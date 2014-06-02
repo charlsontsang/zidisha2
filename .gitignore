@@ -7,3 +7,7 @@ composer.lock
 .DS_Store
 Thumbs.db
 /public/assets/vendor
+
+# IntelliJ project files
+.idea/
+*.iml
