@@ -1,0 +1,73 @@
+@import "../vendor/bootstrap/less/bootstrap.less";
+@import "../vendor/font-awesome/less/font-awesome.less";
+@fa-font-path:        "../vendor/font-awesome/fonts";
+@icon-font-path: "../vendor/bootstrap/fonts/";
+@navbar-margin-bottom: 0px;
+@container-large-desktop: ((970px + @grid-gutter-width));
+
+@border-radius-base:        0px;
+@border-radius-large:       0px;
+@border-radius-small:       0px;
+
+.hr-text {
+  position: relative;
+  font-size: 18px;
+  color: #aaa;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.hr-text hr {
+  background-color: #cdcdcd;
+  height: 1px;
+  margin-top: 0px !important;
+  margin-bottom: 0px !important;
+}
+
+
+.hr-text span {
+  display: block;
+  position: absolute;
+  left: 50%;
+  top: -2px;
+  margin-left: -25px;
+  background-color: #fff;
+  width: 50px;
+  text-align: center;
+}
+
+@modal-sm: 340px;
+.modal-sm { 
+  width: @modal-sm;
+  margin: 30px auto;
+}
+
+.btn-icon {
+  background-color: #3B5999;
+  padding: 0;
+  text-align: left;
+}
+
+.btn-icon .icon-container {
+  text-align: center;
+  padding: 10px 16px;
+  border-right: 1px solid darken(#3B5999, 5%);;
+  display: inline-block;
+}
+
+.btn-icon:hover {
+  background-color: darken(#3B5999, 5%);;
+}
+
+.btn-icon:hover .icon-container {
+  border-right: 1px solid darken(#3B5999, 10%);;
+}
+
+.btn-icon .text-container {
+  text-align: center;
+  padding: 10px;
+  display: inline-block;
+  width: 78%;
+}
