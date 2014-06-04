@@ -6,4 +6,8 @@ class PageController extends BaseController {
         return View::make('pages.our-story');
     }
 
+    public function getHowItWorks() {
+        return View::make('pages.how-it-works');
+    }
+
 }

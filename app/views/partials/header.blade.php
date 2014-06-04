@@ -23,7 +23,7 @@
                         <li><a href="#">Member Updates &amp; Photos</a></li>
                         <li><a href="{{ route('page:our-story') }}">Our Story</a></li>
                         <li><a href="#">Why Zidisha?</a></li>
-                        <li><a href="#">How It Works</a></li>
+                        <li><a href="{{ route('page:how-it-works') }}">How It Works</a></li>
                         <li><a href="#">Trust &amp; Security</a></li>
                         <li><a href="#">FAQ</a></li>
                         <li><a href="#">Team</a></li>
