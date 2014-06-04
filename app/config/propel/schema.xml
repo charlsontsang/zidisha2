@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database name="zidisha" defaultIdMethod="native" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://xsd.propelorm.org/1.6/database.xsd">
+    <table name="users" phpName="User">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="username" type="VARCHAR" size="20" required="true" />
+        <column name="password" type="VARCHAR" size="60" required="true" />
+        <column name="remember_token " type="VARCHAR" size="100" required="false" />
+        <column name="last_login_at" type="TIMESTAMP" required="true" />
+        <behavior name="timestampable" />
+    </table>
+</database>
