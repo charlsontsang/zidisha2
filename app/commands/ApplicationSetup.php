@@ -41,10 +41,7 @@ class ApplicationSetup extends Command
             'homestead'
         );
 
-        $databaseConfig ['databasePassword'] = $this->secret(
-            'Enter your database password [Default=secret] : ',
-            'secret'
-        );
+        $databaseConfig ['databasePassword'] = $this->secret('Enter your database password [Default=secret] : ') ?: 'secret';
 
         $databaseConfig['databasePortNumber'] = $this->ask('Enter your database port number [Default=5432] : ', '5432');
 
