@@ -15,6 +15,18 @@
 
 require __DIR__.'/bootstrap/autoload.php';
 
+/**
+ *  Used to get the development environment form the env.php file.
+ */
+$file = new \Illuminate\Filesystem\Filesystem();
+
+if ($file->exists( __DIR__.'/bootstrap/env.php')) {
+    require __DIR__.'/bootstrap/env.php';
+}
+else {
+    define('LARAVEL_ENV', 'local');
+}
+
 /*
 |--------------------------------------------------------------------------
 | Turn On The Lights

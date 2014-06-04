@@ -18,3 +18,6 @@ Thumbs.db
 /app/config/propel/config.php
 /app/models/Base
 /app/models/Map
+
+/bootstrap/env.php
+_ide_helper.php
