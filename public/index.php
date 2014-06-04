@@ -20,6 +20,12 @@
 
 require __DIR__.'/../bootstrap/autoload.php';
 
+
+/**
+ *  Used to get the development environment form the env.php file.
+ */
+require '../bootstrap/env.php';
+
 /*
 |--------------------------------------------------------------------------
 | Turn On The Lights
