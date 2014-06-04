@@ -8,7 +8,8 @@
     <meta name="author" content="">
     <link rel="shortcut icon" href="favicon.ico">
 
-    <title>Starter Template for Bootstrap</title>
+    <title>Zidisha |  @yield('page-title')</title>
+
 
     <!-- Bootstrap core CSS -->
     <link href="assets/css/styles.css" rel="stylesheet">

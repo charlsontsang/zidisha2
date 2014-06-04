@@ -1,8 +1,13 @@
 @extends('layouts.master')
 
+@section('page-title')
+How It Works
+@stop
+
+
 @section('content')
 <div class="page-header">
-    <h1>How it works</h1>
+    <h1>How It Works</h1>
 </div>
 
 @include('partials.how-it-works-steps')

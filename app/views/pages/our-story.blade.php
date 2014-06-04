@@ -1,5 +1,10 @@
 @extends('layouts.master')
 
+@section('page-title')
+Our Story
+@stop
+
+
 @section('content')
 <div class="page-header">
     <h1>Our Story</h1>

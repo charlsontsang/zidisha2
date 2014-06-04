@@ -1,8 +1,12 @@
 @extends('layouts.master')
 
+@section('page-title')
+Why Zidisha?
+@stop
+
 @section('content')
 <div class="page-header">
-    <h1>Why Zidisha</h1>
+    <h1>Why Zidisha?</h1>
 </div>
 
 <p>Entrepreneurs in developing nations face a difficult problem: With average microfinance interest rates upwards of 40% or more, the high cost of financial services keeps them from growing their earnings enough to improve their families' standards of living.</p>
@@ -15,7 +19,7 @@
 <p>Unlike other internet microfinance websites that simply allow web users to fund microfinance programs, we offer the ability to interact directly with the entrepreneurs. Lenders can post questions and comments, while borrowers share the progress of their micro investments and let lenders know about the impact that their microfinance investing provides.</p>
 
 <div class="text-center">
-    <img src="{{ asset('assets/images/pages/Zidisha_Arrows.png'); }}" alt="" />
+    <img src="{{ asset('assets/images/pages/why-zidisha/Zidisha_Arrows.png'); }}" alt="" />
 </div>
 
 <h4>Zidisha Offers Dramatically Lower Microfinance Interest Rates to the Entrepreneurs</h4>
