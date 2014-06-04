@@ -79,3 +79,8 @@ App::down(function()
 */
 
 require app_path().'/filters.php';
+
+/*
+ * Setup Propel
+ */
+require app_path().'/config/propel/config.php';

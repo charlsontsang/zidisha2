@@ -1,0 +1,24 @@
+#!/bin/bash
+
+PLATFORM=--platform=PgsqlPlatform
+INPUT_DIR=--input-dir='app/config/propel'
+MODELS_DIR=--output-dir="app/models"
+MIGRATIONS_DIR=--output-dir="app/database/migrations"
+
+if [[ "$1" == "list" ]];
+then
+	PLATFORM=""
+	INPUT_DIR=""
+fi
+
+if [[ "$1" != "build" ]];
+then
+	MODELS_DIR=""
+fi
+
+if [[ "$1" != "diff" ]] && [[ "$1" != migrat* ]];
+then
+	MIGRATIONS_DIR=""
+fi
+
+vendor/bin/propel "$@" $PLATFORM $INPUT_DIR $MODELS_DIR $MIGRATIONS_DIR
