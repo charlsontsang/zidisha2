@@ -14,4 +14,11 @@ class PageController extends BaseController {
         return View::make('pages.why-zidisha');
     }
 
+    public function getTrustAndSecurity() {
+        return View::make('pages.trust-and-security');
+    }
+
+    public function getPress() {
+        return View::make('pages.press');
+    }
 }
