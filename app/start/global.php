@@ -79,10 +79,9 @@ App::down(function()
 */
 
 require app_path().'/filters.php';
-
 /*
  * Setup Propel
  */
-if (defined(LARAVEL_ENV)) {
+if (defined('LARAVEL_ENV')) {
     require app_path().'/config/propel/config.php';
 }
