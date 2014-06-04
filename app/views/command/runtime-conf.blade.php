@@ -5,7 +5,7 @@
             <datasource id="zidisha">
                 <adapter>pgsql</adapter>
                 <connection>
-                    <dsn>host={{$databaseHost}};port={{$databasePortNumber}};dbname={{$databaseName}};user={{$databaseUsername}};password={{$databasePassword}}</dsn>
+                    <dsn>pgsql:host={{$databaseHost}};port={{$databasePortNumber}};dbname={{$databaseName}};user={{$databaseUsername}};password={{$databasePassword}}</dsn>
                 </connection>
             </datasource>
         </datasources>
