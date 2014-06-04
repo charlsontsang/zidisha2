@@ -65,7 +65,7 @@ ENV;
         $file->put(base_path() . '/app/config/propel/runtime-conf.xml', $config);
         $file->put(base_path() . '/app/config/propel/buildtime-conf.xml', $config);
 
-        exec('vendor/bin/propel/ config:convert-xml --output-dir="app/config/propel"');
+        exec('vendor/bin/propel config:convert-xml --output-dir="app/config/propel" --input-dir="app/config/propel"');
 
         $this->info('You are done.');
     }
