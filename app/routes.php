@@ -12,3 +12,5 @@
 */
 
 Route::get('/', array('uses' => 'HomeController@getHome', 'as' => 'home'));
+
+Route::get('our-story', array('uses' => 'PageController@getOurStory', 'as' => 'page:our-story'));

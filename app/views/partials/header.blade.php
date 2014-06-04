@@ -7,7 +7,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand" href="{{ route('home') }}">
                 zidisha
             </a>
         </div>
@@ -21,7 +21,7 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li><a href="#">Member Updates &amp; Photos</a></li>
-                        <li><a href="#">Our Story</a></li>
+                        <li><a href="{{ route('page:our-story') }}">Our Story</a></li>
                         <li><a href="#">Why Zidisha?</a></li>
                         <li><a href="#">How It Works</a></li>
                         <li><a href="#">Trust &amp; Security</a></li>
