@@ -9,5 +9,9 @@ class PageController extends BaseController {
     public function getHowItWorks() {
         return View::make('pages.how-it-works');
     }
+    
+    public function getWhyZidisha() {
+        return View::make('pages.why-zidisha');
+    }
 
 }
