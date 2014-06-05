@@ -13,17 +13,27 @@
 
 Route::get('/', array('uses' => 'HomeController@getHome', 'as' => 'home'));
 
-
+/**
+ * Routes for static pages
+ */
 Route::get('our-story', array('uses' => 'PageController@getOurStory', 'as' => 'page:our-story'));
 Route::get('how-it-works', array('uses' => 'PageController@getHowItWorks', 'as' => 'page:how-it-works'));
 Route::get('why-zidisha', array('uses' => 'PageController@getWhyZidisha', 'as' => 'page:why-zidisha'));
 Route::get('trust-and-security', array('uses' => 'PageController@getTrustAndSecurity', 'as' => 'page:trust-and-security'));
 Route::get('press', array('uses' => 'PageController@getPress', 'as' => 'page:press'));
 
+/**
+ * Routes for Authentication
+ */
 Route::get('/join', array('uses' => 'AuthController@getJoin', 'as' => 'join'));
 Route::post('/join', array('uses' => 'AuthController@postJoin', 'before' => 'csrf'));
 
 Route::get('/login', array('uses' => 'AuthController@getLogin', 'as' => 'login'));
 Route::post('/login', array('uses' => 'AuthController@postLogin', 'before' => 'csrf'));
 
-Route::get('/logout', array('uses' => 'AuthController@getLogout'));
+Route::get('/logout', array('uses' => 'AuthController@getLogout', 'as' => 'logout'));
+
+/**
+ * Routes for lend page
+ */
+Route::get('lend', array('uses' => 'LendController@getIndex', 'as' => 'lend:index'));
