@@ -15,12 +15,16 @@ Lend
         <h2>Categories</h2>
 
         <ul class="list-unstyled">
+            <li>
+                <a href="{{ route('lend:index') }}"> All </a>
+            </li>
             @foreach($loanCategories as $loanCategory)
             <li>
                 @if($selectedLoanCategory == $loanCategory)
-                    <strong>{{ $loanCategory->getName()}}</strong>
+                <strong>{{ $loanCategory->getName()}}</strong>
                 @else
-                    <a href="{{ route('lend:index') }}?loan_category_id={{ $loanCategory->getId() }}"> {{ $loanCategory->getName()}} </a>
+                <a href="{{ route('lend:index') }}?loan_category_id={{ $loanCategory->getId() }}"> {{
+                    $loanCategory->getName()}} </a>
                 @endif
             </li>
             @endforeach
@@ -29,6 +33,9 @@ Lend
         <h2>Countries</h2>
 
         <ul class="list-unstyled">
+            <li>
+                <a href="{{ route('lend:index') }}"> EveryWhere </a>
+            </li>
             @foreach($countries as $country)
             <li>
                 @if($selectedCountry == $country)
