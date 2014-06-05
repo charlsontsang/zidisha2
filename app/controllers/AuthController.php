@@ -9,6 +9,20 @@ class AuthController extends BaseController
 
     public function postJoin()
     {
+        $rules = [
+            'email' => 'required|email',
+            'username' => 'required|max:20',
+            'password' => 'required|confirmed'
+        ];
+
+        $validator = Validator::make(Input::all(), $rules);
+
+        if ($validator->fails())
+        {
+            return Redirect::to('join')->withInput()->withErrors($validator);
+        }
+
+
         $user = new User();
         $user->setPassword(Input::get('password'));
         $user->setEmail(Input::get('email'));
@@ -19,7 +33,7 @@ class AuthController extends BaseController
             return Redirect::route('home');
         }
 
-        return Redirect::route('join');
+        return Redirect::to('join')->withInput();
     }
 
     public function getLogin()
@@ -29,13 +43,15 @@ class AuthController extends BaseController
 
     public function postLogin()
     {
+        $rememberMe = Input::has('remember_me');
+
         $input = array(
             'username' => Input::get('username'),
             'password' => Input::get('password'),
             'email' => Input::get('email')
         );
 
-        if (Auth::attempt($input)) {
+        if (Auth::attempt($input, $rememberMe)) {
             return Redirect::route('home');
         }
 

@@ -15,6 +15,12 @@
             {{ Form::password('password', array('class' => 'form-control')) }}
         </div>
 
+        <div class="form-group">
+            <label>
+                {{ Form::checkbox('remember_me', 'remember_me', true) }} Remember me
+            </label>
+        </div>
+
         <button type="submit" class="btn btn-default">Submit</button>
 
         {{ Form::close() }}

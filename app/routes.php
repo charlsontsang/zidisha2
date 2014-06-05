@@ -21,9 +21,9 @@ Route::get('trust-and-security', array('uses' => 'PageController@getTrustAndSecu
 Route::get('press', array('uses' => 'PageController@getPress', 'as' => 'page:press'));
 
 Route::get('/join', array('uses' => 'AuthController@getJoin', 'as' => 'join'));
-Route::post('/join', array('uses' => 'AuthController@postJoin'));
+Route::post('/join', array('uses' => 'AuthController@postJoin', 'before' => 'csrf'));
 
 Route::get('/login', array('uses' => 'AuthController@getLogin', 'as' => 'login'));
-Route::post('/login', array('uses' => 'AuthController@postLogin'));
+Route::post('/login', array('uses' => 'AuthController@postLogin', 'before' => 'csrf'));
 
 Route::get('/logout', array('uses' => 'AuthController@getLogout'));
