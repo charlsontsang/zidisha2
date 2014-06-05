@@ -1,15 +1,19 @@
 <?php
 
 use Base\User as BaseUser;
+use Illuminate\Auth\Reminders\RemindableInterface;
+use Illuminate\Auth\UserInterface;
 use Propel\Runtime\Connection\ConnectionInterface;
 
-class User extends BaseUser implements \Illuminate\Auth\UserInterface
+class User extends BaseUser implements UserInterface, RemindableInterface
 {
-    public function setPassword ($password) {
-        parent::setPassword(Hash::make($password));
+    public function setPassword($password)
+    {
+        return parent::setPassword(Hash::make($password));
     }
 
-    public function preSave(ConnectionInterface $con = null) {
+    public function preSave(ConnectionInterface $con = null)
+    {
         $this->setLastLoginAt(new DateTime());
         return true;
     }
@@ -42,5 +46,15 @@ class User extends BaseUser implements \Illuminate\Auth\UserInterface
     public function getRememberTokenName()
     {
         return $this->getRememberToken();
+    }
+
+    /**
+     * Get the e-mail address where password reminders are sent.
+     *
+     * @return string
+     */
+    public function getReminderEmail()
+    {
+        return $this->getEmail();
     }
 }

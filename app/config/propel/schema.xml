@@ -30,10 +30,10 @@
         <column name="dialing_code" type="VARCHAR" size="4" defaultValue="NULL"/>
         <column name="enabled" type="BOOLEAN"/>
         <index name="name">
-            <index-column name="name"></index-column>
+            <index-column name="name" />
         </index>
         <index name="code">
-            <index-column name="country_code"></index-column>
+            <index-column name="country_code" />
         </index>
         <behavior name="timestampable"/>
     </table>
@@ -49,5 +49,17 @@
             <reference local="loan_category_id" foreign="id" />
         </foreign-key>
         <behavior name="timestampable"/>
+    </table>
+
+    <table name="password_reminders" phpName="PasswordReminder">
+        <column name="email" type="VARCHAR" size="100" required="true" />
+        <column name="token" type="VARCHAR" size="100" required="true" />
+        <behavior name="timestampable" />
+        <index name="email">
+            <index-column name="email" />
+        </index>
+        <index name="token">
+            <index-column name="token" />
+        </index>
     </table>
 </database>
