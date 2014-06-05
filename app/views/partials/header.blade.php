@@ -13,7 +13,7 @@
         </div>
         <div class="collapse navbar-collapse navbar-right">
             <ul class="nav navbar-nav">
-                <li><a href="#">Lend</a></li>
+                <li><a href="{{ route('lend:index') }}">Lend</a></li>
                 <li><a href="#">Borrow</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
