@@ -14,6 +14,7 @@ class LendController extends BaseController
         // TODO
         $selectedLoanCategory = LoanCategoryQuery::create()->findOneById($loanCategoryId);
 
+        //for countries
         $countries = CountryQuery::create()
             ->orderByName()
             ->find();
@@ -22,9 +23,15 @@ class LendController extends BaseController
         // TODO
         $selectedCountry = CountryQuery::create()->findOneById($countryId);
 
+        //for loans
+        $loans = LoanQuery::create()
+            ->orderBySummary()
+            ->filterByLoanCategoryId($loanCategoryId)
+            ->find();
+
         return View::make(
             'pages.lend',
-            compact('countries', 'selectedCountry', 'loanCategories', 'selectedLoanCategory')
+            compact('countries', 'selectedCountry', 'loanCategories', 'selectedLoanCategory', 'loans')
         );
 
     }
