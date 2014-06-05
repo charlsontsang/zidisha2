@@ -33,7 +33,13 @@
                 </li>
             </ul>
             <form class="navbar-form navbar-left">
-                <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#LoginModal">Log In</a>
+                <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#LoginModal">
+                    @if(Auth::check())
+                    Log out
+                    @else
+                    Log in
+                    @endif
+                </a>
             </form>
         </div>
     </div>

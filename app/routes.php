@@ -13,8 +13,17 @@
 
 Route::get('/', array('uses' => 'HomeController@getHome', 'as' => 'home'));
 
+
 Route::get('our-story', array('uses' => 'PageController@getOurStory', 'as' => 'page:our-story'));
 Route::get('how-it-works', array('uses' => 'PageController@getHowItWorks', 'as' => 'page:how-it-works'));
 Route::get('why-zidisha', array('uses' => 'PageController@getWhyZidisha', 'as' => 'page:why-zidisha'));
 Route::get('trust-and-security', array('uses' => 'PageController@getTrustAndSecurity', 'as' => 'page:trust-and-security'));
 Route::get('press', array('uses' => 'PageController@getPress', 'as' => 'page:press'));
+
+Route::get('/join', array('uses' => 'AuthController@getJoin', 'as' => 'join'));
+Route::post('/join', array('uses' => 'AuthController@postJoin'));
+
+Route::get('/login', array('uses' => 'AuthController@getLogin', 'as' => 'login'));
+Route::post('/login', array('uses' => 'AuthController@postLogin'));
+
+Route::get('/logout', array('uses' => 'AuthController@getLogout'));
