@@ -48,7 +48,6 @@ class AuthController extends BaseController
         $input = array(
             'username' => Input::get('username'),
             'password' => Input::get('password'),
-            'email' => Input::get('email')
         );
 
         if (Auth::attempt($input, $rememberMe)) {
