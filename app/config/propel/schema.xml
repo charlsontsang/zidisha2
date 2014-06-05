@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<database name="zidisha" defaultIdMethod="native" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://xsd.propelorm.org/1.6/database.xsd">
+<database name="zidisha" defaultIdMethod="native" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="http://xsd.propelorm.org/1.6/database.xsd">
     <table name="users" phpName="User">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="username" type="VARCHAR" size="20" required="true" />
@@ -8,5 +9,16 @@
         <column name="remember_token " type="VARCHAR" size="100" required="false" />
         <column name="last_login_at" type="TIMESTAMP" required="true" />
         <behavior name="timestampable" />
+    </table>
+
+    <table name="loan_categories" phpName="LoanCategory">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="name" type="VARCHAR" size="100" required="true"/>
+        <column name="what_description" type="LONGVARCHAR" required="false"/>
+        <column name="why_description" type="LONGVARCHAR" required="false"/>
+        <column name="how_description" type="LONGVARCHAR" required="false"/>
+        <column name="admin_only" type="BOOLEAN" defaultValue="FALSE"/>
+        <behavior name="timestampable"/>
+        <behavior name="sortable"/>
     </table>
 </database>
