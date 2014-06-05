@@ -25,7 +25,22 @@ Lend
             </li>
             @endforeach
         </ul>
+
+        <h2>Countries</h2>
+
+        <ul class="list-unstyled">
+            @foreach($countries as $country)
+            <li>
+                @if($selectedCountry == $country)
+                <strong>{{ $country->getName()}}</strong>
+                @else
+                <a href="{{ route('lend:index') }}?country_id={{ $country->getId() }}"> {{ $country->getName()}} </a>
+                @endif
+            </li>
+            @endforeach
+        </ul>
     </div>
+
     <div class="col-xs-8">
         @if($selectedLoanCategory)
         <h2>{{ $selectedLoanCategory->getName(); }}</h2>
@@ -36,6 +51,12 @@ Lend
         <p><strong>Why it's important: </strong> {{ $selectedLoanCategory->getWhyDescription() }} </p> <br>
 
         <p><strong>What your loan can do: </strong> {{ $selectedLoanCategory->getWhatDescription() }} </p>
+        @endif
+
+
+        @if($selectedCountry)
+        <h2>{{ $selectedCountry->getName(); }}</h2>
+        <br>
         @endif
     </div>
 </div>
