@@ -21,4 +21,20 @@
         <behavior name="timestampable"/>
         <behavior name="sortable"/>
     </table>
+
+    <table name="countries" phpName="Country">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="name" type="VARCHAR" size="100" defaultValue="NULL"/>
+        <column name="continent_code" type="VARCHAR" size="2" defaultValue="NULL"/>
+        <column name="country_code" type="VARCHAR" size="2" defaultValue="NULL"/>
+        <column name="dialing_code" type="VARCHAR" size="4" defaultValue="NULL"/>
+        <column name="enabled" type="BOOLEAN"/>
+        <index name="name">
+            <index-column name="name"></index-column>
+        </index>
+        <index name="code">
+            <index-column name="country_code"></index-column>
+        </index>
+        <behavior name="timestampable"/>
+    </table>
 </database>
