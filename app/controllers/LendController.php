@@ -5,6 +5,7 @@ class LendController extends BaseController
 
     public function getIndex()
     {
+        // for categories
         $loanCategories = LoanCategoryQuery::create()
             ->orderByRank()
             ->find();
@@ -13,7 +14,19 @@ class LendController extends BaseController
         // TODO
         $selectedLoanCategory = LoanCategoryQuery::create()->findOneById($loanCategoryId);
 
-        return View::make('pages.lend', compact('loanCategories', 'selectedLoanCategory'));
+        $countries = CountryQuery::create()
+            ->orderByName()
+            ->find();
+
+        $countryId = Request::query('country_id');
+        // TODO
+        $selectedCountry = CountryQuery::create()->findOneById($countryId);
+
+        return View::make(
+            'pages.lend',
+            compact('countries', 'selectedCountry', 'loanCategories', 'selectedLoanCategory')
+        );
+
     }
 }
 
