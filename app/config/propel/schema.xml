@@ -37,4 +37,17 @@
         </index>
         <behavior name="timestampable"/>
     </table>
+
+    <table name="loan" phpName="Loan">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="summary" type="LONGVARCHAR"/>
+        <column name="description" type="LONGVARCHAR"/>
+        <column name="amount" type="DECIMAL" size="10" scale="2"/>
+        <column name="interest_rate" type="DECIMAL" size="5" scale="2"/>
+        <column name="loan_category_id" type="INTEGER" required="true"/>
+        <foreign-key foreignTable="loan_categories">
+            <reference local="loan_category_id" foreign="id" />
+        </foreign-key>
+        <behavior name="timestampable"/>
+    </table>
 </database>

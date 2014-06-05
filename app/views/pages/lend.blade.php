@@ -65,6 +65,18 @@ Lend
         <h2>{{ $selectedCountry->getName(); }}</h2>
         <br>
         @endif
+
+        @foreach($loans as $loan)
+        <ul class="list-unstyled">
+            <li>
+                <h2>{{ $loan->getSummary() }}</h2>
+                <p>{{ $loan->getDescription() }}</p>
+                <strong>Loan Amount: </strong> {{ $loan->getAmount() }} USD
+                <strong>Interest Rate: </strong> {{ $loan->getInterestRate() }} %
+            </li>
+            <br>
+        </ul>
+        @endforeach
     </div>
 </div>
 @stop
