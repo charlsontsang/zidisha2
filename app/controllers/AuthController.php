@@ -11,6 +11,7 @@ class AuthController extends BaseController
     {
         $user = new User();
         $user->setPassword(Input::get('password'));
+        $user->setEmail(Input::get('email'));
         $user->setUsername(Input::get('username'));
 
         if ($user->save()) {
@@ -30,8 +31,8 @@ class AuthController extends BaseController
     {
         $input = array(
             'username' => Input::get('username'),
-            'password' => Input::get('password')
-
+            'password' => Input::get('password'),
+            'email' => Input::get('email')
         );
 
         if (Auth::attempt($input)) {

@@ -55,7 +55,7 @@ class PropelUserProvider implements UserProviderInterface
     public function retrieveByCredentials(array $credentials)
     {
         return \UserQuery::create()
-            ->filterByUsername($credentials['username'])->_or()->fil
+            ->filterByUsername($credentials['username'])->_or()->filterByEmail($credentials['username'])
             ->findOne();
     }
 
