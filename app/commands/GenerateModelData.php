@@ -32,17 +32,30 @@ class GenerateModelData extends Command
         $size = $this->argument('size');
 
         for ($i = 1; $i <= $size; $i++) {
-            if ($model == "User") {
+            if ($model == "Lender") {
 
-                $userName = 'user' . $i;
+                $userName = 'lender' . $i;
                 $password = '1234567890';
-                $email = 'user' . $i . '@mail.com';
+                $email = 'lender' . $i . '@mail.com';
 
                 $user = new User();
                 $user->setUsername($userName);
                 $user->setPassword($password);
                 $user->setEmail($email);
-                $user->save();
+
+                $firstName = 'lender' . $i;
+                $lastName = 'last' . $i;
+                $aboutMe = "Hi, i'm lender" . $i . "!";
+                $countryId = 1;
+
+                $lender = new Lender();
+                $lender->setFirstName($firstName);
+                $lender->setLastName($lastName);
+                $lender->setAboutMe($aboutMe);
+                $lender->setCountryId($countryId);
+                $lender->setUser($user);
+                $lender->save();
+
             }
         }
     }
