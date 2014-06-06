@@ -62,12 +62,9 @@ class LenderController extends BaseController
 
             $lender->save();
 
-            return View::make(
-                'lender.public-profile',
-                compact('lender')
-            );
-        } else {
-                return Redirect::route('lender:edit-profile')->withInput($data)->withErrors($validator);
+            return Redirect::route('lender:public-profile');
         }
+
+        return Redirect::route('lender:edit-profile')->withInput($data)->withErrors($validator);
     }
 }
