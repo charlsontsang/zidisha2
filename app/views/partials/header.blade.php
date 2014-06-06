@@ -31,15 +31,28 @@
                         <li><a href="{{ route('page:press') }}">Press</a></li>
                     </ul>
                 </li>
+                @if(Auth::check())
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        My Account <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{ route('lender:public-profile') }}">View My Public Profile</a></li>
+                        <li><a href="#">Edit Profile</a></li>
+                    </ul>
+                </li>
+                @endif
             </ul>
             <form class="navbar-form navbar-left">
-                <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#LoginModal">
-                    @if(Auth::check())
-                    Log out
-                    @else
-                    Log in
-                    @endif
-                </a>
+                @if(Auth::check())
+                    <a href="{{ route('logout') }}" class="btn btn-primary">
+                        Log out
+                    </a>
+                @else
+                    <a href="{{ route('logout') }}" class="btn btn-primary" data-toggle="modal" data-target="#LoginModal">
+                        Log in
+                    </a>
+                @endif
             </form>
         </div>
     </div>
