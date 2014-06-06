@@ -33,6 +33,10 @@ Route::post('/login', array('uses' => 'AuthController@postLogin', 'before' => 'c
 
 Route::get('/logout', array('uses' => 'AuthController@getLogout', 'as' => 'logout'));
 
+Route::get('auth/facebook/join', array('uses' => 'AuthController@getFacebookJoin', 'as' => 'facebook:join'));
+Route::get('auth/facebook/login', array('uses' => 'AuthController@getFacebookLogin', 'as' => 'facebook:login'));
+Route::post('auth/facebook/confirm', array('uses' => 'AuthController@postFacebookConfirm', 'as' => 'facebook:confirm'));
+
 /**
  * Routes for lend page
  */
@@ -46,6 +50,6 @@ Route::controller('password', 'RemindersController', ['before' => 'csrf']);
 /**
  * Routes for lender page
  */
-Route::get('lender/', array('uses' => 'LenderController@getPublicProfile', 'as' => 'lender:public-profile'));
+Route::get('lender', array('uses' => 'LenderController@getPublicProfile', 'as' => 'lender:public-profile'));
 Route::get('profile', array('uses' => 'LenderController@getEditProfile', 'as' => 'lender:edit-profile'));
 Route::post('profile', array('uses' => 'LenderController@postEditProfile', 'as' => 'lender:post-profile'));

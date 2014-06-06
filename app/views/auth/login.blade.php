@@ -2,8 +2,23 @@
 
 @section('content')
 <div class="row">
-    <div style="margin-top: 40px;"></div>
     <div class="col-md-offset-3 col-md-6">
+        @if(Session::has('error'))
+        <div class="alert alert-danger">
+            {{ Session::get('error') }}
+        </div>
+        @endif
+
+        @if(Session::has('success'))
+        <div class="alert alert-success">
+            {{ Session::get('success') }}
+        </div>
+        @endif
+
+        <div style="text-align: center">
+            <a href="{{$facebookLoginUrl}}" class="btn btn-lg btn-primary">Login with facebook</a>
+        </div>
+
         {{ Form::open(array('url' => 'login')) }}
         <div class="form-group">
             {{ Form::label('username', 'Display Username') }}
