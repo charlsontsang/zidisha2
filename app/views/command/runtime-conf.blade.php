@@ -9,5 +9,12 @@
                 </connection>
             </datasource>
         </datasources>
+        <log>
+            <logger name="defaultLogger">
+                <type>stream</type>
+                <path>{{storage_path()}}/logs/propel.log</path>
+                <level>300</level>
+            </logger>
+        </log>
     </propel>
 </config>
