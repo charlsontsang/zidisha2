@@ -1,12 +1,12 @@
 @extends('layouts.master')
 
 @section('page-title')
-Lender
+Join the global P2P microlending movement
 @stop
 
 @section('content')
 <div class="page-header">
-    <h1>Lender</h1>
+    <h1>Lender Details</h1>
 </div>
 
 @if($lender)

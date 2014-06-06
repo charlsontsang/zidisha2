@@ -38,7 +38,7 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li><a href="{{ route('lender:public-profile') }}">View My Public Profile</a></li>
-                        <li><a href="#">Edit Profile</a></li>
+                        <li><a href="{{ route('lender:edit-profile') }}">Edit Profile</a></li>
                     </ul>
                 </li>
                 @endif
