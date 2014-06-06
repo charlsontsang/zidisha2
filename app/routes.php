@@ -33,6 +33,10 @@ Route::post('/login', array('uses' => 'AuthController@postLogin', 'before' => 'c
 
 Route::get('/logout', array('uses' => 'AuthController@getLogout', 'as' => 'logout'));
 
+Route::get('auth/facebook/join', array('uses' => 'AuthController@getFacebookJoin', 'as' => 'facebook:join'));
+Route::get('auth/facebook/login', array('uses' => 'AuthController@getFacebookLogin', 'as' => 'facebook:login'));
+Route::post('auth/facebook/confirm', array('uses' => 'AuthController@postFacebookConfirm', 'as' => 'facebook:confirm'));
+
 /**
  * Routes for lend page
  */

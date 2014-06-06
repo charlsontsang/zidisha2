@@ -49,7 +49,8 @@
                         Log out
                     </a>
                 @else
-                    <a href="{{ route('logout') }}" class="btn btn-primary" data-toggle="modal" data-target="#LoginModal">
+                    <!--a href="{{ route('logout') }}" class="btn btn-primary" data-toggle="modal" data-target="#LoginModal"-->
+                    <a href="{{ route('login') }}" class="btn btn-primary">
                         Log in
                     </a>
                 @endif
