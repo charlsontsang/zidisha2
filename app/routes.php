@@ -42,3 +42,8 @@ Route::get('lend', array('uses' => 'LendController@getIndex', 'as' => 'lend:inde
  * Routes for lend page
  */
 Route::controller('password', 'RemindersController', ['before' => 'csrf']);
+
+/**
+ * Routes for lender page
+ */
+Route::get('lender/{username}', array('uses' => 'LenderController@getPublicProfile', 'as' => 'lender:public-profile'));
