@@ -62,4 +62,19 @@
             <index-column name="token" />
         </index>
     </table>
+    
+    <table name="lenders" phpName="Lender">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="user_id" type="INTEGER" required="true"/>
+        <column name="country_id" type="INTEGER" required="true"/>
+        <column name="first_name" type="VARCHAR" size="50" required="true" />
+        <column name="last_name" type="VARCHAR" size="50" required="true" />
+        <column name="about_me" type="LONGVARCHAR" />
+        <foreign-key foreignTable="users">
+            <reference local="user_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="countries">
+            <reference local="country_id" foreign="id"/>
+        </foreign-key>
+    </table>
 </database>
