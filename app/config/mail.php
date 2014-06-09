@@ -121,4 +121,8 @@ return array(
 
 	'pretend' => true,
 
+    /*
+     * Two options are valid currently laravel or sendwithus
+     */
+    'mailer.driver' => 'laravel'
 );
