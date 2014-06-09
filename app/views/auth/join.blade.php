@@ -40,6 +40,11 @@
         <button type="submit" class="btn btn-default">Submit</button>
 
         {{ Form::close() }}
+
+        <div>
+            {{ link_to_route('login', 'login' ) }}
+        </div>
+
     </div>
 </div>
 @stop

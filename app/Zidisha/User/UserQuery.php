@@ -1,10 +1,12 @@
 <?php
 
-use Base\LenderQuery as BaseLenderQuery;
+namespace Zidisha\User;
+
+use Zidisha\User\Base\UserQuery as BaseUserQuery;
 
 
 /**
- * Skeleton subclass for performing query and update operations on the 'lenders' table.
+ * Skeleton subclass for performing query and update operations on the 'users' table.
  *
  *
  *
@@ -13,7 +15,7 @@ use Base\LenderQuery as BaseLenderQuery;
  * long as it does not already exist in the output directory.
  *
  */
-class LenderQuery extends BaseLenderQuery
+class UserQuery extends BaseUserQuery
 {
 
-} // LenderQuery
+} // UserQuery

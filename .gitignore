@@ -16,8 +16,8 @@ Thumbs.db
 /app/config/propel/runtime-conf.xml
 /app/config/propel/buildtime-conf.xml
 /app/config/propel/config.php
-/app/models/Base
-/app/models/Map
+/app/Zidisha/*/Map
+/app/Zidisha/*/Base
 
 /bootstrap/env.php
 _ide_helper.php

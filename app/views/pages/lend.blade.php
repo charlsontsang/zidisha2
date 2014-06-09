@@ -1,18 +1,18 @@
 @extends('layouts.master')
 
 @section('page-title')
-Lend
+    @lang('lend.page-title')
 @stop
 
 @section('content')
 <div class="page-header">
-    <h1>Lend</h1>
+    <h1>@lang('lend.page-header')</h1>
 </div>
 
 
 <div class="row">
     <div class="col-xs-4">
-        <h2>Categories</h2>
+        <h2>@lang('lend.sidebar.category-heading')</h2>
 
         <ul class="list-unstyled">
             <li>
@@ -30,7 +30,7 @@ Lend
             @endforeach
         </ul>
 
-        <h2>Countries</h2>
+        <h2>@lang('lend.sidebar.country-heading')</h2>
 
         <ul class="list-unstyled">
             <li>
@@ -53,11 +53,11 @@ Lend
         <h2>{{ $selectedLoanCategory->getName(); }}</h2>
         <br>
 
-        <p><strong>How it works: </strong> {{ $selectedLoanCategory->getHowDescription() }} </p> <br>
+        <p><strong>@lang('lend.category.how-it-works'): </strong> {{ $selectedLoanCategory->getHowDescription() }} </p> <br>
 
-        <p><strong>Why it's important: </strong> {{ $selectedLoanCategory->getWhyDescription() }} </p> <br>
+        <p><strong>@lang('lend.category.why-important'): </strong> {{ $selectedLoanCategory->getWhyDescription() }} </p> <br>
 
-        <p><strong>What your loan can do: </strong> {{ $selectedLoanCategory->getWhatDescription() }} </p>
+        <p><strong>@lang('lend.category.what-your-loan-do'): </strong> {{ $selectedLoanCategory->getWhatDescription() }} </p>
         @endif
 
 
@@ -71,8 +71,8 @@ Lend
             <li>
                 <h2>{{ $loan->getSummary() }}</h2>
                 <p>{{ $loan->getDescription() }}</p>
-                <strong>Loan Amount: </strong> {{ $loan->getAmount() }} USD
-                <strong>Interest Rate: </strong> {{ $loan->getInterestRate() }} %
+                <strong>@lang('lend.loan.amount'): </strong> {{ $loan->getAmount() }} USD
+                <strong>@lang('lend.loan.interest-rate'): </strong> {{ $loan->getInterestRate() }} %
             </li>
             <br>
         </ul>

@@ -1,6 +1,8 @@
 <?php
 
-use Base\User as BaseUser;
+namespace Zidisha\User;
+
+use Zidisha\User\Base\User as BaseUser;
 use Illuminate\Auth\Reminders\RemindableInterface;
 use Illuminate\Auth\UserInterface;
 use Propel\Runtime\Connection\ConnectionInterface;
