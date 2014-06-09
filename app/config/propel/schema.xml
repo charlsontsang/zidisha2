@@ -48,7 +48,7 @@
         <behavior name="timestampable"/>
     </table>
 
-    <table name="loan" phpName="Loan" namespace="Loan">
+    <table name="loans" phpName="Loan" namespace="Loan">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="borrower_id" type="INTEGER" primaryKey="true"/>"
         <column name="summary" type="LONGVARCHAR"/>
@@ -124,6 +124,22 @@
         <behavior name="timestampable" />
         <foreign-key foreignTable="lenders">
             <reference local="lender_id" foreign="id"/>
+        </foreign-key>
+    </table>
+
+    <table name="loan_stages" phpName="Stage" namespace="Loan">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="loan_id" type="INTEGER" required="true"/>
+        <column name="borrower_id" type="INTEGER" required="true"/>
+        <column name="status" type="ENUM" valueSet="0, 1, 2, 3, 5, 6, 7" required="true"/>
+        <column name="start_date" type="TIMESTAMP" required="true"/>
+        <column name="end_date" type="TIMESTAMP" required="false"/>
+        <behavior name="timestampable" />
+        <foreign-key foreignTable="loans">
+            <reference local="loan_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="borrowers">
+            <reference local="borrower_id" foreign="id"/>
         </foreign-key>
     </table>
 </database>
