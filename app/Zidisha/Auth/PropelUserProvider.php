@@ -4,6 +4,7 @@ namespace Zidisha\Auth;
 
 use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\UserProviderInterface;
+use Zidisha\User\UserQuery;
 
 class PropelUserProvider implements UserProviderInterface
 {
@@ -16,7 +17,7 @@ class PropelUserProvider implements UserProviderInterface
      */
     public function retrieveById($identifier)
     {
-        return \UserQuery::create()->findOneById($identifier);
+        return UserQuery::create()->findOneById($identifier);
     }
 
     /**
@@ -28,7 +29,7 @@ class PropelUserProvider implements UserProviderInterface
      */
     public function retrieveByToken($identifier, $token)
     {
-        return \UserQuery::create()
+        return UserQuery::create()
             ->filterById($identifier)
             ->filterByRememberToken($token)
             ->findOne();
@@ -54,7 +55,7 @@ class PropelUserProvider implements UserProviderInterface
      */
     public function retrieveByCredentials(array $credentials)
     {
-        return \UserQuery::create()
+        return UserQuery::create()
             ->filterByUsername($credentials['username'])->_or()->filterByEmail($credentials['username'])
             ->findOne();
     }

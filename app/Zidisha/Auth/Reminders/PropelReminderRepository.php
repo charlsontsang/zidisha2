@@ -3,6 +3,8 @@
 
 use Illuminate\Auth\Reminders\RemindableInterface;
 use Illuminate\Auth\Reminders\ReminderRepositoryInterface;
+use Zidisha\PasswordReminder\PasswordReminder;
+use Zidisha\PasswordReminder\PasswordReminderQuery;
 
 
 class PropelReminderRepository implements ReminderRepositoryInterface
@@ -45,7 +47,7 @@ class PropelReminderRepository implements ReminderRepositoryInterface
         // the database so that we can verify the token within the actual reset.
         $token = $this->createNewToken($user);
 
-        $passwordReminder = new \PasswordReminder();
+        $passwordReminder = new PasswordReminder();
         $passwordReminder->setEmail($email)->setToken($token)->save();
 
         return $token;
@@ -62,7 +64,7 @@ class PropelReminderRepository implements ReminderRepositoryInterface
     {
         $email = $user->getReminderEmail();
 
-        $reminder = \PasswordReminderQuery::create()
+        $reminder = PasswordReminderQuery::create()
             ->filterByEmail($email)
             ->filterByToken($token)
             ->findOne();
@@ -78,7 +80,7 @@ class PropelReminderRepository implements ReminderRepositoryInterface
      */
     public function delete($token)
     {
-        \PasswordReminderQuery::create()->filterByToken($token)->delete();
+        PasswordReminderQuery::create()->filterByToken($token)->delete();
     }
 
     /**
@@ -90,7 +92,7 @@ class PropelReminderRepository implements ReminderRepositoryInterface
     {
         $expired = \Carbon::now()->subSeconds($this->expires);
 
-        \PasswordReminderQuery::create()->where('PasswordReminder.created_at < ?', $expired)->delete();
+        PasswordReminderQuery::create()->where('PasswordReminder.created_at < ?', $expired)->delete();
     }
 
     /**

@@ -38,7 +38,7 @@ class GenerateModelData extends Command
                 $password = '1234567890';
                 $email = 'lender' . $i . '@mail.com';
 
-                $user = new User();
+                $user = new \Zidisha\User\User();
                 $user->setUsername($userName);
                 $user->setPassword($password);
                 $user->setEmail($email);
@@ -48,7 +48,7 @@ class GenerateModelData extends Command
                 $aboutMe = "Hi, i'm lender" . $i . "!";
                 $countryId = 1;
 
-                $lender = new Lender();
+                $lender = new \Zidisha\Lender\Lender();
                 $lender->setFirstName($firstName);
                 $lender->setLastName($lastName);
                 $lender->setAboutMe($aboutMe);

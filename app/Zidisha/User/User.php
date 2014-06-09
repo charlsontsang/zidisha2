@@ -11,12 +11,12 @@ class User extends BaseUser implements UserInterface, RemindableInterface
 {
     public function setPassword($password)
     {
-        return parent::setPassword(Hash::make($password));
+        return parent::setPassword(\Hash::make($password));
     }
 
     public function preSave(ConnectionInterface $con = null)
     {
-        $this->setLastLoginAt(new DateTime());
+        $this->setLastLoginAt(new \DateTime());
         return true;
     }
 
