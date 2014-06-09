@@ -58,6 +58,7 @@
         <column name="installment_day" type="INTEGER"/>
         <column name="interest_rate" type="DECIMAL" size="5" scale="2"/>
         <column name="loan_category_id" type="INTEGER" required="true"/>
+        <column name="status" type="ENUM" valueSet="0, 1, 2, 3, 5, 6, 7"/>
         <behavior name="timestampable"/>
         <foreign-key foreignTable="loan_categories">
             <reference local="loan_category_id" foreign="id" />
