@@ -3,28 +3,43 @@
 class LendController extends BaseController
 {
 
+    protected $loanCategoryQuery;
+    protected $CountryQuery;
+    protected $loanQuery;
+
+    public function  __construct(
+        Zidisha\Loan\LoanCategoryQuery $loanCategoryQuery,
+        Zidisha\Country\CountryQuery $countryQuery,
+        Zidisha\Loan\LoanQuery $loanQuery
+    ) {
+        $this->loanCategoryQuery = $loanCategoryQuery;
+        $this->countryQuery = $countryQuery;
+        $this->loanQuery = $loanQuery;
+    }
+
     public function getIndex()
     {
         // for categories
-        $loanCategories = LoanCategoryQuery::create()
+        $loanCategories = $this->loanCategoryQuery
             ->orderByRank()
             ->find();
 
         $loanCategoryId = Request::query('loan_category_id');
         // TODO
-        $selectedLoanCategory = LoanCategoryQuery::create()->findOneById($loanCategoryId);
+        $selectedLoanCategory = $this->loanCategoryQuery
+            ->findOneById($loanCategoryId);
 
         //for countries
-        $countries = CountryQuery::create()
+        $countries = $this->countryQuery
             ->orderByName()
             ->find();
 
         $countryId = Request::query('country_id');
         // TODO
-        $selectedCountry = CountryQuery::create()->findOneById($countryId);
+        $selectedCountry = $this->countryQuery->findOneById($countryId);
 
         //for loans
-        $loans = LoanQuery::create()
+        $loans = $this->loanQuery
             ->orderBySummary()
             ->filterByLoanCategoryId($loanCategoryId)
             ->find();
@@ -36,5 +51,3 @@ class LendController extends BaseController
 
     }
 }
-
-?>
