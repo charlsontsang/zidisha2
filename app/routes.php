@@ -43,7 +43,7 @@ Route::post('auth/facebook/confirm', array('uses' => 'AuthController@postFaceboo
 Route::get('lend', array('uses' => 'LendController@getIndex', 'as' => 'lend:index'));
 
 /**
- * Routes for lend page
+ * Routes for Password Reminder page.
  */
 Route::controller('password', 'RemindersController', ['before' => 'csrf']);
 
