@@ -72,7 +72,8 @@ class AuthController extends BaseController
             return Redirect::route('home');
         }
 
-        return Redirect::route('login')->with('error', 'Wrong username or password.');
+        Flash::error("Wrong username or password!");
+        return Redirect::route('login');
     }
 
     public function getLogout()
