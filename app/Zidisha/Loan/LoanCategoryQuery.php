@@ -1,6 +1,8 @@
 <?php
 
-use Base\LoanCategoryQuery as BaseLoanCategoryQuery;
+namespace Zidisha\Loan;
+
+use Zidisha\Loan\Base\LoanCategoryQuery as BaseLoanCategoryQuery;
 
 
 /**

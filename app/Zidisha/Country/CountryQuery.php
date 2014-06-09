@@ -1,6 +1,8 @@
 <?php
 
-use Base\CountryQuery as BaseCountryQuery;
+namespace Zidisha\Country;
+
+use Zidisha\Country\Base\CountryQuery as BaseCountryQuery;
 
 
 /**

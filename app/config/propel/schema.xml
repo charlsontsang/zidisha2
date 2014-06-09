@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <database name="zidisha" defaultIdMethod="native" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:noNamespaceSchemaLocation="http://xsd.propelorm.org/1.6/database.xsd">
-    <table name="users" phpName="User">
+          xsi:noNamespaceSchemaLocation="http://xsd.propelorm.org/1.6/database.xsd" namespace="Zidisha\">
+    <table name="users" phpName="User" namespace="User">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="username" type="VARCHAR" size="20" required="true" />
         <column name="email" type="VARCHAR" size="100" required="true" />
@@ -12,7 +12,7 @@
         <behavior name="timestampable" />
     </table>
 
-    <table name="loan_categories" phpName="LoanCategory">
+    <table name="loan_categories" phpName="LoanCategory" namespace="Loan">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="name" type="VARCHAR" size="100" required="true"/>
         <column name="what_description" type="LONGVARCHAR" required="false"/>
@@ -23,7 +23,7 @@
         <behavior name="sortable"/>
     </table>
 
-    <table name="countries" phpName="Country">
+    <table name="countries" phpName="Country" namespace="Country">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="name" type="VARCHAR" size="100" defaultValue="NULL"/>
         <column name="continent_code" type="VARCHAR" size="2" defaultValue="NULL"/>
@@ -39,7 +39,7 @@
         <behavior name="timestampable"/>
     </table>
 
-    <table name="loan" phpName="Loan">
+    <table name="loan" phpName="Loan" namespace="Loan">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="summary" type="LONGVARCHAR"/>
         <column name="description" type="LONGVARCHAR"/>
@@ -52,7 +52,7 @@
         <behavior name="timestampable"/>
     </table>
 
-    <table name="password_reminders" phpName="PasswordReminder">
+    <table name="password_reminders" phpName="PasswordReminder" namespace="PasswordReminder">
         <column name="email" type="VARCHAR" size="100" required="true" />
         <column name="token" type="VARCHAR" size="100" required="true" />
         <behavior name="timestampable" />
@@ -64,7 +64,7 @@
         </index>
     </table>
     
-    <table name="lenders" phpName="Lender">
+    <table name="lenders" phpName="Lender" namespace="Lender">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="user_id" type="INTEGER" required="true"/>
         <column name="country_id" type="INTEGER" required="true"/>
