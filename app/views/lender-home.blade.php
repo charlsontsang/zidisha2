@@ -50,7 +50,6 @@
         <h3 class="text-center">
             P2P LENDING ACROSS THE INTERNATIONAL WEALTH DIVIDE.
         </h3>
-        @include('partials/_flash')
         <br/>
         <p>
             We are pioneering the first online microlending community to connect lenders and borrowers

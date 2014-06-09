@@ -27,6 +27,7 @@
     @yield('content-top')
 
     <div class="container">
+        @include('partials/_flash')
         @yield('content')
     </div>
 
