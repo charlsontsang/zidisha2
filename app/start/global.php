@@ -52,6 +52,14 @@ App::error(
     }
 );
 
+App::error(
+    function (FacebookApiException $exception) {
+        Log::error($exception);
+        Flash::error('Facebook error.');
+        return Redirect::route('home');
+    }
+);
+
 /*
 |--------------------------------------------------------------------------
 | Maintenance Mode Handler

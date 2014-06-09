@@ -1,74 +1,69 @@
 <?php
 
+use Zidisha\Lender\Lender;
+use Zidisha\User\User;
+use Zidisha\User\UserQuery;
+use Zidisha\User\UserService;
+use Zidisha\Vendor\Facebook\FacebookService;
+
 class AuthController extends BaseController
 {
+
+    /**
+     * @var Zidisha\Vendor\Facebook\FacebookService
+     */
+    private $facebookService;
+    
+    /**
+     * @var Zidisha\User\UserService
+     */
+    private $userService;
+
+    public function __construct(FacebookService $facebookService, UserService $userService)
+    {
+        $this->facebookService = $facebookService;
+        $this->userService = $userService;
+    }
+    
     public function getJoin()
     {
-        $facebook = new Facebook(array(
-            'appId' => Config::get('facebook.app_id'),
-            'secret' => Config::get('facebook.app_secret')
-        ));
-
-        $data['facebookJoinUrl'] = $facebook->getLoginUrl(
-            array('scope' => 'email', 'redirect_uri' => route('facebook:join'))
-        );
-
-        return View::make('auth.join', $data);
+       return View::make('auth.join', [
+            'facebookJoinUrl' => $this->facebookService->getLoginUrl('facebook:join'),
+        ]);
     }
 
     public function postJoin()
     {
-        $rules = [
-            'email' => 'required|email',
-            'username' => 'required|max:20',
-            'password' => 'required|confirmed'
-        ];
-
-        $validator = Validator::make(Input::all(), $rules);
+        $validator = $this->userService->getJoinValidator(Input::all());
 
         if ($validator->fails()) {
             return Redirect::to('join')->withInput()->withErrors($validator);
         }
 
-        $user = new User();
-        $user->setPassword(Input::get('password'));
-        $user->setEmail(Input::get('email'));
-        $user->setUsername(Input::get('username'));
+        $user = $this->userService->joinUser(Input::all());
 
-        if ($user->save()) {
+        if ($user) {
             Auth::login($user);
             return Redirect::route('home');
         }
 
+        Flash::error('Oops, something went wrong');
         return Redirect::to('join')->withInput();
     }
 
     public function getLogin()
     {
-        $facebook = new Facebook(array(
-            'appId' => Config::get('facebook.app_id'),
-            'secret' => Config::get('facebook.app_secret')
-        ));
-
-        $data = [
-            'facebookLoginUrl' => $facebook->getLoginUrl(
-                array('scope' => 'email', 'redirect_uri' => route('facebook:login'))
-            )
-        ];
-
-        return View::make('auth.login', $data);
+        return View::make('auth.login', [
+            'facebookLoginUrl' => $this->facebookService->getLoginUrl('facebook:login'),
+        ]);
     }
 
     public function postLogin()
     {
         $rememberMe = Input::has('remember_me');
-
-        $input = array(
-            'username' => Input::get('username'),
-            'password' => Input::get('password'),
-        );
-
-        if (Auth::attempt($input, $rememberMe)) {
+        $credentials = Input::only('username', 'password');
+        
+        if (Auth::attempt($credentials, $rememberMe)) {
             return Redirect::route('home');
         }
 
@@ -79,11 +74,7 @@ class AuthController extends BaseController
     public function getLogout()
     {
         Auth::logout();
-        $facebook = new Facebook(array(
-            'appId' => Config::get('facebook.app_id'),
-            'secret' => Config::get('facebook.app_secret')
-        ));
-        $facebook->destroySession();
+        $this->facebookService->logout();
         return Redirect::route('home');
     }
 
@@ -92,19 +83,9 @@ class AuthController extends BaseController
         $facebookUser = $this->getFacebookUser();
 
         if (Session::has('error')) {
-            $app_id = Config::get('facebook.app_id');
-            $app_secret = Config::get('facebook.app_secret');
-
-            $facebook = new Facebook(array(
-                'appId' => $app_id,
-                'secret' => $app_secret
-            ));
-
-            $data['facebookJoinUrl'] = $facebook->getLoginUrl(
-                array('scope' => 'email', 'redirect_uri' => route('facebook:join'))
-            );
-
-            return View::make('auth.join', $data);
+            return View::make('auth.join', [
+                'facebookJoinUrl' => $this->facebookService->getLoginUrl('facebook:join'),
+            ]);
         }
         if ($facebookUser) {
             return View::make('auth.confirm');
@@ -118,7 +99,6 @@ class AuthController extends BaseController
         $facebookUser = $this->getFacebookUser();
 
         if ($facebookUser) {
-
             $rules = [
                 'username' => 'required|max:20'
             ];
@@ -157,55 +137,27 @@ class AuthController extends BaseController
 
     private function getFacebookUser()
     {
-        $facebook = new Facebook(array(
-            'appId' => Config::get('facebook.app_id'),
-            'secret' => Config::get('facebook.app_secret')
-        ));
-
-        $facebookUser = $facebook->getUser();
-
+        $facebookUser = $this->facebookService->getUserProfile();
+        
         if ($facebookUser) {
-            try {
-                // Proceed knowing you have a logged in user who's authenticated.
-                if ($userProfile = $facebook->api('/me')) {
-                    $checkUser = UserQuery::create()
-                        ->filterByFacebookId($userProfile['id'])
-                        ->_or()
-                        ->filterByEmail($userProfile['email'])
-                        ->findOne();
+            $errors = $this->userService->validateConnectingFacebookUser($facebookUser);
 
-                    if ($checkUser) {
-                        if ($checkUser->getFacebookId() == $userProfile['id']) {
-                            return Redirect::to('join')->with(
-                                'error',
-                                'This facebook account already linked with another account on our website.'
-                            );
-                        } else {
-                            return Redirect::to('join')->with(
-                                'error',
-                                'The email address linked to the facebook account is already linked with another account on our website.'
-                            );
-                        }
-                    }
-
-                    return $userProfile;
+            if ($errors) {
+                foreach ($errors as $error) {
+                    Flash::error($error);
                 }
-            } catch (FacebookApiException $e) {
-
+                return Redirect::to('join');
             }
-        }
 
+            return $facebookUser;
+        }
+        
         return false;
     }
 
     public function getFacebookLogin()
     {
-        $facebook = new Facebook(array(
-            'appId' => Config::get('facebook.app_id'),
-            'secret' => Config::get('facebook.app_secret')
-        ));
-
-        $facebookUserId = $facebook->getUser();
+        $facebookUserId = $this->facebookService->getUserId();
 
         if ($facebookUserId) {
             $checkUser = UserQuery::create()
@@ -217,7 +169,7 @@ class AuthController extends BaseController
             } else {
                 return Redirect::to('login')->with(
                     'error',
-                    'You are not registerd to sue facebook. Please sign up with facebook first.'
+                    'You are not registered to use Facebook. Please sign up with Facebook first.'
                 );
             }
 
