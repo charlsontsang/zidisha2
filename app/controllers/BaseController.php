@@ -15,4 +15,8 @@ class BaseController extends Controller {
 		}
 	}
 
+    protected function flash(){
+
+    }
+
 }

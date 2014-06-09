@@ -121,6 +121,7 @@ return array(
 		'Illuminate\View\ViewServiceProvider',
 		'Illuminate\Workbench\WorkbenchServiceProvider',
         'Zidisha\Auth\Reminders\ReminderServiceProvider',
+        'Zidisha\Flash\FlashServiceProvider'
 
     ),
 
@@ -188,6 +189,7 @@ return array(
 		'URL'             => 'Illuminate\Support\Facades\URL',
 		'Validator'       => 'Illuminate\Support\Facades\Validator',
 		'View'            => 'Illuminate\Support\Facades\View',
+        'Flash'           => 'Zidisha\Flash\Flash'
 
 	),
 

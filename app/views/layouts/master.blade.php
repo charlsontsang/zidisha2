@@ -99,5 +99,6 @@
     
     <script src="{{ asset('assets/vendor/jquery/dist/jquery.min.js') }}"></script>
     <script src="{{ asset('assets/vendor/bootstrap/dist/js/bootstrap.min.js') }}"></script>
-</body>
+    <script>$('.flash-modal').modal();</script>
+    </body>
 </html>
