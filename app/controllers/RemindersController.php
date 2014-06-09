@@ -1,5 +1,7 @@
 <?php
 
+use Zidisha\Flash\Flash;
+
 class RemindersController extends Controller {
 
 	/**
@@ -22,10 +24,12 @@ class RemindersController extends Controller {
 		switch ($response = Password::remind(Input::only('username')))
 		{
 			case Password::INVALID_USER:
-                return Redirect::back()->with('error', Lang::get($response));
+                Flash::error(Lang::get($response));
+                return Redirect::back();
 
 			case Password::REMINDER_SENT:
-                return Redirect::back()->with('status', Lang::get($response));
+                Flash::success(Lang::get($response));
+                return Redirect::back();
 		}
 	}
 
@@ -63,7 +67,8 @@ class RemindersController extends Controller {
 			case Password::INVALID_PASSWORD:
 			case Password::INVALID_TOKEN:
 			case Password::INVALID_USER:
-				return Redirect::back()->with('error', Lang::get($response));
+                Flash::error(Lang::get($response));
+                return Redirect::back();
 
 			case Password::PASSWORD_RESET:
 				return Redirect::to('/');

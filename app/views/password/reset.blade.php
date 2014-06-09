@@ -4,11 +4,6 @@
 <div class="row">
     <div style="margin-top: 40px;"></div>
 
-    @if(Session::has('error'))
-    <div class="alert alert-danger">
-        {{ Session::get('error')}}
-    </div>
-    @endif
     <div class="col-md-offset-3 col-md-6">
         {{ Form::open(array('url' => 'password/reset')) }}
 
