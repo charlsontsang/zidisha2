@@ -10,6 +10,7 @@ use Zidisha\Loan\Category;
 use Zidisha\Loan\CategoryQuery;
 use Zidisha\Loan\Loan;
 use Faker\Factory as Faker;
+use Zidisha\Loan\Stage;
 
 class GenerateModelData extends Command
 {
@@ -182,7 +183,14 @@ class GenerateModelData extends Command
                 $Loan->setInstallmentDay($installmentDay);
                 $Loan->setBorrower($oneBorrower1);
                 $Loan->setCategory($oneCategory1);
-                $Loan->save();
+                $Loan->setStatus(Loan::OPEN);
+
+                $Stage = new Stage();
+                $Stage->setLoan($Loan);
+                $Stage->setBorrower($oneBorrower1);
+                $Stage->setStatus(Loan::OPEN);
+                $Stage->setStartDate(new \DateTime());
+                $Stage->save();
 
             }
         }
