@@ -10,7 +10,7 @@ Join the global P2P microlending movement
 </div>
 
 @if($lender)
-<p><strong>Username: </strong> {{ $lender->getFirstName() }} </p> <br>
+<p><strong>Username: </strong> {{ $lender->getUser()->getUsername() }} </p> <br>
 
 <p><strong>About me: </strong> {{ $lender->getAboutMe() }} </p> <br>
 @else
