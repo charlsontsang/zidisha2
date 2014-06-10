@@ -123,6 +123,7 @@ return array(
         'Zidisha\Auth\Reminders\ReminderServiceProvider',
         'Zidisha\Flash\FlashServiceProvider',
         'Zidisha\Html\BootstrapFormServiceProvider',
+        'Zidisha\Http\RedirectorServiceProvider',
 
     ),
 
