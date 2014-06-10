@@ -9,47 +9,26 @@ Join the global P2P microlending movement
     <h1>Edit Profile</h1>
 </div>
 
-@if($lender)
-{{ Form::open(array('route' => 'lender:post-profile')) }}
-<p>
-    {{ Form::label('username', 'Create Display Username ') }}
-    {{ Form::text('username', Auth::user()->getUsername()) }}
-    {{ $errors->first('username') }}
-</p>
-<p>
-    {{ Form::label('password', 'Change Password ') }}
-    {{ Form::password('password') }}
-    {{ $errors->first('password') }}
-</p>
-<p>
-    {{ Form::label('password_confirmation', 'Confirm Password ') }}
-    {{ Form::password('password_confirmation') }}
-</p>
-<p>
-    {{ Form::label('firstName', 'First Name ') }}
-    {{ Form::text('firstName', $lender->getFirstName()) }}
-    {{ $errors->first('firstName') }}
-</p>
-<p>
-    {{ Form::label('lastName', 'Last Name ') }}
-    {{ Form::text('lastName', $lender->getLastName()) }}
-    {{ $errors->first('lastName') }}
-</p>
-<p>
-    {{ Form::label('email', 'Email Address ') }}
-    {{ Form::text('email', Auth::user()->getEmail()) }}
-    {{ $errors->first('email') }}
-</p>
-<p>
-    {{ Form::label('aboutMe', 'About Me ') }}
-    {{ Form::textarea('aboutMe', $lender->getAboutMe()) }}
-    {{ $errors->first('aboutMe') }}
-</p>
-{{ Form::submit('Save Changes') }}
-{{ Form::close() }}
-@else
-<p>Wrong Username!</p>
-@endif
 
+{{ BootstrapForm::open(array('route' => 'lender:post-profile', 'translationDomain' => 'edit-profile')) }}
+{{ BootstrapForm::populate($form) }}
+
+{{ BootstrapForm::text('username') }}
+
+{{ BootstrapForm::password('password') }}
+
+{{ BootstrapForm::password('password_confirmation') }}
+
+{{ BootstrapForm::text('firstName') }}
+
+{{ BootstrapForm::text('lastName') }}
+
+{{ BootstrapForm::text('email') }}
+
+{{ BootstrapForm::textarea('aboutMe') }}
+
+{{ BootstrapForm::submit('save') }}
+
+{{ BootstrapForm::close() }}
 
 @stop

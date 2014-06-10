@@ -1,7 +1,21 @@
 <?php
 
+use Zidisha\Lender\Form\EditProfile;
+use Zidisha\Lender\LenderQuery;
+
 class LenderController extends BaseController
 {
+
+    /**
+     * @var Zidisha\Lender\Form\EditProfile
+     */
+    private $editProfileForm;
+
+    public function __construct(EditProfile $editProfileForm)
+    {
+        $this->editProfileForm = $editProfileForm;
+    }
+    
     public function getPublicProfile()
     {
         $lender = LenderQuery::create()
@@ -18,32 +32,20 @@ class LenderController extends BaseController
 
     public function getEditProfile()
     {
-        $lender = LenderQuery::create()
-            ->useUserQuery()
-                ->filterById(Auth::user()->getId())
-            ->endUse()
-            ->findOne();
-
         return View::make(
             'lender.edit-profile',
-            compact('lender')
+            ['form' => $this->editProfileForm,]
         );
     }
 
     public function postEditProfile()
     {
-        $data = Input::all();
-
-        $rules = array(
-            'username' => 'required|alpha_num',
-            'firstName' => 'required|alpha_num',
-            'lastName' => 'required|alpha_num',
-            'email' => 'required|email',
-            'password' => 'confirmed'
-        );
-
-        $validator = Validator::make($data, $rules);
-        if ($validator->passes()) {
+        $form = $this->editProfileForm;
+        $form->handleRequest(Request::instance());
+        
+        if ($form->isValid()) {
+            $data = $form->getData();
+            
             $lender = LenderQuery::create()
                 ->useUserQuery()
                     ->filterById(Auth::user()->getId())
@@ -65,6 +67,6 @@ class LenderController extends BaseController
             return Redirect::route('lender:public-profile');
         }
 
-        return Redirect::route('lender:edit-profile')->withInput($data)->withErrors($validator);
+        return Redirect::route('lender:edit-profile')->withForm($form);
     }
 }
