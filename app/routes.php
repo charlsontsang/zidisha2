@@ -55,4 +55,4 @@ Route::controller('password', 'RemindersController', ['before' => 'csrf']);
  */
 Route::get('lender', array('uses' => 'LenderController@getPublicProfile', 'as' => 'lender:public-profile'));
 Route::get('profile', array('uses' => 'LenderController@getEditProfile', 'as' => 'lender:edit-profile'));
-Route::post('profile', array('uses' => 'LenderController@postEditProfile', 'as' => 'lender:post-profile'));
+Route::post('profile', array('uses' => 'LenderController@postEditProfile', 'as' => 'lender:post-profile', 'before' => 'csrf'));
