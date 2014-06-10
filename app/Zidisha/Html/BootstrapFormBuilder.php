@@ -74,6 +74,11 @@ class BootstrapFormBuilder
     {
         return $this->form->model($model, $options);
     }
+    
+    public function populate($form, array $options = array())
+    {
+        return $this->form->model($form->getData(), $options);
+    }
 
     /**
      * Close the current form.
