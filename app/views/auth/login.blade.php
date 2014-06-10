@@ -4,29 +4,21 @@
 <div class="row">
     <div class="col-md-offset-3 col-md-6">
         <div style="text-align: center">
-            <a href="{{$facebookLoginUrl}}" class="btn btn-lg btn-primary">Login with facebook</a>
+            <a href="{{$facebookLoginUrl}}" class="btn btn-lg btn-primary">
+                @lang('login.facebook_login')
+            </a>
         </div>
 
-        {{ Form::open(array('url' => 'login')) }}
-        <div class="form-group">
-            {{ Form::label('username', 'Display Username') }}
-            {{ Form::text('username', null, array('class' => 'form-control')) }}
-        </div>
+        {{ BootstrapForm::open(array('url' => 'login', 'translationDomain' => 'login.form')) }}
+        
+        {{ BootstrapForm::text('username') }}
+        {{ BootstrapForm::password('password') }}
 
-        <div class="form-group">
-            {{ Form::label('password', 'Password') }}
-            {{ Form::password('password', array('class' => 'form-control')) }}
-        </div>
+        {{ BootstrapForm::checkbox('remember_me', 'remember_me', false) }}
 
-        <div class="form-group">
-            <label>
-                {{ Form::checkbox('remember_me', 'remember_me', false) }} Remember me
-            </label>
-        </div>
+        {{ BootstrapForm::submit('submit') }}
 
-        <button type="submit" class="btn btn-default">Submit</button>
-
-        {{ Form::close() }}
+        {{ BootstrapForm::close() }}
 
         <div>
             {{ link_to('/password/remind', 'Forgot Password?' ) }}
