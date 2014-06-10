@@ -3,6 +3,8 @@
 namespace Zidisha\User;
 
 
+use Zidisha\Lender\Lender;
+
 class UserService
 {
 
@@ -24,6 +26,29 @@ class UserService
         $user->setUsername($data['username']);
         
         return $user->save() ? $user : false;
+    }
+    
+    public function joinFacebookUser($facebookUser, $data)
+    {
+        $user = new User();
+        $user
+            ->setUsername($data['username'])
+            ->setEmail($facebookUser['email'])
+            ->setFacebookId($facebookUser['id']);
+
+        $lender = new Lender();
+        $lender
+            ->setUser($user)
+            ->setFirstName($facebookUser['first_name'])
+            ->setLastName($facebookUser['last_name'])
+            ->setAboutMe($data['aboutMe'])
+            // TODO
+            //->setCountry($facebookUser['location']);
+            ->setCountryId(1);
+
+        $lender->save();
+
+        Auth::loginUsingId($user->getId());
     }
 
     public function validateConnectingFacebookUser($facebookUser)

@@ -90,15 +90,11 @@ class AuthController extends BaseController
     {
         $facebookUser = $this->getFacebookUser();
 
-        if (Session::has('error')) {
-            return View::make('auth.join', [
-                'facebookJoinUrl' => $this->facebookService->getLoginUrl('facebook:join'),
-            ]);
-        }
         if ($facebookUser) {
             return View::make('auth.confirm');
         }
 
+        Flash::error('No Facebook account connected.'); 
         return Redirect::to('join');
     }
 
@@ -107,39 +103,21 @@ class AuthController extends BaseController
         $facebookUser = $this->getFacebookUser();
 
         if ($facebookUser) {
-            $rules = [
-                'username' => 'required|max:20'
-            ];
+            $form = $this->joinForm;
+            $form->setFacebookJoin(true);
+            $form->handleRequest(Request::instance());
 
-            $validator = Validator::make(Input::all(), $rules);
-
-            if ($validator->fails()) {
-                return Redirect::route('facebook:join')->withErrors($validator);
+            if (!$form->isValid()) {
+                return Redirect::route('facebook:join')->withForm($form);
             }
 
-            $user = new User();
-            $user
-                ->setUsername(Input::get('username'))
-                ->setEmail($facebookUser['email'])
-                ->setFacebookId($facebookUser['id']);
+            $this->userService->joinFacebookUser($facebookUser, $form->getData());
 
-            $lender = new Lender();
-            $lender
-                ->setUser($user)
-                ->setFirstName($facebookUser['first_name'])
-                ->setLastName($facebookUser['last_name'])
-                ->setAboutMe(Input::get('about_me'))
-                // TODO
-                //->setCountry($facebookUser['location']);
-                ->setCountryId(1);
-
-            $lender->save();
-
-            Auth::loginUsingId($user->getId());
-
-            return Redirect::to('login')->with('success', 'You have successfully joined Zidisha.');
+            Flash::success('You have successfully joined Zidisha.');
+            return Redirect::to('login');
         } else {
-            return Redirect::to('join')->with('error', 'No Facebook account connected.');
+            Flash::error('No Facebook account connected.');
+            return Redirect::to('join');
         }
     }
 
