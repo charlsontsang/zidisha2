@@ -141,6 +141,24 @@ class BootstrapFormBuilder
     }
 
     /**
+     * Create a checkbox input field.
+     *
+     * @param  string  $name
+     * @param  mixed   $value
+     * @param  bool    $checked
+     * @param  array   $options
+     * @return string
+     */
+    public function checkbox($name, $value = 1, $checked = null, $options = array())
+    {
+        $label = array_get($options, 'label', $this->translationDomain ? $this->translationDomain . '.' . $name : $name);
+        unset($options['label']);
+        $label = \Lang::get($label);
+        
+        return '<div class="checkbox"><label>' . $this->form->checkbox($name, $value, $checked, $options) . $label . '</label></div>';
+    }
+
+    /**
      * Create a Bootstrap label.
      *
      * @param  string  $name
