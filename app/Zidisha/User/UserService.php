@@ -16,16 +16,6 @@ class UserService
         $this->userQuery = $userQuery;
     }
     
-    public function getJoinValidator($data) {
-        $rules = [
-            'email'    => 'required|email',
-            'username' => 'required|max:20',
-            'password' => 'required|confirmed'
-        ];
-
-        return \Validator::make($data, $rules);
-    }
-
     public function joinUser($data)
     {
         $user = new User();

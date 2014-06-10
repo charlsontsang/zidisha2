@@ -8,6 +8,7 @@
         </div>
 
         {{ BootstrapForm::open(array('url' => 'join', 'translationDomain' => 'join.form')) }}
+        {{ BootstrapForm::populate($form) }}
         
         {{ BootstrapForm::text('username') }}
         {{ BootstrapForm::text('email') }}

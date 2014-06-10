@@ -1,5 +1,6 @@
 <?php
 
+use Zidisha\Auth\Form\Join;
 use Zidisha\Lender\Lender;
 use Zidisha\User\User;
 use Zidisha\User\UserQuery;
@@ -18,29 +19,36 @@ class AuthController extends BaseController
      * @var Zidisha\User\UserService
      */
     private $userService;
+    /**
+     * @var Zidisha\Auth\Form\Join
+     */
+    private $joinForm;
 
-    public function __construct(FacebookService $facebookService, UserService $userService)
+    public function __construct(FacebookService $facebookService, UserService $userService, Join $joinForm)
     {
         $this->facebookService = $facebookService;
         $this->userService = $userService;
+        $this->joinForm = $joinForm;
     }
     
     public function getJoin()
-    {
-       return View::make('auth.join', [
+    {        
+        return View::make('auth.join', [
+            'form' => $this->joinForm,
             'facebookJoinUrl' => $this->facebookService->getLoginUrl('facebook:join'),
         ]);
     }
 
     public function postJoin()
     {
-        $validator = $this->userService->getJoinValidator(Input::all());
+        $form = $this->joinForm;
+        $form->handleRequest(Request::instance());
 
-        if ($validator->fails()) {
-            return Redirect::to('join')->withInput()->withErrors($validator);
+        if (!$form->isValid()) {
+            return Redirect::to('join')->withForm($form);
         }
 
-        $user = $this->userService->joinUser(Input::all());
+        $user = $this->userService->joinUser($form->getData());
 
         if ($user) {
             Auth::login($user);
