@@ -55,7 +55,7 @@ Route::controller('password', 'RemindersController', ['before' => 'csrf']);
  */
 Route::group(array('prefix' => 'lender', 'before' => 'auth|hasRole:lender'), function()
     {
-        Route::get('profile', array('uses' => 'LenderController@getPublicProfile', 'as' => 'lender:public-profile', 'before' => 'auth|hasRole:lender'));
+        Route::get('profile', array('uses' => 'LenderController@getPublicProfile', 'as' => 'lender:public-profile'));
         Route::get('profile/edit', array('uses' => 'LenderController@getEditProfile', 'as' => 'lender:edit-profile'));
         Route::post('profile/edit', array('uses' => 'LenderController@postEditProfile', 'as' => 'lender:post-profile', 'before' => 'csrf'));
     });
@@ -69,5 +69,3 @@ Route::group(array('prefix' => 'borrower', 'before' => 'auth|hasRole:borrower'),
         Route::get('profile/edit', array('uses' => 'BorrowerController@getEditProfile', 'as' => 'borrower:edit-profile'));
         Route::post('profile/edit', array('uses' => 'BorrowerController@postEditProfile', 'as' => 'borrower:post-profile', 'before' => 'csrf'));
     });
-
-
