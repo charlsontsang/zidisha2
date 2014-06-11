@@ -87,6 +87,8 @@ class AuthController extends BaseController
     public function getLogout()
     {
         Auth::logout();
+        Session::flush();
+        Session::regenerate();
         $this->facebookService->logout();
         return Redirect::route('home');
     }
