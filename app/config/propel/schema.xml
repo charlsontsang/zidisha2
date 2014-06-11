@@ -7,7 +7,8 @@
         <column name="email" type="VARCHAR" size="100" required="true" />
         <column name="password" type="VARCHAR" size="60" required="false" />
         <column name="facebook_id" type="BIGINT" required="false" />
-        <column name="remember_token " type="VARCHAR" size="100" required="false" />
+        <column name="remember_token" type="VARCHAR" size="100" required="false" />
+        <column name="role" type="ENUM" valueSet="lender, borrower" />
         <column name="last_login_at" type="TIMESTAMP" required="true" />
         <behavior name="timestampable" />
         <unique>
