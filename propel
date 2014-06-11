@@ -3,7 +3,7 @@
 PLATFORM=--platform=PgsqlPlatform
 INPUT_DIR=--input-dir='app/config/propel'
 MODELS_DIR=--output-dir='app'
-MIGRATIONS_DIR=--output-dir='app/database/migrations'
+MIGRATIONS_DIR=--output-dir="app/database/migrations"
 
 if [[ "$1" == "list" ]];
 then
