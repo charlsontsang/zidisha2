@@ -88,3 +88,14 @@ Route::filter('csrf', function()
 		throw new Illuminate\Session\TokenMismatchException;
 	}
 });
+
+Route::filter(
+    'hasRole',
+    function ($route, $request, $role) {
+        $isAllowed = Auth::getUser()->getRole() == $role;
+        if (!$isAllowed) {
+            Flash::error("You do not have proper permission to view this page");
+            return Redirect::route('login');
+        }
+    }
+);
