@@ -70,4 +70,5 @@ Route::group(array('prefix' => 'borrower', 'before' => 'auth|hasRole:borrower'),
         Route::get('profile/edit', array('uses' => 'BorrowerController@getEditProfile', 'as' => 'borrower:edit-profile'));
         Route::post('profile/edit', array('uses' => 'BorrowerController@postEditProfile', 'as' => 'borrower:post-profile', 'before' => 'csrf'));
         Route::get('dashboard', array('uses' => 'BorrowerController@getDashboard', 'as' => 'borrower:dashboard'));
+        Route::controller('loan-application', 'LoanApplicationController');
     });
