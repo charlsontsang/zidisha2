@@ -63,7 +63,11 @@ Route::group(array('prefix' => 'lender', 'before' => 'auth|hasRole:lender'), fun
 /**
  * Routes for borrower page
  */
-Route::get('borrower/profile', array('uses' => 'BorrowerController@getPublicProfile', 'as' => 'borrower:public-profile'));
-Route::get('borrower/profile/edit', array('uses' => 'BorrowerController@getEditProfile', 'as' => 'borrower:edit-profile'));
-Route::post('borrower/profile/edit', array('uses' => 'BorrowerController@postEditProfile', 'as' => 'borrower:post-profile', 'before' => 'csrf'));
+Route::group(array('prefix' => 'borrower', 'before' => 'auth|hasRole:borrower'), function()
+    {
+        Route::get('profile', array('uses' => 'BorrowerController@getPublicProfile', 'as' => 'borrower:public-profile'));
+        Route::get('profile/edit', array('uses' => 'BorrowerController@getEditProfile', 'as' => 'borrower:edit-profile'));
+        Route::post('profile/edit', array('uses' => 'BorrowerController@postEditProfile', 'as' => 'borrower:post-profile', 'before' => 'csrf'));
+    });
+
 
