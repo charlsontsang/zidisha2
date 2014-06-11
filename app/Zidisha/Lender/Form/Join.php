@@ -1,6 +1,6 @@
 <?php
 
-namespace Zidisha\Auth\Form;
+namespace Zidisha\Lender\Form;
 
 
 use Zidisha\Form\AbstractForm;

@@ -1,6 +1,6 @@
 <?php
 
-use Zidisha\Auth\Form\Join;
+use Zidisha\Lender\Form\Join;
 use Zidisha\Vendor\Facebook\FacebookService;
 use Zidisha\User\UserService;
 
@@ -16,7 +16,7 @@ class LenderJoinController extends BaseController
      */
     private $userService;
     /**
-     * @var Zidisha\Auth\Form\Join
+     * @var Zidisha\Lender\Form\Join
      */
     private $joinForm;
 
