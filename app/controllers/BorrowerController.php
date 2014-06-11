@@ -44,11 +44,7 @@ class BorrowerController extends BaseController
         if ($form->isValid()) {
             $data = $form->getData();
 
-            $borrower = BorrowerQuery::create()
-                ->useUserQuery()
-                ->filterById(Auth::user()->getId())
-                ->endUse()
-                ->findOne();
+            $borrower = \Auth::user()->getBorrower();
 
             $borrower->setFirstName($data['firstName']);
             $borrower->setLastName($data['lastName']);

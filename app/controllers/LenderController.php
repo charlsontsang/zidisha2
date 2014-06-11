@@ -47,11 +47,7 @@ class LenderController extends BaseController
         if ($form->isValid()) {
             $data = $form->getData();
             
-            $lender = LenderQuery::create()
-                ->useUserQuery()
-                    ->filterById(Auth::user()->getId())
-                ->endUse()
-                ->findOne();
+            $lender = Auth::user()->getLender();
 
             $lender->setFirstName($data['firstName']);
             $lender->setLastName($data['lastName']);
