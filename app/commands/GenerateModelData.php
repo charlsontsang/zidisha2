@@ -42,6 +42,7 @@ class GenerateModelData extends Command
                 $user->setUsername($userName);
                 $user->setPassword($password);
                 $user->setEmail($email);
+                $user->setRole('lender');
 
                 $firstName = 'lender' . $i;
                 $lastName = 'last' . $i;
@@ -70,6 +71,7 @@ class GenerateModelData extends Command
                 $user->setUsername($userName);
                 $user->setPassword($password);
                 $user->setEmail($email);
+                $user->setRole('borrower');
 
                 $firstName = 'borrower' . $i;
                 $lastName = 'last' . $i;

@@ -36,11 +36,16 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         My Account <b class="caret"></b>
                     </a>
+                    
                     <ul class="dropdown-menu">
+                        @if(Auth::getUser()->getRole() == 'lender')
                         <li><a href="{{ route('lender:public-profile') }}">View My Public Profile</a></li>
                         <li><a href="{{ route('lender:edit-profile') }}">Edit Profile</a></li>
-                        <li><a href="{{ route('borrower:public-profile') }}">View Borrower Public Profile</a></li>
-                        <li><a href="{{ route('borrower:edit-profile') }}">Edit Borrower Profile</a></li>
+                        @endif
+                        @if(Auth::getUser()->getRole() == 'borrower')
+                        <li><a href="{{ route('borrower:public-profile') }}">View Public Profile</a></li>
+                        <li><a href="{{ route('borrower:edit-profile') }}">Edit Profile</a></li>
+                        @endif
                     </ul>
                 </li>
                 @endif
