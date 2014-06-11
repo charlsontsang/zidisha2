@@ -62,6 +62,38 @@ ENV;
 
         exec('vendor/bin/propel config:convert-xml --output-dir="app/config/propel" --input-dir="app/config/propel"');
 
+
+        $dbContent = <<<ENV
+<?php
+
+return array(
+    'default' => 'pgsql',
+
+    'connections' => array(
+
+        'pgsql' => array(
+            'driver'   => 'pgsql',
+            'host'     => '{$databaseConfig['databaseHost']}',
+            'database' => '{$databaseConfig ['databaseName']}',
+            'username' => '{$databaseConfig['databaseUsername']}',
+            'password' => '{$databaseConfig ['databasePassword']}',
+            'charset'  => 'utf8',
+            'prefix'   => '',
+            'schema'   => 'public',
+        ),
+
+    ),
+
+);
+
+ENV;
+
+        if (!$file->isDirectory(base_path() . '/app/config/' . $environment)) {
+            $file->makeDirectory(base_path() . '/app/config/' . $environment);
+        }
+
+        $file->put(base_path() . '/app/config/' . $environment .'/database.php', $dbContent);
+
         $this->info('You are done.');
     }
 
