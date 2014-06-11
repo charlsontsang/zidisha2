@@ -52,7 +52,7 @@ class AuthController extends BaseController
 
         if ($user) {
             Auth::login($user);
-            return Redirect::route('home');
+            return Redirect::route('lender:public-profile');
         }
 
         Flash::error('Oops, something went wrong');

@@ -24,7 +24,8 @@ class UserService
         $user->setPassword($data['password']);
         $user->setEmail($data['email']);
         $user->setUsername($data['username']);
-        
+        $user->setRole('lender');
+
         return $user->save() ? $user : false;
     }
     
