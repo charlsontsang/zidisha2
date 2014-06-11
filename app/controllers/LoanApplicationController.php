@@ -34,18 +34,24 @@ class LoanApplicationController extends BaseController
         $state = 'complete';
         $this->steps = array();
         foreach ($steps as $step) {
-            if ($step == $routeStep && $state == 'disabled') {
-                // TODO redirect
-                Flash::error('Not Allowed');
-            }
-            if ($step == $currentStep) {
+            if ($step == $routeStep) {
+                if ($state == 'disabled') {
+                    Flash::error('Not Allowed');
+                    return Redirect::action('LoanApplicationController@getInstructions');
+                }
                 $class = 'active';
                 $state ='disabled';
-            } else {
+            }
+            if ($step == $currentStep && $state != 'disabled') {
+                $class = 'active';
+                $state ='disabled';
+            } elseif ($step != $routeStep) {
                 $class = $state;
             }
             $this->steps[$step] = ['class' => $class];
         }
+        
+        $this->setCurrentStep($routeStep);
     }
     
     protected function setCurrentStep($step)
