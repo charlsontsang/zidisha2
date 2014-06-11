@@ -1,6 +1,5 @@
 <?php
 use Zidisha\Borrower\Form\Loan\Profile;
-use Zidisha\Borrower\BorrowerQuery;
 
 class LoanApplicationController extends BaseController
 {
@@ -96,11 +95,7 @@ class LoanApplicationController extends BaseController
         if ($form->isValid()) {
             $data = $form->getData();
 
-            $borrower = BorrowerQuery::create()
-                ->useUserQuery()
-                ->filterById(Auth::user()->getId())
-                ->endUse()
-                ->findOne();
+            $borrower = Auth::user()->getBorrower();
 
             $borrower->getProfile()->setAboutMe($data['aboutMe']);
             $borrower->getProfile()->setAboutBusiness($data['aboutBusiness']);
