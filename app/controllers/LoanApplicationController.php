@@ -58,12 +58,12 @@ class LoanApplicationController extends BaseController
     {
         Session::set('loanapplication.currentStep', $step);
     }
-    
-    protected function stepView($step)
+
+    protected function stepView($step, $params = array())
     {
-        return View::make("borrower.loan.$step", ['steps' => $this->steps]);    
+        return View::make("borrower.loan.$step", ['steps' => $this->steps] + $params);
     }
-    
+
     public function getInstructions()
     {        
         return $this->stepView('instructions');
@@ -79,5 +79,16 @@ class LoanApplicationController extends BaseController
     public function getProfile()
     {
         return $this->stepView('profile');
+    }
+
+    public function postProfile(){
+        $this->setCurrentStep('profile');
+
+        return Redirect::action('LoanApplicationController@getApplication');
+    }
+
+    public function getApplication()
+    {
+        return $this->stepView('application');
     }
 }
