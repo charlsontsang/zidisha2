@@ -38,26 +38,11 @@ class PropelMigration_1402466270
     {
         return array (
   'zidisha' => '
-CREATE TABLE lenders
-(
-    id serial NOT NULL,
-    user_id INTEGER NOT NULL,
-    country_id INTEGER NOT NULL,
-    first_name VARCHAR(50) NOT NULL,
-    last_name VARCHAR(50) NOT NULL,
-    about_me TEXT,
-    created_at TIMESTAMP,
-    updated_at TIMESTAMP,
-    PRIMARY KEY (id)
-);
+ALTER TABLE lenders
 
-ALTER TABLE lenders ADD CONSTRAINT lenders_fk_69bd79
-    FOREIGN KEY (user_id)
-    REFERENCES users (id);
+  ADD created_at TIMESTAMP,
 
-ALTER TABLE lenders ADD CONSTRAINT lenders_fk_b1f482
-    FOREIGN KEY (country_id)
-    REFERENCES countries (id);
+  ADD updated_at TIMESTAMP;
 ',
 );
     }
@@ -72,7 +57,11 @@ ALTER TABLE lenders ADD CONSTRAINT lenders_fk_b1f482
     {
         return array (
   'zidisha' => '
-DROP TABLE IF EXISTS lenders CASCADE;
+ALTER TABLE lenders
+
+  DROP COLUMN created_at,
+
+  DROP COLUMN updated_at;
 ',
 );
     }
