@@ -53,13 +53,17 @@ Route::controller('password', 'RemindersController', ['before' => 'csrf']);
 /**
  * Routes for lender page
  */
-Route::get('lender/profile', array('uses' => 'LenderController@getPublicProfile', 'as' => 'lender:public-profile', 'before' => 'auth|hasRole:lender'));
-Route::get('lender/profile/edit', array('uses' => 'LenderController@getEditProfile', 'as' => 'lender:edit-profile'));
-Route::post('lender/profile/edit', array('uses' => 'LenderController@postEditProfile', 'as' => 'lender:post-profile', 'before' => 'csrf'));
-
+Route::group(array('prefix' => 'lender', 'before' => 'auth|hasRole:lender'), function()
+    {
+        Route::get('profile', array('uses' => 'LenderController@getPublicProfile', 'as' => 'lender:public-profile', 'before' => 'auth|hasRole:lender'));
+        Route::get('profile/edit', array('uses' => 'LenderController@getEditProfile', 'as' => 'lender:edit-profile'));
+        Route::post('profile/edit', array('uses' => 'LenderController@postEditProfile', 'as' => 'lender:post-profile', 'before' => 'csrf'));
+    });
+    
 /**
  * Routes for borrower page
  */
 Route::get('borrower/profile', array('uses' => 'BorrowerController@getPublicProfile', 'as' => 'borrower:public-profile'));
 Route::get('borrower/profile/edit', array('uses' => 'BorrowerController@getEditProfile', 'as' => 'borrower:edit-profile'));
 Route::post('borrower/profile/edit', array('uses' => 'BorrowerController@postEditProfile', 'as' => 'borrower:post-profile', 'before' => 'csrf'));
+
