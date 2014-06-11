@@ -94,4 +94,15 @@
             <reference local="country_id" foreign="id"/>
         </foreign-key>
     </table>
+
+    <table name="borrower_profiles" phpName="Profile" namespace="Borrower">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="borrower_id" type="INTEGER" required="true"/>
+        <column name="about_me" type="LONGVARCHAR" />
+        <column name="about_business " type="LONGVARCHAR" />
+        <behavior name="timestampable" />
+        <foreign-key foreignTable="borrowers">
+            <reference local="borrower_id" foreign="id"/>
+        </foreign-key>
+    </table>
 </database>

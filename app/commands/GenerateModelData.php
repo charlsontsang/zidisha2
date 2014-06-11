@@ -79,7 +79,12 @@ class GenerateModelData extends Command
                 $borrower->setLastName($lastName);
                 $borrower->setCountryId($countryId);
                 $borrower->setUser($user);
-                $borrower->save();
+
+                $profile = new \Zidisha\Borrower\Profile();
+                $profile->setAboutMe($aboutMe);
+                $profile->setAboutBusiness($aboutMe);
+                $profile->setBorrower($borrower);
+                $profile->save();
 
             }
         }
