@@ -107,7 +107,7 @@ class LoanApplicationController extends BaseController
 
             $borrower->save();
 
-            $this->setCurrentStep('profile');
+            $this->setCurrentStep('application');
 
             return Redirect::action('LoanApplicationController@getApplication');
         }
