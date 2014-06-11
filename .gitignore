@@ -21,3 +21,6 @@ Thumbs.db
 
 /bootstrap/env.php
 _ide_helper.php
+
+#Ignore Database Credentials
+/app/config/local/database.php
