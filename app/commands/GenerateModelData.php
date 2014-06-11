@@ -57,6 +57,31 @@ class GenerateModelData extends Command
                 $lender->save();
 
             }
+
+            if ($model == "Borrower") {
+
+                $userName = 'borrower' . $i;
+                $password = '1234567890';
+                $email = 'borrower' . $i . '@mail.com';
+
+                $user = new \Zidisha\User\User();
+                $user->setUsername($userName);
+                $user->setPassword($password);
+                $user->setEmail($email);
+
+                $firstName = 'borrower' . $i;
+                $lastName = 'last' . $i;
+                $aboutMe = "Hi, i'm a borrower" . $i . "!";
+                $countryId = 1;
+
+                $borrower = new \Zidisha\Borrower\Borrower();
+                $borrower->setFirstName($firstName);
+                $borrower->setLastName($lastName);
+                $borrower->setCountryId($countryId);
+                $borrower->setUser($user);
+                $borrower->save();
+
+            }
         }
     }
 
