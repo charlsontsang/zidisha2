@@ -2,10 +2,11 @@
 
 namespace Zidisha\User;
 
-use Zidisha\User\Base\User as BaseUser;
 use Illuminate\Auth\Reminders\RemindableInterface;
 use Illuminate\Auth\UserInterface;
 use Propel\Runtime\Connection\ConnectionInterface;
+use Zidisha\User\Base\User as BaseUser;
+use Zidisha\User\Exceptions\InvalidUserRoleException;
 
 class User extends BaseUser implements UserInterface, RemindableInterface
 {
@@ -58,5 +59,23 @@ class User extends BaseUser implements UserInterface, RemindableInterface
     public function getReminderEmail()
     {
         return $this->getEmail();
+    }
+
+    public function getLender(ConnectionInterface $con = null)
+    {
+        if ($this->getRole() != 'lender') {
+            throw new InvalidUserRoleException;
+        }
+
+        return parent::getLender($con);
+    }
+
+    public function getBorrower(ConnectionInterface $con = null)
+    {
+        if ($this->getRole() != 'borrower') {
+            throw new InvalidUserRoleException;
+        }
+
+        return parent::getBorrower($con);
     }
 }
