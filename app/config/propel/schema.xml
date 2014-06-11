@@ -71,6 +71,7 @@
         <column name="first_name" type="VARCHAR" size="50" required="true" />
         <column name="last_name" type="VARCHAR" size="50" required="true" />
         <column name="about_me" type="LONGVARCHAR" />
+        <behavior name="timestampable" />
         <foreign-key foreignTable="users">
             <reference local="user_id" foreign="id"/>
         </foreign-key>

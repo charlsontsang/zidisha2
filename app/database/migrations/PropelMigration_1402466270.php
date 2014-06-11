@@ -2,10 +2,10 @@
 
 /**
  * Data object containing the SQL and PHP code to migrate the database
- * up to version 1402032132.
- * Generated on 2014-06-06 05:22:12 by vagrant
+ * up to version 1402466270.
+ * Generated on 2014-06-11 05:57:50 by vagrant
  */
-class PropelMigration_1402032132
+class PropelMigration_1402466270
 {
 
     public function preUp($manager)
@@ -46,8 +46,18 @@ CREATE TABLE lenders
     first_name VARCHAR(50) NOT NULL,
     last_name VARCHAR(50) NOT NULL,
     about_me TEXT,
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP,
     PRIMARY KEY (id)
 );
+
+ALTER TABLE lenders ADD CONSTRAINT lenders_fk_69bd79
+    FOREIGN KEY (user_id)
+    REFERENCES users (id);
+
+ALTER TABLE lenders ADD CONSTRAINT lenders_fk_b1f482
+    FOREIGN KEY (country_id)
+    REFERENCES countries (id);
 ',
 );
     }
