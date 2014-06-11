@@ -1,13 +1,17 @@
 <?php
+use Zidisha\Borrower\Form\Loan\Profile;
 
 class LoanApplicationController extends BaseController
 {
 
     protected $steps = array();
 
-    public function __construct()
+    private $editForm;
+
+    public function __construct(Profile $form )
     {
         $this->beforeFilter('@validateSteps');
+        $this->editForm = $form;
     }
     
     protected function getStepFromRoute($route)
@@ -58,12 +62,12 @@ class LoanApplicationController extends BaseController
     {
         Session::set('loanapplication.currentStep', $step);
     }
-    
-    protected function stepView($step)
+
+    protected function stepView($step, $params = array())
     {
-        return View::make("borrower.loan.$step", ['steps' => $this->steps]);    
+        return View::make("borrower.loan.$step", ['steps' => $this->steps] + $params);
     }
-    
+
     public function getInstructions()
     {        
         return $this->stepView('instructions');
@@ -78,6 +82,37 @@ class LoanApplicationController extends BaseController
 
     public function getProfile()
     {
-        return $this->stepView('profile');
+
+
+        return $this->stepView('profile', ['form' => $this->editForm,]);
+    }
+
+    public function postProfile(){
+
+        $form = $this->editForm;
+        $form->handleRequest(Request::instance());
+
+        if ($form->isValid()) {
+            $data = $form->getData();
+
+            $borrower = Auth::user()->getBorrower();
+
+            $borrower->getProfile()->setAboutMe($data['aboutMe']);
+            $borrower->getProfile()->setAboutBusiness($data['aboutBusiness']);
+
+            $borrower->save();
+
+            $this->setCurrentStep('application');
+
+            return Redirect::action('LoanApplicationController@getApplication');
+        }
+
+        return Redirect::action('LoanApplicationController@getProfile')->withForm($form);
+
+}
+
+    public function getApplication()
+    {
+        return $this->stepView('application');
     }
 }
