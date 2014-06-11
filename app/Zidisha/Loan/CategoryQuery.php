@@ -2,7 +2,7 @@
 
 namespace Zidisha\Loan;
 
-use Zidisha\Loan\Base\LoanCategoryQuery as BaseLoanCategoryQuery;
+use Zidisha\Loan\Base\CategoryQuery as BaseCategoryQuery;
 
 
 /**
@@ -15,7 +15,7 @@ use Zidisha\Loan\Base\LoanCategoryQuery as BaseLoanCategoryQuery;
  * long as it does not already exist in the output directory.
  *
  */
-class LoanCategoryQuery extends BaseLoanCategoryQuery
+class CategoryQuery extends BaseCategoryQuery
 {
 
-} // LoanCategoryQuery
+} // CategoryQuery
