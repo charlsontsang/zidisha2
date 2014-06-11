@@ -29,16 +29,18 @@ Route::get('press', array('uses' => 'PageController@getPress', 'as' => 'page:pre
  * Routes for Authentication
  */
 Route::get('/join', array('uses' => 'AuthController@getJoin', 'as' => 'join'));
-Route::post('/join', array('uses' => 'AuthController@postJoin', 'before' => 'csrf'));
+Route::get('lender/join', array('uses' => 'LenderJoinController@getJoin', 'as' => 'lender:join'));
+Route::post('lender/join', array('uses' => 'LenderJoinController@postJoin', 'before' => 'csrf'));
+
+Route::get('lender/facebook/join', array('uses' => 'LenderJoinController@getFacebookJoin', 'as' => 'lender:facebook-join'));
+Route::post('lender/facebook/join', array('uses' => 'LenderJoinController@postFacebookJoin'));
 
 Route::get('/login', array('uses' => 'AuthController@getLogin', 'as' => 'login'));
 Route::post('/login', array('uses' => 'AuthController@postLogin', 'before' => 'csrf'));
+Route::get('facebook/login', array('uses' => 'AuthController@getFacebookLogin', 'as' => 'facebook:login'));
+
 
 Route::get('/logout', array('uses' => 'AuthController@getLogout', 'as' => 'logout'));
-
-Route::get('auth/facebook/join', array('uses' => 'AuthController@getFacebookJoin', 'as' => 'facebook:join'));
-Route::get('auth/facebook/login', array('uses' => 'AuthController@getFacebookLogin', 'as' => 'facebook:login'));
-Route::post('auth/facebook/confirm', array('uses' => 'AuthController@postFacebookConfirm', 'as' => 'facebook:confirm'));
 
 /**
  * Routes for lend page

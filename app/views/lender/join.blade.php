@@ -7,7 +7,7 @@
             <a href="{{$facebookJoinUrl}}" class="btn btn-lg btn-primary">Join with facebook</a>
         </div>
 
-        {{ BootstrapForm::open(array('url' => 'join', 'translationDomain' => 'join.form')) }}
+        {{ BootstrapForm::open(array('route' => 'lender:join', 'translationDomain' => 'join.form')) }}
         {{ BootstrapForm::populate($form) }}
         
         {{ BootstrapForm::text('username') }}

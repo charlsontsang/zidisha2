@@ -5,7 +5,7 @@
     <div class="col-md-offset-3 col-md-6">
         <h2>Complete signup</h2>
 
-        {{ BootstrapForm::open(['url' => route('facebook:confirm'), 'translationDomain' => 'join.facebook']) }}
+        {{ BootstrapForm::open(['url' => route('lender:facebook-join'), 'translationDomain' => 'join.facebook']) }}
         
         {{ BootstrapForm::text('username') }}
         {{ BootstrapForm::textarea('aboutMe') }}

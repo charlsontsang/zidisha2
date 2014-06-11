@@ -1,10 +1,6 @@
 <?php
 
-use Zidisha\Auth\Form\Join;
-use Zidisha\Lender\Lender;
-use Zidisha\User\User;
 use Zidisha\User\UserQuery;
-use Zidisha\User\UserService;
 use Zidisha\Vendor\Facebook\FacebookService;
 
 class AuthController extends BaseController
@@ -14,49 +10,10 @@ class AuthController extends BaseController
      * @var Zidisha\Vendor\Facebook\FacebookService
      */
     private $facebookService;
-    
-    /**
-     * @var Zidisha\User\UserService
-     */
-    private $userService;
-    /**
-     * @var Zidisha\Auth\Form\Join
-     */
-    private $joinForm;
 
-    public function __construct(FacebookService $facebookService, UserService $userService, Join $joinForm)
+    public function __construct(FacebookService $facebookService)
     {
         $this->facebookService = $facebookService;
-        $this->userService = $userService;
-        $this->joinForm = $joinForm;
-    }
-    
-    public function getJoin()
-    {        
-        return View::make('auth.join', [
-            'form' => $this->joinForm,
-            'facebookJoinUrl' => $this->facebookService->getLoginUrl('facebook:join'),
-        ]);
-    }
-
-    public function postJoin()
-    {
-        $form = $this->joinForm;
-        $form->handleRequest(Request::instance());
-
-        if (!$form->isValid()) {
-            return Redirect::to('join')->withForm($form);
-        }
-
-        $user = $this->userService->joinUser($form->getData());
-
-        if ($user) {
-            Auth::login($user);
-            return Redirect::route('lender:dashboard');
-        }
-
-        Flash::error('Oops, something went wrong');
-        return Redirect::to('join')->withInput();
     }
 
     public function getLogin()
@@ -93,61 +50,6 @@ class AuthController extends BaseController
         return Redirect::route('home');
     }
 
-    public function getFacebookJoin()
-    {
-        $facebookUser = $this->getFacebookUser();
-
-        if ($facebookUser) {
-            return View::make('auth.confirm');
-        }
-
-        Flash::error('No Facebook account connected.'); 
-        return Redirect::to('join');
-    }
-
-    public function postFacebookConfirm()
-    {
-        $facebookUser = $this->getFacebookUser();
-
-        if ($facebookUser) {
-            $form = $this->joinForm;
-            $form->setFacebookJoin(true);
-            $form->handleRequest(Request::instance());
-
-            if (!$form->isValid()) {
-                return Redirect::route('facebook:join')->withForm($form);
-            }
-
-            $this->userService->joinFacebookUser($facebookUser, $form->getData());
-
-            Flash::success('You have successfully joined Zidisha.');
-            return Redirect::to('login');
-        } else {
-            Flash::error('No Facebook account connected.');
-            return Redirect::to('join');
-        }
-    }
-
-    private function getFacebookUser()
-    {
-        $facebookUser = $this->facebookService->getUserProfile();
-        
-        if ($facebookUser) {
-            $errors = $this->userService->validateConnectingFacebookUser($facebookUser);
-
-            if ($errors) {
-                foreach ($errors as $error) {
-                    Flash::error($error);
-                }
-                return Redirect::to('join');
-            }
-
-            return $facebookUser;
-        }
-        
-        return false;
-    }
-
     public function getFacebookLogin()
     {
         $facebookUserId = $this->facebookService->getUserId();
@@ -160,15 +62,19 @@ class AuthController extends BaseController
             if ($checkUser) {
                 Auth::loginUsingId($checkUser->getId());
             } else {
-                return Redirect::to('login')->with(
-                    'error',
-                    'You are not registered to use Facebook. Please sign up with Facebook first.'
-                );
+                Flash::error('You are not registered to use Facebook. Please sign up with Facebook first.');
+                return Redirect::to('login');
             }
 
             return Redirect::route('home');
         } else {
             return Redirect::to('login');
         }
+    }
+
+    public function getJoin()
+    {
+        // TODO
+        return Redirect::route('lender:join');
     }
 }
