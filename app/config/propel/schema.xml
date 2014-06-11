@@ -10,9 +10,15 @@
         <column name="remember_token " type="VARCHAR" size="100" required="false" />
         <column name="last_login_at" type="TIMESTAMP" required="true" />
         <behavior name="timestampable" />
+        <unique>
+            <unique-column name="username" />
+        </unique>
+        <unique>
+            <unique-column name="email"></unique-column>
+        </unique>
     </table>
 
-    <table name="loan_categories" phpName="LoanCategory" namespace="Loan">
+    <table name="loan_categories" phpName="Category" namespace="Loan">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="name" type="VARCHAR" size="100" required="true"/>
         <column name="what_description" type="LONGVARCHAR" required="false"/>
