@@ -39,6 +39,8 @@
                     <ul class="dropdown-menu">
                         <li><a href="{{ route('lender:public-profile') }}">View My Public Profile</a></li>
                         <li><a href="{{ route('lender:edit-profile') }}">Edit Profile</a></li>
+                        <li><a href="{{ route('borrower:public-profile') }}">View Borrower Public Profile</a></li>
+                        <li><a href="{{ route('borrower:edit-profile') }}">Edit Borrower Profile</a></li>
                     </ul>
                 </li>
                 @endif
