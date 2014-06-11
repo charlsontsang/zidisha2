@@ -70,4 +70,8 @@ class LenderController extends BaseController
 
         return Redirect::route('lender:edit-profile')->withForm($form);
     }
+
+    public function getDashboard(){
+        return View::make('lender.dashboard');
+    }
 }

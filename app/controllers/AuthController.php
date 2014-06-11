@@ -52,7 +52,7 @@ class AuthController extends BaseController
 
         if ($user) {
             Auth::login($user);
-            return Redirect::route('lender:public-profile');
+            return Redirect::route('lender:dashboard');
         }
 
         Flash::error('Oops, something went wrong');
@@ -72,7 +72,12 @@ class AuthController extends BaseController
         $credentials = Input::only('username', 'password');
         
         if (Auth::attempt($credentials, $rememberMe)) {
-            return Redirect::route('home');
+            if (Auth::getUser()->getRole() == 'lender'){
+                return Redirect::route('lender:dashboard');
+            }
+            if(Auth::getUser()->getRole() == 'borrower'){
+                return Redirect::route('borrower:dashboard');
+            }
         }
 
         Flash::error("Wrong username or password!");
