@@ -68,4 +68,8 @@ class BorrowerController extends BaseController
 
         return Redirect::route('borrower:edit-profile')->withForm($form);
     }
+
+    public function getDashboard(){
+        return View::make('borrower.dashboard');
+    }
 }
