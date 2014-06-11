@@ -5,8 +5,6 @@ namespace Zidisha\Borrower\Form\Loan;
 
 use Illuminate\Support\Facades\Auth;
 use Zidisha\Form\AbstractForm;
-use Zidisha\Borrower\Base\ProfileQuery;
-use Zidisha\Borrower\BorrowerQuery;
 
 class Profile extends AbstractForm
 {
@@ -21,11 +19,7 @@ class Profile extends AbstractForm
 
     public function getDefaultData()
     {
-        $borrower = BorrowerQuery::create()
-            ->useUserQuery()
-            ->filterById(\Auth::user()->getId())
-            ->endUse()
-            ->findOne();
+        $borrower = Auth::user()->getId()->getBorrower();
 
         return [
             'aboutMe'       => $borrower->getProfile()->getAboutMe(),
