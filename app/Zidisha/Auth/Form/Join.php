@@ -29,12 +29,12 @@ class Join extends AbstractForm
     public function getRules($data)
     {
         $rules = [
-            'username' => 'required|max:20',
+            'username' => 'required|max:20|unique:users,username',
         ];
         
         if (!$this->isFacebookJoin()) {
             $rules += [
-                'email'    => 'required|email',
+                'email'    => 'required|email|unique:users,email',
                 'password' => 'required|confirmed'
             ];
         } else {

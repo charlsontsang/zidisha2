@@ -8,7 +8,7 @@ class LendController extends BaseController
     protected $loanQuery;
 
     public function  __construct(
-        Zidisha\Loan\LoanCategoryQuery $loanCategoryQuery,
+        Zidisha\Loan\CategoryQuery $loanCategoryQuery,
         Zidisha\Country\CountryQuery $countryQuery,
         Zidisha\Loan\LoanQuery $loanQuery
     ) {
