@@ -25,11 +25,7 @@ class EditProfile extends AbstractForm
 
     public function getDefaultData()
     {
-        $lender = LenderQuery::create()
-            ->useUserQuery()
-            ->filterById(\Auth::user()->getId())
-            ->endUse()
-            ->findOne();
+        $lender = \Auth::user()->getLender();
         
         return [
             'username'  => $lender->getUser()->getUsername(),
