@@ -2,6 +2,7 @@
 
 use Zidisha\Lender\Form\EditProfile;
 use Zidisha\Lender\LenderQuery;
+use Zidisha\Lender\ProfileQuery;
 
 class LenderController extends BaseController
 {
@@ -56,7 +57,7 @@ class LenderController extends BaseController
             $lender->setLastName($data['lastName']);
             $lender->getUser()->setEmail($data['email']);
             $lender->getUser()->setUsername($data['username']);
-            $lender->setAboutMe($data['aboutMe']);
+            $lender->getProfile()->setAboutMe($data['aboutMe']);
 
             if (!empty($data['password'])) {
                 $lender->getUser()->setPassword($data['password']);
