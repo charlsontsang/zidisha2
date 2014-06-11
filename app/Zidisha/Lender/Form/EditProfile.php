@@ -3,7 +3,9 @@
 namespace Zidisha\Lender\Form;
 
 
+use Illuminate\Support\Facades\Auth;
 use Zidisha\Form\AbstractForm;
+use Zidisha\Lender\Base\ProfileQuery;
 use Zidisha\Lender\LenderQuery;
 
 class EditProfile extends AbstractForm
@@ -34,7 +36,7 @@ class EditProfile extends AbstractForm
             'firstName' => $lender->getFirstName(),
             'lastName'  => $lender->getLastName(),
             'email'     => $lender->getUser()->getEmail(),
-            'aboutMe'   => $lender->getAboutMe(),
+            'aboutMe'   => $lender->getProfile()->getAboutMe(),
         ];
     }
 }

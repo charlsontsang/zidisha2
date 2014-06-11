@@ -51,11 +51,13 @@ class GenerateModelData extends Command
                 $lender = new \Zidisha\Lender\Lender();
                 $lender->setFirstName($firstName);
                 $lender->setLastName($lastName);
-                $lender->setAboutMe($aboutMe);
                 $lender->setCountryId($countryId);
                 $lender->setUser($user);
-                $lender->save();
 
+                $lender_profile = new \Zidisha\Lender\Profile();
+                $lender_profile->setAboutMe($aboutMe);
+                $lender_profile->setLender($lender);
+                $lender_profile->save();
             }
 
             if ($model == "Borrower") {
@@ -80,11 +82,11 @@ class GenerateModelData extends Command
                 $borrower->setCountryId($countryId);
                 $borrower->setUser($user);
 
-                $profile = new \Zidisha\Borrower\Profile();
-                $profile->setAboutMe($aboutMe);
-                $profile->setAboutBusiness($aboutMe);
-                $profile->setBorrower($borrower);
-                $profile->save();
+                $borrower_profile = new \Zidisha\Borrower\Profile();
+                $borrower_profile->setAboutMe($aboutMe);
+                $borrower_profile->setAboutBusiness($aboutMe);
+                $borrower_profile->setBorrower($borrower);
+                $borrower_profile->save();
 
             }
         }
