@@ -24,25 +24,33 @@ class LendController extends BaseController
             ->orderByRank()
             ->find();
 
-        $loanCategoryId = Request::query('loan_category_id');
-        // TODO
-        $selectedLoanCategory = $this->loanCategoryQuery
-            ->findOneById($loanCategoryId);
-
         //for countries
         $countries = $this->countryQuery
             ->orderByName()
             ->find();
 
+        //for loans
+        $loanQuery = $this->loanQuery->orderBySummary();
+
+        $loanCategoryId = Request::query('loan_category_id');
+        $selectedLoanCategory = $this->loanCategoryQuery
+            ->findOneById($loanCategoryId);
+
+        if ($selectedLoanCategory) {
+            $loanQuery->filterByLoanCategoryId($loanCategoryId);
+        }
+
         $countryId = Request::query('country_id');
-        // TODO
         $selectedCountry = $this->countryQuery->findOneById($countryId);
 
-        //for loans
-        $loans = $this->loanQuery
-            ->orderBySummary()
-            ->filterByLoanCategoryId($loanCategoryId)
-            ->find();
+        if($selectedCountry){
+            $loanQuery
+                ->useBorrowerQuery()
+                    ->filterByCountryId($countryId)
+                ->endUse();
+        }
+
+        $loans = $loanQuery->find();
 
         return View::make(
             'pages.lend',
