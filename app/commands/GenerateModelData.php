@@ -3,6 +3,7 @@
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
+use Zidisha\Country\Country;
 
 class GenerateModelData extends Command
 {
@@ -30,6 +31,18 @@ class GenerateModelData extends Command
     {
         $model = $this->argument('model');
         $size = $this->argument('size');
+        $countries = [
+          ['Bolivia', 'SA', 'BO', '591', 't'],
+          ['Paraguay', 'SA', 'PY', '595', 't'],
+          ['Guyana', 'SA', 'GY', '592', 't'],
+          ['French Guiana', 'SA', 'GF', '594'],
+          ['Falkland Islands', 'SA', 'FK'],
+          ['Equador', 'SA', 'EC', null, 't'],
+          ['Colombia', 'SA', 'CO', '57', 't'],
+          ['Chile', 'SA', 'CL', '56', 't'],
+          ['Brazil', 'SA', 'BR', '55', 't'],
+          ['Argentina', 'SA', 'AR', '54', 't'],
+        ];
 
         for ($i = 1; $i <= $size; $i++) {
             if ($model == "Lender") {
@@ -90,6 +103,23 @@ class GenerateModelData extends Command
                 $borrower_profile->setBorrower($borrower);
                 $borrower_profile->save();
 
+            }
+
+            if($model == "Country"){
+
+                $oneCountry = $countries[$i-1];
+
+                $country = new Country();
+                $country->setName($oneCountry[0]);
+                $country->setContinentCode($oneCountry[1]);
+                $country->setContinentCode($oneCountry[2]);
+                $country->setDialingCode($oneCountry[3]);
+                $country->setEnabled($oneCountry[4]);
+                $country->save();
+
+                if ($i==9) {
+                    exit();
+                }
             }
         }
     }
