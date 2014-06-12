@@ -77,3 +77,8 @@ Route::group(array('prefix' => 'borrower', 'before' => 'auth|hasRole:borrower'),
         Route::get('dashboard', array('uses' => 'BorrowerController@getDashboard', 'as' => 'borrower:dashboard'));
         Route::controller('loan-application', 'LoanApplicationController');
     });
+
+/**
+ * Routes for loan page
+ */
+Route::get('loan', array('uses' => 'LoanController@getIndex', 'as' => 'loan:index'));

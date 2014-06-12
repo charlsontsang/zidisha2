@@ -69,7 +69,7 @@
         @foreach($loans as $loan)
         <ul class="list-unstyled">
             <li>
-                <h2>{{ $loan->getSummary() }}</h2>
+                <a href="{{ route('loan:index') }}?loan_id={{ $loan->getId() }}"><h2>{{ $loan->getSummary() }}</h2></a>
                 <p>{{ $loan->getDescription() }}</p>
                 <strong>@lang('lend.loan.amount'): </strong> {{ $loan->getAmount() }} USD
                 <strong>@lang('lend.loan.interest-rate'): </strong> {{ $loan->getInterestRate() }} %
