@@ -4,10 +4,32 @@
 
 @include('borrower.loan.partials.application-steps')
 
- Application page dude
 <div class="row">
-    <div class="col-md-5 col-md-push-7">
-       Application page dude
+    {{ BootstrapForm::open(array('controller' => 'LoanApplicationController@postApplication', 'translationDomain' => 'borrower.loan-application-page')) }}
+    {{ BootstrapForm::populate($form) }}
+
+    {{ BootstrapForm::text('title') }}
+
+    {{ BootstrapForm::textarea('proposal') }}
+
+    {{ BootstrapForm::select('categoryId', $form->getCategories()) }}
+
+    {{ BootstrapForm::text('amount') }}
+
+    {{ BootstrapForm::text('installmentAmount') }}
+
+    {{ BootstrapForm::select('installmentDay', $form->getDays()) }}
+
+    <div class="col-md-7">
+        <a href="{{ action('LoanApplicationController@getProfile') }}" class="btn btn-primary">
+            Previous
+        </a>
+    </div>
+    <div class="col-md-5">
+
+        {{ BootstrapForm::submit('save') }}
+
+        {{ BootstrapForm::close() }}
     </div>
 </div>
 @stop
