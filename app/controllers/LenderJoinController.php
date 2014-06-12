@@ -113,5 +113,4 @@ class LenderJoinController extends BaseController
 
         return false;
     }
-
-} 
+}

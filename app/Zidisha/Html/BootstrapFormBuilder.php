@@ -197,6 +197,8 @@ class BootstrapFormBuilder
      */
     public function submit($value = null, $options = [])
     {
+        $options = ['name' => $value] + $options;
+
         $value = $this->translationDomain ? $this->translationDomain . '.' . $value : $value;
         $options = array_merge(['class' => 'btn btn-primary'], $options);
 
