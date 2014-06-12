@@ -19,7 +19,7 @@ class Profile extends AbstractForm
 
     public function getDefaultData()
     {
-        $borrower = Auth::user()->getId()->getBorrower();
+        $borrower = Auth::user()->getBorrower();
 
         return [
             'aboutMe'       => $borrower->getProfile()->getAboutMe(),

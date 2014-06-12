@@ -128,6 +128,21 @@ class BootstrapFormBuilder
         return $this->input('textarea', $name, $value, $options);
     }
 
+    public function select($name, $list = [], $selected = null, $options = []){
+        $label = array_get($options, 'label', $this->translationDomain ? $this->translationDomain . '.' . $name : $name);
+        unset($options['label']);
+        $label = \Lang::get($label);
+
+        $options = $this->getFieldOptions($options);
+        $wrapperOptions = ['class' => $this->getRightColumnClass()];
+
+        $inputElement = $this->form->select($name, $list, $selected, $options);
+
+        $groupElement = '<div '.$this->html->attributes($wrapperOptions).'>'.$inputElement.$this->getFieldError($name).'</div>';
+
+        return $this->getFormGroup($name, $label, $groupElement);
+    }
+
     /**
      * Create a Bootstrap password field input.
      *

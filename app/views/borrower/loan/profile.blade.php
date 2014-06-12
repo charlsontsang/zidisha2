@@ -12,7 +12,7 @@
 
     {{ BootstrapForm::textarea('aboutBusiness') }}
     <div class="col-md-7">
-        <a href="#" class="btn btn-primary">
+        <a href="{{ action('LoanApplicationController@getInstructions') }}" class="btn btn-primary">
             Previous
         </a>
     </div>
