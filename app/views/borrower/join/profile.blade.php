@@ -5,6 +5,7 @@
 
 {{ BootstrapForm::populate($form) }}
 
+{{ BootstrapForm::text('username') }}
 {{ BootstrapForm::text('first_name') }}
 {{ BootstrapForm::text('last_name') }}
 {{ BootstrapForm::text('email') }}

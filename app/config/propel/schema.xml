@@ -107,8 +107,8 @@
 
     <table name="borrower_profiles" phpName="Profile" namespace="Borrower">
         <column name="borrower_id" type="INTEGER" primaryKey="true"/>
-        <column name="about_me" type="LONGVARCHAR" />
-        <column name="about_business " type="LONGVARCHAR" />
+        <column name="about_me" type="LONGVARCHAR" required="false"/>
+        <column name="about_business " type="LONGVARCHAR" required="false"/>
         <behavior name="timestampable" />
         <foreign-key foreignTable="borrowers">
             <reference local="borrower_id" foreign="id"/>

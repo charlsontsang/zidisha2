@@ -44,9 +44,9 @@ class BorrowerJoinController extends BaseController
             ->find();
 
         foreach ($countries as $country) {
-            if ($inputCountry == $country->getCountryCode()) {
+            if ($inputCountry == $country->getId()) {
                 $isCountryValid = true;
-                Session::put('BorrowerJoin.Country', $country->getCountryCode());
+                Session::put('BorrowerJoin.country', $country->getId());
             }
         }
 
@@ -88,9 +88,8 @@ class BorrowerJoinController extends BaseController
                 return Redirect::action('BorrowerJoinController@getFacebook');
             }
 
-//            dd($facebookUser['id']);
-
-//            TODO
+            Session::put('BorrowerJoin.facebook_id', $facebookUser['id']);
+            Session::put('BorrowerJoin.email', $facebookUser['email']);
 
             $this->setCurrentStep('profile');
             return Redirect::action('BorrowerJoinController@getProfile');
@@ -102,10 +101,10 @@ class BorrowerJoinController extends BaseController
 
     public function getProfile()
     {
-
+        $email = Session::get('BorrowerJoin.email');
         return View::make(
             'borrower.join.profile',
-            ['form' => $this->joinForm,]
+            ['form' => $this->joinForm,'email' => $email]
         );
     }
 
@@ -113,6 +112,40 @@ class BorrowerJoinController extends BaseController
     {
         if (Input::has('submit')) {
 
+            $form = $this->joinForm;
+            $form->handleRequest(Request::instance());
+
+            if ($form->isValid()) {
+                $data = $form->getData();
+
+                $data = array_merge($data, Session::get('BorrowerJoin'));
+
+                $user = new Zidisha\User\User();
+                $user->setUsername($data['username']);
+                $user->setEmail($data['email']);
+                $user->setFacebookId($data['facebook_id']);
+                $user->setRole('borrower');
+
+
+                $borrower = new Zidisha\Borrower\Borrower();
+                $borrower->setFirstName($data['first_name']);
+                $borrower->setLastName($data['last_name']);
+                $borrower->setCountryId($data['country']);
+                $borrower->setUser($user);
+
+                $borrowerProfile = new Zidisha\Borrower\Profile();
+                $borrowerProfile->setBorrower($borrower);
+                $borrowerProfile->save();
+
+                $this->flushStepsSession();
+                Session::forget('BorrowerJoin');
+
+                Auth::login($user);
+
+                return  Redirect::route('borrower:dashboard');
+            }
+
+            return Redirect::action('BorrowerJoinController@getProfile')->withForm($form);
         }
 
         if (Input::has('save_later')) {
@@ -128,16 +161,11 @@ class BorrowerJoinController extends BaseController
 
     private function getEnabledCountries()
     {
-        $countryData = array();
         $countries = \Zidisha\Country\CountryQuery::create()
             ->filterByEnabled(1)
             ->find();
 
-        foreach ($countries as $country) {
-            $countryData[$country->getCountryCode()] = $country->getName();
-        }
-
-        return $countryData;
+        return $countries->toKeyValue('id', 'name');
     }
 
     private function getFacebookUser()
