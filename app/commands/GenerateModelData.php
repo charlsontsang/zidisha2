@@ -4,6 +4,7 @@ use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Zidisha\Country\Country;
+use Zidisha\Loan\Category;
 
 class GenerateModelData extends Command
 {
@@ -43,6 +44,7 @@ class GenerateModelData extends Command
           ['Brazil', 'SA', 'BR', '55', 't'],
           ['Argentina', 'SA', 'AR', '54', 't'],
         ];
+        $categories = include(app_path() . '/database/LoanCategories.php');
 
         for ($i = 1; $i <= $size; $i++) {
             if ($model == "Lender") {
@@ -118,6 +120,23 @@ class GenerateModelData extends Command
                 $country->save();
 
                 if ($i==9) {
+                    exit();
+                }
+            }
+
+            if($model == "Category"){
+
+                $oneCategory = $categories[$i-1];
+
+                $category = new Category();
+                $category->setName($oneCategory[0]);
+                $category->setWhatDescription($oneCategory[1]);
+                $category->setWhyDescription($oneCategory[2]);
+                $category->setHowDescription($oneCategory[3]);
+                $category->setAdminOnly($oneCategory[4]);
+                $category->save();
+
+                if($i==17){
                     exit();
                 }
             }
