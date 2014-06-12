@@ -84,6 +84,8 @@ class LenderJoinController extends BaseController
             
             $this->userService->joinFacebookUser($facebookUser, $form->getData());
 
+            \Auth::loginUsingId($user->getId());
+
             Flash::success('You have successfully joined Zidisha.');
             return Redirect::route('login');
         } else {
@@ -103,7 +105,7 @@ class LenderJoinController extends BaseController
                 foreach ($errors as $error) {
                     Flash::error($error);
                 }
-                return Redirect::route('lender:join');
+                return false;
             }
 
             return $facebookUser;
@@ -111,5 +113,4 @@ class LenderJoinController extends BaseController
 
         return false;
     }
-
-} 
+}

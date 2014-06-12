@@ -4,6 +4,7 @@ namespace Zidisha\User;
 
 
 use Zidisha\Lender\Lender;
+use Zidisha\Lender\Profile;
 
 class UserService
 {
@@ -42,14 +43,15 @@ class UserService
             ->setUser($user)
             ->setFirstName($facebookUser['first_name'])
             ->setLastName($facebookUser['last_name'])
-            ->setAboutMe($data['aboutMe'])
             // TODO
             //->setCountry($facebookUser['location']);
             ->setCountryId(1);
 
-        $lender->save();
+        $profile = new Profile();
+        $profile->setAboutMe($data['aboutMe']);
+        $lender->setProfile($profile);
 
-        Auth::loginUsingId($user->getId());
+        $lender->save();
     }
 
     public function validateConnectingFacebookUser($facebookUser)

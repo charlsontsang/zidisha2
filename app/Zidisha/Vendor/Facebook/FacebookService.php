@@ -15,12 +15,28 @@ class FacebookService
         ));
     }
 
-    public function getLoginUrl($route)
+    public function getLoginUrl($route, $params = [])
     {
-        return $this->facebook->getLoginUrl(
-            array('scope' => 'email', 'redirect_uri' => route($route))
-        );
+        $defaults = [
+            'scope' => 'email',
+            'redirect_uri' => strpos($route, '@') === false ? route($route) : action($route),
+            'auth_type' => 'reauthenticate',
+        ];
+
+        return $this->facebook->getLoginUrl($params + $defaults);
     }
+
+    public function getLogoutUrl($route, $params = [])
+    {
+        $defaults = [
+            'scope' => 'email',
+            'redirect_uri' => strpos($route, '@') === false ? route($route) : action($route),
+            'auth_type' => 'reauthenticate',
+        ];
+
+        return $this->facebook->getLoginUrl($params + $defaults);
+    }
+
 
     public function isLoggedIn()
     {
@@ -45,5 +61,4 @@ class FacebookService
         
         return null;
     }
-
 }

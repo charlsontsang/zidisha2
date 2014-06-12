@@ -28,11 +28,15 @@ trait StepController
     protected function getStepsSession($key, $default = null) {
         return Session::get($this->stepsSessionKey . '.' . $key, $default);
     }
-    
+
     protected function putStepsSession($key, $value) {
         return Session::put($this->stepsSessionKey . '.' . $key, $value);
     }
-    
+
+    protected function flushStepsSession() {
+        return Session::forget($this->stepsSessionKey);
+    }
+
     protected function getCurrentStep() {
         return $this->getStepsSession('currentStep', $this->steps[0]);
     }
