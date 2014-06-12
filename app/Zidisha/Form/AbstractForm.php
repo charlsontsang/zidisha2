@@ -77,7 +77,7 @@ abstract class AbstractForm implements MessageProviderInterface
     {
         $safeData = array();
         foreach ($rules as $key => $rule) {
-            $safeData[$key] = $data[$key];
+            $safeData[$key] = array_get($data, $key);
         }
         
         return $safeData;
