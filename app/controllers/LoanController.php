@@ -14,15 +14,8 @@ class LoanController extends BaseController
         $this->loanQuery = $loanQuery;
     }
 
-    public function getIndex()
+    public function getIndex($loanId)
     {
-        $loanId = Request::query('loan_id');
-
-        $borrower = BorrowerQuery::create()
-            ->useUserQuery()
-            ->filterById(Auth::user()->getId())
-            ->endUse()
-            ->findOne();
 
         //for loan
         $loan = $this->loanQuery
