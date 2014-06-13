@@ -48,7 +48,7 @@ class GenerateModelData extends Command
             ['Guyana', 'SA', 'GY', '592', 't'],
             ['French Guiana', 'SA', 'GF', '594', 't'],
             ['Falkland Islands', 'SA', 'FK', '45', 't'],
-            ['Equador', 'SA', 'EC', '67', 't'],
+            ['Equador', 'SA', 'EC', '68', 't'],
             ['Colombia', 'SA', 'CO', '57', 't'],
             ['Chile', 'SA', 'CL', '56', 't'],
             ['Brazil', 'SA', 'BR', '55', 't'],
