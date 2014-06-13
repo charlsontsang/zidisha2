@@ -14,7 +14,7 @@
         <div class="collapse navbar-collapse navbar-right">
             <ul class="nav navbar-nav">
                 <li><a href="{{ route('lend:index') }}">Lend</a></li>
-                <li><a href="#">Borrow</a></li>
+                <li><a href="{{ route('borrow.page') }}">Borrow</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         Learn More <b class="caret"></b>

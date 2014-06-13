@@ -52,6 +52,11 @@ Route::get('/logout', array('uses' => 'AuthController@getLogout', 'as' => 'logou
 Route::get('lend', array('uses' => 'LendController@getIndex', 'as' => 'lend:index'));
 
 /**
+ * Routes for borrow page
+ */
+Route::get('borrow', array('uses' => 'BorrowController@getPage', 'as' => 'borrow.page'));
+
+/**
  * Routes for Password Reminder page.
  */
 Route::controller('password', 'RemindersController', ['before' => 'csrf']);
