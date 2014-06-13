@@ -17,14 +17,19 @@ class LenderController extends BaseController
         $this->editProfileForm = $editProfileForm;
     }
     
-    public function getPublicProfile()
+    public function getPublicProfile($username)
     {
+
+
         $lender = LenderQuery::create()
             ->useUserQuery()
-                ->filterById(Auth::user()->getId())
+                ->filterByUsername($username)
             ->endUse()
             ->findOne();
 
+        if(!$lender){
+            \Illuminate\Support\Facades\App::abort(404);
+        }
         return View::make(
             'lender.public-profile',
             compact('lender')

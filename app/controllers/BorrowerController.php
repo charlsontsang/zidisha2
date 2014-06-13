@@ -14,13 +14,17 @@ class BorrowerController extends BaseController
         $this->editProfileForm = $editProfileForm;
     }
 
-    public function getPublicProfile()
+    public function getPublicProfile($username)
     {
         $borrower = BorrowerQuery::create()
             ->useUserQuery()
-            ->filterById(Auth::user()->getId())
+            ->filterByUsername($username)
             ->endUse()
             ->findOne();
+
+        if(!$borrower){
+            App::abort(404);
+        }
 
         return View::make(
             'borrower.public-profile',

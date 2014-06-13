@@ -64,9 +64,12 @@ Route::controller('password', 'RemindersController', ['before' => 'csrf']);
 /**
  * Routes for lender page
  */
+
+Route::get('lender/profile/view/{username}', array('uses' => 'LenderController@getPublicProfile', 'as' => 'lender:public-profile'));
+
 Route::group(array('prefix' => 'lender', 'before' => 'auth|hasRole:lender'), function()
     {
-        Route::get('profile', array('uses' => 'LenderController@getPublicProfile', 'as' => 'lender:public-profile'));
+
         Route::get('profile/edit', array('uses' => 'LenderController@getEditProfile', 'as' => 'lender:edit-profile'));
         Route::post('profile/edit', array('uses' => 'LenderController@postEditProfile', 'as' => 'lender:post-profile', 'before' => 'csrf'));
         Route::get('dashboard', array('uses' => 'LenderController@getDashboard', 'as' => 'lender:dashboard'));
@@ -75,9 +78,11 @@ Route::group(array('prefix' => 'lender', 'before' => 'auth|hasRole:lender'), fun
 /**
  * Routes for borrower page
  */
+Route::get('borrower/profile/view/{username}', array('uses' => 'BorrowerController@getPublicProfile', 'as' => 'borrower:public-profile'));
+
 Route::group(array('prefix' => 'borrower', 'before' => 'auth|hasRole:borrower'), function()
     {
-        Route::get('profile', array('uses' => 'BorrowerController@getPublicProfile', 'as' => 'borrower:public-profile'));
+
         Route::get('profile/edit', array('uses' => 'BorrowerController@getEditProfile', 'as' => 'borrower:edit-profile'));
         Route::post('profile/edit', array('uses' => 'BorrowerController@postEditProfile', 'as' => 'borrower:post-profile', 'before' => 'csrf'));
         Route::get('dashboard', array('uses' => 'BorrowerController@getDashboard', 'as' => 'borrower:dashboard'));
