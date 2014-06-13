@@ -66,7 +66,7 @@
         <br>
         @endif
 
-        @foreach($loans as $loan)
+        @foreach($paginator->getItems() as $loan)
         <ul class="list-unstyled">
             <li>
                 <a href="{{ route('loan:index') }}?loan_id={{ $loan->getId() }}"><h2>{{ $loan->getSummary() }}</h2></a>
@@ -77,6 +77,7 @@
             <br>
         </ul>
         @endforeach
+        {{ $paginator->links() }}
     </div>
 </div>
 @stop
