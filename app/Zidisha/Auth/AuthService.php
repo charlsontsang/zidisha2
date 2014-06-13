@@ -14,6 +14,6 @@ class AuthService
 
     public function attempt($credentials, $rememberMe)
     {
-        return Auth::attempt($credentials, $rememberMe);
+        return \Auth::attempt($credentials, $rememberMe);
     }
 } 
