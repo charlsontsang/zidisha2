@@ -50,11 +50,19 @@ class LendController extends BaseController
                 ->endUse();
         }
 
-        $loans = $loanQuery->find();
+        $page = Request::query('page') ?: 1;
+        $loanPager = $this->loanQuery->paginate($page, 2);
+
+        $paginatorFactory = App::make('paginator');
+        $paginator = $paginatorFactory->make(
+            $loanPager->getResults()->getData(),
+            $loanPager->getNbResults(),
+            2
+        );
 
         return View::make(
             'pages.lend',
-            compact('countries', 'selectedCountry', 'loanCategories', 'selectedLoanCategory', 'loans')
+            compact('countries', 'selectedCountry', 'loanCategories', 'selectedLoanCategory', 'paginator')
         );
 
     }
