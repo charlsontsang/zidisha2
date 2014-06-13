@@ -42,9 +42,9 @@ class GenerateModelData extends Command
             ['Bolivia', 'SA', 'BO', '591', 't'],
             ['Paraguay', 'SA', 'PY', '595', 't'],
             ['Guyana', 'SA', 'GY', '592', 't'],
-            ['French Guiana', 'SA', 'GF', '594'],
-            ['Falkland Islands', 'SA', 'FK'],
-            ['Equador', 'SA', 'EC', null, 't'],
+            ['French Guiana', 'SA', 'GF', '594', 't'],
+            ['Falkland Islands', 'SA', 'FK', '45', 't'],
+            ['Equador', 'SA', 'EC', '67', 't'],
             ['Colombia', 'SA', 'CO', '57', 't'],
             ['Chile', 'SA', 'CL', '56', 't'],
             ['Brazil', 'SA', 'BR', '55', 't'],
@@ -133,7 +133,7 @@ class GenerateModelData extends Command
 
                 $country = new Country();
                 $country->setName($oneCountry[0]);
-                $country->setContinentCode($oneCountry[1]);
+                $country->setCountryCode($oneCountry[1]);
                 $country->setContinentCode($oneCountry[2]);
                 $country->setDialingCode($oneCountry[3]);
                 $country->setEnabled($oneCountry[4]);

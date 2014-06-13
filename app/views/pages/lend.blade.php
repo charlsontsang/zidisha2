@@ -15,14 +15,14 @@
 
         <ul class="list-unstyled">
             <li>
-                <a href="{{ route('lend:index') }}"> All </a>
+                <a href="{{ route('lend:index', ['category' => 'all'] + $routeParams) }}"> All </a>
             </li>
             @foreach($loanCategories as $loanCategory)
             <li>
                 @if($selectedLoanCategory == $loanCategory)
                 <strong>{{ $loanCategory->getName()}}</strong>
                 @else
-                <a href="{{ route('lend:index') }}?loan_category_id={{ $loanCategory->getId() }}"> {{
+                <a href="{{ route('lend:index', ['category' => $loanCategory->getSlug()] + $routeParams) }}"> {{
                     $loanCategory->getName()}} </a>
                 @endif
             </li>
@@ -33,14 +33,14 @@
 
         <ul class="list-unstyled">
             <li>
-                <a href="{{ route('lend:index') }}"> EveryWhere </a>
+                <a href="{{ route('lend:index', ['category' => $routeParams['category']]) }}"> EveryWhere </a>
             </li>
             @foreach($countries as $country)
             <li>
                 @if($selectedCountry == $country)
                 <strong>{{ $country->getName()}}</strong>
                 @else
-                <a href="{{ route('lend:index') }}?country_id={{ $country->getId() }}"> {{ $country->getName()}} </a>
+                <a href="{{ route('lend:index', ['country' => $country->getSlug()] + $routeParams) }}"> {{ $country->getName()}} </a>
                 @endif
             </li>
             @endforeach
