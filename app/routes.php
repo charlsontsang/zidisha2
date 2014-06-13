@@ -92,4 +92,4 @@ Route::group(array('prefix' => 'borrower', 'before' => 'auth|hasRole:borrower'),
 /**
  * Routes for loan page
  */
-Route::get('loan', array('uses' => 'LoanController@getIndex', 'as' => 'loan:index'));
+Route::get('loan/{id}', array('uses' => 'LoanController@getIndex', 'as' => 'loan:index'));

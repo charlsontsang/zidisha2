@@ -66,15 +66,21 @@
         @endif
 
         @foreach($paginator->getItems() as $loan)
+        <div class="media">
+
+            <a class="pull-left" href="{{ route('borrower:public-profile', $loan->getBorrower()->getUser()->getUsername()) }}"><img src="{{ $loan->getBorrower()->getUser()->getProfilePicture() }}" width="100" height="100"></a>
+        <div class="media-body">
         <ul class="list-unstyled">
             <li>
-                <a href="{{ route('loan:index') }}?loan_id={{ $loan->getId() }}"><h2>{{ $loan->getSummary() }}</h2></a>
+                <a href="{{ route('loan:index', $loan->getId()) }}"><h2>{{ $loan->getSummary() }}</h2></a>
                 <p>{{ $loan->getDescription() }}</p>
                 <strong>@lang('lend.loan.amount'): </strong> {{ $loan->getAmount() }} USD
                 <strong>@lang('lend.loan.interest-rate'): </strong> {{ $loan->getInterestRate() }} %
             </li>
             <br>
         </ul>
+        </div>
+        </div>
         @endforeach
         {{ $paginator->links() }}
     </div>
