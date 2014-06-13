@@ -78,4 +78,19 @@ class User extends BaseUser implements UserInterface, RemindableInterface
 
         return parent::getBorrower($con);
     }
+
+    public function getProfilePicture()
+    {
+        return asset('/images/profile/' . $this->getUsername(). '.jpg');
+    }
+
+    public function hasProfilePicture()
+    {
+        $path = '/images/profile/' . $this->getUsername().  '.jpg';
+
+        if(file_exists(public_path() . $path)){
+            return true;
+        }
+        return false;
+    }
 }

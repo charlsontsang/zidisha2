@@ -61,11 +61,11 @@ abstract class AbstractForm implements MessageProviderInterface
         foreach ($data as $key => $value) {
             if (is_array($value)) {
                 $data[$key] = $this->sanitize($value);
-            } else {
+            } elseif (is_scalar($value)) {
                 $data[$key] = trim($value);
             }
         }
-        
+
         return $data;
     }
     
@@ -77,7 +77,10 @@ abstract class AbstractForm implements MessageProviderInterface
     {
         $safeData = array();
         foreach ($rules as $key => $rule) {
-            $safeData[$key] = array_get($data, $key);
+            $value = array_get($data, $key);
+            if (!is_object($value)) {
+                $safeData[$key] = $value;
+            }
         }
         
         return $safeData;

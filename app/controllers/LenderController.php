@@ -51,7 +51,7 @@ class LenderController extends BaseController
         
         if ($form->isValid()) {
             $data = $form->getData();
-            
+
             $lender = Auth::user()->getLender();
 
             $lender->setFirstName($data['firstName']);
@@ -66,7 +66,13 @@ class LenderController extends BaseController
 
             $lender->save();
 
-            return Redirect::route('lender:public-profile');
+            if(Input::hasFile('picture'))
+            {
+                $image = Input::file('picture');
+                $image->move(public_path() . '/images/profile/', $data['username'].'.jpg' );
+            }
+
+            return Redirect::route('lender:public-profile', $data['username']);
         }
 
         return Redirect::route('lender:edit-profile')->withForm($form);
