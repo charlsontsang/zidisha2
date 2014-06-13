@@ -40,9 +40,9 @@ class FacebookService
 
     public function isLoggedIn()
     {
-        return (boolean) $this->getUserId();
+        return (boolean)$this->getUserId();
     }
-    
+
     public function logout()
     {
         $this->facebook->destroySession();
@@ -52,13 +52,13 @@ class FacebookService
     {
         return $this->facebook->getUser();
     }
-    
+
     public function getUserProfile()
     {
         if ($this->isLoggedIn()) {
             return $this->facebook->api('/me');
         }
-        
+
         return null;
     }
 }

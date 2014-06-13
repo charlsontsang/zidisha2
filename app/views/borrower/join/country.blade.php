@@ -3,7 +3,7 @@
 @section('content')
     {{ BootstrapForm::open(array('controller' => 'BorrowerJoinController@postCountry', 'translationDomain' => 'borrower.join.select-country')) }}
 
-    {{ Form::select('country', $countries, 'KE') }}
+    {{ Form::select('country', $form->getEnabledCountries()->toKeyValue('id', 'name'), 'KE') }}
 
     {{ BootstrapForm::submit('continue') }}
 

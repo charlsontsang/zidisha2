@@ -19,9 +19,8 @@ class Join extends AbstractForm
 
     public function getDefaultData()
     {
-    {
         return [
-          'email' => \Session::get('BorrowerJoin.email'),
+            'email' => \Session::get('BorrowerJoin.email'),
         ];
     }
 }

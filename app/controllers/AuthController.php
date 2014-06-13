@@ -2,6 +2,7 @@
 
 use Zidisha\User\UserQuery;
 use Zidisha\Vendor\Facebook\FacebookService;
+use Zidisha\Auth\AuthService;
 
 class AuthController extends BaseController
 {
@@ -11,28 +12,39 @@ class AuthController extends BaseController
      */
     private $facebookService;
 
-    public function __construct(FacebookService $facebookService)
+    /**
+     * @var Zidisha\Auth\AuthService
+     */
+    private $authService;
+
+    public function __construct(FacebookService $facebookService, AuthService $authService)
     {
         $this->facebookService = $facebookService;
+        $this->authService = $authService;
     }
 
     public function getLogin()
     {
-        return View::make('auth.login', [
-            'facebookLoginUrl' => $this->facebookService->getLoginUrl('facebook:login'),
-        ]);
+        return View::make(
+            'auth.login',
+            [
+                'facebookLoginUrl' => $this->facebookService->getLoginUrl('facebook:login'),
+            ]
+        );
     }
 
     public function postLogin()
     {
         $rememberMe = Input::has('remember_me');
         $credentials = Input::only('username', 'password');
-        
-        if (Auth::attempt($credentials, $rememberMe)) {
-            if (Auth::getUser()->getRole() == 'lender'){
+
+        if ($this->authService->attempt($credentials, $rememberMe)) {
+
+            if (Auth::getUser()->getRole() == 'lender') {
                 return Redirect::route('lender:dashboard');
             }
-            if(Auth::getUser()->getRole() == 'borrower'){
+
+            if (Auth::getUser()->getRole() == 'borrower') {
                 return Redirect::route('borrower:dashboard');
             }
         }
