@@ -10,8 +10,10 @@ Join the global P2P microlending movement
 </div>
 
 
-{{ BootstrapForm::open(array('route' => 'lender:post-profile', 'translationDomain' => 'edit-profile')) }}
+{{ BootstrapForm::open(array('route' => 'lender:post-profile', 'translationDomain' => 'edit-profile', 'files' => true)) }}
 {{ BootstrapForm::populate($form) }}
+
+{{ BootstrapForm::file('picture') }}
 
 {{ BootstrapForm::text('username') }}
 

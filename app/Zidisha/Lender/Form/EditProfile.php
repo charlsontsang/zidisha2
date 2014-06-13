@@ -3,6 +3,7 @@
 namespace Zidisha\Lender\Form;
 
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Zidisha\Form\AbstractForm;
 use Zidisha\Lender\Base\ProfileQuery;
@@ -20,7 +21,15 @@ class EditProfile extends AbstractForm
             'email'     => 'required|email',
             'password'  => 'confirmed',
             'aboutMe'   => '',
+            'picture'   => 'image|max:2048',
         ];
+    }
+
+    public function getDataFromRequest(Request $request) {
+        $data = parent::getDataFromRequest($request);
+        $data['picture'] = $request->file('picture');
+
+        return $data;
     }
 
     public function getDefaultData()

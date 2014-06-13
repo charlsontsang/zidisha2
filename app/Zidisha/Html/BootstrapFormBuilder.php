@@ -102,6 +102,11 @@ class BootstrapFormBuilder
         return $this->input('text', $name, $value, $options);
     }
 
+    public function file($name, $options = [])
+    {
+        return $this->input('file', $name, null, $options);
+    }
+
     /**
      * Create a Bootstrap email field input.
      *

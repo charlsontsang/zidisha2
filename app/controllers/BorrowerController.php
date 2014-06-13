@@ -63,7 +63,13 @@ class BorrowerController extends BaseController
 
             $borrower->save();
 
-            return Redirect::route('borrower:public-profile');
+            if(Input::hasFile('picture'))
+            {
+                $image = Input::file('picture');
+                $image->move(public_path() . '/images/profile/', $data['username'].'.jpg' );
+            }
+
+            return Redirect::route('borrower:public-profile' , $data['username']);
         }
 
         return Redirect::route('borrower:edit-profile')->withForm($form);
