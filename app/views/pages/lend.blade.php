@@ -9,7 +9,6 @@
     <h1>@lang('lend.page-header')</h1>
 </div>
 
-
 <div class="row">
     <div class="col-xs-4">
         <h2>@lang('lend.sidebar.category-heading')</h2>

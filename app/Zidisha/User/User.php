@@ -81,7 +81,11 @@ class User extends BaseUser implements UserInterface, RemindableInterface
 
     public function getProfilePicture()
     {
-        return asset('/images/profile/' . $this->getUsername(). '.jpg');
+
+        if($this->hasProfilePicture()){
+            return asset('/images/profile/' . $this->getUsername(). '.jpg');
+        }
+        return $this->getDefaultPicture();
     }
 
     public function hasProfilePicture()
@@ -92,5 +96,10 @@ class User extends BaseUser implements UserInterface, RemindableInterface
             return true;
         }
         return false;
+    }
+
+    public function getDefaultPicture()
+    {
+        return asset('/images/default.jpg');
     }
 }

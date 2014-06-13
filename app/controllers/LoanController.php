@@ -29,7 +29,6 @@ class LoanController extends BaseController
             ->filterById($loanId)
             ->findOne();
 
-
         return View::make(
             'pages.loan',
             compact('loan', 'borrower')
