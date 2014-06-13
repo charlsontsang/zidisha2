@@ -4,7 +4,7 @@ class LendController extends BaseController
 {
 
     protected $loanCategoryQuery;
-    protected $CountryQuery;
+    protected $countryQuery;
     protected $loanQuery;
 
     public function  __construct(
@@ -17,7 +17,7 @@ class LendController extends BaseController
         $this->loanQuery = $loanQuery;
     }
 
-    public function getIndex()
+    public function getIndex($category = null, $country = null)
     {
         // for categories
         $loanCategories = $this->loanCategoryQuery
@@ -32,22 +32,26 @@ class LendController extends BaseController
         //for loans
         $loanQuery = $this->loanQuery->orderBySummary();
 
-        $loanCategoryId = Request::query('loan_category_id');
+        $loanCategoryName = $category;
         $selectedLoanCategory = $this->loanCategoryQuery
-            ->findOneById($loanCategoryId);
+            ->findOneBySlug($loanCategoryName);
+
+        $routeParams = ['category' => 'all'];
 
         if ($selectedLoanCategory) {
-            $loanQuery->filterByLoanCategoryId($loanCategoryId);
+            $loanQuery->filterByLoanCategoryId($selectedLoanCategory->getId());
+            $routeParams['category'] = $selectedLoanCategory->getSlug();
         }
 
-        $countryId = Request::query('country_id');
-        $selectedCountry = $this->countryQuery->findOneById($countryId);
+        $countryName = $country;
+        $selectedCountry = $this->countryQuery->findOneBySlug($countryName);
 
         if($selectedCountry){
             $loanQuery
                 ->useBorrowerQuery()
-                    ->filterByCountryId($countryId)
+                    ->filterByCountryId($selectedCountry->getId())
                 ->endUse();
+            $routeParams['country'] = $selectedCountry->getSlug();
         }
 
         $page = Request::query('page') ?: 1;
@@ -62,7 +66,7 @@ class LendController extends BaseController
 
         return View::make(
             'pages.lend',
-            compact('countries', 'selectedCountry', 'loanCategories', 'selectedLoanCategory', 'paginator')
+            compact('countries', 'selectedCountry', 'loanCategories', 'selectedLoanCategory', 'paginator', 'routeParams')
         );
 
     }

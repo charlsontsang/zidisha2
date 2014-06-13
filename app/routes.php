@@ -49,7 +49,7 @@ Route::get('/logout', array('uses' => 'AuthController@getLogout', 'as' => 'logou
 /**
  * Routes for lend page
  */
-Route::get('lend', array('uses' => 'LendController@getIndex', 'as' => 'lend:index'));
+Route::get('lend/{category?}/{country?}', array('uses' => 'LendController@getIndex', 'as' => 'lend:index'));
 
 /**
  * Routes for borrow page

@@ -22,6 +22,7 @@
     <table name="loan_categories" phpName="Category" namespace="Loan">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="name" type="VARCHAR" size="100" required="true"/>
+        <column name="slug" type="VARCHAR" size="100" required="true"/>
         <column name="what_description" type="LONGVARCHAR" required="false"/>
         <column name="why_description" type="LONGVARCHAR" required="false"/>
         <column name="how_description" type="LONGVARCHAR" required="false"/>
@@ -32,10 +33,11 @@
 
     <table name="countries" phpName="Country" namespace="Country">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
-        <column name="name" type="VARCHAR" size="100" defaultValue="NULL"/>
-        <column name="continent_code" type="VARCHAR" size="2" defaultValue="NULL"/>
-        <column name="country_code" type="VARCHAR" size="2" defaultValue="NULL"/>
-        <column name="dialing_code" type="VARCHAR" size="4" defaultValue="NULL"/>
+        <column name="name" type="VARCHAR" size="100" required="true"/>
+        <column name="slug" type="VARCHAR" size="100" required="true"/>
+        <column name="continent_code" type="VARCHAR" size="2" required="true"/>
+        <column name="country_code" type="VARCHAR" size="2" required="true"/>
+        <column name="dialing_code" type="VARCHAR" size="4" required="true"/>
         <column name="enabled" type="BOOLEAN"/>
         <index name="name">
             <index-column name="name" />
