@@ -100,6 +100,6 @@ class User extends BaseUser implements UserInterface, RemindableInterface
 
     public function getDefaultPicture()
     {
-        return asset('/images/default.jpg');
+        return asset('/assets/images/default.jpg');
     }
 }
