@@ -1,6 +1,6 @@
 <div class="row wizard">
     <?php $i = 1 ?>
-    @foreach($steps as $name => $options)
+    @foreach(array_slice($steps, 0, 4) as $name => $options)
     <div class="col-xs-3 wizard-step {{ $options['class'] }}">
       <div class="text-center wizard-stepnum">Step {{ $i }}</div>
       <div class="progress"><div class="progress-bar"></div></div>
