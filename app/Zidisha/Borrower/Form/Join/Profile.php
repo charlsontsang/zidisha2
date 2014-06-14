@@ -1,10 +1,10 @@
 <?php
-namespace Zidisha\Borrower\Form;
+namespace Zidisha\Borrower\Form\Join;
 
 
 use Zidisha\Form\AbstractForm;
 
-class Join extends AbstractForm
+class Profile extends AbstractForm
 {
 
     public function getRules($data)

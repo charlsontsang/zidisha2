@@ -15,9 +15,9 @@ class BorrowerJoinController extends BaseController
 
     protected $userService;
 
-    protected $joinForm;
+    protected $profileForm;
 
-    protected $checkCountry;
+    protected $countryForm;
 
     protected $borrowerService;
 
@@ -26,30 +26,30 @@ class BorrowerJoinController extends BaseController
     public function __construct(
         \Zidisha\Vendor\Facebook\FacebookService $facebookService,
         \Zidisha\User\UserService $userService,
-        \Zidisha\Borrower\Form\Join $joinForm,
-        \Zidisha\Borrower\Form\checkCountry $checkCountry,
+        \Zidisha\Borrower\Form\Join\Profile $profileForm,
+        \Zidisha\Borrower\Form\Join\Country $countryForm,
         \Zidisha\Borrower\BorrowerService $borrowerService,
         \Zidisha\Auth\AuthService $authService
     ) {
         $this->beforeFilter('@stepsBeforeFilter');
         $this->facebookService = $facebookService;
         $this->userService = $userService;
-        $this->joinForm = $joinForm;
-        $this->checkCountry = $checkCountry;
+        $this->profileForm = $profileForm;
+        $this->countryForm = $countryForm;
         $this->borrowerService = $borrowerService;
         $this->authService = $authService;
     }
 
     public function getCountry()
     {
-        return View::make('borrower.join.country', ['form' => $this->checkCountry]);
+        return View::make('borrower.join.country', ['form' => $this->countryForm]);
     }
 
 
     public function postCountry()
     {
 
-        $form = $this->checkCountry;
+        $form = $this->countryForm;
         $form->handleRequest(Request::instance());
 
         if ($form->isValid()) {
@@ -106,7 +106,7 @@ class BorrowerJoinController extends BaseController
     {
         return View::make(
             'borrower.join.profile',
-            ['form' => $this->joinForm,]
+            ['form' => $this->profileForm,]
         );
     }
 
@@ -114,7 +114,7 @@ class BorrowerJoinController extends BaseController
     {
         if (Input::has('submit')) {
 
-            $form = $this->joinForm;
+            $form = $this->profileForm;
             $form->handleRequest(Request::instance());
 
             if ($form->isValid()) {

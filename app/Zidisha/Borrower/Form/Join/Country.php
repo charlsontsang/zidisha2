@@ -1,15 +1,15 @@
 <?php
-namespace Zidisha\Borrower\Form;
+namespace Zidisha\Borrower\Form\Join;
 
 
 use Zidisha\Form\AbstractForm;
 
-class checkCountry extends AbstractForm
+class Country extends AbstractForm
 {
 
     public function getRules($data)
     {
-        $countries = $this->getEnabledCountries()->toKeyValue('id', 'id');
+        $countries = $this->getCountries()->toKeyValue('id', 'id');
         $listOfEnabledCountries= implode(",", $countries);
 
         return [
@@ -17,7 +17,7 @@ class checkCountry extends AbstractForm
         ];
     }
 
-    public function getEnabledCountries()
+    public function getCountries()
     {
         $countries = \Zidisha\Country\CountryQuery::create()
             ->filterByEnabled(1)
