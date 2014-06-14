@@ -11,7 +11,7 @@ to the neighboring community.', 'Many farmers are forced to acquire
 inputs such as seeds and fertilizer from local moneylenders at
 exorbitant cost - leaving them with little or no profits after selling
 the crops to repay the moneylenders. Your loan can break this cycle of
-debt by providing financing for inputs at reasonable rates.', 'f'],
+debt by providing financing for inputs at reasonable rates.', false],
     ['Livestock', 'Animals like chickens, fish, goats and cows are
 purchased when they are young, and raised with a great deal of attention
 and care until they begin producing value such as eggs, milk or meat. Or
@@ -59,7 +59,7 @@ accumulate large sums of money, because they sell in small quantities
 and frequently allow low-income families to defer payment for food. A
 loan can provide the large sums they need to stock new varieties of food
 and to purchase inventory at wholesale prices, reducing the cost to the
-consumer while improving profit margins.', 'f'],
+consumer while improving profit margins.', false],
     ['Clothing Retail - New', 'Local tailors purchase cloth and turn it
 into traditional or Western-style clothing. The clothing can be made
 "ready to wear," or it can be tailored and designed to fit the
@@ -82,7 +82,7 @@ businesses often serve large numbers of customers at low margins, making
 it difficult to accumulate revenue in bulk. A loan can provide the bulk
 amount needed to improve a beauty facility by painting and adding
 furniture, or to acquire equipment like hairdryers and haircutting
-machines. ', 'f'],
+machines. ', false],
     ['Education', 'Education workers provide goods and services to
 schools - or even start their own schools, offering education from the
 preschool to the professional training level.', 'Universal access to
@@ -110,7 +110,7 @@ purchase their own motorbike taxi, allowing them to become their own
 boss and keep the full days earnings from the vehicle. Larger loans
 can be used to acquire additional motorbikes or to progress to larger
 vehicles like car taxis and vans for transport between cities, creating
-employment for others while growing their own income.', 'f'],
+employment for others while growing their own income.', false],
     ['Health', 'Local retailers supply clinics with consumables like
 medicines, painkillers, syringes and disinfectants.', 'The bulk of
 health care in developing countries is provided by small neighborhood
@@ -126,7 +126,7 @@ to pay. As a result, they are frequently short of cash, and this
 undermines their ability to purchase large supplies of medical
 consumables at wholesale prices.  Whether you support a clinic or a
 health product supplier, your loan can alleviate suffering and even save
-lives.', 'f'],
+lives.', false],
     ['Cybercafe', 'A cybercafe can be as simple as a tiny room with a
 second-hand desktop, or it can be a larger facility with several
 computers, printers and videoconferencing equipment. The computers are
@@ -162,7 +162,7 @@ equipment with sheer ingenuity to enliven their communities with beauty
 and fun.', 'Many entertainment services rely on expensive imported
 equipment, such as DVD players and microphones. Loans can finance these
 purchases up front, giving aspiring entertainers the chance to prove
-themselves.', 'f'],
+themselves.', false],
     ['Household Supplies', 'Retailers purchase supplies of goods like
 furniture, cooking fuel, soap and utensils, and market them to homes via
 door-to-door sales or neighborhood shops.', 'Local suppliers of
@@ -184,7 +184,7 @@ and experience. ', 'A loan can allow an entry-level freelance
 professional to acquire productivity-enhancing equipment, such as a
 personal computer or high-speed internet connection - allowing him or
 her to spend more time producing value and less time commuting or
-waiting in line at cybercafes.', 'f'],
+waiting in line at cybercafes.', false],
     ['Outside the Box', 'Businesses too unique to have their own
 categories are listed here.', 'These entrepreneurs are often the most
 creative, operating businesses that have little in common with others at
@@ -193,7 +193,7 @@ fresh ideas and variety to their markets.', 'Entrepreneurs with
 unconventional business models tend to have an especially hard time
 raising funding to finance their ambitions. A loan can give them the
 chance to overturn the status quo, producing innovation that paves the
-way for other entrepreneurs in their communities.', 'f'],
+way for other entrepreneurs in their communities.', false],
     ['Farming Equipment', 'Farmers use equipment to make land that would
 normally be barren produce crops. For example, hard earth can be made
 cultivable with a tractor and plow, and dry land can produce food crops
@@ -204,7 +204,7 @@ This allows farmers to produce more food without needing to acquire more
 land.', 'Farm equipment often costs more than smallholder farmers earn
 in many months, making it difficult to finance its purchase with
 savings. Your loan makes it possible to acquire the equipment first,
-then pay for it with the increased earnings that result.', 'f'],
+then pay for it with the increased earnings that result.', false],
     ['Clothing Retail - Used', 'Second-hand clothing from America or
 Europe - much of it donated through charities like Goodwill - is packed
 up in bales and sent to developing countries. Local entrepreneurs then
@@ -218,6 +218,6 @@ allow a clothing retailer to purchase inventory in bulk, increasing
 profit margins while improving choice and cost for customers. A larger
 loan can make it possible for a retailer who has been selling clothing
 outdoors to move into a shop, improving the shelf life of the clothing
-and the quality of life of the entrepreneur.', 'f'],
-    ['Featured', null, null, null, 'f'],
+and the quality of life of the entrepreneur.', false],
+    ['Featured', null, null, null, false],
 ];
