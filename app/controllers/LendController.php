@@ -55,14 +55,7 @@ class LendController extends BaseController
         }
 
         $page = Request::query('page') ?: 1;
-        $loanPager = $this->loanQuery->paginate($page, 2);
-
-        $paginatorFactory = App::make('paginator');
-        $paginator = $paginatorFactory->make(
-            $loanPager->getResults()->getData(),
-            $loanPager->getNbResults(),
-            2
-        );
+        $paginator = $this->loanQuery->paginate($page, 2);
 
         return View::make(
             'pages.lend',

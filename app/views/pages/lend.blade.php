@@ -65,7 +65,7 @@
         <br>
         @endif
 
-        @foreach($paginator->getItems() as $loan)
+        @foreach($paginator as $loan)
         <div class="media">
 
             <a class="pull-left" href="{{ route('borrower:public-profile', $loan->getBorrower()->getUser()->getUsername()) }}"><img src="{{ $loan->getBorrower()->getUser()->getProfilePicture() }}" width="100" height="100"></a>
@@ -82,7 +82,7 @@
         </div>
         </div>
         @endforeach
-        {{ $paginator->links() }}
+        {{ BootstrapHtml::paginator($paginator)->links() }}
     </div>
 </div>
 @stop
