@@ -242,6 +242,8 @@ class GenerateModelData extends Command
 
                 $Stage->setStartDate(new \DateTime());
                 $Stage->save();
+
+                $loanService->addToLoanIndex($Loan);
             }
         }
     }

@@ -121,7 +121,7 @@ class LoanService
         );
     }
 
-    protected function addToLoanIndex(Loan $loan)
+    public function addToLoanIndex(Loan $loan)
     {
         $loanIndex = $this->getLoanIndex();
 
