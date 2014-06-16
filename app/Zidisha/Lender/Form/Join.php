@@ -28,8 +28,12 @@ class Join extends AbstractForm
 
     public function getRules($data)
     {
+        $countries = $this->getCountries()->toKeyValue('id', 'id');
+        $listOfEnabledCountries= implode(",", $countries);
+        
         $rules = [
             'username' => 'required|max:20|unique:users,username',
+            'countryId' => ['required', 'in:'.$listOfEnabledCountries]
         ];
         
         if (!$this->isFacebookJoin()) {
@@ -42,6 +46,13 @@ class Join extends AbstractForm
         }
         
         return $rules;
+    }
+
+    public function getCountries()
+    {
+        $countries = \Zidisha\Country\CountryQuery::create()->find();
+
+        return $countries;
     }
 
 }

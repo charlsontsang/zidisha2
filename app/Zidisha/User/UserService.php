@@ -26,8 +26,16 @@ class UserService
         $user->setEmail($data['email']);
         $user->setUsername($data['username']);
         $user->setRole('lender');
+        
+        $lender = new Lender();
+        $lender
+            ->setUser($user)
+            ->setCountryId($data['countryId']);
 
-        return $user->save() ? $user : false;
+        $profile = new Profile();
+        $lender->setProfile($profile);
+
+        return $lender->save() ? $lender : false;
     }
     
     public function joinFacebookUser($facebookUser, $data)

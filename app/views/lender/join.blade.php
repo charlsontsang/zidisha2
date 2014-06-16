@@ -17,6 +17,7 @@
         {{ BootstrapForm::text('email') }}
         {{ BootstrapForm::password('password') }}
         {{ BootstrapForm::password('password_confirmation') }}
+        {{ BootstrapForm::select('countryId', $form->getCountries()->toKeyValue('id', 'name')) }}
         {{ BootstrapForm::submit('submit') }}
 
         {{ BootstrapForm::close() }}
