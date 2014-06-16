@@ -51,6 +51,7 @@ class GenerateModelData extends Command
             ['Brazil', 'SA', 'BR', '55', 't'],
             ['Argentina', 'SA', 'AR', '54', 't'],
         ];
+
         $categories = include(app_path() . '/database/LoanCategories.php');
 
         if ($model == "Loan") {
@@ -173,6 +174,7 @@ class GenerateModelData extends Command
                 }
                 $installmentAmount = $amount / 12;
                 $oneCategory1 = $allCategories[array_rand($allCategories)];
+                $oneStage = (int)$i/7;
                 $oneBorrower1 = $allBorrowers[$i-1];
 
                 $Loan = new Loan();
@@ -183,12 +185,34 @@ class GenerateModelData extends Command
                 $Loan->setInstallmentDay($installmentDay);
                 $Loan->setBorrower($oneBorrower1);
                 $Loan->setCategory($oneCategory1);
-                $Loan->setStatus(Loan::OPEN);
 
                 $Stage = new Stage();
                 $Stage->setLoan($Loan);
                 $Stage->setBorrower($oneBorrower1);
-                $Stage->setStatus(Loan::OPEN);
+                if($i< $oneStage){
+                    $Loan->setStatus(Loan::OPEN);
+                    $Stage->setStatus(Loan::OPEN);
+                }elseif($i < ($oneStage*3) ){
+                    $Loan->setStatus(Loan::FUNDED);
+                    $Stage->setStatus(Loan::FUNDED);
+                }elseif($i < ($oneStage*4) ){
+                    $Loan->setStatus(Loan::ACTIVE);
+                    $Stage->setStatus(Loan::ACTIVE);
+                }elseif($i < ($oneStage*5) ){
+                    $Loan->setStatus(Loan::REPAID);
+                    $Stage->setStatus(Loan::REPAID);
+                }elseif($i < ($oneStage*6) ){
+                    $Loan->setStatus(Loan::DEFAULTED);
+                    $Stage->setStatus(Loan::DEFAULTED);
+                }elseif($i < ($oneStage*7)){
+                    $Loan->setStatus(Loan::CANCELED);
+                    $Stage->setStatus(Loan::CANCELED);
+                }else{
+                    $Loan->setStatus(Loan::EXPIRED);
+                    $Stage->setStatus(Loan::EXPIRED);
+                }
+
+
                 $Stage->setStartDate(new \DateTime());
                 $Stage->save();
 
