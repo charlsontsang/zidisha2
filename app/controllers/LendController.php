@@ -17,7 +17,7 @@ class LendController extends BaseController
         $this->loanQuery = $loanQuery;
     }
 
-    public function getIndex($category = null, $country = null)
+    public function getIndex($stage = null, $category = null, $country = null)
     {
         // for categories
         $loanCategories = $this->loanCategoryQuery
@@ -33,10 +33,22 @@ class LendController extends BaseController
         $loanQuery = $this->loanQuery->orderBySummary();
 
         $loanCategoryName = $category;
+        $stageName = $stage;
         $selectedLoanCategory = $this->loanCategoryQuery
             ->findOneBySlug($loanCategoryName);
 
-        $routeParams = ['category' => 'all'];
+        $routeParams = ['category' => 'all', 'stage' => 'fund-raising'];
+
+        if($stageName == 'completed'){
+            $routeParams['stage'] = 'completed';
+            $loanQuery->filterByStatus([3,5]);
+        }elseif($stageName == 'active'){
+            $routeParams['stage'] = 'active';
+                $loanQuery->filterByStatus([1,2]);
+        }else{
+            $routeParams['stage'] = 'fund-raising';
+            $loanQuery->filterByStatus(0);
+        }
 
         if ($selectedLoanCategory) {
             $loanQuery->filterByLoanCategoryId($selectedLoanCategory->getId());

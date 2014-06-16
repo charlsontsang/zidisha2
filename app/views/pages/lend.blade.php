@@ -14,16 +14,20 @@
         <h2>@lang('lend.sidebar.category-heading')</h2>
 
         <ul class="list-unstyled">
+            @if($selectedLoanCategory == null)
+                <strong> All </strong>
+            @else
             <li>
                 <a href="{{ route('lend:index', ['category' => 'all'] + $routeParams) }}"> All </a>
             </li>
+            @endif
             @foreach($loanCategories as $loanCategory)
             <li>
                 @if($selectedLoanCategory == $loanCategory)
-                <strong>{{ $loanCategory->getName()}}</strong>
+                    <strong>{{ $loanCategory->getName()}}</strong>
                 @else
-                <a href="{{ route('lend:index', ['category' => $loanCategory->getSlug()] + $routeParams) }}"> {{
-                    $loanCategory->getName()}} </a>
+                    <a href="{{ route('lend:index', ['category' => $loanCategory->getSlug()] + $routeParams) }}"> {{
+                        $loanCategory->getName()}} </a>
                 @endif
             </li>
             @endforeach
@@ -32,22 +36,36 @@
         <h2>@lang('lend.sidebar.country-heading')</h2>
 
         <ul class="list-unstyled">
-            <li>
-                <a href="{{ route('lend:index', ['category' => $routeParams['category']]) }}"> EveryWhere </a>
-            </li>
+            @if($selectedCountry == null)
+                <strong>EveryWhere</strong>
+            @else
+                <li>
+                    <a href="{{ route('lend:index', ['country' => 'everywhere'] + $routeParams) }}"> EveryWhere </a>
+                </li>
+            @endif
             @foreach($countries as $country)
             <li>
                 @if($selectedCountry == $country)
-                <strong>{{ $country->getName()}}</strong>
+                    <strong>{{ $country->getName()}}</strong>
                 @else
-                <a href="{{ route('lend:index', ['country' => $country->getSlug()] + $routeParams) }}"> {{ $country->getName()}} </a>
-                @endif
+                    <a href="{{ route('lend:index', ['country' => $country->getSlug()] + $routeParams) }}"> {{ $country->getName()}} </a>
+                    @endif
             </li>
             @endforeach
         </ul>
     </div>
 
     <div class="col-xs-8">
+          <ul class="nav nav-tabs">
+          @foreach(['fund-raising' => 'Fund Raising', 'active' => 'Active', 'completed' => 'Completed'] as $stage => $loanTitle)
+            @if($stage == $routeParams['stage'])
+                <li class="active"><a href="{{ route('lend:index', ['stage' => $stage] + $routeParams) }}">{{ $loanTitle }}</a></li>
+            @else
+                <li><a href="{{ route('lend:index', ['stage' => $stage] + $routeParams) }}">{{ $loanTitle }}</a></li>
+            @endif
+          @endforeach
+          </ul>
+
         @if($selectedLoanCategory)
         <h2>{{ $selectedLoanCategory->getName(); }}</h2>
         <br>
