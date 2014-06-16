@@ -3,13 +3,16 @@
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
+use Zidisha\Balance\Transaction;
 use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Country\Country;
 use Zidisha\Country\CountryQuery;
+use Zidisha\Lender\LenderQuery;
 use Zidisha\Loan\Category;
 use Zidisha\Loan\CategoryQuery;
 use Zidisha\Loan\Loan;
 use Faker\Factory as Faker;
+use Zidisha\Loan\LoanQuery;
 use Zidisha\Loan\Stage;
 
 class GenerateModelData extends Command
@@ -52,6 +55,14 @@ class GenerateModelData extends Command
             ['Argentina', 'SA', 'AR', '54', 't'],
         ];
 
+        $allLenders = LenderQuery::create()
+            ->orderById()
+            ->find();
+
+        $allLoans = LoanQuery::create()
+            ->orderById()
+            ->find();
+
         $categories = include(app_path() . '/database/LoanCategories.php');
         $loanService = App::make('\Zidisha\Loan\LoanService');
         
@@ -90,6 +101,8 @@ class GenerateModelData extends Command
                 ->orderById()
                 ->find()
                 ->getData();
+
+
 
             if ($allCategories == null || count($allBorrowers) < $size) {
                 $this->error("not enough categories or borrowers");
@@ -254,6 +267,22 @@ class GenerateModelData extends Command
                 $transaction = new Transaction();
                 $transaction->setUser($oneLender->getUser());
                 $transaction->setAmount(rand(-100,100));
+                $transaction->setLoan($oneLoan);
+                $transaction->setDescription($oneLoan->getSummary());
+                $transaction->setTransactionDate(new \DateTime());
+                $transaction->setType(Transaction::FUND_WITHDRAW);
+                $transaction->save();
+
+            }
+
+            if ($model == "Transaction") {
+
+                $oneLender = $allLenders[array_rand($allLenders->getData())];
+                $oneLoan = $allLoans[array_rand($allLoans->getData())];
+
+                $transaction = new Transaction();
+                $transaction->setUser($oneLender->getUser());
+                $transaction->setAmount(rand(5,100));
                 $transaction->setLoan($oneLoan);
                 $transaction->setDescription($oneLoan->getSummary());
                 $transaction->setTransactionDate(new \DateTime());
