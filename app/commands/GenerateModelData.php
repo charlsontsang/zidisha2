@@ -54,6 +54,31 @@ class GenerateModelData extends Command
 
         $categories = include(app_path() . '/database/LoanCategories.php');
         $loanService = App::make('\Zidisha\Loan\LoanService');
+        
+        if ($model == 'new') {
+            $this->line('Rebuild database');
+            DB::statement('drop schema public cascade');
+            DB::statement('create schema public');
+            exec('rm -rf app/database/migrations');
+            exec('./propel diff');
+            exec('./propel migrate');
+            exec('./propel build');
+            
+            $this->line('Delete loans index');
+            exec("curl -XDELETE 'http://localhost:9200/loans/' -s");
+            
+            $this->line('Generate data');
+            $this->call('fake', array('model' => 'Country', 'size' => 10));
+            $this->call('fake', array('model' => 'Category', 'size' => 10));
+            $this->call('fake', array('model' => 'Borrower', 'size' => 30));
+            $this->call('fake', array('model' => 'Lender', 'size' => 30));
+            $this->call('fake', array('model' => 'Loan', 'size' => 30));
+            
+            $this->line('Done!');
+            return;
+        }
+        
+        $this->line("Generate $model");
 
         if ($model == "Loan") {
             $allCategories = CategoryQuery::create()
@@ -67,7 +92,8 @@ class GenerateModelData extends Command
                 ->getData();
 
             if ($allCategories == null || count($allBorrowers) < $size) {
-                exit("not enough categories or borrowers");
+                $this->error("not enough categories or borrowers");
+                return;
             }
         }
 
@@ -131,6 +157,9 @@ class GenerateModelData extends Command
             }
 
             if ($model == "Country") {
+                if ($i >= 9) {
+                    continue;
+                }
 
                 $oneCountry = $countries[$i - 1];
 
@@ -141,13 +170,12 @@ class GenerateModelData extends Command
                 $country->setDialingCode($oneCountry[3]);
                 $country->setEnabled($oneCountry[4]);
                 $country->save();
-
-                if ($i == 9) {
-                    exit();
-                }
             }
 
             if ($model == "Category") {
+                if ($i >= 17) {
+                    continue;
+                }
 
                 $oneCategory = $categories[$i - 1];
 
@@ -158,15 +186,11 @@ class GenerateModelData extends Command
                 $category->setHowDescription($oneCategory[3]);
                 $category->setAdminOnly($oneCategory[4]);
                 $category->save();
-
-                if ($i == 17) {
-                    exit();
-                }
             }
 
             if ($model == "Loan") {
 
-               if ($i >= 30) {
+                if ($i >= 30) {
                     $installmentDay = $i - (int)(25 - $i);
                     $amount = 30 + ($i * 10);
                 } else {
@@ -175,8 +199,8 @@ class GenerateModelData extends Command
                 }
                 $installmentAmount = $amount / 12;
                 $loanCategory = $allCategories[array_rand($allCategories)];
-                $status = floatval($size/7);
-                $borrower = $allBorrowers[$i-1];
+                $status = floatval($size / 7);
+                $borrower = $allBorrowers[$i - 1];
 
                 $Loan = new Loan();
                 $Loan->setSummary($faker->sentence(8));
@@ -187,37 +211,37 @@ class GenerateModelData extends Command
                 $Loan->setBorrower($borrower);
                 $Loan->setCategory($loanCategory);
 
+                if ($i < $status) {
+                    $loanService->applyForLoan($Loan);
+                    continue;
+                }
+
                 $Stage = new Stage();
                 $Stage->setLoan($Loan);
                 $Stage->setBorrower($borrower);
 
-                if($i< $status){
-                    $Loan->setStatus(Loan::OPEN);
-                    $Stage->setStatus(Loan::OPEN);
-                }elseif($i < ($status*3) ){
+                if ($i < ($status * 3)) {
                     $Loan->setStatus(Loan::FUNDED);
                     $Stage->setStatus(Loan::FUNDED);
-                }elseif($i < ($status*4) ){
+                } elseif ($i < ($status * 4)) {
                     $Loan->setStatus(Loan::ACTIVE);
                     $Stage->setStatus(Loan::ACTIVE);
-                }elseif($i < ($status*5) ){
+                } elseif ($i < ($status * 5)) {
                     $Loan->setStatus(Loan::REPAID);
                     $Stage->setStatus(Loan::REPAID);
-                }elseif($i < ($status*6) ){
+                } elseif ($i < ($status * 6)) {
                     $Loan->setStatus(Loan::DEFAULTED);
                     $Stage->setStatus(Loan::DEFAULTED);
-                }elseif($i < ($status*7)){
+                } elseif ($i < ($status * 7)) {
                     $Loan->setStatus(Loan::CANCELED);
                     $Stage->setStatus(Loan::CANCELED);
-                }else{
+                } else {
                     $Loan->setStatus(Loan::EXPIRED);
                     $Stage->setStatus(Loan::EXPIRED);
                 }
 
                 $Stage->setStartDate(new \DateTime());
                 $Stage->save();
-
-                $loanService->applyForLoan($Loan);
             }
         }
     }
@@ -231,7 +255,7 @@ class GenerateModelData extends Command
     {
         return array(
             array('model', InputArgument::REQUIRED, 'Model in which you want to insert data'),
-            array('size', InputArgument::REQUIRED, 'Number of entries you want for this model')
+            array('size', InputArgument::OPTIONAL, 'Number of entries you want for this model', 10)
         );
     }
 
