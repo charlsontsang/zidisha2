@@ -11,6 +11,14 @@
 
 <div class="row">
     <div class="col-xs-4">
+        <form class="form-inline" role="form" action="{{ route('lend:index', $searchRouteParams) }}" method="get">
+            <div class="form-group">
+                <label class="sr-only" for="search">Email address</label>
+                <input type="text" class="form-control" id="search" placeholder="Search" name="search" value="{{{ $searchQuery }}}">
+            </div>
+            <button type="submit" class="btn btn-default">Go</button>
+        </form>
+        
         <h2>@lang('lend.sidebar.category-heading')</h2>
 
         <ul class="list-unstyled">
@@ -37,10 +45,10 @@
 
         <ul class="list-unstyled">
             @if($selectedCountry == null)
-                <strong>EveryWhere</strong>
+                <strong>Everywhere</strong>
             @else
                 <li>
-                    <a href="{{ route('lend:index', ['country' => 'everywhere'] + $routeParams) }}"> EveryWhere </a>
+                    <a href="{{ route('lend:index', ['country' => 'everywhere'] + $routeParams) }}"> Everywhere </a>
                 </li>
             @endif
             @foreach($countries as $country)
@@ -100,7 +108,7 @@
         </div>
         </div>
         @endforeach
-        {{ BootstrapHtml::paginator($paginator)->links() }}
+        {{ $paginator->appends(['search' => $searchQuery])->links() }}
     </div>
 </div>
 @stop

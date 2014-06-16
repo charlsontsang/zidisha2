@@ -53,6 +53,7 @@ class GenerateModelData extends Command
         ];
 
         $categories = include(app_path() . '/database/LoanCategories.php');
+        $loanService = App::make('\Zidisha\Loan\LoanService');
 
         if ($model == "Loan") {
             $allCategories = CategoryQuery::create()
@@ -173,9 +174,9 @@ class GenerateModelData extends Command
                     $amount = 30 + ($i * 20);
                 }
                 $installmentAmount = $amount / 12;
-                $oneCategory1 = $allCategories[array_rand($allCategories)];
-                $oneStage = (floatval($size/7));
-                $oneBorrower1 = $allBorrowers[$i-1];
+                $loanCategory = $allCategories[array_rand($allCategories)];
+                $status = floatval($size/7);
+                $borrower = $allBorrowers[$i-1];
 
                 $Loan = new Loan();
                 $Loan->setSummary($faker->sentence(8));
@@ -183,29 +184,29 @@ class GenerateModelData extends Command
                 $Loan->setAmount($amount);
                 $Loan->setInstallmentAmount($installmentAmount);
                 $Loan->setInstallmentDay($installmentDay);
-                $Loan->setBorrower($oneBorrower1);
-                $Loan->setCategory($oneCategory1);
+                $Loan->setBorrower($borrower);
+                $Loan->setCategory($loanCategory);
 
                 $Stage = new Stage();
                 $Stage->setLoan($Loan);
-                $Stage->setBorrower($oneBorrower1);
+                $Stage->setBorrower($borrower);
 
-                if($i< $oneStage){
+                if($i< $status){
                     $Loan->setStatus(Loan::OPEN);
                     $Stage->setStatus(Loan::OPEN);
-                }elseif($i < ($oneStage*3) ){
+                }elseif($i < ($status*3) ){
                     $Loan->setStatus(Loan::FUNDED);
                     $Stage->setStatus(Loan::FUNDED);
-                }elseif($i < ($oneStage*4) ){
+                }elseif($i < ($status*4) ){
                     $Loan->setStatus(Loan::ACTIVE);
                     $Stage->setStatus(Loan::ACTIVE);
-                }elseif($i < ($oneStage*5) ){
+                }elseif($i < ($status*5) ){
                     $Loan->setStatus(Loan::REPAID);
                     $Stage->setStatus(Loan::REPAID);
-                }elseif($i < ($oneStage*6) ){
+                }elseif($i < ($status*6) ){
                     $Loan->setStatus(Loan::DEFAULTED);
                     $Stage->setStatus(Loan::DEFAULTED);
-                }elseif($i < ($oneStage*7)){
+                }elseif($i < ($status*7)){
                     $Loan->setStatus(Loan::CANCELED);
                     $Stage->setStatus(Loan::CANCELED);
                 }else{
@@ -213,10 +214,10 @@ class GenerateModelData extends Command
                     $Stage->setStatus(Loan::EXPIRED);
                 }
 
-
                 $Stage->setStartDate(new \DateTime());
                 $Stage->save();
 
+                $loanService->applyForLoan($Loan);
             }
         }
     }

@@ -5,16 +5,20 @@ class LendController extends BaseController
 
     protected $loanCategoryQuery;
     protected $countryQuery;
-    protected $loanQuery;
+    /**
+     * @var Zidisha\Loan\LoanService
+     */
+    private $loanService;
 
     public function  __construct(
         Zidisha\Loan\CategoryQuery $loanCategoryQuery,
         Zidisha\Country\CountryQuery $countryQuery,
-        Zidisha\Loan\LoanQuery $loanQuery
-    ) {
+        \Zidisha\Loan\LoanService $loanService
+    )
+    {
         $this->loanCategoryQuery = $loanCategoryQuery;
         $this->countryQuery = $countryQuery;
-        $this->loanQuery = $loanQuery;
+        $this->loanService = $loanService;
     }
 
     public function getIndex($stage = null, $category = null, $country = null)
@@ -30,48 +34,61 @@ class LendController extends BaseController
             ->find();
 
         //for loans
-        $loanQuery = $this->loanQuery->orderBySummary();
+        $conditions = [];
 
         $loanCategoryName = $category;
         $stageName = $stage;
         $selectedLoanCategory = $this->loanCategoryQuery
             ->findOneBySlug($loanCategoryName);
 
-        $routeParams = ['category' => 'all', 'stage' => 'fund-raising'];
+        $routeParams = [
+            'category' => 'all',
+            'stage' => 'fund-raising',
+            'country' => 'everywhere'
+        ];
 
-        if($stageName == 'completed'){
+        if ($stageName == 'completed') {
             $routeParams['stage'] = 'completed';
-            $loanQuery->filterByStatus([3,5]);
-        }elseif($stageName == 'active'){
+//            $conditions['status'] = [3, 5];
+        } elseif ($stageName == 'active') {
             $routeParams['stage'] = 'active';
-                $loanQuery->filterByStatus([1,2]);
-        }else{
+//            $conditions['status'] = [1, 2];
+        } else {
             $routeParams['stage'] = 'fund-raising';
-            $loanQuery->filterByStatus(0);
+//            $conditions['status'] = 0;
         }
 
         if ($selectedLoanCategory) {
-            $loanQuery->filterByLoanCategoryId($selectedLoanCategory->getId());
+            $conditions['categoryId'] = $selectedLoanCategory->getId();
             $routeParams['category'] = $selectedLoanCategory->getSlug();
         }
 
         $countryName = $country;
         $selectedCountry = $this->countryQuery->findOneBySlug($countryName);
 
-        if($selectedCountry){
-            $loanQuery
-                ->useBorrowerQuery()
-                    ->filterByCountryId($selectedCountry->getId())
-                ->endUse();
+        if ($selectedCountry) {
+            $conditions['countryId'] = $selectedCountry->getId();
             $routeParams['country'] = $selectedCountry->getSlug();
         }
 
-        $page = Request::query('page') ?: 1;
-        $paginator = $this->loanQuery->paginate($page, 2);
+        $searchRouteParams = $routeParams;
+
+        $searchQuery = Request::query('search');
+        if ($searchQuery) {
+            $conditions['search'] = $searchQuery;
+            $routeParams['search'] = $searchQuery;
+        }
+
+        $page = Request::query('page') ? : 1;
+        $paginator = $this->loanService->searchLoans($conditions, $page);
 
         return View::make(
             'pages.lend',
-            compact('countries', 'selectedCountry', 'loanCategories', 'selectedLoanCategory', 'paginator', 'routeParams')
+            compact(
+                'countries', 'selectedCountry', 'loanCategories',
+                'selectedLoanCategory', 'paginator', 'routeParams',
+                'searchQuery', 'searchRouteParams'
+            )
         );
 
     }

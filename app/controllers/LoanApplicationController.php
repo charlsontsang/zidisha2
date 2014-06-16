@@ -4,6 +4,7 @@ use Zidisha\Borrower\Form\Loan\Profile;
 use Zidisha\Loan\Loan;
 use Zidisha\Loan\CategoryQuery;
 use Zidisha\Loan\LoanQuery;
+use Zidisha\Loan\LoanService;
 
 class LoanApplicationController extends BaseController
 {
@@ -18,12 +19,17 @@ class LoanApplicationController extends BaseController
     ];
 
     private $editForm, $applicationForm;
+    /**
+     * @var Zidisha\Loan\LoanService
+     */
+    private $loanService;
 
-    public function __construct(Profile $form, Application $applicationForm)
+    public function __construct(Profile $form, Application $applicationForm, LoanService $loanService)
     {
         $this->beforeFilter('@stepsBeforeFilter');
         $this->editForm = $form;
         $this->applicationForm = $applicationForm;
+        $this->loanService = $loanService;
     }
 
     protected function stepView($step, $params = array())
@@ -123,7 +129,7 @@ class LoanApplicationController extends BaseController
         $loan->setCategory($loanCategory);
         $loan->setBorrower($borrower);
 
-        $loan->save();
+        $this->loanService->applyForLoan($loan);
 
         $this->setCurrentStep('confirmation');
 
