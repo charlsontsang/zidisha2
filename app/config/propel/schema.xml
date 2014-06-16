@@ -82,8 +82,8 @@
     <table name="lenders" phpName="Lender" namespace="Lender">
         <column name="id" type="INTEGER" primaryKey="true" />
         <column name="country_id" type="INTEGER" required="true"/>
-        <column name="first_name" type="VARCHAR" size="50" required="true" />
-        <column name="last_name" type="VARCHAR" size="50" required="true" />
+        <column name="first_name" type="VARCHAR" size="50" required="false" />
+        <column name="last_name" type="VARCHAR" size="50" required="false" />
         <behavior name="timestampable" />
         <foreign-key foreignTable="users">
             <reference local="id" foreign="id"/>

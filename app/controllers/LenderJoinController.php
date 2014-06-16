@@ -44,10 +44,10 @@ class LenderJoinController extends BaseController
             return Redirect::route('lender:join')->withForm($form);
         }
 
-        $user = $this->userService->joinUser($form->getData());
+        $lender = $this->userService->joinUser($form->getData());
 
-        if ($user) {
-            Auth::login($user);
+        if ($lender) {
+            Auth::login($lender->getUser());
             Flash::success('Welcome to Zidisha!');
             return Redirect::route('lender:dashboard');
         }
