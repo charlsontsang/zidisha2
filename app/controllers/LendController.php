@@ -1,5 +1,7 @@
 <?php
 
+use Zidisha\Loan\Loan;
+
 class LendController extends BaseController
 {
 
@@ -49,13 +51,13 @@ class LendController extends BaseController
 
         if ($stageName == 'completed') {
             $routeParams['stage'] = 'completed';
-//            $conditions['status'] = [3, 5];
+            $conditions['status'] = [Loan::DEFAULTED, Loan::REPAID];
         } elseif ($stageName == 'active') {
             $routeParams['stage'] = 'active';
-//            $conditions['status'] = [1, 2];
+            $conditions['status'] = [Loan::ACTIVE, Loan::FUNDED];
         } else {
             $routeParams['stage'] = 'fund-raising';
-//            $conditions['status'] = 0;
+            $conditions['status'] = Loan::OPEN;
         }
 
         if ($selectedLoanCategory) {

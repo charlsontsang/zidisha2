@@ -129,6 +129,7 @@ class LoanService
             'country_code' => $loan->getBorrower()->getCountry()->getCountryCode(),
             'summary' => $loan->getSummary(),
             'description' => $loan->getDescription(),
+            'status' => $loan->getStatus(),
             'created_at' => $loan->getCreatedAt()->getTimestamp(),
         );
 
