@@ -174,7 +174,7 @@ class GenerateModelData extends Command
                 }
                 $installmentAmount = $amount / 12;
                 $oneCategory1 = $allCategories[array_rand($allCategories)];
-                $oneStage = (int)$i/7;
+                $oneStage = (floatval($size/7));
                 $oneBorrower1 = $allBorrowers[$i-1];
 
                 $Loan = new Loan();
@@ -189,6 +189,7 @@ class GenerateModelData extends Command
                 $Stage = new Stage();
                 $Stage->setLoan($Loan);
                 $Stage->setBorrower($oneBorrower1);
+
                 if($i< $oneStage){
                     $Loan->setStatus(Loan::OPEN);
                     $Stage->setStatus(Loan::OPEN);
