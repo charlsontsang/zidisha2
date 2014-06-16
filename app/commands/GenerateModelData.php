@@ -245,6 +245,22 @@ class GenerateModelData extends Command
 
                 $loanService->addToLoanIndex($Loan);
             }
+
+            if ($model == "Transaction") {
+
+                $oneLender = $allLenders[array_rand($allLenders->getData())];
+                $oneLoan = $allLoans[array_rand($allLoans->getData())];
+
+                $transaction = new Transaction();
+                $transaction->setUser($oneLender->getUser());
+                $transaction->setAmount(rand(-100,100));
+                $transaction->setLoan($oneLoan);
+                $transaction->setDescription($oneLoan->getSummary());
+                $transaction->setTransactionDate(new \DateTime());
+                $transaction->setType(Transaction::FUND_WITHDRAW);
+                $transaction->save();
+
+            }
         }
     }
 
