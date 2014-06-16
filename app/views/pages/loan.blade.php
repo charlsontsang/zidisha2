@@ -17,6 +17,22 @@
         <p>{{ $loan->getBorrower()->getProfile()->getAboutBusiness() }}</p>
         <h3>My Loan Proposal</h3>
         <p>{{ $loan->getDescription() }}</p>
+        <br/>
+        <br/>
+        <h4>Comments</h4>
+
+        {{ BootstrapForm::open(array('route' => 'comment:post', 'translationDomain' => 'comments')) }}
+
+        {{ BootstrapForm::hidden('borrower_id', $borrower->getId()) }}
+        {{ BootstrapForm::text('message') }}
+        {{ BootstrapForm::submit('submit') }}
+
+        {{ BootstrapForm::close() }}
+
+        <br/>
+        <br/>
+
+        @include('partials.comments.comments', ['comments' => $comments])
     </div>
     <div class="col-xs-4">
     <img src="{{ $loan->getBorrower()->getUser()->getProfilePicture() }}" width="100" height="100">
