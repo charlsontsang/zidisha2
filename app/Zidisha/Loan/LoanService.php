@@ -3,9 +3,6 @@
 namespace Zidisha\Loan;
 
 
-use Propel\Tests\Runtime\Util\PropelModelPagerTest;
-use Zidisha\Loan\Base\LoanQuery;
-
 class LoanService
 {
 
@@ -13,7 +10,16 @@ class LoanService
 
     public function applyForLoan(Loan $loan)
     {
+        $loan->setStatus(Loan::OPEN);
+
+        $stage = new Stage();
+        $stage->setBorrower($loan->getBorrower());
+        $stage->setStatus(Loan::OPEN);
+        $stage->setStartDate(new \DateTime());
+        $loan->addStage($stage);
+        
         $loan->save();
+        
         $this->addToLoanIndex($loan);
     }
 
@@ -140,4 +146,4 @@ class LoanService
         $loanType->getIndex()->refresh();
     }
 
-} 
+}
