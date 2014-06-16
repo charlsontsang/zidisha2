@@ -73,6 +73,7 @@ Route::group(array('prefix' => 'lender', 'before' => 'auth|hasRole:lender'), fun
         Route::get('profile/edit', array('uses' => 'LenderController@getEditProfile', 'as' => 'lender:edit-profile'));
         Route::post('profile/edit', array('uses' => 'LenderController@postEditProfile', 'as' => 'lender:post-profile', 'before' => 'csrf'));
         Route::get('dashboard', array('uses' => 'LenderController@getDashboard', 'as' => 'lender:dashboard'));
+        Route::get('history', array('uses' => 'LenderController@getTransactionHistory', 'as' => 'lender:history'));
     });
     
 /**
@@ -87,6 +88,7 @@ Route::group(array('prefix' => 'borrower', 'before' => 'auth|hasRole:borrower'),
         Route::post('profile/edit', array('uses' => 'BorrowerController@postEditProfile', 'as' => 'borrower:post-profile', 'before' => 'csrf'));
         Route::get('dashboard', array('uses' => 'BorrowerController@getDashboard', 'as' => 'borrower:dashboard'));
         Route::controller('loan-application', 'LoanApplicationController');
+        Route::get('history', array('uses' => 'BorrowerController@getTransactionHistory', 'as' => 'borrower:history'));
     });
 
 /**

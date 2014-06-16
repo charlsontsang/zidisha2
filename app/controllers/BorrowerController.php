@@ -78,4 +78,8 @@ class BorrowerController extends BaseController
     public function getDashboard(){
         return View::make('borrower.dashboard');
     }
+
+    public function getTransactionHistory(){
+        return View::make('borrower.history');
+    }
 }

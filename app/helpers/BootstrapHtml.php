@@ -9,7 +9,7 @@ class BootstrapHtml {
         return $paginatorFactory->make(
             $paginator->getResults()->getData(),
             $paginator->getNbResults(),
-            2
+            $paginator->getMaxPerpage()
         );
     }
 

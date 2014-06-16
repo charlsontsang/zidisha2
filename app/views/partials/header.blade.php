@@ -42,11 +42,13 @@
                         <li><a href="{{ route('lender:dashboard') }}">Dashboard</a></li>
                         <li><a href="{{ route('lender:public-profile', Auth::getUser()->getUsername()) }}">View My Public Profile</a></li>
                         <li><a href="{{ route('lender:edit-profile') }}">Edit Profile</a></li>
+                        <li><a href="{{ route('lender:history') }}">Transaction History</a></li>
                         @endif
                         @if(Auth::getUser()->getRole() == 'borrower')
                         <li><a href="{{ route('borrower:dashboard') }}">Dashboard</a></li>
                         <li><a href="{{ route('borrower:public-profile', Auth::getUser()->getUsername()) }}">View Public Profile</a></li>
                         <li><a href="{{ route('borrower:edit-profile') }}">Edit Profile</a></li>
+                        <li><a href="{{ route('borrower:history') }}">Transaction History</a></li>
                         @endif
                     </ul>
                 </li>
