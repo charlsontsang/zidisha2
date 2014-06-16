@@ -39,4 +39,5 @@ class Transaction extends BaseTransaction
     const LENDER_INVITE_REDEEM          = 12;
     const LENDER_INVITE_REDEEM_EXPIRED  = 13;
     const LENDER_INVITE_RETURN          = 14;
+
 }

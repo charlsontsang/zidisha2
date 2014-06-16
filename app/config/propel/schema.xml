@@ -143,7 +143,7 @@
         </foreign-key>
     </table>
 
-    <table name="transactions" phpName="Transaction" namespace="Balance/Transaction">
+    <table name="transactions" phpName="Transaction" namespace="Balance">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="user_id" type="INTEGER" required="true"/>
         <column name="amount" type="DECIMAL" size="12" scale="4" required="true"/>
