@@ -8,6 +8,7 @@ use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Country\Country;
 use Zidisha\Country\CountryQuery;
 use Zidisha\Lender\LenderQuery;
+use Zidisha\Loan\Bid;
 use Zidisha\Loan\Category;
 use Zidisha\Loan\CategoryQuery;
 use Zidisha\Loan\Loan;
@@ -73,6 +74,7 @@ class GenerateModelData extends Command
             $this->call('fake', array('model' => 'Borrower', 'size' => 30));
             $this->call('fake', array('model' => 'Lender', 'size' => 30));
             $this->call('fake', array('model' => 'Loan', 'size' => 30));
+            $this->call('fake', array('model' => 'Bid', 'size' => 50));
             $this->call('fake', array('model' => 'Transaction', 'size' => 200));
             
             $this->line('Done!');
@@ -276,20 +278,22 @@ class GenerateModelData extends Command
 
             }
 
-            if ($model == "Transaction") {
+            if($model == "Bid"){
 
+                $openLoans = LoanQuery::create()
+                    ->filterByStatus(0)
+                    ->find();
+                $oneLoan = $openLoans[array_rand($openLoans->getData())];
                 $oneLender = $allLenders[array_rand($allLenders->getData())];
-                $oneLoan = $allLoans[array_rand($allLoans->getData())];
 
-                $transaction = new Transaction();
-                $transaction->setUser($oneLender->getUser());
-                $transaction->setAmount(rand(5,100));
-                $transaction->setLoan($oneLoan);
-                $transaction->setDescription($oneLoan->getSummary());
-                $transaction->setTransactionDate(new \DateTime());
-                $transaction->setType(Transaction::FUND_WITHDRAW);
-                $transaction->save();
-
+                $oneBid = new Bid();
+                $oneBid->setBidDate(new \DateTime());
+                $oneBid->setBidAmount(rand(0,30));
+                $oneBid->setInterestRate(rand(0,15));
+                $oneBid->setLoan($oneLoan);
+                $oneBid->setLender($oneLender);
+                $oneBid->setBorrower($oneLoan->getBorrower());
+                $oneBid->save();
             }
         }
     }

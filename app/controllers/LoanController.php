@@ -3,6 +3,7 @@
 use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Comment\CommentService;
 use Zidisha\Loan\LoanQuery;
+use Zidisha\Loan\BidQuery;
 
 class LoanController extends BaseController
 {
@@ -13,12 +14,15 @@ class LoanController extends BaseController
      */
     private $commentService;
 
+    protected $bidQuery;
+
     public function  __construct(
         LoanQuery $loanQuery,
-        CommentService $commentService
+        CommentService $commentService,
+        BidQuery $bidQuery
     ) {
-
         $this->loanQuery = $loanQuery;
+        $this->bidQuery = $bidQuery;
         $this->commentService = $commentService;
     }
 
@@ -32,9 +36,22 @@ class LoanController extends BaseController
         $borrower = $loan->getBorrower();
         $comments = $this->commentService->getPaginatedComments($borrower, 1, 10);
 
+        $totalRaised = $this->bidQuery
+            ->select(array('total'))
+            ->withColumn('SUM(bid_amount)', 'total')
+            ->filterByLoan($loan)
+            ->findOne();
+
+        $bids = $this->bidQuery->create()
+            ->filterByLoan($loan)
+            ->orderByBidDate()
+            ->find();
+
+        $stillNeeded = $loan->getAmount() - $totalRaised;
+
         return View::make(
             'pages.loan',
-            ['loan' => $loan, 'borrower' => $borrower, 'loan_id' => $loanId, 'comments' => $comments]
+            compact('loan', 'borrower' , 'bids', 'totalRaised', 'stillNeeded', 'comments')
         );
     }
 }
