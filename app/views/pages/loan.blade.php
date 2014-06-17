@@ -28,6 +28,29 @@
         <h2>{{ $loan->getBorrower()->getFirstName() }} {{ $loan->getBorrower()->getLastName() }}</h2>
         <h4>{{ $loan->getBorrower()->getCountry()->getName() }}</h4>
         <strong>Amount Requested: </strong> USD {{ $loan->getAmount() }}
+
+        <br>
+        <strong>FUNDING RAISED </strong>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Date</th>
+                <th>Lender</th>
+                <th>Amount (USD)</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach($bids as $bid)
+            <tr>
+                <td>{{ $bid->getBidDate()->format('d-m-Y') }}</td>
+                <td><a href="{{ route('lender:public-profile', $bid->getLender()->getUser()->getUserName()) }}">{{ $bid->getLender()->getUser()->getUserName() }}</a></td>
+                <td>{{ $bid->getBidAmount() }}</td>
+            </tr>
+            @endforeach
+            </tbody>
+        </table>
+        <strong>Raised: </strong> USD {{ $totalRaised }}
+        <strong>Still Needed: </strong> USD {{ $stillNeeded }}
     </div>
 </div>
 @stop
