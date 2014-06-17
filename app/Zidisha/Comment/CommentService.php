@@ -46,6 +46,12 @@ class CommentService
     {
         $comment->setUserId(null);
         $comment->setMessage('This comment was deleted');
+
+        if($comment->isTranslated()){
+            $comment->setMessageTranslation(null);
+            $comment->setTranslatorId(null);
+        }
+
         $comment->save();
     }
 
@@ -81,5 +87,11 @@ class CommentService
         }
 
         return $roots;
+    }
+
+    public function translateComment($data, Comment $comment)
+    {
+        $comment->setMessageTranslation($data['message']);
+        $comment->save();
     }
 } 
