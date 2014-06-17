@@ -25,7 +25,7 @@
 
         {{ BootstrapForm::hidden('borrower_id', $borrower->getId()) }}
         {{ BootstrapForm::textarea('message') }}
-        {{ BootstrapForm::file('image') }}
+        {{ BootstrapForm::file('file') }}
         {{ BootstrapForm::submit('submit') }}
 
         {{ BootstrapForm::close() }}
