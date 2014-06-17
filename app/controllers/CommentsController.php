@@ -44,7 +44,7 @@ class CommentsController extends BaseController
         $files = [];
         if (\Input::hasFile('file')) {
             foreach (\Input::file('file') as $file) {
-                if ($file->isValid()) {
+                if ($file->isValid() && $file->getSize() < 2048) {
                     $files[] = $file;
                 } else {
                     Flash::error(\Lang::get('comments.flash.file-not-valid'));
