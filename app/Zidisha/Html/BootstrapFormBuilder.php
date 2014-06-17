@@ -210,11 +210,6 @@ class BootstrapFormBuilder
         return $this->form->submit(\Lang::get($value), $options);
     }
 
-    public function hidden($name, $value = null, $options = array())
-    {
-        return $this->form->input('hidden', $name, $value, $options);
-    }
-
     /**
      * Create a hidden input field.
      *
