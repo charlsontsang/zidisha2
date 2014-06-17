@@ -55,17 +55,6 @@ class GenerateModelData extends Command
             ['Argentina', 'SA', 'AR', '54', 't'],
         ];
 
-        $allLenders = LenderQuery::create()
-            ->orderById()
-            ->find();
-
-        $allLoans = LoanQuery::create()
-            ->orderById()
-            ->find();
-
-        $categories = include(app_path() . '/database/LoanCategories.php');
-        $loanService = App::make('\Zidisha\Loan\LoanService');
-        
         if ($model == 'new') {
             $this->line('Rebuild database');
             DB::statement('drop schema public cascade');
@@ -89,7 +78,18 @@ class GenerateModelData extends Command
             $this->line('Done!');
             return;
         }
-        
+
+        $allLenders = LenderQuery::create()
+            ->orderById()
+            ->find();
+
+        $allLoans = LoanQuery::create()
+            ->orderById()
+            ->find();
+
+        $categories = include(app_path() . '/database/LoanCategories.php');
+        $loanService = App::make('\Zidisha\Loan\LoanService');
+
         $this->line("Generate $model");
 
         if ($model == "Loan") {
