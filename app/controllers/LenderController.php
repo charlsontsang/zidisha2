@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\View;
 use Zidisha\Balance\TransactionQuery;
 use Zidisha\Lender\Form\EditProfile;
+use Zidisha\Lender\Form\Funds;
 use Zidisha\Lender\LenderQuery;
 use Zidisha\Lender\ProfileQuery;
 
@@ -13,12 +14,13 @@ class LenderController extends BaseController
     /**
      * @var Zidisha\Lender\Form\EditProfile
      */
-    private $editProfileForm;
+    private $editProfileForm, $fundsForm;
 
-    public function __construct(EditProfile $editProfileForm, TransactionQuery $transactionQuery)
+    public function __construct(EditProfile $editProfileForm, TransactionQuery $transactionQuery, Funds $fundsForm)
     {
         $this->editProfileForm = $editProfileForm;
         $this->transactionQuery = $transactionQuery;
+        $this->fundsForm = $fundsForm;
     }
     
     public function getPublicProfile($username)
@@ -114,5 +116,16 @@ class LenderController extends BaseController
             ->paginate($page, 50);
 
         return View::make('lender.history', compact('paginator', 'currentBalance', 'currentBalancePage'));
+    }
+
+    public function getFunds(){
+
+        $currentBalance = $this->transactionQuery
+            ->select(array('total'))
+            ->withColumn('SUM(amount)', 'total')
+            ->filterByUserId(Auth::getUser()->getId())
+            ->findOne();
+
+        return View::make('lender.funds', compact('currentBalance'), ['form' => $this->fundsForm,]);
     }
 }
