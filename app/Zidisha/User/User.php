@@ -103,12 +103,11 @@ class User extends BaseUser implements UserInterface, RemindableInterface
         return asset('/assets/images/default.jpg');
     }
 
-    public function getProfileUrl($path)
+    public function getProfileUrl($parameters = [])
     {
-        $role = $this->getRole();
         // TODO
-        $route = "$role".$path;
+        $route = $this->getRole() . ":public-profile";
 
-        return \URL::route($route, $this->getUsername());
+        return route($route, ['username' => $this->getUsername()] + $parameters);
     }
 }
