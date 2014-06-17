@@ -1,7 +1,7 @@
-<div class="edit-reply">
+<div class="comment-form" data-comment-action="edit" style="display: none;">
 {{ BootstrapForm::open(array('route' => 'comment:edit', 'translationDomain' => 'comments')) }}
 
-{{ BootstrapForm::text('message') }}
+{{ BootstrapForm::textarea('message') }}
 {{ BootstrapForm::hidden('comment_id', $comment->getId()) }}
 {{ BootstrapForm::submit('edit') }}
 

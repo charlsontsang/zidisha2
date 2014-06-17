@@ -21,10 +21,11 @@
         <br/>
         <h4>Comments</h4>
 
-        {{ BootstrapForm::open(array('route' => 'comment:post', 'translationDomain' => 'comments')) }}
+        {{ BootstrapForm::open(array('route' => 'comment:post', 'translationDomain' => 'comments', 'files' => true)) }}
 
         {{ BootstrapForm::hidden('borrower_id', $borrower->getId()) }}
-        {{ BootstrapForm::text('message') }}
+        {{ BootstrapForm::textarea('message') }}
+        {{ BootstrapForm::file('image') }}
         {{ BootstrapForm::submit('submit') }}
 
         {{ BootstrapForm::close() }}
