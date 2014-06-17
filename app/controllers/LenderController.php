@@ -1,8 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\View;
+use Propel\Runtime\Propel;
+use Zidisha\Balance\Map\TransactionTableMap;
+use Zidisha\Balance\Transaction;
 use Zidisha\Balance\TransactionQuery;
 use Zidisha\Lender\Form\EditProfile;
+use Zidisha\Lender\Form\Funds;
 use Zidisha\Lender\LenderQuery;
 use Zidisha\Lender\ProfileQuery;
 
@@ -13,12 +17,13 @@ class LenderController extends BaseController
     /**
      * @var Zidisha\Lender\Form\EditProfile
      */
-    private $editProfileForm;
+    private $editProfileForm, $fundsForm;
 
-    public function __construct(EditProfile $editProfileForm, TransactionQuery $transactionQuery)
+    public function __construct(EditProfile $editProfileForm, TransactionQuery $transactionQuery, Funds $fundsForm)
     {
         $this->editProfileForm = $editProfileForm;
         $this->transactionQuery = $transactionQuery;
+        $this->fundsForm = $fundsForm;
     }
     
     public function getPublicProfile($username)
@@ -114,5 +119,99 @@ class LenderController extends BaseController
             ->paginate($page, 50);
 
         return View::make('lender.history', compact('paginator', 'currentBalance', 'currentBalancePage'));
+    }
+
+    public function getFunds()
+    {
+        $currentBalance = $this->transactionQuery
+            ->select(array('total'))
+            ->withColumn('SUM(amount)', 'total')
+            ->filterByUserId(Auth::getUser()->getId())
+            ->findOne();
+
+        return View::make('lender.funds', compact('currentBalance'), ['form' => $this->fundsForm,]);
+    }
+
+    public function postFunds()
+    {
+        $form = $this->fundsForm;
+        $form->handleRequest(Request::instance());
+
+        if ($form->isValid()) {
+            $data = $form->getData();
+            // TODO block countries
+            \Stripe::setApiKey(\Config::get('stripe.secret_key'));
+
+            $payment_success = false;
+            try {
+                $email = Auth::getUser()->getEmail();
+                $charge = \Stripe_Charge::create(array(
+                        "amount" => $data['totalAmount'] * 100, // amount in cents, again
+                        "currency" => "usd",
+                        "card" => $data['stripeToken'],
+                        "description" => $email)
+                );
+                $payment_success = true;
+            } catch (Stripe_Error $e) {
+                // TODO Flash Error
+                Log::error("Stripe error: userid  " . Auth::getUser()->getId());
+                Log::error("Stripe error: token   " . $data['stripeToken']);
+                Log::error("Stripe error: message " . $e->getMessage());
+                Log::error("Stripe error: status  " . $e->getHttpStatus());
+                Log::error("Stripe error: body    " . $e->getHttpBody());
+            }
+
+            if ($payment_success) {
+                $stripe_tran_fee= $data['feeAmount'] * -1;
+                $con = Propel::getWriteConnection(TransactionTableMap::DATABASE_NAME);
+
+                for ($retry = 0; $retry < 3; $retry++ ) {
+                    $con->beginTransaction();
+
+                    $transactionUpload = new Transaction();
+                    $transactionUpload->setUser(Auth::getUser());
+                    $transactionUpload->setAmount($data['totalAmount']);
+                    $transactionUpload->setDescription('Funds upload to lender account');
+                    $transactionUpload->setTransactionDate(new \DateTime());
+                    $transactionUpload->setType(Transaction::FUND_UPLOAD);
+                    $transaction1 = $transactionUpload->save($con);
+
+                    $transaction2 = $transaction3 = 1;
+                    if ($data['feeAmount'] > 0) {
+                        $transactionStripeFee = new Transaction();
+                        $transactionStripeFee->setUser(Auth::getUser());
+                        $transactionStripeFee->setAmount($stripe_tran_fee);
+                        $transactionStripeFee->setDescription('Stripe transaction fee');
+                        $transactionStripeFee->setTransactionDate(new \DateTime());
+                        $transactionStripeFee->setType(Transaction::STRIPE_FEE);
+                        $transaction2 = $transactionStripeFee->save($con);
+
+
+                        $transactionStripeAdmin = new Transaction();
+                        // TODO set use to admin
+                        $transactionStripeAdmin->setUser(Auth::getUser());
+                        $transactionStripeAdmin->setAmount($data['feeAmount']);
+                        $transactionStripeAdmin->setDescription('Lender transaction fee');
+                        $transactionStripeAdmin->setTransactionDate(new \DateTime());
+                        $transactionStripeAdmin->setType(Transaction::STRIPE_FEE);
+                        $transaction3 = $transactionStripeAdmin->save($con);
+                    }
+                    if ($transaction1 == 1 && $transaction2 == 1 && $transaction3 == 1 ) {
+                        $con->commit();
+                        Flash::success("Successfully uploaded USD " . $data['totalAmount']);
+                         return Redirect::route('lender:history');
+                    } else {
+                        $con->rollback();
+                    }
+                }
+                // TODO flash message
+                Log::error("Stripe error: userid  " . Auth::getUser()->getId());
+                Log::error("Stripe error: token   " . $data['stripeToken']);
+                // TODO send mail
+            }
+        }
+        
+            Flash::error("Entered Amounts are invalid!");
+            return Redirect::route('lender:funds')->withForm($form);
     }
 }

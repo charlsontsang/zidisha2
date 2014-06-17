@@ -32,7 +32,7 @@ Transaction History
     @foreach($paginator as $transaction)
         <tr>
             <td>{{ $transaction->getTransactionDate()->format('d-m-Y') }}</td>
-            <td><a href="{{ route('loan:index', $transaction->getLoan()->getId()) }}">{{ $transaction->getDescription() }}</a></td>
+            <td><a href="#">{{ $transaction->getDescription() }}</a></td>
             <td>{{ $transaction->getAmount() }}</td>
             <td>{{ $currentBalancePage }}</td>
         </tr>
