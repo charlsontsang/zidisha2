@@ -71,16 +71,20 @@
     <table name="loan_bids" phpName="Bid" namespace="Loan">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="loan_id" type="INTEGER" required="true"/>
-        <column name="lender_id" type="INTEGER" primaryKey="true"/>
+        <column name="lender_id" type="INTEGER" required="true"/>
+        <column name="borrower_id" type="INTEGER" required="true"/>
         <column name="bid_amount" type="DECIMAL" size="10" scale="2" required="true"/>
         <column name="interest_rate" type="DECIMAL" size="5" scale="2" required="true"/>
-        <column name="active" type="TINYINT" size="1" required="true" defaultValue="0"/>
+        <column name="active" type="TINYINT" size="1" required="true" defaultValue="1"/>
         <column name="paid_amount" type="DECIMAL" size="10" scale="2" required="true" defaultValue="0.00"/>
         <column name="bid_date" type="TIMESTAMP" required="true"/>
         <behavior name="timestampable" />
         <column name="lender_invite_credit" type="TINYINT" size="1" required="true" defaultValue="0"/>
         <foreign-key foreignTable="lenders">
             <reference local="lender_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="borrowers">
+            <reference local="borrower_id" foreign="id"/>
         </foreign-key>
         <foreign-key foreignTable="loans">
             <reference local="loan_id" foreign="id"/>
