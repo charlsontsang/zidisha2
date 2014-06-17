@@ -186,11 +186,13 @@
         <column name="user_id" type="INTEGER" required="false"></column>
         <column name="borrower_id" type="INTEGER" required="true"></column>
         <column name="message" type="LONGVARCHAR"></column>
+        <column name="message_translation" type="LONGVARCHAR" required="false"></column>
+        <column name="translator_id" type="INTEGER" required="false"></column>
         <column name="parent_id" type="INTEGER" required="false"></column>
         <column name="root_id" type="INTEGER" required="false"></column>
         <column name="level" type="INTEGER" required="true"></column>
         <behavior name="timestampable" />
-        <foreign-key foreignTable="users">
+        <foreign-key foreignTable="users" phpName="User">
             <reference local="user_id" foreign="id"/>
         </foreign-key>
         <foreign-key foreignTable="borrowers">
@@ -198,6 +200,9 @@
         </foreign-key>
         <foreign-key foreignTable="comments">
             <reference local="parent_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="users" phpName="Translator">
+            <reference local="translator_id" foreign="id"/>
         </foreign-key>
     </table>
 </database>
