@@ -2,6 +2,7 @@
 
 use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Comment\CommentQuery;
+use Zidisha\Flash\Flash;
 
 class CommentsController extends BaseController
 {
@@ -31,7 +32,7 @@ class CommentsController extends BaseController
 
         $comment = $this->commentService->postComment(compact('message'), $user, $borrower);
 
-        Flash::success('Your comment was posted');
+        Flash::success(\Lang::get('comments.flash.post'));
         return Redirect::backAppend("#comment-" . $comment->getId());
     }
 
@@ -45,13 +46,13 @@ class CommentsController extends BaseController
             ->findOne();
 
         $user = \Auth::user();
-        if ($message == '' || !$comment || $comment->getUserId() != $user->getId()) {
+        if ($message == '' || !$comment || $comment->getUserId() != $user->getId() || $comment->isDeleted()) {
             App::abort(404, 'Bad Request');
         }
 
         $this->commentService->editComment(compact('message'), $comment);
 
-        Flash::success('Your comment was edited');
+        Flash::success(\Lang::get('comments.flash.edit'));
         return Redirect::backAppend("#comment-" . $comment->getId());
     }
 
@@ -70,14 +71,13 @@ class CommentsController extends BaseController
             ->filterById($parentId)
             ->findOne();
 
-        if (!$borrower || $message == '' || !$parentComment) {
-            dd('we are here');
+        if (!$borrower || $message == '' || !$parentComment || $parentComment->isDeleted()) {
             App::abort(404, 'Bad Request');
         }
 
         $comment = $this->commentService->postReply(compact('message'), $user, $borrower, $parentComment);
 
-        Flash::success('Your reply was posted');
+        Flash::success(\Lang::get('comments.flash.reply'));
         return Redirect::backAppend("#comment-" . $comment->getId());
     }
 
@@ -91,14 +91,34 @@ class CommentsController extends BaseController
 
         $user = \Auth::user();
 
-        if (!$comment || $comment->getUserId() != $user->getId()) {
+        if (!$comment || $comment->getUserId() != $user->getId() || $comment->isDeleted()) {
             App::abort(404, 'Bad Request');
         }
 
         $this->commentService->deleteComment($comment);
 
-        Flash::success('Your comment was deleted');
+        Flash::success(\Lang::get('comments.flash.delete'));
         return Redirect::back();
+    }
 
+    public function postTranslate()
+    {
+        $commentId = Input::get('comment_id');
+        $message = trim(Input::get('message'));
+
+        $comment = CommentQuery::create()
+            ->filterById($commentId)
+            ->findOne();
+
+        $user = \Auth::user();
+        $userRole = $user->getRole();
+        if ($message == '' || !$comment || $userRole != 'lender') {
+            App::abort(404, 'Bad Request');
+        }
+
+        $this->commentService->translateComment(compact('message'), $comment);
+
+        Flash::success(\Lang::get('comments.flash.translate'));
+        return Redirect::backAppend("#comment-" . $comment->getId());
     }
 }
