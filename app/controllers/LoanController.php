@@ -32,7 +32,6 @@ class LoanController extends BaseController
         $borrower = $loan->getBorrower();
         $comments = $this->commentService->getPaginatedComments($borrower, 1, 10);
 
-
         return View::make(
             'pages.loan',
             ['loan' => $loan, 'borrower' => $borrower, 'loan_id' => $loanId, 'comments' => $comments]

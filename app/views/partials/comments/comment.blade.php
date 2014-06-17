@@ -39,6 +39,23 @@
                     </p>
                     @endif
 
+                    @if(!$comment->isdeleted())
+
+                        @foreach($comment->getUploads() as $upload)
+
+                            @if($upload->isImage())
+                                 <img src="{{ asset('uploads/'.$upload->getFilename()) }}" width="100px" height="100px" alt=""/>
+                                &nbsp;
+                                <a href=""><span class="fa fa-trash-o"></span></a>
+                            @else
+                                <div class="well">
+                                    <a href="{{ public_path().'/uploads/'.$upload->getFilename()  }}">{{ $upload->getFilename() }}</a>
+                                    &nbsp;
+                                    <a href="" style="color: red;" ><span class="fa fa-trash-o"></span></a>
+                                </div>
+                            @endif
+                        @endforeach
+                    @endif
 
                     @if(!$comment->isdeleted())
                         <div class="comment-actions">

@@ -30,6 +30,12 @@ class CommentsController extends BaseController
             App::abort(404, 'Bad Request');
         }
 
+        //Check if the posted comment has file and is valid
+        if (!\Input::hasFile('file') || !\Input::file('file')->isValid())
+        {
+            Flash::error(\Lang::get('comments.flash.file-not-valid'));
+        }
+
         $comment = $this->commentService->postComment(compact('message'), $user, $borrower);
 
         Flash::success(\Lang::get('comments.flash.post'));
@@ -50,7 +56,13 @@ class CommentsController extends BaseController
             App::abort(404, 'Bad Request');
         }
 
-        $this->commentService->editComment(compact('message'), $comment);
+        //Check if the posted comment has file and is valid
+        if (!\Input::hasFile('file') || !\Input::file('file')->isValid())
+        {
+            Flash::error(\Lang::get('comments.flash.file-not-valid'));
+        }
+
+        $this->commentService->editComment(compact('message'), $user, $comment);
 
         Flash::success(\Lang::get('comments.flash.edit'));
         return Redirect::backAppend("#comment-" . $comment->getId());
