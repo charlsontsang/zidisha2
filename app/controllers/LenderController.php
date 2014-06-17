@@ -96,16 +96,22 @@ class LenderController extends BaseController
 
         $page = Request::query('page') ?: 1;
 
-        $currentBalancePageObj = DB::select('SELECT SUM(amount) AS total FROM transactions
-WHERE id IN (SELECT id FROM transactions WHERE transactions.USER_ID=?
-ORDER BY transactions.TRANSACTION_DATE DESC OFFSET ?)', array(Auth::getUser()->getId(), (($page-1)*3)));
+        $currentBalancePageObj = DB::select(
+            'SELECT SUM(amount) AS total
+             FROM transactions
+             WHERE id IN (SELECT id
+                          FROM transactions WHERE user_id = ?
+                          ORDER BY transaction_date DESC, transactions.id DESC
+                          OFFSET ?)',
+             array(Auth::getUser()->getId(), ($page-1) * 50));
 
         $currentBalancePage = $currentBalancePageObj[0]->total;
 
         $paginator = $this->transactionQuery->create()
             ->orderByTransactionDate('desc')
+            ->orderById('desc')
             ->filterByUserId(Auth::getUser()->getId())
-            ->paginate($page, 3);
+            ->paginate($page, 50);
 
         return View::make('lender.history', compact('paginator', 'currentBalance', 'currentBalancePage'));
     }
