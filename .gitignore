@@ -34,3 +34,5 @@ _ide_helper.php
 /app/config/local
 
 /public/images
+/public/uploads
+
