@@ -32,5 +32,19 @@ class Redirector extends \Illuminate\Routing\Redirector{
 
         return $redirect;
     }
+
+    /**
+     * Create a new redirect response to the previous location.
+     *
+     * @param  int    $status
+     * @param  array  $headers
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function backAppend($append, $status = 302, $headers = array())
+    {
+        $back = $this->generator->getRequest()->headers->get('referer').$append;
+
+        return $this->createRedirect($back, $status, $headers);
+    }
     
 } 
