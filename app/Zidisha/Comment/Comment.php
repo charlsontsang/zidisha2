@@ -26,4 +26,37 @@ class Comment extends BaseComment
     {
         return $this->getLevel() == 0;
     }
+
+    public function getFacebookUrl()
+    {
+        $url = \Request::url() . "#comment-" . $this->getId();
+        $relative_share_url = str_replace("https://www.", "", $url);
+        return "http://www.facebook.com/sharer.php?s=100&p[url]=" . urlencode($relative_share_url);
+    }
+
+    public function getTwitterUrl()
+    {
+        $url = \Request::url() . "#comment-" . $this->getId();
+
+        $message = $this->isTranslated() ? $this->getMessageTranslation() : $this->getMessage();
+
+        $username = $this->getUser()->getUsername();
+
+        $twitterParams = array(
+            "url" => $url,
+            "text" => "$message -- $username",
+        );
+
+        return "http://twitter.com/share?" . http_build_query($twitterParams);
+    }
+
+    public function isDeleted()
+    {
+        return $this->getUser() ? false : true;
+    }
+
+    public function isTranslated()
+    {
+        return $this->getMessageTranslation() ? true : false;
+    }
 }
