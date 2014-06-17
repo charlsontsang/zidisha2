@@ -84,6 +84,7 @@ class GenerateModelData extends Command
             $this->call('fake', array('model' => 'Borrower', 'size' => 30));
             $this->call('fake', array('model' => 'Lender', 'size' => 30));
             $this->call('fake', array('model' => 'Loan', 'size' => 30));
+            $this->call('fake', array('model' => 'Transaction', 'size' => 200));
             
             $this->line('Done!');
             return;
