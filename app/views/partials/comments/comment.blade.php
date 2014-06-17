@@ -19,29 +19,29 @@
                         <small>{{ $comment->getCreatedAt()->format('M d, Y') }}</small>
                     </h4>
                     @if($comment->isTranslated())
-                    <p>
-                        {{{ $comment->getMessageTranslation() }}}
-                    </p>
-                    <p class="clearfix">
-                        <small class="pull-right">
-                            <em>@lang('comments.actions.translated-by')</em>
-                            {{ link_to($comment->getUser()->getProfileUrl(), $comment->getUser()->getUsername()) }}
-                            &nbsp;&nbsp;&nbsp;
-                            <a href="#" class="comment-original-message">@lang('comments.actions.show-original')</a>
-                        </small>
-                    </p>
-                    <p style="display: none">
-                        {{{ $comment->getMessage() }}}
-                    </p>
+                        <p>
+                            {{{ $comment->getMessageTranslation() }}}
+                        </p>
+                        <p class="clearfix">
+                            <small class="pull-right">
+                                <em>@lang('comments.actions.translated-by')</em>
+                                {{ link_to($comment->getUser()->getProfileUrl(), $comment->getUser()->getUsername()) }}
+                                &nbsp;&nbsp;&nbsp;
+                                <a href="#" class="comment-original-message">@lang('comments.actions.show-original')</a>
+                            </small>
+                        </p>
+                        <p style="display: none">
+                            {{{ $comment->getMessage() }}}
+                        </p>
                     @else
-                    <p>
-                        {{{ $comment->getMessage() }}}
-                    </p>
+                        <p>
+                            {{{ $comment->getMessage() }}}
+                        </p>
                     @endif
 
                     @include("partials.comments.partial.display-uploads", ['comment' => $comment])
 
-                    @if(!$comment->isdeleted())
+                    @if(!$comment->isOrphanDeleted())
                         <div class="comment-actions">
                                 @include("partials.comments.partial.comment-actions", ['comment' => $comment])
                         </div>
@@ -49,7 +49,6 @@
                             @include("partials.comments.partial.comment-action-forms", ['borrower' => $borrower, 'comment' => $comment])
                         </div>
                     @endif
-
                 </div>
             </div>
 

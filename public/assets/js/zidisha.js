@@ -1,6 +1,6 @@
 $(function() {
 
-    $comments = $('.comments');
+    var $comments = $('.comments');
 
     $comments.on('click', '.comment-action', function(){
         var $this = $(this),
@@ -22,4 +22,12 @@ $(function() {
         return false;
     });
 
+    var commentUploadTemplate = $('#comment-upload-input-template').html();
+
+    $comments.on('click', '.comment-upload-add-more', function(){
+        console.log('....');
+        console.log( $(this).closest('.comment'));
+        $(this).closest('.comment').find('.comment-upload-inputs').append($(commentUploadTemplate));
+        return false;
+    });
 });

@@ -1,14 +1,13 @@
 <?php
 namespace Zidisha\Comment;
 
-use Illuminate\Support\Facades\Input;
 use Zidisha\Borrower\Borrower;
 use Zidisha\Upload\Upload;
 use Zidisha\User\User;
 
 class CommentService
 {
-    public function postComment($data, User $user, Borrower $borrower)
+    public function postComment($data, User $user, Borrower $borrower, $files = [])
     {
         $comment = new Comment();
         $comment->setUserId($user->getId());
@@ -21,32 +20,13 @@ class CommentService
         $comment->setRootId($comment->getId());
         $comment->save();
 
-        //Check if the posted comment has file
-        if (Input::hasFile('file')) {
-            //Check posted file is valid
-            if (Input::file('file')->isValid()) {
-                $filename = Input::file('file')->getClientOriginalName();
-                $extension = Input::file('file')->getClientOriginalExtension();
-                $mimeType = Input::file('file')->getMimeType();
-
-
-                if ($extension == 'jpeg' || $extension == 'png' || $extension == 'jpg') {
-                    $fileType = 'image';
-                } else {
-                    $fileType = 'document';
-                }
-
-                $upload = new Upload();
-                $upload->setFilename($filename);
-                $upload->setExtension($extension);
-                $upload->setUserId($user->getId());
-                $upload->setType($fileType);
-                $upload->setMimeType($mimeType);
+        if ($files) {
+            foreach ($files as $file) {
+                $upload = Upload::createFromFile($file);
+                $upload->setUser($user);
                 $comment->addUpload($upload);
-                $comment->save();
-
-                Input::file('file')->move(public_path() . '/uploads', $filename);
             }
+            $comment->save();
         }
         return $comment;
     }
@@ -65,39 +45,20 @@ class CommentService
         return $comment;
     }
 
-    public function editComment($data, User $user, Comment $comment)
+    public function editComment($data, User $user, Comment $comment, $files = [])
     {
         $comment->setMessage($data['message']);
         $comment->save();
 
-        //Check if the posted comment has file
-        if (Input::hasFile('file')) {
-            //Check posted file is valid
-            if (Input::file('file')->isValid()) {
-                $filename = Input::file('file')->getClientOriginalName();
-                $extension = Input::file('file')->getClientOriginalExtension();
-                $mimeType = Input::file('file')->getMimeType();
-
-                if ($extension == 'jpeg' || $extension == 'png' || $extension == 'jpg') {
-                    $fileType = 'image';
-                } else {
-                    $fileType = 'document';
-                }
-
-                $upload = new Upload();
-                $upload->setFilename($filename);
-                $upload->setExtension($extension);
-                $upload->setUserId($user->getId());
-                $upload->setType($fileType);
-                $upload->setMimeType($mimeType);
+        if ($files) {
+            foreach ($files as $file) {
+                $upload = Upload::createFromFile($file);
+                $upload->setUser($user);
                 $comment->addUpload($upload);
-                $comment->save();
 
-                Input::file('file')->move(public_path() . '/uploads', $filename);
             }
+            $comment->save();
         }
-
-
     }
 
     public function deleteComment(Comment $comment)
@@ -105,15 +66,16 @@ class CommentService
         $comment->setUserId(null);
         $comment->setMessage('This comment was deleted');
 
-        if ($comment->isTranslated()) {
-            $comment->setMessageTranslation(null);
-            $comment->setTranslatorId(null);
-        }
+        $comment->setMessageTranslation(null);
+        $comment->setTranslatorId(null);
 
-        if ($comment->getUploads()) {
-            //TODO : Add a method to remove uploads accociated with comment.
-        }
         $comment->save();
+
+        foreach ($comment->getUploads() as $upload) {
+            $comment->removeUpload($upload);
+            $comment->save();
+            $upload->delete();
+        }
     }
 
     public function getPaginatedComments(Borrower $borrower, $page, $maxPerPage)

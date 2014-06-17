@@ -31,16 +31,28 @@ class CommentsController extends BaseController
             App::abort(404, 'Bad Request');
         }
 
-        //Check if the posted comment has file and is valid
-        if (!\Input::hasFile('file') || !\Input::file('file')->isValid())
-        {
-            Flash::error(\Lang::get('comments.flash.file-not-valid'));
-        }
+        $files = $this->getInputFiles();
 
-        $comment = $this->commentService->postComment(compact('message'), $user, $borrower);
+        $comment = $this->commentService->postComment(compact('message'), $user, $borrower, $files);
 
         Flash::success(\Lang::get('comments.flash.post'));
         return Redirect::backAppend("#comment-" . $comment->getId());
+    }
+
+    protected function getInputFiles()
+    {
+        $files = [];
+        if (\Input::hasFile('file')) {
+            foreach (\Input::file('file') as $file) {
+                if ($file->isValid()) {
+                    $files[] = $file;
+                } else {
+                    Flash::error(\Lang::get('comments.flash.file-not-valid'));
+                }
+            }
+            return $files;
+        }
+        return $files;
     }
 
     public function postEdit()
@@ -53,17 +65,13 @@ class CommentsController extends BaseController
             ->findOne();
 
         $user = \Auth::user();
-        if ($message == '' || !$comment || $comment->getUserId() != $user->getId() || $comment->isDeleted()) {
+        if ($message == '' || !$comment || $comment->getUserId() != $user->getId() || $comment->isOrphanDeleted()) {
             App::abort(404, 'Bad Request');
         }
 
-        //Check if the posted comment has file and is valid
-        if (!\Input::hasFile('file') || !\Input::file('file')->isValid())
-        {
-            Flash::error(\Lang::get('comments.flash.file-not-valid'));
-        }
+        $files = $this->getInputFiles();
 
-        $this->commentService->editComment(compact('message'), $user, $comment);
+        $this->commentService->editComment(compact('message'), $user, $comment, $files);
 
         Flash::success(\Lang::get('comments.flash.edit'));
         return Redirect::backAppend("#comment-" . $comment->getId());
@@ -84,7 +92,7 @@ class CommentsController extends BaseController
             ->filterById($parentId)
             ->findOne();
 
-        if (!$borrower || $message == '' || !$parentComment || $parentComment->isDeleted()) {
+        if (!$borrower || $message == '' || !$parentComment || $parentComment->isOrphanDeleted()) {
             App::abort(404, 'Bad Request');
         }
 
@@ -104,7 +112,7 @@ class CommentsController extends BaseController
 
         $user = \Auth::user();
 
-        if (!$comment || $comment->getUserId() != $user->getId() || $comment->isDeleted()) {
+        if (!$comment || $comment->getUserId() != $user->getId() || $comment->isOrphanDeleted()) {
             App::abort(404, 'Bad Request');
         }
 
@@ -140,7 +148,9 @@ class CommentsController extends BaseController
         $comment = CommentQuery::create()->filterById(\Input::get('comment_id'))->findOne();
         $upload = \Zidisha\Upload\UploadQuery::create()->filterById(\Input::get('upload_id'))->findOne();
 
-        if(!$comment || !$upload){
+        $user = \Auth::user();
+
+        if (!$comment || !$upload || $comment->getUserId() != $user->getId()) {
             App::abort(404, 'Bad Request');
         }
 

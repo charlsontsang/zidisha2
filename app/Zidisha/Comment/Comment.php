@@ -50,7 +50,7 @@ class Comment extends BaseComment
         return "http://twitter.com/share?" . http_build_query($twitterParams);
     }
 
-    public function isDeleted()
+    public function isOrphanDeleted()
     {
         return $this->getUser() ? false : true;
     }

@@ -18,4 +18,6 @@ return [
         'show-original' => 'Display posting in original language',
         'translated-by' => 'Translated by'
     ],
+    'upload-file' => 'Select a file or image to upload.',
+    'add-more' => 'Add more'
 ];
