@@ -205,4 +205,28 @@
             <reference local="translator_id" foreign="id"/>
         </foreign-key>
     </table>
+
+    <table name="uploads" phpName="Upload" namespace="Upload">
+        <column name="id" type="INTEGER" autoIncrement="true" primaryKey="true"></column>
+        <column name="filename" type="VARCHAR" required="true" ></column>
+        <column name="extension" type="VARCHAR" required="true"></column>
+        <column name="user_id" type="INTEGER" required="true" ></column>
+        <column name="type" type="VARCHAR" required="true"></column>
+        <column name="mime_type" type="VARCHAR" required="true"></column>
+        <behavior name="timestampable"/>
+        <foreign-key foreignTable="users" phpName="User">
+            <reference local="user_id" foreign="id"/>
+        </foreign-key>
+    </table>
+
+    <table name="comment_upload" namespace="Comment" isCrossRef="true">
+        <column name="comment_id" type="INTEGER" required="true" primaryKey="true"></column>
+        <column name="upload_id" type="INTEGER" required="true" primaryKey="true"></column>
+        <foreign-key foreignTable="comments" phpName="Comment">
+            <reference local="comment_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="uploads" phpName="Upload">
+            <reference local="upload_id" foreign="id"/>
+        </foreign-key>
+    </table>
 </database>
