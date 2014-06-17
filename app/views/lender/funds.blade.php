@@ -18,7 +18,7 @@ Funds
     <strong>Add Funds</strong>
 </div>
 
-{{ BootstrapForm::open(array('route' => '', 'translationDomain' => 'fund')) }}
+{{ BootstrapForm::open(array('route' => 'lender:funds', 'translationDomain' => 'fund')) }}
 {{ BootstrapForm::populate($form) }}
 
 {{ BootstrapForm::text('creditAmount') }}
