@@ -1,27 +1,28 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Singularity Guy
- * Date: 6/17/14
- * Time: 3:12 PM
- */
 
 namespace Zidisha\Lender\Form\Validator;
 
 
 use Illuminate\Validation\Validator;
 
-class FundsValidator extends Validator{
+class FundsValidator extends Validator
+{
 
-    public function validateAmounts($attribute, $value, $parameters){
-        if($this->getValue('feeAmount') != ((($this->getValue('donationAmount') + $this->getValue('creditAmount'))*2.5)/100)){
+    public function validateAmounts($attribute, $value, $parameters)
+    {
+        $subtotalAmount = $this->getValue('donationAmount') + $this->getValue('creditAmount');
+        $feeAmount = $subtotalAmount * 0.025;
+        $totalAmount = $subtotalAmount + $feeAmount;
+
+        if ($this->getValue('feeAmount') != round($feeAmount, 2)) {
             return false;
         }
 
-        if($value != ($this->getValue('creditAmount') + $this->getValue('feeAmount') + $this->getValue('donationAmount'))){
+        if ($this->getValue('totalAmount') != round($totalAmount, 2)) {
             return false;
         }
+        
         return true;
     }
 
-} 
+}

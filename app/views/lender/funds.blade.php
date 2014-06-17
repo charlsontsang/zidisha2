@@ -18,7 +18,7 @@ Funds
     <strong>Add Funds</strong>
 </div>
 
-{{ BootstrapForm::open(array('route' => 'lender:post-funds', 'translationDomain' => 'fund')) }}
+{{ BootstrapForm::open(array('route' => 'lender:post-funds', 'translationDomain' => 'fund', 'id' => 'funds-upload')) }}
 {{ BootstrapForm::populate($form) }}
 
 {{ BootstrapForm::text('creditAmount', null, ['id' => 'credit-amount']) }}
@@ -26,6 +26,9 @@ Funds
 
 {{ BootstrapForm::hidden('feeAmount', null, ['id' => 'fee-amount']) }}
 {{ BootstrapForm::hidden('totalAmount', null, ['id' => 'total-amount']) }}
+
+{{ BootstrapForm::hidden('stripeToken', null, ['id' => 'stripe-token']) }}
+{{ BootstrapForm::hidden('paymentMethod', null, ['id' => 'payment-method']) }}
 
 {{ BootstrapForm::label("Payment Transfer Cost") }}:
 USD <span id="fee-amount-display"></span>
@@ -36,16 +39,38 @@ USD <span id="fee-amount-display"></span>
 USD <span id="total-amount-display"></span>
 
 <br/>
-
-{{ BootstrapForm::submit('save') }}
+<button id="stripe-payment" class="btn btn-primary">Pay With Card</button>
 
 {{ BootstrapForm::close() }}
 
 @stop
 
 @section('script-footer')
+<script src="https://checkout.stripe.com/checkout.js"></script>
 <script type="text/javascript">
     $(function() {
+
+        var handler = StripeCheckout.configure({
+            key: "{{ \Config::get('stripe.public_key') }}",
+            token: function(token, args) {
+                $("#stripe-token").val(token.id);
+                $("#payment-method").val("stripe");
+                $('#funds-upload').submit();
+            }
+        });
+        $(function() {
+            $('#stripe-payment').click(function(e) {
+                handler.open({
+                    name: 'Zidisha',
+                    description: 'Payment to Zidisha',
+                    amount: parseFloat($("#total-amount").val()) * 100,
+                    email: "{{ \Auth::user()->getEmail() }}",
+                    panelLabel: "Pay @{{amount}}"
+                });
+                e.preventDefault();
+            });
+        });
+        
         var $donationAmount = $('#donation-amount'),
             $creditAmount = $('#credit-amount'),
             $feeAmount = $('#fee-amount'),
@@ -77,6 +102,8 @@ USD <span id="total-amount-display"></span>
         
         $donationAmount.on('keyup', calculateAmounts);
         $creditAmount.on('keyup', calculateAmounts);
+        
+        calculateAmounts();
     });
 </script>
 @stop

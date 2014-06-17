@@ -118,8 +118,8 @@ class LenderController extends BaseController
         return View::make('lender.history', compact('paginator', 'currentBalance', 'currentBalancePage'));
     }
 
-    public function getFunds(){
-
+    public function getFunds()
+    {
         $currentBalance = $this->transactionQuery
             ->select(array('total'))
             ->withColumn('SUM(amount)', 'total')
@@ -129,14 +129,14 @@ class LenderController extends BaseController
         return View::make('lender.funds', compact('currentBalance'), ['form' => $this->fundsForm,]);
     }
 
-    public function postFunds(){
-
+    public function postFunds()
+    {
         $form = $this->fundsForm;
         $form->handleRequest(Request::instance());
 
         if ($form->isValid()) {
             $data = $form->getData();
-
+            dd($data);
 
            // return Redirect::route('lender:public-profile', $data['username']);
         }
