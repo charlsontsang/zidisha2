@@ -6,7 +6,8 @@ return [
         'reply' => 'Your reply was posted',
         'delete' => 'Your comment was deleted',
         'translate' => 'Your comment was translated',
-        'file-not-valid' => 'The uploaded file is not valid'
+        'file-not-valid' => 'The uploaded file is not valid',
+        'file-deleted' => 'Your File was Deleted'
     ],
     'actions' => [
         'edit' => 'Edit',

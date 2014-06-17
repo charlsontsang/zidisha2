@@ -110,6 +110,9 @@ class CommentService
             $comment->setTranslatorId(null);
         }
 
+        if ($comment->getUploads()) {
+            //TODO : Add a method to remove uploads accociated with comment.
+        }
         $comment->save();
     }
 
@@ -151,5 +154,13 @@ class CommentService
     {
         $comment->setMessageTranslation($data['message']);
         $comment->save();
+    }
+
+    public function deleteUpload(Comment $comment, Upload $upload)
+    {
+        $comment->removeUpload($upload);
+        $comment->save();
+
+        $upload->delete();
     }
 } 

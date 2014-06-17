@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Input;
 use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Comment\CommentQuery;
 use Zidisha\Flash\Flash;
@@ -132,5 +133,20 @@ class CommentsController extends BaseController
 
         Flash::success(\Lang::get('comments.flash.translate'));
         return Redirect::backAppend("#comment-" . $comment->getId());
+    }
+
+    public function postDeleteUpload()
+    {
+        $comment = CommentQuery::create()->filterById(\Input::get('comment_id'))->findOne();
+        $upload = \Zidisha\Upload\UploadQuery::create()->filterById(\Input::get('upload_id'))->findOne();
+
+        if(!$comment || !$upload){
+            App::abort(404, 'Bad Request');
+        }
+
+        $this->commentService->deleteUpload($comment, $upload);
+
+        Flash::success(\Lang::get('comments.flash.file-deleted'));
+        return Redirect::back();
     }
 }

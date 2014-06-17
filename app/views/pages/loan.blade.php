@@ -35,6 +35,7 @@
 
         @include('partials.comments.comments', ['comments' => $comments])
     </div>
+
     <div class="col-xs-4">
     <img src="{{ $loan->getBorrower()->getUser()->getProfilePicture() }}" width="100" height="100">
         <h2>{{ $loan->getBorrower()->getFirstName() }} {{ $loan->getBorrower()->getLastName() }}</h2>
@@ -42,5 +43,4 @@
         <strong>Amount Requested: </strong> USD {{ $loan->getAmount() }}
     </div>
 </div>
-
 @stop

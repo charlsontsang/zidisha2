@@ -106,3 +106,4 @@ Route::post('edit', array('uses' => 'CommentsController@postEdit', 'as' => 'comm
 Route::post('reply', array('uses' => 'CommentsController@postReply', 'as' => 'comment:reply', 'before' => 'csrf'));
 Route::post('translate', array('uses' => 'CommentsController@postTranslate', 'as' => 'comment:translate', 'before' => 'csrf'));
 Route::post('delete', array('uses' => 'CommentsController@postDelete', 'as' => 'comment:delete', 'before' => 'csrf'));
+Route::post('delete/upload', array('uses' => 'CommentsController@postDeleteUpload', 'as' => 'comment:delete-upload', 'before' => 'csrf'));
