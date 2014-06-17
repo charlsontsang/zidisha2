@@ -75,6 +75,7 @@ Route::group(array('prefix' => 'lender', 'before' => 'auth|hasRole:lender'), fun
         Route::get('dashboard', array('uses' => 'LenderController@getDashboard', 'as' => 'lender:dashboard'));
         Route::get('history', array('uses' => 'LenderController@getTransactionHistory', 'as' => 'lender:history'));
         Route::get('funds', array('uses' => 'LenderController@getFunds', 'as' => 'lender:funds'));
+        Route::post('funds', array('uses' => 'LenderController@postFunds', 'as' => 'lender:post-funds', 'before' => 'csrf'));
     });
     
 /**
