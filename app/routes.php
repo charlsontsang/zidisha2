@@ -104,4 +104,5 @@ Route::get('loan/{id}', array('uses' => 'LoanController@getIndex', 'as' => 'loan
 Route::post('comment', array('uses' => 'CommentsController@postComment', 'as' => 'comment:post', 'before' => 'csrf'));
 Route::post('edit', array('uses' => 'CommentsController@postEdit', 'as' => 'comment:edit', 'before' => 'csrf'));
 Route::post('reply', array('uses' => 'CommentsController@postReply', 'as' => 'comment:reply', 'before' => 'csrf'));
+Route::post('translate', array('uses' => 'CommentsController@postTranslate', 'as' => 'comment:translate', 'before' => 'csrf'));
 Route::post('delete', array('uses' => 'CommentsController@postDelete', 'as' => 'comment:delete', 'before' => 'csrf'));
