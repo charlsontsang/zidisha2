@@ -109,3 +109,13 @@ Route::post('reply', array('uses' => 'CommentsController@postReply', 'as' => 'co
 Route::post('translate', array('uses' => 'CommentsController@postTranslate', 'as' => 'comment:translate', 'before' => 'csrf'));
 Route::post('delete', array('uses' => 'CommentsController@postDelete', 'as' => 'comment:delete', 'before' => 'csrf'));
 Route::post('delete/upload', array('uses' => 'CommentsController@postDeleteUpload', 'as' => 'comment:delete-upload', 'before' => 'csrf'));
+
+/**
+ * Routes for Admin
+ */
+Route::group(array('prefix' => 'admin', 'before' => 'auth|hasRole:admin'), function()
+    {
+        Route::get('dashboard', array('uses' => 'AdminController@getDashboard', 'as' => 'admin:dashboard'));
+        Route::get('borrowers', array('uses' => 'AdminController@getBorrowers', 'as' => 'admin:borrowers'));
+        Route::get('lenders', array('uses' => 'AdminController@getLenders', 'as' => 'admin:lenders'));
+    });

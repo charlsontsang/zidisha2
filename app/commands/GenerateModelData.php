@@ -71,6 +71,7 @@ class GenerateModelData extends Command
             $this->line('Generate data');
             $this->call('fake', array('model' => 'Country', 'size' => 10));
             $this->call('fake', array('model' => 'Category', 'size' => 10));
+            $this->call('fake', array('model' => 'Admin', 'size' => 1));
             $this->call('fake', array('model' => 'Borrower', 'size' => 30));
             $this->call('fake', array('model' => 'Lender', 'size' => 30));
             $this->call('fake', array('model' => 'Loan', 'size' => 30));
@@ -111,6 +112,19 @@ class GenerateModelData extends Command
                 $this->error("not enough categories or borrowers");
                 return;
             }
+        }
+
+        if($model == "Admin"){
+            $userName = 'admin';
+            $password = '1234567890';
+            $email = 'admin@mail.com';
+
+            $user = new \Zidisha\User\User();
+            $user->setUsername($userName);
+            $user->setPassword($password);
+            $user->setEmail($email);
+            $user->setRole('admin');
+            $user->save();
         }
 
         for ($i = 1; $i <= $size; $i++) {
