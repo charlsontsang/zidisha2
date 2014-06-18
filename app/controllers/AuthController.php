@@ -47,6 +47,10 @@ class AuthController extends BaseController
             if (Auth::getUser()->getRole() == 'borrower') {
                 return Redirect::route('borrower:dashboard');
             }
+
+            if (Auth::getUser()->getRole() == 'admin') {
+                return Redirect::route('admin:dashboard');
+            }
         }
 
         Flash::error("Wrong username or password!");
