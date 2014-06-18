@@ -117,7 +117,9 @@ class Upload extends BaseUpload
                 }
             );
 
-            $file->makeDirectory($this->getCacheBasePath($format), 0755, true);
+            if(!$file->exists($this->getCacheBasePath($format))){
+                $file->makeDirectory($this->getCacheBasePath($format), 0755, true);
+            }
             $img->save($cachePath);
         }
 
