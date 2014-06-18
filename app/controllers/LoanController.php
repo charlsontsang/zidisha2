@@ -54,10 +54,15 @@ class LoanController extends BaseController
             ->find();
 
         $stillNeeded = $loan->getAmount() - $totalRaised;
+        if($loan->getAmount() <= $totalRaised){
+            $raised = 100;
+        }else{
+            $raised = intval(($totalRaised/($loan->getAmount()))*100);
+        }
 
         return View::make(
             'pages.loan',
-            compact('loan', 'borrower' , 'bids', 'totalRaised', 'stillNeeded', 'comments'),
+            compact('loan', 'borrower' , 'bids', 'totalRaised', 'stillNeeded', 'comments', 'raised'),
             ['form' => $this->bidForm,]
         );
     }
