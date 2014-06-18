@@ -29,6 +29,20 @@
         <h4>{{ $loan->getBorrower()->getCountry()->getName() }}</h4>
         <strong>Amount Requested: </strong> USD {{ $loan->getAmount() }}
 
+        @if($loan->getStatus() == '0')
+        <div>
+            {{ BootstrapForm::open(array('route' => 'loan:post-bid', 'translationDomain' => 'bid')) }}
+            {{ BootstrapForm::populate($form) }}
+
+            {{ BootstrapForm::text('Amount') }}
+            {{ BootstrapForm::select('interestRate', $form->getRates()) }}
+            {{ BootstrapForm::hidden('loanId', $loan->getId()) }}
+            {{ BootstrapForm::submit('save') }}
+
+            {{ BootstrapForm::close() }}
+        </div>
+        @endif
+
         <br>
         <strong>FUNDING RAISED </strong>
         <table class="table table-striped">
