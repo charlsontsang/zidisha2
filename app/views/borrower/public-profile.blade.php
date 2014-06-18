@@ -16,4 +16,21 @@ Join the global P2P microlending movement
 <p><strong>About me: </strong> {{ $borrower->getProfile()->getAboutMe() }} </p> <br>
 
 <p><strong>About business: </strong> {{ $borrower->getProfile()->getAboutBusiness() }} </p> <br>
+
+    @if(!$borrower->getUploads()->isEmpty())
+        <h4>Borrower Pictures</h4>
+        <div>
+            @foreach($borrower->getUploads() as $upload)
+                @if($upload->isImage())
+                    <a href="{{ $upload->getImageUrl('small-profile-picture') }}">
+                        <img src="{{ $upload->getImageUrl('small-profile-picture') }}" alt=""/>
+                    </a>
+                @else
+                    <div class="well">
+                        <a href="{{  $upload->getFileUrl()  }}">{{ $upload->getFilename() }}</a>
+                    </div>
+                @endif
+            @endforeach
+        </div>
+    @endif
 @stop

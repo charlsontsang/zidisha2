@@ -4,8 +4,12 @@ return [
 
     'formats' => [
         'small-profile-picture' => [
+            'width' => '150',
+            'height' => null
+        ],
+        'medium-profile-picture' => [
             'width' => '400',
             'height' => null
-        ]
+        ],
     ],
 ];
