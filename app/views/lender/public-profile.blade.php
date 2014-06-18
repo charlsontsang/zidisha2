@@ -9,7 +9,7 @@ Join the global P2P microlending movement
     <h1>Lender Details</h1>
 </div>
 
-<img src="{{ $lender->getUser()->getProfilePicture() }}">
+<img src="{{ $lender->getUser()->getProfilePictureUrl() }}">
 
 <p><strong>Username: </strong> {{ $lender->getUser()->getUsername() }} </p> <br>
 

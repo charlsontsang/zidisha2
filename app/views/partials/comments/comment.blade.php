@@ -3,7 +3,7 @@
             <div class="media">
                 @if($comment->getUser())
                     <a class="pull-left" href="{{ $comment->getUser()->getProfileUrl() }}">
-                        <img class="media-object" width="100px" height="100px" src="{{ $comment->getUser()->getProfilePicture() }}" alt="">
+                        <img class="media-object" width="100px" height="100px" src="{{ $comment->getUser()->getProfilePictureUrl() }}" alt="">
                     </a>
                 @else
                 <a class="pull-left">

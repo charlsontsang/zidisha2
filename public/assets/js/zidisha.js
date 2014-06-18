@@ -25,9 +25,15 @@ $(function() {
     var commentUploadTemplate = $('#comment-upload-input-template').html();
 
     $comments.on('click', '.comment-upload-add-more', function(){
-        console.log('....');
-        console.log( $(this).closest('.comment'));
         $(this).closest('.comment').find('.comment-upload-inputs').append($(commentUploadTemplate));
+        return false;
+    });
+
+    var $borrowerEditForm = $('.borrower-edit-form');
+
+    var borrowerUploadTemplate = $('#borrower-upload-input-template').html();
+    $borrowerEditForm.on('click', '.borrower-upload-add-more', function(){
+        $borrowerEditForm.find('.borrower-upload-inputs').prepend($(borrowerUploadTemplate));
         return false;
     });
 });

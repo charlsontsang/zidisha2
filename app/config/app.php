@@ -120,6 +120,7 @@ return array(
 		'Illuminate\Validation\ValidationServiceProvider',
 		'Illuminate\View\ViewServiceProvider',
 		'Illuminate\Workbench\WorkbenchServiceProvider',
+        'Intervention\Image\ImageServiceProvider',
         'Zidisha\Auth\Reminders\ReminderServiceProvider',
         'Zidisha\Flash\FlashServiceProvider',
         'Zidisha\Html\BootstrapFormServiceProvider',
@@ -192,8 +193,8 @@ return array(
 		'Validator'       => 'Illuminate\Support\Facades\Validator',
 		'View'            => 'Illuminate\Support\Facades\View',
         'Flash'           => 'Zidisha\Flash\Flash',
-        'BootstrapForm'   => 'Zidisha\Html\BootstrapForm'
-
+        'BootstrapForm'   => 'Zidisha\Html\BootstrapForm',
+        'Image' => 'Intervention\Image\Facades\Image'
 	),
 
 );

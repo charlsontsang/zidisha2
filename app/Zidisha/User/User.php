@@ -79,23 +79,18 @@ class User extends BaseUser implements UserInterface, RemindableInterface
         return parent::getBorrower($con);
     }
 
-    public function getProfilePicture()
+    public function getProfilePictureUrl($format = 'small-profile-picture')
     {
-
         if($this->hasProfilePicture()){
-            return asset('/images/profile/' . $this->getUsername(). '.jpg');
+            return $this->getProfilePicture()->getImageUrl($format);
         }
+
         return $this->getDefaultPicture();
     }
 
     public function hasProfilePicture()
     {
-        $path = '/images/profile/' . $this->getUsername().  '.jpg';
-
-        if(file_exists(public_path() . $path)){
-            return true;
-        }
-        return false;
+        return $this->getProfilePicture() ? true : false;
     }
 
     public function getDefaultPicture()
@@ -105,7 +100,6 @@ class User extends BaseUser implements UserInterface, RemindableInterface
 
     public function getProfileUrl($parameters = [])
     {
-        // TODO
         $route = $this->getRole() . ":public-profile";
 
         return route($route, ['username' => $this->getUsername()] + $parameters);

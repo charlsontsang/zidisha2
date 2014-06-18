@@ -89,6 +89,7 @@ Route::group(array('prefix' => 'borrower', 'before' => 'auth|hasRole:borrower'),
 
         Route::get('profile/edit', array('uses' => 'BorrowerController@getEditProfile', 'as' => 'borrower:edit-profile'));
         Route::post('profile/edit', array('uses' => 'BorrowerController@postEditProfile', 'as' => 'borrower:post-profile', 'before' => 'csrf'));
+        Route::post('delete/upload', array('uses' => 'BorrowerController@postDeleteUpload', 'as' => 'borrower:delete-upload', 'before' => 'csrf'));
         Route::get('dashboard', array('uses' => 'BorrowerController@getDashboard', 'as' => 'borrower:dashboard'));
         Route::controller('loan-application', 'LoanApplicationController');
         Route::get('history', array('uses' => 'BorrowerController@getTransactionHistory', 'as' => 'borrower:history'));
@@ -119,3 +120,7 @@ Route::group(array('prefix' => 'admin', 'before' => 'auth|hasRole:admin'), funct
         Route::get('borrowers', array('uses' => 'AdminController@getBorrowers', 'as' => 'admin:borrowers'));
         Route::get('lenders', array('uses' => 'AdminController@getLenders', 'as' => 'admin:lenders'));
     });
+/**
+ * Image resize route
+ */
+Route::get('resize/{uploadId}/{format}', array('uses' => 'ImageController@getImage', 'as' => 'image:resize'));
