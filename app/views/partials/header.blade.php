@@ -31,40 +31,62 @@
                         <li><a href="{{ route('page:press') }}">Press</a></li>
                     </ul>
                 </li>
-                @if(Auth::check())
+                @if(Auth::check() && Auth::getUser()->getRole() != 'admin')
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         My Account <b class="caret"></b>
                     </a>
-                    
+
                     <ul class="dropdown-menu">
                         @if(Auth::getUser()->getRole() == 'lender')
                         <li><a href="{{ route('lender:dashboard') }}">Dashboard</a></li>
-                        <li><a href="{{ route('lender:public-profile', Auth::getUser()->getUsername()) }}">View My Public Profile</a></li>
+                        <li><a href="{{ route('lender:public-profile', Auth::getUser()->getUsername()) }}">View My
+                                Public Profile</a></li>
                         <li><a href="{{ route('lender:edit-profile') }}">Edit Profile</a></li>
                         <li><a href="{{ route('lender:history') }}">Transaction History</a></li>
                         <li><a href="{{ route('lender:funds') }}">Add or Withdraw Funds</a></li>
                         @endif
                         @if(Auth::getUser()->getRole() == 'borrower')
                         <li><a href="{{ route('borrower:dashboard') }}">Dashboard</a></li>
-                        <li><a href="{{ route('borrower:public-profile', Auth::getUser()->getUsername()) }}">View Public Profile</a></li>
+                        <li><a href="{{ route('borrower:public-profile', Auth::getUser()->getUsername()) }}">View Public
+                                Profile</a></li>
                         <li><a href="{{ route('borrower:edit-profile') }}">Edit Profile</a></li>
                         <li><a href="{{ route('borrower:history') }}">Transaction History</a></li>
                         @endif
                     </ul>
                 </li>
                 @endif
+                @if(Auth::check() && Auth::getUser()->getRole() == 'admin')
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        Manage Borrowers <b class="caret"></b>
+                    </a>
+
+                    <ul class="dropdown-menu">
+                        <li><a href="{{ route('admin:dashboard') }}">Dashboard</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        Manage Lenders <b class="caret"></b>
+                    </a>
+
+                    <ul class="dropdown-menu">
+                        <li><a href="{{ route('admin:dashboard') }}">Dashboard</a></li>
+                     </ul>
+                </li>
+                @endif
             </ul>
             <form class="navbar-form navbar-left">
                 @if(Auth::check())
-                    <a href="{{ route('logout') }}" class="btn btn-primary">
-                        Log out
-                    </a>
+                <a href="{{ route('logout') }}" class="btn btn-primary">
+                    Log out
+                </a>
                 @else
-                    <!--a href="{{ route('logout') }}" class="btn btn-primary" data-toggle="modal" data-target="#LoginModal"-->
-                    <a href="{{ route('login') }}" class="btn btn-primary">
-                        Log in
-                    </a>
+                <!--a href="{{ route('logout') }}" class="btn btn-primary" data-toggle="modal" data-target="#LoginModal"-->
+                <a href="{{ route('login') }}" class="btn btn-primary">
+                    Log in
+                </a>
                 @endif
             </form>
         </div>
