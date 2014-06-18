@@ -76,6 +76,7 @@ Route::group(array('prefix' => 'lender', 'before' => 'auth|hasRole:lender'), fun
         Route::get('history', array('uses' => 'LenderController@getTransactionHistory', 'as' => 'lender:history'));
         Route::get('funds', array('uses' => 'LenderController@getFunds', 'as' => 'lender:funds'));
         Route::post('funds', array('uses' => 'LenderController@postFunds', 'as' => 'lender:post-funds', 'before' => 'csrf'));
+
     });
     
 /**
@@ -97,6 +98,7 @@ Route::group(array('prefix' => 'borrower', 'before' => 'auth|hasRole:borrower'),
  * Routes for loan page
  */
 Route::get('loan/{id}', array('uses' => 'LoanController@getIndex', 'as' => 'loan:index'));
+Route::post('cart', array('uses' => 'LoanController@postBid', 'as' => 'loan:post-bid', 'before' => 'csrf'));
 
 /**
  * Routes for Comments controller

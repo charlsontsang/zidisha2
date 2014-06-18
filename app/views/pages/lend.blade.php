@@ -102,6 +102,7 @@
                 <p>{{ $loan->getDescription() }}</p>
                 <strong>@lang('lend.loan.amount'): </strong> {{ $loan->getAmount() }} USD
                 <strong>@lang('lend.loan.interest-rate'): </strong> {{ $loan->getInterestRate() }} %
+                @include('partials/_progress', [ 'raised' => rand(1,100)])
             </li>
             <br>
         </ul>
