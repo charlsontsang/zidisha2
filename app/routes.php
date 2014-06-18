@@ -116,5 +116,6 @@ Route::post('delete/upload', array('uses' => 'CommentsController@postDeleteUploa
 Route::group(array('prefix' => 'admin', 'before' => 'auth|hasRole:admin'), function()
     {
         Route::get('dashboard', array('uses' => 'AdminController@getDashboard', 'as' => 'admin:dashboard'));
-
+        Route::get('borrowers', array('uses' => 'AdminController@getBorrowers', 'as' => 'admin:borrowers'));
+        Route::get('lenders', array('uses' => 'AdminController@getLenders', 'as' => 'admin:lenders'));
     });

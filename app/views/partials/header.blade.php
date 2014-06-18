@@ -63,7 +63,7 @@
                     </a>
 
                     <ul class="dropdown-menu">
-                        <li><a href="{{ route('admin:dashboard') }}">Dashboard</a></li>
+                        <li><a href="{{ route('admin:borrowers') }}">Find Borrowers</a></li>
                     </ul>
                 </li>
                 <li class="dropdown">
@@ -72,7 +72,7 @@
                     </a>
 
                     <ul class="dropdown-menu">
-                        <li><a href="{{ route('admin:dashboard') }}">Dashboard</a></li>
+                        <li><a href="{{ route('admin:lenders') }}">Find Lenders</a></li>
                      </ul>
                 </li>
                 @endif
