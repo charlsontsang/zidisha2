@@ -20,13 +20,16 @@ class Upload extends BaseUpload
         return $this->getType() == 'image' ? true : false;
     }
 
-    public function getImageUrl()
+    public function getImageUrl($format)
     {
-        $file = new Filesystem();
-        if ($file->exists(public_path() . '/uploads/cache/' . $this->getFilename())) {
-            return asset('uploads/cache/' . $this->getFilename());
+        if (!Config::get('image.formats.' . $format)) {
+            throw new ConfigurationNotFoundException();
+        }
+
+        if ($this->getCachePath($format)) {
+            return asset('uploads/cache/' . $format . '/' . $this->getFilename());
         } else {
-            return route('image:resize', ['upload_id' => $this->getId(), 'format' => 'small_profile_pic']);
+            return route('image:resize', ['upload_id' => $this->getId(), 'format' => $format]);
         }
     }
 
