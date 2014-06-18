@@ -6,8 +6,8 @@
                     <div class="comment-form" data-comment-action="delete-upload">
                         {{ BootstrapForm::open(array('route' => 'comment:delete-upload', 'translationDomain' => 'comments')) }}
 
-                        <a href="{{ $upload->getUrl() }}">
-                            <img src="{{ $upload->getUrl() }}" width="100px" height="100px" alt=""/>
+                        <a href="{{ $upload->getImageUrl('small-profile-picture') }}">
+                            <img src="{{ $upload->getImageUrl('small-profile-picture') }}" width="100px" height="100px" alt=""/>
                         </a>
 
                         {{ BootstrapForm::hidden('comment_id', $comment->getId()) }}
@@ -20,7 +20,7 @@
                         {{ BootstrapForm::open(array('route' => 'comment:delete-upload', 'translationDomain' => 'comments')) }}
 
                         <div class="well">
-                            <a href="{{  $upload->getUrl()  }}">{{ $upload->getFilename() }}</a>
+                            <a href="{{  $upload->getFileUrl()  }}">{{ $upload->getFilename() }}</a>
                         </div>
 
                         {{ BootstrapForm::hidden('comment_id', $comment->getId()) }}
