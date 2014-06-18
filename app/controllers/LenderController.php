@@ -28,8 +28,6 @@ class LenderController extends BaseController
     
     public function getPublicProfile($username)
     {
-
-
         $lender = LenderQuery::create()
             ->useUserQuery()
                 ->filterByUsername($username)

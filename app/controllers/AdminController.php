@@ -59,10 +59,27 @@ class AdminController extends BaseController
 
     public function getLenders()
     {
-        $lenders = $this->lenderQuery
-            ->orderByCreatedAt()
-            ->find();
+        $page = Request::query('page') ?: 1;
+        $countryId = Request::query('country') ?: null;
+        $email = Request::query('email') ?: null;
 
-        return View::make('admin.lenders', compact('lenders'));
+        $query = LenderQuery::create();
+
+        if ($countryId) {
+            $query->filterByCountryId($countryId);
+        }
+        if ($email) {
+            $query
+                ->useUserQuery()
+                ->filterByEmail($email)
+                ->endUse();
+        }
+
+        $paginator = $query
+            ->orderById()
+            ->paginate($page, 3);
+
+        return View::make('admin.lenders', compact('paginator'), ['form' => $this->borrowersForm,]);
     }
+
 }
