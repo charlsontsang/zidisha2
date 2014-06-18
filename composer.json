@@ -8,7 +8,8 @@
         "propel/propel": "2.0.0-alpha3",
         "facebook/php-sdk": "v3.2.3",
         "ruflin/Elastica": "dev-master",
-        "stripe/stripe-php": "1.*"
+        "stripe/stripe-php": "1.*",
+        "intervention/image": "2.0.4"
 	},
 	"autoload": {
 		"classmap": [
