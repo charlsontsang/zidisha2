@@ -119,3 +119,7 @@ Route::group(array('prefix' => 'admin', 'before' => 'auth|hasRole:admin'), funct
         Route::get('borrowers', array('uses' => 'AdminController@getBorrowers', 'as' => 'admin:borrowers'));
         Route::get('lenders', array('uses' => 'AdminController@getLenders', 'as' => 'admin:lenders'));
     });
+/**
+ * Image resize route
+ */
+Route::get('resize/{uploadId}/{format}', array('uses' => 'ImageController@getImage', 'as' => 'image:resize'));
