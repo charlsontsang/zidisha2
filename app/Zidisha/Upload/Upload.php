@@ -59,13 +59,11 @@ class Upload extends BaseUpload
     {
         $upload = new Upload();
 
-        $filename = $file->getClientOriginalName();
         $extension = $file->getClientOriginalExtension();
         $mimeType = $file->getMimeType();
 
         $fileType = in_array($extension, static::$image_types) ? 'image' : 'document';
 
-        $upload->setFilename($filename);
         $upload->setExtension($extension);
         $upload->setType($fileType);
         $upload->setMimeType($mimeType);
@@ -135,5 +133,10 @@ class Upload extends BaseUpload
             throw new ConfigurationNotFoundException();
         }
         return public_path() . '/uploads/cache/' . $format . '/';
+    }
+
+    private function getFilename()
+    {
+        return $this->getId() . '.' . $this->getExtension();
     }
 }

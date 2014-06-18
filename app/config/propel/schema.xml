@@ -231,7 +231,6 @@
 
     <table name="uploads" phpName="Upload" namespace="Upload">
         <column name="id" type="INTEGER" autoIncrement="true" primaryKey="true"></column>
-        <column name="filename" type="VARCHAR" required="true" ></column>
         <column name="extension" type="VARCHAR" required="true"></column>
         <column name="user_id" type="INTEGER" required="true" ></column>
         <column name="type" type="VARCHAR" required="true"></column>
