@@ -24,4 +24,33 @@ class BorrowerService
 
         return $borrower;
     }
+
+    public function editBorrower(Borrower $borrower, $data)
+    {
+        $borrower->setFirstName($data['firstName']);
+        $borrower->setLastName($data['lastName']);
+        $borrower->getUser()->setEmail($data['email']);
+        $borrower->getUser()->setUsername($data['username']);
+        $borrower->getProfile()->setAboutMe($data['aboutMe']);
+        $borrower->getProfile()->setAboutBusiness($data['aboutBusiness']);
+
+        if (!empty($data['password'])) {
+            $borrower->getUser()->setPassword($data['password']);
+        }
+
+        $borrower->save();
+    }
+
+    public function uploadPicture(Borrower $borrower, $image)
+    {
+        $user = $borrower->getUser();
+
+        if ($image) {
+            $upload = Upload::createFromFile($image);
+            $upload->setUser($user);
+
+            $user->setProfilePicture($upload);
+            $user->save();
+        }
+    }
 } 
