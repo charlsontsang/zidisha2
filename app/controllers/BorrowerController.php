@@ -1,5 +1,6 @@
 <?php
 
+use Zidisha\Borrower\BorrowerService;
 use Zidisha\Borrower\Form\EditProfile;
 use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Borrower\ProfileQuery;
@@ -8,10 +9,15 @@ class BorrowerController extends BaseController
 {
 
     private $editProfileForm;
+    /**
+     * @var Zidisha\Borrower\BorrowerService
+     */
+    private $borrowerService;
 
-    public function __construct(EditProfile $editProfileForm)
+    public function __construct(EditProfile $editProfileForm, BorrowerService $borrowerService)
     {
         $this->editProfileForm = $editProfileForm;
+        $this->borrowerService = $borrowerService;
     }
 
     public function getPublicProfile($username)
@@ -50,23 +56,12 @@ class BorrowerController extends BaseController
 
             $borrower = \Auth::user()->getBorrower();
 
-            $borrower->setFirstName($data['firstName']);
-            $borrower->setLastName($data['lastName']);
-            $borrower->getUser()->setEmail($data['email']);
-            $borrower->getUser()->setUsername($data['username']);
-            $borrower->getProfile()->setAboutMe($data['aboutMe']);
-            $borrower->getProfile()->setAboutBusiness($data['aboutBusiness']);
-
-            if (!empty($data['password'])) {
-                $borrower->getUser()->setPassword($data['password']);
-            }
-
-            $borrower->save();
+            $this->borrowerService->editBorrower($borrower, $data);
 
             if(Input::hasFile('picture'))
             {
                 $image = Input::file('picture');
-                $image->move(public_path() . '/images/profile/', $data['username'].'.jpg' );
+                $this->borrowerService->uploadPicture($borrower, $image);
             }
 
             return Redirect::route('borrower:public-profile' , $data['username']);

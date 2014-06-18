@@ -8,6 +8,7 @@ use Zidisha\Balance\TransactionQuery;
 use Zidisha\Lender\Form\EditProfile;
 use Zidisha\Lender\Form\Funds;
 use Zidisha\Lender\LenderQuery;
+use Zidisha\Lender\LenderService;
 use Zidisha\Lender\ProfileQuery;
 
 class LenderController extends BaseController
@@ -18,19 +19,24 @@ class LenderController extends BaseController
      * @var Zidisha\Lender\Form\EditProfile
      */
     private $editProfileForm, $fundsForm;
+    /**
+     * @var Zidisha\Lender\LenderService
+     */
+    private $lenderService;
 
-    public function __construct(EditProfile $editProfileForm, TransactionQuery $transactionQuery, Funds $fundsForm)
+    public function __construct(EditProfile $editProfileForm, TransactionQuery $transactionQuery, Funds $fundsForm, LenderService $lenderService)
     {
         $this->editProfileForm = $editProfileForm;
         $this->transactionQuery = $transactionQuery;
         $this->fundsForm = $fundsForm;
+        $this->lenderService = $lenderService;
     }
-    
+
     public function getPublicProfile($username)
     {
         $lender = LenderQuery::create()
             ->useUserQuery()
-                ->filterByUsername($username)
+            ->filterByUsername($username)
             ->endUse()
             ->findOne();
 
@@ -55,28 +61,18 @@ class LenderController extends BaseController
     {
         $form = $this->editProfileForm;
         $form->handleRequest(Request::instance());
-        
+
         if ($form->isValid()) {
             $data = $form->getData();
 
             $lender = Auth::user()->getLender();
 
-            $lender->setFirstName($data['firstName']);
-            $lender->setLastName($data['lastName']);
-            $lender->getUser()->setEmail($data['email']);
-            $lender->getUser()->setUsername($data['username']);
-            $lender->getProfile()->setAboutMe($data['aboutMe']);
-
-            if (!empty($data['password'])) {
-                $lender->getUser()->setPassword($data['password']);
-            }
-
-            $lender->save();
+            $this->lenderService->editProfile($lender, $data);
 
             if(Input::hasFile('picture'))
             {
                 $image = Input::file('picture');
-                $image->move(public_path() . '/images/profile/', $data['username'].'.jpg' );
+                $this->lenderService->uploadPicture($lender, $image);
             }
 
             return Redirect::route('lender:public-profile', $data['username']);
@@ -106,7 +102,7 @@ class LenderController extends BaseController
                           FROM transactions WHERE user_id = ?
                           ORDER BY transaction_date DESC, transactions.id DESC
                           OFFSET ?)',
-             array(Auth::getUser()->getId(), ($page-1) * 50));
+            array(Auth::getUser()->getId(), ($page-1) * 50));
 
         $currentBalancePage = $currentBalancePageObj[0]->total;
 
@@ -197,7 +193,7 @@ class LenderController extends BaseController
                     if ($transaction1 == 1 && $transaction2 == 1 && $transaction3 == 1 ) {
                         $con->commit();
                         Flash::success("Successfully uploaded USD " . $data['totalAmount']);
-                         return Redirect::route('lender:history');
+                        return Redirect::route('lender:history');
                     } else {
                         $con->rollback();
                     }
@@ -208,8 +204,8 @@ class LenderController extends BaseController
                 // TODO send mail
             }
         }
-        
-            Flash::error("Entered Amounts are invalid!");
-            return Redirect::route('lender:funds')->withForm($form);
+
+        Flash::error("Entered Amounts are invalid!");
+        return Redirect::route('lender:funds')->withForm($form);
     }
 }
