@@ -26,7 +26,13 @@ class Upload extends BaseUpload
             throw new ConfigurationNotFoundException();
         }
 
-        if ($this->getCachePath($format)) {
+        if(!$this->isImage()){
+            throw new FileTypeMisMatchException();
+        }
+
+        $file = new Filesystem();
+
+        if ($file->exists($this->getCachePath($format))) {
             return asset('uploads/cache/' . $format . '/' . $this->getFilename());
         } else {
             return route('image:resize', ['upload_id' => $this->getId(), 'format' => $format]);
