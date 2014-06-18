@@ -29,8 +29,7 @@
     </div>
 
     <div class="col-xs-4">
-        <img src="{{ $loan->getBorrower()->getUser()->getProfilePicture() }}" width="100" height="100">
-
+        <img src="{{ $loan->getBorrower()->getUser()->getProfilePictureUrl() }}" >
         <h2>{{ $loan->getBorrower()->getFirstName() }} {{ $loan->getBorrower()->getLastName() }}</h2>
         <h4>{{ $loan->getBorrower()->getCountry()->getName() }}</h4>
         <strong>Amount Requested: </strong> USD {{ $loan->getAmount() }}

@@ -94,7 +94,7 @@
         @foreach($paginator as $loan)
         <div class="media">
 
-            <a class="pull-left" href="{{ route('borrower:public-profile', $loan->getBorrower()->getUser()->getUsername()) }}"><img src="{{ $loan->getBorrower()->getUser()->getProfilePicture() }}" width="100" height="100"></a>
+            <a class="pull-left" href="{{ route('borrower:public-profile', $loan->getBorrower()->getUser()->getUsername()) }}"><img src="{{ $loan->getBorrower()->getUser()->getProfilePictureUrl() }}" width="100" height="100"></a>
         <div class="media-body">
         <ul class="list-unstyled">
             <li>
