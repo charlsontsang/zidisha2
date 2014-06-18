@@ -79,10 +79,10 @@ class User extends BaseUser implements UserInterface, RemindableInterface
         return parent::getBorrower($con);
     }
 
-    public function getProfilePictureUrl()
+    public function getProfilePictureUrl($format = 'small-profile-picture')
     {
         if($this->hasProfilePicture()){
-            return $this->getProfilePicture()->getImageUrl('small-profile-picture');
+            return $this->getProfilePicture()->getImageUrl($format);
         }
 
         return $this->getDefaultPicture();
