@@ -255,4 +255,15 @@
             <reference local="upload_id" foreign="id"/>
         </foreign-key>
     </table>
+
+    <table name="borrower_upload" namespace="Borrower" isCrossRef="true">
+        <column name="borrower_id" type="INTEGER" required="true" primaryKey="true"></column>
+        <column name="upload_id" type="INTEGER" required="true" primaryKey="true"></column>
+        <foreign-key foreignTable="borrowers" phpName="Borrower">
+            <reference local="borrower_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="uploads" phpName="Upload">
+            <reference local="upload_id" foreign="id"/>
+        </foreign-key>
+    </table>
 </database>
