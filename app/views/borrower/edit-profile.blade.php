@@ -8,31 +8,69 @@ Join the global P2P microlending movement
 <div class="page-header">
     <h1>Edit Profile</h1>
 </div>
+<hr/>
+<div class="borrower-edit-form">
+    <h3>Current Profile Picture</h3>
+    <img src="{{ $borrower->getUser()->getProfilePictureUrl() }}" alt=""/>
+    {{ BootstrapForm::open(array('route' => 'borrower:post-profile', 'translationDomain' => 'borrower.edit-profile', 'files' => true)) }}
+    {{ BootstrapForm::populate($form) }}
 
+    {{ BootstrapForm::file('picture') }}
 
-{{ BootstrapForm::open(array('route' => 'borrower:post-profile', 'translationDomain' => 'borrower.edit-profile', 'files' => true)) }}
-{{ BootstrapForm::populate($form) }}
+    {{ BootstrapForm::text('username') }}
 
-{{ BootstrapForm::file('picture') }}
+    {{ BootstrapForm::password('password') }}
 
-{{ BootstrapForm::text('username') }}
+    {{ BootstrapForm::password('password_confirmation') }}
 
-{{ BootstrapForm::password('password') }}
+    {{ BootstrapForm::text('firstName') }}
 
-{{ BootstrapForm::password('password_confirmation') }}
+    {{ BootstrapForm::text('lastName') }}
 
-{{ BootstrapForm::text('firstName') }}
+    {{ BootstrapForm::text('email') }}
 
-{{ BootstrapForm::text('lastName') }}
+    {{ BootstrapForm::textarea('aboutMe') }}
 
-{{ BootstrapForm::text('email') }}
+    {{ BootstrapForm::textarea('aboutBusiness') }}
 
-{{ BootstrapForm::textarea('aboutMe') }}
+    <div class="borrower-upload-inputs">
+        {{ BootstrapForm::file('images[]', ['label' => 'borrower.edit-profile.upload-file']) }}
+        <button class="btn btn-primary btn-success borrower-upload-add-more">@lang('borrower.add-more')</button>
+    </div>
 
-{{ BootstrapForm::textarea('aboutBusiness') }}
+    {{ BootstrapForm::submit('save') }}
 
-{{ BootstrapForm::submit('save') }}
+    {{ BootstrapForm::close() }}
 
-{{ BootstrapForm::close() }}
+    @if(!$borrower->getUploads()->isEmpty())
+    <h4>Borrower Pictures</h4>
+    <div>
+        @foreach($borrower->getUploads() as $upload)
+
+                <div class="borrower-upload-form" data-comment-action="delete-upload">
+                    {{ BootstrapForm::open(array('route' => 'borrower:delete-upload', 'translationDomain' => 'borrower.edit-uploads')) }}
+                    @if($upload->isImage())
+                        <a href="{{ $upload->getImageUrl('small-profile-picture') }}">
+                            <img src="{{ $upload->getImageUrl('small-profile-picture') }}" width="100px" height="100px" alt=""/>
+                        </a>
+                    @else
+                        <div class="well">
+                            <a href="{{  $upload->getFileUrl()  }}">{{ $upload->getFilename() }}</a>
+                        </div>
+                    @endif
+                    {{ BootstrapForm::hidden('borrower_id', $borrower->getId()) }}
+                    {{ BootstrapForm::hidden('upload_id', $upload->getId()) }}
+                    {{ BootstrapForm::submit('delete') }}
+                    {{ BootstrapForm::close() }}
+                </div>
+
+        @endforeach
+    </div>
+    @endif
+</div>
+
+<script type="text/html" id="borrower-upload-input-template">
+    {{ BootstrapForm::file('images[]', ['label' => 'borrower.edit-profile.upload-file']) }}
+</script>
 
 @stop

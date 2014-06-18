@@ -1,6 +1,9 @@
 <?php
 namespace Zidisha\Borrower;
 
+use Illuminate\Support\Facades\Input;
+use Zidisha\Upload\Upload;
+
 class BorrowerService
 {
     public function joinBorrower($data)
@@ -25,7 +28,7 @@ class BorrowerService
         return $borrower;
     }
 
-    public function editBorrower(Borrower $borrower, $data)
+    public function editBorrower(Borrower $borrower, $data, $files = [])
     {
         $borrower->setFirstName($data['firstName']);
         $borrower->setLastName($data['lastName']);
@@ -38,19 +41,41 @@ class BorrowerService
             $borrower->getUser()->setPassword($data['password']);
         }
 
+        if(Input::hasFile('picture'))
+        {
+            $image = Input::file('picture');
+
+            $user = $borrower->getUser();
+
+            if ($image) {
+                $upload = Upload::createFromFile($image);
+                $upload->setUser($user);
+
+                $user->setProfilePicture($upload);
+                //TODO: Test without user save
+                $user->save();
+            }
+        }
+
+        if ($files) {
+            $user = $borrower->getUser();
+
+            foreach ($files as $file) {
+                $upload = Upload::createFromFile($file);
+                $upload->setUser($user);
+                $borrower->addUpload($upload);
+            }
+            $borrower->save();
+        }
+
         $borrower->save();
     }
 
-    public function uploadPicture(Borrower $borrower, $image)
+    public function deleteUpload(Borrower $borrower, Upload $upload)
     {
-        $user = $borrower->getUser();
+        $borrower->removeUpload($upload);
+        $borrower->save();
 
-        if ($image) {
-            $upload = Upload::createFromFile($image);
-            $upload->setUser($user);
-
-            $user->setProfilePicture($upload);
-            $user->save();
-        }
+        $upload->delete();
     }
 } 
