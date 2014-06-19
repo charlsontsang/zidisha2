@@ -9,7 +9,8 @@
         "facebook/php-sdk": "v3.2.3",
         "ruflin/Elastica": "dev-master",
         "stripe/stripe-php": "1.*",
-        "intervention/image": "2.0.4"
+        "intervention/image": "2.0.4",
+        "supremenewmedia/finance": "0.1.2"
 	},
 	"autoload": {
 		"classmap": [
