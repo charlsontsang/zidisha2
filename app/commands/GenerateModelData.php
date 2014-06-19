@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Console\Command;
+use SupremeNewMedia\Finance\Core\Currency;
+use SupremeNewMedia\Finance\Core\Money;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Zidisha\Balance\Transaction;
@@ -8,7 +10,6 @@ use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Borrower\RegistrationFee;
 use Zidisha\Country\Country;
 use Zidisha\Country\CountryQuery;
-use Zidisha\Currency\Currency;
 use Zidisha\Lender\LenderQuery;
 use Zidisha\Loan\Bid;
 use Zidisha\Loan\Category;
@@ -205,7 +206,7 @@ class GenerateModelData extends Command
                     $country->SetRegistrationFee(200*$i);
                 }
                 $country->SetBorrowerCountry($oneCountry[4]);
-                $currency = new Currency();
+                $currency = new \Zidisha\Currency\Currency();
                 $currency->setName($faker->sentence(2));
                 $currency->setCurrencyCode(substr($faker->word, 1, 3));
                 $country->setCurrency($currency);
@@ -229,7 +230,6 @@ class GenerateModelData extends Command
             }
 
             if ($model == "Loan") {
-
                 if ($i >= 30) {
                     $installmentDay = $i - (int)(25 - $i);
                     $amount = 30 + ($i * 10);
@@ -245,8 +245,12 @@ class GenerateModelData extends Command
                 $Loan = new Loan();
                 $Loan->setSummary($faker->sentence(8));
                 $Loan->setDescription($faker->paragraph(7));
-                $Loan->setAmount($amount);
-                $Loan->setInstallmentAmount($installmentAmount);
+                $Loan->setUsdAmount(\SupremeNewMedia\Finance\Core\Money::valueOf($amount, \SupremeNewMedia\Finance\Core\Currency::valueOf('USD')));
+                $Loan->setAmount(Money::valueOf($amount, \SupremeNewMedia\Finance\Core\Currency::valueOf('USD')));
+                $Loan->setCurrencyCode('KES');
+                $Loan->setInstallmentAmount(\SupremeNewMedia\Finance\Core\Money::valueOf($installmentAmount, \SupremeNewMedia\Finance\Core\Currency::valueOf('USD')));
+                $Loan->setRegistrationFeeRate('5');
+                $Loan->setApplicationDate(new \DateTime());
                 $Loan->setInstallmentDay($installmentDay);
                 $Loan->setBorrower($borrower);
                 $Loan->setCategory($loanCategory);

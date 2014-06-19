@@ -22,7 +22,7 @@ class Loan extends BaseLoan
         return Money::valueOf(parent::getAmount(), Currency::valueOf($this->getCurrencyCode()));
     }
 
-    public function setAmount(Money $money)
+    public function setAmount($money)
     {
         parent::setAmount($money->getAmount());
     }
@@ -32,7 +32,7 @@ class Loan extends BaseLoan
         return Money::valueOf(parent::getInstallmentAmount(), Currency::valueOf($this->getCurrencyCode()));
     }
 
-    public function setInstallmentAmount(Money $money)
+    public function setInstallmentAmount($money)
     {
         parent::setInstallmentAmount($money->getAmount());
     }
@@ -42,7 +42,7 @@ class Loan extends BaseLoan
         return Money::valueOf(parent::getUsdAmount(), Currency::valueOf(Currency::CODE_USD));
     }
 
-    public function setUsdAmount(Money $money)
+    public function setUsdAmount($money)
     {
         parent::setUsdAmount($money->getAmount());
     }
