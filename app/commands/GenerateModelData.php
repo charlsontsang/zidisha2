@@ -8,6 +8,7 @@ use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Borrower\RegistrationFee;
 use Zidisha\Country\Country;
 use Zidisha\Country\CountryQuery;
+use Zidisha\Currency\Currency;
 use Zidisha\Lender\LenderQuery;
 use Zidisha\Loan\Bid;
 use Zidisha\Loan\Category;
@@ -204,6 +205,10 @@ class GenerateModelData extends Command
                     $country->SetRegistrationFee(200*$i);
                 }
                 $country->SetBorrowerCountry($oneCountry[4]);
+                $currency = new Currency();
+                $currency->setName($faker->sentence(2));
+                $currency->setCurrencyCode(substr($faker->word, 1, 3));
+                $country->setCurrency($currency);
                 $country->save();
             }
 

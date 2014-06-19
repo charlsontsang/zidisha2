@@ -39,17 +39,22 @@
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="name" type="VARCHAR" size="100" required="true"/>
         <column name="slug" type="VARCHAR" size="100" required="true"/>
+        <column name="capital" type="VARCHAR" size="100"/>
         <column name="continent_code" type="VARCHAR" size="2" required="true"/>
         <column name="country_code" type="VARCHAR" size="2" required="true"/>
         <column name="dialing_code" type="VARCHAR" size="4" required="true"/>
+        <column name="currency_id" type="INTEGER" required="true"/>
         <column name="borrower_country" type="BOOLEAN"/>
         <column name="registration_fee" type="DECIMAL" size="10" scale="2" defaultValue="0.00"/>
         <index name="name">
             <index-column name="name" />
         </index>
-        <index name="code">
+        <index name="country_code">
             <index-column name="country_code" />
         </index>
+        <foreign-key foreignTable="currencies">
+            <reference local="currency_id" foreign="id"/>
+        </foreign-key>
         <behavior name="timestampable"/>
     </table>
 
@@ -270,12 +275,8 @@
 
     <table name="currencies" phpName="Currency" namespace="Currency">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
-        <column name="country_code" type="VARCHAR" size="2" required="true"/>
-        <column name="country" type="VARCHAR" size="100" required="true"/>
-        <column name="capital" type="VARCHAR" size="100" required="true"/>
         <column name="name" type="VARCHAR" size="100" required="true"/>
         <column name="currency_code" type="VARCHAR" size="3" required="true"/>
-        <column name="active" type="BOOLEAN" required="true" />
     </table>
 
     <table name="exchange_rates" phpName="ExchangeRate" namespace="Currency">

@@ -1,17 +1,17 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Singularity Guy
- * Date: 6/13/14
- * Time: 11:08 AM
- */
+
+use Zidisha\Country\CountryQuery;
 
 class BorrowController extends BaseController {
 
 
     public function getPage()
     {
-        return View::make('pages.borrow');
+        $countries = CountryQuery::create()
+            ->filterByBorrowerCountry(true)
+            ->find();
+
+        return View::make('pages.borrow', compact('countries'));
     }
 
-} 
+}
