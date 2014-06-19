@@ -119,6 +119,7 @@ Route::group(array('prefix' => 'admin', 'before' => 'auth|hasRole:admin'), funct
         Route::get('dashboard', array('uses' => 'AdminController@getDashboard', 'as' => 'admin:dashboard'));
         Route::get('borrowers', array('uses' => 'AdminController@getBorrowers', 'as' => 'admin:borrowers'));
         Route::get('lenders', array('uses' => 'AdminController@getLenders', 'as' => 'admin:lenders'));
+        Route::get('loans', array('uses' => 'AdminController@getLoans', 'as' => 'admin:loans'));
     });
 /**
  * Image resize route
