@@ -266,4 +266,25 @@
             <reference local="upload_id" foreign="id"/>
         </foreign-key>
     </table>
+
+    <table name="currencies" phpName="Currency" namespace="Currency">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="country_code" type="VARCHAR" size="2" required="true"/>
+        <column name="country" type="VARCHAR" size="100" required="true"/>
+        <column name="capital" type="VARCHAR" size="100" required="true"/>
+        <column name="name" type="VARCHAR" size="100" required="true"/>
+        <column name="currency_code" type="VARCHAR" size="3" required="true"/>
+        <column name="active" type="BOOLEAN" required="true" />
+    </table>
+
+    <table name="exchange_rates" phpName="ExchangeRate" namespace="Currency">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="rate" type="DECIMAL" size="10" scale="5" required="true"/>
+        <column name="start_date" type="TIMESTAMP"/>
+        <column name="end_date" type="TIMESTAMP"/>
+        <column name="currency_id" type="INTEGER" required="true"/>
+        <foreign-key foreignTable="currencies">
+            <reference local="currency_id" foreign="id"/>
+        </foreign-key>
+    </table>
 </database>
