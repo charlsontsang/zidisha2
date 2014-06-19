@@ -42,7 +42,8 @@
         <column name="continent_code" type="VARCHAR" size="2" required="true"/>
         <column name="country_code" type="VARCHAR" size="2" required="true"/>
         <column name="dialing_code" type="VARCHAR" size="4" required="true"/>
-        <column name="enabled" type="BOOLEAN"/>
+        <column name="borrower_country" type="BOOLEAN"/>
+        <column name="registration_fee" type="DECIMAL" size="10" scale="2" defaultValue="0.00"/>
         <index name="name">
             <index-column name="name" />
         </index>
@@ -287,4 +288,5 @@
             <reference local="currency_id" foreign="id"/>
         </foreign-key>
     </table>
+
 </database>

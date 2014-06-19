@@ -5,6 +5,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Zidisha\Balance\Transaction;
 use Zidisha\Borrower\BorrowerQuery;
+use Zidisha\Borrower\RegistrationFee;
 use Zidisha\Country\Country;
 use Zidisha\Country\CountryQuery;
 use Zidisha\Lender\LenderQuery;
@@ -64,10 +65,10 @@ class GenerateModelData extends Command
             exec('./propel diff');
             exec('./propel migrate');
             exec('./propel build');
-            
+
             $this->line('Delete loans index');
             exec("curl -XDELETE 'http://localhost:9200/loans/' -s");
-            
+
             $this->line('Generate data');
             $this->call('fake', array('model' => 'Country', 'size' => 10));
             $this->call('fake', array('model' => 'Category', 'size' => 10));
@@ -77,7 +78,8 @@ class GenerateModelData extends Command
             $this->call('fake', array('model' => 'Loan', 'size' => 30));
             $this->call('fake', array('model' => 'Bid', 'size' => 50));
             $this->call('fake', array('model' => 'Transaction', 'size' => 200));
-            
+
+
             $this->line('Done!');
             return;
         }
@@ -107,14 +109,13 @@ class GenerateModelData extends Command
                 ->getData();
 
 
-
             if ($allCategories == null || count($allBorrowers) < $size) {
                 $this->error("not enough categories or borrowers");
                 return;
             }
         }
 
-        if($model == "Admin"){
+        if ($model == "Admin") {
             $userName = 'admin';
             $password = '1234567890';
             $email = 'admin@mail.com';
@@ -126,6 +127,7 @@ class GenerateModelData extends Command
             $user->setRole('admin');
             $user->save();
         }
+
 
         for ($i = 1; $i <= $size; $i++) {
             if ($model == "Lender") {
@@ -198,7 +200,10 @@ class GenerateModelData extends Command
                 $country->setCountryCode($oneCountry[1]);
                 $country->setContinentCode($oneCountry[2]);
                 $country->setDialingCode($oneCountry[3]);
-                $country->setEnabled($oneCountry[4]);
+                if($i == 1 || $i == 4){
+                    $country->SetRegistrationFee(200*$i);
+                }
+                $country->SetBorrowerCountry($oneCountry[4]);
                 $country->save();
             }
 
@@ -283,7 +288,7 @@ class GenerateModelData extends Command
 
                 $transaction = new Transaction();
                 $transaction->setUser($oneLender->getUser());
-                $transaction->setAmount(rand(-100,100));
+                $transaction->setAmount(rand(-100, 100));
                 $transaction->setLoan($oneLoan);
                 $transaction->setDescription($oneLoan->getSummary());
                 $transaction->setTransactionDate(new \DateTime());
@@ -292,7 +297,7 @@ class GenerateModelData extends Command
 
             }
 
-            if($model == "Bid"){
+            if ($model == "Bid") {
 
                 $openLoans = LoanQuery::create()
                     ->filterByStatus(0)
@@ -302,8 +307,8 @@ class GenerateModelData extends Command
 
                 $oneBid = new Bid();
                 $oneBid->setBidDate(new \DateTime());
-                $oneBid->setBidAmount(rand(0,30));
-                $oneBid->setInterestRate(rand(0,15));
+                $oneBid->setBidAmount(rand(0, 30));
+                $oneBid->setInterestRate(rand(0, 15));
                 $oneBid->setLoan($oneLoan);
                 $oneBid->setLender($oneLender);
                 $oneBid->setBorrower($oneLoan->getBorrower());
