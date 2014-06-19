@@ -36,3 +36,5 @@ _ide_helper.php
 /public/images
 /public/uploads
 
+
+tests/_output/*
