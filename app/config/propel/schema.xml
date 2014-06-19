@@ -63,12 +63,15 @@
         <column name="borrower_id" type="INTEGER" primaryKey="true"/>"
         <column name="summary" type="LONGVARCHAR"/>
         <column name="description" type="LONGVARCHAR"/>
-        <column name="amount" type="DECIMAL" size="10" scale="2"/>
-        <column name="installment_amount" type="DECIMAL" size="10" scale="2"/>
+        <column name="amount" type="DECIMAL" size="10" scale="2" phpType="string"/>
+        <column name="installment_amount" type="DECIMAL" size="10" scale="2" phpType="string"/>
         <column name="installment_day" type="INTEGER"/>
-        <column name="interest_rate" type="DECIMAL" size="5" scale="2"/>
+        <column name="interest_rate" type="DECIMAL" size="5" scale="2" phpType="string"/>
         <column name="loan_category_id" type="INTEGER" required="true"/>
         <column name="status" type="ENUM" valueSet="0, 1, 2, 3, 5, 6, 7"/>
+        <column name="application_date" type="TIMESTAMP" required="true"/>
+        <column name="registration_fee" type="DECIMAL" size="10" scale="2" phpType="string"/>
+        <column name="usd_amount" type="DECIMAL" size="10" scale="2"  required="true" phpType="string"/>
         <behavior name="timestampable"/>
         <foreign-key foreignTable="loan_categories">
             <reference local="loan_category_id" foreign="id" />
