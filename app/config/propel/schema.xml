@@ -290,4 +290,9 @@
         </foreign-key>
     </table>
 
+    <table name="settings" phpName="Setting" namespace="Admin">
+        <column name="name" type="VARCHAR" size="45" required="true" primaryKey="true"/>
+        <column name="value" type="VARCHAR" size="45" required="true" defaultValue="0"/>
+    </table>
+
 </database>
