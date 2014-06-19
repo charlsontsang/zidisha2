@@ -19,7 +19,7 @@ class Application extends AbstractForm
         return [
             'title' => 'required|min:10',
             'proposal' => 'required|min:200',
-            'categoryId' => 'required',
+            'categoryId' => 'required|exists:loan_categories,id,admin_only,false',
             'amount' => 'required|numeric',
             'installmentAmount' => 'required|numeric',
             'installmentDay' => 'required',
