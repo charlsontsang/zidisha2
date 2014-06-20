@@ -1,5 +1,6 @@
 <?php
 
+use Zidisha\Country\CountryQuery;
 use Zidisha\Utility\Utility;
 
 class BorrowerJoinController extends BaseController
@@ -57,7 +58,10 @@ class BorrowerJoinController extends BaseController
         $form->handleRequest(Request::instance());
 
         if ($form->isValid()) {
-            Session::put('BorrowerJoin.country', $form->getData()['country']);
+            $country = CountryQuery::create()
+                ->findOneById($form->getData()['country']);
+
+            Session::put('BorrowerJoin.countryCode', $country->getCountryCode());
             $this->setCurrentStep('facebook');
 
             return Redirect::action('BorrowerJoinController@getFacebook');
@@ -148,5 +152,17 @@ class BorrowerJoinController extends BaseController
             $url = $this->facebookService->getLogoutUrl('BorrowerJoinController@getFacebook');
             return Redirect::away($url);
         }
+    }
+
+    public function getSkipFacebook(){
+
+        if(Session::get('BorrowerJoin.countryCode') == 'BF'){
+            $this->setCurrentStep('profile');
+            return Redirect::action('BorrowerJoinController@getProfile');
+        }
+
+
+        Flash::error('Not Allowed.');
+        return Redirect::action('BorrowerJoinController@getCountry');
     }
 }
