@@ -4,6 +4,7 @@ namespace Zidisha\Loan\Form;
 
 use Zidisha\Form\AbstractForm;
 use Zidisha\Loan\Form\Validator\BidValidator;
+use Zidisha\Loan\Loan;
 
 class BidForm extends AbstractForm
 {
@@ -13,7 +14,7 @@ class BidForm extends AbstractForm
         return [
             'Amount' => 'required|numeric|Amount',
             'interestRate' => 'required|numeric|max:15',
-            'loanId' => '',
+            'loanId' => 'exists:loans,id,status,' . Loan::OPEN,
         ];
     }
 

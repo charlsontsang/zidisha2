@@ -40,4 +40,13 @@ class Transaction extends BaseTransaction
     const LENDER_INVITE_REDEEM_EXPIRED  = 13;
     const LENDER_INVITE_RETURN          = 14;
 
+    public function getAmount()
+    {
+        return Money::valueOf(parent::getAmount(), Currency::valueOf($this->getCurrencyCode()));
+    }
+
+    public function setAmount($money)
+    {
+        return parent::setAmount($money->getAmount());
+    }
 }

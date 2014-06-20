@@ -3,10 +3,16 @@
 namespace Zidisha\Loan;
 
 
-use SupremeNewMedia\Finance\Core\Money;
+use Propel\Runtime\Propel;
 use SupremeNewMedia\Finance\Core\Currency;
+use SupremeNewMedia\Finance\Core\Money;
+use Zidisha\Balance\Map\TransactionTableMap;
+use Zidisha\Balance\Transaction;
+use Zidisha\Balance\TransactionQuery;
 use Zidisha\Borrower\Borrower;
 use Zidisha\Currency\CurrencyService;
+use Zidisha\Lender\Exceptions\InsufficientLenderBalanceException;
+use Zidisha\Lender\Lender;
 
 class LoanService
 {
@@ -174,6 +180,84 @@ class LoanService
         $loanType->addDocument($loanDocument);
 
         $loanType->getIndex()->refresh();
+    }
+
+    public function placeBid(Loan $loan, Lender $lender, $data)
+    {
+        $currentBalance = TransactionQuery::create()
+            ->filterByUser($lender->getUser())
+            ->getTotalBalance();
+
+        if (!$data['Amount'] >= $currentBalance) {
+            throw new InsufficientLenderBalanceException();
+        }
+
+        $con = Propel::getWriteConnection(TransactionTableMap::DATABASE_NAME);
+        $con->beginTransaction();
+
+        //TODO: calculate the accepted amount.
+
+        $amount = Money::valueOf($data['Amount'], Currency::valueOf('USD'));
+        try {
+            $bid = new Bid();
+            $bid
+                ->setLoan($loan)
+                ->setLender($lender)
+                ->setBorrower($loan->getBorrower())
+                ->setBidAmount($amount)
+                ->setInterestRate($data['interestRate'])
+                ->setActive(true)
+                ->setBidDate(new \DateTime());
+
+            $bidSuccess = $bid->save($con);
+
+            $bidTransaction = new Transaction();
+            $bidTransaction
+                ->setUser($lender->getUser())
+                ->setAmount($amount)
+                ->setDescription('Loan bid')
+                ->setLoan($loan)
+                ->setTransactionDate(new \DateTime())
+                ->setType(Transaction::LOAN_BID)
+                ->setSubType(Transaction::PLACE_BID);
+
+            $bidTransactionSuccess = $bidTransaction->save($con);
+
+            //Todo: OutBid Transaction.
+
+            if (!$bidSuccess || !$bidTransactionSuccess) {
+                // Todo: Notify admin.
+                throw new \Exception();
+            }
+
+            $con->commit();
+        } catch (\Exception $e) {
+            $con->rollBack();
+            throw $e;
+        }
+
+
+        //Todo: calculate if the loan is fully funded.
+
+        $totalBidAmount = BidQuery::create()
+            ->filterByLoan($loan)
+            ->getTotalBidAmount();
+
+        if ($totalBidAmount->compare($loan->getAmount()) != -1) {
+            //Todo: this loan is complete, Send notification to lenders and borrowers.
+            //$loanService->notifyAll();
+        }
+
+        //Todo: send mail to the lender if it is his first bid.
+        $hasLenderBidEarlier = BidQuery::create()->filterByLender($lender);
+
+        if (!$hasLenderBidEarlier) {
+            //Todo: send mail to lender on placing his first bid.
+        }
+
+        //Todo: Send Lender Invite Credit.
+        //Todo: Send Mixpanel events.
+
     }
 
 }
