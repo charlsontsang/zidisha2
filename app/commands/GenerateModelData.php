@@ -3,6 +3,7 @@
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
+use Zidisha\Admin\Setting;
 use Zidisha\Balance\Transaction;
 use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Borrower\RegistrationFee;
@@ -79,6 +80,7 @@ class GenerateModelData extends Command
             $this->call('fake', array('model' => 'Loan', 'size' => 30));
             $this->call('fake', array('model' => 'Bid', 'size' => 50));
             $this->call('fake', array('model' => 'Transaction', 'size' => 200));
+            $this->call('fake', array('model' => 'Setting', 'size' => 1));
 
 
             $this->line('Done!');
@@ -94,6 +96,7 @@ class GenerateModelData extends Command
             ->find();
 
         $categories = include(app_path() . '/database/LoanCategories.php');
+        $settings = include(app_path() . '/database/AdminSettings.php');
         $loanService = App::make('\Zidisha\Loan\LoanService');
 
         $this->line("Generate $model");
@@ -210,6 +213,19 @@ class GenerateModelData extends Command
                 $currency->setCurrencyCode(substr($faker->word, 1, 3));
                 $country->setCurrency($currency);
                 $country->save();
+            }
+
+            if ($model == "Setting") {
+                if ($i >= 2) {
+                    continue;
+                }
+
+                $oneSetting = $settings[$i - 1];
+
+                $setting = new Setting();
+                $setting->setName($oneSetting[0]);
+                $setting->setValue($oneSetting[1]);
+                $setting->save();
             }
 
             if ($model == "Category") {
