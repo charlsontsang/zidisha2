@@ -128,6 +128,7 @@ class BorrowerJoinController extends BaseController
             if ($form->isValid()) {
                 $data = $form->getData();
 
+
                 $data = array_merge($data, Session::get('BorrowerJoin'));
 
                 $borrower = $this->borrowerService->joinBorrower($data);
@@ -154,13 +155,14 @@ class BorrowerJoinController extends BaseController
         }
     }
 
-    public function getSkipFacebook(){
+    public function getSkipFacebook()
+    {
+        Session::put('BorrowerJoin.facebook_id', null);
 
         if(Session::get('BorrowerJoin.countryCode') == 'BF'){
             $this->setCurrentStep('profile');
             return Redirect::action('BorrowerJoinController@getProfile');
         }
-
 
         Flash::error('Not Allowed.');
         return Redirect::action('BorrowerJoinController@getCountry');

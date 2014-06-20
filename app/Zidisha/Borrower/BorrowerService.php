@@ -21,6 +21,12 @@ class BorrowerService
         $borrower->setUser($user);
 
         $profile = new Profile();
+        $profile->setAddress($data['address']);
+        $profile->setAddressInstruction($data['address_instruction']);
+        $profile->setVillage($data['village']);
+        $profile->setNationalIdNumber($data['national_id_number']);
+        $profile->setPhoneNumber($data['phone_number']);
+        $profile->setAlternatePhoneNumber($data['alternate_phone_number']);
         $borrower->setProfile($profile);
 
         $borrower->save();
