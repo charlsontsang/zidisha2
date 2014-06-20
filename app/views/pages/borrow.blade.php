@@ -19,7 +19,7 @@
         @foreach($countries as $country)
         <tr>
             <td>{{ $country->getName() }}</td>
-            <td>{{ strtoupper($country->getCurrency()->getCurrencyCode()) }} {{ $country->getRegistrationFee() }}</td>
+            <td>{{ strtoupper($country->getCurrencyCode()) }} {{ $country->getRegistrationFee() }}</td>
         </tr>
         @endforeach
         </tbody>
