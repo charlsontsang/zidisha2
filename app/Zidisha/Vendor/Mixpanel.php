@@ -11,13 +11,13 @@ SNIPPET;
 
     private static function addHeadScript($script)
     {
-        $old = Session::get('mixpanel_head_script', '');
+        $old = \Session::get('mixpanel_head_script', '');
         \Session::put('mixpanel_head_script', $old . $script);
     }
 
     private static function addBodyScript($script)
     {
-        $old = Session::get('mixpanel_body_script', '');
+        $old = \Session::get('mixpanel_body_script', '');
         \Session::put('mixpanel_body_script', $old . $script);
     }
 
