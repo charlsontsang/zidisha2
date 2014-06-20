@@ -23,10 +23,10 @@ SNIPPET;
 
     public static function headScript()
     {
-        if (\Config::get('mixpanel-token')) {
+        if (\Config::get('mixpanel.token')) {
             echo '<script type="text/javascript">';
             echo static::$snippet;
-            echo "mixpanel.init('" . \Config::get('mixpanel-token') . "');";
+            echo "mixpanel.init('" . \Config::get('mixpanel.token') . "');";
             echo \Session::pull('mixpanel_head_script');
             echo '</script>';
         }
@@ -34,7 +34,7 @@ SNIPPET;
 
     public static function bodyScript()
     {
-        if (\Config::get('mixpanel-token')) {
+        if (\Config::get('mixpanel.token')) {
             echo '<script type="text/javascript">';
             echo \Session::pull('mixpanel_body_script');
             echo '</script>';

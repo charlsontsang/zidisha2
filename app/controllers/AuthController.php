@@ -3,6 +3,7 @@
 use Zidisha\User\UserQuery;
 use Zidisha\Vendor\Facebook\FacebookService;
 use Zidisha\Auth\AuthService;
+use Zidisha\Vendor\Mixpanel;
 
 class AuthController extends BaseController
 {
@@ -39,18 +40,7 @@ class AuthController extends BaseController
         $credentials = Input::only('username', 'password');
 
         if ($this->authService->attempt($credentials, $rememberMe)) {
-
-            if (Auth::getUser()->getRole() == 'lender') {
-                return Redirect::route('lender:dashboard');
-            }
-
-            if (Auth::getUser()->getRole() == 'borrower') {
-                return Redirect::route('borrower:dashboard');
-            }
-
-            if (Auth::getUser()->getRole() == 'admin') {
-                return Redirect::route('admin:dashboard');
-            }
+            return $this->login();
         }
 
         Flash::error("Wrong username or password!");
@@ -82,7 +72,7 @@ class AuthController extends BaseController
                 return Redirect::to('login');
             }
 
-            return Redirect::route('home');
+            return $this->login();
         } else {
             return Redirect::to('login');
         }
@@ -92,5 +82,27 @@ class AuthController extends BaseController
     {
         // TODO
         return Redirect::route('lender:join');
+    }
+    
+    protected function login()
+    {
+        $user = \Auth::user();
+        $role = $user->getRole();
+        
+        Mixpanel::identify($user->getId(), array(
+            'username' => $user->getUsername(),
+            'userlevel' => $role,
+            'email' => $user->getEmail(),
+        ));
+        Mixpanel::track('Logged in');
+
+        if ($role == 'lender') {
+            return Redirect::route('lender:dashboard');
+        }
+        elseif ($role == 'borrower') {
+            return Redirect::route('borrower:dashboard');
+        }
+        
+        return Redirect::route('admin:dashboard');
     }
 }
