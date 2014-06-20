@@ -1,6 +1,7 @@
 <?php
 
 use Zidisha\Lender\Form\Join;
+use Zidisha\Utility\Utility;
 use Zidisha\Vendor\Facebook\FacebookService;
 use Zidisha\User\UserService;
 
@@ -29,7 +30,10 @@ class LenderJoinController extends BaseController
     
     public function getJoin()
     {
-        return View::make('lender.join', [
+
+        $country = Utility::getCountryCodeByIP();
+
+        return View::make('lender.join',compact('country') , [
             'form' => $this->joinForm,
             'facebookJoinUrl' => $this->facebookService->getLoginUrl('lender:facebook-join'),
         ]);

@@ -20,7 +20,7 @@ class Country extends AbstractForm
     public function getCountries()
     {
         $countries = \Zidisha\Country\CountryQuery::create()
-            ->filterByEnabled(1)
+            ->filterByBorrowerCountry(1)
             ->find();
 
         return $countries;

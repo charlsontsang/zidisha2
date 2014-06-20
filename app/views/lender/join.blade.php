@@ -12,12 +12,13 @@
 
         {{ BootstrapForm::open(array('route' => 'lender:join', 'translationDomain' => 'join.form')) }}
         {{ BootstrapForm::populate($form) }}
-        
+
         {{ BootstrapForm::text('username') }}
         {{ BootstrapForm::text('email') }}
         {{ BootstrapForm::password('password') }}
         {{ BootstrapForm::password('password_confirmation') }}
-        {{ BootstrapForm::select('countryId', $form->getCountries()->toKeyValue('id', 'name')) }}
+        {{ BootstrapForm::select('countryId', $form->getCountries()->toKeyValue('id', 'name'), ['id' => $country['id'],
+        'name' =>$country['name']]) }}
         {{ BootstrapForm::submit('submit') }}
 
         {{ BootstrapForm::close() }}

@@ -107,3 +107,4 @@ Auth::extend(
         return new \Zidisha\Auth\PropelUserProvider();
     }
 );
+

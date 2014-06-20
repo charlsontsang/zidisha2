@@ -10,7 +10,8 @@
         "ruflin/Elastica": "dev-master",
         "stripe/stripe-php": "1.*",
         "intervention/image": "2.0.4",
-        "supremenewmedia/finance": "0.1.2"
+        "supremenewmedia/finance": "0.1.2",
+        "geoip2/geoip2": "0.6.*"
 	},
 	"autoload": {
         "files": ["vendor/supremenewmedia/finance/Core/Money.php", "vendor/supremenewmedia/finance/Core/Currency.php"],

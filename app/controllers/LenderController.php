@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\View;
 use Propel\Runtime\Propel;
 use Zidisha\Balance\Map\TransactionTableMap;
@@ -10,6 +11,7 @@ use Zidisha\Lender\Form\Funds;
 use Zidisha\Lender\LenderQuery;
 use Zidisha\Lender\LenderService;
 use Zidisha\Lender\ProfileQuery;
+use Zidisha\Utility\Utility;
 
 class LenderController extends BaseController
 {
@@ -133,7 +135,12 @@ class LenderController extends BaseController
 
         if ($form->isValid()) {
             $data = $form->getData();
-            // TODO block countries
+            $country = Utility::getCountryCodeByIP();
+            $blockedCountries = \Config::get('blockedCountries.codes');
+            if(in_array($country['code'],$blockedCountries )){
+                Flash::error("Something went wrong!");
+                return Redirect::route('lender:funds')->withForm($form);
+            }
             \Stripe::setApiKey(\Config::get('stripe.secret_key'));
 
             $payment_success = false;

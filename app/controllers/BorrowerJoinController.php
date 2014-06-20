@@ -1,5 +1,7 @@
 <?php
 
+use Zidisha\Utility\Utility;
+
 class BorrowerJoinController extends BaseController
 {
     use StepController;
@@ -42,7 +44,9 @@ class BorrowerJoinController extends BaseController
 
     public function getCountry()
     {
-        return View::make('borrower.join.country', ['form' => $this->countryForm]);
+        $country = Utility::getCountryCodeByIP();
+
+        return View::make('borrower.join.country', compact('country'), ['form' => $this->countryForm]);
     }
 
 

@@ -51,6 +51,7 @@ class GenerateModelData extends Command
             ['GH', 'Ghana', 'GHS', '0',],
             ['ID', 'Indonesia', 'IDR', '0',],
             ['SN', 'Senegal', 'XOF', '0',],
+            ['IN', 'India', 'INR', '0',],
         ];
 
         if ($model == 'new') {
@@ -212,7 +213,7 @@ class GenerateModelData extends Command
             }
 
             if ($model == "Country") {
-                if ($i >= 6) {
+                if ($i > sizeof($countries)) {
                     continue;
                 }
 

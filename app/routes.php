@@ -33,9 +33,10 @@ Route::get('lender/join', array('uses' => 'LenderJoinController@getJoin', 'as' =
 Route::post('lender/join', array('uses' => 'LenderJoinController@postJoin', 'before' => 'csrf'));
 
 Route::get('lender/facebook/join', array('uses' => 'LenderJoinController@getFacebookJoin', 'as' => 'lender:facebook-join'));
-Route::post('lender/facebook/join', array('uses' => 'LenderJoinController@postFacebookJoin'));
+Route::post('lender/facebook/join', array('uses' => 'LenderJoinController@postFacebookJoin', 'before' => 'csrf'));
 
-Route::get('borrower/join', array('uses' => 'BorrowerJoinController@getJoin', 'as' => 'borrower:join'));
+Route::get('borrower/join', array('uses' => 'BorrowerJoinController@getCountry', 'as' => 'borrower:join'));
+Route::post('borrower/join', array('uses' => 'BorrowerJoinController@postCountry', 'before' => 'csrf'));
 
 Route::controller('borrower/join', 'BorrowerJoinController', ['before' => 'csrf']);
 
