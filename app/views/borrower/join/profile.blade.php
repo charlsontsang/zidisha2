@@ -6,35 +6,30 @@
 {{ BootstrapForm::populate($form) }}
 <br><br>
 <p>CREATE ACCOUNT</p>
-{{ BootstrapForm::text('username') }}
-{{ BootstrapForm::password('password') }}
-{{ BootstrapForm::text('email') }}
+{{ BootstrapForm::text('username', null , ['label' => \Lang::get('join.borrower.form.username')]) }}
+{{ BootstrapForm::password('password', ['label' => \Lang::get('join.borrower.form.password')]) }}
+{{ BootstrapForm::text('email', null , ['label' => \Lang::get('join.borrower.form.email')]) }}
 
 <br><br>
 <p>CONTACT INFORMATION</p>
-{{ BootstrapForm::text('first_name') }}
-{{ BootstrapForm::text('last_name') }}
-{{ BootstrapForm::label('Please enter the name of the neighborhood and street on which your home is located.') }}
-{{ BootstrapForm::text('address') }}
+{{ BootstrapForm::text('first_name', null , ['label' => \Lang::get('join.borrower.form.first_name')]) }}
+{{ BootstrapForm::text('last_name', null , ['label' => \Lang::get('join.borrower.form.last_name')]) }}
+{{ BootstrapForm::text('address', null , ['label' => \Lang::get('join.borrower.form.address')]) }}
 <br>
-{{ BootstrapForm::label('Please enter detailed instructions of how to find your home, including your house number or plot number. If your home is not numbered, please describe how to locate it.') }}
+{{ BootstrapForm::label(\Lang::get('join.borrower.form.address_instruction_1')) }}
 <br><br>
-{{ BootstrapForm::label('Please ensure you enter a detailed enough description that a person arriving for the first time in your neighborhood can use it to find your home. Insufficient address information is the most common reason applications to join Zidisha are declined.') }}
-{{ BootstrapForm::textArea('address_instruction') }}
-{{ BootstrapForm::text('village') }}
-{{ BootstrapForm::text('national_id_number') }}
-{{ BootstrapForm::text('phone_number') }}
-{{ BootstrapForm::label('Optional: if you have any other phone number besides the one above, please enter it here.') }}
-{{ BootstrapForm::text('alternate_phone_number') }}
+{{ BootstrapForm::textArea('address_instruction', null , ['label' => \Lang::get('join.borrower.form.address_instruction_2')]) }}
+{{ BootstrapForm::text('village', null , ['label' => \Lang::get('join.borrower.form.village')]) }}
+{{ BootstrapForm::text('national_id_number', null , ['label' => \Lang::get('join.borrower.form.national_id_number')]) }}
+{{ BootstrapForm::text('phone_number', null , ['label' => \Lang::get('join.borrower.form.phone_number')]) }}
+{{ BootstrapForm::label(\Lang::get('join.borrower.form.optional')) }}
+{{ BootstrapForm::text('alternate_phone_number', null , ['label' => \Lang::get('join.borrower.form.alternate_phone_number')]) }}
 
 <br><br>
 <p>REFERENCES</p>
-{{ BootstrapForm::label('Please select the name of the member who referred you to Zidisha:') }}
-{{ BootstrapForm::select('members') }}
-{{ BootstrapForm::label('Please choose the town or village where you are located, or nearest to you:') }}
-{{ BootstrapForm::select('town') }}
-{{ BootstrapForm::label('Please choose one person from this list to serve as your Volunteer Mentor:') }}
-{{ BootstrapForm::select('mentor') }}
+{{ BootstrapForm::select('members', [], null, ['label' => \Lang::get('join.borrower.form.members')]) }}
+{{ BootstrapForm::select('town', [], null, ['label' => \Lang::get('join.borrower.form.town')]) }}
+{{ BootstrapForm::select('mentor', [], null, ['label' => \Lang::get('join.borrower.form.mentor')]) }}
 
 <br><br>
 <p>Please enter the contact information of a community leader, such as the leader of a local school, religious
