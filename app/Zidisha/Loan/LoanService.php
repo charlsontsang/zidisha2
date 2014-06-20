@@ -3,13 +3,40 @@
 namespace Zidisha\Loan;
 
 
+use SupremeNewMedia\Finance\Core\Money;
+use SupremeNewMedia\Finance\Core\Currency;
+use Zidisha\Borrower\Borrower;
+use Zidisha\Currency\CurrencyService;
+
 class LoanService
 {
+    /**
+     * @var CurrencyService
+     */
+    private $currencyService;
+
+    public function __construct(CurrencyService $currencyService)
+    {
+        $this->currencyService = $currencyService;
+    }
 
     protected $loanIndex;
 
-    public function applyForLoan(Loan $loan)
+    public function applyForLoan(Borrower $borrower, $data)
     {
+        $data['currencyCode'] = $borrower->getCountry()->getCurrencyCode();
+
+        $loanCategory = CategoryQuery::create()
+            ->findOneById($data['categoryId']);
+
+        $data['usdAmount'] = $this->currencyService->convertToUSD(
+            Money::valueOf($data['amount'], Currency::valueOf($data['currencyCode']))
+        )->getAmount();
+
+        $loan = Loan::createFromData($data);
+
+        $loan->setCategory($loanCategory);
+        $loan->setBorrower($borrower);
         $loan->setStatus(Loan::OPEN);
 
         $stage = new Stage();
@@ -17,9 +44,9 @@ class LoanService
         $stage->setStatus(Loan::OPEN);
         $stage->setStartDate(new \DateTime());
         $loan->addStage($stage);
-        
+
         $loan->save();
-        
+
         $this->addToLoanIndex($loan);
     }
 
@@ -108,9 +135,12 @@ class LoanService
         foreach ($loans as $loan) {
             $sortedLoans[$loan->getId()] = $loan;
         }
-        $sortedLoans = array_filter($sortedLoans, function ($l) {
-            return !is_scalar($l);
-        });
+        $sortedLoans = array_filter(
+            $sortedLoans,
+            function ($l) {
+                return !is_scalar($l);
+            }
+        );
 
         $paginatorFactory = \App::make('paginator');
 

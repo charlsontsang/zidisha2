@@ -1,22 +1,19 @@
 <?php
 
+use Faker\Factory as Faker;
 use Illuminate\Console\Command;
-use SupremeNewMedia\Finance\Core\Currency;
 use SupremeNewMedia\Finance\Core\Money;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Zidisha\Admin\Setting;
 use Zidisha\Balance\Transaction;
 use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Borrower\RegistrationFee;
 use Zidisha\Country\Country;
-use Zidisha\Country\CountryQuery;
 use Zidisha\Lender\LenderQuery;
 use Zidisha\Loan\Bid;
 use Zidisha\Loan\Category;
 use Zidisha\Loan\CategoryQuery;
 use Zidisha\Loan\Loan;
-use Faker\Factory as Faker;
 use Zidisha\Loan\LoanQuery;
 use Zidisha\Loan\Stage;
 
@@ -48,16 +45,12 @@ class GenerateModelData extends Command
         $size = $this->argument('size');
         $faker = Faker::create();
         $countries = [
-            ['Bolivia', 'SA', 'BO', '591', 't'],
-            ['Paraguay', 'SA', 'PY', '595', 't'],
-            ['Guyana', 'SA', 'GY', '592', 't'],
-            ['French Guiana', 'SA', 'GF', '594', 't'],
-            ['Falkland Islands', 'SA', 'FK', '45', 't'],
-            ['Equador', 'SA', 'EC', '68', 't'],
-            ['Colombia', 'SA', 'CO', '57', 't'],
-            ['Chile', 'SA', 'CL', '56', 't'],
-            ['Brazil', 'SA', 'BR', '55', 't'],
-            ['Argentina', 'SA', 'AR', '54', 't'],
+            ['KE', 'Kenya', 'KES', '1000',],
+            ['BJ', 'Benin', 'XOF', '0',],
+            ['BF', 'Burkina Faso', 'XOF', '0',],
+            ['GH', 'Ghana', 'GHS', '0',],
+            ['ID', 'Indonesia', 'IDR', '0',],
+            ['SN', 'Senegal', 'XOF', '0',],
         ];
 
         if ($model == 'new') {
@@ -78,6 +71,7 @@ class GenerateModelData extends Command
             $this->call('fake', array('model' => 'Admin', 'size' => 1));
             $this->call('fake', array('model' => 'Borrower', 'size' => 30));
             $this->call('fake', array('model' => 'Lender', 'size' => 30));
+            $this->call('fake', array('model' => 'ExchangeRate', 'size' => 30));
             $this->call('fake', array('model' => 'Loan', 'size' => 30));
             $this->call('fake', array('model' => 'Bid', 'size' => 50));
             $this->call('fake', array('model' => 'Transaction', 'size' => 200));
@@ -133,6 +127,30 @@ class GenerateModelData extends Command
             $user->save();
         }
 
+        if ($model == "ExchangeRate") {
+
+            foreach (['KES' => 80, 'XOF' => 20] as $currencyCode => $rate) {
+                $dateMonthAgo = new DateTime();
+                $dateMonthAgo->modify('-1 month');
+                $dateNow = new DateTime();
+                $dateNow->modify('-1 second');
+                
+                $exchangeRate = new \Zidisha\Currency\ExchangeRate();
+                $exchangeRate
+                    ->setCurrencyCode($currencyCode)
+                    ->setRate($rate - 5)
+                    ->setStartDate($dateMonthAgo)
+                    ->setEndDate($dateNow);
+                $exchangeRate->save();
+
+                $exchangeRate = new \Zidisha\Currency\ExchangeRate();
+                $exchangeRate
+                    ->setCurrencyCode($currencyCode)
+                    ->setRate($rate)
+                    ->setStartDate($dateNow);
+                $exchangeRate->save();
+            }
+        }
 
         for ($i = 1; $i <= $size; $i++) {
             if ($model == "Lender") {
@@ -194,25 +212,20 @@ class GenerateModelData extends Command
             }
 
             if ($model == "Country") {
-                if ($i >= 9) {
+                if ($i >= 6) {
                     continue;
                 }
 
                 $oneCountry = $countries[$i - 1];
 
                 $country = new Country();
-                $country->setName($oneCountry[0]);
-                $country->setCountryCode($oneCountry[1]);
-                $country->setContinentCode($oneCountry[2]);
-                $country->setDialingCode($oneCountry[3]);
-                if($i == 1 || $i == 4){
-                    $country->SetRegistrationFee(200*$i);
-                }
-                $country->SetBorrowerCountry($oneCountry[4]);
-                $currency = new \Zidisha\Currency\Currency();
-                $currency->setName($faker->sentence(2));
-                $currency->setCurrencyCode(substr($faker->word, 1, 3));
-                $country->setCurrency($currency);
+                $country->setName($oneCountry[1]);
+                $country->setCountryCode($oneCountry[0]);
+                $country->setContinentCode('AF');
+                $country->setDialingCode('000');
+                $country->SetRegistrationFee($oneCountry[3]);
+                $country->SetBorrowerCountry(true);
+                $country->setCurrencyCode($oneCountry[2]);
                 $country->save();
             }
 
@@ -258,24 +271,27 @@ class GenerateModelData extends Command
                 $status = floatval($size / 7);
                 $borrower = $allBorrowers[$i - 1];
 
-                $Loan = new Loan();
-                $Loan->setSummary($faker->sentence(8));
-                $Loan->setDescription($faker->paragraph(7));
-                $Loan->setUsdAmount(\SupremeNewMedia\Finance\Core\Money::valueOf($amount, \SupremeNewMedia\Finance\Core\Currency::valueOf('USD')));
-                $Loan->setAmount(Money::valueOf($amount, \SupremeNewMedia\Finance\Core\Currency::valueOf('USD')));
-                $Loan->setCurrencyCode('KES');
-                $Loan->setInstallmentAmount(\SupremeNewMedia\Finance\Core\Money::valueOf($installmentAmount, \SupremeNewMedia\Finance\Core\Currency::valueOf('USD')));
-                $Loan->setRegistrationFeeRate('5');
-                $Loan->setApplicationDate(new \DateTime());
-                $Loan->setInstallmentDay($installmentDay);
-                $Loan->setBorrower($borrower);
-                $Loan->setCategory($loanCategory);
+                $data = array();
+                $data['summary'] = $faker->sentence(8);
+                $data['description'] = $faker->paragraph(7);
+                $data['amount'] = $amount;
+                $data['currencyCode'] = 'KES';
+                $data['usdAmount'] = $amount / 2;
+                $data['installmentAmount'] = $installmentAmount;
+                $data['registrationFeeRate'] = '5';
+                $data['applicationDate'] = new \DateTime();
+                $data['installmentDay'] = $installmentDay;
+                $data['categoryId'] = $loanCategory->getId();
 
                 if ($i < $status) {
-                    $loanService->applyForLoan($Loan);
+                    $loanService->applyForLoan($borrower, $data);
                     continue;
                 }
 
+                $Loan = Loan::createFromData($data);
+                $Loan->setCategory($loanCategory);
+                $Loan->setBorrower($borrower);
+                
                 $Stage = new Stage();
                 $Stage->setLoan($Loan);
                 $Stage->setBorrower($borrower);

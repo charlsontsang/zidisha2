@@ -117,19 +117,7 @@ class LoanApplicationController extends BaseController
 
         $borrower = Auth::user()->getBorrower();
 
-        $loanCategory = CategoryQuery::create()
-            ->findOneById($data['categoryId']);
-
-        $loan = new Loan();
-        $loan->setSummary($data['title']);
-        $loan->setDescription($data['proposal']);
-        $loan->setAmount($data['amount']);
-        $loan->setInstallmentAmount($data['installmentAmount']);
-        $loan->setInstallmentDay($data['installmentDay']);
-        $loan->setCategory($loanCategory);
-        $loan->setBorrower($borrower);
-
-        $this->loanService->applyForLoan($loan);
+        $this->loanService->applyForLoan($borrower, $data);
 
         $this->setCurrentStep('confirmation');
 

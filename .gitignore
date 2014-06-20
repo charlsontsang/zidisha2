@@ -38,3 +38,6 @@ _ide_helper.php
 
 
 tests/_output/*
+tests/unit/UnitTester.php
+tests/acceptance/AcceptanceTester.php
+tests/functional/FunctionalTester.php

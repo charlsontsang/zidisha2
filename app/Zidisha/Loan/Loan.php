@@ -17,6 +17,27 @@ class Loan extends BaseLoan
     const CANCELED  = 6;
     const EXPIRED   = 7;
 
+    public static function createFromData($data)
+    {
+        $currency = Currency::valueOf($data['currencyCode']);
+
+        $loan = new Loan();
+        $loan->setSummary($data['summary']);
+        $loan->setDescription($data['description']);
+
+        $loan->setCurrencyCode($data['currencyCode']);
+        $loan->setAmount(Money::valueOf($data['amount'], $currency));
+        $loan->setInstallmentAmount(Money::valueOf($data['installmentAmount'], $currency));
+
+        $loan->setUsdAmount(Money::valueOf($data['usdAmount'], Currency::valueOf('USD')));
+        $loan->setRegistrationFeeRate('5');
+
+        $loan->setInstallmentDay($data['installmentDay']);
+        $loan->setApplicationDate(new \DateTime());
+
+        return $loan;
+    }
+
     public function getAmount()
     {
         return Money::valueOf(parent::getAmount(), Currency::valueOf($this->getCurrencyCode()));
@@ -24,7 +45,7 @@ class Loan extends BaseLoan
 
     public function setAmount($money)
     {
-        parent::setAmount($money->getAmount());
+        return parent::setAmount($money->getAmount());
     }
 
     public function getInstallmentAmount()
@@ -34,7 +55,7 @@ class Loan extends BaseLoan
 
     public function setInstallmentAmount($money)
     {
-        parent::setInstallmentAmount($money->getAmount());
+        return parent::setInstallmentAmount($money->getAmount());
     }
 
     public function getUsdAmount()
@@ -44,6 +65,6 @@ class Loan extends BaseLoan
 
     public function setUsdAmount($money)
     {
-        parent::setUsdAmount($money->getAmount());
+        return parent::setUsdAmount($money->getAmount());
     }
 }
