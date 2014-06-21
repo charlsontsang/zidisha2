@@ -21,7 +21,7 @@ class Money extends \SupremeNewMedia\Finance\Core\Money {
      *
      * @return integer
      */
-    public function compare(Money $money)
+    public function compare(\SupremeNewMedia\Finance\Core\Money $money)
     {
         return bccomp($this->getAmount(), $money->getAmount(), 2);
     }
