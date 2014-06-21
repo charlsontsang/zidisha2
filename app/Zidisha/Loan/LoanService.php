@@ -4,14 +4,13 @@ namespace Zidisha\Loan;
 
 
 use Propel\Runtime\Propel;
-use SupremeNewMedia\Finance\Core\Currency;
-use SupremeNewMedia\Finance\Core\Money;
 use Zidisha\Analytics\MixpanelService;
 use Zidisha\Balance\Map\TransactionTableMap;
 use Zidisha\Balance\Transaction;
 use Zidisha\Balance\TransactionQuery;
 use Zidisha\Borrower\Borrower;
 use Zidisha\Currency\CurrencyService;
+use Zidisha\Currency\Money;
 use Zidisha\Lender\Exceptions\InsufficientLenderBalanceException;
 use Zidisha\Lender\Lender;
 use Zidisha\Loan\BidQuery;
@@ -49,7 +48,7 @@ class LoanService
             ->findOneById($data['categoryId']);
 
         $data['usdAmount'] = $this->currencyService->convertToUSD(
-            Money::valueOf($data['amount'], Currency::valueOf($data['currencyCode']))
+            Money::create($data['amount'], $data['currencyCode'])
         )->getAmount();
 
         $loan = Loan::createFromData($data);
@@ -210,7 +209,7 @@ class LoanService
 
         //TODO: calculate the accepted amount.
 
-        $amount = Money::valueOf($data['amount'], Currency::valueOf('USD'));
+        $amount = Money::create($data['amount'], 'USD');
         try {
             $bid = new Bid();
             $bid
