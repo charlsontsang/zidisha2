@@ -2,14 +2,12 @@
 
 use Faker\Factory as Faker;
 use Illuminate\Console\Command;
-use SupremeNewMedia\Finance\Core\Currency;
-use SupremeNewMedia\Finance\Core\Money;
 use Symfony\Component\Console\Input\InputArgument;
 use Zidisha\Admin\Setting;
 use Zidisha\Balance\Transaction;
 use Zidisha\Borrower\BorrowerQuery;
-use Zidisha\Borrower\RegistrationFee;
 use Zidisha\Country\Country;
+use Zidisha\Currency\Money;
 use Zidisha\Lender\LenderQuery;
 use Zidisha\Loan\Bid;
 use Zidisha\Loan\Category;
@@ -336,7 +334,7 @@ class GenerateModelData extends Command
 
                 $transaction = new Transaction();
                 $transaction->setUser($oneLender->getUser());
-                $transaction->setAmount(Money::valueOf(rand(-100, 100), Currency::valueOf('USD')));
+                $transaction->setAmount(Money::create(rand(-100, 100), 'USD'));
                 $transaction->setLoan($oneLoan);
                 $transaction->setDescription($oneLoan->getSummary());
                 $transaction->setTransactionDate(new \DateTime());
@@ -355,7 +353,7 @@ class GenerateModelData extends Command
 
                 $oneBid = new Bid();
                 $oneBid->setBidDate(new \DateTime());
-                $oneBid->setBidAmount(Money::valueOf(rand(0, 30), Currency::valueOf('USD')));
+                $oneBid->setBidAmount(Money::create(rand(0, 30), 'USD'));
                 $oneBid->setInterestRate(rand(0, 15));
                 $oneBid->setLoan($oneLoan);
                 $oneBid->setLender($oneLender);
