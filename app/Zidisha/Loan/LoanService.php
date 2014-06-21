@@ -546,8 +546,7 @@ class LoanService
         }
     }
 
-    public
-    function disburseLoan(
+    public function disburseLoan(
         Loan $loan,
         \DateTime $date,
         Money $amount
@@ -605,18 +604,7 @@ class LoanService
                 ->setDisbursedAmount($amount);
             $loan->save($con);
 
-            $currentLoanStage = StageQuery::create()
-                ->filterByLoan($loan)
-                ->findOneByStatus(Loan::FUNDED);
-            $currentLoanStage->setEndDate(new \DateTime())
-                ->save($con);
-
-            $newLoanStage = new Stage();
-            $newLoanStage->setLoan($loan);
-            $newLoanStage->setBorrower($loan->getBorrower());
-            $newLoanStage->setStatus(Loan::ACTIVE);
-            $newLoanStage->setStartDate(new \DateTime());
-            $newLoanStage->save($con);
+            $this->changeLoanStage($con, $loan, Loan::FUNDED, Loan::ACTIVE);
 
             if (!$TransactionSuccess && !$TransactionSuccess_2 && !$TransactionSuccess_3) {
                 throw new \Exception();
