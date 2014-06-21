@@ -3,6 +3,7 @@
 namespace Zidisha\Loan;
 
 
+use Faker\Provider\DateTime;
 use Propel\Runtime\Propel;
 use Zidisha\Analytics\MixpanelService;
 use Zidisha\Balance\Map\TransactionTableMap;
@@ -379,4 +380,64 @@ class LoanService
 
         return $bid;
     }
+
+    public function acceptBids(Loan $loan)
+    {
+        $newBids = BidQuery::create()
+            ->getOrderedBids($loan)
+            ->find();
+
+        $newAcceptedBids = $this->getAcceptedBids($newBids, $loan->getAmount());
+
+        $con = Propel::getWriteConnection(TransactionTableMap::DATABASE_NAME);
+        $con->beginTransaction();
+        $totalAmount = 0;
+
+        try {
+            foreach ($newAcceptedBids as $bidId => $acceptedBid) {
+                $acceptedAmount = $acceptedBid['acceptedAmount'];
+                $bid = $acceptedBid['bid'];
+                if ($acceptedAmount->greaterThan(Money::create(0))) {
+                    $bid->setActive(0)
+                        ->setAcceptedAmount($acceptedAmount);
+                    $success = $bid->save($con);
+                    if (!$success) {
+                        // Todo: Notify admin.
+                        throw new \Exception();
+                    }
+                    $totalAmount = $totalAmount->add($acceptedAmount->multiply(0.01 * $bid->getInterestRate()));
+                }
+            }
+
+            $totalInterest = $totalAmount->divide($loan->getUsdAmount())->round(2)->getAmount();
+            $loan->setStatus(Loan::FUNDED)
+                ->setInterestRate($totalInterest)
+                ->setAcceptedDate(new \DateTime())
+                ->save();
+
+            $currentLoanStage = StageQuery::create()
+                ->filterByLoan($loan)
+                ->findOneByStatus(Loan::OPEN);
+            $currentLoanStage->setEndDate(new \DateTime())
+                ->save($con);
+
+            $newLoanStage = new Stage();
+            $newLoanStage->setLoan($loan);
+            $newLoanStage->setBorrower($loan->getBorrower());
+            $newLoanStage->setStatus(Loan::FUNDED);
+            $newLoanStage->setStartDate(new \DateTime());
+            $newLoanStage->save($con);
+
+            $loan->getBorrower()->setActiveLoan($loan);
+            $loan->save($con);
+
+            //TODO send emails
+            
+        } catch (\Exception $e) {
+            $con->rollBack();
+        }
+        $con->commit();
+
+    }
+
 }
