@@ -188,9 +188,7 @@ class LoanService
         );
 
         $loanDocument = new \Elastica\Document($loan->getId(), $data);
-
         $loanType->addDocument($loanDocument);
-
         $loanType->getIndex()->refresh();
     }
 
@@ -201,37 +199,52 @@ class LoanService
 
         //TODO: calculate the accepted amount.
 
-        $amount = Money::create($data['amount'], 'USD');
+
+        $bidAmount = Money::create($data['amount'], 'USD');
         try {
+            $oldBids = BidQuery::create()
+                ->getOrderedBids($loan)
+                ->find();
+
             $bid = new Bid();
             $bid
                 ->setLoan($loan)
                 ->setLender($lender)
                 ->setBorrower($loan->getBorrower())
-                ->setBidAmount($amount)
+                ->setBidAmount($bidAmount)
                 ->setInterestRate($data['interestRate'])
                 ->setActive(true)
                 ->setBidDate(new \DateTime());
 
             $bidSuccess = $bid->save($con);
-
-            $bidTransaction = new Transaction();
-            $bidTransaction
-                ->setUser($lender->getUser())
-                ->setAmount($amount)
-                ->setDescription('Loan bid')
-                ->setLoan($loan)
-                ->setTransactionDate(new \DateTime())
-                ->setType(Transaction::LOAN_BID)
-                ->setSubType(Transaction::PLACE_BID);
-
-            $bidTransactionSuccess = $bidTransaction->save($con);
-
-            //Todo: OutBid Transaction.
-
-            if (!$bidSuccess || !$bidTransactionSuccess) {
-                // Todo: Notify admin.
+            if (!$bidSuccess) {
                 throw new \Exception();
+            }
+
+            $newBids = BidQuery::create()
+                ->getOrderedBids($loan)
+                ->find();
+
+            $oldAcceptedBids = $this->getAcceptedBids($oldBids, $loan->getAmount());
+            $newAcceptedBids = $this->getAcceptedBids($newBids, $loan->getAmount());
+            $changedBids = $this->getChangedBids($oldAcceptedBids, $newAcceptedBids);
+
+            foreach ($changedBids as $bidId => $changedBid) {
+                $bidTransaction = new Transaction();
+                $bidTransaction
+                    ->setUser($changedBid['bid']->getLender()->getUser())
+                    ->setAmount($changedBid['acceptedAmount'])
+                    ->setDescription($changedBid['description'])
+                    ->setLoan($changedBid['bid']->getLoan())
+                    ->setTransactionDate(new \DateTime())
+                    ->setType($changedBid['type'])
+                    ->setSubType($changedBid['subType']);
+
+                $bidTransactionSuccess = $bidTransaction->save($con);
+                if (!$bidTransactionSuccess) {
+                    // Todo: Notify admin.
+                    throw new \Exception();
+                }
             }
 
             $con->commit();
@@ -239,6 +252,8 @@ class LoanService
             $con->rollBack();
             throw $e;
         }
+
+        // loop and send emails
 
         // Send bid confirmation mail
         $this->lenderMailer->bidPlaceMail($bid);
@@ -269,13 +284,87 @@ class LoanService
         return $bid;
     }
 
+    protected function getAcceptedBids($bids, Money $loanAmount)
+    {
+        $zero = Money::create(0, 'USD');
+        $totalBidAmount = $zero;
+        $acceptedBids = [];
+
+        foreach ($bids as $bid) {
+            $bidAmount = $bid->getBidAmount();
+            $missingAmount = $loanAmount->subtract($totalBidAmount)->max($zero)->round(3);
+            $totalBidAmount = $totalBidAmount->add($bidAmount);
+            $acceptedAmount = $missingAmount->min($bidAmount);
+
+            $acceptedBids[$bid->getId()] = compact('bid', 'acceptedAmount');
+        }
+
+        // Sort by bid date
+        // TODO: why?
+        uasort(
+            $acceptedBids,
+            function ($b1, $b2) {
+                return $b1['bid']->getBidDate() <= $b2['bid']->getBidDate();
+            }
+        );
+
+        return $acceptedBids;
+    }
+
+    protected function getChangedBids($oldAcceptedBids, $newAcceptedBids)
+    {
+        $changedBids = [];
+
+        foreach ($newAcceptedBids as $bidId => $acceptedBid) {
+            $acceptedAmount = $acceptedBid['acceptedAmount'];
+            $bid = $acceptedBid['bid'];
+            if (isset($oldAcceptedBids[$bidId])) {
+                $oldAcceptedAmount = $oldAcceptedBids[$bidId]['acceptedAmount'];
+                if ($oldAcceptedAmount->greaterThan($acceptedAmount)) {
+                    $changedBids[$bidId] = [
+                        'bid' => $bid,
+                        'acceptedAmount' => $acceptedAmount,
+                        'type' => Transaction::LOAN_OUTBID,
+                        'subType' => null,
+                        'description' => 'Loan outbid',
+                        'changedAmount' => $oldAcceptedAmount->substract($acceptedAmount),
+                    ];
+                } else {
+                    if ($oldAcceptedAmount->lessThan($acceptedAmount)) {
+                        $changedBids[$bidId] = [
+                            'bid' => $bid,
+                            'acceptedAmount' => $acceptedAmount,
+                            'type' => Transaction::LOAN_BID,
+                            'subType' => Transaction::UPDATE_BID,
+                            'description' => 'Loan bid',
+                            'changedAmount' => $acceptedAmount->substract($oldAcceptedAmount),
+                        ];
+
+                    }
+                }
+            } else {
+                $changedBids[$bidId] = [
+                    'bid' => $bid,
+                    'acceptedAmount' => $acceptedAmount,
+                    'type' => Transaction::LOAN_BID,
+                    'subType' => Transaction::PLACE_BID,
+                    'description' => 'Loan bid',
+                    'changedAmount' => $acceptedAmount,
+                ];
+
+            }
+        }
+
+        return $changedBids;
+    }
+
     public function editBid(Bid $bid, $data)
     {
         // Todo: Outbid Function
 
+        $con = Propel::getWriteConnection(TransactionTableMap::DATABASE_NAME);
+        $con->beginTransaction();
         try {
-            $con = Propel::getWriteConnection(TransactionTableMap::DATABASE_NAME);
-            $con->beginTransaction();
 
             $bid->setBidAmount(Money::create($data['amount'], 'USD'));
             $bid->setInterestRate($data['interestRate']);
@@ -284,7 +373,7 @@ class LoanService
             if ($bidEditSuccess) {
                 $con->commit();
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $con->rollBack();
         }
 

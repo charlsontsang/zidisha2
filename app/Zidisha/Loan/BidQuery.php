@@ -27,4 +27,13 @@ class BidQuery extends BaseBidQuery
 
         return Money::valueOf($total, Currency::valueOf('USD'));
     }
+
+    public function getOrderedBids(Loan $loan)
+    {
+        return $this
+            ->filterByLoan($loan)
+            ->orderByInterestRate()
+            ->orderByBidDate();
+    }
+
 } // BidQuery
