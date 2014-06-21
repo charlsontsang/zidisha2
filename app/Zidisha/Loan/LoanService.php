@@ -2,8 +2,6 @@
 
 namespace Zidisha\Loan;
 
-
-use Faker\Provider\DateTime;
 use Propel\Runtime\Propel;
 use Zidisha\Analytics\MixpanelService;
 use Zidisha\Balance\Map\TransactionTableMap;
