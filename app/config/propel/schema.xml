@@ -67,6 +67,7 @@
         <column name="loan_category_id" type="INTEGER" required="true"/>
         <column name="status" type="ENUM" valueSet="0, 1, 2, 3, 5, 6, 7"/>
         <column name="application_date" type="TIMESTAMP" required="true"/>
+        <column name="accepted_date" type="TIMESTAMP"/>
         <column name="registration_fee_rate" type="DECIMAL" size="5" scale="2" phpType="string"/>
         <column name="usd_amount" type="DECIMAL" size="10" scale="2"  required="true" phpType="string"/>
         <column name="currency_code" type="VARCHAR" size="3" required="true"/>
@@ -74,7 +75,7 @@
         <foreign-key foreignTable="loan_categories">
             <reference local="loan_category_id" foreign="id" />
         </foreign-key>
-        <foreign-key foreignTable="borrowers">
+        <foreign-key foreignTable="borrowers" phpName="Borrower">
             <reference local="borrower_id" foreign="id"/>
         </foreign-key>
     </table>
@@ -86,8 +87,8 @@
         <column name="borrower_id" type="INTEGER" required="true"/>
         <column name="bid_amount" type="DECIMAL" size="10" scale="2" required="true" phpType="string"/>
         <column name="interest_rate" type="DECIMAL" size="5" scale="2" required="true"/>
-        <column name="active" type="TINYINT" size="1" required="true" defaultValue="1"/>
-        <column name="paid_amount" type="DECIMAL" size="10" scale="2" required="true" defaultValue="0.00" phpType="string"/>
+        <column name="active" type="TINYINT" size="1" required="true" defaultValue="0"/>
+        <column name="accepted_amount" type="DECIMAL" size="10" scale="2" required="true" defaultValue="0.00" phpType="string"/>
         <column name="bid_date" type="TIMESTAMP" required="true"/>
         <behavior name="timestampable" />
         <column name="lender_invite_credit" type="TINYINT" size="1" required="true" defaultValue="0"/>
@@ -133,12 +134,16 @@
         <column name="country_id" type="INTEGER" required="true"/>
         <column name="first_name" type="VARCHAR" size="50" required="true" />
         <column name="last_name" type="VARCHAR" size="50" required="true" />
+        <column name="active_loan_id" type="INTEGER"/>
         <behavior name="timestampable" />
         <foreign-key foreignTable="users">
             <reference local="id" foreign="id"/>
         </foreign-key>
         <foreign-key foreignTable="countries">
             <reference local="country_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="loans" phpName="ActiveLoan">
+            <reference local="active_loan_id" foreign="id"/>
         </foreign-key>
     </table>
 
