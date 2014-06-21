@@ -26,4 +26,14 @@ class Bid extends BaseBid
     {
         return parent::setPaidAmount($money->getAmount());
     }
+
+    public function isFirstBid()
+    {
+        $lender = $this->getLender();
+
+        if (BidQuery::create()->filterByLender($lender)->findOne()) {
+            return false;
+        }
+        return true;
+    }
 }

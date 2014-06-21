@@ -251,15 +251,9 @@ class LoanService
         // Send bid confirmation mail
         $this->lenderMailer->bidPlaceMail($bid);
 
-        // Check if this lender is palcing his first bid, if so send him a mail
-        $hasLenderBidEarlier = BidQuery::create()
-            ->filterByLender($lender)
-            ->findOne();
-
-        if (!$hasLenderBidEarlier) {
+        if($bid->isFirstBid()){
             $this->lenderMailer->sendPlaceBidMail($bid);
         }
-
         $this->mixpanelService->trackPlacedBid($bid);
 
         $totalBidAmount = BidQuery::create()
