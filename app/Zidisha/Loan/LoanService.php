@@ -6,6 +6,7 @@ namespace Zidisha\Loan;
 use Propel\Runtime\Propel;
 use SupremeNewMedia\Finance\Core\Currency;
 use SupremeNewMedia\Finance\Core\Money;
+use Zidisha\Analytics\MixpanelService;
 use Zidisha\Balance\Map\TransactionTableMap;
 use Zidisha\Balance\Transaction;
 use Zidisha\Balance\TransactionQuery;
@@ -13,6 +14,8 @@ use Zidisha\Borrower\Borrower;
 use Zidisha\Currency\CurrencyService;
 use Zidisha\Lender\Exceptions\InsufficientLenderBalanceException;
 use Zidisha\Lender\Lender;
+use Zidisha\Loan\BidQuery;
+use Zidisha\Mail\LenderMailer;
 
 class LoanService
 {
@@ -20,10 +23,20 @@ class LoanService
      * @var CurrencyService
      */
     private $currencyService;
+    /**
+     * @var \Zidisha\Mail\LenderMailer
+     */
+    private $lenderMailer;
+    /**
+     * @var MixpanelService
+     */
+    private $mixpanelService;
 
-    public function __construct(CurrencyService $currencyService)
+    public function __construct(CurrencyService $currencyService, LenderMailer $lenderMailer, MixpanelService $mixpanelService)
     {
         $this->currencyService = $currencyService;
+        $this->lenderMailer = $lenderMailer;
+        $this->mixpanelService = $mixpanelService;
     }
 
     protected $loanIndex;
@@ -188,7 +201,7 @@ class LoanService
             ->filterByUser($lender->getUser())
             ->getTotalBalance();
 
-        if (!$data['Amount'] >= $currentBalance) {
+        if ($data['amount'] >= $currentBalance) {
             throw new InsufficientLenderBalanceException();
         }
 
@@ -197,7 +210,7 @@ class LoanService
 
         //TODO: calculate the accepted amount.
 
-        $amount = Money::valueOf($data['Amount'], Currency::valueOf('USD'));
+        $amount = Money::valueOf($data['amount'], Currency::valueOf('USD'));
         try {
             $bid = new Bid();
             $bid
@@ -236,28 +249,38 @@ class LoanService
             throw $e;
         }
 
+        // Send bid confirmation mail
+        $this->lenderMailer->bidPlaceMail($bid);
 
-        //Todo: calculate if the loan is fully funded.
+        // Check if this lender is palcing his first bid, if so send him a mail
+        $hasLenderBidEarlier = BidQuery::create()
+            ->filterByLender($lender)
+            ->findOne();
+
+        if (!$hasLenderBidEarlier) {
+            $this->lenderMailer->sendPlaceBidMail($bid);
+        }
+
+        $this->mixpanelService->trackPlacedBid($bid);
 
         $totalBidAmount = BidQuery::create()
             ->filterByLoan($loan)
             ->getTotalBidAmount();
 
         if ($totalBidAmount->compare($loan->getAmount()) != -1) {
-            //Todo: this loan is complete, Send notification to lenders and borrowers.
-            //$loanService->notifyAll();
+
+            $bids = BidQuery::create()
+                ->filterByLoan($loan)
+                ->find();
+
+            foreach ($bids as $oneBid) {
+                $this->lenderMailer->loanCompletionMail($oneBid);
+            }
         }
 
-        //Todo: send mail to the lender if it is his first bid.
-        $hasLenderBidEarlier = BidQuery::create()->filterByLender($lender);
+        //Todo: Lender Invite Credit.
 
-        if (!$hasLenderBidEarlier) {
-            //Todo: send mail to lender on placing his first bid.
-        }
-
-        //Todo: Send Lender Invite Credit.
-        //Todo: Send Mixpanel events.
-
+        return $bid;
     }
 
 }
