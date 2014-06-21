@@ -71,6 +71,7 @@
         <column name="expired_date" type="TIMESTAMP"/>
         <column name="registration_fee_rate" type="DECIMAL" size="5" scale="2" phpType="string"/>
         <column name="usd_amount" type="DECIMAL" size="10" scale="2"  required="true" phpType="string"/>
+        <column name="disbursed_Amount" type="DECIMAL" size="10" scale="2" phpType="string"/>
         <column name="currency_code" type="VARCHAR" size="3" required="true"/>
         <behavior name="timestampable"/>
         <foreign-key foreignTable="loan_categories">
