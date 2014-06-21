@@ -2,8 +2,7 @@
 
 namespace Zidisha\Loan;
 
-use SupremeNewMedia\Finance\Core\Currency;
-use SupremeNewMedia\Finance\Core\Money;
+use Zidisha\Currency\Money;
 use Zidisha\Loan\Base\Loan as BaseLoan;
 
 class Loan extends BaseLoan
@@ -19,17 +18,17 @@ class Loan extends BaseLoan
 
     public static function createFromData($data)
     {
-        $currency = Currency::valueOf($data['currencyCode']);
+        $currency = $data['currencyCode'];
 
         $loan = new Loan();
         $loan->setSummary($data['summary']);
         $loan->setDescription($data['description']);
 
         $loan->setCurrencyCode($data['currencyCode']);
-        $loan->setAmount(Money::valueOf($data['amount'], $currency));
-        $loan->setInstallmentAmount(Money::valueOf($data['installmentAmount'], $currency));
+        $loan->setAmount(Money::create($data['amount'], $currency));
+        $loan->setInstallmentAmount(Money::create($data['installmentAmount'], $currency));
 
-        $loan->setUsdAmount(Money::valueOf($data['usdAmount'], Currency::valueOf('USD')));
+        $loan->setUsdAmount(Money::create($data['usdAmount'], 'USD'));
         $loan->setRegistrationFeeRate('5');
 
         $loan->setInstallmentDay($data['installmentDay']);
@@ -40,7 +39,7 @@ class Loan extends BaseLoan
 
     public function getAmount()
     {
-        return Money::valueOf(parent::getAmount(), Currency::valueOf($this->getCurrencyCode()));
+        return Money::create(parent::getAmount(), $this->getCurrencyCode());
     }
 
     public function setAmount($money)
@@ -50,7 +49,7 @@ class Loan extends BaseLoan
 
     public function getInstallmentAmount()
     {
-        return Money::valueOf(parent::getInstallmentAmount(), Currency::valueOf($this->getCurrencyCode()));
+        return Money::create(parent::getInstallmentAmount(), $this->getCurrencyCode());
     }
 
     public function setInstallmentAmount($money)
@@ -60,7 +59,7 @@ class Loan extends BaseLoan
 
     public function getUsdAmount()
     {
-        return Money::valueOf(parent::getUsdAmount(), Currency::valueOf(Currency::CODE_USD));
+        return Money::create(parent::getUsdAmount(), 'USD');
     }
 
     public function setUsdAmount($money)

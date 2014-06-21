@@ -2,15 +2,14 @@
 
 namespace Zidisha\Loan;
 
-use SupremeNewMedia\Finance\Core\Currency;
-use SupremeNewMedia\Finance\Core\Money;
+use Zidisha\Currency\Money;
 use Zidisha\Loan\Base\Bid as BaseBid;
 
 class Bid extends BaseBid
 {
     public function getBidAmount()
     {
-        return Money::valueOf(parent::getBidAmount(), Currency::valueOf('USD'));
+        return Money::create(parent::getBidAmount(), 'USD');
     }
 
     public function setBidAmount($money)
@@ -20,7 +19,7 @@ class Bid extends BaseBid
 
     public function getPaidAmount()
     {
-        return Money::valueOf(parent::getPaidAmount(), Currency::valueOf('USD'));
+        return Money::create(parent::getPaidAmount(), 'USD');
     }
 
     public function setPaidAmount($money)
