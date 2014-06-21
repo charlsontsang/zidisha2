@@ -7,6 +7,7 @@ use Zidisha\Loan\Form\BidForm;
 use Zidisha\Loan\Loan;
 use Zidisha\Loan\LoanQuery;
 use Zidisha\Loan\BidQuery;
+use Zidisha\Loan\LoanService;
 
 class LoanController extends BaseController
 {
@@ -17,19 +18,32 @@ class LoanController extends BaseController
      */
     private $commentService;
 
+    /**
+     * @var Zidisha\Loan\BidQuery
+     */
     protected $bidQuery;
+
+    /**
+     * @var Zidisha\Loan\Form\BidForm
+     */
     protected $bidForm;
+    /**
+     * @var Zidisha\Loan\LoanService
+     */
+    private $loanService;
 
     public function  __construct(
         LoanQuery $loanQuery,
         CommentService $commentService,
         BidQuery $bidQuery,
-        BidForm $bidForm
+        BidForm $bidForm,
+        LoanService $loanService
     ) {
         $this->loanQuery = $loanQuery;
         $this->bidQuery = $bidQuery;
         $this->commentService = $commentService;
         $this->bidForm = $bidForm;
+        $this->loanService = $loanService;
     }
 
     public function getIndex($loanId)
@@ -75,18 +89,13 @@ class LoanController extends BaseController
 
         if ($form->isValid()) {
 
-            $loan = $this->loanQuery->create()
+            $loan = LoanQuery::create()
                 ->filterById($data['loanId'])
                 ->findOne();
 
-            $oneBid = new Bid();
-            $oneBid->setBidDate(new \DateTime());
-            $oneBid->setBidAmount($data['Amount']);
-            $oneBid->setInterestRate($data['interestRate']);
-            $oneBid->setLoan($loan);
-            $oneBid->setLender(Auth::user()->getLender());
-            $oneBid->setBorrower($loan->getBorrower());
-            $oneBid->save();
+            $lender = \Auth::user()->getLender();
+
+            $this->loanService->placeBid($loan, $lender, $data);
 
             Flash::success("Successful bid of amount USD " . $data['Amount']);
             return Redirect::route('loan:index', $data['loanId']);

@@ -3,10 +3,19 @@
 namespace Zidisha\Loan;
 
 
-use SupremeNewMedia\Finance\Core\Money;
+use Propel\Runtime\Propel;
 use SupremeNewMedia\Finance\Core\Currency;
+use SupremeNewMedia\Finance\Core\Money;
+use Zidisha\Analytics\MixpanelService;
+use Zidisha\Balance\Map\TransactionTableMap;
+use Zidisha\Balance\Transaction;
+use Zidisha\Balance\TransactionQuery;
 use Zidisha\Borrower\Borrower;
 use Zidisha\Currency\CurrencyService;
+use Zidisha\Lender\Exceptions\InsufficientLenderBalanceException;
+use Zidisha\Lender\Lender;
+use Zidisha\Loan\BidQuery;
+use Zidisha\Mail\LenderMailer;
 
 class LoanService
 {
@@ -14,10 +23,20 @@ class LoanService
      * @var CurrencyService
      */
     private $currencyService;
+    /**
+     * @var \Zidisha\Mail\LenderMailer
+     */
+    private $lenderMailer;
+    /**
+     * @var MixpanelService
+     */
+    private $mixpanelService;
 
-    public function __construct(CurrencyService $currencyService)
+    public function __construct(CurrencyService $currencyService, LenderMailer $lenderMailer, MixpanelService $mixpanelService)
     {
         $this->currencyService = $currencyService;
+        $this->lenderMailer = $lenderMailer;
+        $this->mixpanelService = $mixpanelService;
     }
 
     protected $loanIndex;
@@ -174,6 +193,94 @@ class LoanService
         $loanType->addDocument($loanDocument);
 
         $loanType->getIndex()->refresh();
+    }
+
+    public function placeBid(Loan $loan, Lender $lender, $data)
+    {
+        $currentBalance = TransactionQuery::create()
+            ->filterByUser($lender->getUser())
+            ->getTotalBalance();
+
+        if ($data['amount'] >= $currentBalance) {
+            throw new InsufficientLenderBalanceException();
+        }
+
+        $con = Propel::getWriteConnection(TransactionTableMap::DATABASE_NAME);
+        $con->beginTransaction();
+
+        //TODO: calculate the accepted amount.
+
+        $amount = Money::valueOf($data['amount'], Currency::valueOf('USD'));
+        try {
+            $bid = new Bid();
+            $bid
+                ->setLoan($loan)
+                ->setLender($lender)
+                ->setBorrower($loan->getBorrower())
+                ->setBidAmount($amount)
+                ->setInterestRate($data['interestRate'])
+                ->setActive(true)
+                ->setBidDate(new \DateTime());
+
+            $bidSuccess = $bid->save($con);
+
+            $bidTransaction = new Transaction();
+            $bidTransaction
+                ->setUser($lender->getUser())
+                ->setAmount($amount)
+                ->setDescription('Loan bid')
+                ->setLoan($loan)
+                ->setTransactionDate(new \DateTime())
+                ->setType(Transaction::LOAN_BID)
+                ->setSubType(Transaction::PLACE_BID);
+
+            $bidTransactionSuccess = $bidTransaction->save($con);
+
+            //Todo: OutBid Transaction.
+
+            if (!$bidSuccess || !$bidTransactionSuccess) {
+                // Todo: Notify admin.
+                throw new \Exception();
+            }
+
+            $con->commit();
+        } catch (\Exception $e) {
+            $con->rollBack();
+            throw $e;
+        }
+
+        // Send bid confirmation mail
+        $this->lenderMailer->bidPlaceMail($bid);
+
+        // Check if this lender is palcing his first bid, if so send him a mail
+        $hasLenderBidEarlier = BidQuery::create()
+            ->filterByLender($lender)
+            ->findOne();
+
+        if (!$hasLenderBidEarlier) {
+            $this->lenderMailer->sendPlaceBidMail($bid);
+        }
+
+        $this->mixpanelService->trackPlacedBid($bid);
+
+        $totalBidAmount = BidQuery::create()
+            ->filterByLoan($loan)
+            ->getTotalBidAmount();
+
+        if ($totalBidAmount->compare($loan->getAmount()) != -1) {
+
+            $bids = BidQuery::create()
+                ->filterByLoan($loan)
+                ->find();
+
+            foreach ($bids as $oneBid) {
+                $this->lenderMailer->loanCompletionMail($oneBid);
+            }
+        }
+
+        //Todo: Lender Invite Credit.
+
+        return $bid;
     }
 
 }

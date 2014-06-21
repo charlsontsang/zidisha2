@@ -2,6 +2,7 @@
 
 use Faker\Factory as Faker;
 use Illuminate\Console\Command;
+use SupremeNewMedia\Finance\Core\Currency;
 use SupremeNewMedia\Finance\Core\Money;
 use Symfony\Component\Console\Input\InputArgument;
 use Zidisha\Admin\Setting;
@@ -330,7 +331,7 @@ class GenerateModelData extends Command
 
                 $transaction = new Transaction();
                 $transaction->setUser($oneLender->getUser());
-                $transaction->setAmount(rand(-100, 100));
+                $transaction->setAmount(Money::valueOf(rand(-100, 100), Currency::valueOf('USD')));
                 $transaction->setLoan($oneLoan);
                 $transaction->setDescription($oneLoan->getSummary());
                 $transaction->setTransactionDate(new \DateTime());
@@ -349,7 +350,7 @@ class GenerateModelData extends Command
 
                 $oneBid = new Bid();
                 $oneBid->setBidDate(new \DateTime());
-                $oneBid->setBidAmount(rand(0, 30));
+                $oneBid->setBidAmount(Money::valueOf(rand(0, 30), Currency::valueOf('USD')));
                 $oneBid->setInterestRate(rand(0, 15));
                 $oneBid->setLoan($oneLoan);
                 $oneBid->setLender($oneLender);

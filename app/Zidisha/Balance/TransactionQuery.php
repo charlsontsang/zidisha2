@@ -2,6 +2,8 @@
 
 namespace Zidisha\Balance;
 
+use SupremeNewMedia\Finance\Core\Currency;
+use SupremeNewMedia\Finance\Core\Money;
 use Zidisha\Balance\Base\TransactionQuery as BaseTransactionQuery;
 
 
@@ -17,5 +19,14 @@ use Zidisha\Balance\Base\TransactionQuery as BaseTransactionQuery;
  */
 class TransactionQuery extends BaseTransactionQuery
 {
+    public function getTotalBalance()
+    {
+        $total = $this
+            ->select(array('total'))
+            ->withColumn('SUM(amount)', 'total')
+            ->findOne();
+
+        return Money::valueOf($total, Currency::valueOf('USD'));
+    }
 
 } // TransactionQuery
