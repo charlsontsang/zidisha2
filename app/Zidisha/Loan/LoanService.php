@@ -3,6 +3,7 @@
 namespace Zidisha\Loan;
 
 use Propel\Runtime\Connection\ConnectionInterface;
+
 use Propel\Runtime\Propel;
 use Zidisha\Analytics\MixpanelService;
 use Zidisha\Balance\Map\TransactionTableMap;
@@ -413,7 +414,7 @@ class LoanService
             $loan->setStatus(Loan::FUNDED)
                 ->setInterestRate($totalInterest)
                 ->setAcceptedDate(new \DateTime())
-                ->save();
+                ->save($con);
 
             $this->changeLoanStage($con, $loan, Loan::OPEN, Loan::FUNDED);
 
@@ -544,4 +545,77 @@ class LoanService
             throw new \Exception();
         }
     }
+
+    public function disburseLoan(
+        Loan $loan,
+        \DateTime $date,
+        Money $amount
+    ) {
+        $isDisbursed = TransactionQuery::create()
+            ->filterByLoan($loan)
+            ->filterByType(Transaction::DISBURSEMENT)
+            ->find();
+
+        if ($isDisbursed) {
+            // TODO
+            return;
+        }
+
+        $con = Propel::getWriteConnection(TransactionTableMap::DATABASE_NAME);
+        $con->beginTransaction();
+        try {
+            $disburseTransaction = new Transaction();
+            $disburseTransaction
+                ->setUser($loan->getBorrower())
+                ->setAmount(-$amount)
+                ->setDescription('Got amount from loan')
+                ->setLoan($loan)
+                ->setTransactionDate(new \DateTime())
+                ->setType(Transaction::DISBURSEMENT);
+            $TransactionSuccess = $disburseTransaction->save($con);
+
+            $TransactionSuccess_2 = $TransactionSuccess_3 = true;
+            $loans = LoanQuery::create()
+                ->filterByBorrower($loan->getBorrower())
+                ->count(); // propel count()
+            if ($loans == 1) {
+                $feeTransactionBorrower = new Transaction();
+                $feeTransactionBorrower
+                    ->setUser($loan->getBorrower()->getUser())
+                    ->setAmount(-($amount->multiply(2.5)))
+                    ->setDescription('Registration Fee')
+                    ->setLoan($loan)
+                    ->setTransactionDate(new \DateTime())
+                    ->setType(Transaction::REGISTRATION_FEE);
+                $TransactionSuccess_2 = $feeTransactionBorrower->save($con);
+
+                $feeTransactionAdmin = new Transaction();
+                $feeTransactionAdmin
+                    ->setUserId(\Config::get('adminId'))
+                    ->setAmount($amount->multiply(2.5))
+                    ->setDescription('Registration Fee')
+                    ->setLoan($loan)
+                    ->setTransactionDate(new \DateTime())
+                    ->setType(Transaction::REGISTRATION_FEE);
+                $TransactionSuccess_3 = $feeTransactionAdmin->save($con);
+            }
+
+            $loan->setStatus(Loan::ACTIVE)
+                ->setDisbursedAmount($amount);
+            $loan->save($con);
+
+            $this->changeLoanStage($con, $loan, Loan::FUNDED, Loan::ACTIVE);
+
+            if (!$TransactionSuccess && !$TransactionSuccess_2 && !$TransactionSuccess_3) {
+                throw new \Exception();
+            }
+        } catch (\Exception $e) {
+            $con->rollBack();
+        }
+        $con->commit();
+        //TODO Add repayment schedule
+        //TODO Send email / sift sience event
+    }
 }
+
+
