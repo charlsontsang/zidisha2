@@ -19,7 +19,7 @@ class LenderMailer
     /**
      * @param Mailer $mailer
      */
-    public function __constructs(Mailer $mailer)
+    public function __construct(Mailer $mailer)
     {
         $this->mailer = $mailer;
     }
