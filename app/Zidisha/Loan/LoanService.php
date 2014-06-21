@@ -2,10 +2,12 @@
 
 namespace Zidisha\Loan;
 
+use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Propel;
 use Zidisha\Analytics\MixpanelService;
 use Zidisha\Balance\Map\TransactionTableMap;
 use Zidisha\Balance\Transaction;
+use Zidisha\Balance\TransactionQuery;
 use Zidisha\Borrower\Borrower;
 use Zidisha\Currency\CurrencyService;
 use Zidisha\Currency\Money;
@@ -427,9 +429,94 @@ class LoanService
 
         return true;
     }
+
+    public function expireLoan(Loan $loan)
+    {
+        $con = Propel::getWriteConnection(TransactionTableMap::DATABASE_NAME);
+        $con->beginTransaction();
+
+        try {
+            $loan->setStatus(Loan::EXPIRED)
+                ->setExpiredDate(new \DateTime());
+            $setLoanSuccess = $loan->save($con);
+
+            $loan->getBorrower()
+                ->setActiveLoan(null)
+                ->setLoanStatus(Loan::NO_LOAN);
+            $setBorrowerSuccess = $loan->save($con);
+
+            $this->changeLoanStage($con, $loan, Loan::OPEN, Loan::EXPIRED);
+
+            $refunds = $this->refundLenders($con, $loan, Loan::EXPIRED);
+
+            $updateBidsSuccess = true;
+            if ($loan->getStatus() == Loan::FUNDED) {
+                $updateBidsSuccess = BidQuery::create()
+                    ->filterByLoan($loan)
+                    ->update(['active' => 0, 'accepted_amount' => null], $con);
+            }
+
+            if (!$updateBidsSuccess || !$setBorrowerSuccess || !$setLoanSuccess) {
+                throw new \Exception();
+            }
+            $con->commit();
+        } catch (\Exception $e) {
+            $con->rollBack();
+        }
+
+        // Todo: send emails to notify lenders use $refunds
+        return true;
     }
 
-}    private function changeLoanStage(
+    protected function refundLenders(ConnectionInterface $con, Loan $loan, $status = Loan::EXPIRED)
+    {
+
+        $transactionType = Transaction::LOAN_OUTBID;
+        $transactionSubType = Transaction::LOAN_BID_EXPIRED;
+        $description = 'Loan bid expired';
+
+        if ($status == Loan::CANCELED) {
+            $transactionSubType = Transaction::LOAN_BID_CANCELED;
+            $description = 'Loan bid cancelled';
+        }
+
+        $transactions = TransactionQuery::create()
+            ->filterByLoan($loan)
+            ->filterByType([Transaction::LOAN_BID, Transaction::LOAN_OUTBID])
+            ->find();
+
+        $refunds = [];
+        foreach ($transactions as $transaction) {
+            $refunds[$transaction->getUserId()] = [
+                'lender' => $transaction->getUser()->getLender(),
+                'refundAmount' => array_get($refunds, 'id.refundAmount', Money::create(0))->add(
+                        $transaction->getAmount()->multiply(-1)
+                    ),
+            ];
+        }
+
+        foreach ($refunds as $refund) {
+            if (!$refund['refundAmount']->greaterThan(Money::create(0))) {
+                continue;
+            }
+
+            $refundTransaction = new Transaction();
+            $refundTransaction
+                ->setAmount($refund['refundAmount'])
+                ->setUser($refund['lender']->getUser())
+                ->setLoan($loan)
+                ->setType($transactionType)
+                ->setSubType($transactionSubType)
+                ->setDescription($description);
+
+            $refundTransaction->save($con);
+        }
+        // TODO: lender invite
+
+        return $refunds;
+    }
+
+    private function changeLoanStage(
         ConnectionInterface $con,
         Loan $loan,
         $oldStatus,
@@ -457,3 +544,4 @@ class LoanService
             throw new \Exception();
         }
     }
+}

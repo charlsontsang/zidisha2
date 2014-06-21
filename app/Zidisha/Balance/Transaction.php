@@ -3,6 +3,7 @@
 namespace Zidisha\Balance;
 
 use Zidisha\Balance\Base\Transaction as BaseTransaction;
+use Zidisha\Currency\Money;
 
 class Transaction extends BaseTransaction
 {
@@ -42,7 +43,7 @@ class Transaction extends BaseTransaction
 
     public function getAmount()
     {
-        return Money::valueOf(parent::getAmount(), Currency::valueOf($this->getCurrencyCode()));
+        return Money::create(parent::getAmount(), $this->getCurrencyCode());
     }
 
     public function setAmount($money)

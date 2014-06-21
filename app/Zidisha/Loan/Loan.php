@@ -12,6 +12,7 @@ class Loan extends BaseLoan
     const FUNDED    = 1;
     const ACTIVE    = 2;
     const REPAID    = 3;
+    const NO_LOAN   = 4;
     const DEFAULTED = 5;
     const CANCELED  = 6;
     const EXPIRED   = 7;

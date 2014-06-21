@@ -68,6 +68,7 @@
         <column name="status" type="ENUM" valueSet="0, 1, 2, 3, 5, 6, 7"/>
         <column name="application_date" type="TIMESTAMP" required="true"/>
         <column name="accepted_date" type="TIMESTAMP"/>
+        <column name="expired_date" type="TIMESTAMP"/>
         <column name="registration_fee_rate" type="DECIMAL" size="5" scale="2" phpType="string"/>
         <column name="usd_amount" type="DECIMAL" size="10" scale="2"  required="true" phpType="string"/>
         <column name="currency_code" type="VARCHAR" size="3" required="true"/>
@@ -135,6 +136,7 @@
         <column name="first_name" type="VARCHAR" size="50" required="true" />
         <column name="last_name" type="VARCHAR" size="50" required="true" />
         <column name="active_loan_id" type="INTEGER"/>
+        <column name="loan_status" type="ENUM" valueSet="0, 1, 2, 3, 4, 5, 6, 7" defaultValue="4"/>
         <behavior name="timestampable" />
         <foreign-key foreignTable="users">
             <reference local="id" foreign="id"/>
