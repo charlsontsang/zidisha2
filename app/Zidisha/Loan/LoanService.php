@@ -440,4 +440,31 @@ class LoanService
     }
     }
 
-}
+}    private function changeLoanStage(
+        ConnectionInterface $con,
+        Loan $loan,
+        $oldStatus,
+        $newStatus,
+        \DateTime $date = null
+    ) {
+        $date = $date ? : new \DateTime();
+
+        $currentLoanStage = StageQuery::create()
+            ->filterByLoan($loan)
+            ->findOneByStatus($oldStatus);
+
+        $currentLoanStage->setEndDate($date);
+        $currentLoanStageSuccess = $currentLoanStage->save($con);
+
+        $newLoanStage = new Stage();
+        $newLoanStage->setLoan($loan)
+            ->setBorrower($loan->getBorrower())
+            ->setStatus($newStatus)
+            ->setStartDate($date);
+
+        $newLoanStageSuccess = $newLoanStage->save($con);
+
+        if (!$currentLoanStageSuccess || !$newLoanStageSuccess) {
+            throw new \Exception();
+        }
+    }
