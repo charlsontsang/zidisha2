@@ -1,7 +1,10 @@
 <?php
 
+use SupremeNewMedia\Finance\Core\Currency;
+use SupremeNewMedia\Finance\Core\Money;
 use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Comment\CommentService;
+use Zidisha\Flash\Flash;
 use Zidisha\Loan\Bid;
 use Zidisha\Loan\Form\BidForm;
 use Zidisha\Loan\Loan;
@@ -95,6 +98,17 @@ class LoanController extends BaseController
 
             $lender = \Auth::user()->getLender();
 
+            $currentBalance = TransactionQuery::create()
+                ->filterByUser($lender->getUser())
+                ->getTotalBalance();
+
+            if ($data['amount'] >= $currentBalance) {
+                throw new InsufficientLenderBalanceException();
+            }
+
+            // TODO : amount should be lower then loan amount (also check we do this for new bid)
+
+
             $this->loanService->placeBid($loan, $lender, $data);
 
             Flash::success("Successful bid of amount USD " . $data['Amount']);
@@ -103,5 +117,50 @@ class LoanController extends BaseController
 
         Flash::error("Entered Amounts are invalid!");
         return Redirect::route('loan:index',$data['loanId'])->withForm($form);
+    }
+
+    public function postEditBid()
+    {
+        $data = \Input::all();
+
+        $lender = \Auth::user()->getLender();
+
+        $loan = LoanQuery::create()
+            ->filterById($data['loanId'])
+            ->findOne();
+
+        $totalLoanAmount = $loan->getAmount();
+
+        $amount =  Money::valueOf($data['amount'], Currency::valueOf('USD'));
+
+        $oldBid = BidQuery::create()
+            ->filterByLender($lender)
+            ->filterByLoan($loan)
+            ->findOne();
+
+        if($oldBid->getBidAmount()->compare($amount) != -1){
+            \Flash::error(\Lang::get('Loan.edit-bid.amount'));
+            return Redirect::back()->withInput();
+        }
+
+        if($totalLoanAmount->getAmount() <= $data['amount']){
+            \Flash::error(\Lang::get('Loan.edit-bid.interest-rate'));
+            return Redirect::back()->withInput();
+        }
+
+        if($data['interestRate'] <= $oldBid->getInterestRate()){
+            \Flash::error(\Lang::get('Loan.edit-bid.bid-amount-exceded'));
+            return Redirect::back()->withInput();
+        }
+
+        $bid = BidQuery::create()
+            ->filterByLoan($loan)
+            ->filterByLender($lender)
+            ->findOne();
+
+        $this->loanService->editBid($bid, $data);
+
+        Flash::success(\Lang::get('Loan.edit-bid.success') . $data['amount']);
+        return Redirect::route('loan:index', $data['loanId']);
     }
 }

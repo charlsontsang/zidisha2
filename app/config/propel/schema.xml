@@ -45,7 +45,7 @@
         <column name="dialing_code" type="VARCHAR" size="4" required="true"/>
         <column name="currency_code" type="VARCHAR" size="3" required="true"/>
         <column name="borrower_country" type="BOOLEAN"/>
-        <column name="registration_fee" type="DECIMAL" size="10" scale="2" defaultValue="0.00"/>
+        <column name="registration_fee" type="DECIMAL" size="10" scale="2" defaultValue="0.00" phpType="string"/>
         <index name="name">
             <index-column name="name" />
         </index>
@@ -84,10 +84,10 @@
         <column name="loan_id" type="INTEGER" required="true"/>
         <column name="lender_id" type="INTEGER" required="true"/>
         <column name="borrower_id" type="INTEGER" required="true"/>
-        <column name="bid_amount" type="DECIMAL" size="10" scale="2" required="true"/>
+        <column name="bid_amount" type="DECIMAL" size="10" scale="2" required="true" phpType="string"/>
         <column name="interest_rate" type="DECIMAL" size="5" scale="2" required="true"/>
         <column name="active" type="TINYINT" size="1" required="true" defaultValue="1"/>
-        <column name="paid_amount" type="DECIMAL" size="10" scale="2" required="true" defaultValue="0.00"/>
+        <column name="paid_amount" type="DECIMAL" size="10" scale="2" required="true" defaultValue="0.00" phpType="string"/>
         <column name="bid_date" type="TIMESTAMP" required="true"/>
         <behavior name="timestampable" />
         <column name="lender_invite_credit" type="TINYINT" size="1" required="true" defaultValue="0"/>
@@ -185,7 +185,7 @@
 
     <table name="transactions" phpName="Transaction" namespace="Balance">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
-        <column name="user_id" type="INTEGER" required="true"/>
+        <column name="user_id" type="INTEGER" required="true" phpType="string"/>
         <column name="amount" type="DECIMAL" size="12" scale="4" required="true"/>
         <column name="description" type="VARCHAR" size="100" required="true"/>
         <column name="loan_id" type="INTEGER"/>
@@ -282,7 +282,7 @@
 
     <table name="exchange_rates" phpName="ExchangeRate" namespace="Currency">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
-        <column name="rate" type="DECIMAL" size="10" scale="5" required="true"/>
+        <column name="rate" type="DECIMAL" size="10" scale="5" required="true" phpType="string"/>
         <column name="start_date" type="TIMESTAMP"/>
         <column name="end_date" type="TIMESTAMP"/>
         <column name="currency_code" type="VARCHAR" size="3" required="true"/>
