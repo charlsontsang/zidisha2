@@ -41,7 +41,7 @@
             {{ BootstrapForm::open(array('route' => 'loan:post-bid', 'translationDomain' => 'bid')) }}
             {{ BootstrapForm::populate($form) }}
 
-            {{ BootstrapForm::text('Amount') }}
+            {{ BootstrapForm::text('amount') }}
             {{ BootstrapForm::select('interestRate', $form->getRates()) }}
             {{ BootstrapForm::hidden('loanId', $loan->getId()) }}
             {{ BootstrapForm::submit('save') }}

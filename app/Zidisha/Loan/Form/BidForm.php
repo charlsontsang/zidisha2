@@ -12,7 +12,7 @@ class BidForm extends AbstractForm
     public function getRules($data)
     {
         return [
-            'Amount' => 'required|numeric|Amount',
+            'amount' => 'required|numeric|Amount',
             'interestRate' => 'required|numeric|max:15',
             'loanId' => 'exists:loans,id,status,' . Loan::OPEN,
         ];
@@ -21,7 +21,7 @@ class BidForm extends AbstractForm
     public function getDefaultData()
     {
         return [
-            'Amount' => 20.00,
+            'amount' => 20.00,
             'interestRate' => 3,
         ];
     }
