@@ -7,13 +7,10 @@ use Propel\Runtime\Propel;
 use Zidisha\Analytics\MixpanelService;
 use Zidisha\Balance\Map\TransactionTableMap;
 use Zidisha\Balance\Transaction;
-use Zidisha\Balance\TransactionQuery;
 use Zidisha\Borrower\Borrower;
 use Zidisha\Currency\CurrencyService;
 use Zidisha\Currency\Money;
-use Zidisha\Lender\Exceptions\InsufficientLenderBalanceException;
 use Zidisha\Lender\Lender;
-use Zidisha\Loan\BidQuery;
 use Zidisha\Mail\LenderMailer;
 
 class LoanService
@@ -31,8 +28,11 @@ class LoanService
      */
     private $mixpanelService;
 
-    public function __construct(CurrencyService $currencyService, LenderMailer $lenderMailer, MixpanelService $mixpanelService)
-    {
+    public function __construct(
+        CurrencyService $currencyService,
+        LenderMailer $lenderMailer,
+        MixpanelService $mixpanelService
+    ) {
         $this->currencyService = $currencyService;
         $this->lenderMailer = $lenderMailer;
         $this->mixpanelService = $mixpanelService;
@@ -196,14 +196,6 @@ class LoanService
 
     public function placeBid(Loan $loan, Lender $lender, $data)
     {
-        $currentBalance = TransactionQuery::create()
-            ->filterByUser($lender->getUser())
-            ->getTotalBalance();
-
-        if ($data['amount'] >= $currentBalance) {
-            throw new InsufficientLenderBalanceException();
-        }
-
         $con = Propel::getWriteConnection(TransactionTableMap::DATABASE_NAME);
         $con->beginTransaction();
 
@@ -251,9 +243,10 @@ class LoanService
         // Send bid confirmation mail
         $this->lenderMailer->bidPlaceMail($bid);
 
-        if($bid->isFirstBid()){
+        if ($bid->isFirstBid()) {
             $this->lenderMailer->sendPlaceBidMail($bid);
         }
+
         $this->mixpanelService->trackPlacedBid($bid);
 
         $totalBidAmount = BidQuery::create()
@@ -276,4 +269,25 @@ class LoanService
         return $bid;
     }
 
+    public function editBid(Bid $bid, $data)
+    {
+        // Todo: Outbid Function
+
+        try {
+            $con = Propel::getWriteConnection(TransactionTableMap::DATABASE_NAME);
+            $con->beginTransaction();
+
+            $bid->setBidAmount(Money::create($data['amount'], 'USD'));
+            $bid->setInterestRate($data['interestRate']);
+            $bidEditSuccess = $bid->save($con);
+
+            if ($bidEditSuccess) {
+                $con->commit();
+            }
+        } catch (Exception $e) {
+            $con->rollBack();
+        }
+
+        return $bid;
+    }
 }
