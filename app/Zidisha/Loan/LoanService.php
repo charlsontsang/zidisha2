@@ -469,6 +469,38 @@ class LoanService
         return true;
     }
 
+    public function cancelLoan(Loan $loan)
+    {
+        $con = Propel::getWriteConnection(TransactionTableMap::DATABASE_NAME);
+        $con->beginTransaction();
+
+        try {
+            $loan
+                ->setStatus(Loan::CANCELED)
+                ->setExpiredDate(new \DateTime());
+            $loanSuccess = $loan->save($con);
+
+            $borrower = $loan->getBorrower();
+            $borrower
+                ->setActiveLoan(null)
+                ->setLoanStatus(Loan::NO_LOAN);
+            $borrowerSuccess = $borrower->save($con);
+
+            $this->changeLoanStage($con, $loan, Loan::OPEN, Loan::CANCELED);
+            $this->refundLenders($con, $loan, Loan::CANCELED);
+
+            if (!$loanSuccess || !$borrowerSuccess) {
+                throw new \Exception();
+            }
+
+            $con->commit();
+        } catch (\Exception $e) {
+            $con->rollBack();
+        }
+
+        return true;
+    }
+
     protected function refundLenders(ConnectionInterface $con, Loan $loan, $status = Loan::EXPIRED)
     {
 
