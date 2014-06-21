@@ -14,11 +14,11 @@ class Mailer
         $this->driver = Config::get('mail.mailer.driver');
     }
 
-    public function send($data)
+    public function send($view, $data)
     {
         if ($this->driver == 'laravel') {
             Mail::send(
-                'emails.master',
+                $view,
                 $data,
                 function ($message) use ($data) {
                     $message
@@ -30,11 +30,11 @@ class Mailer
         }
     }
 
-    public function queue($data)
+    public function queue($view, $data)
     {
         if ($this->driver == 'laravel') {
             Mail::queue(
-                'emails.master',
+                $view,
                 $data,
                 function ($message) use ($data) {
                     $message
