@@ -391,7 +391,7 @@ class LoanService
 
         $con = Propel::getWriteConnection(TransactionTableMap::DATABASE_NAME);
         $con->beginTransaction();
-        $totalAmount = 0;
+        $totalAmount = Money::create(0);
 
         try {
             foreach ($newAcceptedBids as $bidId => $acceptedBid) {
@@ -432,12 +432,14 @@ class LoanService
             $loan->save($con);
 
             //TODO send emails
-            
+
         } catch (\Exception $e) {
             $con->rollBack();
         }
         $con->commit();
 
+        return true;
+    }
     }
 
 }
