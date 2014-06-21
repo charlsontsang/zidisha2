@@ -413,18 +413,7 @@ class LoanService
                 ->setAcceptedDate(new \DateTime())
                 ->save();
 
-            $currentLoanStage = StageQuery::create()
-                ->filterByLoan($loan)
-                ->findOneByStatus(Loan::OPEN);
-            $currentLoanStage->setEndDate(new \DateTime())
-                ->save($con);
-
-            $newLoanStage = new Stage();
-            $newLoanStage->setLoan($loan);
-            $newLoanStage->setBorrower($loan->getBorrower());
-            $newLoanStage->setStatus(Loan::FUNDED);
-            $newLoanStage->setStartDate(new \DateTime());
-            $newLoanStage->save($con);
+            $this->changeLoanStage($con, $loan, Loan::OPEN, Loan::FUNDED);
 
             $loan->getBorrower()->setActiveLoan($loan);
             $loan->save($con);
