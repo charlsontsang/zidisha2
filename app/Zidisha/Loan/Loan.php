@@ -60,7 +60,7 @@ class Loan extends BaseLoan
 
     public function getAmount()
     {
-        return Money::create(parent::getmount(), 'USD');
+        return Money::create(parent::getAmount(), 'USD');
     }
 
     public function setAmount($money)

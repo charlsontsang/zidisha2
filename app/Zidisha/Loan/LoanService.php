@@ -639,7 +639,7 @@ class LoanService
 
             $this->changeLoanStage($con, $loan, Loan::FUNDED, Loan::ACTIVE);
 
-            if (!$TransactionSuccess && !$TransactionSuccess_2 && !$TransactionSuccess_3) {
+            if (!$TransactionSuccess_2 || !$TransactionSuccess_3) {
                 throw new \Exception();
             }
         } catch (\Exception $e) {
