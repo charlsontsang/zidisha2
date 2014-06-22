@@ -3,7 +3,6 @@
 namespace Zidisha\Loan;
 
 use Propel\Runtime\Connection\ConnectionInterface;
-
 use Propel\Runtime\Propel;
 use Zidisha\Analytics\MixpanelService;
 use Zidisha\Balance\Map\TransactionTableMap;
@@ -506,46 +505,33 @@ class LoanService
 
     protected function refundLenders(ConnectionInterface $con, Loan $loan, $status = Loan::EXPIRED)
     {
-
-        $transactionType = Transaction::LOAN_OUTBID;
-        $transactionSubType = Transaction::LOAN_BID_EXPIRED;
-        $description = 'Loan bid expired';
-
-        if ($status == Loan::CANCELED) {
-            $transactionSubType = Transaction::LOAN_BID_CANCELED;
-            $description = 'Loan bid cancelled';
-        }
-
         $transactions = TransactionQuery::create()
             ->filterByLoan($loan)
-            ->filterByType([Transaction::LOAN_BID, Transaction::LOAN_OUTBID])
+            ->filterLoanBids()
             ->find();
 
-        $refunds = [];
-        foreach ($transactions as $transaction) {
-            $refunds[$transaction->getUserId()] = [
-                'lender' => $transaction->getUser()->getLender(),
-                'refundAmount' => array_get($refunds, 'id.refundAmount', Money::create(0))->add(
-                        $transaction->getAmount()->multiply(-1)
-                    ),
-            ];
-        }
+        $refunds = $this->getLenderRefunds($transactions);
 
         foreach ($refunds as $refund) {
             if (!$refund['refundAmount']->greaterThan(Money::create(0))) {
                 continue;
             }
 
-            $refundTransaction = new Transaction();
-            $refundTransaction
-                ->setAmount($refund['refundAmount'])
-                ->setUser($refund['lender']->getUser())
-                ->setLoan($loan)
-                ->setType($transactionType)
-                ->setSubType($transactionSubType)
-                ->setDescription($description);
-
-            $refundTransaction->save($con);
+            if ($status == Loan::CANCELED) {
+                $this->transactionService->addLoanBidCanceledTransaction(
+                    $con,
+                    $refund['refundAmount'],
+                    $loan,
+                    $refund['lender']
+                );
+            } else {
+                $this->transactionService->addLoanBidExpiredTransaction(
+                    $con,
+                    $refund['refundAmount'],
+                    $loan,
+                    $refund['lender']
+                );
+            }
         }
         // TODO: lender invite
 
@@ -604,7 +590,7 @@ class LoanService
         $con = Propel::getWriteConnection(TransactionTableMap::DATABASE_NAME);
         $con->beginTransaction();
         try {
-           $this->transactionService->addDisbursementTransaction($con,$loan, $amount);
+            $this->transactionService->addDisbursementTransaction($con, $loan, $amount);
 
             $TransactionSuccess_2 = $TransactionSuccess_3 = true;
             $loans = LoanQuery::create()
@@ -648,6 +634,24 @@ class LoanService
         $con->commit();
         //TODO Add repayment schedule
         //TODO Send email / sift sience event
+    }
+
+    /**
+     * @param $transactions
+     * @return array
+     */
+    protected function getLenderRefunds($transactions)
+    {
+        $refunds = [];
+        foreach ($transactions as $transaction) {
+            $refunds[$transaction->getUserId()] = [
+                'lender' => $transaction->getUser()->getLender(),
+                'refundAmount' => array_get($refunds, 'id.refundAmount', Money::create(0))->add(
+                        $transaction->getAmount()->multiply(-1)
+                    ),
+            ];
+        }
+        return $refunds;
     }
 }
 

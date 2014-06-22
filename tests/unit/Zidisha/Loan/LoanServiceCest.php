@@ -1,4 +1,8 @@
 <?php
+
+use Zidisha\Currency\Money;
+use Zidisha\Loan\Bid;
+
 class LoanServiceCest
 {
     /**
@@ -28,7 +32,78 @@ class LoanServiceCest
             'interestRate' => '5'
         ];
 
-        $this->loanService->placeBid($loan, $lender, $data);
+//        $this->loanService->placeBid($loan, $lender, $data);
 
+    }
+
+    public function testGetAcceptedBids(UnitTester $I)
+    {
+        // id => ['interestRate', 'bidAmount', 'acceptedAmount']
+
+        $this->verifyAcceptedBids(
+            [
+                '1' => ['3', '50', '50'],
+                '20' => ['4', '20', '20'],
+                '8' => ['10', '100', '100'],
+            ],
+            200
+        );
+
+        $this->verifyAcceptedBids(
+            [
+                '8' =>  ['1', '23', '23'],
+                '1' =>  ['3', '50', '50'],
+                '20' => ['4', '20', '20'],
+                '27' => ['5', '34', '34'],
+                '45' => ['6', '34', '34'],
+                '65' => ['8', '75', '39'],
+                '55' => ['9', '55', '0'],
+                '88' => ['11', '95', '0'],
+                '98' => ['15', '85', '0'],
+            ],
+            200
+        );
+
+        $this->verifyAcceptedBids(
+            [
+                '1' => ['3', '10', '10'],
+            ],
+            120
+        );
+    }
+
+    private function generateBid(array $bidData)
+    {
+        $bids = [];
+
+        foreach ($bidData as $id => $bid) {
+            $newBid = new Bid();
+            $newBid->setInterestRate($bid[0]);
+            $newBid->setBidAmount(Money::create($bid[1]));
+            $newBid->setBidDate(new \DateTime());
+            $newBid->setId($id);
+            $bids[$id] = $newBid;
+        }
+
+        return $bids;
+    }
+
+    /**
+     * @param $bidData
+     * @param $amount
+     */
+    protected function verifyAcceptedBids($bidData, $amount)
+    {
+        $method = new ReflectionMethod($this->loanService, 'getAcceptedBids');
+        $method->setAccessible(true);
+
+        $bids = $this->generateBid($bidData);
+
+        $acceptedBids = $method->invoke($this->loanService, $bids, Money::create($amount));
+
+        foreach ($bidData as $id => $data) {
+            verify($acceptedBids)->hasKey($id);
+            verify($acceptedBids[$id]['acceptedAmount'])->equals(Money::create($data[2]));
+        }
     }
 } 

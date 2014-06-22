@@ -14,12 +14,6 @@
         "geoip2/geoip2": "0.6.*"
 	},
 	"autoload": {
-        "files": [
-            "vendor/supremenewmedia/finance/Core/Money.php",
-            "vendor/supremenewmedia/finance/Core/Currency.php",
-            "vendor/supremenewmedia/finance/Core/CurrencyMismatchException.php"
-        ],
-
 		"classmap": [
 			"app/commands",
 			"app/controllers",
