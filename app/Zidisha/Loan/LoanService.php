@@ -44,6 +44,9 @@ class LoanService
 
     public function applyForLoan(Borrower $borrower, $data)
     {
+        $con = Propel::getWriteConnection(TransactionTableMap::DATABASE_NAME);
+        $con->beginTransaction();
+
         $data['currencyCode'] = $borrower->getCountry()->getCurrencyCode();
 
         $loanCategory = CategoryQuery::create()
@@ -53,19 +56,19 @@ class LoanService
             Money::create($data['amount'], $data['currencyCode'])
         )->getAmount();
 
-        $loan = Loan::createFromData($data);
+        try{
+            $loan = Loan::createFromData($data);
 
-        $loan->setCategory($loanCategory);
-        $loan->setBorrower($borrower);
-        $loan->setStatus(Loan::OPEN);
+            $loan->setCategory($loanCategory);
+            $loan->setBorrower($borrower);
+            $loan->setStatus(Loan::OPEN);
+            $loan->save($con);
 
-        $stage = new Stage();
-        $stage->setBorrower($loan->getBorrower());
-        $stage->setStatus(Loan::OPEN);
-        $stage->setStartDate(new \DateTime());
-        $loan->addStage($stage);
-
-        $loan->save();
+            $this->changeLoanStage($con, $loan, null, Loan::OPEN);
+        }catch (\Exception $e) {
+            $con->rollBack();
+        }
+        $con->commit();
 
         $this->addToLoanIndex($loan);
     }
@@ -558,14 +561,6 @@ class LoanService
     ) {
         $date = $date ? : new \DateTime();
 
-        if($oldStatus){
-            $currentLoanStage = StageQuery::create()
-                ->filterByLoan($loan)
-                ->findOneByStatus($oldStatus);
-
-            $currentLoanStage->setEndDate($date);
-            $currentLoanStageSuccess = $currentLoanStage->save($con);
-        }
 
         $newLoanStage = new Stage();
         $newLoanStage->setLoan($loan)
@@ -573,9 +568,23 @@ class LoanService
             ->setStatus($newStatus)
             ->setStartDate($date);
 
+        if ($oldStatus) {
+            $currentLoanStage = StageQuery::create()
+                ->filterByLoan($loan)
+                ->findOneByStatus($oldStatus);
+
+            $currentLoanStage->setEndDate($date);
+            $currentLoanStageSuccess = $currentLoanStage->save($con);
+            if (!$currentLoanStageSuccess) {
+                throw new \Exception();
+            }
+        } else {
+            $loan->addStage($newLoanStage);
+        }
+
         $newLoanStageSuccess = $newLoanStage->save($con);
 
-        if (!$currentLoanStageSuccess || !$newLoanStageSuccess) {
+        if (!$newLoanStageSuccess) {
             throw new \Exception();
         }
     }
