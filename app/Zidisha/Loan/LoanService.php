@@ -4,6 +4,7 @@ namespace Zidisha\Loan;
 
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Propel;
+use Symfony\Component\Validator\Constraints\DateTime;
 use Zidisha\Analytics\MixpanelService;
 use Zidisha\Balance\Map\TransactionTableMap;
 use Zidisha\Balance\Transaction;
@@ -566,7 +567,7 @@ class LoanService
 
     public function disburseLoan(
         Loan $loan,
-        \DateTime $date,
+        \DateTime $disbursedDate,
         Money $amount
     ) {
         $isDisbursed = TransactionQuery::create()
@@ -587,7 +588,7 @@ class LoanService
             $TransactionSuccess_2 = $TransactionSuccess_3 = true;
             $loans = LoanQuery::create()
                 ->filterByBorrower($loan->getBorrower())
-                ->count(); // propel count()
+                ->count();
             if ($loans == 1) {
                 $feeTransactionBorrower = new Transaction();
                 $feeTransactionBorrower
@@ -612,7 +613,8 @@ class LoanService
 
             $loan->setStatus(Loan::ACTIVE)
                 ->setDisbursedAmount($amount)
-                ->setDisbursedDate(new \DateTime());
+                ->setDisbursedDate($disbursedDate)
+                ->calculateExtraDays($disbursedDate);
             $loan->save($con);
 
             $this->changeLoanStage($con, $loan, Loan::FUNDED, Loan::ACTIVE);
