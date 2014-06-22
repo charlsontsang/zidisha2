@@ -52,20 +52,19 @@ class LoanService
         $loanCategory = CategoryQuery::create()
             ->findOneById($data['categoryId']);
 
-        $data['usdAmount'] = $this->currencyService->convertToUSD(
-            Money::create($data['amount'], $data['currencyCode'])
+        $data['amount'] = $this->currencyService->convertToUSD(
+            Money::create($data['nativeAmount'], $data['currencyCode'])
         )->getAmount();
 
-        try{
+        try {
             $loan = Loan::createFromData($data);
-
             $loan->setCategory($loanCategory);
             $loan->setBorrower($borrower);
             $loan->setStatus(Loan::OPEN);
             $loan->save($con);
 
             $this->changeLoanStage($con, $loan, null, Loan::OPEN);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             $con->rollBack();
         }
         $con->commit();
@@ -573,13 +572,10 @@ class LoanService
                 ->filterByLoan($loan)
                 ->findOneByStatus($oldStatus);
 
-            $currentLoanStage->setEndDate($date);
-            $currentLoanStageSuccess = $currentLoanStage->save($con);
-            if (!$currentLoanStageSuccess) {
-                throw new \Exception();
+            if ($currentLoanStage) {
+                $currentLoanStage->setEndDate($date);
+                $currentLoanStage->save($con);
             }
-        } else {
-            $loan->addStage($newLoanStage);
         }
 
         $newLoanStageSuccess = $newLoanStage->save($con);
@@ -644,7 +640,8 @@ class LoanService
             }
 
             $loan->setStatus(Loan::ACTIVE)
-                ->setDisbursedAmount($amount);
+                ->setDisbursedAmount($amount)
+                ->setDisbursedDate(new \DateTime());
             $loan->save($con);
 
             $this->changeLoanStage($con, $loan, Loan::FUNDED, Loan::ACTIVE);
