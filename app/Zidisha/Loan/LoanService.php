@@ -586,30 +586,11 @@ class LoanService
         try {
             $this->transactionService->addDisbursementTransaction($con, $amount, $loan);
 
-            $TransactionSuccess_2 = $TransactionSuccess_3 = true;
             $loans = LoanQuery::create()
                 ->filterByBorrower($loan->getBorrower())
                 ->count();
             if ($loans == 1) {
-                $feeTransactionBorrower = new Transaction();
-                $feeTransactionBorrower
-                    ->setUser($loan->getBorrower()->getUser())
-                    ->setAmount($amount->multiply(-2.5))
-                    ->setDescription('Registration Fee')
-                    ->setLoan($loan)
-                    ->setTransactionDate(new \DateTime())
-                    ->setType(Transaction::REGISTRATION_FEE);
-                $TransactionSuccess_2 = $feeTransactionBorrower->save($con);
-
-                $feeTransactionAdmin = new Transaction();
-                $feeTransactionAdmin
-                    ->setUserId(\Config::get('adminId'))
-                    ->setAmount($amount->multiply(2.5))
-                    ->setDescription('Registration Fee')
-                    ->setLoan($loan)
-                    ->setTransactionDate(new \DateTime())
-                    ->setType(Transaction::REGISTRATION_FEE);
-                $TransactionSuccess_3 = $feeTransactionAdmin->save($con);
+               $this->transactionService->addFeeTransaction($con, $amount, $loan);
             }
 
             $loan->setStatus(Loan::ACTIVE)
@@ -621,9 +602,6 @@ class LoanService
 
             $this->changeLoanStage($con, $loan, Loan::FUNDED, Loan::ACTIVE);
 
-            if (!$TransactionSuccess_2 || !$TransactionSuccess_3) {
-                throw new \Exception();
-            }
         } catch (\Exception $e) {
             $con->rollBack();
         }

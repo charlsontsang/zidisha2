@@ -144,6 +144,35 @@ class TransactionService
         }
     }
 
+    public function addFeeTransaction(ConnectionInterface $con, Money $amount, Loan $loan)
+    {
+        $this->assertAmount($amount);
+
+        $feeTransactionBorrower = new Transaction();
+        $feeTransactionBorrower
+            ->setUser($loan->getBorrower()->getUser())
+            ->setAmount($amount->multiply(-2.5))
+            ->setDescription('Registration Fee')
+            ->setLoan($loan)
+            ->setTransactionDate(new \DateTime())
+            ->setType(Transaction::REGISTRATION_FEE);
+        $TransactionSuccessBorrower = $feeTransactionBorrower->save($con);
+
+        $feeTransactionAdmin = new Transaction();
+        $feeTransactionAdmin
+            ->setUserId(\Config::get('adminId'))
+            ->setAmount($amount->multiply(2.5))
+            ->setDescription('Registration Fee')
+            ->setLoan($loan)
+            ->setTransactionDate(new \DateTime())
+            ->setType(Transaction::REGISTRATION_FEE);
+        $TransactionSuccessAdmin = $feeTransactionAdmin->save($con);
+
+        if (!$TransactionSuccessBorrower || !$TransactionSuccessAdmin) {
+            throw new \Exception();
+        }
+    }
+
     public function assertAmount(
         Money $amount
     ) {
