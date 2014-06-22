@@ -29,15 +29,21 @@ class LoanService
      * @var MixpanelService
      */
     private $mixpanelService;
+    /**
+     * @var \Zidisha\Currency\CurrencyService
+     */
+    private $currencyService;
 
     public function __construct(
         TransactionService $transactionService,
         LenderMailer $lenderMailer,
-        MixpanelService $mixpanelService
+        MixpanelService $mixpanelService,
+        CurrencyService $currencyService
     ) {
         $this->transactionService = $transactionService;
         $this->lenderMailer = $lenderMailer;
         $this->mixpanelService = $mixpanelService;
+        $this->currencyService = $currencyService;
     }
 
     protected $loanIndex;
@@ -234,20 +240,13 @@ class LoanService
             $changedBids = $this->getChangedBids($oldAcceptedBids, $newAcceptedBids);
 
             foreach ($changedBids as $bidId => $changedBid) {
-                $bidTransaction = new Transaction();
-                $bidTransaction
-                    ->setUser($changedBid['bid']->getLender()->getUser())
-                    ->setAmount($changedBid['acceptedAmount'])
-                    ->setDescription($changedBid['description'])
-                    ->setLoan($changedBid['bid']->getLoan())
-                    ->setTransactionDate(new \DateTime())
-                    ->setType($changedBid['type'])
-                    ->setSubType($changedBid['subType']);
 
-                $bidTransactionSuccess = $bidTransaction->save($con);
-                if (!$bidTransactionSuccess) {
-                    // Todo: Notify admin.
-                    throw new \Exception();
+                if ($changedBid['type'] == 'out_bid') {
+                    $this->transactionService->addOutBidTransaction($con, $changedBid['acceptedAmount'], $loan);
+                } elseif ($changedBid['type'] == 'update_bid') {
+                    $this->transactionService->addUpdateBidTransaction($con, $changedBid['acceptedAmount'], $loan);
+                } elseif ($changedBid['subType'] == 'place_bid') {
+                    $this->transactionService->addPlaceBidTransaction($con, $changedBid['acceptedAmount'], $loan);
                 }
             }
 
@@ -328,9 +327,7 @@ class LoanService
                     $changedBids[$bidId] = [
                         'bid' => $bid,
                         'acceptedAmount' => $acceptedAmount,
-                        'type' => Transaction::LOAN_OUTBID,
-                        'subType' => null,
-                        'description' => 'Loan outbid',
+                        'type' => 'out_bid',
                         'changedAmount' => $oldAcceptedAmount->substract($acceptedAmount),
                     ];
                 } else {
@@ -338,21 +335,16 @@ class LoanService
                         $changedBids[$bidId] = [
                             'bid' => $bid,
                             'acceptedAmount' => $acceptedAmount,
-                            'type' => Transaction::LOAN_BID,
-                            'subType' => Transaction::UPDATE_BID,
-                            'description' => 'Loan bid',
+                            'type' => 'update_bid',
                             'changedAmount' => $acceptedAmount->substract($oldAcceptedAmount),
                         ];
-
                     }
                 }
             } else {
                 $changedBids[$bidId] = [
                     'bid' => $bid,
                     'acceptedAmount' => $acceptedAmount,
-                    'type' => Transaction::LOAN_BID,
-                    'subType' => Transaction::PLACE_BID,
-                    'description' => 'Loan bid',
+                    'type' => 'place_bid',
                     'changedAmount' => $acceptedAmount,
                 ];
 
@@ -590,7 +582,7 @@ class LoanService
         $con = Propel::getWriteConnection(TransactionTableMap::DATABASE_NAME);
         $con->beginTransaction();
         try {
-            $this->transactionService->addDisbursementTransaction($con, $loan, $amount);
+            $this->transactionService->addDisbursementTransaction($con, $amount, $loan);
 
             $TransactionSuccess_2 = $TransactionSuccess_3 = true;
             $loans = LoanQuery::create()
