@@ -9,6 +9,7 @@ use Zidisha\Analytics\MixpanelService;
 use Zidisha\Balance\Map\TransactionTableMap;
 use Zidisha\Balance\Transaction;
 use Zidisha\Balance\TransactionQuery;
+use Zidisha\Balance\TransactionService;
 use Zidisha\Borrower\Borrower;
 use Zidisha\Currency\CurrencyService;
 use Zidisha\Currency\Money;
@@ -20,7 +21,7 @@ class LoanService
     /**
      * @var CurrencyService
      */
-    private $currencyService;
+    private $transactionService;
     /**
      * @var \Zidisha\Mail\LenderMailer
      */
@@ -31,11 +32,11 @@ class LoanService
     private $mixpanelService;
 
     public function __construct(
-        CurrencyService $currencyService,
+        TransactionService $transactionService,
         LenderMailer $lenderMailer,
         MixpanelService $mixpanelService
     ) {
-        $this->currencyService = $currencyService;
+        $this->transactionService = $transactionService;
         $this->lenderMailer = $lenderMailer;
         $this->mixpanelService = $mixpanelService;
     }
@@ -603,15 +604,7 @@ class LoanService
         $con = Propel::getWriteConnection(TransactionTableMap::DATABASE_NAME);
         $con->beginTransaction();
         try {
-            $disburseTransaction = new Transaction();
-            $disburseTransaction
-                ->setUser($loan->getBorrower())
-                ->setAmount(-$amount)
-                ->setDescription('Got amount from loan')
-                ->setLoan($loan)
-                ->setTransactionDate(new \DateTime())
-                ->setType(Transaction::DISBURSEMENT);
-            $TransactionSuccess = $disburseTransaction->save($con);
+           $this->transactionService->addDisbursementTransaction($con,$loan, $amount);
 
             $TransactionSuccess_2 = $TransactionSuccess_3 = true;
             $loans = LoanQuery::create()
