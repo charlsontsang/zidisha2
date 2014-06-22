@@ -412,7 +412,7 @@ class LoanService
                 }
             }
 
-            $totalInterest = $totalAmount->divide($loan->getUsdAmount())->round(2)->getAmount();
+            $totalInterest = $totalAmount->divide($loan->getAmount())->round(2)->getAmount();
             $loan->setStatus(Loan::FUNDED)
                 ->setInterestRate($totalInterest)
                 ->setAcceptedDate(new \DateTime())
