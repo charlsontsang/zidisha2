@@ -593,7 +593,7 @@ class LoanService
                 $feeTransactionBorrower = new Transaction();
                 $feeTransactionBorrower
                     ->setUser($loan->getBorrower()->getUser())
-                    ->setAmount(-($amount->multiply(2.5)))
+                    ->setAmount($amount->multiply(-2.5))
                     ->setDescription('Registration Fee')
                     ->setLoan($loan)
                     ->setTransactionDate(new \DateTime())
@@ -614,7 +614,8 @@ class LoanService
             $loan->setStatus(Loan::ACTIVE)
                 ->setDisbursedAmount($amount)
                 ->setDisbursedDate($disbursedDate)
-                ->calculateExtraDays($disbursedDate);
+                ->calculateExtraDays($disbursedDate)
+                ->setServiceFee($amount->multiply(2.5));
             $loan->save($con);
 
             $this->changeLoanStage($con, $loan, Loan::FUNDED, Loan::ACTIVE);
@@ -630,10 +631,6 @@ class LoanService
         //TODO Send email / sift sience event
     }
 
-    /**
-     * @param $transactions
-     * @return array
-     */
     protected function getLenderRefunds($transactions)
     {
         $refunds = [];
