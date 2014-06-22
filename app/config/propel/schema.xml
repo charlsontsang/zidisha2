@@ -64,6 +64,7 @@
         <column name="installment_amount" type="DECIMAL" size="10" scale="2" phpType="string"/>
         <column name="installment_day" type="INTEGER"/>
         <column name="interest_rate" type="DECIMAL" size="5" scale="2" phpType="string"/>
+        <column name="final_interest_rate" type="DECIMAL" size="5" scale="2" phpType="string"/>
         <column name="loan_category_id" type="INTEGER" required="true"/>
         <column name="status" type="ENUM" valueSet="0, 1, 2, 3, 5, 6, 7"/>
         <column name="application_date" type="TIMESTAMP" required="true"/>
