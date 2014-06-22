@@ -521,15 +521,7 @@ class LoanService
             ->filterByType([Transaction::LOAN_BID, Transaction::LOAN_OUTBID])
             ->find();
 
-        $refunds = [];
-        foreach ($transactions as $transaction) {
-            $refunds[$transaction->getUserId()] = [
-                'lender' => $transaction->getUser()->getLender(),
-                'refundAmount' => array_get($refunds, 'id.refundAmount', Money::create(0))->add(
-                        $transaction->getAmount()->multiply(-1)
-                    ),
-            ];
-        }
+        $refunds = $this->getLenderRefunds($transactions);
 
         foreach ($refunds as $refund) {
             if (!$refund['refundAmount']->greaterThan(Money::create(0))) {
@@ -648,6 +640,24 @@ class LoanService
         $con->commit();
         //TODO Add repayment schedule
         //TODO Send email / sift sience event
+    }
+
+    /**
+     * @param $transactions
+     * @return array
+     */
+    protected function getLenderRefunds($transactions)
+    {
+        $refunds = [];
+        foreach ($transactions as $transaction) {
+            $refunds[$transaction->getUserId()] = [
+                'lender' => $transaction->getUser()->getLender(),
+                'refundAmount' => array_get($refunds, 'id.refundAmount', Money::create(0))->add(
+                        $transaction->getAmount()->multiply(-1)
+                    ),
+            ];
+        }
+        return $refunds;
     }
 }
 
