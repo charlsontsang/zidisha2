@@ -29,4 +29,8 @@ class TransactionQuery extends BaseTransactionQuery
         return Money::valueOf($total, Currency::valueOf('USD'));
     }
 
+    public function filterLoanBids()
+    {
+        return $this->filterByType([Transaction::LOAN_BID, Transaction::LOAN_OUTBID]);
+    }
 } // TransactionQuery

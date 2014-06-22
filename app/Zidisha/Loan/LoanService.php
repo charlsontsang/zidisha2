@@ -507,7 +507,7 @@ class LoanService
     {
         $transactions = TransactionQuery::create()
             ->filterByLoan($loan)
-            ->filterByType([Transaction::LOAN_BID, Transaction::LOAN_OUTBID])
+            ->filterLoanBids()
             ->find();
 
         $refunds = $this->getLenderRefunds($transactions);
