@@ -8,7 +8,7 @@
  * @package Finance
  */
 
-namespace SupremeNewMedia\Finance\Core;
+namespace Zidisha\Currency;
 
 /**
  * Thrown when calculating with Money and Currencies do not match.
