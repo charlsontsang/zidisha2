@@ -26,10 +26,10 @@ class Loan extends BaseLoan
         $loan->setDescription($data['description']);
 
         $loan->setCurrencyCode($data['currencyCode']);
-        $loan->setAmount(Money::create($data['amount'], $currency));
+        $loan->setNativeAmount(Money::create($data['nativeAmount'], $currency));
         $loan->setInstallmentAmount(Money::create($data['installmentAmount'], $currency));
 
-        $loan->setUsdAmount(Money::create($data['usdAmount'], 'USD'));
+        $loan->setAmount(Money::create($data['amount'], 'USD'));
         $loan->setRegistrationFeeRate('5');
 
         $loan->setInstallmentDay($data['installmentDay']);
@@ -38,14 +38,14 @@ class Loan extends BaseLoan
         return $loan;
     }
 
-    public function getAmount()
+    public function getNativeAmount()
     {
-        return Money::create(parent::getAmount(), $this->getCurrencyCode());
+        return Money::create(parent::getnativeAmount(), $this->getCurrencyCode());
     }
 
-    public function setAmount($money)
+    public function setNativeAmount($money)
     {
-        return parent::setAmount($money->getAmount());
+        return parent::setNativeamount($money->getAmount());
     }
 
     public function getInstallmentAmount()
@@ -58,13 +58,13 @@ class Loan extends BaseLoan
         return parent::setInstallmentAmount($money->getAmount());
     }
 
-    public function getUsdAmount()
+    public function getAmount()
     {
-        return Money::create(parent::getUsdAmount(), 'USD');
+        return Money::create(parent::getAmount(), 'USD');
     }
 
-    public function setUsdAmount($money)
+    public function setAmount($money)
     {
-        return parent::setUsdAmount($money->getAmount());
+        return parent::setAmount($money->getAmount());
     }
 }

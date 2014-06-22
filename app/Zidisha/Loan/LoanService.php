@@ -9,6 +9,7 @@ use Zidisha\Analytics\MixpanelService;
 use Zidisha\Balance\Map\TransactionTableMap;
 use Zidisha\Balance\Transaction;
 use Zidisha\Balance\TransactionQuery;
+use Zidisha\Balance\TransactionService;
 use Zidisha\Borrower\Borrower;
 use Zidisha\Currency\CurrencyService;
 use Zidisha\Currency\Money;
@@ -20,7 +21,7 @@ class LoanService
     /**
      * @var CurrencyService
      */
-    private $currencyService;
+    private $transactionService;
     /**
      * @var \Zidisha\Mail\LenderMailer
      */
@@ -31,11 +32,11 @@ class LoanService
     private $mixpanelService;
 
     public function __construct(
-        CurrencyService $currencyService,
+        TransactionService $transactionService,
         LenderMailer $lenderMailer,
         MixpanelService $mixpanelService
     ) {
-        $this->currencyService = $currencyService;
+        $this->transactionService = $transactionService;
         $this->lenderMailer = $lenderMailer;
         $this->mixpanelService = $mixpanelService;
     }
@@ -44,28 +45,30 @@ class LoanService
 
     public function applyForLoan(Borrower $borrower, $data)
     {
+        $con = Propel::getWriteConnection(TransactionTableMap::DATABASE_NAME);
+        $con->beginTransaction();
+
         $data['currencyCode'] = $borrower->getCountry()->getCurrencyCode();
 
         $loanCategory = CategoryQuery::create()
             ->findOneById($data['categoryId']);
 
-        $data['usdAmount'] = $this->currencyService->convertToUSD(
-            Money::create($data['amount'], $data['currencyCode'])
+        $data['amount'] = $this->currencyService->convertToUSD(
+            Money::create($data['nativeAmount'], $data['currencyCode'])
         )->getAmount();
 
-        $loan = Loan::createFromData($data);
+        try {
+            $loan = Loan::createFromData($data);
+            $loan->setCategory($loanCategory);
+            $loan->setBorrower($borrower);
+            $loan->setStatus(Loan::OPEN);
+            $loan->save($con);
 
-        $loan->setCategory($loanCategory);
-        $loan->setBorrower($borrower);
-        $loan->setStatus(Loan::OPEN);
-
-        $stage = new Stage();
-        $stage->setBorrower($loan->getBorrower());
-        $stage->setStatus(Loan::OPEN);
-        $stage->setStartDate(new \DateTime());
-        $loan->addStage($stage);
-
-        $loan->save();
+            $this->changeLoanStage($con, $loan, null, Loan::OPEN);
+        } catch (\Exception $e) {
+            $con->rollBack();
+        }
+        $con->commit();
 
         $this->addToLoanIndex($loan);
     }
@@ -552,18 +555,12 @@ class LoanService
     private function changeLoanStage(
         ConnectionInterface $con,
         Loan $loan,
-        $oldStatus,
+        $oldStatus = null,
         $newStatus,
         \DateTime $date = null
     ) {
         $date = $date ? : new \DateTime();
 
-        $currentLoanStage = StageQuery::create()
-            ->filterByLoan($loan)
-            ->findOneByStatus($oldStatus);
-
-        $currentLoanStage->setEndDate($date);
-        $currentLoanStageSuccess = $currentLoanStage->save($con);
 
         $newLoanStage = new Stage();
         $newLoanStage->setLoan($loan)
@@ -571,9 +568,20 @@ class LoanService
             ->setStatus($newStatus)
             ->setStartDate($date);
 
+        if ($oldStatus) {
+            $currentLoanStage = StageQuery::create()
+                ->filterByLoan($loan)
+                ->findOneByStatus($oldStatus);
+
+            if ($currentLoanStage) {
+                $currentLoanStage->setEndDate($date);
+                $currentLoanStage->save($con);
+            }
+        }
+
         $newLoanStageSuccess = $newLoanStage->save($con);
 
-        if (!$currentLoanStageSuccess || !$newLoanStageSuccess) {
+        if (!$newLoanStageSuccess) {
             throw new \Exception();
         }
     }
@@ -596,15 +604,7 @@ class LoanService
         $con = Propel::getWriteConnection(TransactionTableMap::DATABASE_NAME);
         $con->beginTransaction();
         try {
-            $disburseTransaction = new Transaction();
-            $disburseTransaction
-                ->setUser($loan->getBorrower())
-                ->setAmount(-$amount)
-                ->setDescription('Got amount from loan')
-                ->setLoan($loan)
-                ->setTransactionDate(new \DateTime())
-                ->setType(Transaction::DISBURSEMENT);
-            $TransactionSuccess = $disburseTransaction->save($con);
+           $this->transactionService->addDisbursementTransaction($con,$loan, $amount);
 
             $TransactionSuccess_2 = $TransactionSuccess_3 = true;
             $loans = LoanQuery::create()
@@ -633,12 +633,13 @@ class LoanService
             }
 
             $loan->setStatus(Loan::ACTIVE)
-                ->setDisbursedAmount($amount);
+                ->setDisbursedAmount($amount)
+                ->setDisbursedDate(new \DateTime());
             $loan->save($con);
 
             $this->changeLoanStage($con, $loan, Loan::FUNDED, Loan::ACTIVE);
 
-            if (!$TransactionSuccess && !$TransactionSuccess_2 && !$TransactionSuccess_3) {
+            if (!$TransactionSuccess_2 || !$TransactionSuccess_3) {
                 throw new \Exception();
             }
         } catch (\Exception $e) {

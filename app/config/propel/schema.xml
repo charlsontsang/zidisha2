@@ -60,7 +60,7 @@
         <column name="borrower_id" type="INTEGER" primaryKey="true"/>"
         <column name="summary" type="LONGVARCHAR"/>
         <column name="description" type="LONGVARCHAR"/>
-        <column name="amount" type="DECIMAL" size="10" scale="2" phpType="string"/>
+        <column name="native_amount" type="DECIMAL" size="10" scale="2" phpType="string"/>
         <column name="installment_amount" type="DECIMAL" size="10" scale="2" phpType="string"/>
         <column name="installment_day" type="INTEGER"/>
         <column name="interest_rate" type="DECIMAL" size="5" scale="2" phpType="string"/>
@@ -70,8 +70,9 @@
         <column name="accepted_date" type="TIMESTAMP"/>
         <column name="expired_date" type="TIMESTAMP"/>
         <column name="registration_fee_rate" type="DECIMAL" size="5" scale="2" phpType="string"/>
-        <column name="usd_amount" type="DECIMAL" size="10" scale="2"  required="true" phpType="string"/>
-        <column name="disbursed_Amount" type="DECIMAL" size="10" scale="2" phpType="string"/>
+        <column name="amount" type="DECIMAL" size="10" scale="2"  required="true" phpType="string"/>
+        <column name="disbursed_amount" type="DECIMAL" size="10" scale="2" phpType="string"/>
+        <column name="disbursed_date" type="TIMESTAMP"/>
         <column name="currency_code" type="VARCHAR" size="3" required="true"/>
         <behavior name="timestampable"/>
         <foreign-key foreignTable="loan_categories">
@@ -299,5 +300,21 @@
     <table name="settings" phpName="Setting" namespace="Admin">
         <column name="name" type="VARCHAR" size="45" required="true" primaryKey="true"/>
         <column name="value" type="VARCHAR" size="45" required="true" defaultValue="0"/>
+    </table>
+
+    <table name="installments" phpName="Installment" namespace="Installment">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="borrower_id" type="INTEGER" required="true"/>
+        <column name="loan_id" type="INTEGER" required="true"/>
+        <column name="due_date" type="TIMESTAMP"/>
+        <column name="amount" type="DECIMAL" size="10" scale="2" phpType="string"/>
+        <column name="paid_date" type="TIMESTAMP"/>
+        <column name="paid_amount" type="DECIMAL" size="10" scale="2" phpType="string"/>
+        <foreign-key foreignTable="loans">
+            <reference local="loan_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="borrowers">
+            <reference local="borrower_id" foreign="id"/>
+        </foreign-key>
     </table>
 </database>
