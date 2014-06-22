@@ -8,6 +8,7 @@ use Zidisha\Balance\Transaction;
 use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Country\Country;
 use Zidisha\Currency\Money;
+use Zidisha\Installment\Installment;
 use Zidisha\Lender\LenderQuery;
 use Zidisha\Loan\Bid;
 use Zidisha\Loan\Category;
@@ -76,6 +77,7 @@ class GenerateModelData extends Command
             $this->call('fake', array('model' => 'Bid', 'size' => 50));
             $this->call('fake', array('model' => 'Transaction', 'size' => 200));
             $this->call('fake', array('model' => 'Setting', 'size' => 1));
+            $this->call('fake', array('model' => 'Installment', 'size' => 200));
 
 
             $this->line('Done!');
@@ -134,7 +136,7 @@ class GenerateModelData extends Command
                 $dateMonthAgo->modify('-1 month');
                 $dateNow = new DateTime();
                 $dateNow->modify('-1 second');
-                
+
                 $exchangeRate = new \Zidisha\Currency\ExchangeRate();
                 $exchangeRate
                     ->setCurrencyCode($currencyCode)
@@ -271,7 +273,7 @@ class GenerateModelData extends Command
                     $installmentDay = $i;
                     $amount = 30 + ($i * 20);
                 }
-                $installmentAmount = $amount / 12;
+                $installmentAmount = (int)$amount / 12;
                 $loanCategory = $allCategories[array_rand($allCategories)];
                 $status = floatval($size / 7);
                 $borrower = $allBorrowers[$i - 1];
@@ -296,7 +298,7 @@ class GenerateModelData extends Command
                 $Loan = Loan::createFromData($data);
                 $Loan->setCategory($loanCategory);
                 $Loan->setBorrower($borrower);
-                
+
                 $Stage = new Stage();
                 $Stage->setLoan($Loan);
                 $Stage->setBorrower($borrower);
@@ -359,6 +361,24 @@ class GenerateModelData extends Command
                 $oneBid->setLender($oneLender);
                 $oneBid->setBorrower($oneLoan->getBorrower());
                 $oneBid->save();
+            }
+        }
+
+        if ($model == "Installment") {
+            // $oneLoan = $allLoans[array_rand($allLoans->getData())];
+
+            foreach ($allLoans as $oneLoan) {
+                for ($i = 1; $i <= 9; $i++) {
+                    $date = '2010-' . '0' . $i . '-'.$i * 3;
+                    $installment = new Installment();
+                    $installment->setLoan($oneLoan);
+                    $installment->setBorrower($oneLoan->getBorrower());
+                    $installment->setDueDate(new \DateTime('2010-11-25'));
+                    $installment->setAmount($oneLoan->getInstallmentAmount()->getAmount());
+                    $installment->setPaidDate($date);
+                    $installment->setPaidAmount($oneLoan->getInstallmentAmount()->getAmount());
+                    $installment->save();
+                }
             }
         }
     }
