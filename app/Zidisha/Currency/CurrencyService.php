@@ -1,9 +1,6 @@
 <?php
 namespace Zidisha\Currency;
 
-use SupremeNewMedia\Finance\Core\Currency;
-use SupremeNewMedia\Finance\Core\Money;
-
 class CurrencyService
 {
     public function convertToUSD(Money $money, \DateTime $date = null)

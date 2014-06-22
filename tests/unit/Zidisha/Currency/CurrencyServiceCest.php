@@ -1,6 +1,7 @@
 <?php
-use SupremeNewMedia\Finance\Core\Currency;
-use SupremeNewMedia\Finance\Core\Money;
+
+use Zidisha\Currency\Currency;
+use Zidisha\Currency\Money;
 
 class CurrencyServiceCest
 {    
