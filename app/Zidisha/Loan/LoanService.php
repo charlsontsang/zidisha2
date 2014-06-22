@@ -552,18 +552,20 @@ class LoanService
     private function changeLoanStage(
         ConnectionInterface $con,
         Loan $loan,
-        $oldStatus,
+        $oldStatus = null,
         $newStatus,
         \DateTime $date = null
     ) {
         $date = $date ? : new \DateTime();
 
-        $currentLoanStage = StageQuery::create()
-            ->filterByLoan($loan)
-            ->findOneByStatus($oldStatus);
+        if($oldStatus){
+            $currentLoanStage = StageQuery::create()
+                ->filterByLoan($loan)
+                ->findOneByStatus($oldStatus);
 
-        $currentLoanStage->setEndDate($date);
-        $currentLoanStageSuccess = $currentLoanStage->save($con);
+            $currentLoanStage->setEndDate($date);
+            $currentLoanStageSuccess = $currentLoanStage->save($con);
+        }
 
         $newLoanStage = new Stage();
         $newLoanStage->setLoan($loan)

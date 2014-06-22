@@ -279,9 +279,9 @@ class GenerateModelData extends Command
                 $data = array();
                 $data['summary'] = $faker->sentence(8);
                 $data['description'] = $faker->paragraph(7);
-                $data['amount'] = $amount;
+                $data['nativeAmount'] = $amount;
                 $data['currencyCode'] = 'KES';
-                $data['usdAmount'] = $amount / 2;
+                $data['amount'] = $amount / 2;
                 $data['installmentAmount'] = $installmentAmount;
                 $data['registrationFeeRate'] = '5';
                 $data['applicationDate'] = new \DateTime();
