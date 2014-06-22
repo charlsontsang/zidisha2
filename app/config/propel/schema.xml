@@ -300,4 +300,20 @@
         <column name="name" type="VARCHAR" size="45" required="true" primaryKey="true"/>
         <column name="value" type="VARCHAR" size="45" required="true" defaultValue="0"/>
     </table>
+
+    <table name="installments" phpName="Installment" namespace="Installment">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="borrower_id" type="INTEGER" required="true"/>
+        <column name="loan_id" type="INTEGER" required="true"/>
+        <column name="due_date" type="TIMESTAMP"/>
+        <column name="amount" type="DECIMAL" size="10" scale="2" phpType="string"/>
+        <column name="paid_date" type="TIMESTAMP"/>
+        <column name="paid_amount" type="DECIMAL" size="10" scale="2" phpType="string"/>
+        <foreign-key foreignTable="loans">
+            <reference local="loan_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="borrower">
+            <reference local="borrower_id" foreign="id"/>
+        </foreign-key>
+    </table>
 </database>
