@@ -32,9 +32,7 @@ class TransactionService
 
     public function addLoanBidExpiredTransaction(ConnectionInterface $con, Money $amount, Loan $loan, Lender $lender)
     {
-        if (!$amount->greaterThan(Money::create(0))) {
-            throw new \Exception();
-        }
+        $this->assertAmount($amount);
 
         $transaction = new Transaction();
         $transaction
@@ -81,9 +79,7 @@ class TransactionService
         Loan $loan,
         Lender $lender
     ) {
-        if (!$amount->greaterThan(Money::create(0))) {
-            throw new \Exception();
-        }
+        $this->assertAmount($amount);
 
         $transaction = new Transaction();
         $transaction
