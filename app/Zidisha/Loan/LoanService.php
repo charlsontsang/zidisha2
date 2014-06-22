@@ -65,16 +65,23 @@ class LoanService
 
         try {
             $loan = Loan::createFromData($data);
+
             $loan->setCategory($loanCategory);
             $loan->setBorrower($borrower);
             $loan->setStatus(Loan::OPEN);
-            $loan->save($con);
+
+            $loanSuccess = $loan->save($con);
+            if (!$loanSuccess) {
+                throw new \Exception();
+            }
 
             $this->changeLoanStage($con, $loan, null, Loan::OPEN);
+
+            $con->commit();
         } catch (\Exception $e) {
             $con->rollBack();
+            throw $e;
         }
-        $con->commit();
 
         $this->addToLoanIndex($loan);
     }
@@ -182,6 +189,10 @@ class LoanService
 
     public function addToLoanIndex(Loan $loan)
     {
+        if (\App::environment("testing")) {
+            return;
+        }
+        
         $loanIndex = $this->getLoanIndex();
 
         $loanType = $loanIndex->getType('loan');

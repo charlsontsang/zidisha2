@@ -51,8 +51,8 @@ class LoanServiceCest
 
         $this->verifyAcceptedBids(
             [
-                '8' =>  ['1', '23', '23'],
-                '1' =>  ['3', '50', '50'],
+                '8' => ['1', '23', '23'],
+                '1' => ['3', '50', '50'],
                 '20' => ['4', '20', '20'],
                 '27' => ['5', '34', '34'],
                 '45' => ['6', '34', '34'],
@@ -105,5 +105,24 @@ class LoanServiceCest
             verify($acceptedBids)->hasKey($id);
             verify($acceptedBids[$id]['acceptedAmount'])->equals(Money::create($data[2]));
         }
+    }
+
+    public function testApplyForLoan(UnitTester $I)
+    {
+        $borrower = \Zidisha\Borrower\BorrowerQuery::create()
+            ->findOneById(12);
+
+        $borrowerId = $borrower->getId();
+        $data = [
+            'categoryId' => '7',
+            'nativeAmount' => '798097',
+            'summary' => 'suasdasd',
+            'description' => 'asdasda',
+            'installmentAmount' => '2312',
+            'installmentDay' => '1',
+        ];
+
+        $this->loanService->applyForLoan($borrower, $data);
+        $I->seeInDatabase('loans', ['status' => '0', 'borrower_id' => $borrowerId]);
     }
 } 

@@ -3,7 +3,14 @@
 # suite for unit (internal) tests.
 class_name: UnitTester
 modules:
-    enabled: [Asserts, UnitHelper, Laravel4]
+    enabled: [Asserts, UnitHelper, Laravel4, Db]
     config:
         Laravel4:
             start: 'bootstrap/testing.php'
+        Db:
+            dsn: 'pgsql:host=localhost;port=5432;dbname=homestead;user=homestead;password=secret'
+            user: 'homestead'
+            password: 'secret'
+            dump: 'tests/_data/dump.sql'
+            populate: false
+            cleanup: false
