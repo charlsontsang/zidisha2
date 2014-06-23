@@ -206,6 +206,7 @@ class LoanService
             'description' => $loan->getDescription(),
             'status' => $loan->getStatus(),
             'created_at' => $loan->getCreatedAt()->getTimestamp(),
+            'amount_raised' => $loan->getAmountRaised(),
         );
 
         $loanDocument = new \Elastica\Document($loan->getId(), $data);
