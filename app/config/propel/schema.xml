@@ -64,6 +64,7 @@
         <column name="installment_amount" type="DECIMAL" size="10" scale="2" phpType="string"/>
         <column name="installment_day" type="INTEGER"/>
         <column name="interest_rate" type="DECIMAL" size="5" scale="2" phpType="string"/>
+        <column name="final_interest_rate" type="DECIMAL" size="5" scale="2" phpType="string"/>
         <column name="loan_category_id" type="INTEGER" required="true"/>
         <column name="status" type="ENUM" valueSet="0, 1, 2, 3, 5, 6, 7"/>
         <column name="application_date" type="TIMESTAMP" required="true"/>
@@ -73,7 +74,11 @@
         <column name="amount" type="DECIMAL" size="10" scale="2"  required="true" phpType="string"/>
         <column name="disbursed_amount" type="DECIMAL" size="10" scale="2" phpType="string"/>
         <column name="disbursed_date" type="TIMESTAMP"/>
+        <column name="extra_days" type="INTEGER"/>
+        <column name="service_fee_rate" type="DECIMAL" size="5" scale="2" phpType="string"/>
         <column name="currency_code" type="VARCHAR" size="3" required="true"/>
+        <column name="installment_period" type="ENUM" valueSet="monthly, weekly"/>
+        <column name="period" type="INTEGER"/>
         <behavior name="timestampable"/>
         <foreign-key foreignTable="loan_categories">
             <reference local="loan_category_id" foreign="id" />
@@ -302,7 +307,7 @@
         <column name="value" type="VARCHAR" size="45" required="true" defaultValue="0"/>
     </table>
 
-    <table name="installments" phpName="Installment" namespace="Installment">
+    <table name="installments" phpName="Installment" namespace="Repayment">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="borrower_id" type="INTEGER" required="true"/>
         <column name="loan_id" type="INTEGER" required="true"/>

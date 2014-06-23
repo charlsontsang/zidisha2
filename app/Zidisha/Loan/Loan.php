@@ -8,14 +8,14 @@ use Zidisha\Loan\Base\Loan as BaseLoan;
 class Loan extends BaseLoan
 {
 
-    const OPEN      = 0;
-    const FUNDED    = 1;
-    const ACTIVE    = 2;
-    const REPAID    = 3;
-    const NO_LOAN   = 4;
+    const OPEN = 0;
+    const FUNDED = 1;
+    const ACTIVE = 2;
+    const REPAID = 3;
+    const NO_LOAN = 4;
     const DEFAULTED = 5;
-    const CANCELED  = 6;
-    const EXPIRED   = 7;
+    const CANCELED = 6;
+    const EXPIRED = 7;
 
     public static function createFromData($data)
     {
@@ -31,9 +31,12 @@ class Loan extends BaseLoan
 
         $loan->setAmount(Money::create($data['amount'], 'USD'));
         $loan->setRegistrationFeeRate('5');
+        $loan->setInstallmentPeriod('monthly');
+        $loan->setInterestRate('interestRate');
 
         $loan->setInstallmentDay($data['installmentDay']);
         $loan->setApplicationDate(new \DateTime());
+        $loan->setPeriod(Loan::calculatePeriod());
 
         return $loan;
     }
@@ -66,5 +69,27 @@ class Loan extends BaseLoan
     public function setAmount($money)
     {
         return parent::setAmount($money->getAmount());
+    }
+
+    public function calculateExtraDays($disbursedDate)
+    {
+        $installmentDay = $this->getInstallmentDay();
+        $day = $disbursedDate->format('d');
+
+        if ($day <= $installmentDay) {
+            $diff = $installmentDay - $day;
+        } else {
+            $next = date("Y-m-$installmentDay", strtotime("+1 months"));
+            $diff = date('d', strtotime($next) - strtotime($day));
+        }
+
+        return $this->setExtraDays($diff);
+    }
+
+    public function calculatePeriod()
+    {
+        $period = ceil(($this->getAmount()->getAmount()/($this->getInstallmentAmount()->getAmount() - (($this->getAmount()->getAmount() * $this->getInterestRate())/1200))));
+
+        return $period;
     }
 }

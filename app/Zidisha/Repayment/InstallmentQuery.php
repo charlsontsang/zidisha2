@@ -1,8 +1,8 @@
 <?php
 
-namespace Zidisha\Installment;
+namespace Zidisha\Repayment;
 
-use Zidisha\Installment\Base\InstallmentQuery as BaseInstallmentQuery;
+use Zidisha\Repayment\Base\InstallmentQuery as BaseInstallmentQuery;
 
 
 /**
