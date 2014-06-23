@@ -132,7 +132,7 @@ class TransactionService
 
         $bidTransaction = new Transaction();
         $bidTransaction
-            ->setUser($lender->getUser())
+            ->setUserId($lender->getId())
             ->setAmount($amount->multiply(-1))
             ->setDescription('Loan bid')
             ->setLoan($loan)
@@ -176,9 +176,8 @@ class TransactionService
         }
     }
 
-    public function assertAmount(
-        Money $amount
-    ) {
+    public function assertAmount(Money $amount)
+    {
         if (!$amount->greaterThan(Money::create(0))) {
             throw new \Exception();
         }
