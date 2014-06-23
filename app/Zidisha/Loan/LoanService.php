@@ -218,49 +218,8 @@ class LoanService
         $con = Propel::getWriteConnection(TransactionTableMap::DATABASE_NAME);
         $con->beginTransaction();
 
-        //TODO: calculate the accepted amount.
-
-
-        $bidAmount = Money::create($data['amount'], 'USD');
         try {
-            $oldBids = BidQuery::create()
-                ->getOrderedBids($loan)
-                ->find();
-
-            $bid = new Bid();
-            $bid
-                ->setLoan($loan)
-                ->setLender($lender)
-                ->setBorrower($loan->getBorrower())
-                ->setBidAmount($bidAmount)
-                ->setInterestRate($data['interestRate'])
-                ->setActive(true)
-                ->setBidDate(new \DateTime());
-
-            $bidSuccess = $bid->save($con);
-            if (!$bidSuccess) {
-                throw new \Exception();
-            }
-
-            $newBids = BidQuery::create()
-                ->getOrderedBids($loan)
-                ->find();
-
-            $oldAcceptedBids = $this->getAcceptedBids($oldBids, $loan->getAmount());
-            $newAcceptedBids = $this->getAcceptedBids($newBids, $loan->getAmount());
-            $changedBids = $this->getChangedBids($oldAcceptedBids, $newAcceptedBids);
-
-            foreach ($changedBids as $bidId => $changedBid) {
-
-                if ($changedBid['type'] == 'out_bid') {
-                    $this->transactionService->addOutBidTransaction($con, $changedBid['acceptedAmount'], $loan, $bid->getLender());
-                } elseif ($changedBid['type'] == 'update_bid') {
-                    $this->transactionService->addUpdateBidTransaction($con, $changedBid['acceptedAmount'], $loan, $bid->getLender());
-                } elseif ($changedBid['subType'] == 'place_bid') {
-                    $this->transactionService->addPlaceBidTransaction($con, $changedBid['acceptedAmount'], $loan, $bid->getLender());
-                }
-            }
-
+            $bid = $this->createBid($con, $loan, $lender, $data);
             $con->commit();
         } catch (\Exception $e) {
             $con->rollBack();
@@ -351,18 +310,77 @@ class LoanService
                         ];
                     }
                 }
-            } else {
+            } elseif($acceptedAmount->greaterThan(Money::create(0))) {
                 $changedBids[$bidId] = [
                     'bid' => $bid,
                     'acceptedAmount' => $acceptedAmount,
                     'type' => 'place_bid',
                     'changedAmount' => $acceptedAmount,
                 ];
-
             }
         }
 
         return $changedBids;
+    }
+
+    protected function createBid(ConnectionInterface $con, Loan $loan, Lender $lender, $data)
+    {
+        $bidAmount = Money::create($data['amount'], 'USD');
+
+        $oldBids = BidQuery::create()
+            ->getOrderedBids($loan)
+            ->find();
+
+        $bid = new Bid();
+        $bid
+            ->setLoan($loan)
+            ->setLender($lender)
+            ->setBorrower($loan->getBorrower())
+            ->setBidAmount($bidAmount)
+            ->setInterestRate($data['interestRate'])
+            ->setActive(true)
+            ->setBidDate(new \DateTime());
+
+        $bidSuccess = $bid->save($con);
+
+        if (!$bidSuccess) {
+            throw new \Exception();
+        }
+
+        $newBids = BidQuery::create()
+            ->getOrderedBids($loan)
+            ->find();
+
+        $oldAcceptedBids = $this->getAcceptedBids($oldBids, $loan->getAmount());
+        $newAcceptedBids = $this->getAcceptedBids($newBids, $loan->getAmount());
+        $changedBids = $this->getChangedBids($oldAcceptedBids, $newAcceptedBids);
+
+        foreach ($changedBids as $bidId => $changedBid) {
+            if ($changedBid['type'] == 'out_bid') {
+                $this->transactionService->addOutBidTransaction(
+                    $con,
+                    $changedBid['acceptedAmount'],
+                    $loan,
+                    $changedBid['bid']->getLender()
+                );
+            } elseif ($changedBid['type'] == 'update_bid') {
+                $this->transactionService->addUpdateBidTransaction(
+                    $con,
+                    $changedBid['acceptedAmount'],
+                    $loan,
+                    $changedBid['bid']->getLender()
+                );
+            } elseif ($changedBid['type'] == 'place_bid') {
+                $this->transactionService->addPlaceBidTransaction(
+                    $con,
+                    $changedBid['acceptedAmount'],
+                    $loan,
+                    $changedBid['bid']->getLender()
+                );
+            }
+        }
+
+        return $bid;
     }
 
     public function editBid(Bid $bid, $data)
