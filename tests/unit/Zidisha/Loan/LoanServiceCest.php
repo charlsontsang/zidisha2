@@ -156,4 +156,117 @@ class LoanServiceCest
         }
         $con->rollBack();
     }
+
+    public function testGetChangedBids(UnitTester $I)
+    {
+        $this->verifyChangedBids(
+            [
+                '1' => ['3', '50', '50'],
+                '20' => ['4', '20', '20'],
+                '8' => ['10', '100', '100'],
+            ],
+            [
+                '1' => ['3', '50', '50'],
+                '20' => ['4', '20', '20'],
+                '8' => ['10', '100', '100'],
+                '11' => ['2', '15', '15'],
+            ],
+            200,
+            [
+                '11' => [
+                    'acceptedAmount' => '15',
+                    'changedAmount' => '15',
+                    'type' => 'place_bid'
+                ],
+            ]
+        );
+
+        $this->verifyChangedBids(
+            [
+                '1' => ['3', '50', '50'],
+                '20' => ['4', '20', '20'],
+                '8' => ['10', '100', '100'],
+            ],
+            [
+                '1' => ['3', '50', '50'],
+                '20' => ['4', '20', '20'],
+                '11' => ['5', '100', '100'],
+                '8' => ['10', '100', '30'],
+            ],
+            200,
+            [
+                '8' => [
+                    'acceptedAmount' => '30',
+                    'changedAmount' => '70',
+                    'type' => 'out_bid'
+                ],
+                '11' => [
+                    'acceptedAmount' => '100',
+                    'changedAmount' => '100',
+                    'type' => 'place_bid'
+                ],
+            ]
+        );
+
+        $this->verifyChangedBids(
+            [
+                '1' => ['3', '50', '50'],
+                '20' => ['4', '20', '20'],
+                '8' => ['10', '50', '30'],
+            ],
+            [
+                '8' => ['1', '40', '40'],
+                '1' => ['3', '50', '50'],
+                '20' => ['4', '20', '10'],
+            ],
+            100,
+            [
+                '8' => [
+                    'acceptedAmount' => '40',
+                    'changedAmount' => '10',
+                    'type' => 'update_bid'
+                ],
+                '20' => [
+                    'acceptedAmount' => '10',
+                    'changedAmount' => '10',
+                    'type' => 'out_bid'
+                ],
+            ]
+        );
+    }
+
+    /**
+     * @param $bidData
+     * @param $amount
+     * @return mixed
+     */
+    protected function getAcceptedBids($bidData, $amount)
+    {
+        $method = new ReflectionMethod($this->loanService, 'getAcceptedBids');
+        $method->setAccessible(true);
+
+        $bids = $this->generateBid($bidData);
+
+        $acceptedBids = $method->invoke($this->loanService, $bids, Money::create($amount));
+        return $acceptedBids;
+    }
+
+    private function verifyChangedBids($oldBids, $newBids, $LoanAmount, $verify)
+    {
+        $oldAcceptedBids = $this->getAcceptedBids($oldBids, $LoanAmount);
+        $newAcceptedBids = $this->getAcceptedBids($newBids, $LoanAmount);
+
+        $method = new ReflectionMethod($this->loanService, 'getChangedBids');
+        $method->setAccessible(true);
+
+        $changedBids = $method->invoke($this->loanService, $oldAcceptedBids, $newAcceptedBids);
+
+        verify(count($changedBids))->equals(count($verify));
+
+        foreach ($verify as $id => $haveKeys) {
+            verify($changedBids[$id]['acceptedAmount'])->equals(Money::create($haveKeys['acceptedAmount']));
+            verify($changedBids[$id]['changedAmount'])->equals(Money::create($haveKeys['changedAmount']));
+            verify($changedBids[$id]['type'])->equals($haveKeys['type']);
+        }
+    }
 }
