@@ -93,4 +93,15 @@ class Loan extends BaseLoan
 
         return $this->setPeriod($period);
     }
+
+    public function calculateAmountRaised(Money $totalBidAmount)
+    {
+        if ($totalBidAmount->lessThan($this->getAmount())) {
+            $percentAmountRaised = $totalBidAmount->divide($this->getAmount())->multiply(100)->round(2)->getAmount();
+        } else {
+            $percentAmountRaised = 100;
+        }
+
+        return $this->setAmountRaised($percentAmountRaised);
+    }
 }
