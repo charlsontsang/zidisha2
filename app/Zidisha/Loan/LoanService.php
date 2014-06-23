@@ -253,6 +253,10 @@ class LoanService
             }
         }
 
+        $loan->calculateAmountRaised($totalBidAmount);
+        $loan->save();
+
+        //Todo: refresh elastic search index.
         //Todo: Lender Invite Credit.
 
         return $bid;
@@ -311,7 +315,7 @@ class LoanService
                         ];
                     }
                 }
-            } elseif($acceptedAmount->greaterThan(Money::create(0))) {
+            } elseif ($acceptedAmount->greaterThan(Money::create(0))) {
                 $changedBids[$bidId] = [
                     'bid' => $bid,
                     'acceptedAmount' => $acceptedAmount,
@@ -387,6 +391,7 @@ class LoanService
     public function editBid(Bid $bid, $data)
     {
         // Todo: Outbid Function
+        $loan = $bid->getLoan();
 
         $con = Propel::getWriteConnection(TransactionTableMap::DATABASE_NAME);
         $con->beginTransaction();
@@ -396,6 +401,13 @@ class LoanService
             $bid->setInterestRate($data['interestRate']);
             $bidEditSuccess = $bid->save($con);
 
+            $totalBidAmount = BidQuery::create()
+                ->filterByLoan($loan)
+                ->getTotalBidAmount();
+
+            $loan->calculateAmountRaised($totalBidAmount);
+            $loan->save();
+
             if ($bidEditSuccess) {
                 $con->commit();
             }
@@ -403,6 +415,7 @@ class LoanService
             $con->rollBack();
         }
 
+        //Todo: refresh elastic search.
         return $bid;
     }
 
