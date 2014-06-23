@@ -157,6 +157,7 @@ class LoanServiceCest
             'description' => 'asdasda',
             'installmentAmount' => '2312',
             'installmentDay' => '1',
+            'amountRaised' => 0,
             'interestRate' => 10
         ];
 
