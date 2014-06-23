@@ -84,4 +84,4 @@ class BorrowerService
 
         $upload->delete();
     }
-} 
+}
