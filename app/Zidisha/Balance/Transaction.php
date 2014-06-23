@@ -43,7 +43,7 @@ class Transaction extends BaseTransaction
 
     public function getAmount()
     {
-        return Money::create(parent::getAmount(), $this->getCurrencyCode());
+        return Money::create(parent::getAmount(), 'USD');
     }
 
     public function setAmount($money)
