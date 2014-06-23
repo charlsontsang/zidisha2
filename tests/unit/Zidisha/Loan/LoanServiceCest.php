@@ -97,12 +97,7 @@ class LoanServiceCest
      */
     protected function verifyAcceptedBids($bidData, $amount)
     {
-        $method = new ReflectionMethod($this->loanService, 'getAcceptedBids');
-        $method->setAccessible(true);
-
-        $bids = $this->generateBid($bidData);
-
-        $acceptedBids = $method->invoke($this->loanService, $bids, Money::create($amount));
+        $acceptedBids = $this->getAcceptedBids($bidData, $amount);
 
         foreach ($bidData as $id => $data) {
             verify($acceptedBids)->hasKey($id);
