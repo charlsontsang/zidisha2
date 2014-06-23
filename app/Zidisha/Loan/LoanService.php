@@ -4,7 +4,6 @@ namespace Zidisha\Loan;
 
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Propel;
-use Symfony\Component\Validator\Constraints\DateTime;
 use Zidisha\Analytics\MixpanelService;
 use Zidisha\Balance\Map\TransactionTableMap;
 use Zidisha\Balance\Transaction;
@@ -192,7 +191,7 @@ class LoanService
         if (\App::environment("testing")) {
             return;
         }
-        
+
         $loanIndex = $this->getLoanIndex();
 
         $loanType = $loanIndex->getType('loan');
@@ -254,11 +253,11 @@ class LoanService
             foreach ($changedBids as $bidId => $changedBid) {
 
                 if ($changedBid['type'] == 'out_bid') {
-                    $this->transactionService->addOutBidTransaction($con, $changedBid['acceptedAmount'], $loan);
+                    $this->transactionService->addOutBidTransaction($con, $changedBid['acceptedAmount'], $loan, $bid->getLender());
                 } elseif ($changedBid['type'] == 'update_bid') {
-                    $this->transactionService->addUpdateBidTransaction($con, $changedBid['acceptedAmount'], $loan);
+                    $this->transactionService->addUpdateBidTransaction($con, $changedBid['acceptedAmount'], $loan, $bid->getLender());
                 } elseif ($changedBid['subType'] == 'place_bid') {
-                    $this->transactionService->addPlaceBidTransaction($con, $changedBid['acceptedAmount'], $loan);
+                    $this->transactionService->addPlaceBidTransaction($con, $changedBid['acceptedAmount'], $loan, $bid->getLender());
                 }
             }
 
@@ -340,7 +339,7 @@ class LoanService
                         'bid' => $bid,
                         'acceptedAmount' => $acceptedAmount,
                         'type' => 'out_bid',
-                        'changedAmount' => $oldAcceptedAmount->substract($acceptedAmount),
+                        'changedAmount' => $oldAcceptedAmount->subtract($acceptedAmount),
                     ];
                 } else {
                     if ($oldAcceptedAmount->lessThan($acceptedAmount)) {
@@ -348,7 +347,7 @@ class LoanService
                             'bid' => $bid,
                             'acceptedAmount' => $acceptedAmount,
                             'type' => 'update_bid',
-                            'changedAmount' => $acceptedAmount->substract($oldAcceptedAmount),
+                            'changedAmount' => $acceptedAmount->subtract($oldAcceptedAmount),
                         ];
                     }
                 }
@@ -601,7 +600,7 @@ class LoanService
                 ->filterByBorrower($loan->getBorrower())
                 ->count();
             if ($loans == 1) {
-               $this->transactionService->addFeeTransaction($con, $amount, $loan);
+                $this->transactionService->addFeeTransaction($con, $amount, $loan);
             }
 
             $loan->setStatus(Loan::ACTIVE)
@@ -624,14 +623,23 @@ class LoanService
     protected function getLenderRefunds($transactions)
     {
         $refunds = [];
+        $zero = Money::create(0);
         foreach ($transactions as $transaction) {
-            $refunds[$transaction->getUserId()] = [
+            $userId = $transaction->getUserId();
+            $refunds[$userId] = [
                 'lender' => $transaction->getUser()->getLender(),
-                'refundAmount' => array_get($refunds, 'id.refundAmount', Money::create(0))->add(
-                        $transaction->getAmount()->multiply(-1)
+                'refundAmount' => array_get($refunds, "$userId.refundAmount", $zero)->subtract(
+                        $transaction->getAmount()
                     ),
             ];
         }
+
+        foreach ($refunds as $id => $refund) {
+            if ($refunds[$id]['refundAmount']->lessThan(Money::create(0))) {
+                $refunds[$id]['refundAmount'] = $zero;
+            }
+        }
+
         return $refunds;
     }
 }
