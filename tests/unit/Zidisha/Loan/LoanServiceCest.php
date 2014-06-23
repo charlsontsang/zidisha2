@@ -269,4 +269,70 @@ class LoanServiceCest
             verify($changedBids[$id]['type'])->equals($haveKeys['type']);
         }
     }
+
+    public function testRefundLenders(UnitTester $I)
+    {
+        $method = new ReflectionMethod($this->loanService, 'refundLenders');
+        $method->setAccessible(true);
+
+        $con = Propel::getWriteConnection(TransactionTableMap::DATABASE_NAME);
+        $con->beginTransaction();
+
+        $loan = \Zidisha\Loan\LoanQuery::create()
+            ->findOneById(5);
+
+        $lender1 = \Zidisha\Lender\LenderQuery::create()
+            ->findOneById(32);
+
+        $lender2 = \Zidisha\Lender\LenderQuery::create()
+            ->findOneById(33);
+
+        $lender3 = \Zidisha\Lender\LenderQuery::create()
+            ->findOneById(34);
+
+        try {
+            $this->transactionService->addPlaceBidTransaction($con, Money::create(50), $loan, $lender1);
+            $this->transactionService->addPlaceBidTransaction($con, Money::create(30), $loan, $lender2);
+            $this->transactionService->addPlaceBidTransaction($con, Money::create(40), $loan, $lender3);
+            $this->transactionService->addOutBidTransaction($con, Money::create(20), $loan, $lender1);
+            $this->transactionService->addUpdateBidTransaction($con, Money::create(10), $loan, $lender2);
+            $this->transactionService->addOutBidTransaction($con, Money::create(10), $loan, $lender1);
+
+        } catch (Exception $e) {
+            throw $e;
+        }
+
+        try {
+            $refunds = $method->invoke($this->loanService, $con, $loan, Loan::EXPIRED);
+        } catch (\Exception $e) {
+            throw $e;
+        }
+
+        verify($refunds[$lender1->getId()]['refundAmount'])->equals(Money::create(20));
+        verify($refunds[$lender2->getId()]['refundAmount'])->equals(Money::create(40));
+        verify($refunds[$lender3->getId()]['refundAmount'])->equals(Money::create(40));
+
+        $lender1VerifyRefund = \Zidisha\Balance\TransactionQuery::create()
+            ->filterByUserId($lender1->getId())
+            ->filterByType(Transaction::LOAN_OUTBID)
+            ->filterBySubType(Transaction::LOAN_BID_EXPIRED)
+            ->count();
+
+        $lender2VerifyRefund = \Zidisha\Balance\TransactionQuery::create()
+            ->filterByUserId($lender2->getId())
+            ->filterByType(Transaction::LOAN_OUTBID)
+            ->filterBySubType(Transaction::LOAN_BID_EXPIRED)
+            ->count();
+
+        $lender3VerifyRefund = \Zidisha\Balance\TransactionQuery::create()
+            ->filterByUserId($lender1->getId())
+            ->filterByType(Transaction::LOAN_OUTBID)
+            ->filterBySubType(Transaction::LOAN_BID_EXPIRED)
+            ->count();
+
+        verify($lender1VerifyRefund)->equals(1);
+        verify($lender2VerifyRefund)->equals(1);
+        verify($lender3VerifyRefund)->equals(1);
+        $con->rollBack();
+    }
 }
