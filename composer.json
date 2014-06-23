@@ -11,7 +11,8 @@
         "stripe/stripe-php": "1.*",
         "intervention/image": "2.0.4",
         "supremenewmedia/finance": "0.1.2",
-        "geoip2/geoip2": "0.6.*"
+        "geoip2/geoip2": "0.6.*",
+        "phpexcel/phpexcel": "1.7.*"
 	},
 	"autoload": {
 		"classmap": [
