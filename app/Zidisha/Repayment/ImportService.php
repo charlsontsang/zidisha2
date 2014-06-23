@@ -184,8 +184,9 @@ class ImportService
     {
         $borrower = BorrowerQuery::create()
             ->useProfileQuery()
-            ->filterByPhoneNumber($payment['phone'])
+                ->filterByPhoneNumber($payment['phone'])
             ->endUse()
+            ->filterByActive(true)
             ->findOne();
 
         $payment['borrower_id'] = $borrower ? $borrower->getId() : null;
