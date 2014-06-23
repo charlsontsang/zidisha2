@@ -114,6 +114,10 @@ class LoanServiceCest
 
     public function testApplyForLoan(UnitTester $I)
     {
+        $con = Propel::getWriteConnection(TransactionTableMap::DATABASE_NAME);
+        $con->beginTransaction();
+
+
         $borrower = \Zidisha\Borrower\BorrowerQuery::create()
             ->findOneById(12);
 
@@ -125,10 +129,23 @@ class LoanServiceCest
             'description' => 'asdasda',
             'installmentAmount' => '2312',
             'installmentDay' => '1',
+            'interestRate' => 10
         ];
 
-        $this->loanService->applyForLoan($borrower, $data);
-        $I->seeInDatabase('loans', ['status' => '0', 'borrower_id' => $borrowerId]);
+        try {
+            $this->loanService->applyForLoan($borrower, $data);
+        }catch (\Exception $e){
+            throw $e;
+        }
+
+        $LoanCount = \Zidisha\Loan\LoanQuery::create()
+            ->filterByStatus(Loan::OPEN)
+            ->filterByBorrowerId($borrowerId)->count();
+
+
+        verify($LoanCount)->greaterThan(0);
+
+        $con->rollBack();
     }
 
     public function testChangeLoanStage(UnitTester $I)
