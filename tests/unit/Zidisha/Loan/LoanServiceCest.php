@@ -1,7 +1,10 @@
 <?php
 
+use Propel\Runtime\Propel;
+use Zidisha\Balance\Map\TransactionTableMap;
 use Zidisha\Currency\Money;
 use Zidisha\Loan\Bid;
+use Zidisha\Loan\Loan;
 
 class LoanServiceCest
 {
@@ -125,4 +128,30 @@ class LoanServiceCest
         $this->loanService->applyForLoan($borrower, $data);
         $I->seeInDatabase('loans', ['status' => '0', 'borrower_id' => $borrowerId]);
     }
-} 
+
+    public function testChangeLoanStage(UnitTester $I)
+    {
+        $method = new ReflectionMethod($this->loanService, 'changeLoanStage');
+        $method->setAccessible(true);
+
+        $loan = \Zidisha\Loan\LoanQuery::create()
+            ->findOneById('1');
+
+        $con = Propel::getWriteConnection(TransactionTableMap::DATABASE_NAME);
+        $con->beginTransaction();
+
+        try {
+            $method->invoke($this->loanService, $con, $loan, \Zidisha\Loan\Loan::OPEN, \Zidisha\Loan\Loan::FUNDED);
+
+            $recordCount = \Zidisha\Loan\StageQuery::create()
+                ->filterByStatus(Loan::FUNDED)
+                ->findByLoanId($loan->getId())
+                ->count();
+
+            verify($recordCount)->equals(1);
+        } catch (\Exception $e) {
+            throw $e;
+        }
+        $con->rollBack();
+    }
+}
