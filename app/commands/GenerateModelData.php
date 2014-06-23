@@ -291,7 +291,7 @@ class GenerateModelData extends Command
                 $data['installmentDay'] = $installmentDay;
                 $data['categoryId'] = $loanCategory->getId();
                 //TODO set interest rate
-                $date['interestRate'] = '20';
+                $data['interestRate'] = '20';
 
                 if ($i < $status) {
                     $loanService->applyForLoan($borrower, $data);
