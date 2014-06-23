@@ -2,6 +2,7 @@
 
 use Propel\Runtime\Propel;
 use Zidisha\Balance\Map\TransactionTableMap;
+use Zidisha\Balance\Transaction;
 use Zidisha\Currency\Money;
 use Zidisha\Loan\Bid;
 use Zidisha\Loan\Loan;
@@ -13,9 +14,15 @@ class LoanServiceCest
      */
     private $loanService;
 
+    /**
+     * @var Zidisha\Balance\TransactionService
+     */
+    private $transactionService;
+
     public function _before(UnitTester $I)
     {
         $this->loanService = $I->grabService('Zidisha\Loan\LoanService');
+        $this->transactionService = $I->grabService('Zidisha\Balance\TransactionService');
     }
 
     public function _after(UnitTester $I)
