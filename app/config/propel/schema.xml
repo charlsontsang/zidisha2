@@ -145,6 +145,7 @@
         <column name="last_name" type="VARCHAR" size="50" required="true"/>
         <column name="active_loan_id" type="INTEGER"/>
         <column name="loan_status" type="ENUM" valueSet="0, 1, 2, 3, 4, 5, 6, 7" defaultValue="4"/>
+        <column name="active" type="BOOLEAN" defaultValue="true"/>
         <behavior name="timestampable"/>
         <foreign-key foreignTable="users">
             <reference local="id" foreign="id"/>
