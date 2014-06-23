@@ -31,6 +31,7 @@ class Loan extends BaseLoan
 
         $loan->setAmount(Money::create($data['amount'], 'USD'));
         $loan->setRegistrationFeeRate('5');
+        $loan->setInstallmentPeriod('monthly');
 
         $loan->setInstallmentDay($data['installmentDay']);
         $loan->setApplicationDate(new \DateTime());
