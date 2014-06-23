@@ -32,9 +32,11 @@ class Loan extends BaseLoan
         $loan->setAmount(Money::create($data['amount'], 'USD'));
         $loan->setRegistrationFeeRate('5');
         $loan->setInstallmentPeriod('monthly');
+        $loan->setInterestRate('interestRate');
 
         $loan->setInstallmentDay($data['installmentDay']);
         $loan->setApplicationDate(new \DateTime());
+        $loan->setPeriod(Loan::calculatePeriod());
 
         return $loan;
     }
@@ -82,5 +84,12 @@ class Loan extends BaseLoan
         }
 
         return $this->setExtraDays($diff);
+    }
+
+    public function calculatePeriod()
+    {
+        $period = ceil(($this->getAmount()->getAmount()/($this->getInstallmentAmount()->getAmount() - (($this->getAmount()->getAmount() * $this->getInterestRate())/1200))));
+
+        return $period;
     }
 }

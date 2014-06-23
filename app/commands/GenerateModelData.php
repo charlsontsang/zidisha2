@@ -8,7 +8,7 @@ use Zidisha\Balance\Transaction;
 use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Country\Country;
 use Zidisha\Currency\Money;
-use Zidisha\Installment\Installment;
+
 use Zidisha\Lender\LenderQuery;
 use Zidisha\Loan\Bid;
 use Zidisha\Loan\Category;
@@ -16,6 +16,7 @@ use Zidisha\Loan\CategoryQuery;
 use Zidisha\Loan\Loan;
 use Zidisha\Loan\LoanQuery;
 use Zidisha\Loan\Stage;
+use Zidisha\Repayment\Installment;
 
 class GenerateModelData extends Command
 {
@@ -273,7 +274,6 @@ class GenerateModelData extends Command
                     $installmentDay = $i;
                     $amount = 30 + ($i * 20);
                 }
-                $installmentAmount = (int)$amount / 12;
                 $loanCategory = $allCategories[array_rand($allCategories)];
                 $status = floatval($size / 7);
                 $borrower = $allBorrowers[$i - 1];
@@ -284,11 +284,14 @@ class GenerateModelData extends Command
                 $data['nativeAmount'] = $amount;
                 $data['currencyCode'] = 'KES';
                 $data['amount'] = $amount / 2;
+                $installmentAmount = (int)$data['amount'] / 12;
                 $data['installmentAmount'] = $installmentAmount;
                 $data['registrationFeeRate'] = '5';
                 $data['applicationDate'] = new \DateTime();
                 $data['installmentDay'] = $installmentDay;
                 $data['categoryId'] = $loanCategory->getId();
+                //TODO set interest rate
+                $date['interestRate'] = '20';
 
                 if ($i < $status) {
                     $loanService->applyForLoan($borrower, $data);
