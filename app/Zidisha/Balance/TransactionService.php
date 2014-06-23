@@ -3,7 +3,6 @@
 namespace Zidisha\Balance;
 
 use Propel\Runtime\Connection\ConnectionInterface;
-use Zidisha\Balance\Transaction;
 use Zidisha\Currency\Money;
 use Zidisha\Lender\Lender;
 use Zidisha\Loan\Loan;
@@ -41,6 +40,7 @@ class TransactionService
             ->setLoan($loan)
             ->setType(Transaction::LOAN_OUTBID)
             ->setSubType(Transaction::LOAN_BID_EXPIRED)
+            ->setTransactionDate(new \DateTime())
             ->setDescription('Loan bid expired');
         $TransactionSuccess = $transaction->save($con);
 
@@ -52,14 +52,15 @@ class TransactionService
     public function addOutBidTransaction(
         ConnectionInterface $con,
         Money $amount,
-        Loan $loan
+        Loan $loan,
+        Lender $lender
     ) {
         $this->assertAmount($amount);
 
         $bidTransaction = new Transaction();
         $bidTransaction
-            ->setUser($loan->getBorrower()->getUser())
-            ->setAmount($amount->getAmount())
+            ->setUser($lender->getUser())
+            ->setAmount($amount)
             ->setDescription('Loan outbid')
             ->setLoan($loan)
             ->setTransactionDate(new \DateTime())
@@ -99,14 +100,15 @@ class TransactionService
     public function addUpdateBidTransaction(
         ConnectionInterface $con,
         Money $amount,
-        Loan $loan
+        Loan $loan,
+        Lender $lender
     ) {
         $this->assertAmount($amount);
 
         $bidTransaction = new Transaction();
         $bidTransaction
-            ->setUser($loan->getBorrower()->getUser())
-            ->setAmount($amount->getAmount()->multiply(-1))
+            ->setUser($lender->getUser())
+            ->setAmount($amount->multiply(-1))
             ->setDescription('Loan bid')
             ->setLoan($loan)
             ->setTransactionDate(new \DateTime())
@@ -123,14 +125,15 @@ class TransactionService
     public function addPlaceBidTransaction(
         ConnectionInterface $con,
         Money $amount,
-        Loan $loan
+        Loan $loan,
+        Lender $lender
     ) {
         $this->assertAmount($amount);
 
         $bidTransaction = new Transaction();
         $bidTransaction
-            ->setUser($loan->getBorrower()->getUser())
-            ->setAmount($amount->getAmount()->multiply(-1))
+            ->setUserId($lender->getId())
+            ->setAmount($amount->multiply(-1))
             ->setDescription('Loan bid')
             ->setLoan($loan)
             ->setTransactionDate(new \DateTime())
@@ -173,9 +176,8 @@ class TransactionService
         }
     }
 
-    public function assertAmount(
-        Money $amount
-    ) {
+    public function assertAmount(Money $amount)
+    {
         if (!$amount->greaterThan(Money::create(0))) {
             throw new \Exception();
         }

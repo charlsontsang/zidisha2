@@ -4,7 +4,6 @@ namespace Zidisha\Loan;
 
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Propel;
-use Symfony\Component\Validator\Constraints\DateTime;
 use Zidisha\Analytics\MixpanelService;
 use Zidisha\Balance\Map\TransactionTableMap;
 use Zidisha\Balance\Transaction;
@@ -65,16 +64,23 @@ class LoanService
 
         try {
             $loan = Loan::createFromData($data);
+
             $loan->setCategory($loanCategory);
             $loan->setBorrower($borrower);
             $loan->setStatus(Loan::OPEN);
-            $loan->save($con);
+
+            $loanSuccess = $loan->save($con);
+            if (!$loanSuccess) {
+                throw new \Exception();
+            }
 
             $this->changeLoanStage($con, $loan, null, Loan::OPEN);
+
+            $con->commit();
         } catch (\Exception $e) {
             $con->rollBack();
+            throw $e;
         }
-        $con->commit();
 
         $this->addToLoanIndex($loan);
     }
@@ -182,6 +188,10 @@ class LoanService
 
     public function addToLoanIndex(Loan $loan)
     {
+        if (\App::environment("testing")) {
+            return;
+        }
+
         $loanIndex = $this->getLoanIndex();
 
         $loanType = $loanIndex->getType('loan');
@@ -196,6 +206,7 @@ class LoanService
             'description' => $loan->getDescription(),
             'status' => $loan->getStatus(),
             'created_at' => $loan->getCreatedAt()->getTimestamp(),
+            'amount_raised' => $loan->getAmountRaised(),
         );
 
         $loanDocument = new \Elastica\Document($loan->getId(), $data);
@@ -208,49 +219,8 @@ class LoanService
         $con = Propel::getWriteConnection(TransactionTableMap::DATABASE_NAME);
         $con->beginTransaction();
 
-        //TODO: calculate the accepted amount.
-
-
-        $bidAmount = Money::create($data['amount'], 'USD');
         try {
-            $oldBids = BidQuery::create()
-                ->getOrderedBids($loan)
-                ->find();
-
-            $bid = new Bid();
-            $bid
-                ->setLoan($loan)
-                ->setLender($lender)
-                ->setBorrower($loan->getBorrower())
-                ->setBidAmount($bidAmount)
-                ->setInterestRate($data['interestRate'])
-                ->setActive(true)
-                ->setBidDate(new \DateTime());
-
-            $bidSuccess = $bid->save($con);
-            if (!$bidSuccess) {
-                throw new \Exception();
-            }
-
-            $newBids = BidQuery::create()
-                ->getOrderedBids($loan)
-                ->find();
-
-            $oldAcceptedBids = $this->getAcceptedBids($oldBids, $loan->getAmount());
-            $newAcceptedBids = $this->getAcceptedBids($newBids, $loan->getAmount());
-            $changedBids = $this->getChangedBids($oldAcceptedBids, $newAcceptedBids);
-
-            foreach ($changedBids as $bidId => $changedBid) {
-
-                if ($changedBid['type'] == 'out_bid') {
-                    $this->transactionService->addOutBidTransaction($con, $changedBid['acceptedAmount'], $loan);
-                } elseif ($changedBid['type'] == 'update_bid') {
-                    $this->transactionService->addUpdateBidTransaction($con, $changedBid['acceptedAmount'], $loan);
-                } elseif ($changedBid['subType'] == 'place_bid') {
-                    $this->transactionService->addPlaceBidTransaction($con, $changedBid['acceptedAmount'], $loan);
-                }
-            }
-
+            $bid = $this->createBid($con, $loan, $lender, $data);
             $con->commit();
         } catch (\Exception $e) {
             $con->rollBack();
@@ -283,6 +253,10 @@ class LoanService
             }
         }
 
+        $loan->calculateAmountRaised($totalBidAmount);
+        $loan->save();
+
+        //Todo: refresh elastic search index.
         //Todo: Lender Invite Credit.
 
         return $bid;
@@ -329,7 +303,7 @@ class LoanService
                         'bid' => $bid,
                         'acceptedAmount' => $acceptedAmount,
                         'type' => 'out_bid',
-                        'changedAmount' => $oldAcceptedAmount->substract($acceptedAmount),
+                        'changedAmount' => $oldAcceptedAmount->subtract($acceptedAmount),
                     ];
                 } else {
                     if ($oldAcceptedAmount->lessThan($acceptedAmount)) {
@@ -337,27 +311,87 @@ class LoanService
                             'bid' => $bid,
                             'acceptedAmount' => $acceptedAmount,
                             'type' => 'update_bid',
-                            'changedAmount' => $acceptedAmount->substract($oldAcceptedAmount),
+                            'changedAmount' => $acceptedAmount->subtract($oldAcceptedAmount),
                         ];
                     }
                 }
-            } else {
+            } elseif ($acceptedAmount->greaterThan(Money::create(0))) {
                 $changedBids[$bidId] = [
                     'bid' => $bid,
                     'acceptedAmount' => $acceptedAmount,
                     'type' => 'place_bid',
                     'changedAmount' => $acceptedAmount,
                 ];
-
             }
         }
 
         return $changedBids;
     }
 
+    protected function createBid(ConnectionInterface $con, Loan $loan, Lender $lender, $data)
+    {
+        $bidAmount = Money::create($data['amount'], 'USD');
+
+        $oldBids = BidQuery::create()
+            ->getOrderedBids($loan)
+            ->find();
+
+        $bid = new Bid();
+        $bid
+            ->setLoan($loan)
+            ->setLender($lender)
+            ->setBorrower($loan->getBorrower())
+            ->setBidAmount($bidAmount)
+            ->setInterestRate($data['interestRate'])
+            ->setActive(true)
+            ->setBidDate(new \DateTime());
+
+        $bidSuccess = $bid->save($con);
+
+        if (!$bidSuccess) {
+            throw new \Exception();
+        }
+
+        $newBids = BidQuery::create()
+            ->getOrderedBids($loan)
+            ->find();
+
+        $oldAcceptedBids = $this->getAcceptedBids($oldBids, $loan->getAmount());
+        $newAcceptedBids = $this->getAcceptedBids($newBids, $loan->getAmount());
+        $changedBids = $this->getChangedBids($oldAcceptedBids, $newAcceptedBids);
+
+        foreach ($changedBids as $bidId => $changedBid) {
+            if ($changedBid['type'] == 'out_bid') {
+                $this->transactionService->addOutBidTransaction(
+                    $con,
+                    $changedBid['acceptedAmount'],
+                    $loan,
+                    $changedBid['bid']->getLender()
+                );
+            } elseif ($changedBid['type'] == 'update_bid') {
+                $this->transactionService->addUpdateBidTransaction(
+                    $con,
+                    $changedBid['acceptedAmount'],
+                    $loan,
+                    $changedBid['bid']->getLender()
+                );
+            } elseif ($changedBid['type'] == 'place_bid') {
+                $this->transactionService->addPlaceBidTransaction(
+                    $con,
+                    $changedBid['acceptedAmount'],
+                    $loan,
+                    $changedBid['bid']->getLender()
+                );
+            }
+        }
+
+        return $bid;
+    }
+
     public function editBid(Bid $bid, $data)
     {
         // Todo: Outbid Function
+        $loan = $bid->getLoan();
 
         $con = Propel::getWriteConnection(TransactionTableMap::DATABASE_NAME);
         $con->beginTransaction();
@@ -367,6 +401,13 @@ class LoanService
             $bid->setInterestRate($data['interestRate']);
             $bidEditSuccess = $bid->save($con);
 
+            $totalBidAmount = BidQuery::create()
+                ->filterByLoan($loan)
+                ->getTotalBidAmount();
+
+            $loan->calculateAmountRaised($totalBidAmount);
+            $loan->save();
+
             if ($bidEditSuccess) {
                 $con->commit();
             }
@@ -374,6 +415,7 @@ class LoanService
             $con->rollBack();
         }
 
+        //Todo: refresh elastic search.
         return $bid;
     }
 
@@ -590,7 +632,7 @@ class LoanService
                 ->filterByBorrower($loan->getBorrower())
                 ->count();
             if ($loans == 1) {
-               $this->transactionService->addFeeTransaction($con, $amount, $loan);
+                $this->transactionService->addFeeTransaction($con, $amount, $loan);
             }
 
             $loan->setStatus(Loan::ACTIVE)
@@ -613,14 +655,23 @@ class LoanService
     protected function getLenderRefunds($transactions)
     {
         $refunds = [];
+        $zero = Money::create(0);
         foreach ($transactions as $transaction) {
-            $refunds[$transaction->getUserId()] = [
+            $userId = $transaction->getUserId();
+            $refunds[$userId] = [
                 'lender' => $transaction->getUser()->getLender(),
-                'refundAmount' => array_get($refunds, 'id.refundAmount', Money::create(0))->add(
-                        $transaction->getAmount()->multiply(-1)
+                'refundAmount' => array_get($refunds, "$userId.refundAmount", $zero)->subtract(
+                        $transaction->getAmount()
                     ),
             ];
         }
+
+        foreach ($refunds as $id => $refund) {
+            if ($refunds[$id]['refundAmount']->lessThan(Money::create(0))) {
+                $refunds[$id]['refundAmount'] = $zero;
+            }
+        }
+
         return $refunds;
     }
 }

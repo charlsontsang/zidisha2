@@ -1,7 +1,11 @@
 <?php
 
+use Propel\Runtime\Propel;
+use Zidisha\Balance\Map\TransactionTableMap;
+use Zidisha\Balance\Transaction;
 use Zidisha\Currency\Money;
 use Zidisha\Loan\Bid;
+use Zidisha\Loan\Loan;
 
 class LoanServiceCest
 {
@@ -10,30 +14,64 @@ class LoanServiceCest
      */
     private $loanService;
 
+    /**
+     * @var Zidisha\Balance\TransactionService
+     */
+    private $transactionService;
+
     public function _before(UnitTester $I)
     {
         $this->loanService = $I->grabService('Zidisha\Loan\LoanService');
+        $this->transactionService = $I->grabService('Zidisha\Balance\TransactionService');
     }
 
     public function _after(UnitTester $I)
     {
     }
 
-    public function testPlaceBid(UnitTester $I)
+    public function testCreateBid(UnitTester $I)
     {
         $loan = \Zidisha\Loan\LoanQuery::create()
-            ->findOneById('1');
+            ->findOneById('5');
 
         $lender = \Zidisha\Lender\LenderQuery::create()
             ->findOneById('32');
 
         $data = [
-            'amount' => '10',
+            'amount' => '20',
             'interestRate' => '5'
         ];
 
-//        $this->loanService->placeBid($loan, $lender, $data);
+        $method = new ReflectionMethod($this->loanService, 'createBid');
+        $method->setAccessible(true);
 
+        $con = Propel::getWriteConnection(TransactionTableMap::DATABASE_NAME);
+        $con->beginTransaction();
+
+        try {
+            $method->invoke($this->loanService, $con, $loan, $lender, $data);
+
+            $bid = \Zidisha\Loan\BidQuery::create()
+                ->filterByLoan($loan)
+                ->filterByLender($lender)
+                ->findOne();
+
+            $newBidTransaction = \Zidisha\Balance\TransactionQuery::create()
+                ->filterByLoan($loan)
+                ->filterByUserId($lender->getId())
+                ->findOne();
+
+            verify($bid)->notEmpty();
+            verify($bid->getInterestRate())->equals($data['interestRate']);
+            verify($bid->getBidAmount())->equals(Money::create($data['amount']));
+            verify($newBidTransaction)->notEmpty();
+            verify($newBidTransaction->getAmount())->equals(Money::create($data['amount'])->multiply(-1));
+        } catch (\Exception $e) {
+            $con->rollBack();
+            throw $e;
+        }
+
+        $con->rollBack();
     }
 
     public function testGetAcceptedBids(UnitTester $I)
@@ -51,8 +89,8 @@ class LoanServiceCest
 
         $this->verifyAcceptedBids(
             [
-                '8' =>  ['1', '23', '23'],
-                '1' =>  ['3', '50', '50'],
+                '8' => ['1', '23', '23'],
+                '1' => ['3', '50', '50'],
                 '20' => ['4', '20', '20'],
                 '27' => ['5', '34', '34'],
                 '45' => ['6', '34', '34'],
@@ -94,16 +132,250 @@ class LoanServiceCest
      */
     protected function verifyAcceptedBids($bidData, $amount)
     {
-        $method = new ReflectionMethod($this->loanService, 'getAcceptedBids');
-        $method->setAccessible(true);
-
-        $bids = $this->generateBid($bidData);
-
-        $acceptedBids = $method->invoke($this->loanService, $bids, Money::create($amount));
+        $acceptedBids = $this->getAcceptedBids($bidData, $amount);
 
         foreach ($bidData as $id => $data) {
             verify($acceptedBids)->hasKey($id);
             verify($acceptedBids[$id]['acceptedAmount'])->equals(Money::create($data[2]));
         }
     }
-} 
+
+    public function testApplyForLoan(UnitTester $I)
+    {
+        $con = Propel::getWriteConnection(TransactionTableMap::DATABASE_NAME);
+        $con->beginTransaction();
+
+
+        $borrower = \Zidisha\Borrower\BorrowerQuery::create()
+            ->findOneById(12);
+
+        $borrowerId = $borrower->getId();
+        $data = [
+            'categoryId' => '7',
+            'nativeAmount' => '798097',
+            'summary' => 'suasdasd',
+            'description' => 'asdasda',
+            'installmentAmount' => '2312',
+            'installmentDay' => '1',
+            'amountRaised' => 0,
+            'interestRate' => 10
+        ];
+
+        try {
+            $this->loanService->applyForLoan($borrower, $data);
+
+            $LoanCount = \Zidisha\Loan\LoanQuery::create()
+                ->filterByStatus(Loan::OPEN)
+                ->filterByBorrowerId($borrowerId)->count();
+
+
+            verify($LoanCount)->greaterThan(0);
+        } catch (\Exception $e){
+            $con->rollBack();
+            throw $e;
+        }
+
+        $con->rollBack();
+    }
+
+    public function testChangeLoanStage(UnitTester $I)
+    {
+        $method = new ReflectionMethod($this->loanService, 'changeLoanStage');
+        $method->setAccessible(true);
+
+        $loan = \Zidisha\Loan\LoanQuery::create()
+            ->findOneById('1');
+
+        $con = Propel::getWriteConnection(TransactionTableMap::DATABASE_NAME);
+        $con->beginTransaction();
+
+        try {
+            $method->invoke($this->loanService, $con, $loan, \Zidisha\Loan\Loan::OPEN, \Zidisha\Loan\Loan::FUNDED);
+
+            $recordCount = \Zidisha\Loan\StageQuery::create()
+                ->filterByStatus(Loan::FUNDED)
+                ->findByLoanId($loan->getId())
+                ->count();
+
+            verify($recordCount)->equals(1);
+        } catch (\Exception $e) {
+            throw $e;
+        }
+        $con->rollBack();
+    }
+
+    public function testGetChangedBids(UnitTester $I)
+    {
+        $this->verifyChangedBids(
+            [
+                '1' => ['3', '50', '50'],
+                '20' => ['4', '20', '20'],
+                '8' => ['10', '100', '100'],
+            ],
+            [
+                '1' => ['3', '50', '50'],
+                '20' => ['4', '20', '20'],
+                '8' => ['10', '100', '100'],
+                '11' => ['2', '15', '15'],
+            ],
+            200,
+            [
+                '11' => [
+                    'acceptedAmount' => '15',
+                    'changedAmount' => '15',
+                    'type' => 'place_bid'
+                ],
+            ]
+        );
+
+        $this->verifyChangedBids(
+            [
+                '1' => ['3', '50', '50'],
+                '20' => ['4', '20', '20'],
+                '8' => ['10', '100', '100'],
+            ],
+            [
+                '1' => ['3', '50', '50'],
+                '20' => ['4', '20', '20'],
+                '11' => ['5', '100', '100'],
+                '8' => ['10', '100', '30'],
+            ],
+            200,
+            [
+                '8' => [
+                    'acceptedAmount' => '30',
+                    'changedAmount' => '70',
+                    'type' => 'out_bid'
+                ],
+                '11' => [
+                    'acceptedAmount' => '100',
+                    'changedAmount' => '100',
+                    'type' => 'place_bid'
+                ],
+            ]
+        );
+
+        $this->verifyChangedBids(
+            [
+                '1' => ['3', '50', '50'],
+                '20' => ['4', '20', '20'],
+                '8' => ['10', '50', '30'],
+            ],
+            [
+                '8' => ['1', '40', '40'],
+                '1' => ['3', '50', '50'],
+                '20' => ['4', '20', '10'],
+            ],
+            100,
+            [
+                '8' => [
+                    'acceptedAmount' => '40',
+                    'changedAmount' => '10',
+                    'type' => 'update_bid'
+                ],
+                '20' => [
+                    'acceptedAmount' => '10',
+                    'changedAmount' => '10',
+                    'type' => 'out_bid'
+                ],
+            ]
+        );
+    }
+
+    /**
+     * @param $bidData
+     * @param $amount
+     * @return mixed
+     */
+    protected function getAcceptedBids($bidData, $amount)
+    {
+        $method = new ReflectionMethod($this->loanService, 'getAcceptedBids');
+        $method->setAccessible(true);
+
+        $bids = $this->generateBid($bidData);
+
+        $acceptedBids = $method->invoke($this->loanService, $bids, Money::create($amount));
+        return $acceptedBids;
+    }
+
+    private function verifyChangedBids($oldBids, $newBids, $LoanAmount, $verify)
+    {
+        $oldAcceptedBids = $this->getAcceptedBids($oldBids, $LoanAmount);
+        $newAcceptedBids = $this->getAcceptedBids($newBids, $LoanAmount);
+
+        $method = new ReflectionMethod($this->loanService, 'getChangedBids');
+        $method->setAccessible(true);
+
+        $changedBids = $method->invoke($this->loanService, $oldAcceptedBids, $newAcceptedBids);
+
+        verify(count($changedBids))->equals(count($verify));
+
+        foreach ($verify as $id => $haveKeys) {
+            verify($changedBids[$id]['acceptedAmount'])->equals(Money::create($haveKeys['acceptedAmount']));
+            verify($changedBids[$id]['changedAmount'])->equals(Money::create($haveKeys['changedAmount']));
+            verify($changedBids[$id]['type'])->equals($haveKeys['type']);
+        }
+    }
+
+    public function testRefundLenders(UnitTester $I)
+    {
+        $method = new ReflectionMethod($this->loanService, 'refundLenders');
+        $method->setAccessible(true);
+
+        $con = Propel::getWriteConnection(TransactionTableMap::DATABASE_NAME);
+        $con->beginTransaction();
+
+        $loan = \Zidisha\Loan\LoanQuery::create()
+            ->findOneById(5);
+
+        $lender1 = \Zidisha\Lender\LenderQuery::create()
+            ->findOneById(32);
+
+        $lender2 = \Zidisha\Lender\LenderQuery::create()
+            ->findOneById(33);
+
+        $lender3 = \Zidisha\Lender\LenderQuery::create()
+            ->findOneById(34);
+
+        try {
+            $this->transactionService->addPlaceBidTransaction($con, Money::create(50), $loan, $lender1);
+            $this->transactionService->addPlaceBidTransaction($con, Money::create(30), $loan, $lender2);
+            $this->transactionService->addPlaceBidTransaction($con, Money::create(40), $loan, $lender3);
+            $this->transactionService->addOutBidTransaction($con, Money::create(20), $loan, $lender1);
+            $this->transactionService->addUpdateBidTransaction($con, Money::create(10), $loan, $lender2);
+            $this->transactionService->addOutBidTransaction($con, Money::create(10), $loan, $lender1);
+
+            $refunds = $method->invoke($this->loanService, $con, $loan, Loan::EXPIRED);
+
+            verify($refunds[$lender1->getId()]['refundAmount'])->equals(Money::create(20));
+            verify($refunds[$lender2->getId()]['refundAmount'])->equals(Money::create(40));
+            verify($refunds[$lender3->getId()]['refundAmount'])->equals(Money::create(40));
+
+            $lender1VerifyRefund = \Zidisha\Balance\TransactionQuery::create()
+                ->filterByUserId($lender1->getId())
+                ->filterByType(Transaction::LOAN_OUTBID)
+                ->filterBySubType(Transaction::LOAN_BID_EXPIRED)
+                ->count();
+
+            $lender2VerifyRefund = \Zidisha\Balance\TransactionQuery::create()
+                ->filterByUserId($lender2->getId())
+                ->filterByType(Transaction::LOAN_OUTBID)
+                ->filterBySubType(Transaction::LOAN_BID_EXPIRED)
+                ->count();
+
+            $lender3VerifyRefund = \Zidisha\Balance\TransactionQuery::create()
+                ->filterByUserId($lender1->getId())
+                ->filterByType(Transaction::LOAN_OUTBID)
+                ->filterBySubType(Transaction::LOAN_BID_EXPIRED)
+                ->count();
+
+            verify($lender1VerifyRefund)->equals(1);
+            verify($lender2VerifyRefund)->equals(1);
+            verify($lender3VerifyRefund)->equals(1);
+            $con->rollBack();
+        } catch (\Exception $e) {
+            $con->rollBack();
+            throw $e;
+        }
+    }
+}

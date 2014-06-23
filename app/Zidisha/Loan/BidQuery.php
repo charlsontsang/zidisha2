@@ -2,8 +2,7 @@
 
 namespace Zidisha\Loan;
 
-use SupremeNewMedia\Finance\Core\Currency;
-use SupremeNewMedia\Finance\Core\Money;
+use Zidisha\Currency\Money;
 use Zidisha\Loan\Base\BidQuery as BaseBidQuery;
 
 
@@ -19,6 +18,9 @@ use Zidisha\Loan\Base\BidQuery as BaseBidQuery;
  */
 class BidQuery extends BaseBidQuery
 {
+    /**
+     * @return Money
+     */
     public function getTotalBidAmount()
     {
         $total = $this->select(array('total'))
