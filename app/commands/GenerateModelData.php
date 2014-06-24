@@ -9,6 +9,7 @@ use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Country\Country;
 use Zidisha\Currency\Money;
 
+use Zidisha\Lender\Invite;
 use Zidisha\Lender\LenderQuery;
 use Zidisha\Loan\Bid;
 use Zidisha\Loan\Category;
@@ -79,6 +80,7 @@ class GenerateModelData extends Command
             $this->call('fake', array('model' => 'Transaction', 'size' => 200));
             $this->call('fake', array('model' => 'Setting', 'size' => 1));
             $this->call('fake', array('model' => 'Installment', 'size' => 200));
+            $this->call('fake', array('model' => 'Invite', 'size' => 200));
 
 
             $this->line('Done!');
@@ -156,6 +158,26 @@ class GenerateModelData extends Command
         }
 
         for ($i = 1; $i <= $size; $i++) {
+
+            if ($model == "Invite") {
+
+                do {
+                    $lender = $allLenders[array_rand($allLenders->getData())];
+                    $invitee = $allLenders[array_rand($allLenders->getData())];
+                } while ($lender->getId() == $invitee->getId());
+
+                $lender_invite = new Invite();
+                $lender_invite->setLender($lender);
+                if (is_int($i / 4)) {
+                    $lender_invite->setEmail($faker->email);
+                } else {
+                    $lender_invite->setInvitee($invitee);
+                    $lender_invite->setInvited(true);
+                    $lender_invite->setEmail($invitee->getUser()->getEmail());
+                }
+                $lender_invite->save();
+            }
+
             if ($model == "Lender") {
 
                 $userName = 'lender' . $i;
@@ -366,6 +388,24 @@ class GenerateModelData extends Command
                 $oneBid->setLender($oneLender);
                 $oneBid->setBorrower($oneLoan->getBorrower());
                 $oneBid->save();
+            }
+        }
+
+        if ($model == "Installment") {
+            // $oneLoan = $allLoans[array_rand($allLoans->getData())];
+
+            foreach ($allLoans as $oneLoan) {
+                for ($i = 1; $i <= 9; $i++) {
+                    $date = '2010-' . '0' . $i . '-' . $i * 3;
+                    $installment = new Installment();
+                    $installment->setLoan($oneLoan);
+                    $installment->setBorrower($oneLoan->getBorrower());
+                    $installment->setDueDate(new \DateTime('2010-11-25'));
+                    $installment->setAmount($oneLoan->getInstallmentAmount()->getAmount());
+                    $installment->setPaidDate($date);
+                    $installment->setPaidAmount($oneLoan->getInstallmentAmount()->getAmount());
+                    $installment->save();
+                }
             }
         }
     }
