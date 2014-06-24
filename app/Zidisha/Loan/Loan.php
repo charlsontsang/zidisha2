@@ -30,7 +30,6 @@ class Loan extends BaseLoan
 
         $loan->setCurrencyCode($data['currencyCode']);
         $loan->setNativeAmount(Money::create($data['nativeAmount'], $currency));
-        $loan->setInstallmentAmount(Money::create($data['installmentAmount'], $currency));
 
         $loan->setAmount(Money::create($data['amount'], 'USD'));
         $loan->setRegistrationFeeRate('5');

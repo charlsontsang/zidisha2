@@ -61,7 +61,6 @@
         <column name="summary" type="LONGVARCHAR"/>
         <column name="description" type="LONGVARCHAR"/>
         <column name="native_amount" type="DECIMAL" size="10" scale="2" phpType="string"/>
-        <column name="installment_amount" type="DECIMAL" size="10" scale="2" phpType="string"/>
         <column name="installment_day" type="INTEGER"/>
         <column name="interest_rate" type="DECIMAL" size="5" scale="2" phpType="string"/>
         <column name="final_interest_rate" type="DECIMAL" size="5" scale="2" phpType="string"/>
