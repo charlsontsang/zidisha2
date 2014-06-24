@@ -16,6 +16,9 @@ class Loan extends BaseLoan
     const DEFAULTED = 5;
     const CANCELED = 6;
     const EXPIRED = 7;
+    
+    const WEEKLY_INSTALLMENT  = 'week';
+    const MONTHLY_INSTALLMENT = 'month';
 
     public static function createFromData($data)
     {
@@ -103,5 +106,10 @@ class Loan extends BaseLoan
         }
 
         return $this->setAmountRaised($percentAmountRaised);
+    }
+
+    public function isWeeklyInstallment()
+    {
+        return $this->getInstallmentPeriod() == self::WEEKLY_INSTALLMENT;
     }
 }
