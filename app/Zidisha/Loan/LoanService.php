@@ -13,6 +13,7 @@ use Zidisha\Currency\CurrencyService;
 use Zidisha\Currency\Money;
 use Zidisha\Lender\Lender;
 use Zidisha\Mail\LenderMailer;
+use Zidisha\Repayment\Installment;
 
 class LoanService
 {
@@ -674,6 +675,36 @@ class LoanService
 
         return $refunds;
     }
+
+    protected function generateLoanInstallments(Loan $loan)
+    {
+        $nativeInstallmentAmount = $loan->getNativeInstallmentAmount();
+        $installmentCount = $loan->getInstallmentCount();
+
+        $installments = [];
+
+        $graceInstallment = new Installment();
+        $graceInstallment
+            ->setLoan($loan)
+            ->setBorrower($loan->getBorrower())
+            ->setNativeAmount(Money::create(0))
+            ->setDueDate($loan->getInstallmentGraceDate());
+
+        $installments[] = $graceInstallment;
+
+        for ($count = 1; $count <= $installmentCount; $count++) {
+            $installment = new Installment();
+            $installment
+                ->setLoan($loan)
+                ->setBorrower($loan->getBorrower())
+                ->setNativeAmount($nativeInstallmentAmount)
+                ->setDueDate($loan->getNthInstallmentDate($count));
+            $installments[] = $installment;
+        }
+
+        return $installments;
+    }
+
 }
 
 

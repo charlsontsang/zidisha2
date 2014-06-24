@@ -125,4 +125,64 @@ class Loan extends BaseLoan
     {
         return $this->getInstallmentPeriod() == self::WEEKLY_INSTALLMENT;
     }
+
+    public function getYearlyInterestRateRatio()
+    {
+        if ($this->isWeeklyInstallment()) {
+            $totalTimeLoanInWeeks = $this->getInstallmentCount() + round($this->getExtraDays() / 7, 4);
+            return $totalTimeLoanInWeeks / 52;
+        }
+
+        $totalTimeLoanInMonths = $this->getInstallmentCount() + round($this->getExtraDays() / 30, 4);
+        return $totalTimeLoanInMonths / 12;
+    }
+
+    public function getNativeLenderInterest()
+    {
+        return $this->getNativeAmount()->multiply($this->getYearlyInterestRateRatio() * $this->getFinalInterestRate() / 100);
+    }
+    
+    public function getNativeRegistrationFee()
+    {
+        return $this->getNativeAmount()->multiply($this->getRegistrationFeeRate() / 100);
+    }
+
+    public function getNativeTotalInterest()
+    {
+        return $this->getNativeRegistrationFee()->add($this->getNativeLenderInterest());
+    }
+
+    public function getNativeTotalAmount()
+    {
+        return $this->getNativeAmount()->add($this->getNativeTotalInterest());
+    }
+
+    public function getNativeInstallmentAmount()
+    {
+        return $this->getNativeTotalAmount()->divide($this->getInstallmentCount());
+    }
+
+    public function getInstallmentGraceDate()
+    {
+        $date = Carbon::instance($this->getDisbursedDate());
+
+        return $date->addDays($this->getExtraDays());
+    }
+
+    public function getNthInstallmentDate($n = 1)
+    {
+        $date = $this->getInstallmentGraceDate()->copy();
+        
+        if ($this->isWeeklyInstallment()) {
+            $date->addWeeks($n);
+        } else {
+            if ($date->day == 31) {
+                $date->firstOfMonth()->addMonths($n)->lastOfMonth();
+            } else {
+                $date->addMonths($n);
+            }
+        }
+
+        return $date;
+    }
 }
