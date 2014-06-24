@@ -126,3 +126,11 @@ Route::group(array('prefix' => 'admin', 'before' => 'auth|hasRole:admin'), funct
  * Image resize route
  */
 Route::get('resize/{uploadId}/{format}', array('uses' => 'ImageController@getImage', 'as' => 'image:resize'));
+
+/**
+ * Routes for Invite
+ */
+Route::get('invite', array('uses' => 'LenderInviteController@getInvite', 'as' => 'lender:invite'));
+Route::get('i/{username}', array('uses' => 'LenderInviteController@getInvitee', 'as' => 'lender:invitee'));
+Route::get('invite/how-it-works', array('uses' => 'LenderInviteController@getHowItWorks', 'as' => 'lender:how-it-works'));
+Route::post('invite', array('uses' => 'LenderInviteController@postInvite', 'as' => 'lender:post-invite'));
