@@ -33,4 +33,9 @@ class TransactionQuery extends BaseTransactionQuery
     {
         return $this->filterByType([Transaction::LOAN_BID, Transaction::LOAN_OUTBID]);
     }
+    
+    public function filterDisbursement()
+    {
+        return $this->filterByType(Transaction::DISBURSEMENT);
+    }
 } // TransactionQuery

@@ -614,8 +614,8 @@ class LoanService
     {
         $isDisbursed = TransactionQuery::create()
             ->filterByLoan($loan)
-            ->filterByType(Transaction::DISBURSEMENT)
-            ->find();
+            ->filterDisbursement()
+            ->count();
 
         if ($isDisbursed) {
             // TODO
@@ -640,10 +640,19 @@ class LoanService
                 ->setDisbursedAmount($amount)
                 ->setDisbursedDate($disbursedDate)
                 ->calculateExtraDays($disbursedDate)
-                ->setServiceFee($amount->multiply(2.5));
+                ->setServiceFeeRate(2.5);
             $loan->save($con);
 
             $this->changeLoanStage($con, $loan, Loan::FUNDED, Loan::ACTIVE);
+            
+            $installments = $this->generateLoanInstallments($loan);
+            
+            foreach ($installments as $installment) {
+                $success = $installment->save($con);
+                if (!$success) {
+                    throw \Exception();
+                }
+            }
 
         } catch (\Exception $e) {
             $con->rollBack();
