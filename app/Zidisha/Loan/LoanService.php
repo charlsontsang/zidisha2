@@ -610,7 +610,7 @@ class LoanService
         }
     }
 
-    public function disburseLoan(Loan $loan, \DateTime $disbursedDate, Money $amount)
+    public function disburseLoan(Loan $loan, \DateTime $disbursedDate, Money $nativeAmount)
     {
         $isDisbursed = TransactionQuery::create()
             ->filterByLoan($loan)
@@ -625,19 +625,19 @@ class LoanService
         $con = Propel::getWriteConnection(TransactionTableMap::DATABASE_NAME);
         $con->beginTransaction();
         try {
-            $this->transactionService->addDisbursementTransaction($con, $amount, $loan);
+            $this->transactionService->addDisbursementTransaction($con, $nativeAmount, $loan);
 
             $loans = LoanQuery::create()
                 ->filterByBorrower($loan->getBorrower())
                 ->count();
             if ($loans == 1) {
-                $this->transactionService->addFeeTransaction($con, $amount, $loan);
+                $this->transactionService->addFeeTransaction($con, $nativeAmount, $loan);
             }
 
             //TODO service fee rate
             $loan
                 ->setStatus(Loan::ACTIVE)
-                ->setDisbursedAmount($amount)
+                ->setNativeDisbursedAmount($nativeAmount)
                 ->setDisbursedDate($disbursedDate)
                 ->calculateExtraDays($disbursedDate)
                 ->setServiceFeeRate(2.5);
