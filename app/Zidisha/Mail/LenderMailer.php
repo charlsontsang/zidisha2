@@ -2,6 +2,9 @@
 namespace Zidisha\Mail;
 
 
+use Symfony\Component\Translation\Tests\String;
+use Zidisha\Lender\Invite;
+use Zidisha\Lender\Lender;
 use Zidisha\Loan\Bid;
 
 /**
@@ -74,5 +77,11 @@ class LenderMailer
                 'subject' => 'Congratulations your Bid is successfully placed on Zidisha.'
             ]
         );
+    }
+
+    public function sendLenderInvite(Lender $lender, Invite $lender_invite, $subject , $custom_message)
+    {
+        $email = $lender_invite->getEmail();
+        //TODO send invite email
     }
 }
