@@ -360,4 +360,19 @@
             <reference local="invitee_id" foreign="id"/>
         </foreign-key>
     </table>
+
+    <table name="lender_invite_visits" phpName="Visit" namespace="Lender">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="lender_id" type="INTEGER" required="true"/>
+        <column name="lender_invite_id" type="INTEGER"/>
+        <column name="share_type" type="TINYINT" size="4" />
+        <column name="http_referer" type="LONGVARCHAR"/>
+        <column name="ip_address" type="VARCHAR"/>
+        <foreign-key foreignTable="lenders">
+            <reference local="lender_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="lenders">
+            <reference local="lender_invite_id" foreign="id"/>
+        </foreign-key>
+    </table>
 </database>
