@@ -239,15 +239,15 @@
     </table>
 
     <table name="comments" phpName="Comment" namespace="Comment">
-        <column name="id" type="INTEGER" autoIncrement="true" primaryKey="true"></column>
-        <column name="user_id" type="INTEGER" required="false"></column>
-        <column name="borrower_id" type="INTEGER" required="true"></column>
-        <column name="message" type="LONGVARCHAR"></column>
-        <column name="message_translation" type="LONGVARCHAR" required="false"></column>
-        <column name="translator_id" type="INTEGER" required="false"></column>
-        <column name="parent_id" type="INTEGER" required="false"></column>
-        <column name="root_id" type="INTEGER" required="false"></column>
-        <column name="level" type="INTEGER" required="true"></column>
+        <column name="id" type="INTEGER" autoIncrement="true" primaryKey="true"/>
+        <column name="user_id" type="INTEGER" required="false"/>
+        <column name="borrower_id" type="INTEGER" required="true"/>
+        <column name="message" type="LONGVARCHAR"/>
+        <column name="message_translation" type="LONGVARCHAR" required="false"/>
+        <column name="translator_id" type="INTEGER" required="false"/>
+        <column name="parent_id" type="INTEGER" required="false"/>
+        <column name="root_id" type="INTEGER" required="false"/>
+        <column name="level" type="INTEGER" required="true"/>
         <behavior name="timestampable"/>
         <foreign-key foreignTable="users" phpName="User">
             <reference local="user_id" foreign="id"/>
@@ -342,6 +342,22 @@
         </foreign-key>
         <foreign-key foreignTable="countries">
             <reference local="country_code" foreign="id"/>
+        </foreign-key>
+    </table>
+
+    <table name="lender_invites" phpName="Invite" namespace="Lender">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="lender_id" type="INTEGER" required="true"/>
+        <column name="email" type="VARCHAR" size="100" required="true"/>
+        <column name="invited" type="BOOLEAN" defaultValue="true"/>
+        <column name="hash" type="VARCHAR" size="40"/>
+        <column name="invitee_id" type="INTEGER"/>
+        <behavior name="timestampable"/>
+        <foreign-key foreignTable="lenders" phpName="Lender">
+            <reference local="lender_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="lenders" phpName="Invitee">
+            <reference local="invitee_id" foreign="id"/>
         </foreign-key>
     </table>
 </database>
