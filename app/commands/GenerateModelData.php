@@ -368,24 +368,6 @@ class GenerateModelData extends Command
                 $oneBid->save();
             }
         }
-
-        if ($model == "Installment") {
-            // $oneLoan = $allLoans[array_rand($allLoans->getData())];
-
-            foreach ($allLoans as $oneLoan) {
-                for ($i = 1; $i <= 9; $i++) {
-                    $date = '2010-' . '0' . $i . '-'.$i * 3;
-                    $installment = new Installment();
-                    $installment->setLoan($oneLoan);
-                    $installment->setBorrower($oneLoan->getBorrower());
-                    $installment->setDueDate(new \DateTime('2010-11-25'));
-                    $installment->setAmount($oneLoan->getInstallmentAmount()->getAmount());
-                    $installment->setPaidDate($date);
-                    $installment->setPaidAmount($oneLoan->getInstallmentAmount()->getAmount());
-                    $installment->save();
-                }
-            }
-        }
     }
 
     /**
@@ -400,5 +382,4 @@ class GenerateModelData extends Command
             array('size', InputArgument::OPTIONAL, 'Number of entries you want for this model', 10)
         );
     }
-
 }
