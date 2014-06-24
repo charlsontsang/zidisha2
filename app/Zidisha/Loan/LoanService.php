@@ -6,7 +6,6 @@ use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Propel;
 use Zidisha\Analytics\MixpanelService;
 use Zidisha\Balance\Map\TransactionTableMap;
-use Zidisha\Balance\Transaction;
 use Zidisha\Balance\TransactionQuery;
 use Zidisha\Balance\TransactionService;
 use Zidisha\Borrower\Borrower;
@@ -39,7 +38,8 @@ class LoanService
         LenderMailer $lenderMailer,
         MixpanelService $mixpanelService,
         CurrencyService $currencyService
-    ) {
+    )
+    {
         $this->transactionService = $transactionService;
         $this->lenderMailer = $lenderMailer;
         $this->mixpanelService = $mixpanelService;
@@ -580,7 +580,8 @@ class LoanService
         $oldStatus = null,
         $newStatus,
         \DateTime $date = null
-    ) {
+    )
+    {
         $date = $date ? : new \DateTime();
 
 
@@ -608,11 +609,8 @@ class LoanService
         }
     }
 
-    public function disburseLoan(
-        Loan $loan,
-        \DateTime $disbursedDate,
-        Money $amount
-    ) {
+    public function disburseLoan(Loan $loan, \DateTime $disbursedDate, Money $amount)
+    {
         $isDisbursed = TransactionQuery::create()
             ->filterByLoan($loan)
             ->filterByType(Transaction::DISBURSEMENT)
@@ -635,7 +633,9 @@ class LoanService
                 $this->transactionService->addFeeTransaction($con, $amount, $loan);
             }
 
-            $loan->setStatus(Loan::ACTIVE)
+            //TODO service fee rate
+            $loan
+                ->setStatus(Loan::ACTIVE)
                 ->setDisbursedAmount($amount)
                 ->setDisbursedDate($disbursedDate)
                 ->calculateExtraDays($disbursedDate)
