@@ -130,6 +130,12 @@ class GenerateModelData extends Command
             $user->setEmail($email);
             $user->setRole('admin');
             $user->save();
+
+            $user = new \Zidisha\User\User();
+            $user->setUsername('YC');
+            $user->setPassword('1234567890');
+            $user->setEmail('yc@mail.com');
+            $user->save();
         }
 
         if ($model == "ExchangeRate") {
@@ -370,6 +376,19 @@ class GenerateModelData extends Command
                 $transaction->setType(Transaction::FUND_WITHDRAW);
                 $transaction->save();
 
+                $temp = true;
+                if($temp == true){
+                    $yc = \Zidisha\User\UserQuery::create()
+                        ->findOneById(2);
+                    $transaction = new Transaction();
+                    $transaction->setUser($yc);
+                    $transaction->setAmount(Money::creat(10000, 'USD'));
+                    $transaction->setDescription($faker->paragraph(3));
+                    $transaction->setTransactionDate(new \DateTime());
+                    $transaction->setType(Transaction::DONATE_BY_ADMIN);
+                    $transaction->save();
+                    $temp = false;
+                }
             }
 
             if ($model == "Bid") {
