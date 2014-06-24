@@ -39,7 +39,7 @@ class Loan extends BaseLoan
 
         $loan->setInstallmentDay($data['installmentDay']);
         $loan->setApplicationDate(new \DateTime());
-        $loan->calculatePeriod();
+        $loan->calculateInstallmentCount(Money::create($data['installmentAmount'], $currency));
 
         return $loan;
     }
@@ -89,11 +89,21 @@ class Loan extends BaseLoan
         return $this->setExtraDays($diff);
     }
 
-    public function calculatePeriod()
+    public function calculateInstallmentCount(Money $nativeInstallmentAmount)
     {
-        $period = ceil(($this->getAmount()->getAmount()/($this->getInstallmentAmount()->getAmount() - (($this->getAmount()->getAmount() * $this->getInterestRate())/1200))));
+        $maxYearlyInterest = $this->getNativeAmount()->multiply($this->getInterestRate() / 100);
+        
+        if ($this->isWeeklyInstallment()) {
+            $maxInstallmentInterest = $maxYearlyInterest->divide(52);
+        } else {
+            $maxInstallmentInterest = $maxYearlyInterest->divide(12);
+        }
+        
+        $maxNativeInstallmentAmount = $nativeInstallmentAmount->subtract($maxInstallmentInterest);
+        
+        $installmentCount = ceil($this->getNativeAmount()->getAmount() / $maxNativeInstallmentAmount->getAmount());
 
-        return $this->setPeriod($period);
+        return $this->setInstallmentCount($installmentCount);
     }
 
     public function calculateAmountRaised(Money $totalBidAmount)
