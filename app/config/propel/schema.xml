@@ -351,4 +351,17 @@
         <column name="notification" required="true" type="VARCHAR" size="255" />
         <behavior name="timestampable"/>
     </table>
+
+    <table name="paypal_transactions" phpName="PaypalTransaction" namespace="Vendor\Paypal">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="transaction_id" type="VARCHAR" size="255" defaultValue="null" required="false"/>
+        <column name="transaction_type" type="VARCHAR" size="255" required="false"/>
+        <column name="amount" type="DECIMAL" size="10" scale="2" required="true" phpType="string"/>
+        <column name="donation_amount" type="DECIMAL" size="10" scale="2" required="true" phpType="string" />
+        <column name="paypal_transaction_fee" type="DECIMAL" size="10" scale="2" required="true" phpType="string" />
+        <column name="total_amount" type="DECIMAL" size="10" scale="2" required="true" phpType="string" />
+        <column name="status" type="VARCHAR" size="100" required="true"/>
+        <column name="custom" type="VARCHAR" size="255" required="true"/>
+        <behavior name="timestampable"/>
+    </table>
 </database>
