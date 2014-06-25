@@ -8,14 +8,7 @@ use Zidisha\Vendor\Mixpanel;
 class AuthController extends BaseController
 {
 
-    /**
-     * @var Zidisha\Vendor\Facebook\FacebookService
-     */
     private $facebookService;
-
-    /**
-     * @var Zidisha\Auth\AuthService
-     */
     private $authService;
 
     public function __construct(FacebookService $facebookService, AuthService $authService)

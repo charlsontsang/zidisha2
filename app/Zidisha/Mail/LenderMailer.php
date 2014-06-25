@@ -79,9 +79,14 @@ class LenderMailer
         );
     }
 
-    public function sendLenderInvite(Lender $lender, Invite $lender_invite, $subject , $custom_message)
+    public function sendLenderInvite(Lender $lender, Invite $lender_invite, $subject, $custom_message)
     {
         $email = $lender_invite->getEmail();
         //TODO send invite email
+    }
+
+    public function sendLenderInviteCredit(Invite $invite)
+    {
+        //TODO
     }
 }

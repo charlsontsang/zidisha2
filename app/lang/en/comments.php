@@ -7,7 +7,10 @@ return [
         'delete' => 'Your comment was deleted',
         'translate' => 'Your comment was translated',
         'file-not-valid' => 'The uploaded file is not valid',
-        'file-deleted' => 'Your File was Deleted'
+        'file-deleted' => 'Your File was Deleted',
+        'welcome' => 'Welcome to Zidisha!',
+        'already-invited' => 'Email :email is already been invited by you!',
+        'invite-success' => ':count Invite successfully sent!|:count Invites successfully sent!'
     ],
     'actions' => [
         'edit' => 'Edit',
