@@ -2,9 +2,9 @@
 
 namespace Zidisha\Balance;
 
-use SupremeNewMedia\Finance\Core\Currency;
-use SupremeNewMedia\Finance\Core\Money;
 use Zidisha\Balance\Base\TransactionQuery as BaseTransactionQuery;
+use Zidisha\Currency\Currency;
+use Zidisha\Currency\Money;
 
 
 /**

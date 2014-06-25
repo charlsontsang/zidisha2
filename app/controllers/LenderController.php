@@ -90,10 +90,8 @@ class LenderController extends BaseController
     public function getTransactionHistory(){
 
         $currentBalance = $this->transactionQuery
-            ->select(array('total'))
-            ->withColumn('SUM(amount)', 'total')
             ->filterByUserId(Auth::getUser()->getId())
-            ->findOne();
+            ->getTotalBalance();
 
         $page = Request::query('page') ?: 1;
 

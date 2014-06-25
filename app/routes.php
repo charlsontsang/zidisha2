@@ -133,4 +133,4 @@ Route::get('resize/{uploadId}/{format}', array('uses' => 'ImageController@getIma
 Route::get('invite', array('uses' => 'LenderInviteController@getInvite', 'as' => 'lender:invite'));
 Route::get('i/{username}', array('uses' => 'LenderInviteController@getInvitee', 'as' => 'lender:invitee'));
 Route::get('invite/how-it-works', array('uses' => 'LenderInviteController@getHowItWorks', 'as' => 'lender:how-it-works'));
-Route::post('invite', array('uses' => 'LenderInviteController@postInvite', 'as' => 'lender:post-invite'));
+Route::post('invite', array('uses' => 'LenderInviteController@postInvite', 'as' => 'lender:post-invite', 'before' => 'csrf'));
