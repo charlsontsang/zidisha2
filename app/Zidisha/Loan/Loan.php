@@ -55,16 +55,6 @@ class Loan extends BaseLoan
         return parent::setNativeamount($money->getAmount());
     }
 
-    public function getInstallmentAmount()
-    {
-        return Money::create(parent::getInstallmentAmount(), $this->getCurrencyCode());
-    }
-
-    public function setInstallmentAmount($money)
-    {
-        return parent::setInstallmentAmount($money->getAmount());
-    }
-
     public function getAmount()
     {
         return Money::create(parent::getAmount(), 'USD');
