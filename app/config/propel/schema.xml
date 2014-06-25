@@ -345,4 +345,10 @@
             <reference local="country_code" foreign="id"/>
         </foreign-key>
     </table>
+
+    <table name="paypal_instant_payment_notification" phpName="PaypalNotification" namespace="Vendor\Paypal">
+        <column name="id" type="INTEGER" required="true" autoIncrement="True" primaryKey="true" />
+        <column name="notification" required="true" type="VARCHAR" size="255" />
+        <behavior name="timestampable"/>
+    </table>
 </database>
