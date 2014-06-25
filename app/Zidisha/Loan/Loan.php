@@ -144,7 +144,7 @@ class Loan extends BaseLoan
     
     public function getNativeRegistrationFee()
     {
-        return $this->getNativeAmount()->multiply($this->getRegistrationFeeRate() / 100);
+        return $this->getNativeAmount()->multiply($this->getYearlyInterestRateRatio() * $this->getRegistrationFeeRate() / 100);
     }
 
     public function getNativeTotalInterest()
