@@ -1,7 +1,7 @@
 <?php
-namespace Zidisha\Vendor\Paypal;
+namespace Zidisha\Payment\Paypal;
 
 
 class PaypalTransactionFailedException  extends \Exception{
 
-} 
+}

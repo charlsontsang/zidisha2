@@ -1,5 +1,5 @@
 <?php
-namespace Zidisha\Vendor\Paypal;
+namespace Zidisha\Payment\Paypal;
 
 
 class PaypalApiException extends \Exception{
