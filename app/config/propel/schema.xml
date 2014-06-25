@@ -71,7 +71,7 @@
         <column name="expired_date" type="TIMESTAMP"/>
         <column name="registration_fee_rate" type="DECIMAL" size="5" scale="2" phpType="string"/>
         <column name="amount" type="DECIMAL" size="10" scale="2" required="true" phpType="string"/>
-        <column name="amount_raised" type="INTEGER" size="3" required="true" />
+        <column name="amount_raised" type="INTEGER" size="3" required="true"/>
         <column name="native_disbursed_amount" type="DECIMAL" size="10" scale="2" phpType="string"/>
         <column name="disbursed_date" type="TIMESTAMP"/>
         <column name="extra_days" type="INTEGER"/>
@@ -264,11 +264,11 @@
     </table>
 
     <table name="uploads" phpName="Upload" namespace="Upload">
-        <column name="id" type="INTEGER" autoIncrement="true" primaryKey="true"></column>
-        <column name="extension" type="VARCHAR" required="true"></column>
-        <column name="user_id" type="INTEGER" required="true"></column>
-        <column name="type" type="VARCHAR" required="true"></column>
-        <column name="mime_type" type="VARCHAR" required="true"></column>
+        <column name="id" type="INTEGER" autoIncrement="true" primaryKey="true"/>
+        <column name="extension" type="VARCHAR" required="true"/>
+        <column name="user_id" type="INTEGER" required="true"/>
+        <column name="type" type="VARCHAR" required="true"/>
+        <column name="mime_type" type="VARCHAR" required="true"/>
         <behavior name="timestampable"/>
         <foreign-key foreignTable="users" phpName="User">
             <reference local="user_id" foreign="id"/>
@@ -276,8 +276,8 @@
     </table>
 
     <table name="comment_upload" namespace="Comment" isCrossRef="true">
-        <column name="comment_id" type="INTEGER" required="true" primaryKey="true"></column>
-        <column name="upload_id" type="INTEGER" required="true" primaryKey="true"></column>
+        <column name="comment_id" type="INTEGER" required="true" primaryKey="true"/>
+        <column name="upload_id" type="INTEGER" required="true" primaryKey="true"/>
         <foreign-key foreignTable="comments" phpName="Comment">
             <reference local="comment_id" foreign="id"/>
         </foreign-key>
@@ -287,8 +287,8 @@
     </table>
 
     <table name="borrower_upload" namespace="Borrower" isCrossRef="true">
-        <column name="borrower_id" type="INTEGER" required="true" primaryKey="true"></column>
-        <column name="upload_id" type="INTEGER" required="true" primaryKey="true"></column>
+        <column name="borrower_id" type="INTEGER" required="true" primaryKey="true"/>
+        <column name="upload_id" type="INTEGER" required="true" primaryKey="true"/>
         <foreign-key foreignTable="borrowers" phpName="Borrower">
             <reference local="borrower_id" foreign="id"/>
         </foreign-key>
@@ -361,18 +361,43 @@
         </foreign-key>
     </table>
 
-    <table name="lender_invite_visits" phpName="Visit" namespace="Lender">
+    <table name="lender_invite_visits" phpName="InviteVisit" namespace="Lender">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="lender_id" type="INTEGER" required="true"/>
         <column name="lender_invite_id" type="INTEGER"/>
-        <column name="share_type" type="TINYINT" size="4" />
+        <column name="share_type" type="TINYINT" size="4"/>
         <column name="http_referer" type="LONGVARCHAR"/>
         <column name="ip_address" type="VARCHAR"/>
+        <behavior name="timestampable"/>
         <foreign-key foreignTable="lenders">
             <reference local="lender_id" foreign="id"/>
         </foreign-key>
-        <foreign-key foreignTable="lenders">
+        <foreign-key foreignTable="lender_invites">
             <reference local="lender_invite_id" foreign="id"/>
         </foreign-key>
+    </table>
+
+    <table name="lender_invite_transactions" phpName="InviteTransaction" namespace="Balance">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="lender_id" type="INTEGER" required="true" phpType="string"/>
+        <column name="amount" type="DECIMAL" size="12" scale="4" required="true"/>
+        <column name="description" type="VARCHAR" size="100" required="true"/>
+        <column name="transaction_date" type="TIMESTAMP" required="true"/>
+        <column name="type" type="ENUM" valueSet="1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18" required="true"/>
+        <column name="loan_id" type="INTEGER"/>
+        <column name="loan_bid_id" type="INTEGER"/>
+        <behavior name="timestampable"/>
+        <foreign-key foreignTable="lenders">
+            <reference local="lender_id" foreign="id"/>
+        </foreign-key>
+        <index name="lender_id">
+            <index-column name="user_id"/>
+        </index>
+        <index name="transaction_date">
+            <index-column name="transaction_date"/>
+        </index>
+        <index name="type">
+            <index-column name="type"/>
+        </index>
     </table>
 </database>
