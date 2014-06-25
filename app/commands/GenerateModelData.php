@@ -172,16 +172,16 @@ class GenerateModelData extends Command
                     $invitee = $allLenders[array_rand($allLenders->getData())];
                 } while ($lender->getId() == $invitee->getId());
 
-                $lender_invite = new Invite();
-                $lender_invite->setLender($lender);
+                $lenderInvite = new Invite();
+                $lenderInvite->setLender($lender);
                 if (is_int($i / 4)) {
-                    $lender_invite->setEmail($faker->email);
+                    $lenderInvite->setEmail($faker->email);
                 } else {
-                    $lender_invite->setInvitee($invitee);
-                    $lender_invite->setInvited(true);
-                    $lender_invite->setEmail($invitee->getUser()->getEmail());
+                    $lenderInvite->setInvitee($invitee);
+                    $lenderInvite->setInvited(true);
+                    $lenderInvite->setEmail($invitee->getUser()->getEmail());
                 }
-                $lender_invite->save();
+                $lenderInvite->save();
             }
 
             if ($model == "Lender") {
@@ -382,8 +382,8 @@ class GenerateModelData extends Command
                         ->findOneById(2);
                     $transaction = new Transaction();
                     $transaction->setUser($yc);
-                    $transaction->setAmount(Money::creat(10000, 'USD'));
-                    $transaction->setDescription($faker->paragraph(3));
+                    $transaction->setAmount(Money::create(10000, 'USD'));
+                    $transaction->setDescription($faker->sentence(4));
                     $transaction->setTransactionDate(new \DateTime());
                     $transaction->setType(Transaction::DONATE_BY_ADMIN);
                     $transaction->save();
