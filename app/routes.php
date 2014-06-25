@@ -79,7 +79,6 @@ Route::group(array('prefix' => 'lender', 'before' => 'auth|hasRole:lender'), fun
         Route::post('funds', array('uses' => 'LenderController@postFunds', 'as' => 'lender:post-funds', 'before' => 'csrf'));
 
     });
-    
 /**
  * Routes for borrower page
  */
@@ -126,3 +125,15 @@ Route::group(array('prefix' => 'admin', 'before' => 'auth|hasRole:admin'), funct
  * Image resize route
  */
 Route::get('resize/{uploadId}/{format}', array('uses' => 'ImageController@getImage', 'as' => 'image:resize'));
+
+
+/**
+ * Routes for PayPal Payments Processing
+ */
+Route::group(array('prefix' => 'paypal'), function()
+{
+    Route::get('/', 'PayPalController@setExpressToken');
+    Route::get('process', 'PayPalController@process');
+    Route::get('cancel', 'PayPalController@cancel');
+    Route::get('notification', 'PayPalController@notification');
+});
