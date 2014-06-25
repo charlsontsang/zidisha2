@@ -1,5 +1,5 @@
 <?php
-namespace Zidisha\Vendor\Paypal;
+namespace Zidisha\Payment\Paypal;
 
 use PayPal\CoreComponentTypes\BasicAmountType;
 use PayPal\EBLBaseComponents\DoExpressCheckoutPaymentRequestDetailsType;
@@ -13,8 +13,9 @@ use PayPal\PayPalAPI\GetExpressCheckoutDetailsRequestType;
 use PayPal\PayPalAPI\SetExpressCheckoutReq;
 use PayPal\PayPalAPI\SetExpressCheckoutRequestType;
 use PayPal\Service\PayPalAPIInterfaceServiceService;
+use Zidisha\Payment\PaymentService;
 
-class PaypalService
+class PaypalService extends PaymentService
 {
 
     /**
@@ -42,7 +43,7 @@ class PaypalService
             throw new \Exception();
         }
 
-        $amount = $payment['totalAmount'];
+        $totalAmount = $payment['totalAmount'];
         $paypalCustomVariable = md5($payment['userId'] . time());
 
         $paypalTransaction = new PaypalTransaction();
@@ -60,13 +61,13 @@ class PaypalService
         // Make a new item for user purchase
         $itemDetail = new PaymentDetailsItemType();
         $itemDetail->Name = 'Lend To Zidisha';
-        $itemDetail->Amount = $amount;
+        $itemDetail->Amount = $totalAmount;
         $itemDetail->Quantity = '1';
         $itemDetail->ItemCategory = 'Digital';
 
         //Add this item to payment and set the order amount
         $paymentDetail->PaymentDetailsItem = $itemDetail;
-        $paymentDetail->OrderTotal = new BasicAmountType('USD', $amount);
+        $paymentDetail->OrderTotal = new BasicAmountType('USD', $totalAmount);
         $paymentDetail->NotifyURL = \Config::get('paypal.notification_url');
 
 
