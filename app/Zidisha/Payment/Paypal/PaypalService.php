@@ -6,6 +6,8 @@ use PayPal\EBLBaseComponents\DoExpressCheckoutPaymentRequestDetailsType;
 use PayPal\EBLBaseComponents\PaymentDetailsItemType;
 use PayPal\EBLBaseComponents\PaymentDetailsType;
 use PayPal\EBLBaseComponents\SetExpressCheckoutRequestDetailsType;
+use PayPal\Exception\PPConnectionException;
+use PayPal\IPN\PPIPNMessage;
 use PayPal\PayPalAPI\DoExpressCheckoutPaymentReq;
 use PayPal\PayPalAPI\DoExpressCheckoutPaymentRequestType;
 use PayPal\PayPalAPI\GetExpressCheckoutDetailsReq;
@@ -13,176 +15,282 @@ use PayPal\PayPalAPI\GetExpressCheckoutDetailsRequestType;
 use PayPal\PayPalAPI\SetExpressCheckoutReq;
 use PayPal\PayPalAPI\SetExpressCheckoutRequestType;
 use PayPal\Service\PayPalAPIInterfaceServiceService;
+use Zidisha\Currency\Money;
+use Zidisha\Payment\Error\PaymentError;
+use Zidisha\Payment\Payment;
+use Zidisha\Payment\PaymentBus;
 use Zidisha\Payment\PaymentService;
 
-class PaypalService extends PaymentService
+class PayPalService extends PaymentService
 {
-
     /**
      * @var \PayPal\Service\PayPalAPIInterfaceServiceService
      */
-    private $paypalService;
+    private $payPalApi;
 
-    public function __construct()
+    /**
+     * @var \Zidisha\Payment\PaymentBus
+     */
+    private $paymentBus;
+
+    public function __construct(PaymentBus $paymentBus)
     {
-        $this->paypalService = new PayPalAPIInterfaceServiceService(\Config::get('paypal'));
+        $this->payPalApi = new PayPalAPIInterfaceServiceService(\Config::get('paypal'));
+        $this->paymentBus = $paymentBus;
     }
 
-    public function makePayment($payment)
+    public function makePayment(Payment $payment)
     {
-        $requiredKeys = [
-            'amount',
-            'donationAmount',
-            'paypalTransactionFee',
-            'totalAmount',
-            'type', // gift or fund
-            'userId'
-        ];
+        $payPalCustom = md5($payment->getId() . '-' . time());
 
-        if (array_diff($requiredKeys, array_keys($payment))) {
-            throw new \Exception();
-        }
+        $payPalTransaction = new PaypalTransaction();
+        $payPalTransaction
+            ->setAmount($payment->getAmount())
+            ->setDonationAmount($payment->getDonationAmount())
+            ->setPaypalTransactionFee($payment->getTransactionFee())
+            ->setTotalAmount($payment->getTotalAmount())
+            ->setStatus('START')
+            ->setCustom($payPalCustom)
+            ->setPaymentId($payment->getId());
+        $payPalTransaction->save();
 
-        $totalAmount = $payment['totalAmount'];
-        $paypalCustomVariable = md5($payment['userId'] . time());
+        $paymentDetail = $this->setPaypalCheckoutCart($payment);
 
-        $paypalTransaction = new PaypalTransaction();
-        $paypalTransaction->setAmount($payment['amount']);
-        $paypalTransaction->setDonationAmount($payment['donationAmount']);
-        $paypalTransaction->setPaypalTransactionFee($payment['paypalTransactionFee']);
-        $paypalTransaction->setTotalAmount($payment['totalAmount']);
-        $paypalTransaction->setStatus('START');
-        $paypalTransaction->setCustom($paypalCustomVariable);
-        $paypalTransaction->setTransactionType($payment['type']);
-        $paypalTransaction->save();
+        $expressCheckoutRequestDetails = new SetExpressCheckoutRequestDetailsType();
+        $expressCheckoutRequestDetails->Custom = $payPalCustom;
+        $expressCheckoutRequestDetails->PaymentDetails = $paymentDetail;
 
-        $paymentDetail = new PaymentDetailsType();
+        $expressCheckoutRequestDetails->CancelURL = action('PayPalController@getCancel');
+        $expressCheckoutRequestDetails->ReturnURL = action('PayPalController@getReturn');
 
-        // Make a new item for user purchase
-        $itemDetail = new PaymentDetailsItemType();
-        $itemDetail->Name = 'Lend To Zidisha';
-        $itemDetail->Amount = $totalAmount;
-        $itemDetail->Quantity = '1';
-        $itemDetail->ItemCategory = 'Digital';
-
-        //Add this item to payment and set the order amount
-        $paymentDetail->PaymentDetailsItem = $itemDetail;
-        $paymentDetail->OrderTotal = new BasicAmountType('USD', $totalAmount);
-        $paymentDetail->NotifyURL = \Config::get('paypal.notification_url');
-
-
-        $setECReqDetails = new SetExpressCheckoutRequestDetailsType();
-        $setECReqDetails->Custom = $paypalCustomVariable;
-        $setECReqDetails->PaymentDetails = $paymentDetail;
-
-        //Type of Payment (https://developer.paypal.com/docs/classic/express-checkout/integration-guide/ECRelatedAPIOps/)
-        $paymentDetail->PaymentAction = 'Sale';
-
-        $setECReqDetails->CancelURL = \Config::get('paypal.cancel_url');
-        $setECReqDetails->ReturnURL = \Config::get('paypal.return_url');
+        // Display options
+        $expressCheckoutRequestDetails->cpplogoimage = 'https://www.zidisha.org/static/images/logo/zidisha-logo-small.png';
+        $expressCheckoutRequestDetails->BrandName = 'Zidisha';
 
         //Shipping options if required.
-        $setECReqDetails->NoShipping = 1;
-        $setECReqDetails->ReqConfirmShipping = 0;
+        $expressCheckoutRequestDetails->NoShipping = 1;
+        $expressCheckoutRequestDetails->ReqConfirmShipping = 0;
 
         //Set and configure express checkout
-        $setECReqType = new SetExpressCheckoutRequestType();
-        $setECReqType->SetExpressCheckoutRequestDetails = $setECReqDetails;
-        $setECReq = new SetExpressCheckoutReq();
-        $setECReq->SetExpressCheckoutRequest = $setECReqType;
+        $setExpressCheckoutRequestType = new SetExpressCheckoutRequestType();
+        $setExpressCheckoutRequestType->SetExpressCheckoutRequestDetails = $expressCheckoutRequestDetails;
+        $setExpressCheckoutRequest = new SetExpressCheckoutReq();
+        $setExpressCheckoutRequest->SetExpressCheckoutRequest = $setExpressCheckoutRequestType;
 
         try {
             //Try Express Checkout.
-            $setECResponse = $this->paypalService->SetExpressCheckout($setECReq);
-        } catch (\Exception $ex) {
-            throw new PaypalApiException();
+            $setExpressCheckoutResponse = $this->payPalApi->SetExpressCheckout($setExpressCheckoutRequest);
+        } catch (PPConnectionException $e) {
+            $paymentError = new PaymentError('Error Connecting to PayPal.', $e);
+            return $this->paymentBus->getFailedHandler($payment)->redirect($paymentError);
         }
 
-        //Check if we get a response from the server
-        if (isset($setECResponse)) {
-            //Check if we get a Successful acknowledgment from the server.
-            if ($setECResponse->Ack == 'Success') {
-                $paypalUrl = 'https://www.sandbox.paypal.com/webscr?cmd=_express-checkout&token=' . $setECResponse->Token;
-                return \Redirect::away($paypalUrl);
-            }
-        } else {
-            //Todo: return to the same page.
+        //Check if we get a Successful acknowledgment from the server.
+        if ($setExpressCheckoutResponse->Ack != 'Success') {
+            $this->logPayPalErrors($payment, $setExpressCheckoutResponse);
+
+            $paymentError = new PaymentError('Error Connecting to PayPal.');
+            return $this->paymentBus->getFailedHandler($payment)->redirect($paymentError);
         }
+
+        $payPalTransaction
+            ->setToken($setExpressCheckoutResponse->Token);
+        $payPalTransaction->save();
+
+        $paypalUrl = 'https://www.sandbox.paypal.com/webscr?cmd=_express-checkout&token=' . $setExpressCheckoutResponse->Token;
+
+        return \Redirect::away($paypalUrl);
     }
 
-    public function getExpressCheckoutDetails()
+    public function getExpressCheckoutDetails($token)
     {
-        $token = \Input::get('token');
+        $paypalTransaction = PaypalTransactionQuery::create()
+            ->findOneByToken($token);
 
-        if (!$token) {
-            \App::abort('Fatal Error.');
+        if (!$paypalTransaction) {
+            \App::abort('Fatal Error');
         }
+
+        $payment = $paypalTransaction->getPayment();
 
         $getExpressCheckoutDetailsRequest = new GetExpressCheckoutDetailsRequestType($token);
 
-        $getExpressCheckoutReq = new GetExpressCheckoutDetailsReq();
-        $getExpressCheckoutReq->GetExpressCheckoutDetailsRequest = $getExpressCheckoutDetailsRequest;
+        $getExpressCheckoutRequest = new GetExpressCheckoutDetailsReq();
+        $getExpressCheckoutRequest->GetExpressCheckoutDetailsRequest = $getExpressCheckoutDetailsRequest;
 
         try {
-            $getECResponse = $this->paypalService->GetExpressCheckoutDetails($getExpressCheckoutReq);
-        } catch (\Exception $ex) {
-            throw new PaypalApiException();
+            $getExpressCheckoutResponse = $this->payPalApi->GetExpressCheckoutDetails($getExpressCheckoutRequest);
+        } catch (PPConnectionException $e) {
+            $paymentError = new PaymentError('Error Connecting to PayPal.', $e);
+            return $this->paymentBus->getFailedHandler($payment)->redirect($paymentError);
         }
 
-        if (isset($getECResponse)) {
-            if ($getECResponse->Ack == 'Success') {
-                $transactionId = $this->doExpressCheckout(
-                    $getECResponse->GetExpressCheckoutDetailsResponseDetails->PayerInfo->PayerID,
-                    $getECResponse->GetExpressCheckoutDetailsResponseDetails->Token,
-                    $getECResponse->GetExpressCheckoutDetailsResponseDetails->PaymentDetails[0]->OrderTotal
-                );
-
-                //Todo: add the details in database.
-
-                if ($transactionId) {
-                    echo $transactionId;
-                } else {
-                    throw new PaypalTransactionFailedException();
-                }
-            }
+        if ($getExpressCheckoutResponse->Ack != 'Success') {
+            $paymentError = new PaymentError('Error Connecting to PayPal.');
+            return $this->paymentBus->getFailedHandler($payment)->redirect($paymentError);
         }
+
+        try {
+            $payPalFinalResponse = $this->doExpressCheckout(
+                $getExpressCheckoutResponse->GetExpressCheckoutDetailsResponseDetails->PayerInfo->PayerID,
+                $getExpressCheckoutResponse->GetExpressCheckoutDetailsResponseDetails->Token,
+                $getExpressCheckoutResponse->GetExpressCheckoutDetailsResponseDetails->PaymentDetails[0]->OrderTotal
+            );
+        } catch (PPConnectionException $e) {
+            $paymentError = new PaymentError('Error Connecting to PayPal.', $e);
+            return $this->paymentBus->getFailedHandler($payment)->redirect($paymentError);
+        }
+
+        if ($payPalFinalResponse->Ack != "Success") {
+            $this->logPayPalErrors($payment, $payPalFinalResponse);
+
+            $paymentError = new PaymentError('PayPal transaction failed.');
+            return $this->paymentBus->getFailedHandler($payment)->redirect($paymentError);
+        }
+
+        $paymentStatus = $payPalFinalResponse->DoExpressCheckoutPaymentResponseDetails->PaymentInfo[0]->PaymentStatus;
+        if ($paymentStatus != "Completed") {
+            $paymentError = new PaymentError('PayPal transaction pending');
+            return $this->paymentBus->getPendingHandler($payment)->redirect($paymentError);
+        }
+
+        $paypalTransaction->setStatus($paymentStatus);
+        $paypalTransaction->save();
+
+        return $this->paymentBus->getCompletedHandler($payment)->redirect();
     }
 
     protected function doExpressCheckout($payerId, $token, $orderTotal)
     {
-        $paypalService = new PayPalAPIInterfaceServiceService(\Config::get('paypal'));
-
         $paymentDetail = new PaymentDetailsType();
         $paymentDetail->OrderTotal = $orderTotal;
-        $paymentDetail->NotifyURL = \Config::get('paypal.notification_url');
+        $paymentDetail->NotifyURL = $this->getIpnUrl();
 
-        $DoECRequestDetails = new DoExpressCheckoutPaymentRequestDetailsType();
-        $DoECRequestDetails->PayerID = $payerId;
-        $DoECRequestDetails->Token = $token;
-        $DoECRequestDetails->PaymentDetails[0] = $paymentDetail;
+        $DoExpressCheckoutRequestDetails = new DoExpressCheckoutPaymentRequestDetailsType();
+        $DoExpressCheckoutRequestDetails->PayerID = $payerId;
+        $DoExpressCheckoutRequestDetails->Token = $token;
+        $DoExpressCheckoutRequestDetails->PaymentDetails[0] = $paymentDetail;
 
-        $DoECRequest = new DoExpressCheckoutPaymentRequestType();
-        $DoECRequest->DoExpressCheckoutPaymentRequestDetails = $DoECRequestDetails;
+        $DoExpressCheckoutPaymentRequestType = new DoExpressCheckoutPaymentRequestType();
+        $DoExpressCheckoutPaymentRequestType->DoExpressCheckoutPaymentRequestDetails = $DoExpressCheckoutRequestDetails;
 
+        $DoExpressCheckoutPaymentReq = new DoExpressCheckoutPaymentReq();
+        $DoExpressCheckoutPaymentReq->DoExpressCheckoutPaymentRequest = $DoExpressCheckoutPaymentRequestType;
 
-        $DoECReq = new DoExpressCheckoutPaymentReq();
-        $DoECReq->DoExpressCheckoutPaymentRequest = $DoECRequest;
+        return $this->payPalApi->DoExpressCheckoutPayment($DoExpressCheckoutPaymentReq);
+    }
 
-        try {
-            $DoECResponse = $paypalService->DoExpressCheckoutPayment($DoECReq);
-        } catch (\Exception $ex) {
-            throw new PaypalApiException();
+    /**
+     * @param Payment $payment
+     * @return PaymentDetailsType
+     */
+    protected function setPaypalCheckoutCart(Payment $payment)
+    {
+        $paymentDetail = new PaymentDetailsType();
+
+        if ($payment->getAmount()->greaterThan(Money::create(0))) {
+            $itemDetail = new PaymentDetailsItemType();
+            $itemDetail->Name = 'Lend To Zidisha';
+            $itemDetail->Amount = new BasicAmountType('USD', $payment->getAmount()->round(2)->getAmount());
+            $itemDetail->Quantity = '1';
+            $itemDetail->ItemCategory = 'Digital';
+            $paymentDetail->PaymentDetailsItem[] = $itemDetail;
         }
 
-        if (isset($DoECResponse)) {
-            if ($DoECResponse->Ack == 'Success') {
-                return $DoECResponse->DoExpressCheckoutPaymentResponseDetails->PaymentInfo[0]->TransactionID;
-            } else {
-                //Todo: Log errors
-                return false;
+        if ($payment->getDonationAmount()->greaterThan(Money::create(0))) {
+            $itemDetail = new PaymentDetailsItemType();
+            $itemDetail->Name = 'Donation To Zidisha';
+            $itemDetail->Amount = new BasicAmountType('USD', $payment->getDonationAmount()->round(2)->getAmount());
+            $itemDetail->Quantity = '1';
+            $itemDetail->ItemCategory = 'Digital';
+            $paymentDetail->PaymentDetailsItem[] = $itemDetail;
+        }
+
+        if ($payment->getTransactionFee()->greaterThan(Money::create(0))) {
+            $itemDetail = new PaymentDetailsItemType();
+            $itemDetail->Name = ' Zidisha Transaction Fee';
+            $itemDetail->Amount = new BasicAmountType('USD', $payment->getTransactionFee()->round(2)->getAmount());
+            $itemDetail->Quantity = '1';
+            $itemDetail->ItemCategory = 'Digital';
+            $paymentDetail->PaymentDetailsItem[] = $itemDetail;
+        }
+
+        //Add this item to payment and set the order amount
+        $paymentDetail->OrderTotal = new BasicAmountType('USD', $payment->getTotalAmount()->round(2)->getAmount());
+        $paymentDetail->NotifyURL = $this->getIpnUrl();
+
+        //Type of Payment (https://developer.paypal.com/docs/classic/express-checkout/integration-guide/ECRelatedAPIOps/)
+        $paymentDetail->PaymentAction = 'Sale';
+
+        return $paymentDetail;
+    }
+
+    public function processIpn(PPIPNMessage $ipnMessage)
+    {
+        $data = $ipnMessage->getRawData();
+
+        if ($ipnMessage->validate()) {
+            $custom = $data['custom'];
+            $transactionId = $data['txn_id'];
+            $transactionType = $data['txn_type'];
+            $paymentStatus = $data['payment_status'];
+
+            $paypalTransaction = PaypalTransactionQuery::create()
+                ->findOneByCustom($custom);
+
+            $paypalTransaction
+                ->setTransactionId($transactionId)
+                ->setTransactionType($transactionType)
+                ->setStatus($paymentStatus);
+            $paypalTransaction->save();
+
+            $payment = $paypalTransaction->getPayment();
+
+            if ($paymentStatus == 'Completed') {
+                $this->paymentBus->getCompletedHandler($payment)->process();
+            } elseif ($paymentStatus == 'Failed') {
+                $this->paymentBus->getFailedHandler($payment)->process();
             }
         } else {
-            return false;
+            \Log::error("Error: Got invalid IPN data");
+            \Log::error($data);
         }
+
+        return \Response::make('', 200);
+    }
+
+    public function getCancel($token)
+    {
+        $paypalTransaction = PaypalTransactionQuery::create()
+            ->findOneByToken($token);
+
+        $paypalTransaction->setStatus('Canceled');
+        $paypalTransaction->save();
+
+        $payment = $paypalTransaction->getPayment();
+
+        $paymentError = new PaymentError('Canceled PayPal transaction.');
+        return $this->paymentBus->getFailedHandler($payment)->redirect($paymentError);
+    }
+
+    protected function logPayPalErrors($response)
+    {
+        //Todo: mail to admin.
+        \Log::error('PaypalError');
+        \Log::error('Time: ' . $response->Timestamp);
+
+        foreach ($response->Errors as $error) {
+            \Log::error('Error Code: ' . $error->ErrorCode);
+            \Log::error('Error Short Message: ' . $error->ShortMessage);
+            \Log::error('Error Long Message: ' . $error->LongMessage);
+        }
+    }
+
+    /**
+     * @return mixed
+     */
+    protected function getIpnUrl()
+    {
+        return \Config::get('paypal.ipn_url', action('PayPalController@postIpn'));
     }
 }

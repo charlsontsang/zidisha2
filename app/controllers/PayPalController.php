@@ -1,56 +1,59 @@
 <?php
 
 use PayPal\IPN\PPIPNMessage;
-use Zidisha\Vendor\Paypal\PaypalService;
+use Zidisha\Currency\Money;
+use Zidisha\Payment\Paypal\PayPalService;
 
 class PayPalController extends BaseController
 {
     /**
-     * @var Zidisha\Vendor\Paypal\PaypalService
+     * @var Zidisha\Payment\Paypal\PayPalService
      */
-    private $paypalService;
+    private $payPalService;
 
-    public function __construct(PaypalService $paypalService)
+    public function __construct(PayPalService $payPalService)
     {
-
-        $this->paypalService = $paypalService;
+        $this->payPalService = $payPalService;
     }
 
-    public function setExpressToken()
+    public function getStart()
     {
-        $payments = [
-            'amount' => '12',
-            'donationAmount' => '5',
-            'paypalTransactionFee' => '5',
-            'totalAmount' => '22',
-            'type' => 'fund',
-            'userId' => '32'
-        ];
+        $payment = new Zidisha\Payment\Payment();
 
-        return $this->paypalService->makePayment($payments);
+        $payment->setAmount(Money::create(10));
+        $payment->setTransactionFee(Money::create(5));
+        $payment->setDonationAmount(Money::create(5));
+        $payment->setTotalAmount(Money::create(20));
+        $payment->save();
+
+        return $this->payPalService->makePayment($payment);
     }
 
-    public function process()
+    public function getReturn()
     {
-        return $this->paypalService->getExpressCheckoutDetails();
-    }
+        $token = \Input::get('token');
 
-    public function cancel()
-    {
-        dd(\Input::all());
-    }
-
-    public function notification()
-    {
-        $ipnMessage = new PPIPNMessage(null, \Config::get('paypal'));
-        foreach($ipnMessage->getRawData() as $key => $value) {
-            \App::log("IPN: $key => $value");
+        if (!$token) {
+            \App::abort('Fatal Error.');
         }
 
-//        if($ipnMessage->validate()) {
-//            error_log("Success: Got valid IPN data");
-//        } else {
-//            error_log("Error: Got invalid IPN data");
-//        }
+        return $this->payPalService->getExpressCheckoutDetails($token);
+    }
+
+    public function getCancel()
+    {
+        $token = \Input::get('token');
+
+        if (!$token) {
+            \App::abort('Fatal Error.');
+        }
+
+        return $this->payPalService->getCancel($token);
+    }
+
+    public function postIpn()
+    {
+        $ipnMessage = new PPIPNMessage(null, \Config::get('paypal'));
+        return $this->payPalService->processIpn($ipnMessage);
     }
 }
