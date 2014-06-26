@@ -130,10 +130,4 @@ Route::get('resize/{uploadId}/{format}', array('uses' => 'ImageController@getIma
 /**
  * Routes for PayPal Payments Processing
  */
-Route::group(array('prefix' => 'paypal'), function()
-{
-    Route::get('/', 'PayPalController@setExpressToken');
-    Route::get('process', 'PayPalController@process');
-    Route::get('cancel', 'PayPalController@cancel');
-    Route::get('notification', 'PayPalController@notification');
-});
+Route::controller('paypal', 'PayPalController');
