@@ -43,6 +43,7 @@
                         <li><a href="{{ route('lender:public-profile', Auth::getUser()->getUsername()) }}">View My
                                 Public Profile</a></li>
                         <li><a href="{{ route('lender:edit-profile') }}">Edit Profile</a></li>
+                        <li><a href="{{ route('lender:gift-cards') }}">Gift Cards</a></li>
                         <li><a href="{{ route('lender:history') }}">Transaction History</a></li>
                         <li><a href="{{ route('lender:funds') }}">Add or Withdraw Funds</a></li>
                         @endif

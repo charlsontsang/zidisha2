@@ -21,4 +21,8 @@ class PageController extends BaseController {
     public function getPress() {
         return View::make('pages.press');
     }
+
+    public function getTermsOfUse(){
+        return View::make('pages.terms-and-conditions');
+    }
 }

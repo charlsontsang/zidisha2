@@ -3,7 +3,6 @@
 namespace Zidisha\Balance;
 
 use Zidisha\Balance\Base\TransactionQuery as BaseTransactionQuery;
-use Zidisha\Currency\Currency;
 use Zidisha\Currency\Money;
 
 
@@ -26,7 +25,7 @@ class TransactionQuery extends BaseTransactionQuery
             ->withColumn('SUM(amount)', 'total')
             ->findOne();
 
-        return Money::valueOf($total, Currency::valueOf('USD'));
+        return Money::create($total);
     }
 
     public function filterLoanBids()
