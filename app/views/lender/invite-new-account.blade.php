@@ -1,12 +1,12 @@
-@if($user->hasProfilePicture())
-    <img style="width:100px" src="{{ $user->getProfilePictureUrl() }}"/>
+@if($inviter->hasProfilePicture())
+    <img style="width:100px" src="{{ $inviter->getProfilePictureUrl() }}"/>
     <br/>
 @endif
 
 <h3 style="font-size: 16px;padding:12px 0">
     You have received a $25 credit from
-    <a href="{{ route('lender:public-profile', $user->getUsername()) }} ">
-        {{ $user->getUsername()}}
+    <a href="{{ route('lender:public-profile', $inviter->getUsername()) }} ">
+        {{ $inviter->getUsername()}}
     </a>
     to fund a loan of your choice.
 </h3>

@@ -2,6 +2,7 @@
 
 use Zidisha\Lender\Form\Join;
 use Zidisha\Lender\InviteVisitQuery;
+use Zidisha\Lender\Lender;
 use Zidisha\Lender\LenderService;
 use Zidisha\Utility\Utility;
 use Zidisha\Vendor\Facebook\FacebookService;
@@ -49,31 +50,13 @@ class LenderJoinController extends BaseController
         $form->handleRequest(Request::instance());
 
         if (!$form->isValid()) {
+            Flash::error('Oops, something went wrong');
             return Redirect::route('lender:join')->withForm($form);
         }
 
-        $invitee = $this->userService->joinUser($form->getData());
+        $user = $this->userService->joinUser($form->getData());
 
-        if ($invitee) {
-
-            if (Session::get('lenderInviteVisitId')) {
-                $lenderInviteVisit = InviteVisitQuery::create()
-                    ->findOneById(Session::get('lenderInviteVisitId'));
-                $user = $lenderInviteVisit->getLender()->getUser();
-
-                $this->lenderService->processLenderInvite($invitee, $lenderInviteVisit);
-                Session::forget('lenderInviteVisitId');
-                Flash::modal(View::make('lender.invite-new-account', compact('user'))->render());
-            } else {
-                Flash::success(\Lang::get('comments.flash.welcome'));
-            }
-
-            Auth::login($user);
-            return Redirect::route('lender:dashboard');
-        }
-
-        Flash::error('Oops, something went wrong');
-        return Redirect::route('lender:join')->withInput();
+        return $this->join($user);
     }
 
 
@@ -102,17 +85,14 @@ class LenderJoinController extends BaseController
                 return Redirect::route('lender:facebook-join')->withForm($form);
             }
 
-            $this->userService->joinFacebookUser(
+            $user = $this->userService->joinFacebookUser(
                 $facebookUser,
                 $form->getData()
             );
 
-            \Auth::loginUsingId($user->getId());
-
-            Flash::success('You have successfully joined Zidisha.');
-            return Redirect::route('login');
+            return $this->join($user);
         } else {
-            Flash::error('No Facebook account connected.');
+            Flash::error(\Lang::get('comments.flash.welcome'));
             return Redirect::route('lender:join');
         }
     }
@@ -137,5 +117,23 @@ class LenderJoinController extends BaseController
         }
 
         return false;
+    }
+
+    protected function join(Lender $user)
+    {
+        if (Session::get('lenderInviteVisitId')) {
+            $lenderInviteVisit = InviteVisitQuery::create()
+                ->findOneById(Session::get('lenderInviteVisitId'));
+            $inviter = $lenderInviteVisit->getLender()->getUser();
+
+            $this->lenderService->processLenderInvite($user, $lenderInviteVisit);
+            Session::forget('lenderInviteVisitId');
+            Flash::modal(View::make('lender.invite-new-account', compact('inviter'))->render());
+        } else {
+            Flash::success(\Lang::get('comments.flash.welcome'));
+        }
+
+        Auth::login($user->getUser());
+        return Redirect::route('lender:dashboard');
     }
 }

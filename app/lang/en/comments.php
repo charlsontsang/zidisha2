@@ -10,7 +10,8 @@ return [
         'file-deleted' => 'Your File was Deleted',
         'welcome' => 'Welcome to Zidisha!',
         'already-invited' => 'Email :email is already been invited by you!',
-        'invite-success' => ':count Invite successfully sent!|:count Invites successfully sent!'
+        'invite-success' => ':count Invite successfully sent!|:count Invites successfully sent!',
+        'facebook-no-account' => 'No Facebook account connected.'
     ],
     'actions' => [
         'edit' => 'Edit',

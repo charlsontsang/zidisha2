@@ -34,8 +34,9 @@ class UserService
 
         $profile = new Profile();
         $lender->setProfile($profile);
+        $lender->save();
 
-        return $lender->save() ? $lender : false;
+        return $lender;
     }
     
     public function joinFacebookUser($facebookUser, $data)
@@ -60,6 +61,8 @@ class UserService
         $lender->setProfile($profile);
 
         $lender->save();
+
+        return $lender;
     }
 
     public function validateConnectingFacebookUser($facebookUser)
