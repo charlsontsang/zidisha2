@@ -4,6 +4,7 @@ namespace Zidisha\Balance;
 
 use Propel\Runtime\Connection\ConnectionInterface;
 use Zidisha\Currency\Money;
+use Zidisha\Lender\Invite;
 use Zidisha\Lender\Lender;
 use Zidisha\Loan\Loan;
 
@@ -176,10 +177,39 @@ class TransactionService
         }
     }
 
+    public function addLenderInviteTransaction(ConnectionInterface $con, Invite $invite)
+    {
+        $amount = 25;
+
+
+        $transactionLender = new InviteTransaction();
+        $transactionLender->setLender($invite->getLender());
+        $transactionLender->setAmount($amount);
+        $transactionLender->setDescription('Lender invite credit');
+        $transactionLender->setTransactionDate(new \DateTime());
+        $transactionLender->setType(Transaction::LENDER_INVITE_INVITER);
+        $res2 = $transactionLender->save($con);
+
+        $transactionInvitee = new InviteTransaction();
+        $transactionInvitee->setLender($invite->getInvitee());
+        $transactionInvitee->setAmount($amount);
+        $transactionInvitee->setDescription('Lender invite credit');
+        $transactionInvitee->setTransactionDate(new \DateTime());
+        $transactionInvitee->setType(Transaction::LENDER_INVITE_INVITEE);
+        $res3 = $transactionInvitee->save($con);
+
+        if(!$res2 || !$res3) {
+            throw new \Exception();
+        }
+
+    }
+
     public function assertAmount(Money $amount)
     {
         if (!$amount->greaterThan(Money::create(0))) {
             throw new \Exception();
         }
     }
+
+
 }

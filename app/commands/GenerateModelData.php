@@ -9,6 +9,7 @@ use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Country\Country;
 use Zidisha\Currency\Money;
 
+use Zidisha\Lender\Invite;
 use Zidisha\Lender\LenderQuery;
 use Zidisha\Loan\Bid;
 use Zidisha\Loan\Category;
@@ -79,6 +80,7 @@ class GenerateModelData extends Command
             $this->call('fake', array('model' => 'Transaction', 'size' => 200));
             $this->call('fake', array('model' => 'Setting', 'size' => 1));
             $this->call('fake', array('model' => 'Installment', 'size' => 200));
+            $this->call('fake', array('model' => 'Invite', 'size' => 200));
 
 
             $this->line('Done!');
@@ -128,6 +130,12 @@ class GenerateModelData extends Command
             $user->setEmail($email);
             $user->setRole('admin');
             $user->save();
+
+            $user = new \Zidisha\User\User();
+            $user->setUsername('YC');
+            $user->setPassword('1234567890');
+            $user->setEmail('yc@mail.com');
+            $user->save();
         }
 
         if ($model == "ExchangeRate") {
@@ -156,6 +164,26 @@ class GenerateModelData extends Command
         }
 
         for ($i = 1; $i <= $size; $i++) {
+
+            if ($model == "Invite") {
+
+                do {
+                    $lender = $allLenders[array_rand($allLenders->getData())];
+                    $invitee = $allLenders[array_rand($allLenders->getData())];
+                } while ($lender->getId() == $invitee->getId());
+
+                $lenderInvite = new Invite();
+                $lenderInvite->setLender($lender);
+                if (is_int($i / 4)) {
+                    $lenderInvite->setEmail($faker->email);
+                } else {
+                    $lenderInvite->setInvitee($invitee);
+                    $lenderInvite->setInvited(true);
+                    $lenderInvite->setEmail($invitee->getUser()->getEmail());
+                }
+                $lenderInvite->save();
+            }
+
             if ($model == "Lender") {
 
                 $userName = 'lender' . $i;
@@ -348,6 +376,19 @@ class GenerateModelData extends Command
                 $transaction->setType(Transaction::FUND_WITHDRAW);
                 $transaction->save();
 
+                $temp = true;
+                if($temp == true){
+                    $yc = \Zidisha\User\UserQuery::create()
+                        ->findOneById(2);
+                    $transaction = new Transaction();
+                    $transaction->setUser($yc);
+                    $transaction->setAmount(Money::create(10000, 'USD'));
+                    $transaction->setDescription($faker->sentence(4));
+                    $transaction->setTransactionDate(new \DateTime());
+                    $transaction->setType(Transaction::DONATE_BY_ADMIN);
+                    $transaction->save();
+                    $temp = false;
+                }
             }
 
             if ($model == "Bid") {
@@ -366,6 +407,24 @@ class GenerateModelData extends Command
                 $oneBid->setLender($oneLender);
                 $oneBid->setBorrower($oneLoan->getBorrower());
                 $oneBid->save();
+            }
+        }
+
+        if ($model == "Installment") {
+            // $oneLoan = $allLoans[array_rand($allLoans->getData())];
+
+            foreach ($allLoans as $oneLoan) {
+                for ($i = 1; $i <= 9; $i++) {
+                    $date = '2010-' . '0' . $i . '-' . $i * 3;
+                    $installment = new Installment();
+                    $installment->setLoan($oneLoan);
+                    $installment->setBorrower($oneLoan->getBorrower());
+                    $installment->setDueDate(new \DateTime('2010-11-25'));
+                    $installment->setAmount($oneLoan->getInstallmentAmount()->getAmount());
+                    $installment->setPaidDate($date);
+                    $installment->setPaidAmount($oneLoan->getInstallmentAmount()->getAmount());
+                    $installment->save();
+                }
             }
         }
     }

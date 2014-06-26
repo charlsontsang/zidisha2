@@ -1,42 +1,47 @@
 <?php
 
 use Zidisha\Lender\Form\Join;
+use Zidisha\Lender\InviteVisitQuery;
+use Zidisha\Lender\Lender;
+use Zidisha\Lender\LenderService;
 use Zidisha\Utility\Utility;
 use Zidisha\Vendor\Facebook\FacebookService;
 use Zidisha\User\UserService;
 
 class LenderJoinController extends BaseController
 {
-    /**
-     * @var Zidisha\Vendor\Facebook\FacebookService
-     */
     private $facebookService;
-
-    /**
-     * @var Zidisha\User\UserService
-     */
     private $userService;
-    /**
-     * @var Zidisha\Lender\Form\Join
-     */
     private $joinForm;
+    private $lenderService;
 
-    public function __construct(FacebookService $facebookService, UserService $userService, Join $joinForm)
-    {
+    public function __construct(
+        FacebookService $facebookService,
+        UserService $userService,
+        Join $joinForm,
+        LenderService $lenderService
+    ) {
         $this->facebookService = $facebookService;
         $this->userService = $userService;
         $this->joinForm = $joinForm;
+        $this->lenderService = $lenderService;
     }
-    
+
     public function getJoin()
     {
 
         $country = Utility::getCountryCodeByIP();
 
-        return View::make('lender.join',compact('country') , [
-            'form' => $this->joinForm,
-            'facebookJoinUrl' => $this->facebookService->getLoginUrl('lender:facebook-join'),
-        ]);
+        return View::make(
+            'lender.join',
+            compact('country'),
+            [
+                'form' => $this->joinForm,
+                'facebookJoinUrl' => $this->facebookService->getLoginUrl(
+                        'lender:facebook-join'
+                    ),
+            ]
+        );
     }
 
     public function postJoin()
@@ -45,19 +50,13 @@ class LenderJoinController extends BaseController
         $form->handleRequest(Request::instance());
 
         if (!$form->isValid()) {
+            Flash::error('Oops, something went wrong');
             return Redirect::route('lender:join')->withForm($form);
         }
 
-        $lender = $this->userService->joinUser($form->getData());
+        $user = $this->userService->joinUser($form->getData());
 
-        if ($lender) {
-            Auth::login($lender->getUser());
-            Flash::success('Welcome to Zidisha!');
-            return Redirect::route('lender:dashboard');
-        }
-
-        Flash::error('Oops, something went wrong');
-        return Redirect::route('lender:join')->withInput();
+        return $this->join($user);
     }
 
 
@@ -85,15 +84,15 @@ class LenderJoinController extends BaseController
             if (!$form->isValid()) {
                 return Redirect::route('lender:facebook-join')->withForm($form);
             }
-            
-            $this->userService->joinFacebookUser($facebookUser, $form->getData());
 
-            \Auth::loginUsingId($user->getId());
+            $user = $this->userService->joinFacebookUser(
+                $facebookUser,
+                $form->getData()
+            );
 
-            Flash::success('You have successfully joined Zidisha.');
-            return Redirect::route('login');
+            return $this->join($user);
         } else {
-            Flash::error('No Facebook account connected.');
+            Flash::error(\Lang::get('comments.flash.welcome'));
             return Redirect::route('lender:join');
         }
     }
@@ -103,7 +102,9 @@ class LenderJoinController extends BaseController
         $facebookUser = $this->facebookService->getUserProfile();
 
         if ($facebookUser) {
-            $errors = $this->userService->validateConnectingFacebookUser($facebookUser);
+            $errors = $this->userService->validateConnectingFacebookUser(
+                $facebookUser
+            );
 
             if ($errors) {
                 foreach ($errors as $error) {
@@ -116,5 +117,23 @@ class LenderJoinController extends BaseController
         }
 
         return false;
+    }
+
+    protected function join(Lender $user)
+    {
+        if (Session::get('lenderInviteVisitId')) {
+            $lenderInviteVisit = InviteVisitQuery::create()
+                ->findOneById(Session::get('lenderInviteVisitId'));
+            $inviter = $lenderInviteVisit->getLender()->getUser();
+
+            $this->lenderService->processLenderInvite($user, $lenderInviteVisit);
+            Session::forget('lenderInviteVisitId');
+            Flash::modal(View::make('lender.invite-new-account', compact('inviter'))->render());
+        } else {
+            Flash::success(\Lang::get('comments.flash.welcome'));
+        }
+
+        Auth::login($user->getUser());
+        return Redirect::route('lender:dashboard');
     }
 }

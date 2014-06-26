@@ -70,7 +70,7 @@ class LoanController extends BaseController
             ->orderByBidDate()
             ->find();
 
-        $stillNeeded = $loan->getAmount() - $totalRaised;
+        $stillNeeded = $loan->getAmount()->getAmount() - $totalRaised;
         if($loan->getAmount() <= $totalRaised){
             $raised = 100;
         }else{
