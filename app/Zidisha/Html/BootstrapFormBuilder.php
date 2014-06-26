@@ -178,6 +178,15 @@ class BootstrapFormBuilder
         return '<div class="checkbox"><label>' . $this->form->checkbox($name, $value, $checked, $options) . $label . '</label></div>';
     }
 
+    public function radio($name, $value = 1, $checked = null, $options = array())
+    {
+        $label = array_get($options, 'label', $this->translationDomain ? $this->translationDomain . '.' . $name : $name);
+        unset($options['label']);
+        $label = \Lang::get($label);
+
+        return '<div class="radio"><label>' . $this->form->radio($name, $value, $checked,
+            $options) . $label . '</label></div>';
+    }
     /**
      * Create a Bootstrap label.
      *

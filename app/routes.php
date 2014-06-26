@@ -24,6 +24,7 @@ Route::get(
     array('uses' => 'PageController@getTrustAndSecurity', 'as' => 'page:trust-and-security')
 );
 Route::get('press', array('uses' => 'PageController@getPress', 'as' => 'page:press'));
+Route::get('terms-of-use', array('uses' => 'PageController@getTermsOfUse', 'as' => 'page:terms-of-use'));
 
 /**
  * Routes for Authentication
@@ -66,34 +67,66 @@ Route::controller('password', 'RemindersController', ['before' => 'csrf']);
  * Routes for lender page
  */
 
-Route::get('lender/profile/view/{username}', array('uses' => 'LenderController@getPublicProfile', 'as' => 'lender:public-profile'));
+Route::get(
+    'lender/profile/view/{username}',
+    array('uses' => 'LenderController@getPublicProfile', 'as' => 'lender:public-profile')
+);
 
-Route::group(array('prefix' => 'lender', 'before' => 'auth|hasRole:lender'), function()
-    {
+Route::group(
+    array('prefix' => 'lender', 'before' => 'auth|hasRole:lender'),
+    function () {
 
         Route::get('profile/edit', array('uses' => 'LenderController@getEditProfile', 'as' => 'lender:edit-profile'));
-        Route::post('profile/edit', array('uses' => 'LenderController@postEditProfile', 'as' => 'lender:post-profile', 'before' => 'csrf'));
+        Route::post(
+            'profile/edit',
+            array('uses' => 'LenderController@postEditProfile', 'as' => 'lender:post-profile', 'before' => 'csrf')
+        );
         Route::get('dashboard', array('uses' => 'LenderController@getDashboard', 'as' => 'lender:dashboard'));
         Route::get('history', array('uses' => 'LenderController@getTransactionHistory', 'as' => 'lender:history'));
         Route::get('funds', array('uses' => 'LenderController@getFunds', 'as' => 'lender:funds'));
         Route::post('funds', array('uses' => 'LenderController@postFunds', 'as' => 'lender:post-funds', 'before' => 'csrf'));
+        Route::get('gift-cards', array('uses' => 'GiftCardController@getGiftCards', 'as' => 'lender:gift-cards'));
+        Route::post(
+            'gift-cards',
+            array('uses' => 'GiftCardController@postGiftCards', 'as' => 'lender:post-gift-cards', 'before' => 'csrf')
+        );
+        Route::get(
+            '/gift-cards/accept',
+            array(
+                'uses' => 'GiftCardController@getTermsAccept',
+                'as' => 'lender:gift-cards:terms-accept'
+            )
+        );
 
-    });
+    }
+);
+
 /**
  * Routes for borrower page
  */
-Route::get('borrower/profile/view/{username}', array('uses' => 'BorrowerController@getPublicProfile', 'as' => 'borrower:public-profile'));
+Route::get(
+    'borrower/profile/view/{username}',
+    array('uses' => 'BorrowerController@getPublicProfile', 'as' => 'borrower:public-profile')
+);
 
-Route::group(array('prefix' => 'borrower', 'before' => 'auth|hasRole:borrower'), function()
-    {
+Route::group(
+    array('prefix' => 'borrower', 'before' => 'auth|hasRole:borrower'),
+    function () {
 
         Route::get('profile/edit', array('uses' => 'BorrowerController@getEditProfile', 'as' => 'borrower:edit-profile'));
-        Route::post('profile/edit', array('uses' => 'BorrowerController@postEditProfile', 'as' => 'borrower:post-profile', 'before' => 'csrf'));
-        Route::post('delete/upload', array('uses' => 'BorrowerController@postDeleteUpload', 'as' => 'borrower:delete-upload', 'before' => 'csrf'));
+        Route::post(
+            'profile/edit',
+            array('uses' => 'BorrowerController@postEditProfile', 'as' => 'borrower:post-profile', 'before' => 'csrf')
+        );
+        Route::post(
+            'delete/upload',
+            array('uses' => 'BorrowerController@postDeleteUpload', 'as' => 'borrower:delete-upload', 'before' => 'csrf')
+        );
         Route::get('dashboard', array('uses' => 'BorrowerController@getDashboard', 'as' => 'borrower:dashboard'));
         Route::controller('loan-application', 'LoanApplicationController');
         Route::get('history', array('uses' => 'BorrowerController@getTransactionHistory', 'as' => 'borrower:history'));
-    });
+    }
+);
 
 /**
  * Routes for loan page
@@ -109,18 +142,23 @@ Route::post('edit', array('uses' => 'CommentsController@postEdit', 'as' => 'comm
 Route::post('reply', array('uses' => 'CommentsController@postReply', 'as' => 'comment:reply', 'before' => 'csrf'));
 Route::post('translate', array('uses' => 'CommentsController@postTranslate', 'as' => 'comment:translate', 'before' => 'csrf'));
 Route::post('delete', array('uses' => 'CommentsController@postDelete', 'as' => 'comment:delete', 'before' => 'csrf'));
-Route::post('delete/upload', array('uses' => 'CommentsController@postDeleteUpload', 'as' => 'comment:delete-upload', 'before' => 'csrf'));
+Route::post(
+    'delete/upload',
+    array('uses' => 'CommentsController@postDeleteUpload', 'as' => 'comment:delete-upload', 'before' => 'csrf')
+);
 
 /**
  * Routes for Admin
  */
-Route::group(array('prefix' => 'admin', 'before' => 'auth|hasRole:admin'), function()
-    {
+Route::group(
+    array('prefix' => 'admin', 'before' => 'auth|hasRole:admin'),
+    function () {
         Route::get('dashboard', array('uses' => 'AdminController@getDashboard', 'as' => 'admin:dashboard'));
         Route::get('borrowers', array('uses' => 'AdminController@getBorrowers', 'as' => 'admin:borrowers'));
         Route::get('lenders', array('uses' => 'AdminController@getLenders', 'as' => 'admin:lenders'));
         Route::get('loans', array('uses' => 'AdminController@getLoans', 'as' => 'admin:loans'));
-    });
+    }
+);
 /**
  * Image resize route
  */
