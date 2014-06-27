@@ -4,6 +4,7 @@ namespace Zidisha\Balance;
 
 use Propel\Runtime\Connection\ConnectionInterface;
 use Zidisha\Currency\Money;
+use Zidisha\Lender\GiftCard;
 use Zidisha\Lender\Invite;
 use Zidisha\Lender\Lender;
 use Zidisha\Loan\Loan;
@@ -198,7 +199,7 @@ class TransactionService
         $transactionInvitee->setType(Transaction::LENDER_INVITE_INVITEE);
         $res3 = $transactionInvitee->save($con);
 
-        if(!$res2 || !$res3) {
+        if (!$res2 || !$res3) {
             throw new \Exception();
         }
 
@@ -211,5 +212,18 @@ class TransactionService
         }
     }
 
+    public function addRedeemGiftCardTransaction(ConnectionInterface $con, GiftCard $giftCard)
+    {
+        $this->assertAmount($giftCard->getCardAmount());
 
+        $giftTransaction = new Transaction();
+        $giftTransaction
+            ->setUserId($giftCard->getRecipientId())
+            ->setAmount($giftCard->getCardAmount())
+            ->setDescription('Gift Card Redemption')
+            ->setTransactionDate(new \DateTime())
+            ->setType(Transaction::GIFT_REDEEM);
+
+        $giftTransaction->save($con);
+    }
 }
