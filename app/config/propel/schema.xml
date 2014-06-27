@@ -402,23 +402,23 @@
     </table>
 
     <table name="paypal_instant_payment_notification" phpName="PaypalNotification" namespace="Payment\Paypal">
-        <column name="id" type="INTEGER" required="true" autoIncrement="True" primaryKey="true" />
-        <column name="notification" required="true" type="VARCHAR" size="255" />
+        <column name="id" type="INTEGER" required="true" autoIncrement="True" primaryKey="true"/>
+        <column name="notification" required="true" type="VARCHAR" size="255"/>
         <behavior name="timestampable"/>
     </table>
 
     <table name="paypal_transactions" phpName="PaypalTransaction" namespace="Payment\Paypal">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="transaction_id" type="VARCHAR" size="255" defaultValue="null" required="false"/>
-        <column name="transaction_type" type="VARCHAR" size="255" required="false" />
+        <column name="transaction_type" type="VARCHAR" size="255" required="false"/>
         <column name="amount" type="DECIMAL" size="10" scale="2" required="true" phpType="string"/>
-        <column name="donation_amount" type="DECIMAL" size="10" scale="2" required="true" phpType="string" />
-        <column name="paypal_transaction_fee" type="DECIMAL" size="10" scale="2" required="true" phpType="string" />
-        <column name="total_amount" type="DECIMAL" size="10" scale="2" required="true" phpType="string" />
+        <column name="donation_amount" type="DECIMAL" size="10" scale="2" required="true" phpType="string"/>
+        <column name="paypal_transaction_fee" type="DECIMAL" size="10" scale="2" required="true" phpType="string"/>
+        <column name="total_amount" type="DECIMAL" size="10" scale="2" required="true" phpType="string"/>
         <column name="status" type="VARCHAR" size="100" required="true"/>
         <column name="custom" type="VARCHAR" size="255" required="true"/>
         <column name="token" type="VARCHAR" size="255" required="false"/>
-        <column name="payment_id" type="INTEGER" required="false" />
+        <column name="payment_id" type="INTEGER" required="false"/>
         <behavior name="timestampable"/>
         <foreign-key foreignTable="payments">
             <reference local="payment_id" foreign="id"/>
@@ -427,13 +427,13 @@
 
     <table name="stripe_transactions" phpName="StripeTransaction" namespace="Payment\Stripe">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
-        <column name="stripe_id" type="VARCHAR" required="false" />
+        <column name="stripe_id" type="VARCHAR" required="false"/>
         <column name="amount" type="DECIMAL" size="10" scale="2" required="true" phpType="string"/>
-        <column name="donation_amount" type="DECIMAL" size="10" scale="2" required="true" phpType="string" />
-        <column name="transaction_fee" type="DECIMAL" size="10" scale="2" required="true" phpType="string" />
-        <column name="total_amount" type="DECIMAL" size="10" scale="2" required="true" phpType="string" />
+        <column name="donation_amount" type="DECIMAL" size="10" scale="2" required="true" phpType="string"/>
+        <column name="transaction_fee" type="DECIMAL" size="10" scale="2" required="true" phpType="string"/>
+        <column name="total_amount" type="DECIMAL" size="10" scale="2" required="true" phpType="string"/>
         <column name="status" type="VARCHAR" size="100" required="true"/>
-        <column name="payment_id" type="INTEGER" required="false" />
+        <column name="payment_id" type="INTEGER" required="false"/>
         <behavior name="timestampable"/>
         <foreign-key foreignTable="payments">
             <reference local="payment_id" foreign="id"/>
@@ -442,7 +442,7 @@
 
     <table name="stripe_logs" phpName="StripeLog" namespace="Payment\Stripe">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
-        <column name="log" type="VARCHAR" required="false" />
+        <column name="log" type="VARCHAR" required="false"/>
         <behavior name="timestampable"/>
     </table>
 
@@ -453,5 +453,47 @@
         <column name="transaction_fee" type="DECIMAL" size="10" scale="2" required="true" phpType="string"/>
         <column name="total_amount" type="DECIMAL" size="10" scale="2" required="true" phpType="string"/>
         <behavior name="timestampable"/>
+    </table>
+
+    <table name="gift_cards" phpName="GiftCard" namespace="Lender">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="Lender_id" type="INTEGER" size="10"/>
+        <column name="template" type="INTEGER"/>
+        <column name="order_type" type="VARCHAR" size="10" required="true"/>
+        <column name="card_amount" type="DECIMAL" size="10" scale="2" required="true"/>
+        <column name="recipient_email" type="VARCHAR" size="50"/>
+        <column name="confirmation_email" type="VARCHAR" size="50"/>
+        <column name="recipient_name" type="VARCHAR" size="50"/>
+        <column name="from_name" type="VARCHAR" size="50"/>
+        <column name="message" type="LONGVARCHAR"/>
+        <column name="date" type="TIMESTAMP"/>
+        <column name="expire_date" type="TIMESTAMP"/>
+        <column name="card_code" type="VARCHAR" size="20"/>
+        <column name="status" type="TINYINT" size="1" defaultValue="0"/>
+        <column name="claimed" type="TINYINT" size="1" defaultValue="0"/>
+        <column name="recipient_id" type="INTEGER"/>
+        <column name="donated" type="TINYINT" size="1" defaultValue="0"/>
+        <foreign-key foreignTable="lenders" phpName="Lender">
+            <reference local="Lender_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="lenders" phpName="Recipient">
+            <reference local="recipient_id" foreign="id"/>
+        </foreign-key>
+    </table>
+
+    <table name="gift_card_transaction" phpName="GiftCardTransaction" namespace="Lender">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="transaction_id" type="INTEGER" size="10"/>
+        <column name="transaction_type" type="VARCHAR" size="50"/>
+        <column name="Lender_id" type="INTEGER" size="10"/>
+        <column name="invoice_id" type="INTEGER" size="10"/>
+        <column name="status" type="TINYINT" size="1" defaultValue="0"/>
+        <column name="total_cards" type="INTEGER" size="5" required="true"/>
+        <column name="amount" type="DECIMAL" size="10" scale="2" required="true"/>
+        <column name="donation" type="DECIMAL" size="10" scale="2"/>
+        <column name="date" type="TIMESTAMP" required="true"/>
+        <foreign-key foreignTable="lenders">
+            <reference local="Lender_id" foreign="id"/>
+        </foreign-key>
     </table>
 </database>

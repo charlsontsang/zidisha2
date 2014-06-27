@@ -33,10 +33,10 @@ Transaction History
         <tr>
             <td>{{ $transaction->getTransactionDate()->format('d-m-Y') }}</td>
             <td><a href="#">{{ $transaction->getDescription() }}</a></td>
-            <td>{{ $transaction->getAmount() }}</td>
-            <td>{{ $currentBalancePage }}</td>
+            <td>{{ $transaction->getAmount()->getAmount() }}</td>
+            <td>{{ $currentBalancePage->getAmount() }}</td>
         </tr>
-    <?php $currentBalancePage -= $transaction->getAmount(); ?>
+    <?php $currentBalancePage = $currentBalancePage->subtract($transaction->getAmount()); ?>
     @endforeach
     </tbody>
 </table>

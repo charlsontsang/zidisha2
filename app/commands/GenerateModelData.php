@@ -17,7 +17,6 @@ use Zidisha\Loan\CategoryQuery;
 use Zidisha\Loan\Loan;
 use Zidisha\Loan\LoanQuery;
 use Zidisha\Loan\Stage;
-use Zidisha\Repayment\Installment;
 
 class GenerateModelData extends Command
 {
@@ -377,7 +376,7 @@ class GenerateModelData extends Command
                 $transaction->save();
 
                 $temp = true;
-                if($temp == true){
+                if ($temp == true) {
                     $yc = \Zidisha\User\UserQuery::create()
                         ->findOneById(2);
                     $transaction = new Transaction();
@@ -407,24 +406,6 @@ class GenerateModelData extends Command
                 $oneBid->setLender($oneLender);
                 $oneBid->setBorrower($oneLoan->getBorrower());
                 $oneBid->save();
-            }
-        }
-
-        if ($model == "Installment") {
-            // $oneLoan = $allLoans[array_rand($allLoans->getData())];
-
-            foreach ($allLoans as $oneLoan) {
-                for ($i = 1; $i <= 9; $i++) {
-                    $date = '2010-' . '0' . $i . '-' . $i * 3;
-                    $installment = new Installment();
-                    $installment->setLoan($oneLoan);
-                    $installment->setBorrower($oneLoan->getBorrower());
-                    $installment->setDueDate(new \DateTime('2010-11-25'));
-                    $installment->setAmount($oneLoan->getInstallmentAmount()->getAmount());
-                    $installment->setPaidDate($date);
-                    $installment->setPaidAmount($oneLoan->getInstallmentAmount()->getAmount());
-                    $installment->save();
-                }
             }
         }
     }

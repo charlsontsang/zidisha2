@@ -9,6 +9,7 @@ use Zidisha\Balance\TransactionQuery;
 use Zidisha\Currency\Money;
 use Zidisha\Lender\Form\EditProfile;
 use Zidisha\Lender\Form\Funds;
+use Zidisha\Lender\Form\GiftCard;
 use Zidisha\Lender\LenderQuery;
 use Zidisha\Lender\LenderService;
 use Zidisha\Lender\ProfileQuery;
@@ -19,27 +20,29 @@ use Zidisha\Utility\Utility;
 class LenderController extends BaseController
 {
     protected $transactionQuery;
-
-    /**
-     * @var Zidisha\Lender\Form\EditProfile
-     */
-    private $editProfileForm, $fundsForm;
-    /**
-     * @var Zidisha\Lender\LenderService
-     */
+    private $editProfileForm, $fundsForm, $cardForm;
     private $lenderService;
     /**
      * @var StripeService
      */
     private $stripeService;
 
-    public function __construct(EditProfile $editProfileForm, TransactionQuery $transactionQuery, Funds $fundsForm, LenderService $lenderService, StripeService $stripeService)
-    {
+    public function __construct(
+        EditProfile $editProfileForm,
+        TransactionQuery $transactionQuery,
+        Funds $fundsForm,
+        LenderService $lenderService,
+        GiftCard $cardForm,
+        StripeService $stripeService
+    ) {
         $this->editProfileForm = $editProfileForm;
         $this->transactionQuery = $transactionQuery;
         $this->fundsForm = $fundsForm;
         $this->lenderService = $lenderService;
+
         $this->stripeService = $stripeService;
+
+        $this->cardForm = $cardForm;
     }
 
     public function getPublicProfile($username)
@@ -50,7 +53,7 @@ class LenderController extends BaseController
             ->endUse()
             ->findOne();
 
-        if(!$lender){
+        if (!$lender) {
             \Illuminate\Support\Facades\App::abort(404);
         }
         return View::make(
@@ -79,8 +82,7 @@ class LenderController extends BaseController
 
             $this->lenderService->editProfile($lender, $data);
 
-            if(Input::hasFile('picture'))
-            {
+            if (Input::hasFile('picture')) {
                 $image = Input::file('picture');
                 $this->lenderService->uploadPicture($lender, $image);
             }
@@ -91,17 +93,19 @@ class LenderController extends BaseController
         return Redirect::route('lender:edit-profile')->withForm($form);
     }
 
-    public function getDashboard(){
+    public function getDashboard()
+    {
         return View::make('lender.dashboard');
     }
 
-    public function getTransactionHistory(){
+    public function getTransactionHistory()
+    {
 
         $currentBalance = $this->transactionQuery
             ->filterByUserId(Auth::getUser()->getId())
             ->getTotalBalance();
 
-        $page = Request::query('page') ?: 1;
+        $page = Request::query('page') ? : 1;
 
         $currentBalancePageObj = DB::select(
             'SELECT SUM(amount) AS total
@@ -110,9 +114,10 @@ class LenderController extends BaseController
                           FROM transactions WHERE user_id = ?
                           ORDER BY transaction_date DESC, transactions.id DESC
                           OFFSET ?)',
-            array(Auth::getUser()->getId(), ($page-1) * 50));
+            array(Auth::getUser()->getId(), ($page - 1) * 50)
+        );
 
-        $currentBalancePage = $currentBalancePageObj[0]->total;
+        $currentBalancePage = Money::create($currentBalancePageObj[0]->total);
 
         $paginator = $this->transactionQuery->create()
             ->orderByTransactionDate('desc')
@@ -143,7 +148,7 @@ class LenderController extends BaseController
             $data = $form->getData();
             $country = Utility::getCountryCodeByIP();
             $blockedCountries = \Config::get('blockedCountries.codes');
-            if(in_array($country['code'],$blockedCountries )){
+            if (in_array($country['code'], $blockedCountries)) {
                 Flash::error("Something went wrong!");
                 return Redirect::route('lender:funds')->withForm($form);
             }
@@ -164,3 +169,5 @@ class LenderController extends BaseController
         return Redirect::route('lender:funds')->withForm($form);
     }
 }
+
+
