@@ -10,7 +10,7 @@ Funds
 </div>
 
 
-<div >
+<div>
     <strong>Balance available: USD {{ $currentBalance }} </strong>
 </div>
 
@@ -35,11 +35,25 @@ USD <span id="fee-amount-display"></span>
 
 <br/>
 
-{{ BootstrapForm::label("Total amount to be charged to your account") }} 
+{{ BootstrapForm::label("Total amount to be charged to your account") }}
 USD <span id="total-amount-display"></span>
 
 <br/>
 <button id="stripe-payment" class="btn btn-primary">Pay With Card</button>
+
+{{ BootstrapForm::close() }}
+
+<div>
+    <strong>Redeem Gift Card</strong>
+</div>
+<a href="{{ route('lender:gift-cards') }}">Purchase Gift Card</a>
+<br/>
+{{ BootstrapForm::open(array('route' => 'lender:post-redeem-card', 'translationDomain' => 'redeemCard')) }}
+
+{{ BootstrapForm::text('redemptionCode') }}
+
+<br/>
+<button id="stripe-payment" class="btn btn-primary">Submit</button>
 
 {{ BootstrapForm::close() }}
 
@@ -48,18 +62,18 @@ USD <span id="total-amount-display"></span>
 @section('script-footer')
 <script src="https://checkout.stripe.com/checkout.js"></script>
 <script type="text/javascript">
-    $(function() {
+    $(function () {
 
         var handler = StripeCheckout.configure({
             key: "{{ \Config::get('stripe.public_key') }}",
-            token: function(token, args) {
+            token: function (token, args) {
                 $("#stripe-token").val(token.id);
                 $("#payment-method").val("stripe");
                 $('#funds-upload').submit();
             }
         });
-        $(function() {
-            $('#stripe-payment').click(function(e) {
+        $(function () {
+            $('#stripe-payment').click(function (e) {
                 handler.open({
                     name: 'Zidisha',
                     description: 'Payment to Zidisha',
@@ -70,7 +84,7 @@ USD <span id="total-amount-display"></span>
                 e.preventDefault();
             });
         });
-        
+
         var $donationAmount = $('#donation-amount'),
             $creditAmount = $('#credit-amount'),
             $feeAmount = $('#fee-amount'),
@@ -78,15 +92,15 @@ USD <span id="total-amount-display"></span>
             $feeAmountDisplay = $('#fee-amount-display'),
             $totalAmountDisplay = $('#total-amount-display'),
             feePercentage = 0.025;
-        
+
         function parseMoney(value) {
-            return Number(value.replace(/[^0-9\.]+/g,""));
+            return Number(value.replace(/[^0-9\.]+/g, ""));
         }
 
         function formatMoney(value) {
             return value.toFixed(2);
         }
-        
+
         function calculateAmounts() {
             var donationAmount = parseMoney($donationAmount.val()),
                 creditAmount = parseMoney($creditAmount.val()),
@@ -99,10 +113,10 @@ USD <span id="total-amount-display"></span>
             $feeAmountDisplay.text(formatMoney(feeAmount));
             $totalAmountDisplay.text(formatMoney(totalAmount));
         }
-        
+
         $donationAmount.on('keyup', calculateAmounts);
         $creditAmount.on('keyup', calculateAmounts);
-        
+
         calculateAmounts();
     });
 </script>
