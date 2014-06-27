@@ -4,7 +4,7 @@ namespace Zidisha\Payment\Bid;
 
 use Zidisha\Payment\PaymentHandler;
 
-class BidPaymentPendingHandler implements PaymentHandler{
+class BidPaymentPendingHandler extends PaymentHandler{
 
     public function process()
     {

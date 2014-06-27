@@ -21,10 +21,11 @@ Funds
 {{ BootstrapForm::open(array('route' => 'lender:post-funds', 'translationDomain' => 'fund', 'id' => 'funds-upload')) }}
 {{ BootstrapForm::populate($form) }}
 
-{{ BootstrapForm::text('creditAmount', null, ['id' => 'credit-amount']) }}
+{{ BootstrapForm::text('amount', null, ['id' => 'amount']) }}
 {{ BootstrapForm::text('donationAmount', null, ['id' => 'donation-amount']) }}
 
-{{ BootstrapForm::hidden('feeAmount', null, ['id' => 'fee-amount']) }}
+{{ BootstrapForm::hidden('transactionFee', null, ['id' => 'transaction-fee-amount']) }}
+{{ BootstrapForm::hidden('transactionFeeRate', null, ['id' => 'fee-amount-rate']) }}
 {{ BootstrapForm::hidden('totalAmount', null, ['id' => 'total-amount']) }}
 
 {{ BootstrapForm::hidden('stripeToken', null, ['id' => 'stripe-token']) }}
@@ -40,6 +41,7 @@ USD <span id="total-amount-display"></span>
 
 <br/>
 <button id="stripe-payment" class="btn btn-primary">Pay With Card</button>
+<input type="submit" id="paypal-payment" class="btn btn-primary" value="Pay With Paypal" name="submit_paypal">
 
 {{ BootstrapForm::close() }}
 
@@ -86,12 +88,12 @@ USD <span id="total-amount-display"></span>
         });
 
         var $donationAmount = $('#donation-amount'),
-            $creditAmount = $('#credit-amount'),
-            $feeAmount = $('#fee-amount'),
+            $amount = $('#amount'),
+            $transactionFeeAmount = $('#transaction-fee-amount'),
             $totalAmount = $('#total-amount'),
-            $feeAmountDisplay = $('#fee-amount-display'),
+            $transactionFeeAmountDisplay = $('#fee-amount-display'),
             $totalAmountDisplay = $('#total-amount-display'),
-            feePercentage = 0.025;
+            feePercentage = Number($('#fee-amount-rate').val());
 
         function parseMoney(value) {
             return Number(value.replace(/[^0-9\.]+/g, ""));
@@ -103,19 +105,18 @@ USD <span id="total-amount-display"></span>
 
         function calculateAmounts() {
             var donationAmount = parseMoney($donationAmount.val()),
-                creditAmount = parseMoney($creditAmount.val()),
-                subtotalAmount = donationAmount + creditAmount,
-                feeAmount = subtotalAmount * feePercentage,
-                totalAmount = subtotalAmount + feeAmount;
+                amount = parseMoney($amount.val()),
+                transactionFeeAmount = amount * feePercentage,
+                totalAmount = amount + transactionFeeAmount + donationAmount;
 
-            $feeAmount.val(formatMoney(feeAmount));
+            $transactionFeeAmount.val(formatMoney(transactionFeeAmount));
             $totalAmount.val(formatMoney(totalAmount));
-            $feeAmountDisplay.text(formatMoney(feeAmount));
+            $transactionFeeAmountDisplay.text(formatMoney(transactionFeeAmount));
             $totalAmountDisplay.text(formatMoney(totalAmount));
         }
 
         $donationAmount.on('keyup', calculateAmounts);
-        $creditAmount.on('keyup', calculateAmounts);
+        $amount.on('keyup', calculateAmounts);
 
         calculateAmounts();
     });

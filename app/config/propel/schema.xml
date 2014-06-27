@@ -401,9 +401,9 @@
         </index>
     </table>
 
-    <table name="paypal_instant_payment_notification" phpName="PaypalNotification" namespace="Payment\Paypal">
-        <column name="id" type="INTEGER" required="true" autoIncrement="True" primaryKey="true"/>
-        <column name="notification" required="true" type="VARCHAR" size="255"/>
+    <table name="paypal_ipn_log" phpName="PayPalIpnLog" namespace="Payment\Paypal">
+        <column name="id" type="INTEGER" required="true" autoIncrement="True" primaryKey="true" />
+        <column name="log" required="true" type="VARCHAR" size="255" />
         <behavior name="timestampable"/>
     </table>
 
@@ -446,13 +446,21 @@
         <behavior name="timestampable"/>
     </table>
 
-    <table name="payments" phpName="Payment" namespace="Payment">
+    <table name="payments" phpName="Payment" namespace="Payment" abstract="true">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="amount" type="DECIMAL" size="10" scale="2" required="true" phpType="string"/>
         <column name="donation_amount" type="DECIMAL" size="10" scale="2" required="true" phpType="string"/>
         <column name="transaction_fee" type="DECIMAL" size="10" scale="2" required="true" phpType="string"/>
         <column name="total_amount" type="DECIMAL" size="10" scale="2" required="true" phpType="string"/>
+        <column name="payment_method" type="VARCHAR" required="true"/>
+        <column name="lender_id" type="INTEGER" required="true"/>
         <behavior name="timestampable"/>
+        <foreign-key foreignTable="lenders">
+            <reference local="lender_id" foreign="id"/>
+        </foreign-key>
+        <column name="class_key" type="integer" inheritance="single">
+            <inheritance key="1" class="UploadFundPayment"/>
+        </column>
     </table>
 
     <table name="gift_cards" phpName="GiftCard" namespace="Lender">

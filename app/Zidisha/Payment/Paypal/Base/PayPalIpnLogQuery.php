@@ -10,74 +10,74 @@ use Propel\Runtime\ActiveQuery\ModelCriteria;
 use Propel\Runtime\Collection\ObjectCollection;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Exception\PropelException;
-use Zidisha\Payment\Paypal\PaypalNotification as ChildPaypalNotification;
-use Zidisha\Payment\Paypal\PaypalNotificationQuery as ChildPaypalNotificationQuery;
-use Zidisha\Payment\Paypal\Map\PaypalNotificationTableMap;
+use Zidisha\Payment\Paypal\PayPalIpnLog as ChildPayPalIpnLog;
+use Zidisha\Payment\Paypal\PayPalIpnLogQuery as ChildPayPalIpnLogQuery;
+use Zidisha\Payment\Paypal\Map\PayPalIpnLogTableMap;
 
 /**
- * Base class that represents a query for the 'paypal_instant_payment_notification' table.
+ * Base class that represents a query for the 'paypal_ipn_log' table.
  *
  *
  *
- * @method     ChildPaypalNotificationQuery orderById($order = Criteria::ASC) Order by the id column
- * @method     ChildPaypalNotificationQuery orderByNotification($order = Criteria::ASC) Order by the notification column
- * @method     ChildPaypalNotificationQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
- * @method     ChildPaypalNotificationQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
+ * @method     ChildPayPalIpnLogQuery orderById($order = Criteria::ASC) Order by the id column
+ * @method     ChildPayPalIpnLogQuery orderByLog($order = Criteria::ASC) Order by the log column
+ * @method     ChildPayPalIpnLogQuery orderByCreatedAt($order = Criteria::ASC) Order by the created_at column
+ * @method     ChildPayPalIpnLogQuery orderByUpdatedAt($order = Criteria::ASC) Order by the updated_at column
  *
- * @method     ChildPaypalNotificationQuery groupById() Group by the id column
- * @method     ChildPaypalNotificationQuery groupByNotification() Group by the notification column
- * @method     ChildPaypalNotificationQuery groupByCreatedAt() Group by the created_at column
- * @method     ChildPaypalNotificationQuery groupByUpdatedAt() Group by the updated_at column
+ * @method     ChildPayPalIpnLogQuery groupById() Group by the id column
+ * @method     ChildPayPalIpnLogQuery groupByLog() Group by the log column
+ * @method     ChildPayPalIpnLogQuery groupByCreatedAt() Group by the created_at column
+ * @method     ChildPayPalIpnLogQuery groupByUpdatedAt() Group by the updated_at column
  *
- * @method     ChildPaypalNotificationQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
- * @method     ChildPaypalNotificationQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
- * @method     ChildPaypalNotificationQuery innerJoin($relation) Adds a INNER JOIN clause to the query
+ * @method     ChildPayPalIpnLogQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
+ * @method     ChildPayPalIpnLogQuery rightJoin($relation) Adds a RIGHT JOIN clause to the query
+ * @method     ChildPayPalIpnLogQuery innerJoin($relation) Adds a INNER JOIN clause to the query
  *
- * @method     ChildPaypalNotification findOne(ConnectionInterface $con = null) Return the first ChildPaypalNotification matching the query
- * @method     ChildPaypalNotification findOneOrCreate(ConnectionInterface $con = null) Return the first ChildPaypalNotification matching the query, or a new ChildPaypalNotification object populated from the query conditions when no match is found
+ * @method     ChildPayPalIpnLog findOne(ConnectionInterface $con = null) Return the first ChildPayPalIpnLog matching the query
+ * @method     ChildPayPalIpnLog findOneOrCreate(ConnectionInterface $con = null) Return the first ChildPayPalIpnLog matching the query, or a new ChildPayPalIpnLog object populated from the query conditions when no match is found
  *
- * @method     ChildPaypalNotification findOneById(int $id) Return the first ChildPaypalNotification filtered by the id column
- * @method     ChildPaypalNotification findOneByNotification(string $notification) Return the first ChildPaypalNotification filtered by the notification column
- * @method     ChildPaypalNotification findOneByCreatedAt(string $created_at) Return the first ChildPaypalNotification filtered by the created_at column
- * @method     ChildPaypalNotification findOneByUpdatedAt(string $updated_at) Return the first ChildPaypalNotification filtered by the updated_at column
+ * @method     ChildPayPalIpnLog findOneById(int $id) Return the first ChildPayPalIpnLog filtered by the id column
+ * @method     ChildPayPalIpnLog findOneByLog(string $log) Return the first ChildPayPalIpnLog filtered by the log column
+ * @method     ChildPayPalIpnLog findOneByCreatedAt(string $created_at) Return the first ChildPayPalIpnLog filtered by the created_at column
+ * @method     ChildPayPalIpnLog findOneByUpdatedAt(string $updated_at) Return the first ChildPayPalIpnLog filtered by the updated_at column
  *
- * @method     ChildPaypalNotification[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildPaypalNotification objects based on current ModelCriteria
- * @method     ChildPaypalNotification[]|ObjectCollection findById(int $id) Return ChildPaypalNotification objects filtered by the id column
- * @method     ChildPaypalNotification[]|ObjectCollection findByNotification(string $notification) Return ChildPaypalNotification objects filtered by the notification column
- * @method     ChildPaypalNotification[]|ObjectCollection findByCreatedAt(string $created_at) Return ChildPaypalNotification objects filtered by the created_at column
- * @method     ChildPaypalNotification[]|ObjectCollection findByUpdatedAt(string $updated_at) Return ChildPaypalNotification objects filtered by the updated_at column
- * @method     ChildPaypalNotification[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
+ * @method     ChildPayPalIpnLog[]|ObjectCollection find(ConnectionInterface $con = null) Return ChildPayPalIpnLog objects based on current ModelCriteria
+ * @method     ChildPayPalIpnLog[]|ObjectCollection findById(int $id) Return ChildPayPalIpnLog objects filtered by the id column
+ * @method     ChildPayPalIpnLog[]|ObjectCollection findByLog(string $log) Return ChildPayPalIpnLog objects filtered by the log column
+ * @method     ChildPayPalIpnLog[]|ObjectCollection findByCreatedAt(string $created_at) Return ChildPayPalIpnLog objects filtered by the created_at column
+ * @method     ChildPayPalIpnLog[]|ObjectCollection findByUpdatedAt(string $updated_at) Return ChildPayPalIpnLog objects filtered by the updated_at column
+ * @method     ChildPayPalIpnLog[]|\Propel\Runtime\Util\PropelModelPager paginate($page = 1, $maxPerPage = 10, ConnectionInterface $con = null) Issue a SELECT query based on the current ModelCriteria and uses a page and a maximum number of results per page to compute an offset and a limit
  *
  */
-abstract class PaypalNotificationQuery extends ModelCriteria
+abstract class PayPalIpnLogQuery extends ModelCriteria
 {
 
     /**
-     * Initializes internal state of \Zidisha\Payment\Paypal\Base\PaypalNotificationQuery object.
+     * Initializes internal state of \Zidisha\Payment\Paypal\Base\PayPalIpnLogQuery object.
      *
      * @param     string $dbName The database name
      * @param     string $modelName The phpName of a model, e.g. 'Book'
      * @param     string $modelAlias The alias for the model in this query, e.g. 'b'
      */
-    public function __construct($dbName = 'zidisha', $modelName = '\\Zidisha\\Payment\\Paypal\\PaypalNotification', $modelAlias = null)
+    public function __construct($dbName = 'zidisha', $modelName = '\\Zidisha\\Payment\\Paypal\\PayPalIpnLog', $modelAlias = null)
     {
         parent::__construct($dbName, $modelName, $modelAlias);
     }
 
     /**
-     * Returns a new ChildPaypalNotificationQuery object.
+     * Returns a new ChildPayPalIpnLogQuery object.
      *
      * @param     string $modelAlias The alias of a model in the query
      * @param     Criteria $criteria Optional Criteria to build the query from
      *
-     * @return ChildPaypalNotificationQuery
+     * @return ChildPayPalIpnLogQuery
      */
     public static function create($modelAlias = null, Criteria $criteria = null)
     {
-        if ($criteria instanceof ChildPaypalNotificationQuery) {
+        if ($criteria instanceof ChildPayPalIpnLogQuery) {
             return $criteria;
         }
-        $query = new ChildPaypalNotificationQuery();
+        $query = new ChildPayPalIpnLogQuery();
         if (null !== $modelAlias) {
             $query->setModelAlias($modelAlias);
         }
@@ -100,19 +100,19 @@ abstract class PaypalNotificationQuery extends ModelCriteria
      * @param mixed $key Primary key to use for the query
      * @param ConnectionInterface $con an optional connection object
      *
-     * @return ChildPaypalNotification|array|mixed the result, formatted by the current formatter
+     * @return ChildPayPalIpnLog|array|mixed the result, formatted by the current formatter
      */
     public function findPk($key, ConnectionInterface $con = null)
     {
         if ($key === null) {
             return null;
         }
-        if ((null !== ($obj = PaypalNotificationTableMap::getInstanceFromPool((string) $key))) && !$this->formatter) {
+        if ((null !== ($obj = PayPalIpnLogTableMap::getInstanceFromPool((string) $key))) && !$this->formatter) {
             // the object is already in the instance pool
             return $obj;
         }
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getReadConnection(PaypalNotificationTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getReadConnection(PayPalIpnLogTableMap::DATABASE_NAME);
         }
         $this->basePreSelect($con);
         if ($this->formatter || $this->modelAlias || $this->with || $this->select
@@ -131,11 +131,11 @@ abstract class PaypalNotificationQuery extends ModelCriteria
      * @param     mixed $key Primary key to use for the query
      * @param     ConnectionInterface $con A connection object
      *
-     * @return ChildPaypalNotification A model object, or null if the key is not found
+     * @return ChildPayPalIpnLog A model object, or null if the key is not found
      */
     protected function findPkSimple($key, ConnectionInterface $con)
     {
-        $sql = 'SELECT ID, NOTIFICATION, CREATED_AT, UPDATED_AT FROM paypal_instant_payment_notification WHERE ID = :p0';
+        $sql = 'SELECT ID, LOG, CREATED_AT, UPDATED_AT FROM paypal_ipn_log WHERE ID = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -146,10 +146,10 @@ abstract class PaypalNotificationQuery extends ModelCriteria
         }
         $obj = null;
         if ($row = $stmt->fetch(\PDO::FETCH_NUM)) {
-            /** @var ChildPaypalNotification $obj */
-            $obj = new ChildPaypalNotification();
+            /** @var ChildPayPalIpnLog $obj */
+            $obj = new ChildPayPalIpnLog();
             $obj->hydrate($row);
-            PaypalNotificationTableMap::addInstanceToPool($obj, (string) $key);
+            PayPalIpnLogTableMap::addInstanceToPool($obj, (string) $key);
         }
         $stmt->closeCursor();
 
@@ -162,7 +162,7 @@ abstract class PaypalNotificationQuery extends ModelCriteria
      * @param     mixed $key Primary key to use for the query
      * @param     ConnectionInterface $con A connection object
      *
-     * @return ChildPaypalNotification|array|mixed the result, formatted by the current formatter
+     * @return ChildPayPalIpnLog|array|mixed the result, formatted by the current formatter
      */
     protected function findPkComplex($key, ConnectionInterface $con)
     {
@@ -204,12 +204,12 @@ abstract class PaypalNotificationQuery extends ModelCriteria
      *
      * @param     mixed $key Primary key to use for the query
      *
-     * @return $this|ChildPaypalNotificationQuery The current query, for fluid interface
+     * @return $this|ChildPayPalIpnLogQuery The current query, for fluid interface
      */
     public function filterByPrimaryKey($key)
     {
 
-        return $this->addUsingAlias(PaypalNotificationTableMap::COL_ID, $key, Criteria::EQUAL);
+        return $this->addUsingAlias(PayPalIpnLogTableMap::COL_ID, $key, Criteria::EQUAL);
     }
 
     /**
@@ -217,12 +217,12 @@ abstract class PaypalNotificationQuery extends ModelCriteria
      *
      * @param     array $keys The list of primary key to use for the query
      *
-     * @return $this|ChildPaypalNotificationQuery The current query, for fluid interface
+     * @return $this|ChildPayPalIpnLogQuery The current query, for fluid interface
      */
     public function filterByPrimaryKeys($keys)
     {
 
-        return $this->addUsingAlias(PaypalNotificationTableMap::COL_ID, $keys, Criteria::IN);
+        return $this->addUsingAlias(PayPalIpnLogTableMap::COL_ID, $keys, Criteria::IN);
     }
 
     /**
@@ -241,18 +241,18 @@ abstract class PaypalNotificationQuery extends ModelCriteria
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildPaypalNotificationQuery The current query, for fluid interface
+     * @return $this|ChildPayPalIpnLogQuery The current query, for fluid interface
      */
     public function filterById($id = null, $comparison = null)
     {
         if (is_array($id)) {
             $useMinMax = false;
             if (isset($id['min'])) {
-                $this->addUsingAlias(PaypalNotificationTableMap::COL_ID, $id['min'], Criteria::GREATER_EQUAL);
+                $this->addUsingAlias(PayPalIpnLogTableMap::COL_ID, $id['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
             if (isset($id['max'])) {
-                $this->addUsingAlias(PaypalNotificationTableMap::COL_ID, $id['max'], Criteria::LESS_EQUAL);
+                $this->addUsingAlias(PayPalIpnLogTableMap::COL_ID, $id['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -263,36 +263,36 @@ abstract class PaypalNotificationQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(PaypalNotificationTableMap::COL_ID, $id, $comparison);
+        return $this->addUsingAlias(PayPalIpnLogTableMap::COL_ID, $id, $comparison);
     }
 
     /**
-     * Filter the query on the notification column
+     * Filter the query on the log column
      *
      * Example usage:
      * <code>
-     * $query->filterByNotification('fooValue');   // WHERE notification = 'fooValue'
-     * $query->filterByNotification('%fooValue%'); // WHERE notification LIKE '%fooValue%'
+     * $query->filterByLog('fooValue');   // WHERE log = 'fooValue'
+     * $query->filterByLog('%fooValue%'); // WHERE log LIKE '%fooValue%'
      * </code>
      *
-     * @param     string $notification The value to use as filter.
+     * @param     string $log The value to use as filter.
      *              Accepts wildcards (* and % trigger a LIKE)
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildPaypalNotificationQuery The current query, for fluid interface
+     * @return $this|ChildPayPalIpnLogQuery The current query, for fluid interface
      */
-    public function filterByNotification($notification = null, $comparison = null)
+    public function filterByLog($log = null, $comparison = null)
     {
         if (null === $comparison) {
-            if (is_array($notification)) {
+            if (is_array($log)) {
                 $comparison = Criteria::IN;
-            } elseif (preg_match('/[\%\*]/', $notification)) {
-                $notification = str_replace('*', '%', $notification);
+            } elseif (preg_match('/[\%\*]/', $log)) {
+                $log = str_replace('*', '%', $log);
                 $comparison = Criteria::LIKE;
             }
         }
 
-        return $this->addUsingAlias(PaypalNotificationTableMap::COL_NOTIFICATION, $notification, $comparison);
+        return $this->addUsingAlias(PayPalIpnLogTableMap::COL_LOG, $log, $comparison);
     }
 
     /**
@@ -313,18 +313,18 @@ abstract class PaypalNotificationQuery extends ModelCriteria
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildPaypalNotificationQuery The current query, for fluid interface
+     * @return $this|ChildPayPalIpnLogQuery The current query, for fluid interface
      */
     public function filterByCreatedAt($createdAt = null, $comparison = null)
     {
         if (is_array($createdAt)) {
             $useMinMax = false;
             if (isset($createdAt['min'])) {
-                $this->addUsingAlias(PaypalNotificationTableMap::COL_CREATED_AT, $createdAt['min'], Criteria::GREATER_EQUAL);
+                $this->addUsingAlias(PayPalIpnLogTableMap::COL_CREATED_AT, $createdAt['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
             if (isset($createdAt['max'])) {
-                $this->addUsingAlias(PaypalNotificationTableMap::COL_CREATED_AT, $createdAt['max'], Criteria::LESS_EQUAL);
+                $this->addUsingAlias(PayPalIpnLogTableMap::COL_CREATED_AT, $createdAt['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -335,7 +335,7 @@ abstract class PaypalNotificationQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(PaypalNotificationTableMap::COL_CREATED_AT, $createdAt, $comparison);
+        return $this->addUsingAlias(PayPalIpnLogTableMap::COL_CREATED_AT, $createdAt, $comparison);
     }
 
     /**
@@ -356,18 +356,18 @@ abstract class PaypalNotificationQuery extends ModelCriteria
      *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
      * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
      *
-     * @return $this|ChildPaypalNotificationQuery The current query, for fluid interface
+     * @return $this|ChildPayPalIpnLogQuery The current query, for fluid interface
      */
     public function filterByUpdatedAt($updatedAt = null, $comparison = null)
     {
         if (is_array($updatedAt)) {
             $useMinMax = false;
             if (isset($updatedAt['min'])) {
-                $this->addUsingAlias(PaypalNotificationTableMap::COL_UPDATED_AT, $updatedAt['min'], Criteria::GREATER_EQUAL);
+                $this->addUsingAlias(PayPalIpnLogTableMap::COL_UPDATED_AT, $updatedAt['min'], Criteria::GREATER_EQUAL);
                 $useMinMax = true;
             }
             if (isset($updatedAt['max'])) {
-                $this->addUsingAlias(PaypalNotificationTableMap::COL_UPDATED_AT, $updatedAt['max'], Criteria::LESS_EQUAL);
+                $this->addUsingAlias(PayPalIpnLogTableMap::COL_UPDATED_AT, $updatedAt['max'], Criteria::LESS_EQUAL);
                 $useMinMax = true;
             }
             if ($useMinMax) {
@@ -378,27 +378,27 @@ abstract class PaypalNotificationQuery extends ModelCriteria
             }
         }
 
-        return $this->addUsingAlias(PaypalNotificationTableMap::COL_UPDATED_AT, $updatedAt, $comparison);
+        return $this->addUsingAlias(PayPalIpnLogTableMap::COL_UPDATED_AT, $updatedAt, $comparison);
     }
 
     /**
      * Exclude object from result
      *
-     * @param   ChildPaypalNotification $paypalNotification Object to remove from the list of results
+     * @param   ChildPayPalIpnLog $payPalIpnLog Object to remove from the list of results
      *
-     * @return $this|ChildPaypalNotificationQuery The current query, for fluid interface
+     * @return $this|ChildPayPalIpnLogQuery The current query, for fluid interface
      */
-    public function prune($paypalNotification = null)
+    public function prune($payPalIpnLog = null)
     {
-        if ($paypalNotification) {
-            $this->addUsingAlias(PaypalNotificationTableMap::COL_ID, $paypalNotification->getId(), Criteria::NOT_EQUAL);
+        if ($payPalIpnLog) {
+            $this->addUsingAlias(PayPalIpnLogTableMap::COL_ID, $payPalIpnLog->getId(), Criteria::NOT_EQUAL);
         }
 
         return $this;
     }
 
     /**
-     * Deletes all rows from the paypal_instant_payment_notification table.
+     * Deletes all rows from the paypal_ipn_log table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).
@@ -406,7 +406,7 @@ abstract class PaypalNotificationQuery extends ModelCriteria
     public function doDeleteAll(ConnectionInterface $con = null)
     {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(PaypalNotificationTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(PayPalIpnLogTableMap::DATABASE_NAME);
         }
 
         // use transaction because $criteria could contain info
@@ -417,8 +417,8 @@ abstract class PaypalNotificationQuery extends ModelCriteria
             // Because this db requires some delete cascade/set null emulation, we have to
             // clear the cached instance *after* the emulation has happened (since
             // instances get re-added by the select statement contained therein).
-            PaypalNotificationTableMap::clearInstancePool();
-            PaypalNotificationTableMap::clearRelatedInstancePool();
+            PayPalIpnLogTableMap::clearInstancePool();
+            PayPalIpnLogTableMap::clearRelatedInstancePool();
 
             return $affectedRows;
         });
@@ -436,23 +436,23 @@ abstract class PaypalNotificationQuery extends ModelCriteria
     public function delete(ConnectionInterface $con = null)
     {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(PaypalNotificationTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(PayPalIpnLogTableMap::DATABASE_NAME);
         }
 
         $criteria = $this;
 
         // Set the correct dbName
-        $criteria->setDbName(PaypalNotificationTableMap::DATABASE_NAME);
+        $criteria->setDbName(PayPalIpnLogTableMap::DATABASE_NAME);
 
         // use transaction because $criteria could contain info
         // for more than one table or we could emulating ON DELETE CASCADE, etc.
         return $con->transaction(function () use ($con, $criteria) {
             $affectedRows = 0; // initialize var to track total num of affected rows
 
-            PaypalNotificationTableMap::removeInstanceFromPool($criteria);
+            PayPalIpnLogTableMap::removeInstanceFromPool($criteria);
 
             $affectedRows += ModelCriteria::delete($con);
-            PaypalNotificationTableMap::clearRelatedInstancePool();
+            PayPalIpnLogTableMap::clearRelatedInstancePool();
 
             return $affectedRows;
         });
@@ -465,41 +465,41 @@ abstract class PaypalNotificationQuery extends ModelCriteria
      *
      * @param      int $nbDays Maximum age of the latest update in days
      *
-     * @return     $this|ChildPaypalNotificationQuery The current query, for fluid interface
+     * @return     $this|ChildPayPalIpnLogQuery The current query, for fluid interface
      */
     public function recentlyUpdated($nbDays = 7)
     {
-        return $this->addUsingAlias(PaypalNotificationTableMap::COL_UPDATED_AT, time() - $nbDays * 24 * 60 * 60, Criteria::GREATER_EQUAL);
+        return $this->addUsingAlias(PayPalIpnLogTableMap::COL_UPDATED_AT, time() - $nbDays * 24 * 60 * 60, Criteria::GREATER_EQUAL);
     }
 
     /**
      * Order by update date desc
      *
-     * @return     $this|ChildPaypalNotificationQuery The current query, for fluid interface
+     * @return     $this|ChildPayPalIpnLogQuery The current query, for fluid interface
      */
     public function lastUpdatedFirst()
     {
-        return $this->addDescendingOrderByColumn(PaypalNotificationTableMap::COL_UPDATED_AT);
+        return $this->addDescendingOrderByColumn(PayPalIpnLogTableMap::COL_UPDATED_AT);
     }
 
     /**
      * Order by update date asc
      *
-     * @return     $this|ChildPaypalNotificationQuery The current query, for fluid interface
+     * @return     $this|ChildPayPalIpnLogQuery The current query, for fluid interface
      */
     public function firstUpdatedFirst()
     {
-        return $this->addAscendingOrderByColumn(PaypalNotificationTableMap::COL_UPDATED_AT);
+        return $this->addAscendingOrderByColumn(PayPalIpnLogTableMap::COL_UPDATED_AT);
     }
 
     /**
      * Order by create date desc
      *
-     * @return     $this|ChildPaypalNotificationQuery The current query, for fluid interface
+     * @return     $this|ChildPayPalIpnLogQuery The current query, for fluid interface
      */
     public function lastCreatedFirst()
     {
-        return $this->addDescendingOrderByColumn(PaypalNotificationTableMap::COL_CREATED_AT);
+        return $this->addDescendingOrderByColumn(PayPalIpnLogTableMap::COL_CREATED_AT);
     }
 
     /**
@@ -507,21 +507,21 @@ abstract class PaypalNotificationQuery extends ModelCriteria
      *
      * @param      int $nbDays Maximum age of in days
      *
-     * @return     $this|ChildPaypalNotificationQuery The current query, for fluid interface
+     * @return     $this|ChildPayPalIpnLogQuery The current query, for fluid interface
      */
     public function recentlyCreated($nbDays = 7)
     {
-        return $this->addUsingAlias(PaypalNotificationTableMap::COL_CREATED_AT, time() - $nbDays * 24 * 60 * 60, Criteria::GREATER_EQUAL);
+        return $this->addUsingAlias(PayPalIpnLogTableMap::COL_CREATED_AT, time() - $nbDays * 24 * 60 * 60, Criteria::GREATER_EQUAL);
     }
 
     /**
      * Order by create date asc
      *
-     * @return     $this|ChildPaypalNotificationQuery The current query, for fluid interface
+     * @return     $this|ChildPayPalIpnLogQuery The current query, for fluid interface
      */
     public function firstCreatedFirst()
     {
-        return $this->addAscendingOrderByColumn(PaypalNotificationTableMap::COL_CREATED_AT);
+        return $this->addAscendingOrderByColumn(PayPalIpnLogTableMap::COL_CREATED_AT);
     }
 
-} // PaypalNotificationQuery
+} // PayPalIpnLogQuery

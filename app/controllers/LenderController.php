@@ -1,31 +1,33 @@
 <?php
 
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\View;
-use Propel\Runtime\Propel;
-use Zidisha\Balance\Map\TransactionTableMap;
-use Zidisha\Balance\Transaction;
 use Zidisha\Balance\TransactionQuery;
-use Zidisha\Currency\Money;
 use Zidisha\Lender\Form\EditProfile;
 use Zidisha\Lender\Form\Funds;
 use Zidisha\Lender\Form\GiftCard;
 use Zidisha\Lender\LenderQuery;
 use Zidisha\Lender\LenderService;
-use Zidisha\Lender\ProfileQuery;
-use Zidisha\Payment\Payment;
+use Zidisha\Payment\Form\UploadFundForm;
 use Zidisha\Payment\Stripe\StripeService;
 use Zidisha\Utility\Utility;
 
 class LenderController extends BaseController
 {
     protected $transactionQuery;
+
     private $editProfileForm, $fundsForm, $cardForm;
+
     private $lenderService;
     /**
      * @var StripeService
      */
     private $stripeService;
+
+    /**
+     * @var Zidisha\Payment\Form\UploadFundForm
+     */
+    private $uploadFundForm;
+
 
     public function __construct(
         EditProfile $editProfileForm,
@@ -33,16 +35,15 @@ class LenderController extends BaseController
         Funds $fundsForm,
         LenderService $lenderService,
         GiftCard $cardForm,
-        StripeService $stripeService
+        UploadFundForm $uploadFundForm
+
     ) {
         $this->editProfileForm = $editProfileForm;
         $this->transactionQuery = $transactionQuery;
         $this->fundsForm = $fundsForm;
         $this->lenderService = $lenderService;
-
-        $this->stripeService = $stripeService;
-
         $this->cardForm = $cardForm;
+        $this->uploadFundForm = $uploadFundForm;
     }
 
     public function getPublicProfile($username)
@@ -136,36 +137,27 @@ class LenderController extends BaseController
             ->filterByUserId(Auth::getUser()->getId())
             ->findOne();
 
-        return View::make('lender.funds', compact('currentBalance'), ['form' => $this->fundsForm,]);
+        return View::make('lender.funds', compact('currentBalance'), ['form' => $this->uploadFundForm,]);
     }
 
     public function postFunds()
     {
-        $form = $this->fundsForm;
-        $form->handleRequest(Request::instance());
+        $form = $this->uploadFundForm;
+        $form->handleRequest(\Request::instance());
 
         if ($form->isValid()) {
-            $data = $form->getData();
             $country = Utility::getCountryCodeByIP();
             $blockedCountries = \Config::get('blockedCountries.codes');
+
             if (in_array($country['code'], $blockedCountries)) {
-                Flash::error("Something went wrong!");
+                \Flash::error("Something went wrong!");
                 return Redirect::route('lender:funds')->withForm($form);
             }
 
-            $payment = new Payment();
-            $payment
-                ->setAmount(Money::create($data['creditAmount']))
-                ->setTransactionFee(Money::create($data['feeAmount']))
-                ->setTotalAmount(Money::create($data['totalAmount']))
-                ->setDonationAmount(Money::create($data['totalAmount']));
-            $payment->save();
-
-
-            return $this->stripeService->makePayment($payment, ['stripeToken' => $data['stripeToken']]);
+            return $form->makePayment();
         }
 
-        Flash::error("Entered Amounts are invalid!");
+        \Flash::error("Entered Amounts are invalid!");
         return Redirect::route('lender:funds')->withForm($form);
     }
 }
