@@ -16,4 +16,13 @@ class Card extends BaseCard
     {
         return parent::setCardAmount($money->getAmount());
     }
+
+    public function getStringClaimed()
+    {
+        $status = $this->getClaimed();
+        if($status == 0){
+            return "Not Yet Redeemed";
+        }
+        return "Redeemed";
+    }
 }

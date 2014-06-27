@@ -2,25 +2,26 @@
 
 use Propel\Runtime\Propel;
 use Zidisha\Balance\Map\TransactionTableMap;
-use Zidisha\Balance\Transaction;
 use Zidisha\Currency\Money;
 use Zidisha\Lender\Card;
+use Zidisha\Lender\CardQuery;
 use Zidisha\Lender\Form\GiftCard;
 use Faker\Factory as Faker;
+use Zidisha\Lender\GiftCardService;
 
 class GiftCardController extends BaseController
 {
 
-    private $cardForm;
+    private $cardForm, $giftCardService;
 
-    public function __construct(GiftCard $cardForm)
+    public function __construct(GiftCard $cardForm, GiftCardService $giftCardService)
     {
         $this->cardForm = $cardForm;
+        $this->giftCardService = $giftCardService;
     }
 
     public function getGiftCards()
     {
-
         return View::make('lender.gift-cards', ['form' => $this->cardForm,]);
     }
 
@@ -41,7 +42,7 @@ class GiftCardController extends BaseController
         return Redirect::route('lender:gift-cards')->withForm($form);
     }
 
-    public function getTermsAccept()
+    public function postTermsAccept()
     {
 
         $data = Session::get('giftCard');
@@ -74,7 +75,7 @@ class GiftCardController extends BaseController
                 $con->commit();
                 Session::forget('giftCard');
                 Flash::success("GiftCard Successfully Made.");
-                return Redirect::route('lender:history');
+                return Redirect::route('lender:gift-cards:track');
             } else {
                 $con->rollback();
             }
@@ -85,4 +86,58 @@ class GiftCardController extends BaseController
 
     }
 
-} 
+    public function PostRedeemCard()
+    {
+        $data = Input::all();
+        $redemptionCode = $data['redemptionCode'];
+
+        $validateCode = $this->giftCardService->validateCode($redemptionCode);
+
+        if ($validateCode == 3) {
+            Flash::error('comments.flash.duplicate-code');
+            return Redirect::route('lender:funds');
+        } elseif ($validateCode == 2) {
+            Flash::error(\Lang::get('comments.flash.invalid-code'));
+            return Redirect::route('lender:funds');
+        } elseif ($validateCode == 0) {
+            Flash::error(\Lang::get('comments.flash.invalid-code'));
+            return Redirect::route('lender:funds');
+        } elseif ($validateCode == 1) {
+            $card = CardQuery::create()
+                ->filterByCardCode($redemptionCode)
+                ->findOne();
+            if($card->getClaimed() == 1){
+                Flash::error(\Lang::get('comments.flash.redeemed-code'));
+                return Redirect::route('lender:funds');
+            }else{
+                $currentDate = new \DateTime();
+                if($card->getExpireDate() < $currentDate){
+                    Flash::error(\Lang::get('comments.flash.expired-code'));
+                    return Redirect::route('lender:funds');
+                }else{
+                    //TODO make GIFT_REDEEM Transaction
+                    $card->setClaimed(1);
+                    $card->setRecipient(Auth::getUser());
+                    $card->save();
+                    //TODO if Transaction is successful then return success
+                    Flash::success(\Lang::get('comments.flash.redemption-success'));
+                    return Redirect::route('lender:gift-cards:track');
+                }
+            }
+        }
+    }
+
+    public function getTrackCards(){
+        $countQuery = CardQuery::create()
+            ->filterByUser(Auth::getUser());
+
+        $countCards =$countQuery->count();
+        $countRedeemed = $countQuery->filterByClaimed(1)->count();
+        $cards = CardQuery::create()
+            ->filterByUser(Auth::getUser())
+            ->find();
+
+        return View::make('lender.gift-cards-track', compact('countCards', 'countRedeemed', 'cards'));
+    }
+
+}

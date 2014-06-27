@@ -90,11 +90,28 @@ Route::group(
             'gift-cards',
             array('uses' => 'GiftCardController@postGiftCards', 'as' => 'lender:post-gift-cards', 'before' => 'csrf')
         );
+
+
         Route::get(
             '/gift-cards/accept',
             array(
-                'uses' => 'GiftCardController@getTermsAccept',
+                'uses' => 'GiftCardController@postTermsAccept',
                 'as' => 'lender:gift-cards:terms-accept'
+            )
+        );
+        Route::post(
+            'redeem',
+            array(
+                'uses' => 'GiftCardController@postRedeemCard',
+                'as' => 'lender:post-redeem-card',
+                'before' => 'csrf'
+            )
+        );
+        Route::get(
+            '/gift-cards/track',
+            array(
+                'uses' => 'GiftCardController@getTrackCards',
+                'as' => 'lender:gift-cards:track'
             )
         );
 
