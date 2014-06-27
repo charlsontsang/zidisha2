@@ -79,7 +79,6 @@ Route::group(array('prefix' => 'lender', 'before' => 'auth|hasRole:lender'), fun
         Route::post('funds', array('uses' => 'LenderController@postFunds', 'as' => 'lender:post-funds', 'before' => 'csrf'));
 
     });
-    
 /**
  * Routes for borrower page
  */
@@ -134,3 +133,8 @@ Route::get('invite', array('uses' => 'LenderInviteController@getInvite', 'as' =>
 Route::get('i/{username}', array('uses' => 'LenderInviteController@getInvitee', 'as' => 'lender:invitee'));
 Route::get('invite/how-it-works', array('uses' => 'LenderInviteController@getHowItWorks', 'as' => 'lender:how-it-works'));
 Route::post('invite', array('uses' => 'LenderInviteController@postInvite', 'as' => 'lender:post-invite', 'before' => 'csrf'));
+
+/**
+ * Routes for PayPal Payments Processing
+ */
+Route::controller('paypal', 'PayPalController');

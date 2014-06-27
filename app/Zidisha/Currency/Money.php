@@ -955,4 +955,9 @@ class Money
     {
         return (0 == bccomp('0', $this->getAmount(), 2));
     }
+
+    public function getAmountInCents()
+    {
+        return bcmul($this->amount, '100', 0);
+    }
 }
