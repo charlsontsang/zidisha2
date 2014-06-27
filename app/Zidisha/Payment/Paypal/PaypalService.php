@@ -39,7 +39,7 @@ class PayPalService extends PaymentService
         $this->paymentBus = $paymentBus;
     }
 
-    public function makePayment(Payment $payment)
+    public function makePayment(Payment $payment, array $data = null )
     {
         $payPalCustom = md5($payment->getId() . '-' . time());
 
