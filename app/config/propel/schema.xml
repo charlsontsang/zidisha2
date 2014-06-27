@@ -440,6 +440,12 @@
         </foreign-key>
     </table>
 
+    <table name="stripe_logs" phpName="StripeLog" namespace="Payment\Stripe">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="log" type="VARCHAR" required="false" />
+        <behavior name="timestampable"/>
+    </table>
+
     <table name="payments" phpName="Payment" namespace="Payment">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="amount" type="DECIMAL" size="10" scale="2" required="true" phpType="string"/>
