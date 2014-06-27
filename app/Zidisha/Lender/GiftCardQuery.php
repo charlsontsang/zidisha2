@@ -2,7 +2,7 @@
 
 namespace Zidisha\Lender;
 
-use Zidisha\Lender\Base\CardQuery as BaseCardQuery;
+use Zidisha\Lender\Base\GiftCardQuery as BaseGiftCardQuery;
 
 
 /**
@@ -15,7 +15,7 @@ use Zidisha\Lender\Base\CardQuery as BaseCardQuery;
  * long as it does not already exist in the output directory.
  *
  */
-class CardQuery extends BaseCardQuery
+class GiftCardQuery extends BaseGiftCardQuery
 {
 
-} // CardQuery
+} // GiftCardQuery

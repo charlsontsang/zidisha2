@@ -455,9 +455,9 @@
         <behavior name="timestampable"/>
     </table>
 
-    <table name="gift_cards" phpName="Card" namespace="Lender">
+    <table name="gift_cards" phpName="GiftCard" namespace="Lender">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
-        <column name="user_id" type="INTEGER" size="10"/>
+        <column name="Lender_id" type="INTEGER" size="10"/>
         <column name="template" type="INTEGER"/>
         <column name="order_type" type="VARCHAR" size="10" required="true"/>
         <column name="card_amount" type="DECIMAL" size="10" scale="2" required="true"/>
@@ -473,28 +473,27 @@
         <column name="claimed" type="TINYINT" size="1" defaultValue="0"/>
         <column name="recipient_id" type="INTEGER"/>
         <column name="donated" type="TINYINT" size="1" defaultValue="0"/>
-        <foreign-key foreignTable="users" phpName="User">
-            <reference local="user_id" foreign="id"/>
+        <foreign-key foreignTable="lenders" phpName="Lender">
+            <reference local="Lender_id" foreign="id"/>
         </foreign-key>
-        <foreign-key foreignTable="users" phpName="Recipient">
+        <foreign-key foreignTable="lenders" phpName="Recipient">
             <reference local="recipient_id" foreign="id"/>
         </foreign-key>
     </table>
 
-    <table name="gift_transaction" phpName="GiftTransaction" namespace="Lender">
+    <table name="gift_card_transaction" phpName="GiftCardTransaction" namespace="Lender">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
-        <column name="txn_id" type="INTEGER" size="10"/>
-        <column name="txn_type" type="VARCHAR" size="50"/>
-        <column name="user_id" type="INTEGER" size="10"/>
+        <column name="transaction_id" type="INTEGER" size="10"/>
+        <column name="transaction_type" type="VARCHAR" size="50"/>
+        <column name="Lender_id" type="INTEGER" size="10"/>
         <column name="invoice_id" type="INTEGER" size="10"/>
         <column name="status" type="TINYINT" size="1" defaultValue="0"/>
         <column name="total_cards" type="INTEGER" size="5" required="true"/>
         <column name="amount" type="DECIMAL" size="10" scale="2" required="true"/>
         <column name="donation" type="DECIMAL" size="10" scale="2"/>
         <column name="date" type="TIMESTAMP" required="true"/>
-        <foreign-key foreignTable="users">
-            <reference local="user_id" foreign="id"/>
+        <foreign-key foreignTable="lenders">
+            <reference local="Lender_id" foreign="id"/>
         </foreign-key>
-        >>>>>>> add modules for gift-cards
     </table>
 </database>

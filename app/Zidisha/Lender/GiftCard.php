@@ -2,11 +2,12 @@
 
 namespace Zidisha\Lender;
 
+use Zidisha\Lender\Base\GiftCard as BaseGiftCard;
 use Zidisha\Currency\Money;
-use Zidisha\Lender\Base\Card as BaseCard;
 
-class Card extends BaseCard
+class GiftCard extends BaseGiftCard
 {
+
     public function getCardAmount()
     {
         return Money::create(parent::getCardAmount(), 'USD');
@@ -24,5 +25,13 @@ class Card extends BaseCard
             return "Not Yet Redeemed";
         }
         return "Redeemed";
+    }
+
+    public function setOrderType($type)
+    {
+        if($type = 0){
+            return parent::setOrderType('Self-Print');
+        }
+        return parent::setOrderType('Email');
     }
 }
