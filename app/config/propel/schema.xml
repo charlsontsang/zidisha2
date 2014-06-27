@@ -425,6 +425,21 @@
         </foreign-key>
     </table>
 
+    <table name="stripe_transactions" phpName="StripeTransaction" namespace="Payment\Stripe">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="stripe_id" type="VARCHAR" required="false" />
+        <column name="amount" type="DECIMAL" size="10" scale="2" required="true" phpType="string"/>
+        <column name="donation_amount" type="DECIMAL" size="10" scale="2" required="true" phpType="string" />
+        <column name="transaction_fee" type="DECIMAL" size="10" scale="2" required="true" phpType="string" />
+        <column name="total_amount" type="DECIMAL" size="10" scale="2" required="true" phpType="string" />
+        <column name="status" type="VARCHAR" size="100" required="true"/>
+        <column name="payment_id" type="INTEGER" required="false" />
+        <behavior name="timestampable"/>
+        <foreign-key foreignTable="payments">
+            <reference local="payment_id" foreign="id"/>
+        </foreign-key>
+    </table>
+
     <table name="payments" phpName="Payment" namespace="Payment">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="amount" type="DECIMAL" size="10" scale="2" required="true" phpType="string"/>
