@@ -8,6 +8,7 @@ use Zidisha\Lender\GiftCard;
 use Zidisha\Lender\Invite;
 use Zidisha\Lender\Lender;
 use Zidisha\Loan\Loan;
+use Zidisha\Payment\Payment;
 
 class TransactionService
 {
@@ -225,5 +226,67 @@ class TransactionService
             ->setType(Transaction::GIFT_REDEEM);
 
         $giftTransaction->save($con);
+    }
+
+    public function addUploadFundTransaction(ConnectionInterface $con, Payment $payment)
+    {
+        $this->assertAmount($payment->getTotalAmount());
+
+        $transactionUpload = new Transaction();
+        $transactionUpload->setUserId($payment->getLenderId());
+        $transactionUpload->setAmount($payment->getTotalAmount());
+        $transactionUpload->setDescription('Funds upload to lender account');
+        $transactionUpload->setTransactionDate(new \DateTime());
+        $transactionUpload->setType(Transaction::FUND_UPLOAD);
+        $transactionUpload->setSubType(Transaction::FUND_UPLOAD);
+        $transactionUpload->save($con);
+
+        if ($payment->getTransactionFee()->greaterThan(Money::create(0))) {
+            if ($payment->getPaymentMethod() == 'stripe') {
+                $transactionType = Transaction::STRIPE_FEE;
+                $description = 'Stripe transaction fee';
+            } elseif ($payment->getPaymentMethod() == 'paypal') {
+                $transactionType = Transaction::PAYPAL_FEE;
+                $description = 'Paypal transaction fee';
+            } else {
+                throw \Exception('No matching payment method found.');
+            }
+
+            $transactionStripeFee = new Transaction();
+            $transactionStripeFee->setUserId($payment->getLenderId());
+            $transactionStripeFee->setAmount($payment->getTransactionFee()->multiply(-1));
+            $transactionStripeFee->setDescription($description);
+            $transactionStripeFee->setTransactionDate(new \DateTime());
+            $transactionStripeFee->setType($transactionType);
+            $transactionStripeFee->save($con);
+
+            $transactionStripeAdmin = new Transaction();
+            // TODO set use to admin
+            $transactionStripeAdmin->setUserId(\Config::get('app.AdminId'));
+            $transactionStripeAdmin->setAmount($payment->getTransactionFee());
+            $transactionStripeAdmin->setDescription('Lender transaction fee');
+            $transactionStripeAdmin->setTransactionDate(new \DateTime());
+            $transactionStripeAdmin->setType($transactionType);
+            $transactionStripeAdmin->save($con);
+        }
+    }
+
+    public function addDonation(ConnectionInterface $con, Payment $payment)
+    {
+        $donationTransaction = new Transaction();
+        $donationTransaction->setUserId($payment->getLenderId());
+        $donationTransaction->setAmount($payment->getDonationAmount()->multiply(-1));
+        $donationTransaction->setDescription('Donation to Zidisha');
+        $donationTransaction->setTransactionDate(new \DateTime());
+        $donationTransaction->setType(Transaction::DONATION);
+        $donationTransaction->save($con);
+
+        $donationTransaction = new Transaction();
+        $donationTransaction->setUserId(\Config::get('app.AdminId'));
+        $donationTransaction->setAmount($payment->getDonationAmount());
+        $donationTransaction->setDescription('Donation from lender');
+        $donationTransaction->setTransactionDate(new \DateTime());
+        $donationTransaction->setType(Transaction::DONATION);
+        $donationTransaction->save($con);
     }
 }

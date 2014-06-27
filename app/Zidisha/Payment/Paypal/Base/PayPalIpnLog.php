@@ -17,16 +17,16 @@ use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Parser\AbstractParser;
 use Propel\Runtime\Util\PropelDateTime;
-use Zidisha\Payment\Paypal\PaypalNotification as ChildPaypalNotification;
-use Zidisha\Payment\Paypal\PaypalNotificationQuery as ChildPaypalNotificationQuery;
-use Zidisha\Payment\Paypal\Map\PaypalNotificationTableMap;
+use Zidisha\Payment\Paypal\PayPalIpnLog as ChildPayPalIpnLog;
+use Zidisha\Payment\Paypal\PayPalIpnLogQuery as ChildPayPalIpnLogQuery;
+use Zidisha\Payment\Paypal\Map\PayPalIpnLogTableMap;
 
-abstract class PaypalNotification implements ActiveRecordInterface
+abstract class PayPalIpnLog implements ActiveRecordInterface
 {
     /**
      * TableMap class name
      */
-    const TABLE_MAP = '\\Zidisha\\Payment\\Paypal\\Map\\PaypalNotificationTableMap';
+    const TABLE_MAP = '\\Zidisha\\Payment\\Paypal\\Map\\PayPalIpnLogTableMap';
 
 
     /**
@@ -62,10 +62,10 @@ abstract class PaypalNotification implements ActiveRecordInterface
     protected $id;
 
     /**
-     * The value for the notification field.
+     * The value for the log field.
      * @var        string
      */
-    protected $notification;
+    protected $log;
 
     /**
      * The value for the created_at field.
@@ -88,7 +88,7 @@ abstract class PaypalNotification implements ActiveRecordInterface
     protected $alreadyInSave = false;
 
     /**
-     * Initializes internal state of Zidisha\Payment\Paypal\Base\PaypalNotification object.
+     * Initializes internal state of Zidisha\Payment\Paypal\Base\PayPalIpnLog object.
      */
     public function __construct()
     {
@@ -183,9 +183,9 @@ abstract class PaypalNotification implements ActiveRecordInterface
     }
 
     /**
-     * Compares this with another <code>PaypalNotification</code> instance.  If
-     * <code>obj</code> is an instance of <code>PaypalNotification</code>, delegates to
-     * <code>equals(PaypalNotification)</code>.  Otherwise, returns <code>false</code>.
+     * Compares this with another <code>PayPalIpnLog</code> instance.  If
+     * <code>obj</code> is an instance of <code>PayPalIpnLog</code>, delegates to
+     * <code>equals(PayPalIpnLog)</code>.  Otherwise, returns <code>false</code>.
      *
      * @param  mixed   $obj The object to compare to.
      * @return boolean Whether equal to the object specified.
@@ -251,7 +251,7 @@ abstract class PaypalNotification implements ActiveRecordInterface
      * @param string $name  The virtual column name
      * @param mixed  $value The value to give to the virtual column
      *
-     * @return $this|PaypalNotification The current object, for fluid interface
+     * @return $this|PayPalIpnLog The current object, for fluid interface
      */
     public function setVirtualColumn($name, $value)
     {
@@ -315,13 +315,13 @@ abstract class PaypalNotification implements ActiveRecordInterface
     }
 
     /**
-     * Get the [notification] column value.
+     * Get the [log] column value.
      *
      * @return string
      */
-    public function getNotification()
+    public function getLog()
     {
-        return $this->notification;
+        return $this->log;
     }
 
     /**
@@ -400,16 +400,16 @@ abstract class PaypalNotification implements ActiveRecordInterface
     {
         try {
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : PaypalNotificationTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 0 + $startcol : PayPalIpnLogTableMap::translateFieldName('Id', TableMap::TYPE_PHPNAME, $indexType)];
             $this->id = (null !== $col) ? (int) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : PaypalNotificationTableMap::translateFieldName('Notification', TableMap::TYPE_PHPNAME, $indexType)];
-            $this->notification = (null !== $col) ? (string) $col : null;
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 1 + $startcol : PayPalIpnLogTableMap::translateFieldName('Log', TableMap::TYPE_PHPNAME, $indexType)];
+            $this->log = (null !== $col) ? (string) $col : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : PaypalNotificationTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 2 + $startcol : PayPalIpnLogTableMap::translateFieldName('CreatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             $this->created_at = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
 
-            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : PaypalNotificationTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
+            $col = $row[TableMap::TYPE_NUM == $indexType ? 3 + $startcol : PayPalIpnLogTableMap::translateFieldName('UpdatedAt', TableMap::TYPE_PHPNAME, $indexType)];
             $this->updated_at = (null !== $col) ? PropelDateTime::newInstance($col, null, '\DateTime') : null;
             $this->resetModified();
 
@@ -419,10 +419,10 @@ abstract class PaypalNotification implements ActiveRecordInterface
                 $this->ensureConsistency();
             }
 
-            return $startcol + 4; // 4 = PaypalNotificationTableMap::NUM_HYDRATE_COLUMNS.
+            return $startcol + 4; // 4 = PayPalIpnLogTableMap::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
-            throw new PropelException(sprintf('Error populating %s object', '\\Zidisha\\Payment\\Paypal\\PaypalNotification'), 0, $e);
+            throw new PropelException(sprintf('Error populating %s object', '\\Zidisha\\Payment\\Paypal\\PayPalIpnLog'), 0, $e);
         }
     }
 
@@ -447,7 +447,7 @@ abstract class PaypalNotification implements ActiveRecordInterface
      * Set the value of [id] column.
      *
      * @param  int $v new value
-     * @return $this|\Zidisha\Payment\Paypal\PaypalNotification The current object (for fluent API support)
+     * @return $this|\Zidisha\Payment\Paypal\PayPalIpnLog The current object (for fluent API support)
      */
     public function setId($v)
     {
@@ -457,38 +457,38 @@ abstract class PaypalNotification implements ActiveRecordInterface
 
         if ($this->id !== $v) {
             $this->id = $v;
-            $this->modifiedColumns[PaypalNotificationTableMap::COL_ID] = true;
+            $this->modifiedColumns[PayPalIpnLogTableMap::COL_ID] = true;
         }
 
         return $this;
     } // setId()
 
     /**
-     * Set the value of [notification] column.
+     * Set the value of [log] column.
      *
      * @param  string $v new value
-     * @return $this|\Zidisha\Payment\Paypal\PaypalNotification The current object (for fluent API support)
+     * @return $this|\Zidisha\Payment\Paypal\PayPalIpnLog The current object (for fluent API support)
      */
-    public function setNotification($v)
+    public function setLog($v)
     {
         if ($v !== null) {
             $v = (string) $v;
         }
 
-        if ($this->notification !== $v) {
-            $this->notification = $v;
-            $this->modifiedColumns[PaypalNotificationTableMap::COL_NOTIFICATION] = true;
+        if ($this->log !== $v) {
+            $this->log = $v;
+            $this->modifiedColumns[PayPalIpnLogTableMap::COL_LOG] = true;
         }
 
         return $this;
-    } // setNotification()
+    } // setLog()
 
     /**
      * Sets the value of [created_at] column to a normalized version of the date/time value specified.
      *
      * @param  mixed $v string, integer (timestamp), or \DateTime value.
      *               Empty strings are treated as NULL.
-     * @return $this|\Zidisha\Payment\Paypal\PaypalNotification The current object (for fluent API support)
+     * @return $this|\Zidisha\Payment\Paypal\PayPalIpnLog The current object (for fluent API support)
      */
     public function setCreatedAt($v)
     {
@@ -496,7 +496,7 @@ abstract class PaypalNotification implements ActiveRecordInterface
         if ($this->created_at !== null || $dt !== null) {
             if ($dt !== $this->created_at) {
                 $this->created_at = $dt;
-                $this->modifiedColumns[PaypalNotificationTableMap::COL_CREATED_AT] = true;
+                $this->modifiedColumns[PayPalIpnLogTableMap::COL_CREATED_AT] = true;
             }
         } // if either are not null
 
@@ -508,7 +508,7 @@ abstract class PaypalNotification implements ActiveRecordInterface
      *
      * @param  mixed $v string, integer (timestamp), or \DateTime value.
      *               Empty strings are treated as NULL.
-     * @return $this|\Zidisha\Payment\Paypal\PaypalNotification The current object (for fluent API support)
+     * @return $this|\Zidisha\Payment\Paypal\PayPalIpnLog The current object (for fluent API support)
      */
     public function setUpdatedAt($v)
     {
@@ -516,7 +516,7 @@ abstract class PaypalNotification implements ActiveRecordInterface
         if ($this->updated_at !== null || $dt !== null) {
             if ($dt !== $this->updated_at) {
                 $this->updated_at = $dt;
-                $this->modifiedColumns[PaypalNotificationTableMap::COL_UPDATED_AT] = true;
+                $this->modifiedColumns[PayPalIpnLogTableMap::COL_UPDATED_AT] = true;
             }
         } // if either are not null
 
@@ -544,13 +544,13 @@ abstract class PaypalNotification implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getReadConnection(PaypalNotificationTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getReadConnection(PayPalIpnLogTableMap::DATABASE_NAME);
         }
 
         // We don't need to alter the object instance pool; we're just modifying this instance
         // already in the pool.
 
-        $dataFetcher = ChildPaypalNotificationQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
+        $dataFetcher = ChildPayPalIpnLogQuery::create(null, $this->buildPkeyCriteria())->setFormatter(ModelCriteria::FORMAT_STATEMENT)->find($con);
         $row = $dataFetcher->fetch();
         $dataFetcher->close();
         if (!$row) {
@@ -569,8 +569,8 @@ abstract class PaypalNotification implements ActiveRecordInterface
      * @param      ConnectionInterface $con
      * @return void
      * @throws PropelException
-     * @see PaypalNotification::setDeleted()
-     * @see PaypalNotification::isDeleted()
+     * @see PayPalIpnLog::setDeleted()
+     * @see PayPalIpnLog::isDeleted()
      */
     public function delete(ConnectionInterface $con = null)
     {
@@ -579,11 +579,11 @@ abstract class PaypalNotification implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(PaypalNotificationTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(PayPalIpnLogTableMap::DATABASE_NAME);
         }
 
         $con->transaction(function () use ($con) {
-            $deleteQuery = ChildPaypalNotificationQuery::create()
+            $deleteQuery = ChildPayPalIpnLogQuery::create()
                 ->filterByPrimaryKey($this->getPrimaryKey());
             $ret = $this->preDelete($con);
             if ($ret) {
@@ -614,7 +614,7 @@ abstract class PaypalNotification implements ActiveRecordInterface
         }
 
         if ($con === null) {
-            $con = Propel::getServiceContainer()->getWriteConnection(PaypalNotificationTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(PayPalIpnLogTableMap::DATABASE_NAME);
         }
 
         return $con->transaction(function () use ($con) {
@@ -624,16 +624,16 @@ abstract class PaypalNotification implements ActiveRecordInterface
                 $ret = $ret && $this->preInsert($con);
                 // timestampable behavior
 
-                if (!$this->isColumnModified(PaypalNotificationTableMap::COL_CREATED_AT)) {
+                if (!$this->isColumnModified(PayPalIpnLogTableMap::COL_CREATED_AT)) {
                     $this->setCreatedAt(time());
                 }
-                if (!$this->isColumnModified(PaypalNotificationTableMap::COL_UPDATED_AT)) {
+                if (!$this->isColumnModified(PayPalIpnLogTableMap::COL_UPDATED_AT)) {
                     $this->setUpdatedAt(time());
                 }
             } else {
                 $ret = $ret && $this->preUpdate($con);
                 // timestampable behavior
-                if ($this->isModified() && !$this->isColumnModified(PaypalNotificationTableMap::COL_UPDATED_AT)) {
+                if ($this->isModified() && !$this->isColumnModified(PayPalIpnLogTableMap::COL_UPDATED_AT)) {
                     $this->setUpdatedAt(time());
                 }
             }
@@ -645,7 +645,7 @@ abstract class PaypalNotification implements ActiveRecordInterface
                     $this->postUpdate($con);
                 }
                 $this->postSave($con);
-                PaypalNotificationTableMap::addInstanceToPool($this);
+                PayPalIpnLogTableMap::addInstanceToPool($this);
             } else {
                 $affectedRows = 0;
             }
@@ -702,13 +702,13 @@ abstract class PaypalNotification implements ActiveRecordInterface
         $modifiedColumns = array();
         $index = 0;
 
-        $this->modifiedColumns[PaypalNotificationTableMap::COL_ID] = true;
+        $this->modifiedColumns[PayPalIpnLogTableMap::COL_ID] = true;
         if (null !== $this->id) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key (' . PaypalNotificationTableMap::COL_ID . ')');
+            throw new PropelException('Cannot insert a value for auto-increment primary key (' . PayPalIpnLogTableMap::COL_ID . ')');
         }
         if (null === $this->id) {
             try {
-                $dataFetcher = $con->query("SELECT nextval('paypal_instant_payment_notification_id_seq')");
+                $dataFetcher = $con->query("SELECT nextval('paypal_ipn_log_id_seq')");
                 $this->id = $dataFetcher->fetchColumn();
             } catch (Exception $e) {
                 throw new PropelException('Unable to get sequence id.', 0, $e);
@@ -717,21 +717,21 @@ abstract class PaypalNotification implements ActiveRecordInterface
 
 
          // check the columns in natural order for more readable SQL queries
-        if ($this->isColumnModified(PaypalNotificationTableMap::COL_ID)) {
+        if ($this->isColumnModified(PayPalIpnLogTableMap::COL_ID)) {
             $modifiedColumns[':p' . $index++]  = 'ID';
         }
-        if ($this->isColumnModified(PaypalNotificationTableMap::COL_NOTIFICATION)) {
-            $modifiedColumns[':p' . $index++]  = 'NOTIFICATION';
+        if ($this->isColumnModified(PayPalIpnLogTableMap::COL_LOG)) {
+            $modifiedColumns[':p' . $index++]  = 'LOG';
         }
-        if ($this->isColumnModified(PaypalNotificationTableMap::COL_CREATED_AT)) {
+        if ($this->isColumnModified(PayPalIpnLogTableMap::COL_CREATED_AT)) {
             $modifiedColumns[':p' . $index++]  = 'CREATED_AT';
         }
-        if ($this->isColumnModified(PaypalNotificationTableMap::COL_UPDATED_AT)) {
+        if ($this->isColumnModified(PayPalIpnLogTableMap::COL_UPDATED_AT)) {
             $modifiedColumns[':p' . $index++]  = 'UPDATED_AT';
         }
 
         $sql = sprintf(
-            'INSERT INTO paypal_instant_payment_notification (%s) VALUES (%s)',
+            'INSERT INTO paypal_ipn_log (%s) VALUES (%s)',
             implode(', ', $modifiedColumns),
             implode(', ', array_keys($modifiedColumns))
         );
@@ -743,8 +743,8 @@ abstract class PaypalNotification implements ActiveRecordInterface
                     case 'ID':
                         $stmt->bindValue($identifier, $this->id, PDO::PARAM_INT);
                         break;
-                    case 'NOTIFICATION':
-                        $stmt->bindValue($identifier, $this->notification, PDO::PARAM_STR);
+                    case 'LOG':
+                        $stmt->bindValue($identifier, $this->log, PDO::PARAM_STR);
                         break;
                     case 'CREATED_AT':
                         $stmt->bindValue($identifier, $this->created_at ? $this->created_at->format("Y-m-d H:i:s") : null, PDO::PARAM_STR);
@@ -791,7 +791,7 @@ abstract class PaypalNotification implements ActiveRecordInterface
      */
     public function getByName($name, $type = TableMap::TYPE_PHPNAME)
     {
-        $pos = PaypalNotificationTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
+        $pos = PayPalIpnLogTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
         $field = $this->getByPosition($pos);
 
         return $field;
@@ -811,7 +811,7 @@ abstract class PaypalNotification implements ActiveRecordInterface
                 return $this->getId();
                 break;
             case 1:
-                return $this->getNotification();
+                return $this->getLog();
                 break;
             case 2:
                 return $this->getCreatedAt();
@@ -841,14 +841,14 @@ abstract class PaypalNotification implements ActiveRecordInterface
      */
     public function toArray($keyType = TableMap::TYPE_PHPNAME, $includeLazyLoadColumns = true, $alreadyDumpedObjects = array())
     {
-        if (isset($alreadyDumpedObjects['PaypalNotification'][$this->getPrimaryKey()])) {
+        if (isset($alreadyDumpedObjects['PayPalIpnLog'][$this->getPrimaryKey()])) {
             return '*RECURSION*';
         }
-        $alreadyDumpedObjects['PaypalNotification'][$this->getPrimaryKey()] = true;
-        $keys = PaypalNotificationTableMap::getFieldNames($keyType);
+        $alreadyDumpedObjects['PayPalIpnLog'][$this->getPrimaryKey()] = true;
+        $keys = PayPalIpnLogTableMap::getFieldNames($keyType);
         $result = array(
             $keys[0] => $this->getId(),
-            $keys[1] => $this->getNotification(),
+            $keys[1] => $this->getLog(),
             $keys[2] => $this->getCreatedAt(),
             $keys[3] => $this->getUpdatedAt(),
         );
@@ -870,11 +870,11 @@ abstract class PaypalNotification implements ActiveRecordInterface
      *                one of the class type constants TableMap::TYPE_PHPNAME, TableMap::TYPE_STUDLYPHPNAME
      *                TableMap::TYPE_COLNAME, TableMap::TYPE_FIELDNAME, TableMap::TYPE_NUM.
      *                Defaults to TableMap::TYPE_PHPNAME.
-     * @return $this|\Zidisha\Payment\Paypal\PaypalNotification
+     * @return $this|\Zidisha\Payment\Paypal\PayPalIpnLog
      */
     public function setByName($name, $value, $type = TableMap::TYPE_PHPNAME)
     {
-        $pos = PaypalNotificationTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
+        $pos = PayPalIpnLogTableMap::translateFieldName($name, $type, TableMap::TYPE_NUM);
 
         return $this->setByPosition($pos, $value);
     }
@@ -885,7 +885,7 @@ abstract class PaypalNotification implements ActiveRecordInterface
      *
      * @param  int $pos position in xml schema
      * @param  mixed $value field value
-     * @return $this|\Zidisha\Payment\Paypal\PaypalNotification
+     * @return $this|\Zidisha\Payment\Paypal\PayPalIpnLog
      */
     public function setByPosition($pos, $value)
     {
@@ -894,7 +894,7 @@ abstract class PaypalNotification implements ActiveRecordInterface
                 $this->setId($value);
                 break;
             case 1:
-                $this->setNotification($value);
+                $this->setLog($value);
                 break;
             case 2:
                 $this->setCreatedAt($value);
@@ -926,13 +926,13 @@ abstract class PaypalNotification implements ActiveRecordInterface
      */
     public function fromArray($arr, $keyType = TableMap::TYPE_PHPNAME)
     {
-        $keys = PaypalNotificationTableMap::getFieldNames($keyType);
+        $keys = PayPalIpnLogTableMap::getFieldNames($keyType);
 
         if (array_key_exists($keys[0], $arr)) {
             $this->setId($arr[$keys[0]]);
         }
         if (array_key_exists($keys[1], $arr)) {
-            $this->setNotification($arr[$keys[1]]);
+            $this->setLog($arr[$keys[1]]);
         }
         if (array_key_exists($keys[2], $arr)) {
             $this->setCreatedAt($arr[$keys[2]]);
@@ -953,7 +953,7 @@ abstract class PaypalNotification implements ActiveRecordInterface
      *                       or a format name ('XML', 'YAML', 'JSON', 'CSV')
      * @param string $data The source data to import from
      *
-     * @return $this|\Zidisha\Payment\Paypal\PaypalNotification The current object, for fluid interface
+     * @return $this|\Zidisha\Payment\Paypal\PayPalIpnLog The current object, for fluid interface
      */
     public function importFrom($parser, $data)
     {
@@ -973,19 +973,19 @@ abstract class PaypalNotification implements ActiveRecordInterface
      */
     public function buildCriteria()
     {
-        $criteria = new Criteria(PaypalNotificationTableMap::DATABASE_NAME);
+        $criteria = new Criteria(PayPalIpnLogTableMap::DATABASE_NAME);
 
-        if ($this->isColumnModified(PaypalNotificationTableMap::COL_ID)) {
-            $criteria->add(PaypalNotificationTableMap::COL_ID, $this->id);
+        if ($this->isColumnModified(PayPalIpnLogTableMap::COL_ID)) {
+            $criteria->add(PayPalIpnLogTableMap::COL_ID, $this->id);
         }
-        if ($this->isColumnModified(PaypalNotificationTableMap::COL_NOTIFICATION)) {
-            $criteria->add(PaypalNotificationTableMap::COL_NOTIFICATION, $this->notification);
+        if ($this->isColumnModified(PayPalIpnLogTableMap::COL_LOG)) {
+            $criteria->add(PayPalIpnLogTableMap::COL_LOG, $this->log);
         }
-        if ($this->isColumnModified(PaypalNotificationTableMap::COL_CREATED_AT)) {
-            $criteria->add(PaypalNotificationTableMap::COL_CREATED_AT, $this->created_at);
+        if ($this->isColumnModified(PayPalIpnLogTableMap::COL_CREATED_AT)) {
+            $criteria->add(PayPalIpnLogTableMap::COL_CREATED_AT, $this->created_at);
         }
-        if ($this->isColumnModified(PaypalNotificationTableMap::COL_UPDATED_AT)) {
-            $criteria->add(PaypalNotificationTableMap::COL_UPDATED_AT, $this->updated_at);
+        if ($this->isColumnModified(PayPalIpnLogTableMap::COL_UPDATED_AT)) {
+            $criteria->add(PayPalIpnLogTableMap::COL_UPDATED_AT, $this->updated_at);
         }
 
         return $criteria;
@@ -1003,8 +1003,8 @@ abstract class PaypalNotification implements ActiveRecordInterface
      */
     public function buildPkeyCriteria()
     {
-        $criteria = new Criteria(PaypalNotificationTableMap::DATABASE_NAME);
-        $criteria->add(PaypalNotificationTableMap::COL_ID, $this->id);
+        $criteria = new Criteria(PayPalIpnLogTableMap::DATABASE_NAME);
+        $criteria->add(PayPalIpnLogTableMap::COL_ID, $this->id);
 
         return $criteria;
     }
@@ -1066,14 +1066,14 @@ abstract class PaypalNotification implements ActiveRecordInterface
      * If desired, this method can also make copies of all associated (fkey referrers)
      * objects.
      *
-     * @param      object $copyObj An object of \Zidisha\Payment\Paypal\PaypalNotification (or compatible) type.
+     * @param      object $copyObj An object of \Zidisha\Payment\Paypal\PayPalIpnLog (or compatible) type.
      * @param      boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
      * @param      boolean $makeNew Whether to reset autoincrement PKs and make the object new.
      * @throws PropelException
      */
     public function copyInto($copyObj, $deepCopy = false, $makeNew = true)
     {
-        $copyObj->setNotification($this->getNotification());
+        $copyObj->setLog($this->getLog());
         $copyObj->setCreatedAt($this->getCreatedAt());
         $copyObj->setUpdatedAt($this->getUpdatedAt());
         if ($makeNew) {
@@ -1091,7 +1091,7 @@ abstract class PaypalNotification implements ActiveRecordInterface
      * objects.
      *
      * @param  boolean $deepCopy Whether to also copy all rows that refer (by fkey) to the current row.
-     * @return \Zidisha\Payment\Paypal\PaypalNotification Clone of current object.
+     * @return \Zidisha\Payment\Paypal\PayPalIpnLog Clone of current object.
      * @throws PropelException
      */
     public function copy($deepCopy = false)
@@ -1112,7 +1112,7 @@ abstract class PaypalNotification implements ActiveRecordInterface
     public function clear()
     {
         $this->id = null;
-        $this->notification = null;
+        $this->log = null;
         $this->created_at = null;
         $this->updated_at = null;
         $this->alreadyInSave = false;
@@ -1144,7 +1144,7 @@ abstract class PaypalNotification implements ActiveRecordInterface
      */
     public function __toString()
     {
-        return (string) $this->exportTo(PaypalNotificationTableMap::DEFAULT_STRING_FORMAT);
+        return (string) $this->exportTo(PayPalIpnLogTableMap::DEFAULT_STRING_FORMAT);
     }
 
     // timestampable behavior
@@ -1152,11 +1152,11 @@ abstract class PaypalNotification implements ActiveRecordInterface
     /**
      * Mark the current object so that the update date doesn't get updated during next save
      *
-     * @return     $this|ChildPaypalNotification The current object (for fluent API support)
+     * @return     $this|ChildPayPalIpnLog The current object (for fluent API support)
      */
     public function keepUpdateDateUnchanged()
     {
-        $this->modifiedColumns[PaypalNotificationTableMap::COL_UPDATED_AT] = true;
+        $this->modifiedColumns[PayPalIpnLogTableMap::COL_UPDATED_AT] = true;
 
         return $this;
     }

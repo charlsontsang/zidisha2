@@ -7,7 +7,7 @@ class PaymentHandler
     /**
      * @var Payment
      */
-    private $payment;
+    protected $payment;
 
     public function process() {
         return $this;

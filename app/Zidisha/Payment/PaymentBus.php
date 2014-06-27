@@ -10,9 +10,7 @@ class PaymentBus
      */
     public function getFailedHandler(Payment $payment)
     {
-        $paymentHandler = \App::make(get_class($payment) . 'FailedHandler');
-        $paymentHandler->setPayment($payment);
-        return $paymentHandler;
+        return $this->getHandler($payment, 'Failed');
     }
 
     /**
@@ -21,9 +19,7 @@ class PaymentBus
      */
     public function getCompletedHandler(Payment $payment)
     {
-        $paymentHandler = \App::make(get_class($payment) . 'CompletedHandler');
-        $paymentHandler->setPayment($payment);
-        return $paymentHandler;
+        return $this->getHandler($payment, 'Completed');
     }
 
     /**
@@ -32,8 +28,27 @@ class PaymentBus
      */
     public function getPendingHandler(Payment $payment)
     {
-        $paymentHandler =  \App::make(get_class($payment) . 'PendingHandler');
+        return $this->getHandler($payment, 'Pending');
+    }
+
+    /**
+     * @param Payment $payment
+     * @param $status
+     * @return mixed
+     */
+    protected function getHandler(Payment $payment, $status)
+    {
+        $class = get_class($payment);
+        $parts = explode('\\', $class);
+        $name = array_pop($parts);
+        $type = substr($name, 0, -7);
+        $parts[] = 'Handler';
+        $parts[] = $type;
+        $parts[] = $status . 'Handler';
+        $handler = implode('\\', $parts);
+        $paymentHandler = \App::make($handler);
         $paymentHandler->setPayment($payment);
+
         return $paymentHandler;
     }
 }

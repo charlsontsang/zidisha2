@@ -11,12 +11,12 @@ use Propel\Runtime\Exception\PropelException;
 use Propel\Runtime\Map\RelationMap;
 use Propel\Runtime\Map\TableMap;
 use Propel\Runtime\Map\TableMapTrait;
-use Zidisha\Payment\Paypal\PaypalNotification;
-use Zidisha\Payment\Paypal\PaypalNotificationQuery;
+use Zidisha\Payment\Paypal\PayPalIpnLog;
+use Zidisha\Payment\Paypal\PayPalIpnLogQuery;
 
 
 /**
- * This class defines the structure of the 'paypal_instant_payment_notification' table.
+ * This class defines the structure of the 'paypal_ipn_log' table.
  *
  *
  *
@@ -26,7 +26,7 @@ use Zidisha\Payment\Paypal\PaypalNotificationQuery;
  * (i.e. if it's a text column type).
  *
  */
-class PaypalNotificationTableMap extends TableMap
+class PayPalIpnLogTableMap extends TableMap
 {
     use InstancePoolTrait;
     use TableMapTrait;
@@ -34,7 +34,7 @@ class PaypalNotificationTableMap extends TableMap
     /**
      * The (dot-path) name of this class
      */
-    const CLASS_NAME = 'Zidisha.Payment.Paypal.Map.PaypalNotificationTableMap';
+    const CLASS_NAME = 'Zidisha.Payment.Paypal.Map.PayPalIpnLogTableMap';
 
     /**
      * The default database name for this class
@@ -44,17 +44,17 @@ class PaypalNotificationTableMap extends TableMap
     /**
      * The table name for this class
      */
-    const TABLE_NAME = 'paypal_instant_payment_notification';
+    const TABLE_NAME = 'paypal_ipn_log';
 
     /**
      * The related Propel class for this table
      */
-    const OM_CLASS = '\\Zidisha\\Payment\\Paypal\\PaypalNotification';
+    const OM_CLASS = '\\Zidisha\\Payment\\Paypal\\PayPalIpnLog';
 
     /**
      * A class that can be returned by this tableMap
      */
-    const CLASS_DEFAULT = 'Zidisha.Payment.Paypal.PaypalNotification';
+    const CLASS_DEFAULT = 'Zidisha.Payment.Paypal.PayPalIpnLog';
 
     /**
      * The total number of columns
@@ -74,22 +74,22 @@ class PaypalNotificationTableMap extends TableMap
     /**
      * the column name for the ID field
      */
-    const COL_ID = 'paypal_instant_payment_notification.ID';
+    const COL_ID = 'paypal_ipn_log.ID';
 
     /**
-     * the column name for the NOTIFICATION field
+     * the column name for the LOG field
      */
-    const COL_NOTIFICATION = 'paypal_instant_payment_notification.NOTIFICATION';
+    const COL_LOG = 'paypal_ipn_log.LOG';
 
     /**
      * the column name for the CREATED_AT field
      */
-    const COL_CREATED_AT = 'paypal_instant_payment_notification.CREATED_AT';
+    const COL_CREATED_AT = 'paypal_ipn_log.CREATED_AT';
 
     /**
      * the column name for the UPDATED_AT field
      */
-    const COL_UPDATED_AT = 'paypal_instant_payment_notification.UPDATED_AT';
+    const COL_UPDATED_AT = 'paypal_ipn_log.UPDATED_AT';
 
     /**
      * The default string format for model objects of the related table
@@ -103,11 +103,11 @@ class PaypalNotificationTableMap extends TableMap
      * e.g. self::$fieldNames[self::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        self::TYPE_PHPNAME       => array('Id', 'Notification', 'CreatedAt', 'UpdatedAt', ),
-        self::TYPE_STUDLYPHPNAME => array('id', 'notification', 'createdAt', 'updatedAt', ),
-        self::TYPE_COLNAME       => array(PaypalNotificationTableMap::COL_ID, PaypalNotificationTableMap::COL_NOTIFICATION, PaypalNotificationTableMap::COL_CREATED_AT, PaypalNotificationTableMap::COL_UPDATED_AT, ),
-        self::TYPE_RAW_COLNAME   => array('COL_ID', 'COL_NOTIFICATION', 'COL_CREATED_AT', 'COL_UPDATED_AT', ),
-        self::TYPE_FIELDNAME     => array('id', 'notification', 'created_at', 'updated_at', ),
+        self::TYPE_PHPNAME       => array('Id', 'Log', 'CreatedAt', 'UpdatedAt', ),
+        self::TYPE_STUDLYPHPNAME => array('id', 'log', 'createdAt', 'updatedAt', ),
+        self::TYPE_COLNAME       => array(PayPalIpnLogTableMap::COL_ID, PayPalIpnLogTableMap::COL_LOG, PayPalIpnLogTableMap::COL_CREATED_AT, PayPalIpnLogTableMap::COL_UPDATED_AT, ),
+        self::TYPE_RAW_COLNAME   => array('COL_ID', 'COL_LOG', 'COL_CREATED_AT', 'COL_UPDATED_AT', ),
+        self::TYPE_FIELDNAME     => array('id', 'log', 'created_at', 'updated_at', ),
         self::TYPE_NUM           => array(0, 1, 2, 3, )
     );
 
@@ -118,11 +118,11 @@ class PaypalNotificationTableMap extends TableMap
      * e.g. self::$fieldKeys[self::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        self::TYPE_PHPNAME       => array('Id' => 0, 'Notification' => 1, 'CreatedAt' => 2, 'UpdatedAt' => 3, ),
-        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'notification' => 1, 'createdAt' => 2, 'updatedAt' => 3, ),
-        self::TYPE_COLNAME       => array(PaypalNotificationTableMap::COL_ID => 0, PaypalNotificationTableMap::COL_NOTIFICATION => 1, PaypalNotificationTableMap::COL_CREATED_AT => 2, PaypalNotificationTableMap::COL_UPDATED_AT => 3, ),
-        self::TYPE_RAW_COLNAME   => array('COL_ID' => 0, 'COL_NOTIFICATION' => 1, 'COL_CREATED_AT' => 2, 'COL_UPDATED_AT' => 3, ),
-        self::TYPE_FIELDNAME     => array('id' => 0, 'notification' => 1, 'created_at' => 2, 'updated_at' => 3, ),
+        self::TYPE_PHPNAME       => array('Id' => 0, 'Log' => 1, 'CreatedAt' => 2, 'UpdatedAt' => 3, ),
+        self::TYPE_STUDLYPHPNAME => array('id' => 0, 'log' => 1, 'createdAt' => 2, 'updatedAt' => 3, ),
+        self::TYPE_COLNAME       => array(PayPalIpnLogTableMap::COL_ID => 0, PayPalIpnLogTableMap::COL_LOG => 1, PayPalIpnLogTableMap::COL_CREATED_AT => 2, PayPalIpnLogTableMap::COL_UPDATED_AT => 3, ),
+        self::TYPE_RAW_COLNAME   => array('COL_ID' => 0, 'COL_LOG' => 1, 'COL_CREATED_AT' => 2, 'COL_UPDATED_AT' => 3, ),
+        self::TYPE_FIELDNAME     => array('id' => 0, 'log' => 1, 'created_at' => 2, 'updated_at' => 3, ),
         self::TYPE_NUM           => array(0, 1, 2, 3, )
     );
 
@@ -136,15 +136,15 @@ class PaypalNotificationTableMap extends TableMap
     public function initialize()
     {
         // attributes
-        $this->setName('paypal_instant_payment_notification');
-        $this->setPhpName('PaypalNotification');
-        $this->setClassName('\\Zidisha\\Payment\\Paypal\\PaypalNotification');
+        $this->setName('paypal_ipn_log');
+        $this->setPhpName('PayPalIpnLog');
+        $this->setClassName('\\Zidisha\\Payment\\Paypal\\PayPalIpnLog');
         $this->setPackage('Zidisha.Payment.Paypal');
         $this->setUseIdGenerator(true);
-        $this->setPrimaryKeyMethodInfo('paypal_instant_payment_notification_id_seq');
+        $this->setPrimaryKeyMethodInfo('paypal_ipn_log_id_seq');
         // columns
         $this->addPrimaryKey('ID', 'Id', 'INTEGER', true, null, null);
-        $this->addColumn('NOTIFICATION', 'Notification', 'VARCHAR', true, 255, null);
+        $this->addColumn('LOG', 'Log', 'VARCHAR', true, 255, null);
         $this->addColumn('CREATED_AT', 'CreatedAt', 'TIMESTAMP', false, null, null);
         $this->addColumn('UPDATED_AT', 'UpdatedAt', 'TIMESTAMP', false, null, null);
     } // initialize()
@@ -226,7 +226,7 @@ class PaypalNotificationTableMap extends TableMap
      */
     public static function getOMClass($withPrefix = true)
     {
-        return $withPrefix ? PaypalNotificationTableMap::CLASS_DEFAULT : PaypalNotificationTableMap::OM_CLASS;
+        return $withPrefix ? PayPalIpnLogTableMap::CLASS_DEFAULT : PayPalIpnLogTableMap::OM_CLASS;
     }
 
     /**
@@ -240,22 +240,22 @@ class PaypalNotificationTableMap extends TableMap
      *
      * @throws PropelException Any exceptions caught during processing will be
      *                         rethrown wrapped into a PropelException.
-     * @return array           (PaypalNotification object, last column rank)
+     * @return array           (PayPalIpnLog object, last column rank)
      */
     public static function populateObject($row, $offset = 0, $indexType = TableMap::TYPE_NUM)
     {
-        $key = PaypalNotificationTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
-        if (null !== ($obj = PaypalNotificationTableMap::getInstanceFromPool($key))) {
+        $key = PayPalIpnLogTableMap::getPrimaryKeyHashFromRow($row, $offset, $indexType);
+        if (null !== ($obj = PayPalIpnLogTableMap::getInstanceFromPool($key))) {
             // We no longer rehydrate the object, since this can cause data loss.
             // See http://www.propelorm.org/ticket/509
             // $obj->hydrate($row, $offset, true); // rehydrate
-            $col = $offset + PaypalNotificationTableMap::NUM_HYDRATE_COLUMNS;
+            $col = $offset + PayPalIpnLogTableMap::NUM_HYDRATE_COLUMNS;
         } else {
-            $cls = PaypalNotificationTableMap::OM_CLASS;
-            /** @var PaypalNotification $obj */
+            $cls = PayPalIpnLogTableMap::OM_CLASS;
+            /** @var PayPalIpnLog $obj */
             $obj = new $cls();
             $col = $obj->hydrate($row, $offset, false, $indexType);
-            PaypalNotificationTableMap::addInstanceToPool($obj, $key);
+            PayPalIpnLogTableMap::addInstanceToPool($obj, $key);
         }
 
         return array($obj, $col);
@@ -278,18 +278,18 @@ class PaypalNotificationTableMap extends TableMap
         $cls = static::getOMClass(false);
         // populate the object(s)
         while ($row = $dataFetcher->fetch()) {
-            $key = PaypalNotificationTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
-            if (null !== ($obj = PaypalNotificationTableMap::getInstanceFromPool($key))) {
+            $key = PayPalIpnLogTableMap::getPrimaryKeyHashFromRow($row, 0, $dataFetcher->getIndexType());
+            if (null !== ($obj = PayPalIpnLogTableMap::getInstanceFromPool($key))) {
                 // We no longer rehydrate the object, since this can cause data loss.
                 // See http://www.propelorm.org/ticket/509
                 // $obj->hydrate($row, 0, true); // rehydrate
                 $results[] = $obj;
             } else {
-                /** @var PaypalNotification $obj */
+                /** @var PayPalIpnLog $obj */
                 $obj = new $cls();
                 $obj->hydrate($row);
                 $results[] = $obj;
-                PaypalNotificationTableMap::addInstanceToPool($obj, $key);
+                PayPalIpnLogTableMap::addInstanceToPool($obj, $key);
             } // if key exists
         }
 
@@ -310,13 +310,13 @@ class PaypalNotificationTableMap extends TableMap
     public static function addSelectColumns(Criteria $criteria, $alias = null)
     {
         if (null === $alias) {
-            $criteria->addSelectColumn(PaypalNotificationTableMap::COL_ID);
-            $criteria->addSelectColumn(PaypalNotificationTableMap::COL_NOTIFICATION);
-            $criteria->addSelectColumn(PaypalNotificationTableMap::COL_CREATED_AT);
-            $criteria->addSelectColumn(PaypalNotificationTableMap::COL_UPDATED_AT);
+            $criteria->addSelectColumn(PayPalIpnLogTableMap::COL_ID);
+            $criteria->addSelectColumn(PayPalIpnLogTableMap::COL_LOG);
+            $criteria->addSelectColumn(PayPalIpnLogTableMap::COL_CREATED_AT);
+            $criteria->addSelectColumn(PayPalIpnLogTableMap::COL_UPDATED_AT);
         } else {
             $criteria->addSelectColumn($alias . '.ID');
-            $criteria->addSelectColumn($alias . '.NOTIFICATION');
+            $criteria->addSelectColumn($alias . '.LOG');
             $criteria->addSelectColumn($alias . '.CREATED_AT');
             $criteria->addSelectColumn($alias . '.UPDATED_AT');
         }
@@ -331,7 +331,7 @@ class PaypalNotificationTableMap extends TableMap
      */
     public static function getTableMap()
     {
-        return Propel::getServiceContainer()->getDatabaseMap(PaypalNotificationTableMap::DATABASE_NAME)->getTable(PaypalNotificationTableMap::TABLE_NAME);
+        return Propel::getServiceContainer()->getDatabaseMap(PayPalIpnLogTableMap::DATABASE_NAME)->getTable(PayPalIpnLogTableMap::TABLE_NAME);
     }
 
     /**
@@ -339,16 +339,16 @@ class PaypalNotificationTableMap extends TableMap
      */
     public static function buildTableMap()
     {
-        $dbMap = Propel::getServiceContainer()->getDatabaseMap(PaypalNotificationTableMap::DATABASE_NAME);
-        if (!$dbMap->hasTable(PaypalNotificationTableMap::TABLE_NAME)) {
-            $dbMap->addTableObject(new PaypalNotificationTableMap());
+        $dbMap = Propel::getServiceContainer()->getDatabaseMap(PayPalIpnLogTableMap::DATABASE_NAME);
+        if (!$dbMap->hasTable(PayPalIpnLogTableMap::TABLE_NAME)) {
+            $dbMap->addTableObject(new PayPalIpnLogTableMap());
         }
     }
 
     /**
-     * Performs a DELETE on the database, given a PaypalNotification or Criteria object OR a primary key value.
+     * Performs a DELETE on the database, given a PayPalIpnLog or Criteria object OR a primary key value.
      *
-     * @param mixed               $values Criteria or PaypalNotification object or primary key or array of primary keys
+     * @param mixed               $values Criteria or PayPalIpnLog object or primary key or array of primary keys
      *              which is used to create the DELETE statement
      * @param  ConnectionInterface $con the connection to use
      * @return int             The number of affected rows (if supported by underlying database driver).  This includes CASCADE-related rows
@@ -359,27 +359,27 @@ class PaypalNotificationTableMap extends TableMap
      public static function doDelete($values, ConnectionInterface $con = null)
      {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(PaypalNotificationTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(PayPalIpnLogTableMap::DATABASE_NAME);
         }
 
         if ($values instanceof Criteria) {
             // rename for clarity
             $criteria = $values;
-        } elseif ($values instanceof \Zidisha\Payment\Paypal\PaypalNotification) { // it's a model object
+        } elseif ($values instanceof \Zidisha\Payment\Paypal\PayPalIpnLog) { // it's a model object
             // create criteria based on pk values
             $criteria = $values->buildPkeyCriteria();
         } else { // it's a primary key, or an array of pks
-            $criteria = new Criteria(PaypalNotificationTableMap::DATABASE_NAME);
-            $criteria->add(PaypalNotificationTableMap::COL_ID, (array) $values, Criteria::IN);
+            $criteria = new Criteria(PayPalIpnLogTableMap::DATABASE_NAME);
+            $criteria->add(PayPalIpnLogTableMap::COL_ID, (array) $values, Criteria::IN);
         }
 
-        $query = PaypalNotificationQuery::create()->mergeWith($criteria);
+        $query = PayPalIpnLogQuery::create()->mergeWith($criteria);
 
         if ($values instanceof Criteria) {
-            PaypalNotificationTableMap::clearInstancePool();
+            PayPalIpnLogTableMap::clearInstancePool();
         } elseif (!is_object($values)) { // it's a primary key, or an array of pks
             foreach ((array) $values as $singleval) {
-                PaypalNotificationTableMap::removeInstanceFromPool($singleval);
+                PayPalIpnLogTableMap::removeInstanceFromPool($singleval);
             }
         }
 
@@ -387,20 +387,20 @@ class PaypalNotificationTableMap extends TableMap
     }
 
     /**
-     * Deletes all rows from the paypal_instant_payment_notification table.
+     * Deletes all rows from the paypal_ipn_log table.
      *
      * @param ConnectionInterface $con the connection to use
      * @return int The number of affected rows (if supported by underlying database driver).
      */
     public static function doDeleteAll(ConnectionInterface $con = null)
     {
-        return PaypalNotificationQuery::create()->doDeleteAll($con);
+        return PayPalIpnLogQuery::create()->doDeleteAll($con);
     }
 
     /**
-     * Performs an INSERT on the database, given a PaypalNotification or Criteria object.
+     * Performs an INSERT on the database, given a PayPalIpnLog or Criteria object.
      *
-     * @param mixed               $criteria Criteria or PaypalNotification object containing data that is used to create the INSERT statement.
+     * @param mixed               $criteria Criteria or PayPalIpnLog object containing data that is used to create the INSERT statement.
      * @param ConnectionInterface $con the ConnectionInterface connection to use
      * @return mixed           The new primary key.
      * @throws PropelException Any exceptions caught during processing will be
@@ -409,22 +409,22 @@ class PaypalNotificationTableMap extends TableMap
     public static function doInsert($criteria, ConnectionInterface $con = null)
     {
         if (null === $con) {
-            $con = Propel::getServiceContainer()->getWriteConnection(PaypalNotificationTableMap::DATABASE_NAME);
+            $con = Propel::getServiceContainer()->getWriteConnection(PayPalIpnLogTableMap::DATABASE_NAME);
         }
 
         if ($criteria instanceof Criteria) {
             $criteria = clone $criteria; // rename for clarity
         } else {
-            $criteria = $criteria->buildCriteria(); // build Criteria from PaypalNotification object
+            $criteria = $criteria->buildCriteria(); // build Criteria from PayPalIpnLog object
         }
 
-        if ($criteria->containsKey(PaypalNotificationTableMap::COL_ID) && $criteria->keyContainsValue(PaypalNotificationTableMap::COL_ID) ) {
-            throw new PropelException('Cannot insert a value for auto-increment primary key ('.PaypalNotificationTableMap::COL_ID.')');
+        if ($criteria->containsKey(PayPalIpnLogTableMap::COL_ID) && $criteria->keyContainsValue(PayPalIpnLogTableMap::COL_ID) ) {
+            throw new PropelException('Cannot insert a value for auto-increment primary key ('.PayPalIpnLogTableMap::COL_ID.')');
         }
 
 
         // Set the correct dbName
-        $query = PaypalNotificationQuery::create()->mergeWith($criteria);
+        $query = PayPalIpnLogQuery::create()->mergeWith($criteria);
 
         // use transaction because $criteria could contain info
         // for more than one table (I guess, conceivably)
@@ -433,7 +433,7 @@ class PaypalNotificationTableMap extends TableMap
         });
     }
 
-} // PaypalNotificationTableMap
+} // PayPalIpnLogTableMap
 // This is the static code needed to register the TableMap for this table with the main Propel class.
 //
-PaypalNotificationTableMap::buildTableMap();
+PayPalIpnLogTableMap::buildTableMap();

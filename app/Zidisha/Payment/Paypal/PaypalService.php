@@ -231,8 +231,8 @@ class PayPalService extends PaymentService
 
         if ($ipnMessage->validate()) {
             //Log PayPal Notifications
-            $payPalLog = new PaypalNotification();
-            $payPalLog->setNotification(serialize($data));
+            $payPalLog = new PayPalIpnLog();
+            $payPalLog->setLog(serialize($data));
             $payPalLog->save();
 
             $custom = $data['custom'];
