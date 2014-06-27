@@ -230,6 +230,11 @@ class PayPalService extends PaymentService
         $data = $ipnMessage->getRawData();
 
         if ($ipnMessage->validate()) {
+            //Log PayPal Notifications
+            $payPalLog = new PaypalNotification();
+            $payPalLog->setNotification(serialize($data));
+            $payPalLog->save();
+
             $custom = $data['custom'];
             $transactionId = $data['txn_id'];
             $transactionType = $data['txn_type'];
