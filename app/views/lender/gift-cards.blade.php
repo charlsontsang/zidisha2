@@ -15,15 +15,16 @@ Gift Cards
 <div>
     <div>
         <div>
+
+            {{ BootstrapForm::open(array('controller' => 'LenderController@postGiftCards', 'translationDomain' =>
+            'lender.gift-cards')) }}
+            {{ BootstrapForm::populate($form) }}
+
             <div style='margin-right: 20px; margin-left: 10px; margin-top:30px;font-size:20px'><strong>
                     <br/><br/>Step One: Select An Image</strong>
             </div>
+            {{ BootstrapForm::select('template', $form->getTemplates()) }}
             <br/><br/>
-
-            {{ Form::label('panda_colour', 'Images') }}
-            {{ Form::radio('panda_colour', 'red', true) }} Red
-            {{ Form::radio('panda_colour', 'black') }} Black
-            {{ Form::radio('panda_colour', 'white') }} White
 
 
             <div style='margin-right: 20px; margin-left: 10px; margin-top:30px;font-size:20px'><strong>
@@ -31,29 +32,24 @@ Gift Cards
             </div>
             <br/>
 
-            {{ BootstrapForm::open(array('controller' => 'LenderController@postGiftCards', 'translationDomain' =>
-            'lender.gift-cards')) }}
-            {{ BootstrapForm::populate($form) }}
 
             {{ BootstrapForm::select('amount', $form->getAmounts()) }}
 
-            {{ Form::label('self-Print','Self-Print') }}
-            {{ Form::radio('deliveryMethod','Self-Print','',array('id'=>'self-Print')) }}
-            {{ Form::label('email','Email') }}
-            {{ Form::radio('deliveryMethod','Email','',array('id'=>'email')) }}
+            {{ BootstrapForm::select( 'orderType', $form->getOrderTypes()) }}
+
             {{ BootstrapForm::text('recipientEmail') }}
 
             <br/>
             <br/>
             {{ BootstrapForm::label('Optional Fields') }}
             <br/> <br/>
-            {{ BootstrapForm::text('toName') }}
+            {{ BootstrapForm::text('recipientName') }}
 
             {{ BootstrapForm::text('fromName') }}
 
             {{ BootstrapForm::textarea('message') }}
 
-            {{ BootstrapForm::text('yourEmail') }}
+            {{ BootstrapForm::text('confirmationEmail') }}
 
             {{ BootstrapForm::submit('save') }}
 
