@@ -261,8 +261,19 @@ class RepaymentService
         }
         
         if ($updatedInstallments) {
+            /** @var Installment $installment */
             $installment = end($updatedInstallments);
-            // TODO make installmentPayment
+            
+            $installmentPayment = new InstallmentPayment();
+            $installmentPayment
+                ->setInstallmentId($installment->getId())
+                ->setBorrowerId($installment->getBorrowerId())
+                ->setLoanId($loan->getId())
+                ->setPaidAmount($amount)
+                ->setPaidDate($date);
+            
+            $installmentPayment->save($con);
+            
             reset($updatedInstallments);
         }
         
