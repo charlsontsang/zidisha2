@@ -35,7 +35,7 @@ class LoanServiceCest
             ->findOneById('5');
 
         $lender = \Zidisha\Lender\LenderQuery::create()
-            ->findOneById('32');
+            ->findOneById('33');
 
         $data = [
             'amount' => '20',
@@ -329,13 +329,13 @@ class LoanServiceCest
             ->findOneById(5);
 
         $lender1 = \Zidisha\Lender\LenderQuery::create()
-            ->findOneById(32);
-
-        $lender2 = \Zidisha\Lender\LenderQuery::create()
             ->findOneById(33);
 
-        $lender3 = \Zidisha\Lender\LenderQuery::create()
+        $lender2 = \Zidisha\Lender\LenderQuery::create()
             ->findOneById(34);
+
+        $lender3 = \Zidisha\Lender\LenderQuery::create()
+            ->findOneById(35);
 
         try {
             $this->transactionService->addPlaceBidTransaction($con, Money::create(50), $loan, $lender1);
