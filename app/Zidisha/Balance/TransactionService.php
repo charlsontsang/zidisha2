@@ -57,7 +57,8 @@ class TransactionService
         Money $amount,
         Loan $loan,
         Lender $lender
-    ) {
+    )
+    {
         $this->assertAmount($amount);
 
         $bidTransaction = new Transaction();
@@ -82,7 +83,8 @@ class TransactionService
         Money $amount,
         Loan $loan,
         Lender $lender
-    ) {
+    )
+    {
         $this->assertAmount($amount);
 
         $transaction = new Transaction();
@@ -105,7 +107,8 @@ class TransactionService
         Money $amount,
         Loan $loan,
         Lender $lender
-    ) {
+    )
+    {
         $this->assertAmount($amount);
 
         $bidTransaction = new Transaction();
@@ -130,7 +133,8 @@ class TransactionService
         Money $amount,
         Loan $loan,
         Lender $lender
-    ) {
+    )
+    {
         $this->assertAmount($amount);
 
         $bidTransaction = new Transaction();
