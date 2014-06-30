@@ -207,8 +207,8 @@
         <column name="loan_id" type="INTEGER"/>
         <column name="transaction_date" type="TIMESTAMP" required="true"/>
         <column name="exchange_rate" type="DECIMAL" size="10" scale="4"/>
-        <column name="type" type="ENUM" valueSet="1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18" required="true"/>
-        <column name="sub_type" type="ENUM" valueSet="1,2,3,4,5,6,7,8,9,10,11,12,13,14"/>
+        <column name="type" type="ENUM" valueSet="0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18" required="true"/>
+        <column name="sub_type" type="ENUM" valueSet="0,1,2,3,4,5,6,7,8,9,10,11,12,13,14"/>
         <column name="loan_bid_id" type="INTEGER"/>
         <!--To, change to require=true-->
         <behavior name="timestampable"/>
@@ -405,7 +405,7 @@
         <column name="amount" type="DECIMAL" size="12" scale="4" required="true"/>
         <column name="description" type="VARCHAR" size="100" required="true"/>
         <column name="transaction_date" type="TIMESTAMP" required="true"/>
-        <column name="type" type="ENUM" valueSet="1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18" required="true"/>
+        <column name="type" type="ENUM" valueSet="0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18" required="true"/>
         <column name="loan_id" type="INTEGER"/>
         <column name="loan_bid_id" type="INTEGER"/>
         <behavior name="timestampable"/>
@@ -489,6 +489,7 @@
         <column name="class_key" type="integer" inheritance="single">
             <inheritance key="1" class="UploadFundPayment"/>
             <inheritance key="2" class="BidPayment"/>
+            <inheritance key="3" class="GiftCardPayment"/>
         </column>
     </table>
 

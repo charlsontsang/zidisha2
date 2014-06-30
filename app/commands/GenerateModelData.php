@@ -54,6 +54,7 @@ class GenerateModelData extends Command
             ['SN', 'Senegal', 'XOF', '0',],
             ['IN', 'India', 'INR', '0',],
         ];
+        $temp = true;
 
         if ($model == 'new') {
             $this->line('Rebuild database');
@@ -375,7 +376,7 @@ class GenerateModelData extends Command
                 $transaction->setType(Transaction::FUND_WITHDRAW);
                 $transaction->save();
 
-                $temp = true;
+
                 if ($temp == true) {
                     $yc = \Zidisha\User\UserQuery::create()
                         ->findOneById(2);

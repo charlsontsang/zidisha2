@@ -5,6 +5,7 @@ namespace Zidisha\Balance;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Zidisha\Currency\Money;
 use Zidisha\Lender\GiftCard;
+use Zidisha\Lender\GiftCardTransaction;
 use Zidisha\Lender\Invite;
 use Zidisha\Lender\Lender;
 use Zidisha\Loan\Loan;
@@ -58,8 +59,7 @@ class TransactionService
         Money $amount,
         Loan $loan,
         Lender $lender
-    )
-    {
+    ) {
         $this->assertAmount($amount);
 
         $bidTransaction = new Transaction();
@@ -80,8 +80,7 @@ class TransactionService
         Money $amount,
         Loan $loan,
         Lender $lender
-    )
-    {
+    ) {
         $this->assertAmount($amount);
 
         $transaction = new Transaction();
@@ -101,8 +100,7 @@ class TransactionService
         Money $amount,
         Loan $loan,
         Lender $lender
-    )
-    {
+    ) {
         $this->assertAmount($amount);
 
         $bidTransaction = new Transaction();
@@ -123,8 +121,7 @@ class TransactionService
         Money $amount,
         Loan $loan,
         Lender $lender
-    )
-    {
+    ) {
         $this->assertAmount($amount);
 
         $bidTransaction = new Transaction();
@@ -219,6 +216,7 @@ class TransactionService
             ->setSubType(Transaction::FUND_UPLOAD);
         $transactionUpload->save($con);
 
+
         if ($payment->getTransactionFee()->greaterThan(Money::create(0))) {
             if ($payment->getPaymentMethod() == 'stripe') {
                 $transactionType = Transaction::STRIPE_FEE;
@@ -260,6 +258,7 @@ class TransactionService
             ->setTransactionDate(new \DateTime())
             ->setType(Transaction::DONATION);
         $donationTransaction->save($con);
+
 
         $donationTransaction = new Transaction();
         $donationTransaction
@@ -319,8 +318,12 @@ class TransactionService
         $transaction->save($con);
     }
 
-    public function addLenderInviteCreditRepaymentTransaction(ConnectionInterface $con, Money $amount, Loan $loan, \DateTime $date)
-    {
+    public function addLenderInviteCreditRepaymentTransaction(
+        ConnectionInterface $con,
+        Money $amount,
+        Loan $loan,
+        \DateTime $date
+    ) {
         $this->assertAmount($amount);
 
         $transaction = new Transaction();
@@ -333,5 +336,37 @@ class TransactionService
             ->setType(Transaction::LOAN_BACK_LENDER);
 
         $transaction->save($con);
+    }
+
+    public function purchaseGiftCardTransaction(ConnectionInterface $con, GiftCard $giftCard)
+    {
+        $this->assertAmount($giftCard->getCardAmount());
+
+        $giftCardTransaction = new Transaction();
+        $giftCardTransaction->setUserId($giftCard->getLender()->getUser()->getId())
+            ->setAmount($giftCard->getCardAmount()->multiply(-1))
+            ->setDescription("Gift Card Purchase")
+            ->setTransactionDate(new \DateTime())
+            ->setType(Transaction::GIFT_PURCHASE);
+        $giftCardTransaction->save($con);
+
+        $giftCardTransaction = new Transaction();
+        $giftCardTransaction->setUserId(\Config::get('app.AdminId'))
+            ->setAmount($giftCard->getCardAmount())
+            ->setDescription("Gift Card Purchase")
+            ->setTransactionDate(new \DateTime())
+            ->setType(Transaction::GIFT_PURCHASE);
+        $giftCardTransaction->save($con);
+
+        $giftPurchaseTransaction = new GiftCardTransaction();
+        $giftPurchaseTransaction->setLender($giftCard->getLender())
+            ->setAmount($giftCard->getCardAmount()->getAmount())
+            ->setTransactionId($giftCardTransaction->getId())
+            ->setDate(new \DateTime())
+            ->setTotalCards(1)
+            ->setTransactionType("Gift Card");
+
+        $giftPurchaseTransaction->save($con);
+
     }
 }

@@ -92,7 +92,7 @@ Route::group(
         );
 
 
-        Route::get(
+        Route::post(
             '/gift-cards/accept',
             array(
                 'uses' => 'GiftCardController@postTermsAccept',
