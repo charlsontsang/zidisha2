@@ -239,7 +239,7 @@ class GenerateModelData extends Command
                 $borrower_profile->setAboutBusiness($faker->paragraph(7));
                 $borrower_profile->setAddress($faker->paragraph(3));
                 $borrower_profile->setAddressInstruction($faker->paragraph(6));
-                $borrower_profile->setVillage($faker->sentence(2));
+                $borrower_profile->setCity($faker->sentence(2));
                 $borrower_profile->setPhoneNumber($faker->phoneNumber);
                 $borrower_profile->setAlternatePhoneNumber($faker->phoneNumber);
                 $borrower_profile->setNationalIdNumber($faker->randomNumber(10));

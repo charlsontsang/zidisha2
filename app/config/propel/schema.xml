@@ -164,7 +164,7 @@
         <column name="about_business " type="LONGVARCHAR" required="false"/>
         <column name="address" type="LONGVARCHAR" required="true"/>
         <column name="address_instruction" type="LONGVARCHAR" required="true"/>
-        <column name="village" type="VARCHAR" size="100" required="true"/>
+        <column name="city" type="VARCHAR" size="100" required="true"/>
         <column name="national_id_number" type="VARCHAR" size="100" required="true"/>
         <column name="phone_number" type="VARCHAR" size="45" required="true"/>
         <column name="alternate_phone_number" type="VARCHAR" size="45" required="true"/>

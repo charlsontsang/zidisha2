@@ -4,16 +4,16 @@ namespace Zidisha\Borrower\Form\Join;
 
 use Zidisha\Form\AbstractForm;
 
-class Country extends AbstractForm
+class CountryForm extends AbstractForm
 {
 
     public function getRules($data)
     {
         $countries = $this->getCountries()->toKeyValue('id', 'id');
-        $listOfEnabledCountries= implode(",", $countries);
+        $listOfEnabledCountries = implode(",", $countries);
 
         return [
-            'country' => ['required', 'in:'.$listOfEnabledCountries]
+            'country' => ['required', 'in:' . $listOfEnabledCountries]
         ];
     }
 

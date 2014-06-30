@@ -11,22 +11,22 @@ class BorrowerService
         $user = new \Zidisha\User\User();
         $user->setUsername($data['username']);
         $user->setEmail($data['email']);
-        $user->setFacebookId($data['facebook_id']);
+        $user->setFacebookId($data['facebookId']);
         $user->setRole('borrower');
 
         $borrower = new Borrower();
-        $borrower->setFirstName($data['first_name']);
-        $borrower->setLastName($data['last_name']);
+        $borrower->setFirstName($data['firstName']);
+        $borrower->setLastName($data['lastName']);
         $borrower->setCountryId($data['country']);
         $borrower->setUser($user);
 
         $profile = new Profile();
         $profile->setAddress($data['address']);
-        $profile->setAddressInstruction($data['address_instruction']);
-        $profile->setVillage($data['village']);
-        $profile->setNationalIdNumber($data['national_id_number']);
-        $profile->setPhoneNumber($data['phone_number']);
-        $profile->setAlternatePhoneNumber($data['alternate_phone_number']);
+        $profile->setAddressInstruction($data['addressInstruction']);
+        $profile->setCity($data['city']);
+        $profile->setNationalIdNumber($data['nationalIdNumber']);
+        $profile->setPhoneNumber($data['phoneNumber']);
+        $profile->setAlternatePhoneNumber($data['alternatePhoneNumber']);
         $borrower->setProfile($profile);
 
         $borrower->save();

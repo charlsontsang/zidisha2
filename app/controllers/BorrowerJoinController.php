@@ -29,11 +29,12 @@ class BorrowerJoinController extends BaseController
     public function __construct(
         \Zidisha\Vendor\Facebook\FacebookService $facebookService,
         \Zidisha\User\UserService $userService,
-        \Zidisha\Borrower\Form\Join\Profile $profileForm,
-        \Zidisha\Borrower\Form\Join\Country $countryForm,
+        \Zidisha\Borrower\Form\Join\ProfileForm $profileForm,
+        \Zidisha\Borrower\Form\Join\CountryForm $countryForm,
         \Zidisha\Borrower\BorrowerService $borrowerService,
         \Zidisha\Auth\AuthService $authService
-    ) {
+    )
+    {
         $this->beforeFilter('@stepsBeforeFilter');
         $this->facebookService = $facebookService;
         $this->userService = $userService;
@@ -53,7 +54,6 @@ class BorrowerJoinController extends BaseController
 
     public function postCountry()
     {
-
         $form = $this->countryForm;
         $form->handleRequest(Request::instance());
 
@@ -99,14 +99,14 @@ class BorrowerJoinController extends BaseController
                 return Redirect::action('BorrowerJoinController@getFacebook');
             }
 
-            Session::put('BorrowerJoin.facebook_id', $facebookUser['id']);
+            Session::put('BorrowerJoin.facebookId', $facebookUser['id']);
             Session::put('BorrowerJoin.email', $facebookUser['email']);
 
             $this->setCurrentStep('profile');
             return Redirect::action('BorrowerJoinController@getProfile');
         }
 
-        Flash::error('You need to provide a Valid Facebook Profile');
+        Flash::error('You need to provide a valid Facebook profile');
         return Redirect::action('BorrowerJoinController@getFacebook');
     }
 
@@ -127,8 +127,6 @@ class BorrowerJoinController extends BaseController
 
             if ($form->isValid()) {
                 $data = $form->getData();
-
-
                 $data = array_merge($data, Session::get('BorrowerJoin'));
 
                 $borrower = $this->borrowerService->joinBorrower($data);
@@ -157,9 +155,9 @@ class BorrowerJoinController extends BaseController
 
     public function getSkipFacebook()
     {
-        Session::put('BorrowerJoin.facebook_id', null);
+        Session::put('BorrowerJoin.facebookId', null);
 
-        if(Session::get('BorrowerJoin.countryCode') == 'BF'){
+        if (Session::get('BorrowerJoin.countryCode') == 'BF') {
             $this->setCurrentStep('profile');
             return Redirect::action('BorrowerJoinController@getProfile');
         }
