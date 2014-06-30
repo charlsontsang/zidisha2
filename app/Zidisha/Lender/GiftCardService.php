@@ -63,6 +63,9 @@ class GiftCardService
         $amount = Money::create($data['amount'], 'USD');
         $faker = Faker::create();
 
+        $con = Propel::getWriteConnection(TransactionTableMap::DATABASE_NAME);
+        $con->beginTransaction();
+
         $giftCard = new GiftCard();
         $giftCard
             ->setLender($lender)
@@ -77,7 +80,16 @@ class GiftCardService
             ->setExpireDate(strtotime('+1 year'))
             ->setCardCode($faker->creditCardNumber)
             ->setConfirmationEmail($data['confirmationEmail']);
-        $giftCard->save();
+
+        try {
+            $giftCard->save($con);
+
+            $this->transactionService->purchaseGiftCardTransaction($con, $giftCard);
+            $con->commit();
+        } catch (Exception $e) {
+            $con->rollBack();
+            throw $e;
+        }
 
         // Todo send email
 

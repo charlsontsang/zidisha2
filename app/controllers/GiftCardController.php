@@ -1,18 +1,30 @@
 <?php
 
+use Zidisha\Balance\TransactionQuery;
+use Zidisha\Currency\Money;
 use Zidisha\Lender\GiftCardQuery;
 use Zidisha\Lender\Form\GiftCard;
 use Zidisha\Lender\GiftCardService;
+use Zidisha\Payment\Form\GiftCardForm;
+use Zidisha\Payment\Form\UploadFundForm;
 
 class GiftCardController extends BaseController
 {
 
     private $cardForm, $giftCardService;
+    private $transactionQuery;
+    private $giftCardForm;
 
-    public function __construct(GiftCard $cardForm, GiftCardService $giftCardService)
-    {
+    public function __construct(
+        GiftCard $cardForm,
+        GiftCardService $giftCardService,
+        TransactionQuery $transactionQuery,
+        GiftCardForm $giftCardForm
+    ) {
         $this->cardForm = $cardForm;
         $this->giftCardService = $giftCardService;
+        $this->transactionQuery = $transactionQuery;
+        $this->giftCardForm = $giftCardForm;
     }
 
     public function getGiftCards()
@@ -30,16 +42,35 @@ class GiftCardController extends BaseController
 
             Session::put('giftCard', $data);
 
-            return View::make('lender.gift-cards-terms');
+            $currentBalance = $this->transactionQuery
+                ->filterByUserId(Auth::getUser()->getId())
+                ->getTotalAmount();
+            $data = Session::get('giftCard');
+            $amount = Money::create($data['amount'], 'USD');
+            $enoughBalance = 1;
+            if ($currentBalance < $amount) {
+                $enoughBalance = 0;
+            }
+
+            return View::make('lender.gift-cards-terms', compact('enoughBalance'));
         }
         return Redirect::route('lender:gift-cards')->withForm($form);
     }
 
     public function postTermsAccept()
     {
+        $form = $this->giftCardForm;
+        $form->handleRequest(\Request::instance());
+        $formData = $form->getData();
+
         $data = Session::get('giftCard');
         $lender = Auth::getUser()->getLender();
-        $giftCard = $this->giftCardService->addGiftCard($lender, $data);
+
+        if ($formData['amount']) {
+           return $form->makePayment();
+        } else {
+            $giftCard = $this->giftCardService->addGiftCard($lender, $data);
+        }
 
         Session::forget('giftCard');
         Flash::success("GiftCard Successfully Made.");
