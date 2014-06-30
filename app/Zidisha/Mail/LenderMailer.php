@@ -35,7 +35,7 @@ class LenderMailer
         $email = $bid->getLender()->getUser()->getEmail();
 
         $this->mailer->send(
-            'mail.loan.placed-first-bid',
+            'emails.loan.placed-first-bid',
             [
                 'to' => $email,
                 'from' => 'service@zidisha.com',
@@ -53,7 +53,7 @@ class LenderMailer
         $email = $bid->getLender()->getUser()->getEmail();
 
         $this->mailer->send(
-            'mail.loan.loan-completed',
+            'emails.loan.loan-completed',
             [
                 'to' => $email,
                 'from' => 'service@zidisha.com',
@@ -70,7 +70,7 @@ class LenderMailer
         $email = $bid->getLender()->getUser()->getEmail();
 
         $this->mailer->send(
-            'mail.loan.bid-placed',
+            'emails.loan.bid-placed',
             [
                 'to' => $email,
                 'from' => 'service@zidisha.com',

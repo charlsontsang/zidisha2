@@ -41,8 +41,8 @@
                 {{ BootstrapForm::open(array('route' => 'loan:post-bid', 'translationDomain' => 'bid', 'id' => 'funds-upload')) }}
                 {{ BootstrapForm::populate($form) }}
 
-                {{ BootstrapForm::text('bidAmount', null, ['id' => 'bid-amount']) }}
-                {{ BootstrapForm::hidden('amount', null, ['id' => 'credit-amount']) }}
+                {{ BootstrapForm::text('amount', null, ['id' => 'amount']) }}
+                {{ BootstrapForm::hidden('creditAmount', null, ['id' => 'credit-amount']) }}
                 {{ BootstrapForm::text('donationAmount', null, ['id' => 'donation-amount']) }}
 
                 {{ BootstrapForm::select('interestRate', $form->getRates()) }}
@@ -50,18 +50,17 @@
 
                 {{ BootstrapForm::hidden('transactionFee', null, ['id' => 'transaction-fee-amount']) }}
                 {{ BootstrapForm::hidden('transactionFeeRate', null, ['id' => 'fee-amount-rate']) }}
-                {{ BootstrapForm::hidden('current-balance', 40, ['id' => 'current-balance']) }}
+                {{ BootstrapForm::hidden('currentBalance', null, ['id' => 'current-balance']) }}
                 {{ BootstrapForm::hidden('totalAmount', null, ['id' => 'total-amount']) }}
 
                 {{ BootstrapForm::hidden('stripeToken', null, ['id' => 'stripe-token']) }}
                 {{ BootstrapForm::hidden('paymentMethod', null, ['id' => 'payment-method']) }}
 
-                @if(40 > 0)
-                    {{ BootstrapForm::label("Current Balance") }}: {{ 40 }}
+                @if($form->getCurrentBalance()->isPositive())
+                    {{ BootstrapForm::label("Current Balance") }}: {{ $form->getCurrentBalance() }}
                     <br/>
                 @endif
-                
-                
+
                 {{ BootstrapForm::label("Payment Transfer Cost") }}:
                 USD <span id="fee-amount-display"></span>
 
@@ -115,7 +114,7 @@
         paymentForm({
             stripeToken: "{{ \Config::get('stripe.public_key') }}",
             email: "{{ \Auth::user()->getEmail() }}",
-            amount: $('#bid-amount')
+            amount: $('#amount')
         });
     });
 </script>

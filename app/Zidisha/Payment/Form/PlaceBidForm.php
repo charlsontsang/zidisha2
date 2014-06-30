@@ -8,6 +8,15 @@ use Zidisha\Payment\BidPayment;
 class PlaceBidForm extends AbstractPaymentForm
 {
 
+    public function getRules($data)
+    {
+        return [
+            'amount' => '',
+            'loanId' => 'assert',
+            'interestRate' => '',
+        ] + parent::getRules($data);
+    }
+
     public function getPayment()
     {
 
@@ -21,13 +30,13 @@ class PlaceBidForm extends AbstractPaymentForm
 
         $placeBidPayment = new BidPayment();
         $placeBidPayment
-            ->setAmount(Money::create($data['amount']))
+            ->setCreditAmount(Money::create($data['creditAmount']))
             ->setDonationAmount(Money::create($data['donationAmount']))
             ->setTransactionFee(Money::create($data['transactionFee']))
             ->setTotalAmount(Money::create($data['totalAmount']))
             ->setLoanId($data['loanId'])
             ->setInterestRate($data['interestRate'])
-            ->setBidAmount(Money::create($data['bidAmount']))
+            ->setBidAmount(Money::create($data['amount']))
             ->setLender($lender);
 
         return $placeBidPayment;

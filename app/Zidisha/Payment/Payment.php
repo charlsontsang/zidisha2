@@ -7,14 +7,14 @@ use Zidisha\Payment\Base\Payment as BasePayment;
 
 class Payment extends BasePayment
 {
-    public function getAmount()
+    public function getCreditAmount()
     {
-        return Money::create(parent::getAmount(), 'USD');
+        return Money::create(parent::getCreditAmount(), 'USD');
     }
 
-    public function setAmount($money)
+    public function setCreditAmount($money)
     {
-        return parent::setAmount($money->getAmount());
+        return parent::setCreditAmount($money->getAmount());
     }
 
     public function getDonationAmount()

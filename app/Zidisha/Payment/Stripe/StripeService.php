@@ -32,7 +32,7 @@ class StripeService extends PaymentService
 
         $stripeTransaction = new StripeTransaction();
         $stripeTransaction
-            ->setAmount($payment->getAmount())
+            ->setAmount($payment->getCreditAmount())
             ->setDonationAmount($payment->getDonationAmount())
             ->setTransactionFee($payment->getTransactionFee())
             ->setTotalAmount($payment->getTotalAmount())
