@@ -68,7 +68,7 @@ class StripeService extends PaymentService
         }
 
         if ($paymentError) {
-            return $this->paymentBus->getFailedHandler($payment)->setPayment($payment)->redirect($paymentError);
+            return $this->paymentBus->getFailedHandler($payment, $paymentError)->setPayment($payment)->redirect();
         }
 
         $stripeTransaction

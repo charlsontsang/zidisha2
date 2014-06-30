@@ -2,9 +2,11 @@
 
 use SupremeNewMedia\Finance\Core\Currency;
 use SupremeNewMedia\Finance\Core\Money;
+use Zidisha\Balance\TransactionQuery;
 use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Comment\CommentService;
 use Zidisha\Flash\Flash;
+use Zidisha\Lender\Exceptions\InsufficientLenderBalanceException;
 use Zidisha\Loan\Bid;
 use Zidisha\Loan\Form\BidForm;
 use Zidisha\Loan\Loan;
@@ -39,7 +41,7 @@ class LoanController extends BaseController
         LoanQuery $loanQuery,
         CommentService $commentService,
         BidQuery $bidQuery,
-        BidForm $bidForm,
+        \Zidisha\Payment\Form\PlaceBidForm $bidForm,
         LoanService $loanService
     ) {
         $this->loanQuery = $loanQuery;
@@ -91,28 +93,7 @@ class LoanController extends BaseController
         $data = $form->getData();
 
         if ($form->isValid()) {
-
-            $loan = LoanQuery::create()
-                ->filterById($data['loanId'])
-                ->findOne();
-
-            $lender = \Auth::user()->getLender();
-
-            $currentBalance = TransactionQuery::create()
-                ->filterByUser($lender->getUser())
-                ->getTotalBalance();
-
-            if ($data['amount'] >= $currentBalance) {
-                throw new InsufficientLenderBalanceException();
-            }
-
-            // TODO : amount should be lower then loan amount (also check we do this for new bid)
-
-
-            $this->loanService->placeBid($loan, $lender, $data);
-
-            Flash::success("Successful bid of amount USD " . $data['Amount']);
-            return Redirect::route('loan:index', $data['loanId']);
+           return $form->makePayment();
         }
 
         Flash::error("Entered Amounts are invalid!");

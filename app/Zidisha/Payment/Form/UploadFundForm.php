@@ -9,11 +9,11 @@ class UploadFundForm  extends AbstractPaymentForm{
 
     public function getPayment()
     {
-        if(!\Auth::getUser()){
-            \App::abort('Fatal Error');
+        if(!\Auth::user()){
+            \App::abort(404, 'Fatal Error');
         }
 
-        $lender = \Auth::getUser()->getLender();
+        $lender = \Auth::user()->getLender();
 
         $data = $this->getData();
         $uploadPayment = new UploadFundPayment();

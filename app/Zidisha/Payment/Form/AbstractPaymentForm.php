@@ -32,6 +32,9 @@ abstract class AbstractPaymentForm extends AbstractForm
             'paymentMethod' => 'required|in:'. implode(',', $this->allowedServices),
             'stripeToken' => 'required_if:paymentMethod,stripe',
             'transactionFeeRate' => '',
+            'loanId' => '',
+            'interestRate' => '',
+            'bidAmount' => ''
         ];
     }
 
@@ -43,6 +46,7 @@ abstract class AbstractPaymentForm extends AbstractForm
             'totalAmount' => 0,
             'paymentMethod' => 'paypal',
             'transactionFeeRate' => 0.035, //Todo: get this transaction fee from the config;
+            'bidAmount' => 30
         ];
     }
 

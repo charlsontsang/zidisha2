@@ -82,7 +82,7 @@ class PayPalService extends PaymentService
             $setExpressCheckoutResponse = $this->payPalApi->SetExpressCheckout($setExpressCheckoutRequest);
         } catch (PPConnectionException $e) {
             $paymentError = new PaymentError('Error Connecting to PayPal.', $e);
-            return $this->paymentBus->getFailedHandler($payment)->redirect($paymentError);
+            return $this->paymentBus->getFailedHandler($payment, $paymentError)->redirect();
         }
 
         //Check if we get a Successful acknowledgment from the server.
@@ -90,7 +90,7 @@ class PayPalService extends PaymentService
             $this->logPayPalErrors($payment, $setExpressCheckoutResponse);
 
             $paymentError = new PaymentError('Error Connecting to PayPal.');
-            return $this->paymentBus->getFailedHandler($payment)->redirect($paymentError);
+            return $this->paymentBus->getFailedHandler($payment, $paymentError)->redirect();
         }
 
         $payPalTransaction
@@ -122,12 +122,12 @@ class PayPalService extends PaymentService
             $getExpressCheckoutResponse = $this->payPalApi->GetExpressCheckoutDetails($getExpressCheckoutRequest);
         } catch (PPConnectionException $e) {
             $paymentError = new PaymentError('Error Connecting to PayPal.', $e);
-            return $this->paymentBus->getFailedHandler($payment)->redirect($paymentError);
+            return $this->paymentBus->getFailedHandler($payment, $paymentError)->redirect();
         }
 
         if ($getExpressCheckoutResponse->Ack != 'Success') {
             $paymentError = new PaymentError('Error Connecting to PayPal.');
-            return $this->paymentBus->getFailedHandler($payment)->redirect($paymentError);
+            return $this->paymentBus->getFailedHandler($payment, $paymentError)->redirect();
         }
 
         try {
@@ -138,20 +138,20 @@ class PayPalService extends PaymentService
             );
         } catch (PPConnectionException $e) {
             $paymentError = new PaymentError('Error Connecting to PayPal.', $e);
-            return $this->paymentBus->getFailedHandler($payment)->redirect($paymentError);
+            return $this->paymentBus->getFailedHandler($payment, $paymentError)->redirect();
         }
 
         if ($payPalFinalResponse->Ack != "Success") {
             $this->logPayPalErrors($payment, $payPalFinalResponse);
 
             $paymentError = new PaymentError('PayPal transaction failed.');
-            return $this->paymentBus->getFailedHandler($payment)->redirect($paymentError);
+            return $this->paymentBus->getFailedHandler($payment, $paymentError)->redirect();
         }
 
         $paymentStatus = $payPalFinalResponse->DoExpressCheckoutPaymentResponseDetails->PaymentInfo[0]->PaymentStatus;
         if ($paymentStatus != "Completed") {
             $paymentError = new PaymentError('PayPal transaction pending');
-            return $this->paymentBus->getPendingHandler($payment)->redirect($paymentError);
+            return $this->paymentBus->getPendingHandler($payment, $paymentError)->redirect();
         }
 
         $paypalTransaction->setStatus($paymentStatus);
@@ -275,7 +275,7 @@ class PayPalService extends PaymentService
         $payment = $paypalTransaction->getPayment();
 
         $paymentError = new PaymentError('Canceled PayPal transaction.');
-        return $this->paymentBus->getFailedHandler($payment)->redirect($paymentError);
+        return $this->paymentBus->getFailedHandler($payment, $paymentError)->redirect();
     }
 
     protected function logPayPalErrors($response)

@@ -476,12 +476,19 @@
         <column name="total_amount" type="DECIMAL" size="10" scale="2" required="true" phpType="string"/>
         <column name="payment_method" type="VARCHAR" required="true"/>
         <column name="lender_id" type="INTEGER" required="true"/>
+        <column name="loan_id" type="INTEGER" required="false"/>
+        <column name="interest_rate" type="DECIMAL" required="false" size="5" scale="2" phpType="string"/>
+        <column name="bid_amount" type="DECIMAL" size="10" scale="2" required="false" phpType="string"/>
         <behavior name="timestampable"/>
         <foreign-key foreignTable="lenders">
             <reference local="lender_id" foreign="id"/>
         </foreign-key>
-        <column name="class_key" type="INTEGER" inheritance="single">
+        <foreign-key foreignTable="loans">
+            <reference local="loan_id" foreign="id"/>
+        </foreign-key>
+        <column name="class_key" type="integer" inheritance="single">
             <inheritance key="1" class="UploadFundPayment"/>
+            <inheritance key="2" class="BidPayment"/>
         </column>
     </table>
 

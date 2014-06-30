@@ -1,6 +1,8 @@
 <?php
 namespace Zidisha\Payment;
 
+use Zidisha\Payment\Error\PaymentError;
+
 class PaymentHandler
 {
 
@@ -9,7 +11,13 @@ class PaymentHandler
      */
     protected $payment;
 
-    public function process() {
+    /**
+     * @var PaymentError
+     */
+    protected $paymentError;
+
+    public function process()
+    {
         return $this;
     }
 
@@ -26,4 +34,13 @@ class PaymentHandler
     {
         $this->payment = $payment;
     }
+
+    /**
+     * @param PaymentError $paymentError
+     */
+    public function setPaymentError(PaymentError $paymentError)
+    {
+        $this->paymentError = $paymentError;
+    }
+
 }

@@ -37,17 +37,39 @@
         @include('partials/_progress', [ 'raised' => $raised])
 
         @if($loan->getStatus() == '0')
-        <div>
-            {{ BootstrapForm::open(array('route' => 'loan:post-bid', 'translationDomain' => 'bid')) }}
-            {{ BootstrapForm::populate($form) }}
+            <div>
+                {{ BootstrapForm::open(array('route' => 'loan:post-bid', 'translationDomain' => 'bid', 'id' => 'funds-upload')) }}
+                {{ BootstrapForm::populate($form) }}
 
-            {{ BootstrapForm::text('amount') }}
-            {{ BootstrapForm::select('interestRate', $form->getRates()) }}
-            {{ BootstrapForm::hidden('loanId', $loan->getId()) }}
-            {{ BootstrapForm::submit('save') }}
+                {{ BootstrapForm::text('bidAmount', null, ['id' => 'bid-amount']) }}
+                {{ BootstrapForm::text('amount', null, ['id' => 'amount']) }}
+                {{ BootstrapForm::text('donationAmount', null, ['id' => 'donation-amount']) }}
 
-            {{ BootstrapForm::close() }}
-        </div>
+                {{ BootstrapForm::select('interestRate', $form->getRates()) }}
+                {{ BootstrapForm::hidden('loanId', $loan->getId()) }}
+
+                {{ BootstrapForm::hidden('transactionFee', null, ['id' => 'transaction-fee-amount']) }}
+                {{ BootstrapForm::hidden('transactionFeeRate', null, ['id' => 'fee-amount-rate']) }}
+                {{ BootstrapForm::hidden('totalAmount', null, ['id' => 'total-amount']) }}
+
+                {{ BootstrapForm::hidden('stripeToken', null, ['id' => 'stripe-token']) }}
+                {{ BootstrapForm::hidden('paymentMethod', null, ['id' => 'payment-method']) }}
+
+                {{ BootstrapForm::label("Payment Transfer Cost") }}:
+                USD <span id="fee-amount-display"></span>
+
+                <br/>
+
+                {{ BootstrapForm::label("Total amount to be charged to your account") }}
+                USD <span id="total-amount-display"></span>
+
+                <br/>
+                <button id="stripe-payment" class="btn btn-primary">Pay With Card</button>
+                <input type="submit" id="paypal-payment" class="btn btn-primary" value="Pay With Paypal" name="submit_paypal">
+
+                {{ BootstrapForm::close() }}
+
+            </div>
         @endif
 
         <br>
@@ -75,4 +97,16 @@
         <strong>Still Needed: </strong> USD {{ $stillNeeded }}
     </div>
 </div>
+@stop
+
+@section('script-footer')
+<script src="https://checkout.stripe.com/checkout.js"></script>
+<script type="text/javascript">
+    $(function() {
+        paymentForm({
+            stripeToken: "{{ \Config::get('stripe.public_key') }}",
+            email: "{{ \Auth::user()->getEmail() }}"
+        })
+    });
+</script>
 @stop

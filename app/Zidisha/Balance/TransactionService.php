@@ -15,8 +15,8 @@ class TransactionService
 
     public function assertAmount(Money $amount)
     {
-        if (!$amount->greaterThan(Money::create(0))) {
-            throw new \Exception();
+        if (!$amount->isPositive()) {
+            throw new \Exception('Amount should be positive.');
         }
     }
 
