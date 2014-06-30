@@ -946,12 +946,7 @@ class Money
         return $this->lessThan($money) ? $this : $money;
     }
 
-    /**
-     * Is the current amount zero?
-     *
-     * @return boolean
-     */
-    public function isAmountZero()
+    public function isZero()
     {
         return (0 == bccomp('0', $this->getAmount(), 2));
     }
@@ -959,5 +954,13 @@ class Money
     public function getAmountInCents()
     {
         return bcmul($this->amount, '100', 0);
+    }
+    
+    public function isNegative() {
+        return $this->lessThan(Money::create(0));
+    }
+    
+    public function isPositive() {
+        return $this->greaterThan(Money::create(0));
     }
 }
