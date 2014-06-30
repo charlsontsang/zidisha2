@@ -3,6 +3,7 @@
 namespace Zidisha\Balance;
 
 use Zidisha\Balance\Base\TransactionQuery as BaseTransactionQuery;
+use Zidisha\Currency\Currency;
 use Zidisha\Currency\Money;
 
 
@@ -18,14 +19,14 @@ use Zidisha\Currency\Money;
  */
 class TransactionQuery extends BaseTransactionQuery
 {
-    public function getTotalBalance()
+    public function getTotalAmount()
     {
         $total = $this
             ->select(array('total'))
             ->withColumn('SUM(amount)', 'total')
             ->findOne();
 
-        return Money::create($total);
+        return Money::create($total, 'USD');
     }
 
     public function filterLoanBids()
@@ -36,5 +37,15 @@ class TransactionQuery extends BaseTransactionQuery
     public function filterDisbursement()
     {
         return $this->filterByType(Transaction::DISBURSEMENT);
+    }
+    
+    public function getNativeTotalAmount(Currency $currency)
+    {
+        $total = $this
+            ->select(array('total'))
+            ->withColumn('SUM(amount * exchangeRate)', 'total')
+            ->findOne();
+
+        return Money::create($total, $currency);
     }
 } // TransactionQuery
