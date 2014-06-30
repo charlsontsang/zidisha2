@@ -370,7 +370,7 @@ class GenerateModelData extends Command
                 $transaction->setUser($oneLender->getUser());
                 $transaction->setAmount(Money::create(rand(-100, 100), 'USD'));
                 $transaction->setLoan($oneLoan);
-                $transaction->setDescription($oneLoan->getSummary());
+                $transaction->setDescription('description');
                 $transaction->setTransactionDate(new \DateTime());
                 $transaction->setType(Transaction::FUND_WITHDRAW);
                 $transaction->save();
