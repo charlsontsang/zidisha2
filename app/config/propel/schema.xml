@@ -340,7 +340,7 @@
             <reference local="borrower_id" foreign="id"/>
         </foreign-key>
         <foreign-key foreignTable="installments">
-            <reference local="installment" foreign="id"/>
+            <reference local="installment_id" foreign="id"/>
         </foreign-key>
         <index name="loan_borrower">
             <index-column name="loan_id"/>
@@ -515,7 +515,7 @@
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="transaction_id" type="INTEGER" size="10"/>
         <column name="transaction_type" type="VARCHAR" size="50"/>
-        <column name="Lender_id" type="INTEGER" size="10"/>
+        <column name="lender_id" type="INTEGER" size="10"/>
         <column name="invoice_id" type="INTEGER" size="10"/>
         <column name="status" type="TINYINT" size="1" defaultValue="0"/>
         <column name="total_cards" type="INTEGER" size="5" required="true"/>
