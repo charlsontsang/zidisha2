@@ -687,7 +687,8 @@ class LoanService
 
     protected function generateLoanInstallments(Loan $loan)
     {
-        $nativeInstallmentAmount = $loan->getNativeInstallmentAmount();
+        $calculator = new Calculator\InstallmentCalculator($loan);
+        $nativeInstallmentAmount = $calculator->installmentAmount();
         $installmentCount = $loan->getInstallmentCount();
 
         $installments = [];
@@ -697,7 +698,7 @@ class LoanService
             ->setLoan($loan)
             ->setBorrower($loan->getBorrower())
             ->setNativeAmount(Money::create(0))
-            ->setDueDate($loan->getInstallmentGraceDate());
+            ->setDueDate($calculator->installmentGraceDate());
 
         $installments[] = $graceInstallment;
 
@@ -707,7 +708,7 @@ class LoanService
                 ->setLoan($loan)
                 ->setBorrower($loan->getBorrower())
                 ->setNativeAmount($nativeInstallmentAmount)
-                ->setDueDate($loan->getNthInstallmentDate($count));
+                ->setDueDate($calculator->nthInstallmentDate($count));
             $installments[] = $installment;
         }
 

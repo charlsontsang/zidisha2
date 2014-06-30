@@ -3,6 +3,7 @@
 namespace Zidisha\Loan;
 
 use Carbon\Carbon;
+use Zidisha\Currency\Currency;
 use Zidisha\Currency\Money;
 use Zidisha\Loan\Base\Loan as BaseLoan;
 
@@ -47,12 +48,12 @@ class Loan extends BaseLoan
 
     public function getNativeAmount()
     {
-        return Money::create(parent::getnativeAmount(), $this->getCurrencyCode());
+        return Money::create(parent::getNativeAmount(), $this->getCurrencyCode());
     }
 
     public function setNativeAmount($money)
     {
-        return parent::setNativeamount($money->getAmount());
+        return parent::setNativeAmount($money->getAmount());
     }
 
     public function getAmount()
@@ -63,6 +64,11 @@ class Loan extends BaseLoan
     public function setAmount($money)
     {
         return parent::setAmount($money->getAmount());
+    }
+
+    public function getCurrency()
+    {
+        return Currency::valueOf($this->getCurrencyCode());
     }
 
     public function calculateExtraDays($disbursedDate)
@@ -114,65 +120,5 @@ class Loan extends BaseLoan
     public function isWeeklyInstallment()
     {
         return $this->getInstallmentPeriod() == self::WEEKLY_INSTALLMENT;
-    }
-
-    public function getYearlyInterestRateRatio()
-    {
-        if ($this->isWeeklyInstallment()) {
-            $totalTimeLoanInWeeks = $this->getInstallmentCount() + round($this->getExtraDays() / 7, 4);
-            return $totalTimeLoanInWeeks / 52;
-        }
-
-        $totalTimeLoanInMonths = $this->getInstallmentCount() + round($this->getExtraDays() / 30, 4);
-        return $totalTimeLoanInMonths / 12;
-    }
-
-    public function getNativeLenderInterest()
-    {
-        return $this->getNativeAmount()->multiply($this->getYearlyInterestRateRatio() * $this->getFinalInterestRate() / 100);
-    }
-    
-    public function getNativeRegistrationFee()
-    {
-        return $this->getNativeAmount()->multiply($this->getYearlyInterestRateRatio() * $this->getRegistrationFeeRate() / 100);
-    }
-
-    public function getNativeTotalInterest()
-    {
-        return $this->getNativeRegistrationFee()->add($this->getNativeLenderInterest());
-    }
-
-    public function getNativeTotalAmount()
-    {
-        return $this->getNativeAmount()->add($this->getNativeTotalInterest());
-    }
-
-    public function getNativeInstallmentAmount()
-    {
-        return $this->getNativeTotalAmount()->divide($this->getInstallmentCount());
-    }
-
-    public function getInstallmentGraceDate()
-    {
-        $date = Carbon::instance($this->getDisbursedDate());
-
-        return $date->addDays($this->getExtraDays());
-    }
-
-    public function getNthInstallmentDate($n = 1)
-    {
-        $date = $this->getInstallmentGraceDate()->copy();
-        
-        if ($this->isWeeklyInstallment()) {
-            $date->addWeeks($n);
-        } else {
-            if ($date->day == 31) {
-                $date->firstOfMonth()->addMonths($n)->lastOfMonth();
-            } else {
-                $date->addMonths($n);
-            }
-        }
-
-        return $date;
     }
 }
