@@ -3,10 +3,13 @@
 namespace Zidisha\Repayment;
 
 use Illuminate\Queue\Jobs\Job;
+use Zidisha\Balance\TransactionQuery;
 use Zidisha\Borrower\Borrower;
 use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Html\BootstrapForm;
 use Zidisha\Currency\Money;
+use Zidisha\Loan\Calculator\RepaymentCalculator;
+use Zidisha\Loan\ForgivenLoanQuery;
 use Zidisha\Loan\Loan;
 
 class RepaymentService
@@ -110,5 +113,36 @@ class RepaymentService
         $borrowerRefund->save();
         
         return $borrowerRefund;
+    }
+
+    /**
+     * @param Loan $loan
+     * @param Money $amount
+     * @return RepaymentCalculator
+     */
+    public function getRepaymentCalculator(Loan $loan, Money $amount)
+    {
+        $paidServiceFee = TransactionQuery::create()
+            ->filterByLoan($loan)
+            ->filterServiceFee()
+            ->getNativeTotalAmount($loan->getCurrency());
+
+        $forgivenAmount = ForgivenLoanQuery::create()
+            ->filterByLoan($loan)
+            ->getNativeTotalAmount($loan);
+
+        $amounts = InstallmentQuery::create()
+            ->filterByLoan($loan)
+            ->getNativeAmounts($loan->getCurrency());
+
+        $calculator = new RepaymentCalculator($loan);
+        $calculator
+            ->setPaidAmount($amounts['paidAmount'])
+            ->setTotalAmount($amounts['totalAmount'])
+            ->setRepaymentAmount($amount)
+            ->setPaidServiceFee($paidServiceFee)
+            ->setForgivenAmount($forgivenAmount);
+
+        return $calculator;
     }
 }
