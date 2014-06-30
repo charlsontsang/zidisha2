@@ -73,6 +73,7 @@ class LoanController extends BaseController
             ->find();
 
         $stillNeeded = $loan->getAmount()->getAmount() - $totalRaised;
+
         if($loan->getAmount() <= $totalRaised){
             $raised = 100;
         }else{

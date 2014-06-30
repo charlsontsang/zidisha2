@@ -2,6 +2,7 @@
 namespace Zidisha\Payment\Form\Validator;
 
 use Illuminate\Validation\Validator;
+use Zidisha\Balance\TransactionQuery;
 use Zidisha\Currency\Money;
 
 class GreaterThanValidator extends Validator
@@ -40,5 +41,21 @@ class GreaterThanValidator extends Validator
     protected function replaceTotalFee($message, $attribute, $rule, $parameters)
     {
         return $attribute.' Total fee should be amount times the rate.';
+    }
+    
+    public function validateCreditAmount($attribute, $value, $parameters)
+    {
+        $amount = Money::create($this->data['amount']);
+        $creditAmount = Money::create($this->data['creditAmount']);
+        $currentBalance = Money::create($this->data['currentBalance']);
+
+        $amountDifference = $amount->greaterThan($currentBalance) ? $amount->subtract($currentBalance) : Money::create(0);
+
+        return $creditAmount->equals($amountDifference);
+    }
+
+    protected function replaceCreditAmount($message, $attribute, $rule, $parameters)
+    {
+        return 'Credit Amount Does not match.';
     }
 }
