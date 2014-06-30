@@ -42,7 +42,7 @@
                 {{ BootstrapForm::populate($form) }}
 
                 {{ BootstrapForm::text('bidAmount', null, ['id' => 'bid-amount']) }}
-                {{ BootstrapForm::text('amount', null, ['id' => 'amount']) }}
+                {{ BootstrapForm::hidden('amount', null, ['id' => 'credit-amount']) }}
                 {{ BootstrapForm::text('donationAmount', null, ['id' => 'donation-amount']) }}
 
                 {{ BootstrapForm::select('interestRate', $form->getRates()) }}
@@ -50,11 +50,18 @@
 
                 {{ BootstrapForm::hidden('transactionFee', null, ['id' => 'transaction-fee-amount']) }}
                 {{ BootstrapForm::hidden('transactionFeeRate', null, ['id' => 'fee-amount-rate']) }}
+                {{ BootstrapForm::hidden('current-balance', 40, ['id' => 'current-balance']) }}
                 {{ BootstrapForm::hidden('totalAmount', null, ['id' => 'total-amount']) }}
 
                 {{ BootstrapForm::hidden('stripeToken', null, ['id' => 'stripe-token']) }}
                 {{ BootstrapForm::hidden('paymentMethod', null, ['id' => 'payment-method']) }}
 
+                @if(40 > 0)
+                    {{ BootstrapForm::label("Current Balance") }}: {{ 40 }}
+                    <br/>
+                @endif
+                
+                
                 {{ BootstrapForm::label("Payment Transfer Cost") }}:
                 USD <span id="fee-amount-display"></span>
 
@@ -64,8 +71,10 @@
                 USD <span id="total-amount-display"></span>
 
                 <br/>
+                
                 <button id="stripe-payment" class="btn btn-primary">Pay With Card</button>
                 <input type="submit" id="paypal-payment" class="btn btn-primary" value="Pay With Paypal" name="submit_paypal">
+                <input type="submit" id="credit-payment" class="btn btn-primary" value="Pay" name="submit_credit">
 
                 {{ BootstrapForm::close() }}
 
@@ -105,8 +114,9 @@
     $(function() {
         paymentForm({
             stripeToken: "{{ \Config::get('stripe.public_key') }}",
-            email: "{{ \Auth::user()->getEmail() }}"
-        })
+            email: "{{ \Auth::user()->getEmail() }}",
+            amount: $('#bid-amount')
+        });
     });
 </script>
 @stop

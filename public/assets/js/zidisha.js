@@ -70,16 +70,20 @@ function paymentForm(config) {
     });
 
     var $donationAmount = $('#donation-amount'),
-        $amount = $('#amount'),
+        $creditAmount = $('#credit-amount'),
         $transactionFeeAmount = $('#transaction-fee-amount'),
         $totalAmount = $('#total-amount'),
         $transactionFeeAmountDisplay = $('#fee-amount-display'),
         $totalAmountDisplay = $('#total-amount-display'),
-        feePercentage = Number($('#fee-amount-rate').val());
+        feePercentage = Number($('#fee-amount-rate').val()),
+        currentBalance = Number($('#current-balance').val()),
+        $paymentMethods = $('#stripe-payment, #paypal-payment'),
+        $creditSubmit = $('#credit-payment'),
+        $amount = config.amount;
 
     function calculateAmounts() {
         var donationAmount = parseMoney($donationAmount.val()),
-            amount = parseMoney($amount.val()),
+            amount = parseMoney($creditAmount.val()),
             transactionFeeAmount = amount * feePercentage,
             totalAmount = amount + transactionFeeAmount + donationAmount;
 
@@ -87,11 +91,23 @@ function paymentForm(config) {
         $totalAmount.val(formatMoney(totalAmount));
         $transactionFeeAmountDisplay.text(formatMoney(transactionFeeAmount));
         $totalAmountDisplay.text(formatMoney(totalAmount));
+        
+        if (totalAmount > 0) {
+            $paymentMethods.show();
+            $creditSubmit.hide();
+        } else {
+            $paymentMethods.hide();
+            $creditSubmit.show();
+        }
     }
 
     $donationAmount.on('keyup', calculateAmounts);
-    $amount.on('keyup', calculateAmounts);
+    $amount.on('keyup', function() {
+        var amount = parseMoney($amount.val()),
+            creditAmount = amount >= currentBalance ? amount - currentBalance: 0;
+        $creditAmount.val(creditAmount);
+        calculateAmounts();
+    });
 
     calculateAmounts();
-
 }
