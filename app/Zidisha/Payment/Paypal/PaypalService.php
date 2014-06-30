@@ -45,7 +45,7 @@ class PayPalService extends PaymentService
 
         $payPalTransaction = new PaypalTransaction();
         $payPalTransaction
-            ->setAmount($payment->getAmount())
+            ->setAmount($payment->getCreditAmount())
             ->setDonationAmount($payment->getDonationAmount())
             ->setPaypalTransactionFee($payment->getTransactionFee())
             ->setTotalAmount($payment->getTotalAmount())
@@ -188,10 +188,10 @@ class PayPalService extends PaymentService
     {
         $paymentDetail = new PaymentDetailsType();
 
-        if ($payment->getAmount()->greaterThan(Money::create(0))) {
+        if ($payment->getCreditAmount()->greaterThan(Money::create(0))) {
             $itemDetail = new PaymentDetailsItemType();
             $itemDetail->Name = 'Lend To Zidisha';
-            $itemDetail->Amount = new BasicAmountType('USD', $payment->getAmount()->round(2)->getAmount());
+            $itemDetail->Amount = new BasicAmountType('USD', $payment->getCreditAmount()->round(2)->getAmount());
             $itemDetail->Quantity = '1';
             $itemDetail->ItemCategory = 'Digital';
             $paymentDetail->PaymentDetailsItem[] = $itemDetail;

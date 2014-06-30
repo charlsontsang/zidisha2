@@ -18,7 +18,7 @@ class GreaterThanValidator extends Validator
 
     public function validateAssertTotal($attribute, $value, $parameters)
     {
-        return Money::create($this->data['amount'])
+        return Money::create($this->data['creditAmount'])
             ->add(Money::create($this->data['donationAmount']))
             ->add(Money::create($this->data['transactionFee']))
             ->equals(Money::create($this->data['totalAmount']));
@@ -32,7 +32,7 @@ class GreaterThanValidator extends Validator
     public function validateTotalFee($attribute, $value, $parameters)
     {
         //Todo: get transaction fee rate from the Configuration.
-        return Money::create($this->data['amount'])
+        return Money::create($this->data['creditAmount'])
             ->multiply($this->data['transactionFeeRate'])
             ->equals(Money::create($this->data['transactionFee']));
     }

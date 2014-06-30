@@ -25,23 +25,20 @@ abstract class AbstractPaymentForm extends AbstractForm
     public function getRules($data)
     {
         return [
-            'amount' => 'required|numeric',
+            'creditAmount' => 'required|numeric',
             'donationAmount' => 'required|numeric',
             'transactionFee' => 'required|numeric|totalFee',
             'totalAmount' => 'required|numeric|assertTotal|greaterThan:0',
             'paymentMethod' => 'required|in:'. implode(',', $this->allowedServices),
             'stripeToken' => 'required_if:paymentMethod,stripe',
             'transactionFeeRate' => '',
-            'loanId' => '',
-            'interestRate' => '',
-            'bidAmount' => ''
         ];
     }
 
     public function getDefaultData()
     {
         return [
-            'amount' => 0,
+            'creditAmount' => 0,
             'donationAmount' => 0,
             'totalAmount' => 0,
             'paymentMethod' => 'paypal',
@@ -72,6 +69,9 @@ abstract class AbstractPaymentForm extends AbstractForm
         throw new \Exception();
     }
 
+    /**
+     * @return \Zidisha\payment\payment $payment
+     */
     abstract public function getPayment();
 
     protected function validate($data, $rules)
