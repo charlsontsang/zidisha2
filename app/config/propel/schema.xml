@@ -471,7 +471,7 @@
 
     <table name="payments" phpName="Payment" namespace="Payment" abstract="true">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
-        <column name="amount" type="DECIMAL" size="10" scale="2" required="true" phpType="string"/>
+        <column name="credit_amount" type="DECIMAL" size="10" scale="2" required="true" phpType="string"/>
         <column name="donation_amount" type="DECIMAL" size="10" scale="2" required="true" phpType="string"/>
         <column name="transaction_fee" type="DECIMAL" size="10" scale="2" required="true" phpType="string"/>
         <column name="total_amount" type="DECIMAL" size="10" scale="2" required="true" phpType="string"/>
