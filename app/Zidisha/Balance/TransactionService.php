@@ -32,7 +32,7 @@ class TransactionService
             ->setLoan($loan)
             ->setTransactionDate(new \DateTime())
             ->setType(Transaction::DISBURSEMENT);
-        
+
         $disburseTransaction->save($con);
     }
 
@@ -49,7 +49,7 @@ class TransactionService
             ->setSubType(Transaction::LOAN_BID_EXPIRED)
             ->setTransactionDate(new \DateTime())
             ->setDescription('Loan bid expired');
-        
+
         $transaction->save($con);
     }
 
@@ -92,7 +92,7 @@ class TransactionService
             ->setType(Transaction::LOAN_OUTBID)
             ->setSubType(Transaction::LOAN_BID_CANCELED)
             ->setDescription('Loan bid cancelled');
-        
+
         $transaction->save($con);
     }
 
@@ -152,7 +152,7 @@ class TransactionService
             ->setLoan($loan)
             ->setTransactionDate(new \DateTime())
             ->setType(Transaction::REGISTRATION_FEE);
-        
+
         $feeTransactionBorrower->save($con);
 
         $feeTransactionAdmin = new Transaction();
@@ -163,7 +163,7 @@ class TransactionService
             ->setLoan($loan)
             ->setTransactionDate(new \DateTime())
             ->setType(Transaction::REGISTRATION_FEE);
-        
+
         $feeTransactionAdmin->save($con);
     }
 
@@ -270,7 +270,7 @@ class TransactionService
             ->setType(Transaction::DONATION);
         $donationTransaction->save($con);
     }
-    
+
     public function addInstallmentTransaction(ConnectionInterface $con, Money $amount, Loan $loan, \DateTime $date)
     {
         $this->assertAmount($amount);
