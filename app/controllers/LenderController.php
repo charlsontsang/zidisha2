@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\View;
 use Zidisha\Balance\TransactionQuery;
+use Zidisha\Currency\Money;
 use Zidisha\Lender\Form\EditProfile;
 use Zidisha\Lender\Form\Funds;
 use Zidisha\Lender\Form\GiftCard;
@@ -104,7 +105,7 @@ class LenderController extends BaseController
 
         $currentBalance = $this->transactionQuery
             ->filterByUserId(Auth::getUser()->getId())
-            ->getTotalBalance();
+            ->getTotalAmount();
 
         $page = Request::query('page') ? : 1;
 
