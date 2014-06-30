@@ -51,16 +51,25 @@ class Loan extends BaseLoan
         return Money::create(parent::getNativeAmount(), $this->getCurrencyCode());
     }
 
+    /**
+     * @param Money $money
+     * @return $this|Loan
+     */
     public function setNativeAmount($money)
     {
         return parent::setNativeAmount($money->getAmount());
     }
 
+    
     public function getAmount()
     {
         return Money::create(parent::getAmount(), 'USD');
     }
 
+    /**
+     * @param Money $money
+     * @return $this|Loan
+     */
     public function setAmount($money)
     {
         return parent::setAmount($money->getAmount());
