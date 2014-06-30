@@ -293,4 +293,68 @@ class TransactionService
         $donationTransaction->setType(Transaction::DONATION);
         $donationTransaction->save($con);
     }
+    
+    public function addInstallmentTransaction(ConnectionInterface $con, Money $amount, Loan $loan, \DateTime $date)
+    {
+        $this->assertAmount($amount);
+
+        $transaction = new Transaction();
+        $transaction
+            ->setUserId($loan->getBorrowerId())
+            ->setAmount($amount)
+            ->setDescription('Loan installment')
+            ->setLoan($loan)
+            ->setTransactionDate($date)
+            ->setType(Transaction::LOAN_BACK);
+
+        $transaction->save($con);
+    }
+
+    public function addInstallmentFeeTransaction(ConnectionInterface $con, Money $amount, Loan $loan, \DateTime $date)
+    {
+        $this->assertAmount($amount);
+
+        $transaction = new Transaction();
+        $transaction
+            ->setUserId(\Config::get('adminId'))
+            ->setAmount($amount)
+            ->setDescription('Fee')
+            ->setLoan($loan)
+            ->setTransactionDate($date)
+            ->setType(Transaction::FEE);
+
+        $transaction->save($con);
+    }
+
+    public function addRepaymentTransaction(ConnectionInterface $con, Money $amount, Loan $loan, Lender $lender, \DateTime $date)
+    {
+        $this->assertAmount($amount);
+
+        $transaction = new Transaction();
+        $transaction
+            ->setUserId($lender->getId())
+            ->setAmount($amount)
+            ->setDescription('Loan repayment received')
+            ->setLoan($loan)
+            ->setTransactionDate($date)
+            ->setType(Transaction::LOAN_BACK_LENDER);
+
+        $transaction->save($con);
+    }
+
+    public function addLenderInviteCreditRepaymentTransaction(ConnectionInterface $con, Money $amount, Loan $loan, \DateTime $date)
+    {
+        $this->assertAmount($amount);
+
+        $transaction = new Transaction();
+        $transaction
+            ->setUserId(\Config::get('YCAccountId'))
+            ->setAmount($amount)
+            ->setDescription('Loan repayment received')
+            ->setLoan($loan)
+            ->setTransactionDate($date)
+            ->setType(Transaction::LOAN_BACK_LENDER);
+
+        $transaction->save($con);
+    }
 }

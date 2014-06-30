@@ -325,6 +325,28 @@
             <reference local="borrower_id" foreign="id"/>
         </foreign-key>
     </table>
+    
+    <table name="installment_payments" phpName="InstallmentPayment" namespace="Repayment">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="installment_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="borrower_id" type="INTEGER" required="true"/>
+        <column name="loan_id" type="INTEGER" required="true"/>
+        <column name="paid_date" type="TIMESTAMP" required="true"/>
+        <column name="paid_amount" type="DECIMAL" size="15" scale="4" phpType="string" required="true"/>
+        <foreign-key foreignTable="loans">
+            <reference local="loan_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="borrowers">
+            <reference local="borrower_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="installments">
+            <reference local="installment" foreign="id"/>
+        </foreign-key>
+        <index name="loan_borrower">
+            <index-column name="loan_id"/>
+            <index-column name="borrower_id"/>
+        </index>
+    </table>
 
     <table name="borrower_payments" phpName="BorrowerPayment" namespace="Repayment">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>

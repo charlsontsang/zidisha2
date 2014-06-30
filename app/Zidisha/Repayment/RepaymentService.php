@@ -4,10 +4,12 @@ namespace Zidisha\Repayment;
 
 use Illuminate\Queue\Jobs\Job;
 use Zidisha\Balance\TransactionQuery;
+use Zidisha\Balance\TransactionService;
 use Zidisha\Borrower\Borrower;
 use Zidisha\Borrower\BorrowerQuery;
-use Zidisha\Html\BootstrapForm;
+use Zidisha\Currency\CurrencyService;
 use Zidisha\Currency\Money;
+use Zidisha\Loan\BidQuery;
 use Zidisha\Loan\Calculator\RepaymentCalculator;
 use Zidisha\Loan\ForgivenLoanQuery;
 use Zidisha\Loan\Loan;
@@ -17,12 +19,22 @@ class RepaymentService
 
     private $paymentQuery;
     private $borrowerQuery;
+    /**
+     * @var \Zidisha\Currency\CurrencyService
+     */
+    private $currencyService;
+    /**
+     * @var \Zidisha\Balance\TransactionService
+     */
+    private $transactionService;
 
-    public function __construct(BorrowerPaymentQuery $paymentQuery, BorrowerQuery $borrowerQuery)
+    public function __construct(BorrowerPaymentQuery $paymentQuery, BorrowerQuery $borrowerQuery, CurrencyService $currencyService, TransactionService $transactionService)
     {
 
         $this->paymentQuery = $paymentQuery;
         $this->borrowerQuery = $borrowerQuery;
+        $this->currencyService = $currencyService;
+        $this->transactionService = $transactionService;
     }
 
     public function addBorrowerPayment(Borrower $borrower, $data)
@@ -144,5 +156,116 @@ class RepaymentService
             ->setForgivenAmount($forgivenAmount);
 
         return $calculator;
+    }
+    
+    public function addRepayment(Loan $loan, \Datetime $date, Money $amount, BorrowerPayment $borrowerPayment = null)
+    {        
+        // Divide the payment in the lenders and the web site fee
+        // 1. Get the web site fee %
+        // 2. Get who all lended and how much
+        // 3. substract he website fee out of this installment
+        // 4. remaining money should be divided in lenders according to their proportion and added
+        // 5. If the loan gets completed with this payment set the loan status to complete
+        
+        $calculator = $this->getRepaymentCalculator($loan, $amount);
+
+        if ($calculator->unpaidAmount()->isNegative()) {
+            throw new \Exception('Unpaid amount is negative');
+        }
+        
+        $con = Propel::getWriteConnection(TransactionTableMap::DATABASE_NAME);
+        $con->beginTransaction();
+
+        $refundThreshold = $this->currencyService->convertFromUSD(Money::create(1), $loan->getCurrency(), $date);
+        $refundAmount = $calculator->refundAmount($refundThreshold);
+
+        if ($refundAmount->isPositive()) {
+            $this->addBorrowerRefund($con, $loan, $refundAmount);
+            $amount = $amount->subtract($refundAmount);
+            $calculator->setRepaymentAmount($amount);
+        }
+
+        $this->transactionService->addInstallmentTransaction($con, $amount, $loan, $date);
+
+        $nativeFeeAmount = $calculator->installmentServiceFee();
+        $feeAmount = $this->currencyService->convertToUSD($nativeFeeAmount, $date);
+        $this->transactionService->addInstallmentFeeTransaction($con, $loan, $feeAmount, $date);
+
+        $bids = BidQuery::create()
+            ->filterByLoan($loan)
+            ->filterByActive(true)
+            ->find();
+        $loanRepayments = $calculator->loanRepayments($bids);
+
+        /** @var $loanRepayment LoanRepayment */
+        foreach ($loanRepayments as $loanRepayment) {
+            $lender = $loanRepayment->getLender();
+            $nativeLenderAmount = $loanRepayment->getAmount();
+            $nativeLenderInviteCredit = $loanRepayment->getLenderInviteCredit();
+            
+            if ($nativeLenderAmount->isPositive()) {
+                $lenderAmount = $this->currencyService->convertToUSD($nativeLenderAmount, $date);
+                $this->transactionService->addRepaymentTransaction($con, $lenderAmount, $loan, $lender, $date);
+            }
+            
+            if ($nativeLenderInviteCredit->isPositive()) {
+                $lenderInviteCredit = $this->currencyService->convertToUSD($nativeLenderInviteCredit, $date);
+                $this->transactionService->addLenderInviteCreditRepaymentTransaction($con, $lenderInviteCredit, $loan, $date);
+            }
+        }
+        
+        $updatedInstallments = $this->updateInstallmentSchedule($con, $loan, $amount, $date);
+        
+        // TODO
+        // $database->setOntimeRepayCredit($rest4, $borrowerid, $amount);
+
+        // TODO
+        // $database->loanpaidback($borrowerid,$loanid);
+        
+        // TODO emails/sms
+    }
+
+    protected function updateInstallmentSchedule($con, Loan $loan, Money $amount, \Datetime $date)
+    {
+        $installments = InstallmentQuery::create()
+            ->filterByLoan($loan)
+            ->orderById()// TODO order due date?
+            ->find();
+        
+        $updatedInstallments = [];
+        $installmentId = null;
+        $paidAmount = $amount;
+        
+        foreach ($installments as $installment) {
+            if ($paidAmount->isZero()) {
+                break;
+            }
+            
+            if ($installment->getNativeAmount()->isZero()) {
+                continue;
+            }
+            
+            if ($installment->isRepaid()) {
+               continue;
+            }
+            
+            $unpaidAmount = $installment->getUnpaidAmount();
+            $installmentAmount = $unpaidAmount->min($paidAmount);
+            $installment
+                ->payAmount($installmentAmount)
+                ->setPaidDate($date);
+            $installment->save($con);
+            $updatedInstallments[] = $installment;
+            
+            $paidAmount = $paidAmount->subtract($installmentAmount);
+        }
+        
+        if ($updatedInstallments) {
+            $installment = end($updatedInstallments);
+            // TODO make installmentPayment
+            reset($updatedInstallments);
+        }
+        
+        return $updatedInstallments;
     }
 }

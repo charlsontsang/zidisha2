@@ -39,6 +39,11 @@ class TransactionQuery extends BaseTransactionQuery
         return $this->filterByType(Transaction::DISBURSEMENT);
     }
     
+    public function filterServiceFee()
+    {
+        return $this->filterByType(Transaction::FEE);
+    }
+    
     public function getNativeTotalAmount(Currency $currency)
     {
         $total = $this
