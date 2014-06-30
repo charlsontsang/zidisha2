@@ -10,6 +10,7 @@
         <column name="facebook_id" type="BIGINT" required="false"/>
         <column name="remember_token" type="VARCHAR" size="100" required="false"/>
         <column name="role" type="ENUM" valueSet="lender, borrower, admin"/>
+        <column name="sub_role" type="ENUM" valueSet="volunteer, volunteerMentor"/>
         <column name="last_login_at" type="TIMESTAMP" required="true"/>
         <behavior name="timestampable"/>
         <foreign-key foreignTable="uploads" phpName="ProfilePicture">
@@ -325,7 +326,7 @@
             <reference local="borrower_id" foreign="id"/>
         </foreign-key>
     </table>
-    
+
     <table name="installment_payments" phpName="InstallmentPayment" namespace="Repayment">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="installment_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
@@ -424,8 +425,8 @@
     </table>
 
     <table name="paypal_ipn_log" phpName="PayPalIpnLog" namespace="Payment\Paypal">
-        <column name="id" type="INTEGER" required="true" autoIncrement="true" primaryKey="true" />
-        <column name="log" required="true" type="VARCHAR" size="255" />
+        <column name="id" type="INTEGER" required="true" autoIncrement="true" primaryKey="true"/>
+        <column name="log" required="true" type="VARCHAR" size="255"/>
         <behavior name="timestampable"/>
     </table>
 
@@ -534,7 +535,7 @@
             <reference local="lender_id" foreign="id"/>
         </foreign-key>
     </table>
-    
+
     <table name="forgiven_loans" phpName="ForgivenLoan" namespace="Loan">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="loan_id" type="INTEGER"/>"
@@ -581,6 +582,17 @@
         </foreign-key>
         <foreign-key foreignTable="borrower_payments">
             <reference local="borrower_payment_id" foreign="id"/>
+        </foreign-key>
+    </table>
+
+    <table name="volunteer_mentor" phpName="Volunteer" namespace="Borrower">
+        <column name="user_id" type="INTEGER" required="true"/>
+        <column name="country" type="VARCHAR" required="true"/>
+        <column name="grant_date" type="TIMESTAMP" required="true"/>
+        <column name="note" type="LONGVARCHAR"/>
+        <column name="status" type="TINYINT" defaultValue="0"/>
+        <foreign-key foreignTable="users">
+            <reference local="user_id" foreign="id"/>
         </foreign-key>
     </table>
 </database>

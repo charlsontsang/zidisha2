@@ -81,7 +81,7 @@ class User extends BaseUser implements UserInterface, RemindableInterface
 
     public function getProfilePictureUrl($format = 'small-profile-picture')
     {
-        if($this->hasProfilePicture()){
+        if ($this->hasProfilePicture()) {
             return $this->getProfilePicture()->getImageUrl($format);
         }
 
@@ -103,5 +103,30 @@ class User extends BaseUser implements UserInterface, RemindableInterface
         $route = $this->getRole() . ":public-profile";
 
         return route($route, ['username' => $this->getUsername()] + $parameters);
+    }
+
+    public function isLender()
+    {
+        return $this->getRole() == 'lender';
+    }
+
+    public function isBorrower()
+    {
+        return $this->getRole() == 'borrower';
+    }
+
+    public function isAdmin()
+    {
+        return $this->getRole() == 'admin';
+    }
+
+    public function isVolunteer()
+    {
+        return $this->isLender() && $this->getSubRole() == 'volunteer';
+    }
+
+    public function isVolunteerMentor()
+    {
+        return $this->isBorrower() && $this->getSubRole() == 'volunteerMentor';
     }
 }

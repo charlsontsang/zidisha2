@@ -99,3 +99,14 @@ Route::filter(
         }
     }
 );
+
+Route::filter(
+    'hasSubRole',
+    function ($route, $request, $role) {
+        $isAllowed = Auth::getUser()->getSubRole() == $role;
+        if (!$isAllowed) {
+            Flash::error("You do not have proper permission to view this page");
+            return Redirect::route('login');
+        }
+    }
+);
