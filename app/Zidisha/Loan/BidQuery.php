@@ -2,6 +2,7 @@
 
 namespace Zidisha\Loan;
 
+use Zidisha\Currency\Currency;
 use Zidisha\Currency\Money;
 use Zidisha\Loan\Base\BidQuery as BaseBidQuery;
 
