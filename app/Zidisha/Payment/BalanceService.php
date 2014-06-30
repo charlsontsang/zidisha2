@@ -3,8 +3,10 @@ namespace Zidisha\Payment;
 
 use Propel\Runtime\Propel;
 use Zidisha\Balance\Map\TransactionTableMap;
+use Zidisha\Balance\TransactionQuery;
 use Zidisha\Balance\TransactionService;
 use Zidisha\Currency\Money;
+use Zidisha\Lender\Exceptions\InsufficientLenderBalanceException;
 
 class BalanceService
 {
@@ -30,8 +32,6 @@ class BalanceService
             if ($payment->getDonationAmount()->greaterThan(Money::create(0))) {
                 $this->transactionService->addDonation($con, $payment);
             }
-//        $database->setTransaction(ADMIN_ID,$donation_amount,'Donation from lender',0,0,DONATION);
-//        $database->setTransaction($userid,$donationamt,'Donation to Zidisha',0,0,DONATION);
         } catch (\Exception $e) {
             $con->rollback();
             throw $e;

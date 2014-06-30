@@ -38,6 +38,14 @@ $(function () {
     });
 });
 
+function parseMoney(value) {
+    return Number(value.replace(/[^0-9\.]+/g, ""));
+}
+
+function formatMoney(value) {
+    return value.toFixed(2);
+}
+
 function paymentForm(config) {
 
     var handler = StripeCheckout.configure({
@@ -53,7 +61,7 @@ function paymentForm(config) {
             handler.open({
                 name: 'Zidisha',
                 description: 'Payment to Zidisha',
-                amount: parseFloat($("#total-amount").val()) * 100,
+                amount: (parseMoney($("#total-amount").val()) * 100).toFixed(0),
                 email: config.email,
                 panelLabel: "Pay @{{amount}}"
             });
@@ -68,14 +76,6 @@ function paymentForm(config) {
         $transactionFeeAmountDisplay = $('#fee-amount-display'),
         $totalAmountDisplay = $('#total-amount-display'),
         feePercentage = Number($('#fee-amount-rate').val());
-
-    function parseMoney(value) {
-        return Number(value.replace(/[^0-9\.]+/g, ""));
-    }
-
-    function formatMoney(value) {
-        return value.toFixed(2);
-    }
 
     function calculateAmounts() {
         var donationAmount = parseMoney($donationAmount.val()),
