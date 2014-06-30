@@ -7,24 +7,38 @@ use Zidisha\Loan\Base\Bid as BaseBid;
 
 class Bid extends BaseBid
 {
+    /**
+     * @return Money
+     */
     public function getBidAmount()
     {
         return Money::create(parent::getBidAmount(), 'USD');
     }
 
+    /**
+     * @param Money $money
+     * @return $this|Bid
+     */
     public function setBidAmount($money)
     {
         return parent::setBidAmount($money->getAmount());
     }
 
-    public function getPaidAmount()
+    /**
+     * @return Money
+     */
+    public function getAcceptedAmount()
     {
-        return Money::create(parent::getPaidAmount(), 'USD');
+        return Money::create(parent::getAcceptedAmount(), 'USD');
     }
 
-    public function setPaidAmount($money)
+    /**
+     * @param Money $money
+     * @return $this|Bid
+     */
+    public function setAcceptedAmount($money)
     {
-        return parent::setPaidAmount($money->getAmount());
+        return parent::setAcceptedAmount($money->getAmount());
     }
 
     public function isFirstBid()
