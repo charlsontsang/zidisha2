@@ -2,6 +2,8 @@
 
 namespace Zidisha\Repayment;
 
+use Zidisha\Currency\Currency;
+use Zidisha\Currency\Money;
 use Zidisha\Repayment\Base\InstallmentQuery as BaseInstallmentQuery;
 
 
@@ -18,4 +20,17 @@ use Zidisha\Repayment\Base\InstallmentQuery as BaseInstallmentQuery;
 class InstallmentQuery extends BaseInstallmentQuery
 {
 
+    public function getNativeAmounts(Currency $currency)
+    {
+        $result = $this
+            ->select(['totalAmount', 'paidAmount'])
+            ->withColumn('SUM(amount)', 'totalAmount')
+            ->withColumn('SUM(paid_amount)', 'paidAmount')
+            ->findOne();
+        
+        return [
+            'totalAmount' => Money::create($result['totalAmount'], $currency),
+            'paidAmount'  => Money::create($result['paidAmount'], $currency),
+        ];
+    }
 } // InstallmentQuery
