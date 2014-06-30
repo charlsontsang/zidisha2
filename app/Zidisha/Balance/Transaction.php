@@ -15,7 +15,7 @@ class Transaction extends BaseTransaction
     const DISBURSEMENT      = 6;
     const LOAN_BACK         = 7;
     const GIFT_REDEEM       = 8;
-    const GIFT_PURCHAGE     = 9;
+    const GIFT_PURCHASE     = 9;
     const GIFT_DONATE       = 10;
     const DONATION          = 11;
     const PAYPAL_FEE        = 12;
