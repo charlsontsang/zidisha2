@@ -64,61 +64,11 @@ USD <span id="total-amount-display"></span>
 @section('script-footer')
 <script src="https://checkout.stripe.com/checkout.js"></script>
 <script type="text/javascript">
-    $(function () {
-
-        var handler = StripeCheckout.configure({
-            key: "{{ \Config::get('stripe.public_key') }}",
-            token: function (token, args) {
-                $("#stripe-token").val(token.id);
-                $("#payment-method").val("stripe");
-                $('#funds-upload').submit();
-            }
-        });
-        $(function () {
-            $('#stripe-payment').click(function (e) {
-                handler.open({
-                    name: 'Zidisha',
-                    description: 'Payment to Zidisha',
-                    amount: parseFloat($("#total-amount").val()) * 100,
-                    email: "{{ \Auth::user()->getEmail() }}",
-                    panelLabel: "Pay @{{amount}}"
-                });
-                e.preventDefault();
-            });
-        });
-
-        var $donationAmount = $('#donation-amount'),
-            $amount = $('#amount'),
-            $transactionFeeAmount = $('#transaction-fee-amount'),
-            $totalAmount = $('#total-amount'),
-            $transactionFeeAmountDisplay = $('#fee-amount-display'),
-            $totalAmountDisplay = $('#total-amount-display'),
-            feePercentage = Number($('#fee-amount-rate').val());
-
-        function parseMoney(value) {
-            return Number(value.replace(/[^0-9\.]+/g, ""));
-        }
-
-        function formatMoney(value) {
-            return value.toFixed(2);
-        }
-
-        function calculateAmounts() {
-            var donationAmount = parseMoney($donationAmount.val()),
-                amount = parseMoney($amount.val()),
-                transactionFeeAmount = amount * feePercentage,
-                totalAmount = amount + transactionFeeAmount + donationAmount;
-
-            $transactionFeeAmount.val(formatMoney(transactionFeeAmount));
-            $totalAmount.val(formatMoney(totalAmount));
-            $transactionFeeAmountDisplay.text(formatMoney(transactionFeeAmount));
-            $totalAmountDisplay.text(formatMoney(totalAmount));
-        }
-
-        $donationAmount.on('keyup', calculateAmounts);
-        $amount.on('keyup', calculateAmounts);
-
-        calculateAmounts();
+    $(function() {
+        paymentForm({
+            stripeToken: "{{ \Config::get('stripe.public_key') }}",
+            email: "{{ \Auth::user()->getEmail() }}"
+        })
     });
 </script>
 @stop
