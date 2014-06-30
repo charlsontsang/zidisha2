@@ -6,6 +6,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Zidisha\Admin\Setting;
 use Zidisha\Balance\Transaction;
 use Zidisha\Borrower\BorrowerQuery;
+use Zidisha\Borrower\Volunteer;
 use Zidisha\Country\Country;
 use Zidisha\Currency\Money;
 
@@ -87,6 +88,8 @@ class GenerateModelData extends Command
             return;
         }
 
+        $randArray = [true, false, false, false, false, true, false, false, false, true, false];
+
         $allLenders = LenderQuery::create()
             ->orderById()
             ->find();
@@ -111,7 +114,6 @@ class GenerateModelData extends Command
                 ->orderById()
                 ->find()
                 ->getData();
-
 
             if ($allCategories == null || count($allBorrowers) < $size) {
                 $this->error("not enough categories or borrowers");
@@ -218,11 +220,14 @@ class GenerateModelData extends Command
                 $password = '1234567890';
                 $email = 'borrower' . $i . '@mail.com';
 
+                $isMentor = $randArray[array_rand($randArray)];
+
                 $user = new \Zidisha\User\User();
                 $user->setUsername($userName);
                 $user->setPassword($password);
                 $user->setEmail($email);
                 $user->setRole('borrower');
+
 
                 $firstName = 'borrower' . $i;
                 $lastName = 'last' . $i;
@@ -233,6 +238,13 @@ class GenerateModelData extends Command
                 $borrower->setLastName($lastName);
                 $borrower->setCountryId($countryId);
                 $borrower->setUser($user);
+                if ($isMentor) {
+                    $user->setSubRole('volunteerMentor');
+                    $mentor = new Volunteer();
+                    $mentor->setUser($user)
+                        ->setCountry($borrower->getCountry())
+                        ->setGrantDate(new \DateTime());
+                }
 
                 $borrower_profile = new \Zidisha\Borrower\Profile();
                 $borrower_profile->setAboutMe($faker->paragraph(7));

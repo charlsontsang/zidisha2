@@ -38,7 +38,7 @@
                     </a>
 
                     <ul class="dropdown-menu">
-                        @if(Auth::getUser()->getRole() == 'lender')
+                        @if(Auth::getUser()->isLender())
                         <li><a href="{{ route('lender:dashboard') }}">Dashboard</a></li>
                         <li><a href="{{ route('lender:public-profile', Auth::getUser()->getUsername()) }}">View My
                                 Public Profile</a></li>
@@ -49,7 +49,7 @@
                         <li><a href="{{ route('lender:history') }}">Transaction History</a></li>
                         <li><a href="{{ route('lender:funds') }}">Add or Withdraw Funds</a></li>
                         @endif
-                        @if(Auth::getUser()->getRole() == 'borrower')
+                        @if(Auth::getUser()->isBorrower())
                         <li><a href="{{ route('borrower:dashboard') }}">Dashboard</a></li>
                         <li><a href="{{ route('borrower:public-profile', Auth::getUser()->getUsername()) }}">View Public
                                 Profile</a></li>
@@ -59,7 +59,7 @@
                     </ul>
                 </li>
                 @endif
-                @if(Auth::check() && Auth::getUser()->getRole() == 'admin')
+                @if(Auth::check() && Auth::getUser()->isAdmin())
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         Manage Borrowers <b class="caret"></b>

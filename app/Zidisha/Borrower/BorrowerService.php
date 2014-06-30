@@ -47,8 +47,7 @@ class BorrowerService
             $borrower->getUser()->setPassword($data['password']);
         }
 
-        if(Input::hasFile('picture'))
-        {
+        if (Input::hasFile('picture')) {
             $image = Input::file('picture');
 
             $user = $borrower->getUser();
@@ -83,5 +82,11 @@ class BorrowerService
         $borrower->save();
 
         $upload->delete();
+    }
+
+    public function makeVolunteerMentor(Borrower $borrower)
+    {
+        $borrower->getUser()->setSubRole('volunteerMentor');
+        $borrower->save();
     }
 }
