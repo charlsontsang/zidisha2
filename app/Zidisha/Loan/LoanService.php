@@ -14,6 +14,7 @@ use Zidisha\Currency\Money;
 use Zidisha\Lender\Lender;
 use Zidisha\Mail\LenderMailer;
 use Zidisha\Repayment\Installment;
+use Zidisha\Vendor\PropelDB;
 
 class LoanService
 {
@@ -51,9 +52,6 @@ class LoanService
 
     public function applyForLoan(Borrower $borrower, $data)
     {
-        $con = Propel::getWriteConnection(TransactionTableMap::DATABASE_NAME);
-        $con->beginTransaction();
-
         $data['currencyCode'] = $borrower->getCountry()->getCurrencyCode();
 
         $loanCategory = CategoryQuery::create()
@@ -63,25 +61,18 @@ class LoanService
             Money::create($data['nativeAmount'], $data['currencyCode'])
         )->getAmount();
 
-        try {
-            $loan = Loan::createFromData($data);
+        $loan = Loan::createFromData($data);
 
-            $loan->setCategory($loanCategory);
-            $loan->setBorrower($borrower);
-            $loan->setStatus(Loan::OPEN);
-
-            $loanSuccess = $loan->save($con);
-            if (!$loanSuccess) {
-                throw new \Exception();
-            }
+        $loan
+            ->setCategory($loanCategory)
+            ->setBorrower($borrower)
+            ->setStatus(Loan::OPEN);
+        
+        PropelDB::transaction(function($con) use ($loan) {
+            $loan->save($con);
 
             $this->changeLoanStage($con, $loan, null, Loan::OPEN);
-
-            $con->commit();
-        } catch (\Exception $e) {
-            $con->rollBack();
-            throw $e;
-        }
+        });
 
         $this->addToLoanIndex($loan);
     }
@@ -217,16 +208,10 @@ class LoanService
 
     public function placeBid(Loan $loan, Lender $lender, $data)
     {
-        $con = Propel::getWriteConnection(TransactionTableMap::DATABASE_NAME);
-        $con->beginTransaction();
-
-        try {
-            $bid = $this->createBid($con, $loan, $lender, $data);
-            $con->commit();
-        } catch (\Exception $e) {
-            $con->rollBack();
-            throw $e;
-        }
+        /** @var Bid $bid */
+        $bid = PropelDB::transaction(function($con) use($loan, $lender, $data) {
+            return  $this->createBid($con, $loan, $lender, $data);    
+        });
 
         // loop and send emails
 
@@ -391,30 +376,23 @@ class LoanService
 
     public function editBid(Bid $bid, $data)
     {
-        // Todo: Outbid Function
         $loan = $bid->getLoan();
 
-        $con = Propel::getWriteConnection(TransactionTableMap::DATABASE_NAME);
-        $con->beginTransaction();
-        try {
+        $totalBidAmount = BidQuery::create()
+            ->filterByLoan($loan)
+            ->getTotalBidAmount();
 
-            $bid->setBidAmount(Money::create($data['amount'], 'USD'));
-            $bid->setInterestRate($data['interestRate']);
-            $bidEditSuccess = $bid->save($con);
+        $bid
+            ->setBidAmount(Money::create($data['amount'], 'USD'))
+            ->setInterestRate($data['interestRate']);
 
-            $totalBidAmount = BidQuery::create()
-                ->filterByLoan($loan)
-                ->getTotalBidAmount();
+        $loan->calculateAmountRaised($totalBidAmount);
 
-            $loan->calculateAmountRaised($totalBidAmount);
-            $loan->save();
+        PropelDB::transaction(function($con) use ($bid, $loan) {
+            $bid->save($con);
 
-            if ($bidEditSuccess) {
-                $con->commit();
-            }
-        } catch (\Exception $e) {
-            $con->rollBack();
-        }
+            $loan->save();            
+        });
 
         //Todo: refresh elastic search.
         return $bid;
@@ -428,11 +406,9 @@ class LoanService
 
         $newAcceptedBids = $this->getAcceptedBids($newBids, $loan->getAmount());
 
-        $con = Propel::getWriteConnection(TransactionTableMap::DATABASE_NAME);
-        $con->beginTransaction();
-        $totalAmount = Money::create(0);
+        PropelDB::transaction(function($con) use ($newAcceptedBids, $loan) {
+            $totalAmount = Money::create(0);
 
-        try {
             foreach ($newAcceptedBids as $bidId => $acceptedBid) {
                 $acceptedAmount = $acceptedBid['acceptedAmount'];
                 $bid = $acceptedBid['bid'];
@@ -459,83 +435,60 @@ class LoanService
 
             $loan->getBorrower()->setActiveLoan($loan);
             $loan->save($con);
-
-            //TODO send emails
-
-        } catch (\Exception $e) {
-            $con->rollBack();
-        }
-        $con->commit();
+        });
+        
+        //TODO send emails
 
         return true;
     }
 
     public function expireLoan(Loan $loan)
-    {
-        $con = Propel::getWriteConnection(TransactionTableMap::DATABASE_NAME);
-        $con->beginTransaction();
-
-        try {
+    {        
+        PropelDB::transaction(function($con) use ($loan) {
             $loan->setStatus(Loan::EXPIRED)
                 ->setExpiredDate(new \DateTime());
-            $setLoanSuccess = $loan->save($con);
+            $loan->save($con);
 
             $loan->getBorrower()
                 ->setActiveLoan(null)
                 ->setLoanStatus(Loan::NO_LOAN);
-            $setBorrowerSuccess = $loan->save($con);
+            $loan->save($con);
 
             $this->changeLoanStage($con, $loan, Loan::OPEN, Loan::EXPIRED);
 
             $refunds = $this->refundLenders($con, $loan, Loan::EXPIRED);
 
-            $updateBidsSuccess = true;
             if ($loan->getStatus() == Loan::FUNDED) {
-                $updateBidsSuccess = BidQuery::create()
+                BidQuery::create()
                     ->filterByLoan($loan)
                     ->update(['active' => 0, 'accepted_amount' => null], $con);
             }
-
-            if (!$updateBidsSuccess || !$setBorrowerSuccess || !$setLoanSuccess) {
-                throw new \Exception();
-            }
-            $con->commit();
-        } catch (\Exception $e) {
-            $con->rollBack();
-        }
+        });
 
         // Todo: send emails to notify lenders use $refunds
+        
         return true;
     }
 
     public function cancelLoan(Loan $loan)
     {
-        $con = Propel::getWriteConnection(TransactionTableMap::DATABASE_NAME);
-        $con->beginTransaction();
-
-        try {
+        PropelDB::transaction(function($con) use($loan) {
             $loan
                 ->setStatus(Loan::CANCELED)
                 ->setExpiredDate(new \DateTime());
-            $loanSuccess = $loan->save($con);
+            $loan->save($con);
 
             $borrower = $loan->getBorrower();
             $borrower
                 ->setActiveLoan(null)
                 ->setLoanStatus(Loan::NO_LOAN);
-            $borrowerSuccess = $borrower->save($con);
+            $borrower->save($con);
 
             $this->changeLoanStage($con, $loan, Loan::OPEN, Loan::CANCELED);
             $this->refundLenders($con, $loan, Loan::CANCELED);
-
-            if (!$loanSuccess || !$borrowerSuccess) {
-                throw new \Exception();
-            }
-
-            $con->commit();
-        } catch (\Exception $e) {
-            $con->rollBack();
-        }
+        });
+        
+        // TODO emails to refunded lenders
 
         return true;
     }
@@ -585,7 +538,6 @@ class LoanService
     {
         $date = $date ? : new \DateTime();
 
-
         $newLoanStage = new Stage();
         $newLoanStage->setLoan($loan)
             ->setBorrower($loan->getBorrower())
@@ -622,9 +574,7 @@ class LoanService
             return;
         }
 
-        $con = Propel::getWriteConnection(TransactionTableMap::DATABASE_NAME);
-        $con->beginTransaction();
-        try {
+        PropelDB::transaction(function($con) use ($loan, $disbursedDate, $nativeAmount) {
             $this->transactionService->addDisbursementTransaction($con, $nativeAmount, $loan);
 
             $loans = LoanQuery::create()
@@ -648,16 +598,10 @@ class LoanService
             $installments = $this->generateLoanInstallments($loan);
             
             foreach ($installments as $installment) {
-                $success = $installment->save($con);
-                if (!$success) {
-                    throw \Exception();
-                }
+                $installment->save($con);
             }
+        });
 
-        } catch (\Exception $e) {
-            $con->rollBack();
-        }
-        $con->commit();
         //TODO Add repayment schedule
         //TODO Send email / sift sience event
     }
