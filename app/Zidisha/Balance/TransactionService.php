@@ -13,6 +13,13 @@ use Zidisha\Payment\Payment;
 class TransactionService
 {
 
+    public function assertAmount(Money $amount)
+    {
+        if (!$amount->greaterThan(Money::create(0))) {
+            throw new \Exception();
+        }
+    }
+
     public function addDisbursementTransaction(ConnectionInterface $con, Money $amount, Loan $loan)
     {
         $this->assertAmount($amount);
@@ -25,11 +32,8 @@ class TransactionService
             ->setLoan($loan)
             ->setTransactionDate(new \DateTime())
             ->setType(Transaction::DISBURSEMENT);
-        $TransactionSuccess = $disburseTransaction->save($con);
-
-        if (!$TransactionSuccess) {
-            throw new \Exception();
-        }
+        
+        $disburseTransaction->save($con);
     }
 
     public function addLoanBidExpiredTransaction(ConnectionInterface $con, Money $amount, Loan $loan, Lender $lender)
@@ -45,11 +49,8 @@ class TransactionService
             ->setSubType(Transaction::LOAN_BID_EXPIRED)
             ->setTransactionDate(new \DateTime())
             ->setDescription('Loan bid expired');
-        $TransactionSuccess = $transaction->save($con);
-
-        if (!$TransactionSuccess) {
-            throw new \Exception();
-        }
+        
+        $transaction->save($con);
     }
 
     public function addOutBidTransaction(
@@ -71,11 +72,7 @@ class TransactionService
             ->setType(Transaction::LOAN_OUTBID)
             ->setSubType(null);
 
-        $bidTransactionSuccess = $bidTransaction->save($con);
-        if (!$bidTransactionSuccess) {
-            // Todo: Notify admin.
-            throw new \Exception();
-        }
+        $bidTransaction->save($con);
     }
 
     public function addLoanBidCanceledTransaction(
@@ -95,11 +92,8 @@ class TransactionService
             ->setType(Transaction::LOAN_OUTBID)
             ->setSubType(Transaction::LOAN_BID_CANCELED)
             ->setDescription('Loan bid cancelled');
-        $TransactionSuccess = $transaction->save($con);
-
-        if (!$TransactionSuccess) {
-            throw new \Exception();
-        }
+        
+        $transaction->save($con);
     }
 
     public function addUpdateBidTransaction(
@@ -121,11 +115,7 @@ class TransactionService
             ->setType(Transaction::LOAN_BID)
             ->setSubType(Transaction::UPDATE_BID);
 
-        $bidTransactionSuccess = $bidTransaction->save($con);
-        if (!$bidTransactionSuccess) {
-            // Todo: Notify admin.
-            throw new \Exception();
-        }
+        $bidTransaction->save($con);
     }
 
     public function addPlaceBidTransaction(
@@ -147,11 +137,7 @@ class TransactionService
             ->setType(Transaction::LOAN_BID)
             ->setSubType(Transaction::PLACE_BID);
 
-        $bidTransactionSuccess = $bidTransaction->save($con);
-        if (!$bidTransactionSuccess) {
-            // Todo: Notify admin.
-            throw new \Exception();
-        }
+        $bidTransaction->save($con);
     }
 
     public function addFeeTransaction(ConnectionInterface $con, Money $amount, Loan $loan)
@@ -166,7 +152,8 @@ class TransactionService
             ->setLoan($loan)
             ->setTransactionDate(new \DateTime())
             ->setType(Transaction::REGISTRATION_FEE);
-        $TransactionSuccessBorrower = $feeTransactionBorrower->save($con);
+        
+        $feeTransactionBorrower->save($con);
 
         $feeTransactionAdmin = new Transaction();
         $feeTransactionAdmin
@@ -176,45 +163,31 @@ class TransactionService
             ->setLoan($loan)
             ->setTransactionDate(new \DateTime())
             ->setType(Transaction::REGISTRATION_FEE);
-        $TransactionSuccessAdmin = $feeTransactionAdmin->save($con);
-
-        if (!$TransactionSuccessBorrower || !$TransactionSuccessAdmin) {
-            throw new \Exception();
-        }
+        
+        $feeTransactionAdmin->save($con);
     }
 
     public function addLenderInviteTransaction(ConnectionInterface $con, Invite $invite)
     {
-        $amount = 25;
-
+        $amount = Money::create(25);
 
         $transactionLender = new InviteTransaction();
-        $transactionLender->setLender($invite->getLender());
-        $transactionLender->setAmount($amount);
-        $transactionLender->setDescription('Lender invite credit');
-        $transactionLender->setTransactionDate(new \DateTime());
-        $transactionLender->setType(Transaction::LENDER_INVITE_INVITER);
-        $res2 = $transactionLender->save($con);
+        $transactionLender
+            ->setLender($invite->getLender())
+            ->setAmount($amount)
+            ->setDescription('Lender invite credit')
+            ->setTransactionDate(new \DateTime())
+            ->setType(Transaction::LENDER_INVITE_INVITER);
+        $transactionLender->save($con);
 
         $transactionInvitee = new InviteTransaction();
-        $transactionInvitee->setLender($invite->getInvitee());
-        $transactionInvitee->setAmount($amount);
-        $transactionInvitee->setDescription('Lender invite credit');
-        $transactionInvitee->setTransactionDate(new \DateTime());
-        $transactionInvitee->setType(Transaction::LENDER_INVITE_INVITEE);
-        $res3 = $transactionInvitee->save($con);
-
-        if (!$res2 || !$res3) {
-            throw new \Exception();
-        }
-
-    }
-
-    public function assertAmount(Money $amount)
-    {
-        if (!$amount->greaterThan(Money::create(0))) {
-            throw new \Exception();
-        }
+        $transactionInvitee
+            ->setLender($invite->getInvitee())
+            ->setAmount($amount)
+            ->setDescription('Lender invite credit')
+            ->setTransactionDate(new \DateTime())
+            ->setType(Transaction::LENDER_INVITE_INVITEE);
+        $transactionInvitee->save($con);
     }
 
     public function addRedeemGiftCardTransaction(ConnectionInterface $con, GiftCard $giftCard)
@@ -237,12 +210,13 @@ class TransactionService
         $this->assertAmount($payment->getTotalAmount());
 
         $transactionUpload = new Transaction();
-        $transactionUpload->setUserId($payment->getLenderId());
-        $transactionUpload->setAmount($payment->getTotalAmount());
-        $transactionUpload->setDescription('Funds upload to lender account');
-        $transactionUpload->setTransactionDate(new \DateTime());
-        $transactionUpload->setType(Transaction::FUND_UPLOAD);
-        $transactionUpload->setSubType(Transaction::FUND_UPLOAD);
+        $transactionUpload
+            ->setUserId($payment->getLenderId())
+            ->setAmount($payment->getTotalAmount())
+            ->setDescription('Funds upload to lender account')
+            ->setTransactionDate(new \DateTime())
+            ->setType(Transaction::FUND_UPLOAD)
+            ->setSubType(Transaction::FUND_UPLOAD);
         $transactionUpload->save($con);
 
         if ($payment->getTransactionFee()->greaterThan(Money::create(0))) {
@@ -257,20 +231,21 @@ class TransactionService
             }
 
             $transactionStripeFee = new Transaction();
-            $transactionStripeFee->setUserId($payment->getLenderId());
-            $transactionStripeFee->setAmount($payment->getTransactionFee()->multiply(-1));
-            $transactionStripeFee->setDescription($description);
-            $transactionStripeFee->setTransactionDate(new \DateTime());
-            $transactionStripeFee->setType($transactionType);
+            $transactionStripeFee
+                ->setUserId($payment->getLenderId())
+                ->setAmount($payment->getTransactionFee()->multiply(-1))
+                ->setDescription($description)
+                ->setTransactionDate(new \DateTime())
+                ->setType($transactionType);
             $transactionStripeFee->save($con);
 
             $transactionStripeAdmin = new Transaction();
-            // TODO set use to admin
-            $transactionStripeAdmin->setUserId(\Config::get('app.AdminId'));
-            $transactionStripeAdmin->setAmount($payment->getTransactionFee());
-            $transactionStripeAdmin->setDescription('Lender transaction fee');
-            $transactionStripeAdmin->setTransactionDate(new \DateTime());
-            $transactionStripeAdmin->setType($transactionType);
+            $transactionStripeAdmin
+                ->setUserId(\Config::get('app.AdminId'))
+                ->setAmount($payment->getTransactionFee())
+                ->setDescription('Lender transaction fee')
+                ->setTransactionDate(new \DateTime())
+                ->setType($transactionType);
             $transactionStripeAdmin->save($con);
         }
     }
@@ -278,19 +253,21 @@ class TransactionService
     public function addDonation(ConnectionInterface $con, Payment $payment)
     {
         $donationTransaction = new Transaction();
-        $donationTransaction->setUserId($payment->getLenderId());
-        $donationTransaction->setAmount($payment->getDonationAmount()->multiply(-1));
-        $donationTransaction->setDescription('Donation to Zidisha');
-        $donationTransaction->setTransactionDate(new \DateTime());
-        $donationTransaction->setType(Transaction::DONATION);
+        $donationTransaction
+            ->setUserId($payment->getLenderId())
+            ->setAmount($payment->getDonationAmount()->multiply(-1))
+            ->setDescription('Donation to Zidisha')
+            ->setTransactionDate(new \DateTime())
+            ->setType(Transaction::DONATION);
         $donationTransaction->save($con);
 
         $donationTransaction = new Transaction();
-        $donationTransaction->setUserId(\Config::get('app.AdminId'));
-        $donationTransaction->setAmount($payment->getDonationAmount());
-        $donationTransaction->setDescription('Donation from lender');
-        $donationTransaction->setTransactionDate(new \DateTime());
-        $donationTransaction->setType(Transaction::DONATION);
+        $donationTransaction
+            ->setUserId(\Config::get('app.AdminId'))
+            ->setAmount($payment->getDonationAmount())
+            ->setDescription('Donation from lender')
+            ->setTransactionDate(new \DateTime())
+            ->setType(Transaction::DONATION);
         $donationTransaction->save($con);
     }
     
