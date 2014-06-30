@@ -402,7 +402,7 @@
     </table>
 
     <table name="paypal_ipn_log" phpName="PayPalIpnLog" namespace="Payment\Paypal">
-        <column name="id" type="INTEGER" required="true" autoIncrement="True" primaryKey="true" />
+        <column name="id" type="INTEGER" required="true" autoIncrement="true" primaryKey="true" />
         <column name="log" required="true" type="VARCHAR" size="255" />
         <behavior name="timestampable"/>
     </table>
@@ -458,7 +458,7 @@
         <foreign-key foreignTable="lenders">
             <reference local="lender_id" foreign="id"/>
         </foreign-key>
-        <column name="class_key" type="integer" inheritance="single">
+        <column name="class_key" type="INTEGER" inheritance="single">
             <inheritance key="1" class="UploadFundPayment"/>
         </column>
     </table>
@@ -501,7 +501,25 @@
         <column name="donation" type="DECIMAL" size="10" scale="2"/>
         <column name="date" type="TIMESTAMP" required="true"/>
         <foreign-key foreignTable="lenders">
-            <reference local="Lender_id" foreign="id"/>
+            <reference local="lender_id" foreign="id"/>
+        </foreign-key>
+    </table>
+    
+    <table name="borrower_refunds" phpName="BorrowerRefund" namespace="Repayment">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="amount" type="DECIMAL" size="10" scale="2" required="true"/>
+        <column name="borrower_id" type="INTEGER" required="true"/>
+        <column name="loan_id" type="INTEGER" required="true"/>
+        <column name="borrower_payment_id" type="INTEGER" required="true"/>
+        <column name="refunded" type="BOOLEAN" default="0"/>
+        <foreign-key foreignTable="borrowers">
+            <reference local="borrower_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="loans">
+            <reference local="loan_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="borrower_payments">
+            <reference local="borrower_payment_id" foreign="id"/>
         </foreign-key>
     </table>
 </database>

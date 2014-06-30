@@ -6,6 +6,8 @@ use Illuminate\Queue\Jobs\Job;
 use Zidisha\Borrower\Borrower;
 use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Html\BootstrapForm;
+use Zidisha\Currency\Money;
+use Zidisha\Loan\Loan;
 
 class RepaymentService
 {
@@ -96,5 +98,17 @@ class RepaymentService
                 ->save();
         }
         return true;
+    }
+
+    public function addBorrowerRefund($con, Loan $loan, Money $amount)
+    {
+        $borrowerRefund = new BorrowerRefund();
+        $borrowerRefund
+            ->setLoan($loan)
+            ->setBorrower($loan->getBorrower())
+            ->setAmount($amount);
+        $borrowerRefund->save();
+        
+        return $borrowerRefund;
     }
 }
