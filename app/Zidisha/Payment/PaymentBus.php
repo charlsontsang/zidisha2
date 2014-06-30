@@ -2,20 +2,23 @@
 namespace Zidisha\Payment;
 
 
+use Zidisha\Payment\Error\PaymentError;
+
 class PaymentBus
 {
     /**
      * @param Payment $payment
-     * @return PaymentHandler
+     * @param PaymentError $paymentError
+     * @return mixed
      */
-    public function getFailedHandler(Payment $payment)
+    public function getFailedHandler(Payment $payment, PaymentError $paymentError)
     {
-        return $this->getHandler($payment, 'Failed');
+        return $this->getHandler($payment, 'Failed')->setPaymentError($paymentError);
     }
 
     /**
      * @param Payment $payment
-     * @return PaymentHandler
+     * @return mixed
      */
     public function getCompletedHandler(Payment $payment)
     {
@@ -24,11 +27,12 @@ class PaymentBus
 
     /**
      * @param Payment $payment
-     * @return PaymentHandler
+     * @param PaymentError $paymentError
+     * @return mixed
      */
-    public function getPendingHandler(Payment $payment)
+    public function getPendingHandler(Payment $payment, PaymentError $paymentError)
     {
-        return $this->getHandler($payment, 'Pending');
+        return $this->getHandler($payment, 'Pending')->setPaymentError($paymentError);
     }
 
     /**
