@@ -20,9 +20,9 @@
 {{ BootstrapForm::textArea('addressInstruction') }}
 {{ BootstrapForm::text('city') }}
 {{ BootstrapForm::text('nationalIdNumber') }}
-{{ BootstrapForm::text('phoneNumber', null, ['prepend' => '+ ' . $form->getCountry()->getDialingCode() . ' (0)']) }}
+{{ BootstrapForm::text('phoneNumber', null, ['prepend' => $form->getDialingCode()]) }}
 {{ BootstrapForm::text('alternatePhoneNumber', null, [
-    'prepend' => '+ ' . $form->getCountry()->getDialingCode() . ' (0)',
+    'prepend' => $form->getDialingCode(),
     'description' => \Lang::get('borrowerJoin.form.optional')
 ]) }}
 
@@ -33,8 +33,74 @@
 {{ BootstrapForm::select('volunteer_mentor') }}
 
 <br><br>
-<p>Please enter the contact information of a community leader, such as the leader of a local school, religious
-    institution or other community organization, who knows you well and can recommend you for a Zidisha loan.</p>
+<label>@lang('borrowerJoin.form.communityLeaderDescription')</label>
+
+<fieldset>
+    <legend>@lang('borrowerJoin.form.communityLeader')</legend>
+
+    {{ BootstrapForm::text('communityLeader_firstName', null, ['label' => 'borrowerJoin.form.contact.firstName']) }}
+    {{ BootstrapForm::text('communityLeader_lastName', null, ['label' => 'borrowerJoin.form.contact.lastName']) }}
+    {{ BootstrapForm::text('communityLeader_phoneNumber', null, ['label' => 'borrowerJoin.form.contact.phoneNumber', 'prepend' => $form->getDialingCode()]) }}
+    {{ BootstrapForm::text('communityLeader_description', null, ['label' => 'borrowerJoin.form.contact.organizationTitle']) }}
+</fieldset>
+
+<label>@lang('borrowerJoin.form.familyMemberDescription')</label>
+
+<fieldset>
+    <legend>@lang('borrowerJoin.form.familyMember') 1</legend>
+
+    {{ BootstrapForm::text('familyMember_1_firstName', null, ['label' => 'borrowerJoin.form.contact.firstName']) }}
+    {{ BootstrapForm::text('familyMember_1_lastName', null, ['label' => 'borrowerJoin.form.contact.lastName']) }}
+    {{ BootstrapForm::text('familyMember_1_phoneNumber', null, ['label' => 'borrowerJoin.form.contact.phoneNumber', 'prepend' => $form->getDialingCode()]) }}
+    {{ BootstrapForm::text('familyMember_1_description', null, ['label' => 'borrowerJoin.form.contact.relationship']) }}
+</fieldset>
+
+<fieldset>
+    <legend>@lang('borrowerJoin.form.familyMember') 2</legend>
+
+    {{ BootstrapForm::text('familyMember_2_firstName', null, ['label' => 'borrowerJoin.form.contact.firstName']) }}
+    {{ BootstrapForm::text('familyMember_2_lastName', null, ['label' => 'borrowerJoin.form.contact.lastName']) }}
+    {{ BootstrapForm::text('familyMember_2_phoneNumber', null, ['label' => 'borrowerJoin.form.contact.phoneNumber', 'prepend' => $form->getDialingCode()]) }}
+    {{ BootstrapForm::text('familyMember_2_description', null, ['label' => 'borrowerJoin.form.contact.relationship']) }}
+</fieldset>
+
+<fieldset>
+    <legend>@lang('borrowerJoin.form.familyMember') 3</legend>
+
+    {{ BootstrapForm::text('familyMember_3_firstName', null, ['label' => 'borrowerJoin.form.contact.firstName']) }}
+    {{ BootstrapForm::text('familyMember_3_lastName', null, ['label' => 'borrowerJoin.form.contact.lastName']) }}
+    {{ BootstrapForm::text('familyMember_3_phoneNumber', null, ['label' => 'borrowerJoin.form.contact.phoneNumber', 'prepend' => $form->getDialingCode()]) }}
+    {{ BootstrapForm::text('familyMember_3_description', null, ['label' => 'borrowerJoin.form.contact.relationship']) }}
+</fieldset>
+
+<label>@lang('borrowerJoin.form.neighborDescription')</label>
+
+<fieldset>
+    <legend>@lang('borrowerJoin.form.neighbor') 1</legend>
+
+    {{ BootstrapForm::text('neighbor_1_firstName', null, ['label' => 'borrowerJoin.form.contact.firstName']) }}
+    {{ BootstrapForm::text('neighbor_1_lastName', null, ['label' => 'borrowerJoin.form.contact.lastName']) }}
+    {{ BootstrapForm::text('neighbor_1_phoneNumber', null, ['label' => 'borrowerJoin.form.contact.phoneNumber', 'prepend' => $form->getDialingCode()]) }}
+    {{ BootstrapForm::text('neighbor_1_description', null, ['label' => 'borrowerJoin.form.contact.relationship']) }}
+</fieldset>
+
+<fieldset>
+    <legend>@lang('borrowerJoin.form.neighbor') 2</legend>
+
+    {{ BootstrapForm::text('neighbor_2_firstName', null, ['label' => 'borrowerJoin.form.contact.firstName']) }}
+    {{ BootstrapForm::text('neighbor_2_lastName', null, ['label' => 'borrowerJoin.form.contact.lastName']) }}
+    {{ BootstrapForm::text('neighbor_2_phoneNumber', null, ['label' => 'borrowerJoin.form.contact.phoneNumber', 'prepend' => $form->getDialingCode()]) }}
+    {{ BootstrapForm::text('neighbor_2_description', null, ['label' => 'borrowerJoin.form.contact.relationship']) }}
+</fieldset>
+
+<fieldset>
+    <legend>@lang('borrowerJoin.form.neighbor') 3</legend>
+
+    {{ BootstrapForm::text('neighbor_3_firstName', null, ['label' => 'borrowerJoin.form.contact.firstName']) }}
+    {{ BootstrapForm::text('neighbor_3_lastName', null, ['label' => 'borrowerJoin.form.contact.lastName']) }}
+    {{ BootstrapForm::text('neighbor_3_phoneNumber', null, ['label' => 'borrowerJoin.form.contact.phoneNumber', 'prepend' => $form->getDialingCode()]) }}
+    {{ BootstrapForm::text('neighbor_3_description', null, ['label' => 'borrowerJoin.form.contact.relationship']) }}
+</fieldset>
 
 {{ BootstrapForm::submit('submit') }} -
 {{ BootstrapForm::submit('save_later') }} -

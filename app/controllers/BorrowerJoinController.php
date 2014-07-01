@@ -64,6 +64,7 @@ class BorrowerJoinController extends BaseController
                 ->findOneById($form->getData()['country']);
 
             Session::put('BorrowerJoin.countryCode', $country->getCountryCode());
+            Session::put('BorrowerJoin.countryId', $country->getId());
             $this->setCurrentStep('facebook');
 
             return Redirect::action('BorrowerJoinController@getFacebook');
@@ -133,7 +134,7 @@ class BorrowerJoinController extends BaseController
             $form->handleRequest(Request::instance());
 
             if ($form->isValid()) {
-                $data = $form->getData();
+                $data = $form->getNestedData();
                 $data = array_merge($data, Session::get('BorrowerJoin'));
 
                 $borrower = $this->borrowerService->joinBorrower($data);

@@ -58,7 +58,7 @@ class BootstrapFormBuilder
     public function open(array $options = [])
     {
         $this->translationDomain = array_get($options, 'translationDomain', '');
-        unset($options['name']);
+        unset($options['translationDomain']);
 
         return $this->form->open($options);
     }

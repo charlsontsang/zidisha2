@@ -27,6 +27,34 @@ class ProfileForm extends AbstractForm
             'nationalIdNumber'     => 'required|unique:borrower_profiles,national_id_number',
             'phoneNumber'          => 'required|numeric|digits:' . $phoneNumberLength .'|UniqueNumber|MutualUniqueNumber',
             'alternatePhoneNumber' => 'required|numeric|digits:' . $phoneNumberLength . '|UniqueNumber|MutualUniqueNumber',
+            'communityLeader_firstName'    => 'required',
+            'communityLeader_lastName'     => 'required',
+            'communityLeader_phoneNumber'  => 'required|numeric|digits:' . $phoneNumberLength,
+            'communityLeader_description'  => 'required',
+            'familyMember_1_firstName'     => 'required',
+            'familyMember_1_lastName'      => 'required',
+            'familyMember_1_phoneNumber'   => 'required|numeric|digits:' . $phoneNumberLength,
+            'familyMember_1_description'   => 'required',
+            'familyMember_2_firstName'     => 'required',
+            'familyMember_2_lastName'      => 'required',
+            'familyMember_2_phoneNumber'   => 'required|numeric|digits:' . $phoneNumberLength,
+            'familyMember_2_description'   => 'required',
+            'familyMember_3_firstName'     => 'required',
+            'familyMember_3_lastName'      => 'required',
+            'familyMember_3_phoneNumber'   => 'required|numeric|digits:' . $phoneNumberLength,
+            'familyMember_3_description'   => 'required',
+            'neighbor_1_firstName'         => 'required',
+            'neighbor_1_lastName'          => 'required',
+            'neighbor_1_phoneNumber'       => 'required|numeric|digits:' . $phoneNumberLength,
+            'neighbor_1_description'       => 'required',
+            'neighbor_2_firstName'         => 'required',
+            'neighbor_2_lastName'          => 'required',
+            'neighbor_2_phoneNumber'       => 'required|numeric|digits:' . $phoneNumberLength,
+            'neighbor_2_description'       => 'required',
+            'neighbor_3_firstName'         => 'required',
+            'neighbor_3_lastName'          => 'required',
+            'neighbor_3_phoneNumber'       => 'required|numeric|digits:' . $phoneNumberLength,
+            'neighbor_3_description'       => 'required',
         ];
     }
 
@@ -77,5 +105,10 @@ class ProfileForm extends AbstractForm
         );
 
         parent::validate($data, $this->getRules($data));
+    }
+
+    public function getDialingCode()
+    {
+        return '+ ' . $this->getCountry()->getDialingCode() . ' (0)';
     }
 }

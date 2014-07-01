@@ -16,7 +16,21 @@ return [
         'optional' => 'Optional: if you have any other phone number besides the one above, please enter it here.',
         'alternatePhoneNumber' => 'Alternate Mobile Phone Number',
         'members' => 'Please select the name of the member who referred you to Zidisha:',
-        'volunteer_mentor_city' => 'Please choose the town or village where you are located, or nearest to you:',
-        'volunteer_mentor' => 'Please choose one person from this list to serve as your Volunteer Mentor:',
+        'volunteerMentorCity' => 'Please choose the town or village where you are located, or nearest to you:',
+        'volunteerMentor' => 'Please choose one person from this list to serve as your Volunteer Mentor:',
+        'contact' => [
+            'firstName' => 'First Name',
+            'lastName' => 'Last Name',
+            'phoneNumber' => 'Mobile Phone Number',
+            'organizationTitle' => 'Name of institution and official title',
+            'relationship' => 'Relationship',
+        ],
+        'communityLeader' => 'Community Leader',
+        'communityLeaderDescription' => 'Please enter the contact information of a community leader, such as the leader of a local school, religious
+    institution or other community organization, who knows you well and can recommend you for a Zidisha loan.',
+        'familyMember' => 'Family Member',
+        'familyMemberDescription' => 'Please enter the contact information of three family members whom we may contact as a reference',
+        'neighbor' => 'Neighbor / Business Associate',
+        'neighborDescription' => 'Please enter the contact information of three neighbors whom we may contact as a reference',
     ]
 ];

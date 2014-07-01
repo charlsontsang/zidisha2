@@ -35,7 +35,7 @@ class BorrowerService
         $borrower = new Borrower();
         $borrower->setFirstName($data['firstName']);
         $borrower->setLastName($data['lastName']);
-        $borrower->setCountryId($data['country']);
+        $borrower->setCountryId($data['countryId']);
         $borrower->setUser($user);
 
         $profile = new Profile();
@@ -46,6 +46,37 @@ class BorrowerService
         $profile->setPhoneNumber($data['phoneNumber']);
         $profile->setAlternatePhoneNumber($data['alternatePhoneNumber']);
         $borrower->setProfile($profile);
+        
+        $communityLeader = new Contact();
+        $communityLeader
+            ->setType('communityLeader')
+            ->setFirstName($data['communityLeader']['firstName'])
+            ->setLastName($data['communityLeader']['lastName'])
+            ->setPhoneNumber($data['communityLeader']['phoneNumber'])
+            ->setDescription($data['communityLeader']['description']);
+        $borrower->addContact($communityLeader);
+        
+        for ($i = 1; $i <= 3; $i++) {
+            $familyMember = new Contact();
+            $familyMember
+                ->setType('familyMember')
+                ->setFirstName($data['familyMember'][$i]['firstName'])
+                ->setLastName($data['familyMember'][$i]['lastName'])
+                ->setPhoneNumber($data['familyMember'][$i]['phoneNumber'])
+                ->setDescription($data['familyMember'][$i]['description']);
+            $borrower->addContact($familyMember);
+        }
+
+        for ($i = 1; $i <= 3; $i++) {
+            $neighbor = new Contact();
+            $neighbor
+                ->setType('neighbor')
+                ->setFirstName($data['neighbor'][$i]['firstName'])
+                ->setLastName($data['neighbor'][$i]['lastName'])
+                ->setPhoneNumber($data['neighbor'][$i]['phoneNumber'])
+                ->setDescription($data['neighbor'][$i]['description']);
+            $borrower->addContact($neighbor);
+        }
 
         $borrower->save();
 
