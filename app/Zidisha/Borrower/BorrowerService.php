@@ -119,9 +119,9 @@ class BorrowerService
         $errors = array();
         if ($checkUser) {
             if ($checkUser->getFacebookId() == $facebookUser['id']) {
-                $errors[] = 'This facebook account already linked with another account on our website.';
+                $errors[] = \Lang::get('borrower-registration.account-already-linked');
             } else {
-                $errors[] = 'The email address linked to the facebook account is already linked with another account on our website.';
+                $errors[] = \Lang::get('borrower-registration.email-address-already-linked');
             }
         }
 
