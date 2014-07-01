@@ -284,14 +284,20 @@ class BootstrapFormBuilder
         $options = $this->getFieldOptions($options);
         $wrapperOptions = ['class' => $this->getRightColumnClass()];
 
-        $prepend = null;
+        $description = '';
+        if (isset($options['description'])) {
+            $description = '<span class="help-block">' . $options['description'] . '</span>';
+            unset($options['description']);
+        }
+        
+        $prepend = '';
         if (isset($options['prepend'])) {
             $prepend = '<span class="input-group-addon">' . $options['prepend'] . '</span>';
             unset($options['prepend']);
             $wrapperOptions['class'] = $wrapperOptions['class'] . ' input-group';
         }
 
-        $append = null;
+        $append = '';
         if (isset($options['append'])) {
             $append = '<span class="input-group-addon">' . $options['append'] . '</span>';
             unset($options['append']);
@@ -307,7 +313,7 @@ class BootstrapFormBuilder
         $groupElement = '<div ' . $this->html->attributes($wrapperOptions) . '>' . $prepend . $inputElement . $append . '</div>';
         $groupElement .= $this->getFieldError($name);
 
-        return $this->getFormGroup($name, $label, $groupElement);
+        return $this->getFormGroup($name, $label, $description . $groupElement);
     }
 
     /**
