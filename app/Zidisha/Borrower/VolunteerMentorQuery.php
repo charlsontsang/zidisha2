@@ -2,7 +2,7 @@
 
 namespace Zidisha\Borrower;
 
-use Zidisha\Borrower\Base\VolunteerQuery as BaseVolunteerQuery;
+use Zidisha\Borrower\Base\VolunteerMentorQuery as BaseVolunteerMentorQuery;
 
 
 /**
@@ -15,7 +15,7 @@ use Zidisha\Borrower\Base\VolunteerQuery as BaseVolunteerQuery;
  * long as it does not already exist in the output directory.
  *
  */
-class VolunteerQuery extends BaseVolunteerQuery
+class VolunteerMentorQuery extends BaseVolunteerMentorQuery
 {
 
-} // VolunteerQuery
+} // VolunteerMentorQuery

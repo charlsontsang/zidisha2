@@ -6,8 +6,9 @@ use Symfony\Component\Console\Input\InputArgument;
 use Zidisha\Admin\Setting;
 use Zidisha\Balance\Transaction;
 use Zidisha\Borrower\BorrowerQuery;
-use Zidisha\Borrower\Volunteer;
+use Zidisha\Borrower\VolunteerMentor;
 use Zidisha\Country\Country;
+use Zidisha\Country\CountryQuery;
 use Zidisha\Currency\Money;
 
 use Zidisha\Lender\Invite;
@@ -96,6 +97,9 @@ class GenerateModelData extends Command
 
         $allLoans = LoanQuery::create()
             ->orderById()
+            ->find();
+
+        $allCountries = CountryQuery::create()
             ->find();
 
         $categories = include(app_path() . '/database/LoanCategories.php');
@@ -191,6 +195,7 @@ class GenerateModelData extends Command
                 $userName = 'lender' . $i;
                 $password = '1234567890';
                 $email = 'lender' . $i . '@mail.com';
+                $oneCountry = $allCountries[array_rand($allCountries->getData())];
 
                 $user = new \Zidisha\User\User();
                 $user->setUsername($userName);
@@ -200,12 +205,11 @@ class GenerateModelData extends Command
 
                 $firstName = 'lender' . $i;
                 $lastName = 'last' . $i;
-                $countryId = 1;
 
                 $lender = new \Zidisha\Lender\Lender();
                 $lender->setFirstName($firstName);
                 $lender->setLastName($lastName);
-                $lender->setCountryId($countryId);
+                $lender->setCountry($oneCountry);
                 $lender->setUser($user);
 
                 $lender_profile = new \Zidisha\Lender\Profile();
@@ -221,6 +225,7 @@ class GenerateModelData extends Command
                 $email = 'borrower' . $i . '@mail.com';
 
                 $isMentor = $randArray[array_rand($randArray)];
+                $oneCountry = $allCountries[array_rand($allCountries->getData())];
 
                 $user = new \Zidisha\User\User();
                 $user->setUsername($userName);
@@ -231,20 +236,13 @@ class GenerateModelData extends Command
 
                 $firstName = 'borrower' . $i;
                 $lastName = 'last' . $i;
-                $countryId = 1;
 
                 $borrower = new \Zidisha\Borrower\Borrower();
                 $borrower->setFirstName($firstName);
                 $borrower->setLastName($lastName);
-                $borrower->setCountryId($countryId);
+                $borrower->setCountry($oneCountry);
                 $borrower->setUser($user);
-                if ($isMentor) {
-                    $user->setSubRole('volunteerMentor');
-                    $mentor = new Volunteer();
-                    $mentor->setUser($user)
-                        ->setCountry($borrower->getCountry())
-                        ->setGrantDate(new \DateTime());
-                }
+
 
                 $borrower_profile = new \Zidisha\Borrower\Profile();
                 $borrower_profile->setAboutMe($faker->paragraph(7));
@@ -256,6 +254,13 @@ class GenerateModelData extends Command
                 $borrower_profile->setAlternatePhoneNumber($faker->phoneNumber);
                 $borrower_profile->setNationalIdNumber($faker->randomNumber(10));
                 $borrower_profile->setBorrower($borrower);
+                if ($isMentor) {
+                    $user->setSubRole('volunteerMentor');
+                    $mentor = new VolunteerMentor();
+                    $mentor->setUser($user)
+                        ->setCountry($borrower->getCountry())
+                        ->setGrantDate(new \DateTime());
+                }
                 $borrower_profile->save();
             }
 
