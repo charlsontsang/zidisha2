@@ -28,7 +28,7 @@
 
 <br><br>
 <p>REFERENCES</p>
-{{ BootstrapForm::select('members') }}
+{{ BootstrapForm::select('members', $form->getBorrowersByCountry()) }}
 {{ BootstrapForm::select('volunteer_mentor_city', $form->getVolunteerMentorCity()) }}
 {{ BootstrapForm::select('volunteer_mentor') }}
 

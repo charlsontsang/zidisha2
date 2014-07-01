@@ -2,6 +2,8 @@
 namespace Zidisha\Borrower;
 
 use Illuminate\Support\Facades\Input;
+use Zidisha\Borrower\Base\BorrowerQuery;
+use Zidisha\Country\CountryQuery;
 use Zidisha\Upload\Upload;
 use Zidisha\User\User;
 use Zidisha\User\UserQuery;
@@ -26,6 +28,11 @@ class BorrowerService
 
     public function joinBorrower($data)
     {
+        $volunteerMentor = VolunteerMentorQuery::create()
+            ->findOneByBorrowerId($data['volunteer_mentor']);
+        $referrer = BorrowerQuery::create()
+            ->findOneById($data['members']);
+
         $user = new User();
         $user->setUsername($data['username']);
         $user->setEmail($data['email']);
@@ -36,6 +43,8 @@ class BorrowerService
         $borrower->setFirstName($data['firstName']);
         $borrower->setLastName($data['lastName']);
         $borrower->setCountryId($data['countryId']);
+        $borrower->setVolunteerMentor($volunteerMentor);
+        $borrower->setReferrer($referrer);
         $borrower->setUser($user);
 
         $profile = new Profile();

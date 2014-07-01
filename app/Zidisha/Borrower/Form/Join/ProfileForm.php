@@ -1,9 +1,12 @@
 <?php
 namespace Zidisha\Borrower\Form\Join;
 
+use Illuminate\Routing\Route;
 use Propel\Runtime\Propel;
 use Zidisha\Balance\Map\TransactionTableMap;
 use Zidisha\Borrower\Form\Validator\NumberValidator;
+use Zidisha\Borrower\BorrowerQuery;
+use Zidisha\Borrower\VolunteerMentorQuery;
 use Zidisha\Country\CountryQuery;
 use Zidisha\Form\AbstractForm;
 
@@ -14,7 +17,7 @@ class ProfileForm extends AbstractForm
     public function getRules($data)
     {
         $phoneNumberLength = $this->getCountry()->getPhoneNumberLength();
-        
+
         return [
             'username'             => 'required|unique:users,username',
             'password'             => 'required',
@@ -55,6 +58,12 @@ class ProfileForm extends AbstractForm
             'neighbor_3_lastName'          => 'required',
             'neighbor_3_phoneNumber'       => 'required|numeric|digits:' . $phoneNumberLength,
             'neighbor_3_description'       => 'required',
+            'volunteer_mentor_city' => 'in:' . implode(',', array_keys($this->getVolunteerMentorCity())),
+            'volunteer_mentor' => 'in:' . implode(
+                    ',',
+                    array_keys(VolunteerMentorQuery::create()->getVolunteerMentorByCity($data['volunteer_mentor_city']))
+                ),
+            'members' => 'in:' . implode(',', array_keys($this->getBorrowersByCountry()))
         ];
     }
 
@@ -74,7 +83,7 @@ class ProfileForm extends AbstractForm
             $this->country = CountryQuery::create()
                 ->findOneByCountryCode(\Session::get('BorrowerJoin.countryCode'));
         }
-        
+
         return $this->country;
     }
 
@@ -111,4 +120,46 @@ class ProfileForm extends AbstractForm
     {
         return '+ ' . $this->getCountry()->getDialingCode() . ' (0)';
     }
+
+    public function getBorrowersByCountry()
+    {
+        $list = [];
+        $countryCode = \Session::get('BorrowerJoin.countryCode');
+        $country = CountryQuery::create()
+            ->findOneByCountryCode($countryCode);
+
+        $borrowers = BorrowerQuery::create()
+            ->filterByCountry($country)
+            ->orderByFirstName()
+            ->filterByActive(true)
+            ->find();
+
+        foreach ($borrowers as $borrower) {
+            $list[$borrower->getId()] = $borrower->getName() . " ( " . $borrower->getProfile()->getCity() . " )";
+        }
+
+        return $list;
+    }
+
+    public function getVolunteerMentorByCity($city)
+    {
+        $list = [];
+        $volunteerMentors = VolunteerMentorQuery::create()
+            ->filterByStatus(1)
+            ->filterByMenteeCount(array('max' => '25'))
+            ->useBorrowerVolunteerQuery()
+            ->useProfileQuery()
+            ->filterByCity($city)
+            ->endUse()
+            ->endUse()
+            ->joinWith('VolunteerMentor.BorrowerVolunteer')
+            ->find();
+
+        foreach ($volunteerMentors as $volunteerMentor) {
+            $list[$volunteerMentor->getBorrowerId()] = $volunteerMentor->getBorrowerVolunteer()->getName();
+        }
+
+        return $list;
+    }
+
 }
