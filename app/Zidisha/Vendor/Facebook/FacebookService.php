@@ -61,4 +61,36 @@ class FacebookService
 
         return null;
     }
+
+    public function hasEnoughFriends()
+    {
+        $data = $this->facebook->api(
+            array(
+                'method' => 'fql.query',
+                'query' => 'SELECT friend_count FROM user WHERE uid = me()'
+            )
+        );
+
+        $numberOfFriends = $data[0]['friend_count'];
+
+        //TODO: get minimum number of friends from admin settings.
+        if($numberOfFriends > 50){
+            return true;
+        }
+        return false;
+
+    }
+
+    public function isAccountOldEnough()
+    {
+        //Todo: get date from configuration
+
+        $data = $this->facebook->api('/me/posts?limit=1&until=1388534400');
+
+        if (!empty($data['data']['0'])) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
