@@ -91,7 +91,7 @@ class BorrowerJoinController extends BaseController
         $facebookUser = $this->facebookService->getUserProfile();
 
         if ($facebookUser) {
-            $errors = $this->userService->validateConnectingFacebookUser($facebookUser);
+            $errors = $this->borrowerService->validateConnectingFacebookUser($facebookUser);
 
             if ($errors) {
                 foreach ($errors as $error) {
