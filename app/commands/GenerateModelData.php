@@ -274,6 +274,7 @@ class GenerateModelData extends Command
                 $country->SetRegistrationFee($oneCountry[3]);
                 $country->SetBorrowerCountry(true);
                 $country->setCurrencyCode($oneCountry[2]);
+                $country->setPhoneNumberLength(9);
                 $country->save();
             }
 

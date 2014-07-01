@@ -20,9 +20,9 @@
 {{ BootstrapForm::textArea('addressInstruction') }}
 {{ BootstrapForm::text('city') }}
 {{ BootstrapForm::text('nationalIdNumber') }}
-{{ BootstrapForm::text('phoneNumber') }}
+{{ BootstrapForm::text('phoneNumber', null, ['prepend' => '+ ' . $form->getCountry()->getDialingCode() . ' (0)']) }}
 {{ BootstrapForm::label(\Lang::get('borrowerJoin.form.optional')) }}
-{{ BootstrapForm::text('alternatePhoneNumber') }}
+{{ BootstrapForm::text('alternatePhoneNumber', null, ['prepend' => '+ ' . $form->getCountry()->getDialingCode() . ' (0)']) }}
 
 <br><br>
 <p>REFERENCES</p>
