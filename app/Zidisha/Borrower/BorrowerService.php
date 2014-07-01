@@ -129,7 +129,7 @@ class BorrowerService
             $errors[] = \Lang::get('borrower-registration.account-not-old');
         }
 
-        if($this->facebookService->hasEnoughFriends()){
+        if(!$this->facebookService->hasEnoughFriends()){
             $errors[] = \Lang::get('borrower-registration.does-not-have-enough-friends');
         }
 
