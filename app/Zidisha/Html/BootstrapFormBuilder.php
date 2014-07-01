@@ -280,19 +280,32 @@ class BootstrapFormBuilder
     {
         $label = array_get($options, 'label', $this->translationDomain ? $this->translationDomain . '.' . $name : $name);
         unset($options['label']);
-
+        
         $options = $this->getFieldOptions($options);
         $wrapperOptions = ['class' => $this->getRightColumnClass()];
 
+        $prepend = null;
+        if (isset($options['prepend'])) {
+            $prepend = '<span class="input-group-addon">' . $options['prepend'] . '</span>';
+            unset($options['prepend']);
+            $wrapperOptions['class'] = $wrapperOptions['class'] . ' input-group';
+        }
+
+        $append = null;
+        if (isset($options['append'])) {
+            $append = '<span class="input-group-addon">' . $options['append'] . '</span>';
+            unset($options['append']);
+            $wrapperOptions['class'] = $wrapperOptions['class'] . ' input-group';
+        }
+        
         $inputElement = $type == 'password' ? $this->form->password($name, $options) : $this->form->{$type}(
             $name,
             $value,
             $options
         );
 
-        $groupElement = '<div ' . $this->html->attributes($wrapperOptions) . '>' . $inputElement . $this->getFieldError(
-                $name
-            ) . '</div>';
+        $groupElement = '<div ' . $this->html->attributes($wrapperOptions) . '>' . $prepend . $inputElement . $append . '</div>';
+        $groupElement .= $this->getFieldError($name);
 
         return $this->getFormGroup($name, $label, $groupElement);
     }
