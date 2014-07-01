@@ -15,10 +15,10 @@ class ProfileForm extends AbstractForm
             'email'                => 'required|email|unique:users,email',
             'firstName'            => 'required',
             'lastName'             => 'required',
-            'address'              => 'required|min:20',
-            'addressInstruction'   => 'required|min:50',
+            'address'              => 'required',
+            'addressInstruction'   => 'required',
             'city'                 => 'required',
-            'nationalIdNumber'     => 'required',
+            'nationalIdNumber'     => 'required|unique:borrower_profiles,national_id_number',
             'phoneNumber'          => 'required|numeric',
             'alternatePhoneNumber' => 'required|numeric',
         ];
