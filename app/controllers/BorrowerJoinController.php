@@ -2,6 +2,7 @@
 
 use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Borrower\VolunteerMentorQuery;
+use Zidisha\Borrower\JoinLog;
 use Zidisha\Country\CountryQuery;
 use Zidisha\Utility\Utility;
 
@@ -89,6 +90,10 @@ class BorrowerJoinController extends BaseController
     public function getFacebookRedirect()
     {
         $facebookUser = $this->facebookService->getUserProfile();
+
+        $joinLog = new JoinLog();
+        $joinLog->setIpAddress(\Request::getClientIp());
+        $joinLog->save();
 
         if ($facebookUser) {
             $errors = $this->borrowerService->validateConnectingFacebookUser($facebookUser);
