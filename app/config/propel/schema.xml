@@ -609,4 +609,10 @@
             <parameter name="expression" value="COUNT(id)"/>
         </behavior>
     </table>
+
+    <table name="borrower_join_logs" phpName="JoinLog" namespace="Borrower">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="ip_address" type="VARCHAR" size="256" required="true"/>
+        <behavior name="timestampable"/>
+    </table>
 </database>

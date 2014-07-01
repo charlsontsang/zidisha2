@@ -4,7 +4,6 @@ namespace Zidisha\Payment\Form;
 
 use Zidisha\Balance\TransactionQuery;
 use Zidisha\Form\AbstractForm;
-use Zidisha\Payment\Form\Validator\AssertTotalValidator;
 use Zidisha\Payment\Form\Validator\GreaterThanValidator;
 use Zidisha\Payment\PaymentBus;
 use Zidisha\Payment\Paypal\PayPalService;

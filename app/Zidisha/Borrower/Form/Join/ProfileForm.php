@@ -3,6 +3,7 @@ namespace Zidisha\Borrower\Form\Join;
 
 use Propel\Runtime\Propel;
 use Zidisha\Balance\Map\TransactionTableMap;
+use Zidisha\Borrower\Form\Validator\NumberValidator;
 use Zidisha\Country\CountryQuery;
 use Zidisha\Form\AbstractForm;
 
@@ -24,8 +25,8 @@ class ProfileForm extends AbstractForm
             'addressInstruction'   => 'required',
             'city'                 => 'required',
             'nationalIdNumber'     => 'required|unique:borrower_profiles,national_id_number',
-            'phoneNumber'          => 'required|numeric|digits:' . $phoneNumberLength,
-            'alternatePhoneNumber' => 'required|numeric' . $phoneNumberLength,
+            'phoneNumber'          => 'required|numeric|digits:' . $phoneNumberLength .'|UniqueNumber|MutualUniqueNumber',
+            'alternatePhoneNumber' => 'required|numeric|digits:' . $phoneNumberLength . '|UniqueNumber|MutualUniqueNumber',
         ];
     }
 
@@ -65,5 +66,16 @@ class ProfileForm extends AbstractForm
         $stmt->execute(array(':country_id' => $country->getId(), ':status' => '1', ':mentee_count' => '25'));
         $cities = $stmt->fetchAll(\PDO::FETCH_COLUMN);
         return array_combine($cities, $cities);
+    }
+
+    protected function validate($data, $rules)
+    {
+        \Validator::resolver(
+            function ($translator, $data, $rules, $messages, $parameters) {
+                return new NumberValidator($translator, $data, $rules, $messages, $parameters);
+            }
+        );
+
+        parent::validate($data, $this->getRules($data));
     }
 }

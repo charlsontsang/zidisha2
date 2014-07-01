@@ -2,6 +2,7 @@
 
 use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Borrower\VolunteerMentorQuery;
+use Zidisha\Borrower\JoinLog;
 use Zidisha\Country\CountryQuery;
 use Zidisha\Utility\Utility;
 
@@ -90,8 +91,12 @@ class BorrowerJoinController extends BaseController
     {
         $facebookUser = $this->facebookService->getUserProfile();
 
+        $joinLog = new JoinLog();
+        $joinLog->setIpAddress(\Request::getClientIp());
+        $joinLog->save();
+
         if ($facebookUser) {
-            $errors = $this->userService->validateConnectingFacebookUser($facebookUser);
+            $errors = $this->borrowerService->validateConnectingFacebookUser($facebookUser);
 
             if ($errors) {
                 foreach ($errors as $error) {

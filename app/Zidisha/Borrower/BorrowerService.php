@@ -4,9 +4,26 @@ namespace Zidisha\Borrower;
 use Illuminate\Support\Facades\Input;
 use Zidisha\Upload\Upload;
 use Zidisha\User\User;
+use Zidisha\User\UserQuery;
+use Zidisha\Vendor\Facebook\FacebookService;
 
 class BorrowerService
 {
+    /**
+     * @var \Zidisha\Vendor\Facebook\FacebookService
+     */
+    private $facebookService;
+    /**
+     * @var \Zidisha\User\UserQuery
+     */
+    private $userQuery;
+
+    public function __construct(FacebookService $facebookService, UserQuery $userQuery)
+    {
+        $this->facebookService = $facebookService;
+        $this->userQuery = $userQuery;
+    }
+
     public function joinBorrower($data)
     {
         $user = new User();
@@ -48,8 +65,8 @@ class BorrowerService
             $borrower->getUser()->setPassword($data['password']);
         }
 
-        if (Input::hasFile('picture')) {
-            $image = Input::file('picture');
+        if (\Input::hasFile('picture')) {
+            $image = \Input::file('picture');
 
             $user = $borrower->getUser();
 
@@ -89,5 +106,37 @@ class BorrowerService
     {
         $borrower->getUser()->setSubRole('volunteerMentor');
         $borrower->save();
+    }
+
+    public function validateConnectingFacebookUser($facebookUser)
+    {
+        $checkUser = $this->userQuery
+            ->filterByFacebookId($facebookUser['id'])
+            ->_or()
+            ->filterByEmail($facebookUser['email'])
+            ->findOne();
+
+        $errors = array();
+        if ($checkUser) {
+            if ($checkUser->getFacebookId() == $facebookUser['id']) {
+                $errors[] = \Lang::get('borrower-registration.account-already-linked');
+            } else {
+                $errors[] = \Lang::get('borrower-registration.email-address-already-linked');
+            }
+        }
+
+        if(!$this->facebookService->isAccountOldEnough()){
+            $errors[] = \Lang::get('borrower-registration.account-not-old');
+        }
+
+        if(!$this->facebookService->hasEnoughFriends()){
+            $errors[] = \Lang::get('borrower-registration.does-not-have-enough-friends');
+        }
+
+        if(!$facebookUser['verified']){
+            $errors[] = \Lang::get('borrower-registration.facebook-email-not-verified');
+        }
+
+        return $errors;
     }
 }
