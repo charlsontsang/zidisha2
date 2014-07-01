@@ -89,6 +89,12 @@ class BorrowerService
 
         $borrower->save();
 
+        $joinLog = new JoinLog();
+        $joinLog
+            ->setIpAddress($data['ipAddress'])
+            ->setBorrower($borrower);
+        $joinLog->save();
+
         return $borrower;
     }
 

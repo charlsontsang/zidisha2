@@ -92,10 +92,6 @@ class BorrowerJoinController extends BaseController
     {
         $facebookUser = $this->facebookService->getUserProfile();
 
-        $joinLog = new JoinLog();
-        $joinLog->setIpAddress(\Request::getClientIp());
-        $joinLog->save();
-
         if ($facebookUser) {
             $errors = $this->borrowerService->validateConnectingFacebookUser($facebookUser);
 
@@ -108,6 +104,7 @@ class BorrowerJoinController extends BaseController
 
             Session::put('BorrowerJoin.facebookId', $facebookUser['id']);
             Session::put('BorrowerJoin.email', $facebookUser['email']);
+            Session::put('BorrowerJoin.ipAddress', \Request::getClientIp());
 
             $this->setCurrentStep('profile');
             return Redirect::action('BorrowerJoinController@getProfile');
@@ -119,7 +116,6 @@ class BorrowerJoinController extends BaseController
 
     public function getProfile()
     {
-
         return View::make(
             'borrower.join.profile',
             ['form' => $this->profileForm,]
@@ -164,6 +160,7 @@ class BorrowerJoinController extends BaseController
     public function getSkipFacebook()
     {
         Session::put('BorrowerJoin.facebookId', null);
+        Session::put('BorrowerJoin.ipAddress', \Request::getClientIp());
 
         if (Session::get('BorrowerJoin.countryCode') == 'BF') {
             $this->setCurrentStep('profile');

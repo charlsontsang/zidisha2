@@ -29,7 +29,7 @@ class ProfileForm extends AbstractForm
             'city'                 => 'required',
             'nationalIdNumber'     => 'required|unique:borrower_profiles,national_id_number',
             'phoneNumber'          => 'required|numeric|digits:' . $phoneNumberLength .'|UniqueNumber|MutualUniqueNumber',
-            'alternatePhoneNumber' => 'required|numeric|digits:' . $phoneNumberLength . '|UniqueNumber|MutualUniqueNumber',
+            'alternatePhoneNumber' => 'numeric|digits:' . $phoneNumberLength . '|UniqueNumber|MutualUniqueNumber',
             'communityLeader_firstName'    => 'required',
             'communityLeader_lastName'     => 'required',
             'communityLeader_phoneNumber'  => 'required|numeric|digits:' . $phoneNumberLength,
