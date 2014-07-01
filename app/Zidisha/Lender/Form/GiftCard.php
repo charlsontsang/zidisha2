@@ -61,7 +61,7 @@ class GiftCard extends AbstractForm
         return $array;
     }
 
-    public function getOrderTypes() // todo rename
+    public function getOrderTypes()
     {
         $array = [
             'Self-Print',

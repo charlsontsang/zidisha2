@@ -13,4 +13,8 @@ class Borrower extends BaseBorrower
     const PAYMENT_FAILED = 4;
     const PAYMENT_DELETED = 5;
 
+    public function getName(){
+        return $this->getFirstName() . " " . $this->getLastName();
+    }
+
 }

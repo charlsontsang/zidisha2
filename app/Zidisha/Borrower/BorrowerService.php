@@ -3,12 +3,13 @@ namespace Zidisha\Borrower;
 
 use Illuminate\Support\Facades\Input;
 use Zidisha\Upload\Upload;
+use Zidisha\User\User;
 
 class BorrowerService
 {
     public function joinBorrower($data)
     {
-        $user = new \Zidisha\User\User();
+        $user = new User();
         $user->setUsername($data['username']);
         $user->setEmail($data['email']);
         $user->setFacebookId($data['facebookId']);

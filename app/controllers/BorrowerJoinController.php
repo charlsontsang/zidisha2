@@ -1,5 +1,7 @@
 <?php
 
+use Zidisha\Borrower\BorrowerQuery;
+use Zidisha\Borrower\VolunteerMentorQuery;
 use Zidisha\Country\CountryQuery;
 use Zidisha\Utility\Utility;
 
@@ -33,8 +35,7 @@ class BorrowerJoinController extends BaseController
         \Zidisha\Borrower\Form\Join\CountryForm $countryForm,
         \Zidisha\Borrower\BorrowerService $borrowerService,
         \Zidisha\Auth\AuthService $authService
-    )
-    {
+    ) {
         $this->beforeFilter('@stepsBeforeFilter');
         $this->facebookService = $facebookService;
         $this->userService = $userService;
@@ -112,6 +113,7 @@ class BorrowerJoinController extends BaseController
 
     public function getProfile()
     {
+
         return View::make(
             'borrower.join.profile',
             ['form' => $this->profileForm,]
@@ -165,4 +167,26 @@ class BorrowerJoinController extends BaseController
         Flash::error('Not Allowed.');
         return Redirect::action('BorrowerJoinController@getCountry');
     }
+
+    public function getVolunteerMentorByCity($city)
+    {
+        $list = [];
+        $volunteerMentors = VolunteerMentorQuery::create()
+            ->filterByStatus(1)
+            ->filterByMenteeCount(array('min' => '25'))
+            ->useBorrowerVolunteerQuery()
+                ->useProfileQuery()
+                    ->filterByCity($city)
+                ->endUse()
+            ->endUse()
+            ->joinWith('VolunteerMentor.BorrowerVolunteer')
+            ->find();
+
+        foreach ($volunteerMentors as $volunteerMentor) {
+            $list[$volunteerMentor->getBorrowerId()] = $volunteerMentor->getBorrowerVolunteer()->getName();
+        }
+
+        return $list;
+    }
+
 }

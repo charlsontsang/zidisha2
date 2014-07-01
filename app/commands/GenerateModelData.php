@@ -7,6 +7,7 @@ use Zidisha\Admin\Setting;
 use Zidisha\Balance\Transaction;
 use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Borrower\VolunteerMentor;
+use Zidisha\Borrower\VolunteerMentorQuery;
 use Zidisha\Country\Country;
 use Zidisha\Country\CountryQuery;
 use Zidisha\Currency\Money;
@@ -74,7 +75,7 @@ class GenerateModelData extends Command
             $this->call('fake', array('model' => 'Country', 'size' => 10));
             $this->call('fake', array('model' => 'Category', 'size' => 10));
             $this->call('fake', array('model' => 'Admin', 'size' => 1));
-            $this->call('fake', array('model' => 'Borrower', 'size' => 30));
+            $this->call('fake', array('model' => 'Borrower', 'size' => 300));
             $this->call('fake', array('model' => 'Lender', 'size' => 30));
             $this->call('fake', array('model' => 'ExchangeRate', 'size' => 30));
             $this->call('fake', array('model' => 'Loan', 'size' => 30));
@@ -101,6 +102,16 @@ class GenerateModelData extends Command
 
         $allCountries = CountryQuery::create()
             ->find();
+
+        $allCategories = CategoryQuery::create()
+            ->orderByRank()
+            ->find()
+            ->getData();
+
+        $allBorrowers = BorrowerQuery::create()
+            ->orderById()
+            ->find()
+            ->getData();
 
         $categories = include(app_path() . '/database/LoanCategories.php');
         $settings = include(app_path() . '/database/AdminSettings.php');
@@ -225,7 +236,11 @@ class GenerateModelData extends Command
                 $email = 'borrower' . $i . '@mail.com';
 
                 $isMentor = $randArray[array_rand($randArray)];
-                $oneCountry = $allCountries[array_rand($allCountries->getData())];
+                if ($i <= 20 && $isMentor) {
+                    $oneCountry = $allCountries[3];
+                } else {
+                    $oneCountry = $allCountries[array_rand($allCountries->getData())];
+                }
 
                 $user = new \Zidisha\User\User();
                 $user->setUsername($userName);
@@ -233,33 +248,46 @@ class GenerateModelData extends Command
                 $user->setEmail($email);
                 $user->setRole('borrower');
 
-
                 $firstName = 'borrower' . $i;
                 $lastName = 'last' . $i;
 
                 $borrower = new \Zidisha\Borrower\Borrower();
                 $borrower->setFirstName($firstName);
                 $borrower->setLastName($lastName);
+                if ($isMentor) {
+                    $oneCountry = $allCountries[2];
+                }
                 $borrower->setCountry($oneCountry);
                 $borrower->setUser($user);
-
 
                 $borrower_profile = new \Zidisha\Borrower\Profile();
                 $borrower_profile->setAboutMe($faker->paragraph(7));
                 $borrower_profile->setAboutBusiness($faker->paragraph(7));
                 $borrower_profile->setAddress($faker->paragraph(3));
                 $borrower_profile->setAddressInstruction($faker->paragraph(6));
-                $borrower_profile->setCity($faker->sentence(2));
+                if ($isMentor) {
+                    $borrower_profile->setCity("Experimento");
+                } else {
+                    $borrower_profile->setCity($faker->city);
+                }
                 $borrower_profile->setPhoneNumber($faker->phoneNumber);
                 $borrower_profile->setAlternatePhoneNumber($faker->phoneNumber);
                 $borrower_profile->setNationalIdNumber($faker->randomNumber(10));
                 $borrower_profile->setBorrower($borrower);
-                if ($isMentor) {
+                if ($i <= 15) {
                     $user->setSubRole('volunteerMentor');
                     $mentor = new VolunteerMentor();
-                    $mentor->setUser($user)
+                    $borrower->setCountry($allCountries[2]);
+                    $mentor->setBorrowerVolunteer($borrower)
                         ->setCountry($borrower->getCountry())
+                        ->setStatus(1)
                         ->setGrantDate(new \DateTime());
+                } else {
+                    $allMentors = VolunteerMentorQuery::create()
+                        ->find();
+
+                    $oneMentor = $allMentors[array_rand($allMentors->getData())];
+                    $borrower->setVolunteerMentor($oneMentor);
                 }
                 $borrower_profile->save();
             }

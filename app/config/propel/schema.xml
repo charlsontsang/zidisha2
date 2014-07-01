@@ -148,6 +148,7 @@
         <column name="active_loan_id" type="INTEGER"/>
         <column name="loan_status" type="ENUM" valueSet="0, 1, 2, 3, 4, 5, 6, 7" defaultValue="4"/>
         <column name="active" type="BOOLEAN" defaultValue="true"/>
+        <column name="volunteer_mentor_borrower_id" type="INTEGER"/>
         <behavior name="timestampable"/>
         <foreign-key foreignTable="users">
             <reference local="id" foreign="id"/>
@@ -157,6 +158,9 @@
         </foreign-key>
         <foreign-key foreignTable="loans" phpName="ActiveLoan">
             <reference local="active_loan_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="volunteer_mentor" phpName="VolunteerMentor">
+            <reference local="volunteer_mentor_borrower_id" foreign="borrower_id"/>
         </foreign-key>
     </table>
 
@@ -587,16 +591,22 @@
     </table>
 
     <table name="volunteer_mentor" phpName="VolunteerMentor" namespace="Borrower">
-        <column name="user_id" type="INTEGER" required="true" primaryKey="true"/>
+        <column name="borrower_id" type="INTEGER" primaryKey="true"/>
         <column name="country_id" type="INTEGER" required="true"/>
         <column name="grant_date" type="TIMESTAMP" required="true"/>
         <column name="note" type="LONGVARCHAR"/>
         <column name="status" type="TINYINT" defaultValue="0"/>
-        <foreign-key foreignTable="users">
-            <reference local="user_id" foreign="id"/>
+        <behavior name="timestampable"/>
+        <foreign-key foreignTable="borrowers" phpName="BorrowerVolunteer">
+            <reference local="borrower_id" foreign="id"/>
         </foreign-key>
         <foreign-key foreignTable="countries">
             <reference local="country_id" foreign="id"/>
         </foreign-key>
+        <behavior name="aggregate_column">
+            <parameter name="name" value="mentee_count"/>
+            <parameter name="foreign_table" value="borrowers"/>
+            <parameter name="expression" value="COUNT(id)"/>
+        </behavior>
     </table>
 </database>

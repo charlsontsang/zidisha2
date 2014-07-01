@@ -29,7 +29,7 @@
 <br><br>
 <p>REFERENCES</p>
 {{ BootstrapForm::select('members') }}
-{{ BootstrapForm::select('volunteer_mentor_city') }}
+{{ BootstrapForm::select('volunteer_mentor_city', $form->getVolunteerMentorCity()) }}
 {{ BootstrapForm::select('volunteer_mentor') }}
 
 <br><br>
@@ -45,4 +45,22 @@
 <br/>
 <br/>
 {{ link_to_route('lender:join', 'Join as lender') }}
+@stop
+
+
+@section('script-footer')
+<script type="text/javascript">
+    $(function () {
+        $("[name=volunteer_mentor_city]").change(function () {
+            var $volunteerMentors = $("[name=volunteer_mentor]");
+            $.get("{{ route('borrower:join-city', '') }}/" + $(this).val(), function(res) {
+                $volunteerMentors.empty();
+                $.each(res, function(borrowerId, name) {
+                   $volunteerMentors.append('<option value="' + borrowerId + '">' + name + "</option>");
+                });
+            });
+
+        });
+    });
+</script>
 @stop

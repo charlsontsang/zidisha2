@@ -37,6 +37,13 @@ Route::get('lender/facebook/join', array('uses' => 'LenderJoinController@getFace
 Route::post('lender/facebook/join', array('uses' => 'LenderJoinController@postFacebookJoin', 'before' => 'csrf'));
 
 Route::get('borrower/join', array('uses' => 'BorrowerJoinController@getCountry', 'as' => 'borrower:join'));
+Route::get(
+    'borrower/join/profile/{city}',
+    array(
+        'uses' => 'BorrowerJoinController@getVolunteerMentorByCity',
+        'as' => 'borrower:join-city'
+    )
+);
 Route::post('borrower/join', array('uses' => 'BorrowerJoinController@postCountry', 'before' => 'csrf'));
 
 Route::controller('borrower/join', 'BorrowerJoinController', ['before' => 'csrf']);
@@ -142,6 +149,7 @@ Route::group(
         Route::get('dashboard', array('uses' => 'BorrowerController@getDashboard', 'as' => 'borrower:dashboard'));
         Route::controller('loan-application', 'LoanApplicationController');
         Route::get('history', array('uses' => 'BorrowerController@getTransactionHistory', 'as' => 'borrower:history'));
+
     }
 );
 

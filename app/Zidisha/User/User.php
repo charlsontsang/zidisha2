@@ -129,4 +129,5 @@ class User extends BaseUser implements UserInterface, RemindableInterface
     {
         return $this->isBorrower() && $this->getSubRole() == 'volunteerMentor';
     }
+
 }
