@@ -173,7 +173,7 @@ class BorrowerJoinController extends BaseController
         $list = [];
         $volunteerMentors = VolunteerMentorQuery::create()
             ->filterByStatus(1)
-            ->filterByMenteeCount(array('min' => '25'))
+            ->filterByMenteeCount(array('max' => '25'))
             ->useBorrowerVolunteerQuery()
                 ->useProfileQuery()
                     ->filterByCity($city)
