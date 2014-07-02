@@ -17,16 +17,22 @@ abstract class AbstractForm implements MessageProviderInterface
      * @var array
      */
     protected $data;
+
+    public function handleData(array $data)
+    {
+        $rules = $this->getRules($data);
+
+        $this->validate($data, $rules);
+
+        $this->data = $this->safeData($rules, $data);
+    }
     
     public function handleRequest(Request $request)
     {
         $data = $this->getDataFromRequest($request);
         $data = $this->sanitize($data);
-        $rules = $this->getRules($data);
         
-        $this->validate($data, $rules);
-        
-        $this->data = $this->safeData($rules, $data);
+        $this->handleData($data);
     }
 
     public function getDataFromRequest(Request $request)
