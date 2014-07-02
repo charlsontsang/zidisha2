@@ -28,7 +28,7 @@ return array(
 	|
 	*/
 
-	'host' => 'smtp.mailgun.org',
+	'host' => '127.0.0.1',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -67,7 +67,7 @@ return array(
 	|
 	*/
 
-	'encryption' => 'tls',
+	'encryption' => '',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -119,7 +119,7 @@ return array(
 	|
 	*/
 
-	'pretend' => true,
+	'pretend' => false,
 
     /*
      * Two options are valid currently laravel or sendwithus
