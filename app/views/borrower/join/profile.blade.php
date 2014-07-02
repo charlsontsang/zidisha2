@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('content')
-{{ BootstrapForm::open(array('controller' => 'BorrowerJoinController@postProfile', 'translationDomain' => 'borrowerJoin.form')) }}
+{{ BootstrapForm::open(array('controller' => 'BorrowerJoinController@postProfile', 'translationDomain' => 'borrowerJoin.form', 'id' => 'borrowerRegistrationForm')) }}
 {{ BootstrapForm::populate($form) }}
 
 <p>CREATE ACCOUNT</p>
@@ -102,6 +102,11 @@
     {{ BootstrapForm::text('neighbor_3_description', null, ['label' => 'borrowerJoin.form.contact.relationship']) }}
 </fieldset>
 
+{{ BootstrapForm::checkbox('termsAndCondition', null, null, ['id' => 'termsAndConditionCheckbox']) }} {{ \Lang::get('borrowerJoin.terms-and-condition.confirmation') }}
+            <a data-toggle="modal" data-target="#termsAndConditionModal">
+                {{ \Lang::get('borrowerJoin.terms-and-condition.confirmation-link') }}
+            </a>
+<br/>
 {{ BootstrapForm::submit('submit') }} -
 {{ BootstrapForm::submit('save_later') }} -
 {{ BootstrapForm::submit('diconnect_facebook_account') }}
@@ -113,6 +118,12 @@
 {{ link_to_route('lender:join', 'Join as lender') }}
 @stop
 
+@include('partials._modal', [
+            'id' => 'termsAndConditionModal',
+            'title' => \Lang::get('borrowerJoin.terms-and-condition.title'),
+            'body' => \Lang::get('borrowerJoin.terms-and-condition.body')
+            ]
+        )
 
 @section('script-footer')
 <script type="text/javascript">
@@ -125,8 +136,15 @@
                    $volunteerMentors.append('<option value="' + borrowerId + '">' + name + "</option>");
                 });
             });
-
         });
+
+        $('#borrowerRegistrationForm').submit(function(){
+            if(!$('#termsAndConditionCheckbox').is(":checked")){
+                alert(" {{ \Lang::get('borrowerJoin.form.please-agree-to-t&c') }}");
+                return false;
+            }
+        });
+
     });
 </script>
 @stop
