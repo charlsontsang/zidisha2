@@ -59,7 +59,7 @@ class ProfileForm extends AbstractForm
             'neighbor_3_lastName' => 'required',
             'neighbor_3_phoneNumber' => 'required|numeric|digits:' . $phoneNumberLength,
             'neighbor_3_description' => 'required',
-            'volunteerMentorCity' => 'in:' . implode(',', array_keys($this->getVolunteerMentorCity())),
+            'volunteerMentorCity' => 'in:' . implode(',', array_keys($this->getVolunteerMentorCities())),
             'volunteerMentor' => 'in:' . implode(
                     ',',
                     array_keys(VolunteerMentorQuery::create()->getVolunteerMentorByCity($data['volunteerMentorCity']))
@@ -146,8 +146,11 @@ class ProfileForm extends AbstractForm
 
     public function getVolunteerMentors()
     {
-        $cities = $this->getVolunteerMentorCities();
-        $city = $cities ? reset($cities) : null;
+        $city = \Input::old('volunteerMentorCity');
+        if ($city === null) {
+            $cities = $this->getVolunteerMentorCities();
+            $city = $cities ? reset($cities) : null;
+        }
 
         return $city ? VolunteerMentorQuery::create()->getVolunteerMentorByCity($city) : [];
     }
