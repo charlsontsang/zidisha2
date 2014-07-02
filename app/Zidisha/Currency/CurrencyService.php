@@ -1,6 +1,8 @@
 <?php
 namespace Zidisha\Currency;
 
+use Zidisha\Country\CountryQuery;
+
 class CurrencyService
 {
     public function convertToUSD(Money $money, \DateTime $date = null)
@@ -35,5 +37,44 @@ class CurrencyService
             ->combine(['endDate', 'endNull'], 'or', 'end')
             ->where(['start', 'end'], 'and')
             ->findOne();
+    }
+
+    public function getExchangeRatesForCountry($countrySlug)
+    {
+        $country = CountryQuery::create()
+            ->filterBySlug($countrySlug)
+            ->findOne();
+
+        $rates = ExchangeRateQuery::create()
+            ->filterByCurrencyCode($country->getCurrencyCode())
+            ->orderByStartDate('desc');
+
+        return $rates;
+    }
+
+    public function updateExchangeRateForCountry($data)
+    {
+        $country = CountryQuery::create()
+            ->filterBySlug($data['countrySlug'])
+            ->findOne();
+        $currencyCode = $country->getCurrency()->getCode();
+
+        $lastRate = ExchangeRateQuery::create()
+            ->filterByCurrencyCode($currencyCode)
+            ->filterByEndDate(null)
+            ->findone();
+
+        if ($lastRate) {
+            $lastRate->setEndDate(new \DateTime());
+            $lastRate->save();
+        }
+
+        $newRate = new ExchangeRate();
+        $newRate->setStartDate(new \DateTime())
+            ->setCurrencyCode($currencyCode)
+            ->setRate($data['newRate']);
+
+        return $newRate->save();
+
     }
 }

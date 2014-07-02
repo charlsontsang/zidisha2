@@ -1,10 +1,12 @@
 <?php
 
+use Zidisha\Admin\Form\ExchangeRateForm;
 use Zidisha\Admin\Form\FilterBorrowers;
 use Zidisha\Admin\Form\FilterLenders;
 use Zidisha\Admin\Form\FilterLoans;
 use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Country\CountryQuery;
+use Zidisha\Currency\CurrencyService;
 use Zidisha\Lender\LenderQuery;
 use Zidisha\Loan\LoanQuery;
 use Zidisha\Loan\LoanService;
@@ -16,6 +18,9 @@ class AdminController extends BaseController
     protected $lenderQuery, $borrowerQuery, $countryQuery;
     protected $borrowersForm, $lendersForm, $loansForm;
     private $loanService;
+    private $adminService;
+    private $exchangeRateForm;
+    private $currencyService;
 
     public function  __construct(
         LenderQuery $lenderQuery,
@@ -24,7 +29,9 @@ class AdminController extends BaseController
         FilterBorrowers $borrowersForm,
         FilterLenders $lendersForm,
         FilterLoans $loansForm,
-        LoanService $loanService
+        LoanService $loanService,
+        CurrencyService $currencyService,
+        ExchangeRateForm $exchangeRateForm
     ) {
         $this->lenderQuery = $lenderQuery;
         $this->$borrowerQuery = $borrowerQuery;
@@ -33,6 +40,8 @@ class AdminController extends BaseController
         $this->lendersForm = $lendersForm;
         $this->loansForm = $loansForm;
         $this->loanService = $loanService;
+        $this->exchangeRateForm = $exchangeRateForm;
+        $this->currencyService = $currencyService;
     }
 
     public
@@ -43,9 +52,9 @@ class AdminController extends BaseController
 
     public function getBorrowers()
     {
-        $page = Request::query('page') ?: 1;
-        $countryId = Request::query('country') ?: null;
-        $email = Request::query('email') ?: null;
+        $page = Request::query('page') ? : 1;
+        $countryId = Request::query('country') ? : null;
+        $email = Request::query('email') ? : null;
 
         $query = BorrowerQuery::create();
 
@@ -55,7 +64,7 @@ class AdminController extends BaseController
         if ($email) {
             $query
                 ->useUserQuery()
-                    ->filterByEmail($email)
+                ->filterByEmail($email)
                 ->endUse();
         }
 
@@ -68,9 +77,9 @@ class AdminController extends BaseController
 
     public function getLenders()
     {
-        $page = Request::query('page') ?: 1;
-        $countryId = Request::query('country') ?: null;
-        $email = Request::query('email') ?: null;
+        $page = Request::query('page') ? : 1;
+        $countryId = Request::query('country') ? : null;
+        $email = Request::query('email') ? : null;
 
         $query = LenderQuery::create();
 
@@ -93,9 +102,9 @@ class AdminController extends BaseController
 
     public function getLoans()
     {
-        $page = Request::query('page') ?: 1;
-        $countryName = Request::query('country') ?: null;
-        $status = Request::query('status') ?: null;
+        $page = Request::query('page') ? : 1;
+        $countryName = Request::query('country') ? : null;
+        $status = Request::query('status') ? : null;
 
         $selectedCountry = $this->countryQuery->findOneBySlug($countryName);
 
@@ -127,5 +136,37 @@ class AdminController extends BaseController
         $paginator = $this->loanService->searchLoans($conditions, $page);
 
         return View::make('admin.loans', compact('paginator'), ['form' => $this->loansForm,]);
+    }
+
+    public function getExchangeRates($countrySlug = null)
+    {
+        $page = Request::query('page') ? : 1;
+        $rates = $this->currencyService->getExchangeRatesForCountry($countrySlug);
+
+        $paginator = $rates
+            ->paginate($page, 50);
+        $offset = ($page - 1) * 50;
+
+        return View::make('admin.exchange-rates', compact('paginator', 'countrySlug', 'offset'),
+            ['form' => $this->exchangeRateForm,]);
+    }
+
+    public function postExchangeRates()
+    {
+        $form = $this->exchangeRateForm;
+        $form->handleRequest(Request::instance());
+        $data = $form->getData();
+        $countrySlug = array_get($data, 'countrySlug');
+
+        if ($form->isValid()) {
+
+            $this->currencyService->updateExchangeRateForCountry($data);
+
+            \Flash::success("Exchange rate Successfully updated!");
+            return Redirect::route('admin:exchange-rates', $countrySlug);
+        }
+
+        return Redirect::route('admin:exchange-rates', $countrySlug)->withForm($form);
+
     }
 }
