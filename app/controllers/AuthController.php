@@ -1,8 +1,9 @@
 <?php
 
+use Zidisha\Auth\AuthService;
+use Zidisha\Borrower\JoinLogQuery;
 use Zidisha\User\UserQuery;
 use Zidisha\Vendor\Facebook\FacebookService;
-use Zidisha\Auth\AuthService;
 use Zidisha\Vendor\Mixpanel;
 
 class AuthController extends BaseController
@@ -76,26 +77,56 @@ class AuthController extends BaseController
         // TODO
         return Redirect::route('lender:join');
     }
-    
+
     protected function login()
     {
         $user = \Auth::user();
         $role = $user->getRole();
-        
-        Mixpanel::identify($user->getId(), array(
-            'username' => $user->getUsername(),
-            'userlevel' => $role,
-            'email' => $user->getEmail(),
-        ));
+
+        Mixpanel::identify(
+            $user->getId(),
+            array(
+                'username' => $user->getUsername(),
+                'userlevel' => $role,
+                'email' => $user->getEmail(),
+            )
+        );
         Mixpanel::track('Logged in');
 
         if ($role == 'lender') {
             return Redirect::route('lender:dashboard');
-        }
-        elseif ($role == 'borrower') {
+        } elseif ($role == 'borrower') {
             return Redirect::route('borrower:dashboard');
         }
-        
+
         return Redirect::route('admin:dashboard');
+    }
+
+    public function verifyBorrower($verificationCode)
+    {
+        $joinLog = JoinLogQuery::create()
+            ->filterByVerifiedAt(null)
+            ->filterByVerificationCode($verificationCode)
+            ->findOne();
+
+        if (!$joinLog) {
+            \Flash::error('The code is not valid');
+            return \Redirect::home();
+        }
+
+        $joinLog
+            ->setVerifiedAt(new \DateTime());
+        $joinLog->save();
+        
+        $borrower = $joinLog->getBorrower();
+        $borrower
+            ->setVerified(1);
+
+        $borrower->save();
+
+        Auth::loginUsingId($borrower->getId());
+
+        \Flash::info('You are verified.');
+        return $this->login();
     }
 }
