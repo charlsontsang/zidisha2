@@ -3,6 +3,8 @@
 use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Borrower\BorrowerService;
 use Zidisha\Borrower\Form\EditProfile;
+use Zidisha\Borrower\JoinLogQuery;
+use Zidisha\Mail\BorrowerMailer;
 use Zidisha\Upload\UploadQuery;
 
 class BorrowerController extends BaseController
@@ -16,10 +18,19 @@ class BorrowerController extends BaseController
      */
     private $borrowerService;
 
-    public function __construct(EditProfile $editProfileForm, BorrowerService $borrowerService)
-    {
+    /**
+     * @var Zidisha\Mail\BorrowerMailer
+     */
+    private $borrowerMailer;
+
+    public function __construct(
+        EditProfile $editProfileForm,
+        BorrowerService $borrowerService,
+        BorrowerMailer $borrowerMailer
+    ) {
         $this->editProfileForm = $editProfileForm;
         $this->borrowerService = $borrowerService;
+        $this->borrowerMailer = $borrowerMailer;
     }
 
     public function getPublicProfile($username)
@@ -90,7 +101,9 @@ class BorrowerController extends BaseController
 
     public function getDashboard()
     {
-        return View::make('borrower.dashboard');
+        $verified = \Auth::user()->getBorrower()->getVerified();
+
+        return View::make('borrower.dashboard', compact('verified'));
     }
 
     public function getTransactionHistory()
@@ -113,5 +126,15 @@ class BorrowerController extends BaseController
 
         Flash::success(\Lang::get('borrower.flash.file-deleted'));
         return Redirect::back();
+    }
+
+    public function resendVerificationMail()
+    {
+        $borrower = \Auth::user()->getBorrower();
+
+        $this->borrowerService->sendVerificationCode($borrower);
+
+        \Flash::info('A verification code has been sent to your email. Please check your email.');
+        return \Redirect::action('BorrowerController@getDashboard');
     }
 }
