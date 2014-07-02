@@ -49,7 +49,7 @@ class BorrowerService
 
         $profile = new Profile();
         $profile->setAddress($data['address']);
-        $profile->setAddressInstruction($data['addressInstruction']);
+        $profile->setAddressInstructions($data['addressInstruction']);
         $profile->setCity($data['city']);
         $profile->setNationalIdNumber($data['nationalIdNumber']);
         $profile->setPhoneNumber($data['phoneNumber']);

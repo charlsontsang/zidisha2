@@ -266,7 +266,7 @@ class GenerateModelData extends Command
                 $borrower_profile->setAboutMe($faker->paragraph(7));
                 $borrower_profile->setAboutBusiness($faker->paragraph(7));
                 $borrower_profile->setAddress($faker->paragraph(3));
-                $borrower_profile->setAddressInstruction($faker->paragraph(6));
+                $borrower_profile->setAddressInstructions($faker->paragraph(6));
                 if ($isMentor) {
                     $borrower_profile->setCity("Experimento");
                 } elseif ($i <= 20) {
