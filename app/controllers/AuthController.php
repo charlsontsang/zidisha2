@@ -1,6 +1,7 @@
 <?php
 
 use Zidisha\Auth\AuthService;
+use Zidisha\Borrower\BorrowerGuestQuery;
 use Zidisha\Borrower\JoinLogQuery;
 use Zidisha\User\UserQuery;
 use Zidisha\Vendor\Facebook\FacebookService;
@@ -117,7 +118,7 @@ class AuthController extends BaseController
         $joinLog
             ->setVerifiedAt(new \DateTime());
         $joinLog->save();
-        
+
         $borrower = $joinLog->getBorrower();
         $borrower
             ->setVerified(1);
@@ -128,5 +129,42 @@ class AuthController extends BaseController
 
         \Flash::info('You are verified.');
         return $this->login();
+    }
+
+    public function resumeApplication($resumeCode)
+    {
+        $borrowerGuest = BorrowerGuestQuery::create()
+            ->findOneByResumecode($resumeCode);
+
+        if (!$borrowerGuest) {
+            \App::abort(404, 'fatal error');
+        }
+
+        $form = $borrowerGuest->getForm();
+        $form = unserialize($form);
+
+        $session = $borrowerGuest->getSession();
+        $session = unserialize($session);
+
+        Session::put('BorrowerJoin', $session);
+        Session::put('BorrowerJoin.resumeCode', $resumeCode);
+
+        $profileForm = new \Zidisha\Borrower\Form\Join\ProfileForm();
+        $profileForm->handleData($form);
+
+        return Redirect::action('BorrowerJoinController@getProfile')->withForm($profileForm);
+    }
+
+    public function postResumeApplication()
+    {
+        $code = \Input::get('code');
+
+        if (!$code) {
+            \App::abort(404, 'fatal error');
+        }
+
+        return \Redirect::route('borrower:resumeApplication', [
+                'code' => $code
+            ]);
     }
 }
