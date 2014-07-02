@@ -1,8 +1,6 @@
 <?php
 
-use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Borrower\VolunteerMentorQuery;
-use Zidisha\Borrower\JoinLog;
 use Zidisha\Country\CountryQuery;
 use Zidisha\Utility\Utility;
 

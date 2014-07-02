@@ -1,9 +1,9 @@
 <?php
 namespace Zidisha\Borrower;
 
-use Illuminate\Support\Facades\Input;
+use Elastica\Bulk\Action\DeleteDocument;
 use Zidisha\Borrower\Base\BorrowerQuery;
-use Zidisha\Country\CountryQuery;
+use Zidisha\Mail\BorrowerMailer;
 use Zidisha\Upload\Upload;
 use Zidisha\User\User;
 use Zidisha\User\UserQuery;
@@ -19,11 +19,16 @@ class BorrowerService
      * @var \Zidisha\User\UserQuery
      */
     private $userQuery;
+    /**
+     * @var \Zidisha\Mail\BorrowerMailer
+     */
+    private $borrowerMailer;
 
-    public function __construct(FacebookService $facebookService, UserQuery $userQuery)
+    public function __construct(FacebookService $facebookService, UserQuery $userQuery, BorrowerMailer $borrowerMailer)
     {
         $this->facebookService = $facebookService;
         $this->userQuery = $userQuery;
+        $this->borrowerMailer = $borrowerMailer;
     }
 
     public function joinBorrower($data)
@@ -94,6 +99,8 @@ class BorrowerService
             ->setIpAddress($data['ipAddress'])
             ->setBorrower($borrower);
         $joinLog->save();
+
+        $this->sendVerificationCode($borrower);
 
         return $borrower;
     }
@@ -184,5 +191,22 @@ class BorrowerService
         }
 
         return $errors;
+    }
+
+    protected function createVerificationToken()
+    {
+        return md5(uniqid(rand(), true));
+    }
+
+    public function sendVerificationCode(Borrower $borrower)
+    {
+        $hashCode = $this->createVerificationToken();
+
+        $joinLog = $borrower->getJoinLog();
+        $joinLog
+            ->setVerificationCode($hashCode);
+        $joinLog->save();
+
+        $this->borrowerMailer->sendVerificationMail($borrower, $hashCode);
     }
 }
