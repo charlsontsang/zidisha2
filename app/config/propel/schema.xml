@@ -150,10 +150,11 @@
         <column name="active" type="BOOLEAN" defaultValue="true"/>
         <column name="volunteer_mentor_borrower_id" type="INTEGER"/>
         <column name="referrer_id" type="INTEGER"/>
+        <column name="verified" type="BOOLEAN" defaultValue="false" />
+        <behavior name="timestampable"/>
         <foreign-key foreignTable="borrowers" phpName="Referrer">
             <reference local="referrer_id" foreign="id"/>
         </foreign-key>
-        <behavior name="timestampable"/>
         <foreign-key foreignTable="users">
             <reference local="id" foreign="id"/>
         </foreign-key>
@@ -615,12 +616,13 @@
     </table>
 
     <table name="borrower_join_logs" phpName="JoinLog" namespace="Borrower">
-        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
-        <column name="borrower_id" type="INTEGER" required="true"/>
+        <column name="id" type="INTEGER" required="true" primaryKey="true" />
         <column name="ip_address" type="VARCHAR" size="256" required="true"/>
+        <column name="verification_code" type="VARCHAR" required="false" />
+        <column name="verified_at" type="TIMESTAMP" required="false" />
         <behavior name="timestampable"/>
         <foreign-key foreignTable="borrowers" phpName="Borrower">
-            <reference local="borrower_id" foreign="id"/>
+            <reference local="id" foreign="id"/>
         </foreign-key>
     </table>
     
@@ -635,5 +637,8 @@
         <foreign-key foreignTable="borrowers">
             <reference local="borrower_id" foreign="id"/>
         </foreign-key>
+        <unique>
+            <unique-column name="verification_code" />
+        </unique>
     </table>
 </database>
