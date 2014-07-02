@@ -30,4 +30,19 @@ class BorrowerMailer{
             $data
         );
     }
-} 
+
+    public function sendFormResumeLaterMail($email, $resumeCode)
+    {
+        $data = [
+            'resumeCode' => $resumeCode,
+            'to' => $email,
+            'from' => 'service@zidisha.org',
+            'subject' => 'Zidisha Borrower Account Verification'
+        ];
+
+        $this->mailer->send(
+            'emails.borrower.resumeLater',
+            $data
+        );
+    }
+}
