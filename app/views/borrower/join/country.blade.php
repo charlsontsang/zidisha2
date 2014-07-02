@@ -12,4 +12,12 @@
     <br/>
     <br/>
     {{ link_to_route('lender:join', 'Join as lender') }}
+    <br/>
+    <br/>
+    {{ BootstrapForm::open(array('route' => 'borrower:post:resumeApplication', 'translationDomain' => 'borrower.join.resume')) }}
+    {{ BootstrapForm::text('code') }}
+
+    {{ BootstrapForm::submit('submit') }}
+
+    {{ BootstrapForm::close() }}
 @stop

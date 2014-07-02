@@ -14,10 +14,17 @@ class ProfileForm extends AbstractForm
 {
     protected $country;
     protected $cities;
+    protected $isSaveLater;
 
     public function getRules($data)
     {
         $phoneNumberLength = $this->getCountry()->getPhoneNumberLength();
+
+        if ($this->isSaveLater) {
+            return [
+                'email' => 'required|email|unique:users,email',
+            ];
+        }
 
         return [
             'username'             => 'required|unique:users,username',
@@ -156,4 +163,8 @@ class ProfileForm extends AbstractForm
         return $city ? VolunteerMentorQuery::create()->getVolunteerMentorByCity($city) : [];
     }
 
+    public function setIsSaveLater($state = true)
+    {
+        $this->isSaveLater = $state;
+    }
 }
