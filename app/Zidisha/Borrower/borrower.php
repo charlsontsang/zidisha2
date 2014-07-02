@@ -16,5 +16,16 @@ class Borrower extends BaseBorrower
     public function getName(){
         return $this->getFirstName() . " " . $this->getLastName();
     }
+    
+    public function getCommunityLeader()
+    {
+        foreach ($this->getContacts() as $contact) {
+            if ($contact->getType() == 'communityLeader') {
+                return $contact;
+            }
+        }
+        
+        return null;
+    }
 
 }

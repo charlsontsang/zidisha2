@@ -261,6 +261,18 @@ class GenerateModelData extends Command
                 }
                 $borrower->setCountry($oneCountry);
                 $borrower->setUser($user);
+                $borrower->setVerified($faker->boolean());
+                
+                foreach (['communityLeader', 'familyMember', 'familyMember', 'familyMember', 'neighbor', 'neighbor', 'neighbor'] as $contactType) {
+                    $contact = new \Zidisha\Borrower\Contact();
+                    $contact
+                        ->setPhoneNumber($faker->numberBetween(100000000, 1000000000))
+                        ->setFirstName($faker->firstName)
+                        ->setLastName($faker->lastName)
+                        ->setDescription($faker->sentence())
+                        ->setType($contactType);
+                    $borrower->addContact($contact);
+                }
 
                 $borrower_profile = new \Zidisha\Borrower\Profile();
                 $borrower_profile->setAboutMe($faker->paragraph(7));

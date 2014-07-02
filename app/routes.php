@@ -189,6 +189,7 @@ Route::group(
                 'as' => 'admin:exchange-rates'));
         Route::post('/settings/exchange-rates/{countryName?}', array('uses' => 'AdminController@postExchangeRates',
                 'as' => 'admin:post-exchange-rates', 'before' => 'csrf'));
+        Route::get('pending-activation', array('uses' => 'AdminController@getPendingActivation', 'as' => 'admin:pending-activation'));
     }
 );
 /**

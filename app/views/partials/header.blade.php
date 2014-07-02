@@ -67,6 +67,7 @@
 
                     <ul class="dropdown-menu">
                         <li><a href="{{ route('admin:borrowers') }}">Find Borrowers</a></li>
+                        <li><a href="{{ route('admin:pending-activation') }}">Pending Activation</a></li>
                         <li><a href="{{ route('admin:loans') }}">Find Loans</a></li>
                     </ul>
                 </li>

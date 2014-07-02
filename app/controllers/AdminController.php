@@ -167,6 +167,17 @@ class AdminController extends BaseController
         }
 
         return Redirect::route('admin:exchange-rates', $countrySlug)->withForm($form);
+    }
 
+    public function getPendingActivation()
+    {
+        $page = Request::query('page') ?: 1;
+        
+        $paginator = BorrowerQuery::create()
+            ->filterByVerified(true)
+            ->orderByCreatedAt() // Todo registration date
+            ->paginate($page, 50);
+
+        return View::make('admin.pending-activation', compact('paginator'));
     }
 }

@@ -624,6 +624,9 @@
         <foreign-key foreignTable="borrowers" phpName="Borrower">
             <reference local="borrower_id" foreign="id"/>
         </foreign-key>
+        <unique>
+            <unique-column name="verification_code" />
+        </unique>
     </table>
     
     <table name="borrower_contacts" phpName="Contact" namespace="Borrower">
@@ -637,8 +640,5 @@
         <foreign-key foreignTable="borrowers">
             <reference local="borrower_id" foreign="id"/>
         </foreign-key>
-        <unique>
-            <unique-column name="verification_code" />
-        </unique>
     </table>
 </database>
