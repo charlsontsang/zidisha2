@@ -14,7 +14,6 @@ class BorrowerJoinController extends BaseController
         'profile'
     ];
 
-
     protected $facebookService;
 
     protected $userService;
@@ -26,6 +25,10 @@ class BorrowerJoinController extends BaseController
     protected $borrowerService;
 
     protected $authService;
+    /**
+     * @var Zidisha\Mail\BorrowerMailer
+     */
+    private $borrowerMailer;
 
     public function __construct(
         \Zidisha\Vendor\Facebook\FacebookService $facebookService,
@@ -33,7 +36,8 @@ class BorrowerJoinController extends BaseController
         \Zidisha\Borrower\Form\Join\ProfileForm $profileForm,
         \Zidisha\Borrower\Form\Join\CountryForm $countryForm,
         \Zidisha\Borrower\BorrowerService $borrowerService,
-        \Zidisha\Auth\AuthService $authService
+        \Zidisha\Auth\AuthService $authService,
+        \Zidisha\Mail\BorrowerMailer $borrowerMailer
     ) {
         $this->beforeFilter('@stepsBeforeFilter');
         $this->facebookService = $facebookService;
@@ -42,6 +46,9 @@ class BorrowerJoinController extends BaseController
         $this->countryForm = $countryForm;
         $this->borrowerService = $borrowerService;
         $this->authService = $authService;
+        $this->borrowerMailer = $borrowerMailer;
+
+        $this->stepsSessionKey = 'BorrowerJoin';
     }
 
     public function getCountry()
@@ -145,7 +152,21 @@ class BorrowerJoinController extends BaseController
         }
 
         if (Input::has('save_later')) {
-            dd(Input::all());
+            $form = $this->profileForm;
+            $form->setIsSaveLater();
+
+            $form->handleRequest(Request::instance());
+
+            if ($form->isValid()) {
+                $formData = $form->getDataFromRequest(Request::instance());
+
+                unset($formData['password']);
+                unset($formData['_token']);
+
+                return $this->borrowerService->saveBorrowerGuest($formData, Session::get('BorrowerJoin'));
+            }
+
+            return Redirect::action('BorrowerJoinController@getProfile')->withForm($form);
         }
 
         if (Input::has('diconnect_facebook_account')) {
@@ -176,9 +197,9 @@ class BorrowerJoinController extends BaseController
             ->filterByStatus(1)
             ->filterByMenteeCount(array('max' => '25'))
             ->useBorrowerVolunteerQuery()
-                ->useProfileQuery()
-                    ->filterByCity($city)
-                ->endUse()
+            ->useProfileQuery()
+            ->filterByCity($city)
+            ->endUse()
             ->endUse()
             ->joinWith('VolunteerMentor.BorrowerVolunteer')
             ->find();
