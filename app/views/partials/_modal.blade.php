@@ -1,4 +1,4 @@
-<div class="modal fade {{ $modalClass or '' }}">
+<div class="modal fade {{ $modalClass or '' }}" id="{{ $id or ''}}">
     <div class="modal-dialog">
         <div class="modal-content">
             @if($title)
