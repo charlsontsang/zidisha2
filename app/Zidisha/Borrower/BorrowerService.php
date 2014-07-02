@@ -29,7 +29,7 @@ class BorrowerService
     public function joinBorrower($data)
     {
         $volunteerMentor = VolunteerMentorQuery::create()
-            ->findOneByBorrowerId($data['volunteerMentor']);
+            ->findOneByBorrowerId($data['volunteerMentorId']);
         $referrer = BorrowerQuery::create()
             ->findOneById($data['members']);
 
@@ -150,7 +150,7 @@ class BorrowerService
 
     public function makeVolunteerMentor(Borrower $borrower)
     {
-        $borrower->getUser()->setSubRole('volunteerMentor');
+        $borrower->getUser()->setSubRole('volunteerMentorId');
         $borrower->save();
     }
 

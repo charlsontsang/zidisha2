@@ -60,7 +60,7 @@ class ProfileForm extends AbstractForm
             'neighbor_3_phoneNumber'       => 'required|numeric|digits:' . $phoneNumberLength,
             'neighbor_3_description'       => 'required',
             'volunteerMentorCity'          => 'required|in:' . implode(',', array_keys($this->getVolunteerMentorCities())),
-            'volunteerMentor'              => 'required|in:' . implode(
+            'volunteerMentorId'            => 'required|in:' . implode(
                     ',',
                     array_keys(VolunteerMentorQuery::create()->getVolunteerMentorByCity($data['volunteerMentorCity']))
                 ),
@@ -95,7 +95,7 @@ class ProfileForm extends AbstractForm
 
             $con = Propel::getWriteConnection(TransactionTableMap::DATABASE_NAME);
             $sql = "SELECT DISTINCT city FROM borrower_profiles WHERE borrower_id IN "
-                . "(SELECT borrower_id FROM volunteer_mentor WHERE country_id = :country_id AND status = :status
+                . "(SELECT borrower_id FROM volunteer_mentors WHERE country_id = :country_id AND status = :status
             AND mentee_count < :mentee_count)";
             $stmt = $con->prepare($sql);
             //TODO to make mentee_count = 50
