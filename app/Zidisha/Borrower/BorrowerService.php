@@ -29,7 +29,7 @@ class BorrowerService
     public function joinBorrower($data)
     {
         $volunteerMentor = VolunteerMentorQuery::create()
-            ->findOneByBorrowerId($data['volunteer_mentor']);
+            ->findOneByBorrowerId($data['volunteerMentor']);
         $referrer = BorrowerQuery::create()
             ->findOneById($data['members']);
 
@@ -55,7 +55,7 @@ class BorrowerService
         $profile->setPhoneNumber($data['phoneNumber']);
         $profile->setAlternatePhoneNumber($data['alternatePhoneNumber']);
         $borrower->setProfile($profile);
-        
+
         $communityLeader = new Contact();
         $communityLeader
             ->setType('communityLeader')
@@ -64,7 +64,7 @@ class BorrowerService
             ->setPhoneNumber($data['communityLeader']['phoneNumber'])
             ->setDescription($data['communityLeader']['description']);
         $borrower->addContact($communityLeader);
-        
+
         for ($i = 1; $i <= 3; $i++) {
             $familyMember = new Contact();
             $familyMember
@@ -171,15 +171,15 @@ class BorrowerService
             }
         }
 
-        if(!$this->facebookService->isAccountOldEnough()){
+        if (!$this->facebookService->isAccountOldEnough()) {
             $errors[] = \Lang::get('borrower-registration.account-not-old');
         }
 
-        if(!$this->facebookService->hasEnoughFriends()){
+        if (!$this->facebookService->hasEnoughFriends()) {
             $errors[] = \Lang::get('borrower-registration.does-not-have-enough-friends');
         }
 
-        if(!$facebookUser['verified']){
+        if (!$facebookUser['verified']) {
             $errors[] = \Lang::get('borrower-registration.facebook-email-not-verified');
         }
 
