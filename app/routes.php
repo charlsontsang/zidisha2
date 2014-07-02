@@ -155,6 +155,8 @@ Route::group(
 );
 
 Route::get('borrower/verification/{verificationCode}', array('uses' => 'AuthController@verifyBorrower', 'as' => 'borrower:verify'));
+Route::get('borrower/resume/{resumeCode}', array('uses' => 'AuthController@resumeApplication', 'as' => 'borrower:resumeApplication'));
+Route::post('borrower/resume', array('uses' => 'AuthController@postResumeApplication', 'as' => 'borrower:post:resumeApplication'));
 
 /**
  * Routes for loan page
