@@ -13,6 +13,7 @@ use Zidisha\Form\AbstractForm;
 class ProfileForm extends AbstractForm
 {
     protected $country;
+    protected $cities;
 
     public function getRules($data)
     {
@@ -58,12 +59,12 @@ class ProfileForm extends AbstractForm
             'neighbor_3_lastName'          => 'required',
             'neighbor_3_phoneNumber'       => 'required|numeric|digits:' . $phoneNumberLength,
             'neighbor_3_description'       => 'required',
-            'volunteer_mentor_city' => 'in:' . implode(',', array_keys($this->getVolunteerMentorCity())),
-            'volunteer_mentor' => 'in:' . implode(
+            'volunteerMentorCity'          => 'required|in:' . implode(',', array_keys($this->getVolunteerMentorCities())),
+            'volunteerMentorId'            => 'required|in:' . implode(
                     ',',
-                    array_keys(VolunteerMentorQuery::create()->getVolunteerMentorByCity($data['volunteer_mentor_city']))
+                    array_keys(VolunteerMentorQuery::create()->getVolunteerMentorByCity($data['volunteerMentorCity']))
                 ),
-            'members' => 'in:' . implode(',', array_keys($this->getBorrowersByCountry()))
+            'members'                      => 'in:' . implode(',', array_keys($this->getBorrowersByCountry())),
         ];
     }
 
@@ -87,22 +88,24 @@ class ProfileForm extends AbstractForm
         return $this->country;
     }
 
-    public function getVolunteerMentorCity()
+    public function getVolunteerMentorCities()
     {
-        $countryCode = \Session::get('BorrowerJoin.countryCode');
-        $country = CountryQuery::create()
-            ->filterByCountryCode($countryCode)
-            ->findOne();
+        if ($this->cities === null) {
+            $country = $this->getCountry();
 
-        $con = Propel::getWriteConnection(TransactionTableMap::DATABASE_NAME);
-        $sql = "SELECT DISTINCT city FROM borrower_profiles WHERE borrower_id IN "
-            . "(SELECT borrower_id FROM volunteer_mentor WHERE country_id = :country_id AND status = :status
+            $con = Propel::getWriteConnection(TransactionTableMap::DATABASE_NAME);
+            $sql = "SELECT DISTINCT city FROM borrower_profiles WHERE borrower_id IN "
+                . "(SELECT borrower_id FROM volunteer_mentors WHERE country_id = :country_id AND status = :status
             AND mentee_count < :mentee_count)";
-        $stmt = $con->prepare($sql);
-        //TODO to make mentee_count = 50
-        $stmt->execute(array(':country_id' => $country->getId(), ':status' => '1', ':mentee_count' => '25'));
-        $cities = $stmt->fetchAll(\PDO::FETCH_COLUMN);
-        return array_combine($cities, $cities);
+            $stmt = $con->prepare($sql);
+            //TODO to make mentee_count = 50
+            $stmt->execute(array(':country_id' => $country->getId(), ':status' => '1', ':mentee_count' => '25'));
+            $cities = $stmt->fetchAll(\PDO::FETCH_COLUMN);
+
+            $this->cities = array_combine($cities, $cities);
+        }
+
+        return $this->cities;
     }
 
     protected function validate($data, $rules)
@@ -124,6 +127,7 @@ class ProfileForm extends AbstractForm
     public function getBorrowersByCountry()
     {
         $list = [];
+        $list[0] = null;
         $countryCode = \Session::get('BorrowerJoin.countryCode');
         $country = CountryQuery::create()
             ->findOneByCountryCode($countryCode);
@@ -141,25 +145,15 @@ class ProfileForm extends AbstractForm
         return $list;
     }
 
-    public function getVolunteerMentorByCity($city)
+    public function getVolunteerMentors()
     {
-        $list = [];
-        $volunteerMentors = VolunteerMentorQuery::create()
-            ->filterByStatus(1)
-            ->filterByMenteeCount(array('max' => '25'))
-            ->useBorrowerVolunteerQuery()
-            ->useProfileQuery()
-            ->filterByCity($city)
-            ->endUse()
-            ->endUse()
-            ->joinWith('VolunteerMentor.BorrowerVolunteer')
-            ->find();
-
-        foreach ($volunteerMentors as $volunteerMentor) {
-            $list[$volunteerMentor->getBorrowerId()] = $volunteerMentor->getBorrowerVolunteer()->getName();
+        $city = \Input::old('volunteerMentorCity');
+        if ($city === null) {
+            $cities = $this->getVolunteerMentorCities();
+            $city = $cities ? reset($cities) : null;
         }
 
-        return $list;
+        return $city ? VolunteerMentorQuery::create()->getVolunteerMentorByCity($city) : [];
     }
 
 }

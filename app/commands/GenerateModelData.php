@@ -59,6 +59,8 @@ class GenerateModelData extends Command
         ];
         $temp = true;
 
+        $allCity = [];
+
         if ($model == 'new') {
             $this->line('Rebuild database');
             DB::statement('drop schema public cascade');
@@ -75,7 +77,7 @@ class GenerateModelData extends Command
             $this->call('fake', array('model' => 'Country', 'size' => 10));
             $this->call('fake', array('model' => 'Category', 'size' => 10));
             $this->call('fake', array('model' => 'Admin', 'size' => 1));
-            $this->call('fake', array('model' => 'Borrower', 'size' => 300));
+            $this->call('fake', array('model' => 'Borrower', 'size' => 400));
             $this->call('fake', array('model' => 'Lender', 'size' => 30));
             $this->call('fake', array('model' => 'ExchangeRate', 'size' => 30));
             $this->call('fake', array('model' => 'Loan', 'size' => 30));
@@ -236,7 +238,7 @@ class GenerateModelData extends Command
                 $email = 'borrower' . $i . '@mail.com';
 
                 $isMentor = $randArray[array_rand($randArray)];
-                if ($i <= 20 && $isMentor) {
+                if ($i <= 40 && $isMentor) {
                     $oneCountry = $allCountries[3];
                 } else {
                     $oneCountry = $allCountries[array_rand($allCountries->getData())];
@@ -264,17 +266,21 @@ class GenerateModelData extends Command
                 $borrower_profile->setAboutMe($faker->paragraph(7));
                 $borrower_profile->setAboutBusiness($faker->paragraph(7));
                 $borrower_profile->setAddress($faker->paragraph(3));
-                $borrower_profile->setAddressInstruction($faker->paragraph(6));
+                $borrower_profile->setAddressInstructions($faker->paragraph(6));
                 if ($isMentor) {
                     $borrower_profile->setCity("Experimento");
+                } elseif ($i <= 20) {
+                    $city = $faker->city;
+                    array_push($allCity, $city);
+                    $borrower_profile->setCity($city);
                 } else {
-                    $borrower_profile->setCity($faker->city);
+                    $borrower_profile->setCity($allCity[array_rand($allCity)]);
                 }
                 $borrower_profile->setPhoneNumber($faker->phoneNumber);
                 $borrower_profile->setAlternatePhoneNumber($faker->phoneNumber);
                 $borrower_profile->setNationalIdNumber($faker->randomNumber(10));
                 $borrower_profile->setBorrower($borrower);
-                if ($i <= 15) {
+                if ($i <= 40) {
                     $user->setSubRole('volunteerMentor');
                     $mentor = new VolunteerMentor();
                     $borrower->setCountry($allCountries[2]);

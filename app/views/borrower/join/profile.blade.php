@@ -29,8 +29,8 @@
 <br><br>
 <p>REFERENCES</p>
 {{ BootstrapForm::select('members', $form->getBorrowersByCountry()) }}
-{{ BootstrapForm::select('volunteer_mentor_city', $form->getVolunteerMentorCity()) }}
-{{ BootstrapForm::select('volunteer_mentor') }}
+{{ BootstrapForm::select('volunteerMentorCity', $form->getVolunteerMentorCities()) }}
+{{ BootstrapForm::select('volunteerMentorId', $form->getVolunteerMentors()) }}
 
 <br><br>
 <label>@lang('borrowerJoin.form.communityLeaderDescription')</label>
@@ -117,10 +117,10 @@
 @section('script-footer')
 <script type="text/javascript">
     $(function () {
-        $("[name=volunteer_mentor_city]").change(function () {
-            var $volunteerMentors = $("[name=volunteer_mentor]");
+        $("[name=volunteerMentorCity]").change(function () {
+            var $volunteerMentors = $("[name=volunteerMentorId]");
+            $volunteerMentors.empty();
             $.get("{{ route('borrower:join-city', '') }}/" + $(this).val(), function(res) {
-                $volunteerMentors.empty();
                 $.each(res, function(borrowerId, name) {
                    $volunteerMentors.append('<option value="' + borrowerId + '">' + name + "</option>");
                 });
