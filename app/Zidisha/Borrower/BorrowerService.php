@@ -1,7 +1,6 @@
 <?php
 namespace Zidisha\Borrower;
 
-use Elastica\Bulk\Action\DeleteDocument;
 use Zidisha\Borrower\Base\BorrowerQuery;
 use Zidisha\Mail\BorrowerMailer;
 use Zidisha\Upload\Upload;
@@ -208,5 +207,44 @@ class BorrowerService
         $joinLog->save();
 
         $this->borrowerMailer->sendVerificationMail($borrower, $hashCode);
+    }
+
+    public function saveBorrowerGuest($formData, $sessionData)
+    {
+        $email = array_get($formData, 'email');
+
+        $code = array_get($sessionData, 'resumeCode');
+        if ($code) {
+            $borrowerGuest = \Zidisha\Borrower\BorrowerGuestQuery::create()
+                ->findOneByResumecode($code);
+        } else {
+            $code = md5(uniqid(rand(), true));
+
+            $borrowerGuest = new BorrowerGuest();
+        }
+
+        $formData = serialize($formData);
+        $sessionData = serialize($sessionData);
+
+        $borrowerGuest
+            ->setEmail($email)
+            ->setResumecode($code)
+            ->setSession($sessionData)
+            ->setForm($formData);
+
+        $borrowerGuest->save();
+
+        $this->borrowerMailer->sendFormResumeLaterMail($email, $code);
+
+        \Session::forget('BorrowerJoin');
+
+        \Flash::info(\Lang::get('borrower.save-later.information-is-saved'));
+        \Flash::info(
+            \Lang::get(
+                'borrower.save-later.application-resume-link' . ' ' . route('borrower:resumeApplication', $code)
+            )
+        );
+        \Flash::info(\Lang::get('borrower.save-later.application-resume-code' . ' ' . $code));
+        return \Redirect::action('BorrowerJoinController@getCountry');
     }
 }
