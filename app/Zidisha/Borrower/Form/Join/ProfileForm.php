@@ -59,8 +59,8 @@ class ProfileForm extends AbstractForm
             'neighbor_3_lastName' => 'required',
             'neighbor_3_phoneNumber' => 'required|numeric|digits:' . $phoneNumberLength,
             'neighbor_3_description' => 'required',
-            'volunteerMentorCity' => 'in:' . implode(',', array_keys($this->getVolunteerMentorCities())),
-            'volunteerMentor' => 'in:' . implode(
+            'volunteerMentorCity' => 'required|in:' . implode(',', array_keys($this->getVolunteerMentorCities())),
+            'volunteerMentor' => 'required|in:' . implode(
                     ',',
                     array_keys(VolunteerMentorQuery::create()->getVolunteerMentorByCity($data['volunteerMentorCity']))
                 ),
@@ -127,6 +127,7 @@ class ProfileForm extends AbstractForm
     public function getBorrowersByCountry()
     {
         $list = [];
+        $list[0] = null;
         $countryCode = \Session::get('BorrowerJoin.countryCode');
         $country = CountryQuery::create()
             ->findOneByCountryCode($countryCode);
