@@ -185,6 +185,10 @@ Route::group(
         Route::get('borrowers', array('uses' => 'AdminController@getBorrowers', 'as' => 'admin:borrowers'));
         Route::get('lenders', array('uses' => 'AdminController@getLenders', 'as' => 'admin:lenders'));
         Route::get('loans', array('uses' => 'AdminController@getLoans', 'as' => 'admin:loans'));
+        Route::get('/settings/exchange-rates/{countryName?}', array('uses' => 'AdminController@getExchangeRates' ,
+                'as' => 'admin:exchange-rates'));
+        Route::post('/settings/exchange-rates/{countryName?}', array('uses' => 'AdminController@postExchangeRates',
+                'as' => 'admin:post-exchange-rates', 'before' => 'csrf'));
     }
 );
 /**
