@@ -185,4 +185,20 @@ class AdminController extends BaseController
 
         return View::make('admin.pending-activation', compact('paginator'));
     }
+
+    public function getBorrowerPendingActivation($borrowerId)
+    {
+        $borrower = BorrowerQuery::create()
+            ->filterById($borrowerId)
+            ->findOne();
+
+        if (!$borrower) {
+            App::abort(404);
+        }
+
+        return View::make(
+            'admin.pending-borrower-activation',
+            compact('borrower')
+        );
+    }
 }
