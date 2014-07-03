@@ -19,8 +19,8 @@ class Loan extends BaseLoan
     const CANCELED = 6;
     const EXPIRED = 7;
     
-    const WEEKLY_INSTALLMENT  = 'week';
-    const MONTHLY_INSTALLMENT = 'month';
+    const WEEKLY_INSTALLMENT  = 'weekly';
+    const MONTHLY_INSTALLMENT = 'monthly';
 
     public static function createFromData($data)
     {
