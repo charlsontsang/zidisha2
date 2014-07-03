@@ -17,4 +17,13 @@ Dashboard
 
 <h2>Dashboard for borrowers</h2>
 
+@if($volunteerMentor)
+If you like help with Zidisha, You may contact your Volunteer mentor: <a href="{{ route('page:volunteer-mentor-guidelines') }}">here</a>
+<br>
+<br>
+Name: {{ $volunteerMentor->getName() }}
+<br>
+Telephone: {{ $volunteerMentor->getProfile()->getPhoneNumber() }}
+@endif
+
 @stop
