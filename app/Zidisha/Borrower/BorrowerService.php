@@ -2,6 +2,7 @@
 namespace Zidisha\Borrower;
 
 use Zidisha\Borrower\Base\BorrowerQuery;
+use Zidisha\Loan\LoanQuery;
 use Zidisha\Mail\BorrowerMailer;
 use Zidisha\Sms\BorrowerSmsService;
 use Zidisha\Upload\Upload;
@@ -251,5 +252,26 @@ class BorrowerService
         );
         \Flash::info(\Lang::get('borrower.save-later.application-resume-code' . ' ' . $resumeCode));
         return \Redirect::action('BorrowerJoinController@getCountry');
+    }
+
+    public function addLoanFeedback($loanId, $data)
+    {
+        $loan = LoanQuery::create()
+            ->findOneById($loanId);
+
+        $feedbackMessage =  new FeedbackMessage();
+        $feedbackMessage->setCc($data['cc'])
+                ->setReplyTo($data['replyTo'])
+                ->setSubject($data['subject'])
+                ->setMessage($data['message'])
+                ->setBorrowerEmail($data['borrowerEmail'])
+                ->setSenderName($data['senderName'])
+                ->setSentAt(new \DateTime())
+                ->setLoan($loan)
+                ->setType('loan')
+                ->setBorrower($loan->getBorrower());
+
+        $feedbackMessage->save();
+
     }
 }

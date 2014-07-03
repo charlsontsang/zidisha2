@@ -1,10 +1,13 @@
 <?php
 
 use Zidisha\Admin\Form\ExchangeRateForm;
+use Zidisha\Admin\Form\FeatureFeedbackForm;
 use Zidisha\Admin\Form\FilterBorrowers;
 use Zidisha\Admin\Form\FilterLenders;
 use Zidisha\Admin\Form\FilterLoans;
 use Zidisha\Borrower\BorrowerQuery;
+use Zidisha\Borrower\BorrowerService;
+use Zidisha\Borrower\FeedbackMessageQuery;
 use Zidisha\Country\CountryQuery;
 use Zidisha\Currency\CurrencyService;
 use Zidisha\Lender\LenderQuery;
@@ -18,9 +21,10 @@ class AdminController extends BaseController
     protected $lenderQuery, $borrowerQuery, $countryQuery;
     protected $borrowersForm, $lendersForm, $loansForm;
     private $loanService;
-    private $adminService;
     private $exchangeRateForm;
     private $currencyService;
+    private $featureFeedbackForm;
+    private $borrowerService;
 
     public function  __construct(
         LenderQuery $lenderQuery,
@@ -31,7 +35,9 @@ class AdminController extends BaseController
         FilterLoans $loansForm,
         LoanService $loanService,
         CurrencyService $currencyService,
-        ExchangeRateForm $exchangeRateForm
+        ExchangeRateForm $exchangeRateForm,
+        FeatureFeedbackForm $featureFeedbackForm,
+        BorrowerService $borrowerService
     ) {
         $this->lenderQuery = $lenderQuery;
         $this->$borrowerQuery = $borrowerQuery;
@@ -42,6 +48,8 @@ class AdminController extends BaseController
         $this->loanService = $loanService;
         $this->exchangeRateForm = $exchangeRateForm;
         $this->currencyService = $currencyService;
+        $this->featureFeedbackForm = $featureFeedbackForm;
+        $this->borrowerService = $borrowerService;
     }
 
     public
@@ -200,5 +208,41 @@ class AdminController extends BaseController
             'admin.pending-borrower-activation',
             compact('borrower')
         );
+    }
+
+    public function getLoanFeedback($loanId)
+    {
+        $loan = LoanQuery::create()
+            ->filterById($loanId)
+            ->findOne();
+
+        $borrower = $loan->getBorrower();
+        Session::put('loanId', $loanId);
+
+        $feedbackMessages = FeedbackMessageQuery::create()
+            ->filterByLoan($loan)
+            ->find();
+
+        return View::make('admin.borrower-feedback', compact('borrower', 'feedbackMessages'),
+            ['form' => $this->featureFeedbackForm,]);
+    }
+
+    public function postLoanFeedback()
+    {
+        $form = $this->featureFeedbackForm;
+        $form->handleRequest(Request::instance());
+
+        $loanId = Session::get('loanId');
+
+        if ($form->isValid()) {
+            $data = $form->getData();
+
+            $this->borrowerService->addLoanFeedback($loanId, $data);
+
+            \Flash::success("Suggestion successfully sent!");
+            return Redirect::route('loan:index', $loanId);
+        }
+
+        return Redirect::route('admin:loan-feedback', $loanId)->withForm($form);
     }
 }

@@ -103,6 +103,11 @@
         </table>
         <strong>Raised: </strong> USD {{ $totalRaised }}
         <strong>Still Needed: </strong> USD {{ $stillNeeded }}
+
+        @if(Auth::check() && Auth::getUser()->isAdmin())
+        <br><br>
+        <a href="{{ route('admin:loan-feedback', $loan->getId()) }}">Give Feedback</a>
+        @endif
     </div>
 </div>
 @stop
