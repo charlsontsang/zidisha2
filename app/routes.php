@@ -145,6 +145,9 @@ Route::group(
     array('prefix' => 'borrower', 'before' => 'auth|hasRole:borrower'),
     function () {
 
+        Route::get('personal-information', array('uses' => 'BorrowerController@getPersonalInformation', 'as' => 'borrower:personal-information'));
+        Route::post('personal-information', array('uses' => 'BorrowerController@postPersonalInformation', 'as' => 'borrower:post-personal-information'));
+
         Route::get('profile/edit', array('uses' => 'BorrowerController@getEditProfile', 'as' => 'borrower:edit-profile'));
         Route::post(
             'profile/edit',
@@ -227,3 +230,14 @@ Route::post('invite', array('uses' => 'LenderInviteController@postInvite', 'as' 
  * Routes for PayPal Payments Processing
  */
 Route::controller('paypal', 'PayPalController');
+
+Route::get('test', function(){
+
+        preg_match('/^(?P<contact>.*_)(firstName|lastName)$/', 'communityLeader_firstName', $matches);
+
+        print_r($matches);
+        if ($matches){
+            $matches['contact'] . 'firstName';
+            $matches['contact'] . 'lastName';
+        }
+    });

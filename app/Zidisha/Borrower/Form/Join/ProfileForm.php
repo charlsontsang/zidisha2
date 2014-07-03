@@ -33,7 +33,7 @@ class ProfileForm extends AbstractForm
             'firstName'            => 'required',
             'lastName'             => 'required',
             'address'              => 'required',
-            'addressInstruction'   => 'required',
+            'addressInstructions'  => 'required',
             'city'                 => 'required',
             'nationalIdNumber'     => 'required|unique:borrower_profiles,national_id_number',
             'phoneNumber'          => 'required|numeric|digits:' . $phoneNumberLength .'|UniqueNumber|MutualUniqueNumber',
@@ -71,7 +71,7 @@ class ProfileForm extends AbstractForm
                     ',',
                     array_keys(VolunteerMentorQuery::create()->getVolunteerMentorByCity($data['volunteerMentorCity']))
                 ),
-            'members'                      => 'in:' . implode(',', array_keys($this->getBorrowersByCountry())),
+            'referrerId'                      => 'in:' . implode(',', array_keys($this->getBorrowersByCountry())),
         ];
     }
 

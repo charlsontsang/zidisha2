@@ -32,7 +32,7 @@ class BorrowerService
         $volunteerMentor = VolunteerMentorQuery::create()
             ->findOneByBorrowerId($data['volunteerMentorId']);
         $referrer = BorrowerQuery::create()
-            ->findOneById($data['members']);
+            ->findOneById($data['referrerId']);
 
         $user = new User();
         $user->setUsername($data['username']);
@@ -50,7 +50,7 @@ class BorrowerService
 
         $profile = new Profile();
         $profile->setAddress($data['address']);
-        $profile->setAddressInstructions($data['addressInstruction']);
+        $profile->setAddressInstructions($data['addressInstructions']);
         $profile->setCity($data['city']);
         $profile->setNationalIdNumber($data['nationalIdNumber']);
         $profile->setPhoneNumber($data['phoneNumber']);
@@ -113,10 +113,7 @@ class BorrowerService
 
     public function editBorrower(Borrower $borrower, $data, $files = [])
     {
-        $borrower->setFirstName($data['firstName']);
-        $borrower->setLastName($data['lastName']);
         $borrower->getUser()->setEmail($data['email']);
-        $borrower->getUser()->setUsername($data['username']);
         $borrower->getProfile()->setAboutMe($data['aboutMe']);
         $borrower->getProfile()->setAboutBusiness($data['aboutBusiness']);
 

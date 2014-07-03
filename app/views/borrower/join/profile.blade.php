@@ -17,7 +17,7 @@
 <br>
 {{ BootstrapForm::label(\Lang::get('borrowerJoin.form.addressInstructions')) }}
 <br><br>
-{{ BootstrapForm::textArea('addressInstruction') }}
+{{ BootstrapForm::textArea('addressInstructions') }}
 {{ BootstrapForm::text('city') }}
 {{ BootstrapForm::text('nationalIdNumber') }}
 {{ BootstrapForm::text('phoneNumber', null, ['prepend' => $form->getDialingCode()]) }}
@@ -28,7 +28,7 @@
 
 <br><br>
 <p>REFERENCES</p>
-{{ BootstrapForm::select('members', $form->getBorrowersByCountry()) }}
+{{ BootstrapForm::select('referrerId', $form->getBorrowersByCountry()) }}
 {{ BootstrapForm::select('volunteerMentorCity', $form->getVolunteerMentorCities()) }}
 {{ BootstrapForm::select('volunteerMentorId', $form->getVolunteerMentors()) }}
 

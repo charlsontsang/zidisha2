@@ -28,4 +28,55 @@ class Borrower extends BaseBorrower
         return null;
     }
 
+    public function getFamilyMembers()
+    {
+        $familyMembers = [];
+
+        foreach ($this->getContacts() as $contact) {
+            if ($contact->getType() == 'familyMember') {
+                $familyMembers[] = $contact;
+            }
+        }
+
+        return $familyMembers;
+    }
+
+    public function getNeighbors(){
+        $neighbors = [];
+
+        foreach ($this->getContacts() as $contact) {
+            if ($contact->getType() == 'neighbor') {
+                $neighbors[] = $contact;
+            }
+        }
+
+        return $neighbors;
+    }
+
+    public function getPersonalInformation()
+    {
+        $profile = $this->getProfile();
+
+        $data = [
+            'address'              => $profile->getAddress(),
+            'addressInstruction'   => $profile->getAddressInstructions(),
+            'city'                 => $profile->getCity(),
+            'nationalIdNumber'     => $profile->getNationalIdNumber(),
+            'phoneNumber'          => $profile->getPhoneNumber(),
+            'alternatePhoneNumber' => $profile->getAlternatePhoneNumber(),
+        ];
+
+        foreach ($this->getContacts() as $contact) {
+            if ($contact->getType() == 'communityLeader') {
+                $data['communityLeader_firstName'] = $contact->getFirstName();
+                $data['communityLeader_lastName'] = $contact->getLastName();
+                $data['communityLeader_phoneNumber'] = $contact->getPhoneNumber();
+                $data['communityLeader_description'] = $contact->getDescription();
+            } else {
+                //TODO: family members and neighbours.
+            }
+        }
+
+        return $data;
+    }
 }

@@ -147,4 +147,21 @@ class BorrowerController extends BaseController
         \Flash::info('A verification code has been sent to your email. Please check your email.');
         return \Redirect::action('BorrowerController@getDashboard');
     }
+
+    public function getPersonalInformation()
+    {
+        $borrower =  \Auth::user()->getBorrower();
+        $information = $borrower->getPersonalInformation();
+
+
+        $form = new \Zidisha\Borrower\Form\personalInformationFrom($borrower);
+
+        dd($information);
+        return \View::make('borrower.personal-information', ['information' => $information, 'form' => $form]);
+    }
+
+    public function postPersonalInformation()
+    {
+        dd(\Input::all());
+    }
 }
