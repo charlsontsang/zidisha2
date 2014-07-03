@@ -5,30 +5,30 @@ namespace Zidisha\Sms;
 
 class SmsService {
     
-    public function send($phoneNumber, $text)
+    public function send($view, $data)
     {
         \Mail::send(
-            'emails.sms',
-            compact('text'),
-            function ($mail) use ($phoneNumber) {
+            $view,
+            $data,
+            function ($mail) use ($data) {
                 $mail
-                    ->to('sms@zidisha.com', $phoneNumber)
+                    ->to('sms@zidisha.com', $data['phoneNumber'])
                     ->from('sms@zidisha.com')
-                    ->subject("SMS for $phoneNumber");
+                    ->subject("SMS for " . $data['phoneNumber']);
             }
         );
     }
 
-    public function queue($phoneNumber, $text)
+    public function queue($view, $data)
     {
         \Mail::queue(
-            'emails.sms',
-            compact('text'),
-            function ($mail) use ($phoneNumber) {
+            $view,
+            $data,
+            function ($mail) use ($data) {
                 $mail
-                    ->to('sms@zidisha.com', $phoneNumber)
+                    ->to('sms@zidisha.com', $data['phoneNumber'])
                     ->from('sms@zidisha.com')
-                    ->subject("SMS for $phoneNumber");
+                    ->subject("SMS for " . $data['phoneNumber']);
             }
         );
     }

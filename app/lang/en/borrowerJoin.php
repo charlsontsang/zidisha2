@@ -32,5 +32,13 @@ return [
         'familyMemberDescription' => 'Please enter the contact information of three family members whom we may contact as a reference',
         'neighbor' => 'Neighbor / Business Associate',
         'neighborDescription' => 'Please enter the contact information of three neighbors whom we may contact as a reference',
+    ],
+
+    'emails' => [
+        'subject'=>[
+            'join-confirmation' => 'Zidisha application submitted',
+            'borrower-volunteer-notify' => 'New assigned member :name',
+
+        ]
     ]
 ];

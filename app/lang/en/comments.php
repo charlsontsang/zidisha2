@@ -16,7 +16,8 @@ return [
         'duplicate-code' => 'Sorry gift card redemption request could not be processed. Please contact to Administrator.',
         'redeemed-code' => 'Sorry, this gift card has already been redeemed.',
         'expired-code' => 'We are sorry, but this gift card expired on',
-        'redemption-success' => 'Your card is successfully Redeemed'
+        'redemption-success' => 'Your card is successfully Redeemed',
+        'borrower-join-email-sent' => 'A confirmation email is sent to your email address!'
     ],
     'actions' => [
         'edit' => 'Edit',
