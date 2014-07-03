@@ -149,7 +149,7 @@ Route::group(
         Route::get('dashboard', array('uses' => 'BorrowerController@getDashboard', 'as' => 'borrower:dashboard'));
         Route::controller('loan-application', 'LoanApplicationController');
         Route::get('history', array('uses' => 'BorrowerController@getTransactionHistory', 'as' => 'borrower:history'));
-        Route::get('resend', array('uses' => 'BorrowerController@resendVerificationMail', 'as' => 'borrower:resend:verification'));
+        Route::get('resend-verification-mail', array('uses' => 'BorrowerController@resendVerificationMail', 'as' => 'borrower:resend:verification'));
 
     }
 );
