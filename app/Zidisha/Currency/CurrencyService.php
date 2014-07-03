@@ -41,10 +41,17 @@ class CurrencyService
 
     public function getExchangeRatesForCountry($countrySlug)
     {
-        $country = CountryQuery::create()
-            ->filterBySlug($countrySlug)
-            ->findOne();
-
+        if($countrySlug){
+            $country = CountryQuery::create()
+                ->filterBySlug($countrySlug)
+                ->findOne();
+        }else{
+            $country = CountryQuery::create()
+                ->filterByBorrowerCountry(true)
+                ->orderByName()
+                ->findOne();
+        }
+        
         $rates = ExchangeRateQuery::create()
             ->filterByCurrencyCode($country->getCurrencyCode())
             ->orderByStartDate('desc');
