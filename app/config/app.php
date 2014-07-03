@@ -125,6 +125,7 @@ return array(
         'Zidisha\Flash\FlashServiceProvider',
         'Zidisha\Html\BootstrapFormServiceProvider',
         'Zidisha\Http\RedirectorServiceProvider',
+        'Barryvdh\Debugbar\ServiceProvider',
 
     ),
 
@@ -194,7 +195,8 @@ return array(
 		'View'            => 'Illuminate\Support\Facades\View',
         'Flash'           => 'Zidisha\Flash\Flash',
         'BootstrapForm'   => 'Zidisha\Html\BootstrapForm',
-        'Image' => 'Intervention\Image\Facades\Image'
+        'Image'           => 'Intervention\Image\Facades\Image',
+        'Debugbar'        => 'Barryvdh\Debugbar\Facade',
 	),
 
 );
