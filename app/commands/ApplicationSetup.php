@@ -50,6 +50,8 @@ define("LARAVEL_ENV", '$environment');
 ENV;
 
         $file->put(base_path() . '/bootstrap/env.php', $contents);
+        
+        $databaseConfig['environment'] = $environment;
 
         $config = View::make('command.runtime-conf', $databaseConfig);
 

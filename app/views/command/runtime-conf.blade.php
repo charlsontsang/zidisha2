@@ -6,6 +6,9 @@
                 <adapter>pgsql</adapter>
                 <connection>
                     <dsn>pgsql:host={{$databaseHost}};port={{$databasePortNumber}};dbname={{$databaseName}};user={{$databaseUsername}};password={{$databasePassword}}</dsn>
+                    @if($environment == 'local')
+                    <classname>Zidisha\Vendor\DebugBarPDO</classname>
+                    @endif
                 </connection>
             </datasource>
         </datasources>
