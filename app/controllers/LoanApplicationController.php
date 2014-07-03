@@ -56,7 +56,6 @@ class LoanApplicationController extends BaseController
 
     public function postProfile()
     {
-
         $form = $this->editForm;
         $form->handleRequest(Request::instance());
 

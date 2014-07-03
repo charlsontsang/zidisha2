@@ -30,7 +30,6 @@ class BorrowerJoinController extends BaseController
      * @var Zidisha\Mail\BorrowerMailer
      */
     private $borrowerMailer;
-    private $borrowerSmser;
 
     public function __construct(
         \Zidisha\Vendor\Facebook\FacebookService $facebookService,

@@ -28,22 +28,16 @@ class Application extends AbstractForm
 
     public function getCategories()
     {
-        $loanCategories = CategoryQuery::create()
+        $categories = CategoryQuery::create()
             ->orderBySortableRank()
             ->findByAdminOnly(false);
 
-
-        $array = [];
-        foreach ($loanCategories as $loanCategory) {
-            $array[] = $loanCategory->getName();
-        }
-
-        return $array;
+        return $categories->toKeyValue('id', 'name');
     }
 
     public function getDays()
     {
-        $array = range(1, 30);
+        $array = range(1, 31);
 
         return array_combine($array, $array);
     }

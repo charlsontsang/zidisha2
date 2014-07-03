@@ -74,7 +74,10 @@ trait StepController
             } elseif ($step != $routeStep) {
                 $class = $state;
             }
-            $this->stepsData[$step] = ['class' => $class];
+            $this->stepsData[$step] = [
+                'class' => $class,
+                'action' => get_class() . '@get' . ucfirst(camel_case($step))
+            ];
         }
 
         $this->setCurrentStep($routeStep);

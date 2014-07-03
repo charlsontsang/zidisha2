@@ -153,6 +153,8 @@ Route::group(
             array('uses' => 'BorrowerController@postDeleteUpload', 'as' => 'borrower:delete-upload', 'before' => 'csrf')
         );
         Route::get('dashboard', array('uses' => 'BorrowerController@getDashboard', 'as' => 'borrower:dashboard'));
+        Route::get('loan-application', array('uses' => 'LoanApplicationController@getInstructions', 'as' => 'borrower:loan-application'));
+        Route::post('loan-application', array('uses' => 'LoanApplicationController@postInstructions'));
         Route::controller('loan-application', 'LoanApplicationController');
         Route::get('history', array('uses' => 'BorrowerController@getTransactionHistory', 'as' => 'borrower:history'));
         Route::get('resend-verification-mail', array('uses' => 'BorrowerController@resendVerificationMail', 'as' => 'borrower:resend:verification'));
