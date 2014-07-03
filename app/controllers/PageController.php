@@ -9,7 +9,7 @@ class PageController extends BaseController {
     public function getHowItWorks() {
         return View::make('pages.how-it-works');
     }
-    
+
     public function getWhyZidisha() {
         return View::make('pages.why-zidisha');
     }
@@ -24,5 +24,17 @@ class PageController extends BaseController {
 
     public function getTermsOfUse(){
         return View::make('pages.terms-and-conditions');
+    }
+
+    public function getVolunteerMentorGuidelines(){
+        return View::make('borrower.volunteerMentor.guidelines');
+    }
+
+    public function getVolunteerMentorCodeOfEthics(){
+        return View::make('borrower.volunteerMentor.code-of-ethics');
+    }
+
+    public function getVolunteerMentorFaq(){
+        return View::make('borrower.volunteerMentor.frequently-asked-questions');
     }
 }

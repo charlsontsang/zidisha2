@@ -25,6 +25,12 @@ Route::get(
 );
 Route::get('press', array('uses' => 'PageController@getPress', 'as' => 'page:press'));
 Route::get('terms-of-use', array('uses' => 'PageController@getTermsOfUse', 'as' => 'page:terms-of-use'));
+Route::get('volunteer-mentor-guidelines', array('uses' => 'PageController@getVolunteerMentorGuidelines',
+        'as' => 'page:volunteer-mentor-guidelines'));
+Route::get('volunteer-mentor-code-of-ethics', array('uses' => 'PageController@getVolunteerMentorCodeOfEthics',
+        'as' => 'page:volunteer-mentor-code-of-ethics'));
+Route::get('volunteer-mentor-faq', array('uses' => 'PageController@getVolunteerMentorFaq',
+        'as' => 'page:volunteer-mentor-faq'));
 
 /**
  * Routes for Authentication
