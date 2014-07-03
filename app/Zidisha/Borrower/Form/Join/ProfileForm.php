@@ -143,6 +143,7 @@ class ProfileForm extends AbstractForm
             ->filterByCountry($country)
             ->orderByFirstName()
             ->filterByActive(true)
+            ->joinWith('Profile')
             ->find();
 
         foreach ($borrowers as $borrower) {
