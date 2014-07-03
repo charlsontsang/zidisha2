@@ -101,9 +101,11 @@ class BorrowerController extends BaseController
 
     public function getDashboard()
     {
-        $verified = \Auth::user()->getBorrower()->getVerified();
+        $borrower = \Auth::User()->getBorrower();
+        $verified = $borrower->getVerified();
+        $volunteerMentor = $borrower->getVolunteerMentor()->getBorrowerVolunteer();
 
-        return View::make('borrower.dashboard', compact('verified'));
+        return View::make('borrower.dashboard', compact('verified', 'volunteerMentor'));
     }
 
     public function getTransactionHistory()
