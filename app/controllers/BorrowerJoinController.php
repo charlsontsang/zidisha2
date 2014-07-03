@@ -2,6 +2,7 @@
 
 use Zidisha\Borrower\VolunteerMentorQuery;
 use Zidisha\Country\CountryQuery;
+use Zidisha\Sms\BorrowerSmser;
 use Zidisha\Utility\Utility;
 
 class BorrowerJoinController extends BaseController
@@ -29,6 +30,7 @@ class BorrowerJoinController extends BaseController
      * @var Zidisha\Mail\BorrowerMailer
      */
     private $borrowerMailer;
+    private $borrowerSmser;
 
     public function __construct(
         \Zidisha\Vendor\Facebook\FacebookService $facebookService,
@@ -144,11 +146,6 @@ class BorrowerJoinController extends BaseController
                 Session::forget('BorrowerJoin');
 
                 $this->authService->login($borrower->getUser());
-
-                $this->borrowerMailer->sendJoinConfirmationMail($borrower);
-                if($borrower->getVolunteerMentor()){
-                    $this->borrowerMailer->sendBorrowerVolunteerMail($borrower);
-                }
 
                 Flash::success(\Lang::get('comments.flash.borrower-join-email-sent'));
                 return Redirect::route('borrower:dashboard');

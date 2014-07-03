@@ -3,6 +3,7 @@ namespace Zidisha\Borrower;
 
 use Zidisha\Borrower\Base\BorrowerQuery;
 use Zidisha\Mail\BorrowerMailer;
+use Zidisha\Sms\BorrowerSmsService;
 use Zidisha\Upload\Upload;
 use Zidisha\User\User;
 use Zidisha\User\UserQuery;
@@ -10,24 +11,18 @@ use Zidisha\Vendor\Facebook\FacebookService;
 
 class BorrowerService
 {
-    /**
-     * @var \Zidisha\Vendor\Facebook\FacebookService
-     */
     private $facebookService;
-    /**
-     * @var \Zidisha\User\UserQuery
-     */
     private $userQuery;
-    /**
-     * @var \Zidisha\Mail\BorrowerMailer
-     */
     private $borrowerMailer;
+    private $borrowerSmsService;
 
-    public function __construct(FacebookService $facebookService, UserQuery $userQuery, BorrowerMailer $borrowerMailer)
+    public function __construct(FacebookService $facebookService, UserQuery $userQuery, BorrowerMailer $borrowerMailer,
+        BorrowerSmsService $borrowerSmsService )
     {
         $this->facebookService = $facebookService;
         $this->userQuery = $userQuery;
         $this->borrowerMailer = $borrowerMailer;
+        $this->borrowerSmsService = $borrowerSmsService;
     }
 
     public function joinBorrower($data)
@@ -100,6 +95,12 @@ class BorrowerService
         $joinLog->save();
 
         $this->sendVerificationCode($borrower);
+
+        $this->borrowerMailer->sendJoinConfirmationMail($borrower);
+        if ($borrower->getVolunteerMentor()) {
+            $this->borrowerMailer->sendBorrowerVolunteerMail($borrower);
+        }
+        $this->borrowerSmsService->sendContactConfirmationSms($borrower);
 
         return $borrower;
     }

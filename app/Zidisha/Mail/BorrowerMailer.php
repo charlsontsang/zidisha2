@@ -68,6 +68,6 @@ class BorrowerMailer{
                     array('name' => $borrower->getName()))
         ];
 
-        $this->mailer->send('emails.borrower.volunteer-mentor-notify', $data);
+        $this->mailer->send('emails.borrower.volunteer-mentor-notify-new-borrower', $data);
     }
 }
