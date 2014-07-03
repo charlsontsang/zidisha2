@@ -96,11 +96,15 @@ class BorrowerService
 
         $this->sendVerificationCode($borrower);
 
-        $this->borrowerMailer->sendJoinConfirmationMail($borrower);
+        $this->borrowerMailer->sendBorrowerJoinedConfirmationMail($borrower);
+        
         if ($borrower->getVolunteerMentor()) {
-            $this->borrowerMailer->sendBorrowerVolunteerMail($borrower);
+            $this->borrowerMailer->sendBorrowerJoinedVolunteerMentorConfirmationMail($borrower);
         }
-        $this->borrowerSmsService->sendContactConfirmationSms($borrower);
+        
+        foreach ($borrower->getContacts() as $contact) {
+            $this->borrowerSmsService->sendBorrowerJoinedContactConfirmationSms($contact);
+        }
 
         return $borrower;
     }

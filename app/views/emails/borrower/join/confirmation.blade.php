@@ -9,5 +9,4 @@ complete.  You may also log in to Zidisha to check the status of your account at
 
 Regards,
 <br/><br/>
-
 The Zidisha Team

@@ -3,7 +3,7 @@
 namespace Zidisha\Sms;
 
 
-use Zidisha\Borrower\ContactQuery;
+use Zidisha\Borrower\Contact;
 
 class BorrowerSmsService {
 
@@ -14,18 +14,15 @@ class BorrowerSmsService {
         $this->smsService = $smsService;
     }
 
-    public function sendContactConfirmationSms($borrower)
+    public function sendBorrowerJoinedContactConfirmationSms(Contact $contact)
     {
-        $contacts = ContactQuery::create()
-            ->filterByBorrower($borrower)
-            ->find();
-        $data = [];
-
-        foreach($contacts as $contact){
-            $data['phoneNumber'] = $contact->getPhoneNumber();
-            $data['contact'] = $contact;
-            $this->smsService->send('emails.sms', $data);
-        }
+        $arguments = [
+            'borrowerName'        => $contact->getBorrower()->getName(),
+            'borrowerPhoneNumber' => $contact->getBorrower()->getProfile()->getPhoneNumber(),
+            'contactName'         => $contact->getName(),
+        ];
+        $text = \Lang::get('borrowerJoin.sms.contact-confirmation', $arguments);
+        $this->smsService->send($contact->getPhoneNumber(), $text);
     }
 
-} 
+}

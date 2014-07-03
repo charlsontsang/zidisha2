@@ -31,16 +31,16 @@ class BorrowerMailer{
         );
     }
 
-    public function sendJoinConfirmationMail(Borrower $borrower)
+    public function sendBorrowerJoinedConfirmationMail(Borrower $borrower)
     {
         $data = [
             'borrower' => $borrower,
             'to'        => $borrower->getUser()->getEmail(),
             'from'      => 'noreply@zidisha.org',
-            'subject'   => \Lang::get('borrowerJoin.emails.subject.join-confirmation')
+            'subject'   => \Lang::get('borrowerJoin.emails.subject.confirmation')
         ];
 
-        $this->mailer->send('emails.borrower.join-confirmation', $data);
+        $this->mailer->send('emails.borrower.join.confirmation', $data);
     }
 
     public function sendFormResumeLaterMail($email, $resumeCode)
@@ -58,16 +58,16 @@ class BorrowerMailer{
         );
     }
 
-    public function sendBorrowerVolunteerMail(Borrower $borrower)
+    public function sendBorrowerJoinedVolunteerMentorConfirmationMail(Borrower $borrower)
     {
+        $subject = \Lang::get('borrowerJoin.emails.subject.volunteer-mentor-confirmation', ['name' => $borrower->getName()]);
         $data = [
             'borrower' => $borrower,
             'to'        => $borrower->getVolunteerMentor()->getBorrowerVolunteer()->getUser()->getEmail(),
             'from'      => 'service@zidisha.org',
-            'subject'   => \Lang::get('borrowerJoin.emails.subject.borrower-volunteer-notify',
-                    array('name' => $borrower->getName()))
+            'subject'   => $subject,
         ];
 
-        $this->mailer->send('emails.borrower.volunteer-mentor-notify-new-borrower', $data);
+        $this->mailer->send('emails.borrower.join.volunteer-mentor-confirmation', $data);
     }
 }
