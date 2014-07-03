@@ -103,7 +103,7 @@ class BorrowerController extends BaseController
     {
         $borrower = \Auth::User()->getBorrower();
         $verified = $borrower->getVerified();
-        $volunteerMentor = $borrower->getVolunteerMentor()->getBorrowerVolunteer();
+        $volunteerMentor = $borrower->getVolunteerMentor() ? $borrower->getVolunteerMentor()->getBorrowerVolunteer() : null;
 
         return View::make('borrower.dashboard', compact('verified', 'volunteerMentor'));
     }
