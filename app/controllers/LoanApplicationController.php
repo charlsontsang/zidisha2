@@ -1,6 +1,6 @@
 <?php
-use Zidisha\Borrower\Form\Loan\Application;
-use Zidisha\Borrower\Form\Loan\Profile;
+use Zidisha\Borrower\Form\Loan\ApplicationForm;
+use Zidisha\Borrower\Form\Loan\ProfileForm;
 use Zidisha\Loan\Loan;
 use Zidisha\Loan\CategoryQuery;
 use Zidisha\Loan\LoanQuery;
@@ -24,11 +24,11 @@ class LoanApplicationController extends BaseController
      */
     private $loanService;
 
-    public function __construct(Profile $form, Application $applicationForm, LoanService $loanService)
+    public function __construct(ProfileForm $form, LoanService $loanService)
     {
         $this->beforeFilter('@stepsBeforeFilter');
         $this->editForm = $form;
-        $this->applicationForm = $applicationForm;
+        $this->applicationForm = new ApplicationForm(\Auth::user()->getBorrower());
         $this->loanService = $loanService;
     }
 

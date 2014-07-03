@@ -8,11 +8,24 @@
 
 namespace Zidisha\Borrower\Form\Loan;
 
+use Zidisha\Borrower\Base\Borrower;
 use Zidisha\Form\AbstractForm;
 use Zidisha\Loan\CategoryQuery;
+use Zidisha\Loan\Loan;
 
-class Application extends AbstractForm
+class ApplicationForm extends AbstractForm
 {
+
+    /**
+     * @var \Zidisha\Borrower\Base\Borrower
+     */
+    private $borrower;
+
+    public function __construct(Borrower $borrower)
+    {
+
+        $this->borrower = $borrower;
+    }
 
     public function getRules($data)
     {
@@ -37,7 +50,10 @@ class Application extends AbstractForm
 
     public function getDays()
     {
-        $array = range(1, 31);
+        $installmentPeriod = $this->borrower->getCountry()->getInstallmentPeriod();
+        $dayCount = ($installmentPeriod == Loan::WEEKLY_INSTALLMENT) ? 7 : 31;
+        
+        $array = range(1, $dayCount);
 
         return array_combine($array, $array);
     }

@@ -6,7 +6,7 @@ namespace Zidisha\Borrower\Form\Loan;
 use Illuminate\Support\Facades\Auth;
 use Zidisha\Form\AbstractForm;
 
-class Profile extends AbstractForm
+class ProfileForm extends AbstractForm
 {
 
     public function getRules($data)
