@@ -192,6 +192,8 @@ Route::group(
         Route::post('/settings/exchange-rates/{countryName?}', array('uses' => 'AdminController@postExchangeRates',
                 'as' => 'admin:post-exchange-rates', 'before' => 'csrf'));
         Route::get('pending-activation', array('uses' => 'AdminController@getPendingActivation', 'as' => 'admin:pending-activation'));
+        Route::get('pending-activation/{borrowerId}', array('uses' => 'AdminController@getBorrowerPendingActivation',
+                'as' => 'admin:pending-borrower-activation'));
     }
 );
 /**
