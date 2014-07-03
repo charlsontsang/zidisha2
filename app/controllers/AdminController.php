@@ -176,7 +176,12 @@ class AdminController extends BaseController
         $paginator = BorrowerQuery::create()
             ->filterByVerified(true)
             ->orderByCreatedAt() // Todo registration date
+            ->joinWith('Profile')
             ->paginate($page, 50);
+        
+        $paginator->populateRelation('Contact');
+        $paginator->populateRelation('User');
+        $paginator->populateRelation('Country');
 
         return View::make('admin.pending-activation', compact('paginator'));
     }
