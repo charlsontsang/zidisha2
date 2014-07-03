@@ -6,6 +6,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Zidisha\Admin\Setting;
 use Zidisha\Balance\Transaction;
 use Zidisha\Borrower\BorrowerQuery;
+use Zidisha\Borrower\JoinLog;
 use Zidisha\Borrower\VolunteerMentor;
 use Zidisha\Borrower\VolunteerMentorQuery;
 use Zidisha\Country\Country;
@@ -308,6 +309,16 @@ class GenerateModelData extends Command
                     $borrower->setVolunteerMentor($oneMentor);
                 }
                 $borrower_profile->save();
+
+                $joinLog = new JoinLog();
+                $joinLog
+                    ->setIpAddress($faker->ipv4)
+                    ->setVerificationCode($faker->randomNumber(20))
+                    ->setBorrower($borrower);
+                if ($borrower->getVerified()) {
+                    $joinLog->setVerifiedAt(new \DateTime());
+                }
+                $joinLog->save();
             }
 
             if ($model == "Country") {
