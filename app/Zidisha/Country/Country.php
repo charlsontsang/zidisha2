@@ -20,4 +20,13 @@ class Country extends BaseCountry
     {
         return Currency::valueOf($this->getCurrencyCode());
     }
+
+    public function isCountryBF()
+    {
+        if ($this->getCountryCode() == 'BF'){
+            return true;
+        }
+
+        return false;
+    }
 }
