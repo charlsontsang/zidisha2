@@ -155,5 +155,27 @@ class Utility {
         return $truncate;
     }
 
+    public static function nestedArray($data)
+    {
+        $nestedData = [];
 
+        foreach ($data as $k => $v) {
+            $keys = explode('_', $k);
+            $count = count($keys);
+            $parent = & $nestedData;
+            foreach ($keys as $key) {
+                if ($count == 1) {
+                    $parent[$key] = $v;
+                } else {
+                    if (!isset($parent[$key])) {
+                        $parent[$key] = [];
+                    }
+                    $parent = & $parent[$key];
+                }
+                $count -= 1;
+            }
+        }
+
+        return $nestedData;
+    }
 }
