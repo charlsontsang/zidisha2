@@ -8,11 +8,12 @@ use Zidisha\Borrower\Form\Validator\NumberValidator;
 use Zidisha\Borrower\VolunteerMentorQuery;
 use Zidisha\Country\CountryQuery;
 use Zidisha\Form\AbstractForm;
+use Zidisha\Utility\Utility;
 
-class personalInformationFrom extends AbstractForm
+class PersonalInformationForm extends AbstractForm
 {
 
-    protected $editableField;
+    protected $fields;
 
     /**
      * @var \Zidisha\Borrower\Borrower
@@ -38,12 +39,23 @@ class personalInformationFrom extends AbstractForm
 
     public function getRules($data)
     {
-        return [
-            'username' => 'required|unique:users,username',
-            'password' => 'required',
-            'firstName' => 'required',
-            'lastName' => 'required',
-        ];
+        $allFields = $this->fields;
+
+        $rules = [];
+
+        if ($this->borrower->getActivationStatus() == 'pending'){
+            return $this->getAllRules();
+        }
+
+        $allRules = $this->getAllRules();
+
+        foreach ($allFields as $field => $value) {
+            if ($this->isEditable($field)) {
+                $rules[$field] = $allRules[$field];
+            }
+        }
+
+        return $rules;
     }
 
     public function getAllRules()
@@ -52,11 +64,11 @@ class personalInformationFrom extends AbstractForm
             'address' => 'required',
             'addressInstruction' => 'required',
             'city' => 'required',
-            'nationalIdNumber' => 'required|unique:borrower_profiles,national_id_number',
+            'nationalIdNumber' => 'required|unique:borrower_profiles,national_id_number,'.$this->borrower->getId() .',borrower_id',
             'phoneNumber' => 'required|numeric|digits:' . $this->getPhoneNumberLength(
-                ) . '|UniqueNumber|MutualUniqueNumber',
+                ) . '|UniqueNumber:'. $this->borrower->getId() .'|MutualUniqueNumber',
             'alternatePhoneNumber' => 'numeric|digits:' . $this->getPhoneNumberLength(
-                ) . '|UniqueNumber|MutualUniqueNumber',
+                ) . '|UniqueNumber:'. $this->borrower->getId() .'|MutualUniqueNumber',
             'communityLeader_firstName' => 'required',
             'communityLeader_lastName' => 'required',
             'communityLeader_phoneNumber' => 'required|numeric|ContactUniqueNumber|digits:' . $this->getPhoneNumberLength(
@@ -153,8 +165,7 @@ class personalInformationFrom extends AbstractForm
     public function getCountry()
     {
         if ($this->country === null) {
-            $this->country = CountryQuery::create()
-                ->findOneByCountryCode(\Session::get('BorrowerJoin.countryCode'));
+            $this->country = $this->borrower->getCountry();
         }
 
         return $this->country;
@@ -178,15 +189,21 @@ class personalInformationFrom extends AbstractForm
                 $fields[$matches['contact'] . 'firstName'] = true;
                 $fields[$matches['contact'] . 'lastName'] = true;
             }
+
         }
 
-//        dd($fields);
-        $this->editableField = $fields;
+        if ($this->borrower->getActivationStatus() == 'pending'){
+            $this->fields = array_combine(array_keys($rules), array_fill(0, count($rules), true));
+        }
+        else{
+
+        $this->fields = $fields;
+        }
     }
 
     public function isEditable($fieldName)
     {
-        return $this->editableField[$fieldName];
+        return $this->fields[$fieldName];
     }
 
     protected function validate($data, $rules)
@@ -200,4 +217,25 @@ class personalInformationFrom extends AbstractForm
         parent::validate($data, $rules);
     }
 
+    public function getDefaultData()
+    {
+        return $this->borrower->getPersonalInformation();
+    }
+
+    public function getDialingCode()
+    {
+        return '+ ' . $this->getCountry()->getDialingCode() . ' (0)';
+    }
+
+    public function setData($data)
+    {
+        $this->data = $data;
+    }
+
+    public function getNestedData()
+    {
+        $data = $this->getData() + $this->borrower->getPersonalInformation();
+
+        return Utility::nestedArray($data);
+    }
 }
