@@ -10,6 +10,7 @@ use Zidisha\Upload\Upload;
 use Zidisha\User\User;
 use Zidisha\User\UserQuery;
 use Zidisha\Vendor\Facebook\FacebookService;
+use Zidisha\Vendor\PropelDB;
 
 class BorrowerService
 {
@@ -109,6 +110,65 @@ class BorrowerService
         }
 
         return $borrower;
+    }
+
+    public function updatePersonalInformation(Borrower $borrower, $data)
+    {
+        $updatedContacts = [];
+        PropelDB::transaction(function($con) use($borrower, $data, $updatedContacts) {
+            $profile = $borrower->getProfile();
+            $profile->setAddress($data['address']);
+            $profile->setAddressInstructions($data['addressInstruction']);
+            $profile->setCity($data['city']);
+            $profile->setNationalIdNumber($data['nationalIdNumber']);
+            $profile->setPhoneNumber($data['phoneNumber']);
+            $profile->setAlternatePhoneNumber($data['alternatePhoneNumber']);
+            $profile->save($con);
+
+            $communityLeader = $borrower->getCommunityLeader();
+
+            if ($communityLeader->getPhoneNumber() != $data['communityLeader']['phoneNumber']) {
+                $updatedContacts[] = $communityLeader;
+            }
+
+            $communityLeader
+                ->setFirstName($data['communityLeader']['firstName'])
+                ->setLastName($data['communityLeader']['lastName'])
+                ->setPhoneNumber($data['communityLeader']['phoneNumber'])
+                ->setDescription($data['communityLeader']['description']);
+            $communityLeader->save($con);
+
+            foreach ($borrower->getFamilyMembers() as $i => $familyMember) {
+                if ($familyMember->getPhoneNumber() != $data['familyMember'][$i + 1]['phoneNumber']) {
+                    $updatedContacts[] = $familyMember;
+                }
+
+                $familyMember
+                    ->setFirstName($data['familyMember'][$i + 1]['firstName'])
+                    ->setLastName($data['familyMember'][$i + 1]['lastName'])
+                    ->setPhoneNumber($data['familyMember'][$i + 1]['phoneNumber'])
+                    ->setDescription($data['familyMember'][$i + 1]['description']);
+                $familyMember->save($con);
+            }
+
+            foreach ($borrower->getNeighbors() as $i => $neighbor) {
+
+                if ($neighbor->getPhoneNumber() != $data['neighbor'][$i + 1]['phoneNumber']) {
+                    $updatedContacts[] = $neighbor;
+                }
+
+                $neighbor
+                    ->setFirstName($data['neighbor'][$i + 1]['firstName'])
+                    ->setLastName($data['neighbor'][$i + 1]['lastName'])
+                    ->setPhoneNumber($data['neighbor'][$i + 1]['phoneNumber'])
+                    ->setDescription($data['neighbor'][$i + 1]['description']);
+                $neighbor->save($con);
+            }
+        });
+
+        foreach ($updatedContacts as $contact) {
+            $this->borrowerSmsService->sendBorrowerJoinedContactConfirmationSms($contact);
+        }
     }
 
     public function editBorrower(Borrower $borrower, $data, $files = [])
