@@ -12,6 +12,7 @@ use Zidisha\Borrower\VolunteerMentorQuery;
 use Zidisha\Country\Country;
 use Zidisha\Country\CountryQuery;
 use Zidisha\Currency\Money;
+use Zidisha\Borrower\Borrower;
 
 use Zidisha\Lender\Invite;
 use Zidisha\Lender\LenderQuery;
@@ -81,7 +82,7 @@ class GenerateModelData extends Command
             $this->call('fake', array('model' => 'Borrower', 'size' => 400));
             $this->call('fake', array('model' => 'Lender', 'size' => 30));
             $this->call('fake', array('model' => 'ExchangeRate', 'size' => 30));
-            $this->call('fake', array('model' => 'Loan', 'size' => 30));
+            $this->call('fake', array('model' => 'Loan', 'size' => 300));
             $this->call('fake', array('model' => 'Bid', 'size' => 50));
             $this->call('fake', array('model' => 'Transaction', 'size' => 200));
             $this->call('fake', array('model' => 'Setting', 'size' => 1));
@@ -411,27 +412,40 @@ class GenerateModelData extends Command
                 $Stage->setBorrower($borrower);
 
                 if ($i < ($status * 3)) {
+                    $borrower->setLoanStatus(Loan::FUNDED);
+                    $borrower->setActiveLoan($Loan);
                     $Loan->setStatus(Loan::FUNDED);
                     $Stage->setStatus(Loan::FUNDED);
                 } elseif ($i < ($status * 4)) {
+                    $borrower->setLoanStatus(Loan::ACTIVE);
+                    $borrower->setActiveLoan($Loan);
                     $Loan->setStatus(Loan::ACTIVE);
                     $Stage->setStatus(Loan::ACTIVE);
                 } elseif ($i < ($status * 5)) {
+                    $borrower->setLoanStatus(Loan::REPAID);
+                    $borrower->setActiveLoan($Loan);
                     $Loan->setStatus(Loan::REPAID);
                     $Stage->setStatus(Loan::REPAID);
                 } elseif ($i < ($status * 6)) {
+                    $borrower->setLoanStatus(Loan::DEFAULTED);
+                    $borrower->setActiveLoan($Loan);
                     $Loan->setStatus(Loan::DEFAULTED);
                     $Stage->setStatus(Loan::DEFAULTED);
                 } elseif ($i < ($status * 7)) {
+                    $borrower->setLoanStatus(Loan::CANCELED);
+                    $borrower->setActiveLoan($Loan);
                     $Loan->setStatus(Loan::CANCELED);
                     $Stage->setStatus(Loan::CANCELED);
                 } else {
+                    $borrower->setLoanStatus(Loan::EXPIRED);
+                    $borrower->setActiveLoan($Loan);
                     $Loan->setStatus(Loan::EXPIRED);
                     $Stage->setStatus(Loan::EXPIRED);
                 }
 
                 $Stage->setStartDate(new \DateTime());
                 $Stage->save();
+                $borrower->save();
 
                 $loanService->addToLoanIndex($Loan);
             }

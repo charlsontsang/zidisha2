@@ -22,7 +22,7 @@ Feedback
 and add your name to the signature line.<br> You may change the language in the footer of this page to display the default
 message in French or Indonesian.)
 {{ BootstrapForm::textarea('message', $form->getMessage($borrower->getName())) }}
-{{ BootstrapForm::text('senderName', $borrower->getName()) }}
+{{ BootstrapForm::text('senderName') }}
 
 {{ BootstrapForm::submit('save') }}
 
@@ -44,7 +44,12 @@ message in French or Indonesian.)
     <tbody>
     @foreach($feedbackMessages as $feedbackMessage)
     <tr>
-        
+        <td>{{ $feedbackMessage->getBorrower()->getName() }}</td>
+        <td>{{ $feedbackMessage->getBorrowerEmail() }}</td>
+        <td>{{ $feedbackMessage->getSubject() }}</td>
+        <td>{{ $feedbackMessage->getMessage() }}</td>
+        <td>{{ $feedbackMessage->getSenderName() }}</td>
+        <td>{{ $feedbackMessage->getSentAt()->format('d-m-Y') }}</td>
     </tr>
     @endforeach
     </tbody>
