@@ -29,7 +29,7 @@ message in French or Indonesian.)
 {{ BootstrapForm::close() }}
 
 <br><br>
-@if($feedbackMessages)
+@if($feedbackMessages != null)
 <table class="table table-striped">
     <thead>
     <tr>
