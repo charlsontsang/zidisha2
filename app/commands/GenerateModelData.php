@@ -160,7 +160,7 @@ class GenerateModelData extends Command
 
         if ($model == "ExchangeRate") {
 
-            foreach (['KES' => 80, 'XOF' => 20] as $currencyCode => $rate) {
+            foreach (['KES' => 80, 'XOF' => 20, 'GHS' => 50, 'IDR' => 40, 'INR' => 80] as $currencyCode => $rate) {
                 $dateMonthAgo = new DateTime();
                 $dateMonthAgo->modify('-1 month');
                 $dateNow = new DateTime();
@@ -395,8 +395,6 @@ class GenerateModelData extends Command
                 $data['installmentDay'] = $installmentDay;
                 $data['categoryId'] = $loanCategory->getId();
                 $data['amountRaised'] = 40;
-                //TODO set interest rate
-                $data['interestRate'] = '20';
 
                 if ($i < $status) {
                     $data['amountRaised'] = 0;

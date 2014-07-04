@@ -77,7 +77,7 @@ class LoanController extends BaseController
         if($loan->getAmount() <= $totalRaised){
             $raised = 100;
         }else{
-            $raised = intval(($totalRaised/($loan->getAmount()))*100);
+            $raised = intval(($totalRaised/($loan->getAmount()->getAmount()))*100);
         }
 
         return View::make(

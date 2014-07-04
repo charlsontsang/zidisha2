@@ -35,9 +35,8 @@ class Loan extends BaseLoan
 
         $loan->setAmount(Money::create($data['amount'], 'USD'));
         $loan->setRegistrationFeeRate('5');
-        $loan->setInstallmentPeriod('monthly');
-        $loan->setInterestRate($data['interestRate']);
-        $loan->setAmountRaised($data['amountRaised']);
+        $loan->setInstallmentPeriod('monthly'); // TODO $borrower->getCountry()->getInstallmentPeriod()
+        $loan->setInterestRate(20); // TODO
 
         $loan->setInstallmentDay($data['installmentDay']);
         $loan->setApplicationDate(new \DateTime());
@@ -59,7 +58,6 @@ class Loan extends BaseLoan
     {
         return parent::setNativeAmount($money->getAmount());
     }
-
     
     public function getAmount()
     {

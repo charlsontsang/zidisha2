@@ -57,6 +57,7 @@ class LoanService
         $loanCategory = CategoryQuery::create()
             ->findOneById($data['categoryId']);
 
+        $data['nativeAmount'] = $data['amount']; // TODO
         $data['amount'] = $this->currencyService->convertToUSD(
             Money::create($data['nativeAmount'], $data['currencyCode'])
         )->getAmount();
