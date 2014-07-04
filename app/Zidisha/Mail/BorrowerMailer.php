@@ -4,6 +4,7 @@ namespace Zidisha\Mail;
 
 use Zidisha\Borrower\Borrower;
 use Zidisha\Borrower\FeedbackMessage;
+use Zidisha\Loan\Loan;
 
 class BorrowerMailer{
 
@@ -92,5 +93,19 @@ class BorrowerMailer{
                 $this->mailer->send('emails.borrower.feature-feedback', $data);
             }
         }
+    }
+
+    public function sendLoanConfirmation(Borrower $borrower, Loan $loan)
+    {
+        $subject = \Lang::get('emails.loan-confirmation-subject');
+        $data = [
+            'borrower'  => $borrower,
+            'loan'      => $loan,
+            'to'        => $borrower->getUser()->getEmail(),
+            'from'      => 'noreply@zidisha.org',
+            'subject'   => $subject,
+        ];
+
+        $this->mailer->send('emails.borrower.loan-confirmation', $data);
     }
 }
