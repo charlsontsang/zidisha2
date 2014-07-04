@@ -5,7 +5,7 @@ Feedback
 @stop
 
 @section('content')
-<h2>Email Applicant</h2>
+<h2>Email Applicant</h2> <a href="{{ route('loan:index', $loanId) }}">back to Loan</a>
 <br><br>
 <p>Following the guidelines at the page <a href="{{ route('page:loan-feature-criteria') }}">How to Have Your Loan
         Featured</a>, come up with one to three things that this applicant can do to make his or her loan profile more attractive
@@ -44,7 +44,7 @@ message in French or Indonesian.)
     <tbody>
     @foreach($feedbackMessages as $feedbackMessage)
     <tr>
-        <td>{{ $feedbackMessage->getBorrower()->getName() }}</td>
+        <td>{{ $feedbackMessage->getLoanApplicant()->getName() }}</td>
         <td>{{ $feedbackMessage->getBorrowerEmail() }}</td>
         <td>{{ $feedbackMessage->getSubject() }}</td>
         <td>{{ $feedbackMessage->getMessage() }}</td>

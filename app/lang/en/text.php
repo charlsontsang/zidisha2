@@ -8,15 +8,16 @@ return [
     ],
 
     'admin' => [
-        'suggestion-default-message' => 'Dear :name,
+        'suggestion-default-message' =>
+'Dear :name,
 
-                                        I was reviewing your loan profile, and wanted to help by sharing some suggestions. I think you could make your application more attractive to lenders if you make some of these improvements:
+I was reviewing your loan profile, and wanted to help by sharing some suggestions. I think you could make your application more attractive to lenders if you make some of these improvements:
 
-                                        You may make these changes using the "Edit Profile" page of your member account.
+You may make these changes using the "Edit Profile" page of your member account.
 
-                                        Best of luck,
+Best of luck,
 
-                                        Zidisha team',
+Zidisha team',
 
         'suggestion-default-subject' => 'Suggestions for improving your loan profile',
     ]

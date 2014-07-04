@@ -28,30 +28,14 @@ Telephone: {{ $volunteerMentor->getProfile()->getPhoneNumber() }}
 
 <br><br>
 @if($feedbackMessages != null)
-<table class="table table-striped">
-    <thead>
-    <tr>
-        <th>Borrower Name</th>
-        <th>Borrower Email</th>
-        <th>Subject</th>
-        <th>Message</th>
-        <th>Sender Name</th>
-        <th>Sent at</th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach($feedbackMessages as $feedbackMessage)
-    <tr>
-        <td>{{ $feedbackMessage->getBorrower()->getName() }}</td>
-        <td>{{ $feedbackMessage->getBorrowerEmail() }}</td>
-        <td>{{ $feedbackMessage->getSubject() }}</td>
-        <td>{{ $feedbackMessage->getMessage() }}</td>
-        <td>{{ $feedbackMessage->getSenderName() }}</td>
-        <td>{{ $feedbackMessage->getSentAt()->format('d-m-Y') }}</td>
-    </tr>
-    @endforeach
-    </tbody>
-</table>
+@foreach($feedbackMessages as $feedbackMessage)
+<div>
+    <p>{{ $feedbackMessage->getSubject() }} -  {{ $feedbackMessage->getSentAt()->format('d-m-Y') }}</p>
+    <p>
+        {{ $feedbackMessage->getMessage() }}
+    </p>
+</div>
+@endforeach
 @endif
 
 @stop

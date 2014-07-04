@@ -221,7 +221,7 @@ class AdminController extends BaseController
 
         $feedbackMessages = $this->borrowerService->getFeedbackMessages($loan);
 
-        return View::make('admin.borrower-feedback', compact('borrower', 'feedbackMessages'),
+        return View::make('admin.borrower-feedback', compact('borrower', 'feedbackMessages', 'loanId'),
             ['form' => $this->featureFeedbackForm,]);
     }
 
@@ -236,6 +236,7 @@ class AdminController extends BaseController
             $data = $form->getData();
 
             $this->borrowerService->addLoanFeedback($loanId, $data);
+            Session::forget('loanId');
 
             \Flash::success("Suggestion successfully sent!");
             return Redirect::route('loan:index', $loanId);

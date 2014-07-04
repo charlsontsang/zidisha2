@@ -270,10 +270,13 @@ class BorrowerService
                 ->setSentAt(new \DateTime())
                 ->setLoan($loan)
                 ->setType('loan')
-                ->setBorrower($loan->getBorrower());
+                ->setLoanApplicant($loan->getBorrower());
 
         $feedbackMessage->save();
 
+        $this->borrowerMailer->sendLoanFeedbackMail($feedbackMessage);
+
+        return $feedbackMessage;
     }
 
     public function getFeedbackMessages(Loan $loan)
