@@ -79,10 +79,10 @@ class GenerateModelData extends Command
             $this->call('fake', array('model' => 'Country', 'size' => 10));
             $this->call('fake', array('model' => 'Category', 'size' => 10));
             $this->call('fake', array('model' => 'Admin', 'size' => 1));
-            $this->call('fake', array('model' => 'Borrower', 'size' => 400));
+            $this->call('fake', array('model' => 'Borrower', 'size' => 200));
             $this->call('fake', array('model' => 'Lender', 'size' => 30));
             $this->call('fake', array('model' => 'ExchangeRate', 'size' => 30));
-            $this->call('fake', array('model' => 'Loan', 'size' => 300));
+            $this->call('fake', array('model' => 'Loan', 'size' => 150));
             $this->call('fake', array('model' => 'Bid', 'size' => 50));
             $this->call('fake', array('model' => 'Transaction', 'size' => 200));
             $this->call('fake', array('model' => 'Setting', 'size' => 1));

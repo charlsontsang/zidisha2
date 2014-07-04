@@ -2,6 +2,7 @@
 namespace Zidisha\Borrower;
 
 use Zidisha\Borrower\Base\BorrowerQuery;
+use Zidisha\Loan\Loan;
 use Zidisha\Loan\LoanQuery;
 use Zidisha\Mail\BorrowerMailer;
 use Zidisha\Sms\BorrowerSmsService;
@@ -273,5 +274,14 @@ class BorrowerService
 
         $feedbackMessage->save();
 
+    }
+
+    public function getFeedbackMessages(Loan $loan)
+    {
+        $feedbackMessages = FeedbackMessageQuery::create()
+            ->filterByLoan($loan)
+            ->find();
+
+        return $feedbackMessages;
     }
 }

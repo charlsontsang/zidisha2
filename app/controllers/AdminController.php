@@ -219,9 +219,7 @@ class AdminController extends BaseController
         $borrower = $loan->getBorrower();
         Session::put('loanId', $loanId);
 
-        $feedbackMessages = FeedbackMessageQuery::create()
-            ->filterByLoan($loan)
-            ->find();
+        $feedbackMessages = $this->borrowerService->getFeedbackMessages($loan);
 
         return View::make('admin.borrower-feedback', compact('borrower', 'feedbackMessages'),
             ['form' => $this->featureFeedbackForm,]);
