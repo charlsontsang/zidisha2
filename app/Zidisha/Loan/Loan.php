@@ -28,7 +28,7 @@ class Loan extends BaseLoan
 
         $loan = new Loan();
         $loan->setSummary($data['summary']);
-        $loan->setDescription($data['description']);
+        $loan->setProposal($data['proposal']);
 
         $loan->setCurrencyCode($data['currencyCode']);
         $loan->setNativeAmount(Money::create($data['nativeAmount'], $currency));

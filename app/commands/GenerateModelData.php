@@ -384,7 +384,7 @@ class GenerateModelData extends Command
 
                 $data = array();
                 $data['summary'] = $faker->sentence(8);
-                $data['description'] = $faker->paragraph(7);
+                $data['proposal'] = $faker->paragraph(7);
                 $data['nativeAmount'] = $amount;
                 $data['currencyCode'] = 'KES';
                 $data['amount'] = $amount / 2;

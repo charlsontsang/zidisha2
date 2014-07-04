@@ -8,7 +8,7 @@
     {{ BootstrapForm::open(array('controller' => 'LoanApplicationController@postApplication', 'translationDomain' => 'borrower.loan-application-page')) }}
     {{ BootstrapForm::populate($form) }}
 
-    {{ BootstrapForm::text('title') }}
+    {{ BootstrapForm::text('summary') }}
 
     {{ BootstrapForm::textarea('proposal') }}
 

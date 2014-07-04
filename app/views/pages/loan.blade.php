@@ -21,7 +21,7 @@
 
         <h3>My Loan Proposal</h3>
 
-        <p>{{ $loan->getDescription() }}</p>
+        <p>{{ $loan->getProposal() }}</p>
         <br/>
         <br/>
         <h4>Comments</h4>

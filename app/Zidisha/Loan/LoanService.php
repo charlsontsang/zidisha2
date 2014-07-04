@@ -195,7 +195,7 @@ class LoanService
             'countryId' => $loan->getBorrower()->getCountry()->getId(),
             'country_code' => $loan->getBorrower()->getCountry()->getCountryCode(),
             'summary' => $loan->getSummary(),
-            'description' => $loan->getDescription(),
+            'proposal' => $loan->getProposal(),
             'status' => $loan->getStatus(),
             'created_at' => $loan->getCreatedAt()->getTimestamp(),
             'amount_raised' => $loan->getAmountRaised(),
