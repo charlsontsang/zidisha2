@@ -36,7 +36,7 @@
 
         @include('partials/_progress', [ 'raised' => $raised])
 
-        @if($loan->getStatus() == '0')
+        @if($loan->isOpen())
             <div>
                 {{ BootstrapForm::open(array('route' => 'loan:post-bid', 'translationDomain' => 'bid', 'id' => 'funds-upload')) }}
                 {{ BootstrapForm::populate($form) }}

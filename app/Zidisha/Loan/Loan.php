@@ -128,4 +128,9 @@ class Loan extends BaseLoan
     {
         return $this->getInstallmentPeriod() == self::WEEKLY_INSTALLMENT;
     }
+
+    public function isOpen()
+    {
+        return $this->getStatus() == static::OPEN;
+    }
 }
