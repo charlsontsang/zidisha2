@@ -2,13 +2,17 @@
 namespace Zidisha\Borrower\Form\Validator;
 
 use Illuminate\Validation\Validator;
+use Propel\Runtime\ActiveQuery\Criteria;
 use Zidisha\Borrower\ProfileQuery;
 
 class NumberValidator extends Validator
 {
     public function validateUniqueNumber($attribute, $value, $parameters)
     {
+        $id = $parameters[0];
+
         $checkPhoneNumber = ProfileQuery::create()
+            ->filterByBorrowerId( $id, Criteria::NOT_EQUAL)
             ->filterByPhoneNumber($value)
             ->_or()
             ->filterByAlternatePhoneNumber($value)
