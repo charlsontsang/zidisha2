@@ -12,6 +12,7 @@ use Zidisha\Borrower\Borrower;
 use Zidisha\Currency\CurrencyService;
 use Zidisha\Currency\Money;
 use Zidisha\Lender\Lender;
+use Zidisha\Mail\BorrowerMailer;
 use Zidisha\Mail\LenderMailer;
 use Zidisha\Repayment\Installment;
 use Zidisha\Vendor\PropelDB;
@@ -34,18 +35,21 @@ class LoanService
      * @var \Zidisha\Currency\CurrencyService
      */
     private $currencyService;
+    private $borrowerMailer;
 
     public function __construct(
         TransactionService $transactionService,
         LenderMailer $lenderMailer,
         MixpanelService $mixpanelService,
-        CurrencyService $currencyService
+        CurrencyService $currencyService,
+        BorrowerMailer $borrowerMailer
     )
     {
         $this->transactionService = $transactionService;
         $this->lenderMailer = $lenderMailer;
         $this->mixpanelService = $mixpanelService;
         $this->currencyService = $currencyService;
+        $this->borrowerMailer = $borrowerMailer;
     }
 
     protected $loanIndex;
@@ -75,7 +79,7 @@ class LoanService
             $this->changeLoanStage($con, $loan, null, Loan::OPEN);
         });
 
-        // TODO send mail to borrower
+        $this->borrowerMailer->sendLoanConfirmation($borrower, $loan);
         // TODO send mail to lenders
         
         $this->addToLoanIndex($loan);

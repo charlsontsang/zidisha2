@@ -105,6 +105,7 @@ class BorrowerController extends BaseController
         $verified = $borrower->getVerified();
 
         $volunteerMentor = $borrower->getVolunteerMentor() ? $borrower->getVolunteerMentor()->getBorrowerVolunteer() : null;
+        $feedbackMessages = null;
 
         $loan = $borrower->getActiveLoan();
 

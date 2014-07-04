@@ -10,7 +10,7 @@
 </div>
 
 <div class="row">
-    <div class="col-xs-4">
+    <div class="col-xs-3">
         <form class="form-inline" role="form" action="{{ route('lend:index', $searchRouteParams) }}" method="get">
             <div class="form-group">
                 <label class="sr-only" for="search">Email address</label>
@@ -65,7 +65,7 @@
         </ul>
     </div>
 
-    <div class="col-xs-8">
+    <div class="col-xs-9">
         <ul class="nav nav-tabs">
             @foreach(['fund-raising' => 'Fund Raising', 'active' => 'Active', 'completed' => 'Completed'] as $stage =>
             $loanTitle)
@@ -103,14 +103,18 @@
 
             <a class="pull-left"
                href="{{ route('borrower:public-profile', $loan->getBorrower()->getUser()->getUsername()) }}"><img
-                    src="{{ $loan->getBorrower()->getUser()->getProfilePictureUrl() }}" width="100" height="100"></a>
+                    src="{{ $loan->getBorrower()->getUser()->getProfilePictureUrl() }}" width="200" height="200"></a>
 
             <div class="media-body">
                 <ul class="list-unstyled">
                     <li>
                         <a href="{{ route('loan:index', $loan->getId()) }}"><h2>{{ $loan->getSummary() }}</h2></a>
+                        <p>{{ $loan->getBorrower()->getName() }} | {{ $loan->getBorrower()->getProfile()->getCity() }},
+                            {{ $loan->getBorrower()->getCountry()->getName() }}</p>
+                        <p>Category: <b>{{ $loan->getCategory()->getName() }}</b></p>
 
-                        <p>{{ $loan->getProposal() }}</p>
+                        <p>{{ Zidisha\Utility\Utility::truncate($loan->getProposal(), 200,
+                            array('exact' => false)) }} <a href="{{ route('loan:index', $loan->getId()) }}">Read More</a></p>
                         <strong>@lang('lend.loan.amount'): </strong> {{ $loan->getAmount() }} USD
                         <strong>@lang('lend.loan.interest-rate'): </strong> {{ $loan->getInterestRate() }} %
                         @include('partials/_progress', [ 'raised' => rand(1,100)])

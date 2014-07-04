@@ -5,6 +5,7 @@ namespace Zidisha\User;
 
 use Zidisha\Lender\Lender;
 use Zidisha\Lender\Profile;
+use Zidisha\Mail\LenderMailer;
 
 class UserService
 {
@@ -13,10 +14,12 @@ class UserService
      * @var UserQuery
      */
     private $userQuery;
+    private $lenderMailer;
 
-    public function __construct(UserQuery $userQuery)
+    public function __construct(UserQuery $userQuery, LenderMailer $lenderMailer)
     {
         $this->userQuery = $userQuery;
+        $this->lenderMailer = $lenderMailer;
     }
     
     public function joinUser($data)
@@ -35,6 +38,8 @@ class UserService
         $profile = new Profile();
         $lender->setProfile($profile);
         $lender->save();
+
+        $this->lenderMailer->sendLenderIntroMail($lender);
 
         return $lender;
     }
