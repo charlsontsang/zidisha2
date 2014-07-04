@@ -1,11 +1,13 @@
 <?php
 
+use Illuminate\Support\ViewErrorBag;
 use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Borrower\BorrowerService;
 use Zidisha\Borrower\Form\EditProfile;
-use Zidisha\Borrower\JoinLogQuery;
+use Zidisha\Borrower\Form\PersonalInformationForm;
 use Zidisha\Mail\BorrowerMailer;
 use Zidisha\Upload\UploadQuery;
+use Zidisha\Vendor\Facebook\FacebookService;
 
 class BorrowerController extends BaseController
 {
@@ -22,15 +24,21 @@ class BorrowerController extends BaseController
      * @var Zidisha\Mail\BorrowerMailer
      */
     private $borrowerMailer;
+    /**
+     * @var Zidisha\Vendor\Facebook\FacebookService
+     */
+    private $facebookService;
 
     public function __construct(
         EditProfile $editProfileForm,
         BorrowerService $borrowerService,
-        BorrowerMailer $borrowerMailer
+        BorrowerMailer $borrowerMailer,
+        FacebookService $facebookService
     ) {
         $this->editProfileForm = $editProfileForm;
         $this->borrowerService = $borrowerService;
         $this->borrowerMailer = $borrowerMailer;
+        $this->facebookService = $facebookService;
     }
 
     public function getPublicProfile($username)
@@ -150,18 +158,70 @@ class BorrowerController extends BaseController
 
     public function getPersonalInformation()
     {
-        $borrower =  \Auth::user()->getBorrower();
-        $information = $borrower->getPersonalInformation();
+        $borrower = \Auth::user()->getBorrower();
+
+        $personalInformation = $borrower->getPersonalInformation();
+
+        $form = new PersonalInformationForm($borrower);
+        $form->handleData($form->getDefaultData());
+
+        $errors = new ViewErrorBag();
+        $errors->put('default', $form->getMessageBag());
+        Session::flash('errors', $errors);
 
 
-        $form = new \Zidisha\Borrower\Form\personalInformationFrom($borrower);
+        $facebookJoinUrl = $this->borrowerService->validateFacebook($borrower);
+        $showMessage = !$borrower->getCountry()->isCountryBF();
 
-        dd($information);
-        return \View::make('borrower.personal-information', ['information' => $information, 'form' => $form]);
+        return \View::make(
+            'borrower.personal-information',
+            ['personalInformation' => $personalInformation, 'form' => $form, 'facebookJoinUrl' => $facebookJoinUrl, 'showMessage' => $showMessage]
+        );
     }
 
     public function postPersonalInformation()
     {
-        dd(\Input::all());
+        $borrower = \Auth::user()->getBorrower();
+
+        $form = new PersonalInformationForm($borrower);
+
+        $form->handleRequest(\Request::instance());
+
+        if ($form->isValid()) {
+            $data = $form->getNestedData();
+
+            $this->borrowerService->updatePersonalInformation($borrower, $data);
+
+            \Flash::success('Your profile has been updated.');
+            return Redirect::route('borrower:personal-information');
+        }
+
+        return Redirect::route('borrower:personal-information')->withForm($form);
+    }
+
+    public function getFacebookRedirect()
+    {
+        $facebookUser = $this->facebookService->getUserProfile();
+
+        if ($facebookUser) {
+            $errors = $this->borrowerService->validateConnectingFacebookUser($facebookUser);
+
+            if ($errors) {
+                foreach ($errors as $error) {
+                    Flash::error($error);
+                }
+                return Redirect::route('borrower:personal-information');
+            }
+        }
+
+        $facebookId = $facebookUser['id'];
+
+        $user = \Auth::user();
+
+        $user->setFacebookId($facebookId);
+        $user->save();
+
+        \Flash::success('Your facebook account is linked successfully.');
+        return Redirect::route('borrower:personal-information');
     }
 }
