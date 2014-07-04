@@ -17,6 +17,7 @@ class LoanValidator extends Validator
     
     public function validateMinimumInstallmentAmount($attribute, $value, $parameters)
     {
+        // TODO use Loan->calculateInstallmentCount
         return array_get($this->data, 'amount') / $value <= $parameters[0];
     }
 
