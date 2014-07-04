@@ -12,7 +12,7 @@ class FeatureFeedbackForm extends AbstractForm
     {
         return [
             'borrowerEmail'      => 'required|email',
-            'cc'         => '',
+            'cc'         => 'Emails',
             'replyTo' => 'required|email',
             'subject' => 'required',
             'message' => 'required',

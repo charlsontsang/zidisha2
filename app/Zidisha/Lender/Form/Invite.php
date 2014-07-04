@@ -26,11 +26,4 @@ class Invite extends AbstractForm {
         ];
     }
 
-    protected function validate($data, $rules)
-    {
-        \Validator::resolver(function ($translator, $data, $rules, $messages) {
-                return new InvitesValidator($translator, $data, $rules, $messages);
-            });
-        parent::validate($data, $rules);
-    }
 }

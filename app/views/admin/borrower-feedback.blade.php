@@ -15,7 +15,7 @@ Feedback
 {{ BootstrapForm::populate($form) }}
 
 {{ BootstrapForm::email('borrowerEmail', $borrower->getUser()->getEmail()) }}
-{{ BootstrapForm::text('cc') }}
+{{ BootstrapForm::text('cc', null, ['placeholder' => 'Enter emails separated by commas']) }}
 {{ BootstrapForm::email('replyTo') }}
 {{ BootstrapForm::text('subject', $form->getSubject()) }}
 (Please modify the default text as necessary to indicate what is needed to improve the loan application,
