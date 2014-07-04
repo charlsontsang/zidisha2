@@ -287,4 +287,22 @@ class BorrowerService
 
         return $feedbackMessages;
     }
+
+    public function getPreviousLoans(Borrower $borrower, Loan $loan)
+    {
+        $loans = LoanQuery::create()
+            ->filterByBorrower($borrower)
+            ->orderByAcceptedDate('desc')
+            ->find();
+
+        $previousLoans = [];
+
+        foreach($loans as $oneLoan){
+            if($loan->getId() != $oneLoan->getId()){
+                array_push($previousLoans, $oneLoan);
+            }
+        }
+
+        return $previousLoans;
+    }
 }

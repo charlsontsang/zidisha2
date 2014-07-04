@@ -667,6 +667,27 @@ class LoanService
         return $installments;
     }
 
+    public function calculateTotalInterest(Loan $loan)
+    {
+        if($loan->getInstallmentPeriod() == 0){
+
+            $totalInterest = ($loan->getNativeDisbursedAmount())*($loan->getInterestRate()/100)*($loan->getInstallmentCount()
+                    /12);
+        }else{
+            $totalInterest = ($loan->getNativeDisbursedAmount())*($loan->getInterestRate()/100)*($loan->getInstallmentCount()
+                    /52);
+        }
+        //TODO. change nativeAmount to USD
+
+        return $totalInterest;
+    }
+
+    public function calculateTransactionFee(Loan $loan)
+    {
+        return $loan->getNativeDisbursedAmount()*(5/100);
+        //TODO. change nativeAmount to USD
+    }
+
 }
 
 

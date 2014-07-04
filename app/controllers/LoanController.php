@@ -4,6 +4,7 @@ use SupremeNewMedia\Finance\Core\Currency;
 use SupremeNewMedia\Finance\Core\Money;
 use Zidisha\Balance\TransactionQuery;
 use Zidisha\Borrower\BorrowerQuery;
+use Zidisha\Borrower\BorrowerService;
 use Zidisha\Comment\CommentService;
 use Zidisha\Flash\Flash;
 use Zidisha\Lender\Exceptions\InsufficientLenderBalanceException;
@@ -36,19 +37,22 @@ class LoanController extends BaseController
      * @var Zidisha\Loan\LoanService
      */
     private $loanService;
+    private $borrowerService;
 
     public function  __construct(
         LoanQuery $loanQuery,
         CommentService $commentService,
         BidQuery $bidQuery,
         \Zidisha\Payment\Form\PlaceBidForm $bidForm,
-        LoanService $loanService
+        LoanService $loanService,
+        BorrowerService $borrowerService
     ) {
         $this->loanQuery = $loanQuery;
         $this->bidQuery = $bidQuery;
         $this->commentService = $commentService;
         $this->bidForm = $bidForm;
         $this->loanService = $loanService;
+        $this->borrowerService = $borrowerService;
     }
 
     public function getIndex($loanId)
@@ -80,9 +84,14 @@ class LoanController extends BaseController
             $raised = intval(($totalRaised/($loan->getAmount()->getAmount()))*100);
         }
 
+        $totalInterest = $this->loanService->calculateTotalInterest($loan);
+        $transactionFee = $this->loanService->calculateTransactionFee($loan);
+        $previousLoans = $this->borrowerService->getPreviousLoans($borrower, $loan);
+
         return View::make(
             'pages.loan',
-            compact('loan', 'borrower' , 'bids', 'totalRaised', 'stillNeeded', 'comments', 'raised'),
+            compact('loan', 'borrower' , 'bids', 'totalRaised', 'stillNeeded', 'comments', 'raised', 'totalInterest',
+                'transactionFee', 'previousLoans'),
             ['form' => $this->bidForm,]
         );
     }

@@ -29,55 +29,125 @@
     </div>
 
     <div class="col-xs-4">
-        <img src="{{ $loan->getBorrower()->getUser()->getProfilePictureUrl() }}" >
+        <img src="{{ $loan->getBorrower()->getUser()->getProfilePictureUrl() }}" width="300" height="300">
+
         <h2>{{ $loan->getBorrower()->getFirstName() }} {{ $loan->getBorrower()->getLastName() }}</h2>
         <h4>{{ $loan->getBorrower()->getCountry()->getName() }}</h4>
         <strong>Amount Requested: </strong> USD {{ $loan->getAmount() }}
 
+        <div class="panel panel-default">
+            <div class="panel-heading"><b>About {{ $borrower->getName() }}</b></div>
+            <div class="panel-body">
+                <p><b>On-Time Repayments:</b>
+                    <a href="#" class="repayment" data-toggle="tooltip">(?)</a>
+                    //TODO
+                </p>
+
+                @if($previousLoans != null)
+                <div class="DemoBS2">
+                    <!-- Toogle Buttons -->
+                    <a class="previous-loans" id="toggle-btn"
+                       data-toggle="collapse" data-target="#toggle-example">View Previous Loans</a>
+
+                    <div id="toggle-example" class="collapse in">
+                        @foreach($previousLoans as $oneLoan)
+                        <p><a href="{{ route('loan:index', $oneLoan->getId()) }}">USD {{ $oneLoan->getNativeAmount() }}
+                                {{ $oneLoan->getApplicationDate()->format('d-m-Y') }}
+                                {{-- TODO $oneLoan->getAcceptedDate()->format('d-m-Y')
+                                $oneLoan->getExpiredDate()->format('d-m-Y')
+                                TODO change nativeAmount to disbursedAmount in USD
+                                --}}
+                            </a>
+                        </p>
+                        @endforeach
+                    </div>
+                </div>
+                @endif
+
+                <p><b>Feedback Rating: </b> <a href="#" class="rating" data-toggle="tooltip">(?)</a>
+                    //TODO
+                </p>
+
+                <p><a href="#">View Lender Feedback</a></p>
+                <!-- Generated markup by the plugin -->
+
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading"><b>About this Loan</b></div>
+            <div class="panel-body">
+                <p><b>Loan Principal Disbursed: </b>USD {{ $loan->getNativeDisbursedAmount() }}</p>
+
+                <p><b>Date Disbursed: </b> {{ $loan->getDisbursedDate()->format('d-m-Y') }}</p>
+
+                <p><b>Repayment period: </b> <a href="#" class="repaymentPeriod" data-toggle="tooltip">(?)</a>
+                    {{ $loan->getInstallmentCount() }}
+                    @if($loan->getInstallmentPeriod() == 0)
+                    months
+                    @else
+                    weeks
+                    @endif
+                    //TODO check installment period
+                </p>
+
+                <p><b>Total Interest Due to Lenders: </b> <a href="#" class="totalInterest" data-toggle="tooltip">(?)</a>USD
+                    {{ $totalInterest }} ({{ $loan->getInterestRate() }}%)</p>
+
+                <p><b>Borrower Transaction Fees: </b> <a href="#" class="transactionFee" data-toggle="tooltip">(?)</a>USD
+                    {{ $transactionFee }} (5.00%)</p>
+
+                <p><b>Total Amount (Including Interest and Transaction Fee) to be Repaid: </b> <a href="#" class="repaidAmount"
+                                                                                                  data-toggle="tooltip">(?)</a>
+                    USD {{ $totalInterest+$transactionFee }} ({{5.00 + $loan->getInterestRate() }}%)
+                </p>
+            </div>
+        </div>
+
         @include('partials/_progress', [ 'raised' => $raised])
 
         @if($loan->isOpen())
-            <div>
-                {{ BootstrapForm::open(array('route' => 'loan:post-bid', 'translationDomain' => 'bid', 'id' => 'funds-upload')) }}
-                {{ BootstrapForm::populate($form) }}
+        <div>
+            {{ BootstrapForm::open(array('route' => 'loan:post-bid', 'translationDomain' => 'bid', 'id' => 'funds-upload')) }}
+            {{ BootstrapForm::populate($form) }}
 
-                {{ BootstrapForm::text('amount', null, ['id' => 'amount']) }}
-                {{ BootstrapForm::hidden('creditAmount', null, ['id' => 'credit-amount']) }}
-                {{ BootstrapForm::text('donationAmount', null, ['id' => 'donation-amount']) }}
+            {{ BootstrapForm::text('amount', null, ['id' => 'amount']) }}
+            {{ BootstrapForm::hidden('creditAmount', null, ['id' => 'credit-amount']) }}
+            {{ BootstrapForm::text('donationAmount', null, ['id' => 'donation-amount']) }}
 
-                {{ BootstrapForm::select('interestRate', $form->getRates()) }}
-                {{ BootstrapForm::hidden('loanId', $loan->getId()) }}
+            {{ BootstrapForm::select('interestRate', $form->getRates()) }}
+            {{ BootstrapForm::hidden('loanId', $loan->getId()) }}
 
-                {{ BootstrapForm::hidden('transactionFee', null, ['id' => 'transaction-fee-amount']) }}
-                {{ BootstrapForm::hidden('transactionFeeRate', null, ['id' => 'fee-amount-rate']) }}
-                {{ BootstrapForm::hidden('currentBalance', null, ['id' => 'current-balance']) }}
-                {{ BootstrapForm::hidden('totalAmount', null, ['id' => 'total-amount']) }}
+            {{ BootstrapForm::hidden('transactionFee', null, ['id' => 'transaction-fee-amount']) }}
+            {{ BootstrapForm::hidden('transactionFeeRate', null, ['id' => 'fee-amount-rate']) }}
+            {{ BootstrapForm::hidden('currentBalance', null, ['id' => 'current-balance']) }}
+            {{ BootstrapForm::hidden('totalAmount', null, ['id' => 'total-amount']) }}
 
-                {{ BootstrapForm::hidden('stripeToken', null, ['id' => 'stripe-token']) }}
-                {{ BootstrapForm::hidden('paymentMethod', null, ['id' => 'payment-method']) }}
+            {{ BootstrapForm::hidden('stripeToken', null, ['id' => 'stripe-token']) }}
+            {{ BootstrapForm::hidden('paymentMethod', null, ['id' => 'payment-method']) }}
 
-                @if($form->getCurrentBalance()->isPositive())
-                    {{ BootstrapForm::label("Current Balance") }}: {{ $form->getCurrentBalance() }}
-                    <br/>
-                @endif
+            @if($form->getCurrentBalance()->isPositive())
+            {{ BootstrapForm::label("Current Balance") }}: {{ $form->getCurrentBalance() }}
+            <br/>
+            @endif
 
-                {{ BootstrapForm::label("Payment Transfer Cost") }}:
-                USD <span id="fee-amount-display"></span>
+            {{ BootstrapForm::label("Payment Transfer Cost") }}:
+            USD <span id="fee-amount-display"></span>
 
-                <br/>
+            <br/>
 
-                {{ BootstrapForm::label("Total amount to be charged to your account") }}
-                USD <span id="total-amount-display"></span>
+            {{ BootstrapForm::label("Total amount to be charged to your account") }}
+            USD <span id="total-amount-display"></span>
 
-                <br/>
-                
-                <button id="stripe-payment" class="btn btn-primary">Pay With Card</button>
-                <input type="submit" id="paypal-payment" class="btn btn-primary" value="Pay With Paypal" name="submit_paypal">
-                <input type="submit" id="credit-payment" class="btn btn-primary" value="Pay" name="submit_credit">
+            <br/>
 
-                {{ BootstrapForm::close() }}
+            <button id="stripe-payment" class="btn btn-primary">Pay With Card</button>
+            <input type="submit" id="paypal-payment" class="btn btn-primary" value="Pay With Paypal" name="submit_paypal">
+            <input type="submit" id="credit-payment" class="btn btn-primary" value="Pay" name="submit_credit">
 
-            </div>
+            {{ BootstrapForm::close() }}
+
+        </div>
         @endif
 
         <br>
@@ -115,11 +185,49 @@
 @section('script-footer')
 <script src="https://checkout.stripe.com/checkout.js"></script>
 <script type="text/javascript">
-    $(function() {
+    $(function () {
         paymentForm({
             stripeToken: "{{ \Config::get('stripe.public_key') }}",
             email: "{{ \Auth::user()->getEmail() }}",
             amount: $('#amount')
+        });
+    });
+</script>
+<script type="text/javascript">
+    $('.repayment').tooltip({placement: 'bottom', title: 'The On-Time Repayment Rate is the percentage of all monthly or weekly loan repayment installments that this member has paid on time (within ten days of the due date), for all loans that he or she has taken since joining Zidisha. The number displayed in parentheses is the total number of monthly or weekly installments that have been due, over which the On-Time Repayment Rate is measured.'})
+</script>
+<script type="text/javascript">
+    $('.rating').tooltip({placement: 'bottom', title: 'The Feedback Rating is based on performance ratings assigned to the ' +
+        'borrower’s previous loans by Zidisha lenders. The Feedback Rating score is the percentage of all performance ratings ' +
+        'that are positive, and the number displayed in parentheses is the total number of performance ratings the borrower has earned.'})
+</script>
+<script type="text/javascript">
+    $('.repaymentPeriod').tooltip({placement: 'bottom', title: 'Number of months or weeks from disbursement until loan is fully' +
+        ' repaid'})
+</script>
+<script type="text/javascript">
+    $('.totalInterest').tooltip({placement: 'bottom', title: 'This is the annual interest rate the borrower will pay for the ' +
+        'amount that has been funded by lenders. Lenders may bid to finance the loan at their preferred interest rate. If more ' +
+        'bids are received than the amount needed to fund the loan, the borrower will accept the bids with the lowest proposed interest rates.' +
+
+        'All interest rates displayed on the Zidisha website are expressed as flat percentages of loan principal per year the ' +
+        'loan is held. For example, for a loan of USD 100, taken at 4% annual interest with a repayment period of six months, ' +
+        'the total interest amount will be USD 100 * 4% * (6 months / 12 months) = $2.' +
+
+        'The expression of interest rates as flat percentages of loan principal amounts is intended to make calculation of ' +
+        'interest amounts more intuitive for borrowers and for lenders, and to facilitate comparison with other microfinance ' +
+        'loans in borrowers\' communities, the majority of which also use the flat rate methodology to express interest rates.'})
+</script>
+<script type="text/javascript">
+    $('.transactionFee').tooltip({placement: 'bottom', title: 'A transaction fee paid to Zidisha, expressed as a total amount and as a flat annualized percentage of the loan principal amount.'})
+</script>
+<script type="text/javascript">
+    $('.repaidAmount').tooltip({placement: 'bottom', title: 'Interest plus transaction fees, expressed as a total amount and as a flat annualized percentage of the loan principal amount.'})
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.previous-loans').click(function () {
+            $("#toggle-example").collapse('toggle');
         });
     });
 </script>

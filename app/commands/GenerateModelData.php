@@ -381,7 +381,12 @@ class GenerateModelData extends Command
                 }
                 $loanCategory = $allCategories[array_rand($allCategories)];
                 $status = floatval($size / 7);
-                $borrower = $allBorrowers[$i - 1];
+
+                if($i > 50 && $i < 55 ){
+                    $borrower = $allBorrowers[50];
+                }else{
+                    $borrower = $allBorrowers[$i - 1];
+                }
 
                 $data = array();
                 $data['summary'] = $faker->sentence(8);
@@ -415,15 +420,21 @@ class GenerateModelData extends Command
                     $borrower->setLoanStatus(Loan::FUNDED);
                     $borrower->setActiveLoan($Loan);
                     $Loan->setStatus(Loan::FUNDED);
+                    $Loan->setNativeDisbursedAmount($amount);
+                    $Loan->setDisbursedDate(new \DateTime());
                     $Stage->setStatus(Loan::FUNDED);
                 } elseif ($i < ($status * 4)) {
                     $borrower->setLoanStatus(Loan::ACTIVE);
                     $borrower->setActiveLoan($Loan);
                     $Loan->setStatus(Loan::ACTIVE);
+                    $Loan->setAmountRaised($amount - $amount/3);
+                    $Loan->setDisbursedDate(new \DateTime());
                     $Stage->setStatus(Loan::ACTIVE);
                 } elseif ($i < ($status * 5)) {
                     $borrower->setLoanStatus(Loan::REPAID);
                     $borrower->setActiveLoan($Loan);
+                    $Loan->setNativeDisbursedAmount($amount);
+                    $Loan->setDisbursedDate(strtotime("-1 year"));
                     $Loan->setStatus(Loan::REPAID);
                     $Stage->setStatus(Loan::REPAID);
                 } elseif ($i < ($status * 6)) {
