@@ -2,6 +2,7 @@
 namespace Zidisha\Mail;
 
 
+use Carbon\Carbon;
 use Symfony\Component\Translation\Tests\String;
 use Zidisha\Lender\Invite;
 use Zidisha\Lender\Lender;
@@ -88,5 +89,17 @@ class LenderMailer
     public function sendLenderInviteCredit(Invite $invite)
     {
         //TODO
+    }
+
+    public function sendLenderIntroMail(Lender $lender)
+    {
+        $time = Carbon::create()->addDay();
+        $this->mailer->later($time, 'emails.lender.introduction',
+        [
+            'to' => $lender->getUser()->getEmail(),
+            'from' => 'service@zidisha.com',
+            'subject' => 'Welcome to Zidisha!'
+        ]
+        );
     }
 }

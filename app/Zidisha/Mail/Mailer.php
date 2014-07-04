@@ -45,4 +45,21 @@ class Mailer
             );
         }
     }
+
+    public function later($time, $view, $data)
+    {
+        if ($this->driver == 'laravel') {
+            Queue::later(
+                $time,
+                $view,
+                $data,
+                function ($message) use ($data) {
+                    $message
+                        ->to($data['to'])
+                        ->from($data['from'])
+                        ->subject($data['subject']);
+                }
+            );
+        }
+    }
 }
