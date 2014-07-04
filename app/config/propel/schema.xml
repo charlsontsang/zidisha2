@@ -630,7 +630,7 @@
             <unique-column name="verification_code" />
         </unique>
     </table>
-    
+
     <table name="borrower_contacts" phpName="Contact" namespace="Borrower">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="borrower_id" type="INTEGER" required="true"/>
@@ -650,5 +650,25 @@
         <column name="form" type="LONGVARCHAR" />
         <column name="email" type="VARCHAR" size="100" required="true"/>
         <column name="resumeCode" type="VARCHAR" required="true" />
+    </table>
+
+    <table name="borrower_feedback_messages" phpName="FeedbackMessage" namespace="Borrower">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="borrower_id" type="INTEGER" required="true"/>
+        <column name="type" type="ENUM" valueSet="loan, activation"/>
+        <column name="borrower_email" type="VARCHAR" size="100" required="true"/>
+        <column name="cc" type="VARCHAR"/>
+        <column name="reply_to" type="VARCHAR" required="true"/>
+        <column name="subject" type="VARCHAR" required="true"/>
+        <column name="message" type="LONGVARCHAR" required="true"/>
+        <column name="sent_at" type="TIMESTAMP" required="true"/>
+        <column name="sender_name" type="VARCHAR" required="true"/>
+        <column name="loan_id" type="INTEGER" size="11"/>
+        <foreign-key foreignTable="loans">
+            <reference local="loan_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="borrowers" phpName="LoanApplicant">
+            <reference local="borrower_id" foreign="id"/>
+        </foreign-key>
     </table>
 </database>

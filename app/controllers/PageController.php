@@ -37,4 +37,10 @@ class PageController extends BaseController {
     public function getVolunteerMentorFaq(){
         return View::make('borrower.volunteerMentor.frequently-asked-questions');
     }
+
+    public function getFeatureCriteria()
+    {
+        //TODO change links on this page
+        return View::make('borrower.feature-criteria');
+    }
 }

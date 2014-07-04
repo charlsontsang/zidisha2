@@ -31,6 +31,8 @@ Route::get('volunteer-mentor-code-of-ethics', array('uses' => 'PageController@ge
         'as' => 'page:volunteer-mentor-code-of-ethics'));
 Route::get('volunteer-mentor-faq', array('uses' => 'PageController@getVolunteerMentorFaq',
         'as' => 'page:volunteer-mentor-faq'));
+Route::get('feature-criteria', array('uses' => 'PageController@getFeatureCriteria',
+        'as' => 'page:loan-feature-criteria'));
 
 /**
  * Routes for Authentication
@@ -202,6 +204,10 @@ Route::group(
         Route::get('pending-activation', array('uses' => 'AdminController@getPendingActivation', 'as' => 'admin:pending-activation'));
         Route::get('pending-activation/{borrowerId}', array('uses' => 'AdminController@getBorrowerPendingActivation',
                 'as' => 'admin:pending-borrower-activation'));
+        Route::get('loan-feedback/{loanId}', array('uses' => 'AdminController@getLoanFeedback',
+                'as' => 'admin:loan-feedback'));
+        Route::post('loan-feedback', array('uses' => 'AdminController@postLoanFeedback',
+                'as' => 'admin:post-loan-feedback'));
     }
 );
 /**

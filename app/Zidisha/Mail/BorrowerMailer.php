@@ -3,6 +3,7 @@ namespace Zidisha\Mail;
 
 
 use Zidisha\Borrower\Borrower;
+use Zidisha\Borrower\FeedbackMessage;
 
 class BorrowerMailer{
 
@@ -69,5 +70,27 @@ class BorrowerMailer{
         ];
 
         $this->mailer->send('emails.borrower.join.volunteer-mentor-confirmation', $data);
+    }
+
+    public function sendLoanFeedbackMail(FeedbackMessage $feedbackMessage)
+    {
+        $data = [
+            'feedback' => $feedbackMessage->getMessage(),
+            'to'    => $feedbackMessage->getBorrowerEmail(),
+            'from'  => $feedbackMessage->getReplyTo(),
+            'subject' => $feedbackMessage->getSubject()
+        ];
+
+        $this->mailer->send('emails.borrower.feature-feedback', $data);
+
+        if($feedbackMessage->getCc() != null){
+            $emails = explode(",", $feedbackMessage->getCc());
+            foreach($emails as $email)
+            {
+                $email = trim($email);
+                $data['to'] = $email;
+                $this->mailer->send('emails.borrower.feature-feedback', $data);
+            }
+        }
     }
 }
