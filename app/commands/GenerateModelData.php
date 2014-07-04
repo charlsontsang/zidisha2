@@ -374,10 +374,10 @@ class GenerateModelData extends Command
             if ($model == "Loan") {
                 if ($i >= 30) {
                     $installmentDay = $i - (int)(25 - $i);
-                    $amount = 30 + ($i * 10);
+                    $amount = 30 + ($i * 100);
                 } else {
                     $installmentDay = $i;
-                    $amount = 30 + ($i * 20);
+                    $amount = 30 + ($i * 200);
                 }
                 $loanCategory = $allCategories[array_rand($allCategories)];
                 $status = floatval($size / 7);
