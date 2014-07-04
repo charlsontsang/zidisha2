@@ -75,6 +75,9 @@ class LoanService
             $this->changeLoanStage($con, $loan, null, Loan::OPEN);
         });
 
+        // TODO send mail to borrower
+        // TODO send mail to lenders
+        
         $this->addToLoanIndex($loan);
     }
 
