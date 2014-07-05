@@ -56,6 +56,8 @@ class LoanService
 
     public function applyForLoan(Borrower $borrower, $data)
     {
+        $exchangeRate = $this->currencyService->getExchangeRate($borrower->getCountry()->getCurrency());
+        
         $data['currencyCode'] = $borrower->getCountry()->getCurrencyCode();
 
         $loanCategory = CategoryQuery::create()
@@ -63,7 +65,8 @@ class LoanService
 
         $data['nativeAmount'] = $data['amount']; // TODO
         $data['amount'] = $this->currencyService->convertToUSD(
-            Money::create($data['nativeAmount'], $data['currencyCode'])
+            Money::create($data['nativeAmount'], $data['currencyCode']),
+            $exchangeRate
         )->getAmount();
 
         $loan = Loan::createFromData($data);
