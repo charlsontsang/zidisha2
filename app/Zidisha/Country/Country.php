@@ -18,7 +18,7 @@ class Country extends BaseCountry
 
     public function getCurrency()
     {
-        return Currency::valueOf($this->getCurrencyCode());
+        return Currency::create($this->getCurrencyCode());
     }
 
     public function isCountryBF()

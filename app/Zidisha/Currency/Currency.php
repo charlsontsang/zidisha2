@@ -91,6 +91,11 @@ class Currency
             throw new \InvalidArgumentException('Unknown currency code \''.$code.'\'.');
         }
     }
+    
+    public static function create($code = self::NONE)
+    {
+        return static::valueOf($code);
+    }
 
     /**
      * Is the given code valid?

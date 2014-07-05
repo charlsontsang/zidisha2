@@ -2,27 +2,32 @@
 namespace Zidisha\Currency;
 
 use Zidisha\Country\CountryQuery;
+use Zidisha\Currency\Exception\InvalidCurrencyExchangeException;
 
 class CurrencyService
 {
-    public function convertToUSD(Money $money, \DateTime $date = null)
+    public function convertToUSD(Money $money, ExchangeRate $exchangeRate)
     {
-        $exchangeRate = $this->getExchangeRate($money->getCurrency(), $date);
+        if ($exchangeRate->getCurrency() != $money->getCurrency()) {
+            throw new InvalidCurrencyExchangeException();
+        }
+        
         $rate = $exchangeRate->getRate();
-
         $amountInUSD = $money->divide($rate);
 
-        return Money::valueOf($amountInUSD->getAmount(), Currency::valueOf(Currency::CODE_USD));
+        return Money::create($amountInUSD->getAmount(), Currency::CODE_USD);
     }
 
-    public function convertFromUSD(Money $money, Currency $currency, \DateTime $date = null)
+    public function convertFromUSD(Money $money, Currency $currency, ExchangeRate $exchangeRate)
     {
-        $exchangeRate = $this->getExchangeRate($currency, $date);
+        if ($exchangeRate->getCurrency() != $currency) {
+            throw new InvalidCurrencyExchangeException();
+        }
+        
         $rate = $exchangeRate->getRate();
-
         $amount = $money->multiply($rate);
 
-        return Money::valueOf($amount->getAmount(), $currency);
+        return Money::create($amount->getAmount(), $currency);
     }
 
     public function getExchangeRate(Currency $currency, \DateTime $date = null)

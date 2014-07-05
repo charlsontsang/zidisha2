@@ -24,26 +24,50 @@ class CurrencyServiceCest
         // get exchange rate from one month ago
         $date = new \DateTime();
         $date->modify('-1 month');
-        $rateMonthAgo = $this->currencyService->getExchangeRate(Currency::valueOf(Currency::CODE_KES), $date);
+        $rateMonthAgo = $this->currencyService->getExchangeRate(Currency::create(Currency::CODE_KES), $date);
         verify($rateMonthAgo->getCurrencyCode())->equals(Currency::CODE_KES);
         verify($rateMonthAgo->getRate())->equals('75'); 
 
         // get current exchange rate
-        $rateNow = $this->currencyService->getExchangeRate(Currency::valueOf(Currency::CODE_KES));
+        $rateNow = $this->currencyService->getExchangeRate(Currency::create(Currency::CODE_KES));
         verify($rateNow->getCurrencyCode())->equals(Currency::CODE_KES);
         verify($rateNow->getRate())->equals('80');
     }
     
     public function testConvertCurrency(UnitTester $I)
     {
-        // get current exchange rate
-        $money = Money::valueOf('160', Currency::valueOf(Currency::CODE_KES));
-        $moneyUSD = Money::valueOf('2.0', Currency::valueOf(Currency::CODE_USD));
-        verify($this->currencyService->convertToUSD($money))->equals($moneyUSD);            
+        $exchangeRate = new \Zidisha\Currency\ExchangeRate();
+        $exchangeRate
+            ->setRate(80)
+            ->setCurrencyCode(Currency::CODE_KES);
         
-        // get current exchange rate
-        $money = Money::valueOf('240', Currency::valueOf(Currency::CODE_KES));
-        $moneyUSD = Money::valueOf('3.0', Currency::valueOf(Currency::CODE_USD));
-        verify($this->currencyService->convertFromUSD($moneyUSD, Currency::valueOf(Currency::CODE_KES)))->equals($money);
+        // convert to USD
+        $money = Money::create('160', Currency::CODE_KES);
+        $moneyUSD = Money::create('2.0', Currency::CODE_USD);
+        verify($this->currencyService->convertToUSD($money, $exchangeRate))->equals($moneyUSD);            
+        
+        // convert from USD
+        $money = Money::create('240', Currency::CODE_KES);
+        $moneyUSD = Money::create('3.0', Currency::CODE_USD);
+        verify($this->currencyService->convertFromUSD($moneyUSD, Currency::create(Currency::CODE_KES), $exchangeRate))->equals($money);
+        
+        $failed = false;
+        try {
+            $money = Money::create('160', Currency::CODE_XOF);
+            $this->currencyService->convertToUSD($money, $exchangeRate);
+        } catch (\Zidisha\Currency\Exception\InvalidCurrencyExchangeException $e) {
+            $failed = true;
+        }
+        
+        verify($failed)->true();
+
+        $failed = false;
+        try {
+            $this->currencyService->convertFromUSD($moneyUSD, Currency::create(Currency::CODE_XOF), $exchangeRate);
+        } catch (\Zidisha\Currency\Exception\InvalidCurrencyExchangeException $e) {
+            $failed = true;
+        }
+
+        verify($failed)->true();
     }
 }
