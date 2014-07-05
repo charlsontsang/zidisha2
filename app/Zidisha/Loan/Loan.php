@@ -133,4 +133,9 @@ class Loan extends BaseLoan
     {
         return $this->getStatus() == static::OPEN;
     }
+    
+    public function isActive()
+    {
+        return $this->getStatus() == static::ACTIVE;
+    }
 }

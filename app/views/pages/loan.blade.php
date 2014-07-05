@@ -74,6 +74,7 @@
             </div>
         </div>
 
+        @if($loan->isActive())
         <div class="panel panel-default">
             <div class="panel-heading"><b>About this Loan</b></div>
             <div class="panel-body">
@@ -103,6 +104,7 @@
                 </p>
             </div>
         </div>
+        @endif
 
         @include('partials/_progress', [ 'raised' => $raised])
 
@@ -188,7 +190,7 @@
     $(function () {
         paymentForm({
             stripeToken: "{{ \Config::get('stripe.public_key') }}",
-            email: "{{ \Auth::user()->getEmail() }}",
+            email: "{{ \Auth::check() ? \Auth::user()->getEmail() : '' }}",
             amount: $('#amount')
         });
     });

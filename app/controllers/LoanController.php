@@ -30,7 +30,7 @@ class LoanController extends BaseController
     protected $bidQuery;
 
     /**
-     * @var Zidisha\Loan\Form\BidForm
+     * @var Zidisha\Payment\Form\PlaceBidForm
      */
     protected $bidForm;
     /**

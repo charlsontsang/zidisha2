@@ -3,6 +3,7 @@ namespace Zidisha\Payment\Form;
 
 
 use Zidisha\Balance\TransactionQuery;
+use Zidisha\Currency\Money;
 use Zidisha\Form\AbstractForm;
 use Zidisha\Payment\Form\Validator\GreaterThanValidator;
 use Zidisha\Payment\PaymentBus;
@@ -93,9 +94,13 @@ abstract class AbstractPaymentForm extends AbstractForm
     public function getCurrentBalance()
     {
         if ($this->currentBalance === null) {
-            $this->currentBalance = TransactionQuery::create()
-                ->filterByUserId(\Auth::user()->getId())
-                ->getTotalAmount();
+            if (!\Auth::check()) {
+                $this->currentBalance = Money::create(0);
+            } else {
+                $this->currentBalance = TransactionQuery::create()
+                    ->filterByUserId(\Auth::user()->getId())
+                    ->getTotalAmount();
+            }
         }
 
         return $this->currentBalance;
