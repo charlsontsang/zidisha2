@@ -358,14 +358,14 @@ class LoanService
             if ($changedBid['type'] == 'out_bid') {
                 $this->transactionService->addOutBidTransaction(
                     $con,
-                    $changedBid['acceptedAmount'],
+                    $changedBid['changedAmount'],
                     $loan,
                     $changedBid['bid']->getLender()
                 );
             } elseif ($changedBid['type'] == 'update_bid') {
                 $this->transactionService->addUpdateBidTransaction(
                     $con,
-                    $changedBid['acceptedAmount'],
+                    $changedBid['changedAmount'],
                     $loan,
                     $changedBid['bid']->getLender()
                 );
