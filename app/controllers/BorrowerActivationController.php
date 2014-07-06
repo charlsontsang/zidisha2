@@ -2,6 +2,7 @@
 
 use Zidisha\Borrower\BorrowerActivationService;
 use Zidisha\Borrower\BorrowerQuery;
+use Zidisha\Borrower\Form\Activation\FeedbackForm;
 use Zidisha\Borrower\Form\Activation\ReviewForm;
 
 class BorrowerActivationController extends BaseController
@@ -40,15 +41,19 @@ class BorrowerActivationController extends BaseController
             ->filterById($borrowerId)
             ->findOne();
 
-        $reviewForm = new ReviewForm($borrower);
-
         if (!$borrower) {
             App::abort(404);
         }
 
+        $feedbackForm = new FeedbackForm($borrower);
+        $reviewForm = new ReviewForm($borrower);
+
+        // TODO show feedbackForm when review completed?
+        $feedbackMessages = $this->borrowerActivationService->getFeedbackMessages($borrower);
+        
         return View::make(
             'admin.borrower-activation.edit',
-            compact('borrower', 'reviewForm')
+            compact('borrower', 'feedbackForm', 'reviewForm', 'feedbackMessages')
         );
     }
 
@@ -58,7 +63,7 @@ class BorrowerActivationController extends BaseController
             ->filterById($borrowerId)
             ->findOne();
 
-        if (!$borrower) {
+        if (!$borrower || ($borrower->getReview() && $borrower->getReview()->isCompleted())) {
             App::abort(404);
         }
 
@@ -74,5 +79,30 @@ class BorrowerActivationController extends BaseController
         $review = $this->borrowerActivationService->review($borrower, Auth::user(), $data);
 
         return Redirect::route('admin:borrower-activation:edit', [$borrower->getId(), '#review']);
+    }
+
+    public function postFeedback($borrowerId)
+    {
+        $borrower = BorrowerQuery::create()
+            ->filterById($borrowerId)
+            ->findOne();
+
+        if (!$borrower) {
+            App::abort(404);
+        }
+        
+        $feedbackForm = new FeedbackForm($borrower);
+        $feedbackForm->handleRequest(Request::instance());
+
+        if ($feedbackForm->isValid()) {
+            $data = $feedbackForm->getData();
+
+            $this->borrowerActivationService->addActivationFeedback($borrower, $data);
+
+            \Flash::success("Feedback successfully sent!");
+            return Redirect::route('admin:borrower-activation:edit', [$borrower->getId(), '#review']);
+        }
+
+        return Redirect::route('admin:borrower-activation:edit', [$borrower->getId(), '#review'])->withForm($feedbackForm);
     }
 }

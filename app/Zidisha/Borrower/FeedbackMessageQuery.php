@@ -18,4 +18,9 @@ use Zidisha\Borrower\Base\FeedbackMessageQuery as BaseFeedbackMessageQuery;
 class FeedbackMessageQuery extends BaseFeedbackMessageQuery
 {
 
+    public function filterByActivationType()
+    {
+        return $this->filterByType(FeedbackMessage::ACTIVATION_TYPE);
+    }
+    
 } // FeedbackMessageQuery

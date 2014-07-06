@@ -1,6 +1,9 @@
 <?php
 
+
 use Illuminate\Support\ViewErrorBag;
+use Zidisha\Borrower\Borrower;
+use Zidisha\Borrower\BorrowerActivationService;
 use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Borrower\BorrowerService;
 use Zidisha\Borrower\Form\EditProfile;
@@ -28,17 +31,24 @@ class BorrowerController extends BaseController
      * @var Zidisha\Vendor\Facebook\FacebookService
      */
     private $facebookService;
+    /*
+     * @var Zidisha\Borrower\BorrowerActivationService
+     */
+    private $borrowerActivationService;
+
 
     public function __construct(
         EditProfile $editProfileForm,
         BorrowerService $borrowerService,
         BorrowerMailer $borrowerMailer,
-        FacebookService $facebookService
+        FacebookService $facebookService,
+        BorrowerActivationService $borrowerActivationService
     ) {
         $this->editProfileForm = $editProfileForm;
         $this->borrowerService = $borrowerService;
         $this->borrowerMailer = $borrowerMailer;
         $this->facebookService = $facebookService;
+        $this->borrowerActivationService = $borrowerActivationService;
     }
 
     public function getPublicProfile($username)
@@ -118,9 +128,11 @@ class BorrowerController extends BaseController
 
         $loan = $borrower->getActiveLoan();
 
-        if($loan){
         if ($loan){
             $feedbackMessages = $this->borrowerService->getFeedbackMessages($loan);
+        }
+        if ($borrower->isActivationPending()) {
+            $feedbackMessages = $this->borrowerActivationService->getFeedbackMessages($borrower);
         }
 
         return View::make('borrower.dashboard', compact('verified', 'volunteerMentor', 'feedbackMessages'));

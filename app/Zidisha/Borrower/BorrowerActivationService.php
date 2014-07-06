@@ -3,11 +3,23 @@
 namespace Zidisha\Borrower;
 
 
+use Zidisha\Mail\BorrowerMailer;
 use Zidisha\User\User;
 use Zidisha\Vendor\PropelDB;
 
 class BorrowerActivationService
 {
+
+    /**
+     * @var \Zidisha\Mail\BorrowerMailer
+     */
+    private $borrowerMailer;
+
+    public function __construct(BorrowerMailer $borrowerMailer)
+    {
+        $this->borrowerMailer = $borrowerMailer;
+    }
+    
     public function review(Borrower $borrower, User $user, $data)
     {
         $review = ReviewQuery::create()
@@ -35,5 +47,35 @@ class BorrowerActivationService
         });
         
         return $review;
+    }
+
+    public function addActivationFeedback(Borrower $borrower, $data)
+    {
+        $feedbackMessage =  new FeedbackMessage();
+        $feedbackMessage
+            ->setCc($data['cc'])
+            ->setReplyTo($data['replyTo'])
+            ->setSubject($data['subject'])
+            ->setMessage($data['message'])
+            ->setBorrowerEmail($data['borrowerEmail'])
+            ->setSenderName($data['senderName'])
+            ->setSentAt(new \DateTime())
+            ->setBorrower($borrower)
+            ->setType(FeedbackMessage::ACTIVATION_TYPE);
+
+        $feedbackMessage->save();
+
+        $this->borrowerMailer->sendFeedbackMail($feedbackMessage);
+
+        return $feedbackMessage;
+    }
+
+    public function getFeedbackMessages(Borrower $borrower)
+    {
+        return FeedbackMessageQuery::create()
+            ->filterByActivationType()
+            ->filterByBorrower($borrower)
+            ->orderByCreatedAt('desc')
+            ->find();
     }
 }
