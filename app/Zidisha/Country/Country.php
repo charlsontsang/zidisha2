@@ -21,12 +21,8 @@ class Country extends BaseCountry
         return Currency::create($this->getCurrencyCode());
     }
 
-    public function isCountryBF()
+    public function isFacebookRequired()
     {
-        if ($this->getCountryCode() == 'BF'){
-            return true;
-        }
-
-        return false;
+        return ! $this->getCountryCode() == 'BF';
     }
 }
