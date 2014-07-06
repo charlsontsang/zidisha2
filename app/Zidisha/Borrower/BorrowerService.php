@@ -368,25 +368,10 @@ class BorrowerService
     {
         $user = $borrower->getUser();
         $facebookId = $user->getFacebookId();
+
         $createdAt = $user->getCreatedAt();
-        $country = $borrower->getCountry();
+        $requiredDate = \DateTime::createFromFormat('j-M-Y', '1-Jan-2014');
 
-        $january = \DateTime::createFromFormat('j-M-Y', '1-Jan-2014');
-        $facebookVerificationApplicable = $createdAt > $january;
-
-        if (!$facebookId) {
-            if ($facebookVerificationApplicable && !$country->isCountryBF()) {
-                \Flash::error('Facebook verification required.');
-            }
-        }
-
-        $facebookJoinUrl = null;
-        if (!$facebookId) {
-            $facebookJoinUrl = $this->facebookService->getLoginUrl(
-                'borrower:facebook-verification',
-                ['scope' => 'email,user_location,publish_stream,read_stream']
-            );
-        }
         $borrowerRequiresFacebook = $borrower->getCountry()->isFacebookRequired();
 
         return $borrowerRequiresFacebook && !$facebookId && ($createdAt > $requiredDate);
