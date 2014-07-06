@@ -211,6 +211,7 @@ Route::group(
                 'as' => 'admin:borrower-activation:edit'));
         Route::post('borrower-activation/{borrowerId}/review', array('uses' => 'BorrowerActivationController@postReview', 'as' => 'admin:borrower-activation:review'));
         Route::post('borrower-activation/{borrowerId}/feedback', array('uses' => 'BorrowerActivationController@postFeedback', 'as' => 'admin:borrower-activation:feedback'));
+        Route::post('borrower-activation/{borrowerId}/verification', array('uses' => 'BorrowerActivationController@postVerification', 'as' => 'admin:borrower-activation:verification'));
         Route::get('loan-feedback/{loanId}', array('uses' => 'AdminController@getLoanFeedback',
                 'as' => 'admin:loan-feedback'));
         Route::post('loan-feedback', array('uses' => 'AdminController@postLoanFeedback',

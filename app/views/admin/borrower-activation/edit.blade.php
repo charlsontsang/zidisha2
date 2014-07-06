@@ -78,5 +78,7 @@ Pending Borrower Activation
     </div>
 </div>
 @include('admin.borrower-activation.feedback', compact('feedbackForm', 'borrower', 'feedbackMessages'))
+
+@include('admin.borrower-activation.verification', compact('verificationForm', 'borrower'))
 @endif
 @stop

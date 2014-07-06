@@ -18,4 +18,9 @@ use Zidisha\Borrower\Base\BorrowerQuery as BaseBorrowerQuery;
 class BorrowerQuery extends BaseBorrowerQuery
 {
 
+    public function filterPendingActivation()
+    {
+        return $this->filterByActivationStatus(Borrower::ACTIVATION_PENDING);
+    }
+    
 } // BorrowerQuery

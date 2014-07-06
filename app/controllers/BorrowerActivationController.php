@@ -4,6 +4,7 @@ use Zidisha\Borrower\BorrowerActivationService;
 use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Borrower\Form\Activation\FeedbackForm;
 use Zidisha\Borrower\Form\Activation\ReviewForm;
+use Zidisha\Borrower\Form\Activation\VerificationForm;
 
 class BorrowerActivationController extends BaseController
 {
@@ -24,6 +25,7 @@ class BorrowerActivationController extends BaseController
 
         $paginator = BorrowerQuery::create()
             ->filterByVerified(true)
+            ->filterPendingActivation()
             ->orderByCreatedAt() // Todo registration date
             ->joinWith('Profile')
             ->paginate($page, 50);
@@ -45,15 +47,16 @@ class BorrowerActivationController extends BaseController
             App::abort(404);
         }
 
-        $feedbackForm = new FeedbackForm($borrower);
         $reviewForm = new ReviewForm($borrower);
+        $feedbackForm = new FeedbackForm($borrower);
+        $verificationForm = new VerificationForm($borrower);
 
         // TODO show feedbackForm when review completed?
         $feedbackMessages = $this->borrowerActivationService->getFeedbackMessages($borrower);
         
         return View::make(
             'admin.borrower-activation.edit',
-            compact('borrower', 'feedbackForm', 'reviewForm', 'feedbackMessages')
+            compact('borrower', 'reviewForm', 'feedbackForm', 'verificationForm', 'feedbackMessages')
         );
     }
 
@@ -78,7 +81,9 @@ class BorrowerActivationController extends BaseController
         
         $review = $this->borrowerActivationService->review($borrower, Auth::user(), $data);
 
-        return Redirect::route('admin:borrower-activation:edit', [$borrower->getId(), '#review']);
+        $fragment = $review->isCompleted() ? '#verification' : '#review';
+        
+        return Redirect::route('admin:borrower-activation:edit', [$borrower->getId(), $fragment]);
     }
 
     public function postFeedback($borrowerId)
@@ -104,5 +109,29 @@ class BorrowerActivationController extends BaseController
         }
 
         return Redirect::route('admin:borrower-activation:edit', [$borrower->getId(), '#review'])->withForm($feedbackForm);
+    }
+
+    public function postVerification($borrowerId)
+    {
+        $borrower = BorrowerQuery::create()
+            ->filterById($borrowerId)
+            ->findOne();
+
+        if (!$borrower || ($borrower->getReview() && !$borrower->getReview()->isCompleted())) {
+            App::abort(404);
+        }
+
+        $verificationForm = new VerificationForm($borrower);
+
+        if (!$verificationForm->isValid()) {
+            return Redirect::route('admin:borrower-activation:edit', [$borrower->getId(), '#verification']);
+        }
+
+        $data = [];
+        $data['isEligibleByAdmin'] = (boolean) Input::get('isEligibleByAdmin');
+
+        $this->borrowerActivationService->verify($borrower, Auth::user(), $data);
+
+        return Redirect::route('admin:borrower-activation:edit', [$borrower->getId()]);
     }
 }

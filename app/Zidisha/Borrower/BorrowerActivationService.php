@@ -3,6 +3,7 @@
 namespace Zidisha\Borrower;
 
 
+use Zidisha\Borrower\Borrower;
 use Zidisha\Mail\BorrowerMailer;
 use Zidisha\User\User;
 use Zidisha\Vendor\PropelDB;
@@ -77,5 +78,11 @@ class BorrowerActivationService
             ->filterByBorrower($borrower)
             ->orderByCreatedAt('desc')
             ->find();
+    }
+
+    public function verify(Borrower $borrower, User $user, $data)
+    {
+        $borrower->setActivationStatus($data['isEligibleByAdmin'] ? Borrower::ACTIVATION_APPROVED : Borrower::ACTIVATION_DECLINED);
+        $borrower->save();
     }
 }
