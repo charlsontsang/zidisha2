@@ -17,15 +17,9 @@ Join the global P2P microlending movement
 
     {{ BootstrapForm::file('picture') }}
 
-    {{ BootstrapForm::text('username') }}
-
     {{ BootstrapForm::password('password') }}
 
     {{ BootstrapForm::password('password_confirmation') }}
-
-    {{ BootstrapForm::text('firstName') }}
-
-    {{ BootstrapForm::text('lastName') }}
 
     {{ BootstrapForm::text('email') }}
 

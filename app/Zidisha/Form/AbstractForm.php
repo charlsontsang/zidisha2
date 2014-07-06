@@ -4,6 +4,7 @@ namespace Zidisha\Form;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Contracts\MessageProviderInterface;
+use Zidisha\Utility\Utility;
 
 abstract class AbstractForm implements MessageProviderInterface
 {
@@ -95,26 +96,7 @@ abstract class AbstractForm implements MessageProviderInterface
     public function getNestedData()
     {
         $data = $this->getData();
-        $nestedData = [];
-        
-        foreach ($data as $k => $v) {
-            $keys = explode('_', $k);
-            $count = count($keys);
-            $parent = &$nestedData;
-            foreach ($keys as $key) {
-                if ($count == 1) {
-                    $parent[$key] = $v;
-                } else {
-                    if (!isset($parent[$key])) {
-                        $parent[$key] = [];
-                    }
-                    $parent = &$parent[$key];
-                }
-                $count -= 1;
-            }
-        }
-        
-        return $nestedData;
+
+        return Utility::nestedArray($data);
     }
-    
 } 

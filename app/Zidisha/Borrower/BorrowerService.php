@@ -10,6 +10,7 @@ use Zidisha\Upload\Upload;
 use Zidisha\User\User;
 use Zidisha\User\UserQuery;
 use Zidisha\Vendor\Facebook\FacebookService;
+use Zidisha\Vendor\PropelDB;
 
 class BorrowerService
 {
@@ -32,7 +33,7 @@ class BorrowerService
         $volunteerMentor = VolunteerMentorQuery::create()
             ->findOneByBorrowerId($data['volunteerMentorId']);
         $referrer = BorrowerQuery::create()
-            ->findOneById($data['members']);
+            ->findOneById($data['referrerId']);
 
         $user = new User();
         $user->setUsername($data['username']);
@@ -50,7 +51,7 @@ class BorrowerService
 
         $profile = new Profile();
         $profile->setAddress($data['address']);
-        $profile->setAddressInstructions($data['addressInstruction']);
+        $profile->setAddressInstructions($data['addressInstructions']);
         $profile->setCity($data['city']);
         $profile->setNationalIdNumber($data['nationalIdNumber']);
         $profile->setPhoneNumber($data['phoneNumber']);
@@ -111,12 +112,68 @@ class BorrowerService
         return $borrower;
     }
 
+    public function updatePersonalInformation(Borrower $borrower, $data)
+    {
+        $updatedContacts = [];
+        PropelDB::transaction(function($con) use($borrower, $data, $updatedContacts) {
+            $profile = $borrower->getProfile();
+            $profile->setAddress($data['address']);
+            $profile->setAddressInstructions($data['addressInstruction']);
+            $profile->setCity($data['city']);
+            $profile->setNationalIdNumber($data['nationalIdNumber']);
+            $profile->setPhoneNumber($data['phoneNumber']);
+            $profile->setAlternatePhoneNumber($data['alternatePhoneNumber']);
+            $profile->save($con);
+
+            $communityLeader = $borrower->getCommunityLeader();
+
+            if ($communityLeader->getPhoneNumber() != $data['communityLeader']['phoneNumber']) {
+                $updatedContacts[] = $communityLeader;
+            }
+
+            $communityLeader
+                ->setFirstName($data['communityLeader']['firstName'])
+                ->setLastName($data['communityLeader']['lastName'])
+                ->setPhoneNumber($data['communityLeader']['phoneNumber'])
+                ->setDescription($data['communityLeader']['description']);
+            $communityLeader->save($con);
+
+            foreach ($borrower->getFamilyMembers() as $i => $familyMember) {
+                if ($familyMember->getPhoneNumber() != $data['familyMember'][$i + 1]['phoneNumber']) {
+                    $updatedContacts[] = $familyMember;
+                }
+
+                $familyMember
+                    ->setFirstName($data['familyMember'][$i + 1]['firstName'])
+                    ->setLastName($data['familyMember'][$i + 1]['lastName'])
+                    ->setPhoneNumber($data['familyMember'][$i + 1]['phoneNumber'])
+                    ->setDescription($data['familyMember'][$i + 1]['description']);
+                $familyMember->save($con);
+            }
+
+            foreach ($borrower->getNeighbors() as $i => $neighbor) {
+
+                if ($neighbor->getPhoneNumber() != $data['neighbor'][$i + 1]['phoneNumber']) {
+                    $updatedContacts[] = $neighbor;
+                }
+
+                $neighbor
+                    ->setFirstName($data['neighbor'][$i + 1]['firstName'])
+                    ->setLastName($data['neighbor'][$i + 1]['lastName'])
+                    ->setPhoneNumber($data['neighbor'][$i + 1]['phoneNumber'])
+                    ->setDescription($data['neighbor'][$i + 1]['description']);
+                $neighbor->save($con);
+            }
+        });
+
+        foreach ($updatedContacts as $contact) {
+            $this->borrowerSmsService->sendBorrowerJoinedContactConfirmationSms($contact);
+        }
+    }
+
     public function editBorrower(Borrower $borrower, $data, $files = [])
     {
-        $borrower->setFirstName($data['firstName']);
-        $borrower->setLastName($data['lastName']);
         $borrower->getUser()->setEmail($data['email']);
-        $borrower->getUser()->setUsername($data['username']);
         $borrower->getProfile()->setAboutMe($data['aboutMe']);
         $borrower->getProfile()->setAboutBusiness($data['aboutBusiness']);
 
@@ -288,6 +345,7 @@ class BorrowerService
         return $feedbackMessages;
     }
 
+
     public function getPreviousLoans(Borrower $borrower, Loan $loan)
     {
         $loans = LoanQuery::create()
@@ -304,5 +362,18 @@ class BorrowerService
         }
 
         return $previousLoans;
+    }
+
+    public function isFacebookRequired(Borrower $borrower)
+    {
+        $user = $borrower->getUser();
+        $facebookId = $user->getFacebookId();
+
+        $createdAt = $user->getCreatedAt();
+        $requiredDate = \DateTime::createFromFormat('j-M-Y', '1-Jan-2014');
+
+        $borrowerRequiresFacebook = $borrower->getCountry()->isFacebookRequired();
+
+        return $borrowerRequiresFacebook && !$facebookId && ($createdAt > $requiredDate);
     }
 }

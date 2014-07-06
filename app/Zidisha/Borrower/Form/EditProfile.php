@@ -15,9 +15,6 @@ class EditProfile extends AbstractForm
     public function getRules($data)
     {
         return [
-            'username'      => 'required|alpha_num',
-            'firstName'     => 'required|alpha_num',
-            'lastName'      => 'required|alpha_num',
             'email'         => 'required|email',
             'password'      => 'confirmed',
             'aboutMe'       => '',
@@ -38,9 +35,6 @@ class EditProfile extends AbstractForm
         $borrower = \Auth::user()->getBorrower();
         
         return [
-            'username'      => $borrower->getUser()->getUsername(),
-            'firstName'     => $borrower->getFirstName(),
-            'lastName'      => $borrower->getLastName(),
             'email'         => $borrower->getUser()->getEmail(),
             'aboutMe'       => $borrower->getProfile()->getAboutMe(),
             'aboutBusiness' => $borrower->getProfile()->getAboutBusiness(),

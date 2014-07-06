@@ -145,6 +145,11 @@ Route::group(
     array('prefix' => 'borrower', 'before' => 'auth|hasRole:borrower'),
     function () {
 
+        Route::get('personal-information', array('uses' => 'BorrowerController@getPersonalInformation', 'as' => 'borrower:personal-information'));
+        Route::post('personal-information', array('uses' => 'BorrowerController@postPersonalInformation', 'as' => 'borrower:post-personal-information'));
+
+        Route::get('facebook/verification', array('uses' => 'BorrowerController@getFacebookRedirect', 'as' => 'borrower:facebook-verification'));
+
         Route::get('profile/edit', array('uses' => 'BorrowerController@getEditProfile', 'as' => 'borrower:edit-profile'));
         Route::post(
             'profile/edit',
