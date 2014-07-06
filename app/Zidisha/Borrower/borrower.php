@@ -7,11 +7,16 @@ use Zidisha\Borrower\Base\Borrower as BaseBorrower;
 class Borrower extends BaseBorrower
 {
 
+    // TODO move to Payment?
     const PAYMENT_COMPLETE = 1;
     const PAYMENT_INCOMPLETE = 2;
     const PAYMENT_PROCESSED = 3;
     const PAYMENT_FAILED = 4;
     const PAYMENT_DELETED = 5;
+
+    const ACTIVATION_PENDING  = 'pending';
+    const ACTIVATION_APPROVED = 'approved';
+    const ACTIVATION_DECLINED = 'declined';
 
     public function getName(){
         return $this->getFirstName() . " " . $this->getLastName();
@@ -93,4 +98,20 @@ class Borrower extends BaseBorrower
 
         return $data;
     }
+
+    public function isActivationPending()
+    {
+        return $this->getActivationStatus() == static::ACTIVATION_PENDING;
+    }
+    
+    public function isActivationDeclined()
+    {
+        return $this->getActivationStatus() == static::ACTIVATION_DECLINED;
+    }
+    
+    public function isActivationApproved()
+    {
+        return $this->getActivationStatus() == static::ACTIVATION_APPROVED;
+    }
+
 }
