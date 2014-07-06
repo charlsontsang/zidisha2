@@ -16,6 +16,7 @@ Pending Activation
         <th>Completed On</th>
         <th>Last Modified</th>
         <th>Status</th>
+        <th></th>
     </tr>
     </thead>
     <tbody>
@@ -49,8 +50,11 @@ Pending Activation
         </td>
         <td>
             TODO
-            <a href="{{ route('admin:borrower-activation:edit', $borrower->getId()) }}">{{ 'Check Profile' }}
-                 </a>
+        </td>
+        <td>
+            <a href="{{ route('admin:borrower-activation:edit', $borrower->getId()) }}">
+                <i class="fa fa-pencil-square-o fa-lg"></i>
+            </a>
         </td>
     </tr>
     @endforeach
