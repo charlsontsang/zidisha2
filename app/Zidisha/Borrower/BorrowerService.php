@@ -338,11 +338,10 @@ class BorrowerService
 
     public function getFeedbackMessages(Loan $loan)
     {
-        $feedbackMessages = FeedbackMessageQuery::create()
+        return FeedbackMessageQuery::create()
             ->filterByLoan($loan)
+            ->orderByCreatedAt('desc')
             ->find();
-
-        return $feedbackMessages;
     }
 
 

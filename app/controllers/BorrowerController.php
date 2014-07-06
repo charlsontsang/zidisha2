@@ -109,6 +109,7 @@ class BorrowerController extends BaseController
 
     public function getDashboard()
     {
+        /** @var Borrower $borrower */
         $borrower = \Auth::User()->getBorrower();
         $verified = $borrower->getVerified();
 
@@ -118,6 +119,7 @@ class BorrowerController extends BaseController
         $loan = $borrower->getActiveLoan();
 
         if($loan){
+        if ($loan){
             $feedbackMessages = $this->borrowerService->getFeedbackMessages($loan);
         }
 

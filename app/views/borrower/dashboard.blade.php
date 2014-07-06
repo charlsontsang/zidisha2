@@ -27,15 +27,6 @@ Telephone: {{ $volunteerMentor->getProfile()->getPhoneNumber() }}
 @endif
 
 <br><br>
-@if($feedbackMessages != null)
-@foreach($feedbackMessages as $feedbackMessage)
-<div>
-    <p>{{ $feedbackMessage->getSubject() }} -  {{ $feedbackMessage->getSentAt()->format('d-m-Y') }}</p>
-    <p>
-        {{ $feedbackMessage->getMessage() }}
-    </p>
-</div>
-@endforeach
-@endif
+@include('borrower.dashboard.feedback', compact('feedbackMessages'))
 
 @stop
