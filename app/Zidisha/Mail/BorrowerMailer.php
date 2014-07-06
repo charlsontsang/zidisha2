@@ -104,4 +104,30 @@ class BorrowerMailer{
 
         $this->mailer->send('emails.borrower.loan-confirmation', $data);
     }
+
+    public function sendApprovedConfirmationMail(Borrower $borrower)
+    {
+        $subject = \Lang::get('borrowerActivation.email.approved.subject', ['name' => $borrower->getName()]);
+        $data = [
+            'borrowerName' => $borrower->getName(),
+            'to'           => $borrower->getUser()->getEmail(),
+            'from'         => 'service@zidisha.org',
+            'subject'      => $subject,
+        ];
+
+        $this->mailer->send('emails.borrower.activation.approved-confirmation', $data);
+    }
+
+    public function sendDeclinedConfirmationMail(Borrower $borrower)
+    {
+        $subject = \Lang::get('borrowerActivation.email.declined.subject', ['name' => $borrower->getName()]);
+        $data = [
+            'borrowerName' => $borrower->getName(),
+            'to'           => $borrower->getUser()->getEmail(),
+            'from'         => 'service@zidisha.org',
+            'subject'      => $subject,
+        ];
+
+        $this->mailer->send('emails.borrower.activation.declined-confirmation', $data);
+    }
 }

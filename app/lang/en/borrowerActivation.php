@@ -28,5 +28,13 @@ Once again thank you for your application to join Zidisha.
 Best regards,
 
 Zidisha Team',
+    ],
+    'email' => [
+        'approved' => [
+            'subject' => 'Zidisha Account Activation',
+        ],
+        'declined' => [
+            'subject' => 'Message from Zidisha',
+        ]
     ]
 ];

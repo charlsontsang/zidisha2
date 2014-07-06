@@ -84,5 +84,11 @@ class BorrowerActivationService
     {
         $borrower->setActivationStatus($data['isEligibleByAdmin'] ? Borrower::ACTIVATION_APPROVED : Borrower::ACTIVATION_DECLINED);
         $borrower->save();
+        
+        if ($borrower->isActivationApproved()) {
+            $this->borrowerMailer->sendApprovedConfirmationMail($borrower);
+        } else {
+            $this->borrowerMailer->sendDeclinedConfirmationMail($borrower);
+        }
     }
 }
