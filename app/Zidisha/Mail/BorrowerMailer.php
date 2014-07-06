@@ -73,25 +73,21 @@ class BorrowerMailer{
         $this->mailer->send('emails.borrower.join.volunteer-mentor-confirmation', $data);
     }
 
-    public function sendLoanFeedbackMail(FeedbackMessage $feedbackMessage)
+    public function sendFeedbackMail(FeedbackMessage $feedbackMessage)
     {
         $data = [
-            'feedback' => $feedbackMessage->getMessage(),
-            'to'    => $feedbackMessage->getBorrowerEmail(),
-            'from'  => $feedbackMessage->getReplyTo(),
-            'subject' => $feedbackMessage->getSubject()
+            'feedback' => nl2br($feedbackMessage->getMessage()),
+            'to'       => $feedbackMessage->getBorrowerEmail(),
+            'from'     => $feedbackMessage->getReplyTo(),
+            'subject'  => $feedbackMessage->getSubject()
         ];
 
-        $this->mailer->send('emails.borrower.feature-feedback', $data);
+        $this->mailer->send('emails.borrower.feedback', $data);
 
-        if($feedbackMessage->getCc() != null){
-            $emails = explode(",", $feedbackMessage->getCc());
-            foreach($emails as $email)
-            {
-                $email = trim($email);
-                $data['to'] = $email;
-                $this->mailer->send('emails.borrower.feature-feedback', $data);
-            }
+       // TODO necessary? or just use cc field
+        foreach($feedbackMessage->getCcEmails() as $email) {
+            $data['to'] = $email;
+            $this->mailer->send('emails.borrower.feedback', $data);
         }
     }
 
