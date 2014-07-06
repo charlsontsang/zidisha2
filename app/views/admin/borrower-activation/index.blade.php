@@ -49,7 +49,7 @@ Pending Activation
         </td>
         <td>
             TODO
-            <a href="{{ route('admin:pending-borrower-activation', $borrower->getId()) }}">{{ 'Check Profile' }}
+            <a href="{{ route('admin:borrower-activation:edit', $borrower->getId()) }}">{{ 'Check Profile' }}
                  </a>
         </td>
     </tr>

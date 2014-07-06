@@ -208,7 +208,8 @@ Route::group(
                 'as' => 'admin:post-exchange-rates', 'before' => 'csrf'));
         Route::get('borrower-activation', array('uses' => 'BorrowerActivationController@getIndex', 'as' => 'admin:borrower-activation'));
         Route::get('borrower-activation/{borrowerId}', array('uses' => 'BorrowerActivationController@getEdit',
-                'as' => 'admin:pending-borrower-activation'));
+                'as' => 'admin:borrower-activation:edit'));
+        Route::post('borrower-activation/{borrowerId}/review', array('uses' => 'BorrowerActivationController@postReview', 'as' => 'admin:borrower-activation:review'));
         Route::get('loan-feedback/{loanId}', array('uses' => 'AdminController@getLoanFeedback',
                 'as' => 'admin:loan-feedback'));
         Route::post('loan-feedback', array('uses' => 'AdminController@postLoanFeedback',

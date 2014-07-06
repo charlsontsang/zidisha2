@@ -499,7 +499,7 @@
         <foreign-key foreignTable="loans">
             <reference local="loan_id" foreign="id"/>
         </foreign-key>
-        <column name="class_key" type="integer" inheritance="single">
+        <column name="class_key" type="INTEGER" inheritance="single">
             <inheritance key="1" class="UploadFundPayment"/>
             <inheritance key="2" class="BidPayment"/>
             <inheritance key="3" class="GiftCardPayment"/>
@@ -668,6 +668,25 @@
             <reference local="loan_id" foreign="id"/>
         </foreign-key>
         <foreign-key foreignTable="borrowers" phpName="LoanApplicant">
+            <reference local="borrower_id" foreign="id"/>
+        </foreign-key>
+    </table>
+    
+    <table name="borrower_reviews" phpName="Review" namespace="Borrower">
+        <column name="borrower_id" type="INTEGER" primaryKey="true"/>
+        <column name="is_photo_clear" type="LONGVARCHAR" required="false" />
+        <column name="is_desc_clear" type="LONGVARCHAR" required="false" />
+        <column name="is_address_locatable" type="BOOLEAN" required="true" />
+        <column name="is_address_locatable_note" type="LONGVARCHAR" required="true" />
+        <column name="is_number_provided" type="LONGVARCHAR" required="false" />
+        <column name="is_nat_id_uploaded" type="LONGVARCHAR" required="false" />
+        <column name="is_rec_form_uploaded" type="LONGVARCHAR" required="false" />
+        <column name="is_rec_form_offcr_name" type="LONGVARCHAR" required="false" />
+        <column name="is_pending_mediation" type="LONGVARCHAR" required="false" />
+        <column name="created_by" type="INTEGER" required="false" />
+        <column name="modified_by" type="INTEGER" required="false" />
+        <behavior name="timestampable"/>
+        <foreign-key foreignTable="borrowers">
             <reference local="borrower_id" foreign="id"/>
         </foreign-key>
     </table>
