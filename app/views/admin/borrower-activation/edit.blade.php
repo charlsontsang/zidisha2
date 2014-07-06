@@ -25,6 +25,4 @@ Pending Borrower Activation
     <div class="col-xs-4">
         <img width="200" height="200" src="{{ $borrower->getUser()->getProfilePictureUrl() }}">
     </div>
-
-
-    @stop
+@stop
