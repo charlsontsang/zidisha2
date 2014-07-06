@@ -114,4 +114,8 @@ class Borrower extends BaseBorrower
         return $this->getActivationStatus() == static::ACTIVATION_APPROVED;
     }
 
+    public function isVerified()
+    {
+        return $this->getVerified();
+    }
 }
