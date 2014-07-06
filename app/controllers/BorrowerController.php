@@ -121,10 +121,9 @@ class BorrowerController extends BaseController
     {
         /** @var Borrower $borrower */
         $borrower = \Auth::User()->getBorrower();
-        $verified = $borrower->getVerified();
 
         $volunteerMentor = $borrower->getVolunteerMentor() ? $borrower->getVolunteerMentor()->getBorrowerVolunteer() : null;
-        $feedbackMessages = null;
+        $feedbackMessages = [];
 
         $loan = $borrower->getActiveLoan();
 
@@ -135,7 +134,7 @@ class BorrowerController extends BaseController
             $feedbackMessages = $this->borrowerActivationService->getFeedbackMessages($borrower);
         }
 
-        return View::make('borrower.dashboard', compact('verified', 'volunteerMentor', 'feedbackMessages'));
+        return View::make('borrower.dashboard', compact('borrower', 'volunteerMentor', 'feedbackMessages'));
     }
 
     public function getTransactionHistory()
