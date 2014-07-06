@@ -112,3 +112,11 @@ Auth::extend(
     }
 );
 
+/**
+ * Custom validator class
+ */
+
+Validator::resolver(function($translator, $data, $rules, $messages)
+{
+    return new Zidisha\Form\ZidishaValidator($translator, $data, $rules, $messages);
+});
