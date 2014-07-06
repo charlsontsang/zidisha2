@@ -169,13 +169,20 @@ class BorrowerController extends BaseController
         $errors->put('default', $form->getMessageBag());
         Session::flash('errors', $errors);
 
+        $isFacebookRequired = $this->borrowerService->isFacebookRequired($borrower);
 
-        $facebookJoinUrl = $this->borrowerService->validateFacebook($borrower);
-        $showMessage = !$borrower->getCountry()->isCountryBF();
+        $facebookJoinUrl = $this->facebookService->getLoginUrl(
+            'borrower:facebook-verification',
+            ['scope' => 'email,user_location,publish_stream,read_stream']
+        );
+
+        if ($isFacebookRequired) {
+            \Flash::error('Facebook verification required.');
+        }
 
         return \View::make(
             'borrower.personal-information',
-            ['personalInformation' => $personalInformation, 'form' => $form, 'facebookJoinUrl' => $facebookJoinUrl, 'showMessage' => $showMessage]
+            ['personalInformation' => $personalInformation, 'form' => $form, 'facebookJoinUrl' => $facebookJoinUrl, 'isFacebookRequired' => $isFacebookRequired]
         );
     }
 

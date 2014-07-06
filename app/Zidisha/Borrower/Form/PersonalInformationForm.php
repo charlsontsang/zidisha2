@@ -192,12 +192,10 @@ class PersonalInformationForm extends AbstractForm
 
         }
 
-        if ($this->borrower->getActivationStatus() == 'pending'){
+        if ($this->borrower->getActivationStatus() == 'pending') {
             $this->fields = array_combine(array_keys($rules), array_fill(0, count($rules), true));
-        }
-        else{
-
-        $this->fields = $fields;
+        } else {
+            $this->fields = $fields;
         }
     }
 

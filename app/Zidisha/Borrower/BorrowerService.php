@@ -345,6 +345,7 @@ class BorrowerService
         return $feedbackMessages;
     }
 
+
     public function getPreviousLoans(Borrower $borrower, Loan $loan)
     {
         $loans = LoanQuery::create()
@@ -362,8 +363,8 @@ class BorrowerService
 
         return $previousLoans;
     }
-    
-    public function validateFacebook(Borrower $borrower)
+
+    public function isFacebookRequired(Borrower $borrower)
     {
         $user = $borrower->getUser();
         $facebookId = $user->getFacebookId();
@@ -386,7 +387,8 @@ class BorrowerService
                 ['scope' => 'email,user_location,publish_stream,read_stream']
             );
         }
+        $borrowerRequiresFacebook = $borrower->getCountry()->isFacebookRequired();
 
-        return $facebookJoinUrl;
+        return $borrowerRequiresFacebook && !$facebookId && ($createdAt > $requiredDate);
     }
 }
