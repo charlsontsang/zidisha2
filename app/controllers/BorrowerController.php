@@ -182,7 +182,7 @@ class BorrowerController extends BaseController
 
         return \View::make(
             'borrower.personal-information',
-            ['personalInformation' => $personalInformation, 'form' => $form, 'facebookJoinUrl' => $facebookJoinUrl, 'isFacebookRequired' => $isFacebookRequired]
+            ['personalInformation' => $personalInformation, 'form' => $form, 'facebookJoinUrl' => $facebookJoinUrl, 'borrower' => $borrower, 'isFacebookRequired' => $isFacebookRequired]
         );
     }
 
