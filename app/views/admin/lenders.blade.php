@@ -39,5 +39,5 @@ Lenders
     @endforeach
     </tbody>
 </table>
-{{ BootstrapHtml::paginator($paginator)->appends(['country' => Request::query('country'), 'email' => Request::query('email')])->links() }}
+{{ BootstrapHtml::paginator($paginator)->links() }}
 @stop
