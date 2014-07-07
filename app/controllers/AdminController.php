@@ -102,11 +102,11 @@ class AdminController extends BaseController
             App::abort(404);
         }
 
-        $borrowerPersonalInformation = $borrower->getPersonalInformation();
-        $borrowerLoans = LoanQuery::create()
+        $personalInformation = $borrower->getPersonalInformation();
+        $loans = LoanQuery::create()
             ->filterByBorrowerId($borrowerId);
 
-        return View::make('admin.borrower', compact('borrower', 'borrowerPersonalInformation', 'borrowerLoans'));
+        return View::make('admin.borrower', compact('borrower', 'personalInformation', 'loans'));
     }
 
     public function getLenders()

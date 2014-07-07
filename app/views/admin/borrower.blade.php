@@ -14,8 +14,8 @@
 
         <div>
             <h3>Loans Raised</h3>
-            @if($borrowerLoans)
-                @foreach($borrowerLoans as $loan)
+            @if($loans)
+                @foreach($loans as $loan)
                 {{ $loan->getAmount() }} - TODO (show dates) - <a href="{{ route('loan:index', $loan->getId()) }}">View Loan Profile</a>
                 @endforeach
             @else
@@ -96,16 +96,16 @@
                 <hr/>
                 <h4>Community Leader</h4>
                 <dt>First Name</dt>
-                <dd>{{ $borrowerPersonalInformation['communityLeader_firstName'] }} </dd>
+                <dd>{{ $personalInformation['communityLeader_firstName'] }} </dd>
 
                 <dt>Last Name</dt>
-                <dd>{{ $borrowerPersonalInformation['communityLeader_lastName'] }}</dd>
+                <dd>{{ $personalInformation['communityLeader_lastName'] }}</dd>
 
                 <dt>Phone Number</dt>
-                <dd>{{ $borrowerPersonalInformation['communityLeader_phoneNumber'] }}</dd>
+                <dd>{{ $personalInformation['communityLeader_phoneNumber'] }}</dd>
 
                 <dt>Description</dt>
-                <dd>{{ $borrowerPersonalInformation['communityLeader_description'] }}</dd>
+                <dd>{{ $personalInformation['communityLeader_description'] }}</dd>
 
                 <hr/>
 
@@ -114,48 +114,48 @@
                 <h5>Family Member 1</h5>
 
                 <dt>First Name</dt>
-                <dd>{{ $borrowerPersonalInformation['familyMember_1_firstName'] }} </dd>
+                <dd>{{ $personalInformation['familyMember_1_firstName'] }} </dd>
 
                 <dt>Last Name</dt>
-                <dd>{{ $borrowerPersonalInformation['familyMember_1_lastName'] }}</dd>
+                <dd>{{ $personalInformation['familyMember_1_lastName'] }}</dd>
 
                 <dt>Phone Number</dt>
-                <dd>{{ $borrowerPersonalInformation['familyMember_1_phoneNumber'] }}</dd>
+                <dd>{{ $personalInformation['familyMember_1_phoneNumber'] }}</dd>
 
                 <dt>Description</dt>
-                <dd>{{ $borrowerPersonalInformation['familyMember_1_description'] }}</dd>
+                <dd>{{ $personalInformation['familyMember_1_description'] }}</dd>
 
                 <hr/>
 
                 <h5>Family Member 2</h5>
 
                 <dt>First Name</dt>
-                <dd>{{ $borrowerPersonalInformation['familyMember_2_firstName'] }} </dd>
+                <dd>{{ $personalInformation['familyMember_2_firstName'] }} </dd>
 
                 <dt>Last Name</dt>
-                <dd>{{ $borrowerPersonalInformation['familyMember_2_lastName'] }}</dd>
+                <dd>{{ $personalInformation['familyMember_2_lastName'] }}</dd>
 
                 <dt>Phone Number</dt>
-                <dd>{{ $borrowerPersonalInformation['familyMember_2_phoneNumber'] }}</dd>
+                <dd>{{ $personalInformation['familyMember_2_phoneNumber'] }}</dd>
 
                 <dt>Description</dt>
-                <dd>{{ $borrowerPersonalInformation['familyMember_2_description'] }}</dd>
+                <dd>{{ $personalInformation['familyMember_2_description'] }}</dd>
 
                 <hr/>
 
                 <h5>Family Member 3</h5>
 
                 <dt>First Name</dt>
-                <dd>{{ $borrowerPersonalInformation['familyMember_3_firstName'] }} </dd>
+                <dd>{{ $personalInformation['familyMember_3_firstName'] }} </dd>
 
                 <dt>Last Name</dt>
-                <dd>{{ $borrowerPersonalInformation['familyMember_3_lastName'] }}</dd>
+                <dd>{{ $personalInformation['familyMember_3_lastName'] }}</dd>
 
                 <dt>Phone Number</dt>
-                <dd>{{ $borrowerPersonalInformation['familyMember_3_phoneNumber'] }}</dd>
+                <dd>{{ $personalInformation['familyMember_3_phoneNumber'] }}</dd>
 
                 <dt>Description</dt>
-                <dd>{{ $borrowerPersonalInformation['familyMember_3_description'] }}</dd>
+                <dd>{{ $personalInformation['familyMember_3_description'] }}</dd>
 
                 <hr/>
 
@@ -164,48 +164,48 @@
                 <h5>Neighbor 1</h5>
 
                 <dt>First Name</dt>
-                <dd>{{ $borrowerPersonalInformation['neighbor_1_firstName'] }} </dd>
+                <dd>{{ $personalInformation['neighbor_1_firstName'] }} </dd>
 
                 <dt>Last Name</dt>
-                <dd>{{ $borrowerPersonalInformation['neighbor_1_lastName'] }}</dd>
+                <dd>{{ $personalInformation['neighbor_1_lastName'] }}</dd>
 
                 <dt>Phone Number</dt>
-                <dd>{{ $borrowerPersonalInformation['neighbor_1_phoneNumber'] }}</dd>
+                <dd>{{ $personalInformation['neighbor_1_phoneNumber'] }}</dd>
 
                 <dt>Description</dt>
-                <dd>{{ $borrowerPersonalInformation['neighbor_1_description'] }}</dd>
+                <dd>{{ $personalInformation['neighbor_1_description'] }}</dd>
 
                 <hr/>
 
                 <h5>Neighbor 2</h5>
 
                 <dt>First Name</dt>
-                <dd>{{ $borrowerPersonalInformation['neighbor_2_firstName'] }} </dd>
+                <dd>{{ $personalInformation['neighbor_2_firstName'] }} </dd>
 
                 <dt>Last Name</dt>
-                <dd>{{ $borrowerPersonalInformation['neighbor_2_lastName'] }}</dd>
+                <dd>{{ $personalInformation['neighbor_2_lastName'] }}</dd>
 
                 <dt>Phone Number</dt>
-                <dd>{{ $borrowerPersonalInformation['neighbor_2_phoneNumber'] }}</dd>
+                <dd>{{ $personalInformation['neighbor_2_phoneNumber'] }}</dd>
 
                 <dt>Description</dt>
-                <dd>{{ $borrowerPersonalInformation['neighbor_2_description'] }}</dd>
+                <dd>{{ $personalInformation['neighbor_2_description'] }}</dd>
 
                 <hr/>
 
                 <h5>Neighbor 3</h5>
 
                 <dt>First Name</dt>
-                <dd>{{ $borrowerPersonalInformation['neighbor_3_firstName'] }} </dd>
+                <dd>{{ $personalInformation['neighbor_3_firstName'] }} </dd>
 
                 <dt>Last Name</dt>
-                <dd>{{ $borrowerPersonalInformation['neighbor_3_lastName'] }}</dd>
+                <dd>{{ $personalInformation['neighbor_3_lastName'] }}</dd>
 
                 <dt>Phone Number</dt>
-                <dd>{{ $borrowerPersonalInformation['neighbor_3_phoneNumber'] }}</dd>
+                <dd>{{ $personalInformation['neighbor_3_phoneNumber'] }}</dd>
 
                 <dt>Description</dt>
-                <dd>{{ $borrowerPersonalInformation['neighbor_3_description'] }}</dd>
+                <dd>{{ $personalInformation['neighbor_3_description'] }}</dd>
 
             </dl>
         </div>
