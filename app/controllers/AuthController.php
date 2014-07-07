@@ -42,7 +42,7 @@ class AuthController extends BaseController
             return $this->login();
         }
 
-        $this->siftScienceService->invalidLoginEvent();
+        $this->siftScienceService->sendInvalidLoginEvent();
 
         Flash::error("Wrong username or password!");
         return Redirect::route('login');
@@ -50,7 +50,7 @@ class AuthController extends BaseController
 
     public function getLogout()
     {
-        $this->siftScienceService->logoutEvent(\Auth::user()->getId());
+        $this->siftScienceService->sendLogoutEvent(\Auth::user()->getId());
 
         Auth::logout();
         Session::flush();
@@ -101,7 +101,7 @@ class AuthController extends BaseController
             )
         );
         Mixpanel::track('Logged in');
-        $this->siftScienceService->loginEvent($user->getId());
+        $this->siftScienceService->sendLoginEvent($user);
 
         if ($role == 'lender') {
             return Redirect::route('lender:dashboard');

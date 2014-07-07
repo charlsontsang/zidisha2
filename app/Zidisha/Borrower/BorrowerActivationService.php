@@ -94,7 +94,7 @@ class BorrowerActivationService
             $this->borrowerMailer->sendApprovedConfirmationMail($borrower);
         } else {
             $this->borrowerMailer->sendDeclinedConfirmationMail($borrower);
-            $this->siftScienceService->declineEvent($user->getId());
+            $this->siftScienceService->sendBorrowerDeclinedEvent($borrower);
         }
     }
 }

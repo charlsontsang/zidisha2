@@ -2,6 +2,9 @@
 
 namespace Zidisha\Vendor\SiftScience;
 
+use Zidisha\Borrower\Borrower;
+use Zidisha\User\User;
+
 class SiftScienceService
 {
     protected $siftScienceKey;
@@ -17,12 +20,12 @@ class SiftScienceService
         $this->sessionId = \Session::getId();
     }
 
-    public function loginEvent($userId = null)
+    public function sendLoginEvent(User $user)
     {
         $data = [
             '$type'         => '$login',
             '$api_key'      => $this->siftScienceKey,
-            '$user_id'      => $userId,
+            '$user_id'      => $user->getId(),
             '$session_id'   => $this->sessionId,
             '$login_status' => '$success',
             '$time'         => time()
@@ -31,7 +34,7 @@ class SiftScienceService
         $this->sendEvent($this->siftScienceUrl, json_encode($data));
     }
 
-    public function invalidLoginEvent()
+    public function sendInvalidLoginEvent()
     {
         $data = array(
             '$type'         => '$login',
@@ -44,7 +47,7 @@ class SiftScienceService
         $this->sendEvent($this->siftScienceUrl, json_encode($data));
     }
 
-    public function logoutEvent($userId = null)
+    public function sendLogoutEvent($userId = null)
     {
         $data = array(
             '$type'       => '$logout',
@@ -56,8 +59,10 @@ class SiftScienceService
         $this->sendEvent($this->siftScienceUrl, json_encode($data));
     }
 
-    public function declineEvent($userId)
+    public function sendBorrowerDeclinedEvent(Borrower $borrower)
     {
+        $userId = $borrower->getId();
+
         $data = array(
             '$type'        => 'decline',
             '$api_key'     => $this->siftScienceKey,
