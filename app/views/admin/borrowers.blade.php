@@ -23,6 +23,7 @@ Borrowers
         <th>Borrower</th>
         <th>Location</th>
         <th>To Do</th>
+        <th></th>
     </tr>
     </thead>
     <tbody>
@@ -35,6 +36,14 @@ Borrowers
         </td>
         <td>{{ $borrower->getCountry()->getName() }}</td>
         <td></td>
+        <td>
+            <a href="{{ route('admin:borrower', $borrower->getId()) }}">
+                <i class="fa fa-info-circle fa-lg"></i>
+            </a>
+            <a href="{{ route('admin:borrower', $borrower->getId()) }}">
+                <i class="fa fa-pencil-square-o fa-lg"></i>
+            </a>
+        </td>
     </tr>
     @endforeach
     </tbody>
