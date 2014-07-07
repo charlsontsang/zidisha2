@@ -50,7 +50,8 @@ class AuthController extends BaseController
 
     public function getLogout()
     {
-        $this->siftScienceService->sendLogoutEvent(\Auth::user()->getId());
+        $user = \Auth::user();
+        $this->siftScienceService->sendLogoutEvent($user);
 
         Auth::logout();
         Session::flush();

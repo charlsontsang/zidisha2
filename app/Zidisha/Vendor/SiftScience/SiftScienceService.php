@@ -47,12 +47,12 @@ class SiftScienceService
         $this->sendEvent($this->siftScienceUrl, json_encode($data));
     }
 
-    public function sendLogoutEvent($userId = null)
+    public function sendLogoutEvent(User $user)
     {
         $data = array(
             '$type'       => '$logout',
             '$api_key'    => $this->siftScienceKey,
-            '$user_id'    => $userId,
+            '$user_id'    => $user->getId(),
             '$session_id' => $this->sessionId
         );
 
