@@ -1,4 +1,5 @@
 <div class="row">
+    @if($borrower->isActivationIncomplete())
     <div class="col-md-6">
         {{ BootstrapForm::open(array('route' => ['admin:borrower-activation:feedback', $borrower->getId()], 'translationDomain' => 'borrowerActivation.feedback')) }}
         {{ BootstrapForm::populate($feedbackForm) }}
@@ -14,6 +15,7 @@
 
         {{ BootstrapForm::close() }}
     </div>
+    @endif
     
     <div class="col-md-6">
         <br/>

@@ -14,9 +14,11 @@ class Borrower extends BaseBorrower
     const PAYMENT_FAILED = 4;
     const PAYMENT_DELETED = 5;
 
-    const ACTIVATION_PENDING  = 'pending';
-    const ACTIVATION_APPROVED = 'approved';
-    const ACTIVATION_DECLINED = 'declined';
+    const ACTIVATION_PENDING    = 'pending';
+    const ACTIVATION_INCOMPLETE = 'incomplete';
+    const ACTIVATION_REVIEWED   = 'reviewed';
+    const ACTIVATION_APPROVED   = 'approved';
+    const ACTIVATION_DECLINED   = 'declined';
 
     public function getName(){
         return $this->getFirstName() . " " . $this->getLastName();
@@ -102,6 +104,16 @@ class Borrower extends BaseBorrower
     public function isActivationPending()
     {
         return $this->getActivationStatus() == static::ACTIVATION_PENDING;
+    }
+
+    public function isActivationIncomplete()
+    {
+        return $this->getActivationStatus() == static::ACTIVATION_INCOMPLETE;
+    }
+
+    public function isActivationReviewed()
+    {
+        return $this->getActivationStatus() == static::ACTIVATION_REVIEWED;
     }
     
     public function isActivationDeclined()

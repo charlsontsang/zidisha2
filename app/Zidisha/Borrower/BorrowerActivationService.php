@@ -42,9 +42,8 @@ class BorrowerActivationService
         
         PropelDB::transaction(function() use ($review, $borrower) {
             $review->save();
-            if ($review->isCompleted()) {
-//                $borrower->setActivationStatus('pending-verification'); TODO
-            }
+            $borrower->setActivationStatus($review->isCompleted() ? Borrower::ACTIVATION_REVIEWED : Borrower::ACTIVATION_INCOMPLETE);
+            $borrower->save();
         });
         
         return $review;

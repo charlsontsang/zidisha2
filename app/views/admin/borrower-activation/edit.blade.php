@@ -77,8 +77,11 @@ Pending Borrower Activation
         @endif
     </div>
 </div>
-@include('admin.borrower-activation.feedback', compact('feedbackForm', 'borrower', 'feedbackMessages'))
 
-@include('admin.borrower-activation.verification', compact('verificationForm', 'borrower'))
+@include('admin.borrower-activation.feedback', compact('feedbackForm', 'borrower', 'feedbackMessages'))
+@endif
+
+@if($borrower->isActivationReviewed())
+    @include('admin.borrower-activation.verification', compact('verificationForm', 'borrower'))
 @endif
 @stop

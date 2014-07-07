@@ -152,7 +152,7 @@
         <column name="volunteer_mentor_id" type="INTEGER"/>
         <column name="referrer_id" type="INTEGER"/>
         <column name="verified" type="BOOLEAN" defaultValue="false" />
-        <column name="activation_status" type="ENUM" valueSet="pending, approved, declined" defaultValue="pending"/>
+        <column name="activation_status" type="ENUM" valueSet="pending, incomplete, reviewed, approved, declined" defaultValue="pending"/>
         <behavior name="timestampable"/>
         <foreign-key foreignTable="borrowers" phpName="Referrer">
             <reference local="referrer_id" foreign="id"/>
