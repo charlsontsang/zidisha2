@@ -217,6 +217,7 @@ Route::group(
                 'as' => 'admin:loan-feedback'));
         Route::post('loan-feedback', array('uses' => 'AdminController@postLoanFeedback',
                 'as' => 'admin:post-loan-feedback'));
+        Route::post('loan/{id}', array('uses' => 'AdminController@postAdminCategory', 'as' => 'admin:post-category'));
     }
 );
 /**

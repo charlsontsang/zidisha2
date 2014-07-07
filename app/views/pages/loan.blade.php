@@ -29,6 +29,24 @@
     </div>
 
     <div class="col-xs-4">
+        @if(Auth::check() && Auth::getUser()->isAdmin())
+        <br><br>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                {{ BootstrapForm::open(['route' => ['admin:post-category', $loan->getId()]]) }}
+                {{ BootstrapForm::populate($categoryForm) }}
+
+                {{ BootstrapForm::select('category', $categoryForm->getCategories(), $loan->getCategoryId()) }}
+
+                {{ BootstrapForm::select('secondaryCategory', $categoryForm->getSecondaryCategories(), $loan->getSecondaryCategoryId())}}
+
+                {{ BootstrapForm::submit('save') }}
+
+                {{ BootstrapForm::close() }}
+
+            </div>
+        </div>
+        @endif
         <img src="{{ $loan->getBorrower()->getUser()->getProfilePictureUrl() }}" width="300" height="300">
 
         <h2>{{ $loan->getBorrower()->getFirstName() }} {{ $loan->getBorrower()->getLastName() }}</h2>

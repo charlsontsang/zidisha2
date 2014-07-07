@@ -108,6 +108,7 @@ class GenerateModelData extends Command
             ->find();
 
         $allCategories = CategoryQuery::create()
+            ->filterByAdminOnly(false)
             ->orderByRank()
             ->find()
             ->getData();
@@ -125,6 +126,7 @@ class GenerateModelData extends Command
 
         if ($model == "Loan") {
             $allCategories = CategoryQuery::create()
+                ->filterByAdminOnly(false)
                 ->orderByRank()
                 ->find()
                 ->getData();
