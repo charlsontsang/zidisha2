@@ -705,6 +705,18 @@ class LoanService
 
     }
 
+    public function AddTranslations(Loan $loan, $data)
+    {
+        $profile = $loan->getBorrower()->getProfile();
+
+        $profile->setAboutMeTranslation($data['translateAboutMe'])
+            ->setAboutBusinessTranslation($data['translateAboutBusiness']);
+        $loan->setProposalTranslation($data['translateProposal']);
+
+        $profile->save();
+        $loan->save();
+    }
+
 }
 
 

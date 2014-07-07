@@ -62,7 +62,9 @@
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="borrower_id" type="INTEGER"/>"
         <column name="summary" type="LONGVARCHAR"/>
+        <column name="summary_translation" type="LONGVARCHAR"/>
         <column name="proposal" type="LONGVARCHAR"/>
+        <column name="proposal_translation" type="LONGVARCHAR"/>
         <column name="native_amount" type="DECIMAL" size="10" scale="2" phpType="string"/>
         <column name="installment_day" type="INTEGER"/>
         <column name="interest_rate" type="DECIMAL" size="5" scale="2" phpType="string"/>
@@ -178,7 +180,9 @@
     <table name="borrower_profiles" phpName="Profile" namespace="Borrower">
         <column name="borrower_id" type="INTEGER" primaryKey="true"/>
         <column name="about_me" type="LONGVARCHAR" required="false"/>
+        <column name="about_me_translation" type="LONGVARCHAR" required="false"/>
         <column name="about_business " type="LONGVARCHAR" required="false"/>
+        <column name="about_business_translation " type="LONGVARCHAR" required="false"/>
         <column name="address" type="LONGVARCHAR" required="true"/>
         <column name="address_instructions" type="LONGVARCHAR" required="true"/>
         <column name="city" type="VARCHAR" size="100" required="true"/>

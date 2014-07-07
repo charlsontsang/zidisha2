@@ -217,7 +217,10 @@ Route::group(
                 'as' => 'admin:loan-feedback'));
         Route::post('loan-feedback', array('uses' => 'AdminController@postLoanFeedback',
                 'as' => 'admin:post-loan-feedback'));
-        Route::post('loan/{id}', array('uses' => 'AdminController@postAdminCategory', 'as' => 'admin:post-category'));
+        Route::post('loan/{id}', array('uses' => 'AdminController@postAdminCategory', 'as' => 'admin:post-category',  'before' => 'csrf'));
+        Route::get('loan/{id}/translate', array('uses' => 'AdminController@getTranslate', 'as' => 'admin:get-translate'));
+        Route::post('loan/{id}/translate', array('uses' => 'AdminController@postTranslate', 'as' => 'admin:post-translate',
+                'before' => 'csrf'));
     }
 );
 /**

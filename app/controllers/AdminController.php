@@ -5,6 +5,7 @@ use Zidisha\Admin\Form\FeatureFeedbackForm;
 use Zidisha\Admin\Form\FilterBorrowers;
 use Zidisha\Admin\Form\FilterLenders;
 use Zidisha\Admin\Form\FilterLoans;
+use Zidisha\Admin\Form\TranslateForm;
 use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Borrower\BorrowerService;
 use Zidisha\Borrower\FeedbackMessageQuery;
@@ -27,6 +28,7 @@ class AdminController extends BaseController
     private $featureFeedbackForm;
     private $borrowerService;
     private $adminCategoryForm;
+    protected $translateForm;
 
     public function  __construct(
         LenderQuery $lenderQuery,
@@ -40,7 +42,8 @@ class AdminController extends BaseController
         ExchangeRateForm $exchangeRateForm,
         FeatureFeedbackForm $featureFeedbackForm,
         BorrowerService $borrowerService,
-        AdminCategoryForm $adminCategoryForm
+        AdminCategoryForm $adminCategoryForm,
+        TranslateForm $translateForm
     ) {
         $this->lenderQuery = $lenderQuery;
         $this->$borrowerQuery = $borrowerQuery;
@@ -54,6 +57,7 @@ class AdminController extends BaseController
         $this->featureFeedbackForm = $featureFeedbackForm;
         $this->borrowerService = $borrowerService;
         $this->adminCategoryForm = $adminCategoryForm;
+        $this->translateForm = $translateForm;
     }
 
     public
@@ -249,8 +253,48 @@ class AdminController extends BaseController
             return Redirect::route('loan:index', $loanId);
         }
 
-        \Flash::success("Couldn't set categories!");
+        \Flash::error("Couldn't set categories!");
         return Redirect::route('loan:index', $loanId)->withForm($form);
 
+    }
+
+    public function getTranslate($loanId)
+    {
+        $loan = LoanQuery::create()
+            ->findOneById($loanId);
+
+        if (!$loan) {
+            App::abort(404);
+        }
+
+        $borrower = $loan->getBorrower();
+
+        return View::make('admin.translate', compact('borrower', 'loan'),
+            ['form' => $this->translateForm,]);
+    }
+
+    public function postTranslate($loanId)
+    {
+        $loan = LoanQuery::create()
+            ->findOneById($loanId);
+
+        if (!$loan) {
+            App::abort(404);
+        }
+
+        $form = $this->translateForm;
+        $form->handleRequest(Request::instance());
+
+        if ($form->isValid()) {
+            $data = $form->getData();
+
+            $this->loanService->AddTranslations($loan, $data);
+
+            \Flash::success("Translations successfully saved!");
+            return Redirect::route('loan:index', $loanId);
+        }
+
+        \Flash::error("Couldn't save Translations!");
+        return Redirect::route('loan:index', $loanId)->withForm($form);
     }
 }
