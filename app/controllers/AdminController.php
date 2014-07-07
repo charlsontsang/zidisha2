@@ -83,6 +83,19 @@ class AdminController extends BaseController
         return View::make('admin.borrowers', compact('paginator'), ['form' => $this->borrowersForm,]);
     }
 
+    public function getBorrower($borrowerId)
+    {
+        $borrower = BorrowerQuery::create()
+            ->filterById($borrowerId)
+            ->findOne();
+
+        if (!$borrower) {
+            App::abort(404);
+        }
+
+        return View::make('admin.borrower', compact('borrower'));
+    }
+
     public function getLenders()
     {
         $page = Request::query('page') ? : 1;
