@@ -50,6 +50,7 @@
         <column name="registration_fee" type="DECIMAL" size="10" scale="2" defaultValue="0.00" phpType="string"/>
         <column name="installment_period" type="ENUM" valueSet="monthly, weekly"/>
         <column name="repayment_instructions" type="LONGVARCHAR" required="false"/>
+        <column name="language_code" type="VARCHAR" size="10"/>
         <index name="name">
             <index-column name="name"/>
         </index>
@@ -57,6 +58,9 @@
             <index-column name="country_code"/>
         </index>
         <behavior name="timestampable"/>
+        <foreign-key foreignTable="languages">
+            <reference local="language_code" foreign="language_code"/>
+        </foreign-key>
     </table>
 
     <table name="loans" phpName="Loan" namespace="Loan">
@@ -183,7 +187,7 @@
         <column name="about_me" type="LONGVARCHAR" required="false"/>
         <column name="about_me_translation" type="LONGVARCHAR" required="false"/>
         <column name="about_business " type="LONGVARCHAR" required="false"/>
-        <column name="about_business_translation " type="LONGVARCHAR" required="false"/>
+        <column name="about_business_translation" type="LONGVARCHAR" required="false"/>
         <column name="address" type="LONGVARCHAR" required="true"/>
         <column name="address_instructions" type="LONGVARCHAR" required="true"/>
         <column name="city" type="VARCHAR" size="100" required="true"/>
@@ -703,5 +707,11 @@
         <foreign-key foreignTable="borrowers">
             <reference local="borrower_id" foreign="id"/>
         </foreign-key>
+    </table>
+
+    <table name="languages" phpName="Language" namespace="Country">
+        <column name="language_code" type="VARCHAR" size="10" primaryKey="true" required="true"/>
+        <column name="name" type="VARCHAR" required="true"/>
+        <column name="active" type="BOOLEAN" defaultValue="false"/>
     </table>
 </database>
