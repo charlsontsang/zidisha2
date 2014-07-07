@@ -691,10 +691,8 @@ class LoanService
         //TODO. change nativeAmount to USD
     }
 
-    public function addLoanCategories($loanId, $data)
+    public function updateLoanCategories(Loan $loan, $data)
     {
-        $loan = LoanQuery::create()
-            ->findOneById($loanId);
         $category = CategoryQuery::create()
             ->findOneById($data['category']);
         $secondaryCategory = CategoryQuery::create()

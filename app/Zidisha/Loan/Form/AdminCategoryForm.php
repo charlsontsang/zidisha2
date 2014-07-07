@@ -12,8 +12,8 @@ class AdminCategoryForm extends AbstractForm
     public function getRules($data)
     {
         return [
-            'category' => 'required',
-            'secondaryCategory' => 'required',
+            'category' => 'required|in:'. implode(',', array_keys($this->getCategories())),
+            'secondaryCategory' => 'required|in:'. implode(',', array_keys($this->getSecondaryCategories())),
         ];
     }
 

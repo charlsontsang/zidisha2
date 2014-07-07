@@ -255,13 +255,18 @@ class AdminController extends BaseController
         $form->handleRequest(Request::instance());
 
         if ($form->isValid()) {
-        $data = $form->getData();
+            $data = $form->getData();
+            $loan = LoanQuery::create()
+                ->findOneById($loanId);
+            if(!$loan){
+                App::abort(404);
+            }
 
-        $this->loanService->addLoanCategories($loanId, $data);
+            $this->loanService->updateLoanCategories($loan, $data);
 
-        \Flash::success("Categories successfully set!");
-        return Redirect::route('loan:index', $loanId);
-    }
+            \Flash::success("Categories successfully set!");
+            return Redirect::route('loan:index', $loanId);
+        }
 
         \Flash::success("Couldn't set categories!");
         return Redirect::route('loan:index', $loanId)->withForm($form);

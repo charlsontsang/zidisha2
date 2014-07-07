@@ -67,8 +67,8 @@
         <column name="installment_day" type="INTEGER"/>
         <column name="interest_rate" type="DECIMAL" size="5" scale="2" phpType="string"/>
         <column name="final_interest_rate" type="DECIMAL" size="5" scale="2" phpType="string"/>
-        <column name="loan_category_id" type="INTEGER" required="true"/>
-        <column name="loan_secondary_category_id" type="INTEGER"/>
+        <column name="category_id" type="INTEGER" required="true"/>
+        <column name="secondary_category_id" type="INTEGER"/>
         <column name="status" type="ENUM" valueSet="0, 1, 2, 3, 5, 6, 7"/>
         <column name="application_date" type="TIMESTAMP" required="true"/>
         <column name="accepted_date" type="TIMESTAMP"/>
@@ -85,10 +85,10 @@
         <column name="installment_count" type="INTEGER"/>
         <behavior name="timestampable"/>
         <foreign-key foreignTable="loan_categories" phpName="Category">
-            <reference local="loan_category_id" foreign="id"/>
+            <reference local="category_id" foreign="id"/>
         </foreign-key>
         <foreign-key foreignTable="loan_categories" phpName="SecondaryCategory">
-            <reference local="loan_secondary_category_id" foreign="id"/>
+            <reference local="secondary_category_id" foreign="id"/>
         </foreign-key>
         <foreign-key foreignTable="borrowers" phpName="Borrower">
             <reference local="borrower_id" foreign="id"/>
