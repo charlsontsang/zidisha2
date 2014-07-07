@@ -8,17 +8,25 @@ Pending Borrower Activation
 <div class="row">
     <div class="col-xs-8">
 
-        <p><strong>Applicant Name: </strong> {{ $borrower->getName() }} </p> <br>
+        <dl class="dl-horizontal">
+            <dt>Applicant Name</dt> 
+            <dd>{{ $borrower->getName() }}</dd>
 
-        <p><strong>Telephone: </strong> {{ $borrower->getProfile()->getPhoneNumber() }} </p> <br>
+            <dt>Telephone</dt>
+            <dd>{{ $borrower->getProfile()->getPhoneNumber() }}</dd>
 
-        <p><strong>Email: </strong> {{ $borrower->getUser()->getEmail() }} </p> <br>
+            <dt>Email</dt>
+            <dd>{{ $borrower->getUser()->getEmail() }}</dd>
 
-        <p><strong>City: </strong> {{ $borrower->getProfile()->getCity() }} </p> <br>
+            <dt>City</dt>
+            <dd>{{ $borrower->getProfile()->getCity() }}</dd>
 
-        <p><strong>Country: </strong> {{ $borrower->getCountry()->getName() }} </p> <br>
+            <dt>Country</dt>
+            <dd>{{ $borrower->getCountry()->getName() }}</dd>
 
-        <p><strong>Application Status: </strong> {{ $borrower->getActivationStatus() }} </p> <br>
+            <dt>Application Status</dt>
+            <dd>{{ $borrower->getActivationStatus() }}</dd>
+        </dl>
 
     </div>
 
