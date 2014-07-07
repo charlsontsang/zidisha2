@@ -221,6 +221,8 @@ Route::group(
         Route::get('loan/{id}/translate', array('uses' => 'AdminController@getTranslate', 'as' => 'admin:get-translate'));
         Route::post('loan/{id}/translate', array('uses' => 'AdminController@postTranslate', 'as' => 'admin:post-translate',
                 'before' => 'csrf'));
+        Route::post('loan/{id}', array('uses' => 'AdminController@postAdminCategory', 'as' => 'admin:post-category'));
+        Route::get('countries', array('uses' => 'CountryController@getCountries', 'as' => 'admin:countries'));
     }
 );
 /**
