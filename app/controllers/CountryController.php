@@ -8,11 +8,11 @@ class CountryController extends BaseController
     /**
      * @var Zidisha\Country\Form\EditForm
      */
-    private $form;
+    private $editForm;
 
     public function __construct(EditForm $form)
     {
-        $this->form = $form;
+        $this->editForm = $form;
     }
 
     public function getCountries()
@@ -30,10 +30,6 @@ class CountryController extends BaseController
 
     public function editCountry($id)
     {
-        if (!$id) {
-            \App::abort(404, 'fatal error.');
-        }
-
         $country = CountryQuery::create()
             ->findOneById($id);
 
@@ -48,23 +44,17 @@ class CountryController extends BaseController
 
     public function postEditCountry($id)
     {
+        $country = CountryQuery::create()
+            ->findOneById($id);
 
-        if (!$id) {
+        if (!$country) {
             \App::abort(404, 'fatal error.');
         }
 
-
-        $form = $this->form;
+        $form = $this->editForm;
         $form->handleRequest(Request::instance());
 
         if ($form->isValid()) {
-            $country = CountryQuery::create()
-                ->findOneById($id);
-
-            if (!$country) {
-                \App::abort(404, 'fatal error.');
-            }
-
             $data = $form->getData();
 
             $country
