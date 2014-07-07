@@ -276,7 +276,7 @@ class BootstrapFormBuilder
      * @param  array $options
      * @return string
      */
-    protected function input($type, $name, $value = null, $options = [])
+    public function input($type, $name, $value = null, $options = [])
     {
         $label = array_get($options, 'label', $this->translationDomain ? $this->translationDomain . '.' . $name : $name);
         unset($options['label']);

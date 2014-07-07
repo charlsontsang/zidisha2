@@ -225,6 +225,8 @@ Route::group(
         Route::get('countries', array('uses' => 'CountryController@getCountries', 'as' => 'admin:countries'));
         Route::get('countries/edit/{id}', array('uses' => 'CountryController@editCountry', 'as' => 'admin:edit:country'));
         Route::post('countries/edit/{id}', array('uses' => 'CountryController@postEditCountry', 'as' => 'admin:post:edit:country'));
+        Route::get('settings', array('uses' => 'AdminController@getSettings', 'as' => 'admin:settings'));
+        Route::post('settings', array('uses' => 'AdminController@postSettings', 'as' => 'admin:settings'));
     }
 );
 /**

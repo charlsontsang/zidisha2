@@ -5,10 +5,11 @@ use Zidisha\Admin\Form\FeatureFeedbackForm;
 use Zidisha\Admin\Form\FilterBorrowers;
 use Zidisha\Admin\Form\FilterLenders;
 use Zidisha\Admin\Form\FilterLoans;
+use Zidisha\Admin\Form\SettingsForm;
+use Zidisha\Admin\Setting;
 use Zidisha\Admin\Form\TranslateForm;
 use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Borrower\BorrowerService;
-use Zidisha\Borrower\FeedbackMessageQuery;
 use Zidisha\Country\CountryQuery;
 use Zidisha\Currency\CurrencyService;
 use Zidisha\Lender\LenderQuery;
@@ -255,7 +256,32 @@ class AdminController extends BaseController
 
         \Flash::error("Couldn't set categories!");
         return Redirect::route('loan:index', $loanId)->withForm($form);
+    }
+    
+    public function getSettings()
+    {
+        $settingsForm = new SettingsForm();
+        $groups = Setting::getGroups();
 
+        return View::make('admin.settings', compact('settingsForm', 'groups'));
+    }
+
+    public function postSettings()
+    {
+        $settingsForm = new SettingsForm();
+        $settingsForm->handleRequest(\Request::instance());
+        
+        if ($settingsForm->isValid()) {
+            $data = $settingsForm->getSettingsData();
+            
+            Setting::updateSettings($data);
+            
+            \Flash::success("Successfully updated the setting.");
+            return Redirect::route('admin:settings');
+        }
+
+        \Flash::error('Please correct the errors.');
+        return Redirect::route('admin:settings')->withForm($settingsForm);
     }
 
     public function getTranslate($loanId)

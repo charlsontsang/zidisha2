@@ -47,6 +47,12 @@ class GenerateModelData extends Command
      */
     public function fire()
     {
+        try {
+            $settings = Setting::getAll();
+        } catch (\Exception $e) {
+            $settings = [];
+        }        
+        
         $model = $this->argument('model');
         $size = $this->argument('size');
         $faker = Faker::create();
@@ -76,6 +82,7 @@ class GenerateModelData extends Command
             exec("curl -XDELETE 'http://localhost:9200/loans/' -s");
 
             $this->line('Generate data');
+            Setting::import($settings);
             $this->call('fake', array('model' => 'Country', 'size' => 10));
             $this->call('fake', array('model' => 'Category', 'size' => 10));
             $this->call('fake', array('model' => 'Admin', 'size' => 1));

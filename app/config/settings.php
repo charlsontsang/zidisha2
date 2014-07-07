@@ -4,6 +4,8 @@ return [
     'Site' => [
         'site.replyTo' => [
             'label' => 'Reply To',
+            'default' => 'service@zidisha.org',
+            'rule' => 'required|email',
         ],
     ],
     'API' => [
@@ -16,10 +18,10 @@ return [
         'mixpanel.token' => [
             'label' => 'Mixpanel Token',
         ],
-        'stripe.public_key' => [
+        'stripe.publicKey' => [
             'label' => 'Stripe Public Key',
         ],
-        'stripe.secret_key' => [
+        'stripe.secretKey' => [
             'label' => 'Stripe Secret Key',
         ]
     ],

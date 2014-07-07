@@ -2,7 +2,6 @@
 
 use Illuminate\Console\Command;
 use Zidisha\Admin\Setting;
-use Zidisha\Admin\SettingQuery;
 
 class Settings extends Command
 {
@@ -28,22 +27,7 @@ class Settings extends Command
      */
     public function fire()
     {
-        $groups = Setting::getGroups();
-                
-        $settings = SettingQuery::create()->find();
-        $nameToValue = $settings->toKeyValue('name', 'value');
-
-        foreach ($groups as $group => $groupSettings) {
-            foreach ($groupSettings as $name => $options) {
-                if (!isset($nameToValue[$name])) {
-                    $setting = new Setting();
-                    $setting
-                        ->setName($name)
-                        ->setValue($options['default']);
-                    $setting->save();
-                }
-            }
-        }        
+        Setting::import();       
     }
 
 }
