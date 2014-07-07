@@ -32,12 +32,12 @@ class EditForm extends AbstractForm
     public function getRules($data)
     {
         return [
-            'borrower_country'       => '',
+            'borrower_country'       => 'required',
             'dialing_code'           => 'required|numeric|digits_between:1,3',
             'phone_number_length'    => 'required|numeric',
-            'registration_fee'       => '',
-            'installment_period'     => '',
-            'repayment_instructions' => '',
+            'registration_fee'       => 'required',
+            'installment_period'     => 'required',
+            'repayment_instructions' => 'required',
         ];
     }
 
@@ -52,5 +52,10 @@ class EditForm extends AbstractForm
     public function getDefaultInstallmentPeriod()
     {
         return $this->country->getInstallmentPeriod();
+    }
+
+    public function getCurrency()
+    {
+        return $this->country->getCurrencyCode();
     }
 }

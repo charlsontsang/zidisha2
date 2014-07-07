@@ -7,13 +7,10 @@ Countries
 @section('content')
 <h1>Countries</h1>
 <hr/>
-<div class="btn-group btn-group-lg">
-    <a class="btn btn-default active">Borrower Countries</a>
-    <a class="btn btn-default" href="{{ route('admin:countries') . '?other_countries=true' }}">Other Countires</a>
-<div>
-    <br/>
-    <br/>
-    <br/>
+    <ul class="nav nav-tabs" role="tablist">
+        <li class="{{ $otherCountries ? '' : 'active' }}"><a href="{{ route('admin:countries') }}">Borrower Countries</a></li>
+        <li class="{{ !$otherCountries ? '' : 'active' }}"><a href="{{ route('admin:countries') . '?other_countries=true' }}">Other Countires</a></li>
+    </ul>
 
 <table class="table table-striped">
     <thead>
