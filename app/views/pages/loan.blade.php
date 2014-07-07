@@ -14,14 +14,68 @@
         <h3>My Story</h3>
 
         <p>{{ $loan->getBorrower()->getProfile()->getAboutMe() }}</p>
+        @if(Auth::check() && Auth::getUser()->isAdmin())
+        <a href="{{ route('admin:get-translate', $loan->getId()) }}#about-me">Edit translation</a>
+        @endif
+
+        @if($loan->getBorrower()->getProfile()->getAboutMeTranslation())
+        <div>
+            <a class="original-aboutMe" id="toggle-btn"
+               data-toggle="collapse" data-target="#toggle-aboutMe">Display posting in original Language</a>
+
+            <div id="toggle-aboutMe" class="collapse">
+
+                <p>
+                    {{ $loan->getBorrower()->getProfile()->getAboutMeTranslation() }}
+                </p>
+
+            </div>
+        </div>
+        @endif
 
         <h3>About My Business</h3>
 
         <p>{{ $loan->getBorrower()->getProfile()->getAboutBusiness() }}</p>
+        @if(Auth::check() && Auth::getUser()->isAdmin())
+        <a href="{{ route('admin:get-translate', $loan->getId()) }}#about-business">Edit translation</a>
+        @endif
+
+        @if($loan->getBorrower()->getProfile()->getAboutBusinessTranslation())
+        <div>
+            <a class="original-aboutBusiness" id="toggle-btn"
+               data-toggle="collapse" data-target="#toggle-aboutBusiness">Display posting in original Language</a>
+
+            <div id="toggle-aboutBusiness" class="collapse">
+
+                <p>
+                    {{ $loan->getBorrower()->getProfile()->getAboutBusinessTranslation() }}
+                </p>
+
+            </div>
+        </div>
+        @endif
 
         <h3>My Loan Proposal</h3>
 
         <p>{{ $loan->getProposal() }}</p>
+        @if(Auth::check() && Auth::getUser()->isAdmin())
+        <a href="{{ route('admin:get-translate', $loan->getId()) }}#proposal">Edit translation</a>
+        @endif
+
+        @if($loan->getProposalTranslation())
+        <div>
+            <a class="original-proposal" id="toggle-btn"
+               data-toggle="collapse" data-target="#toggle-proposal">Display posting in original Language</a>
+
+            <div id="toggle-proposal" class="collapse">
+
+                <p>
+                    {{ $loan->getProposalTranslation() }}
+                </p>
+
+            </div>
+        </div>
+        @endif
         <br/>
         <br/>
         <h4>Comments</h4>
@@ -67,7 +121,7 @@
                     <a class="previous-loans" id="toggle-btn"
                        data-toggle="collapse" data-target="#toggle-example">View Previous Loans</a>
 
-                    <div id="toggle-example" class="collapse in">
+                    <div id="toggle-example" class="collapse">
                         @foreach($previousLoans as $oneLoan)
                         <p><a href="{{ route('loan:index', $oneLoan->getId()) }}">USD {{ $oneLoan->getNativeAmount() }}
                                 {{ $oneLoan->getApplicationDate()->format('d-m-Y') }}
@@ -248,6 +302,27 @@
     $(document).ready(function () {
         $('.previous-loans').click(function () {
             $("#toggle-example").collapse('toggle');
+        });
+    });
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.original-aboutMe').click(function () {
+            $("#toggle-aboutMe").collapse('toggle');
+        });
+    });
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.original-aboutBusiness').click(function () {
+            $("#toggle-aboutBusiness").collapse('toggle');
+        });
+    });
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.original-proposal').click(function () {
+            $("#toggle-proposal").collapse('toggle');
         });
     });
 </script>
