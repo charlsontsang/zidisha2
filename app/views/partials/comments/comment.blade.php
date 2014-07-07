@@ -1,7 +1,7 @@
 <li id="comment-{{ $comment->getId() }}" class="comment">
         <div>
             <div class="media">
-                @if($comment->getUser())
+                @if($comment->getUser() && !$comment->getUser()->isAdmin())
                     <a class="pull-left" href="{{ $comment->getUser()->getProfileUrl() }}">
                         <img class="media-object" width="100px" height="100px" src="{{ $comment->getUser()->getProfilePictureUrl() }}" alt="">
                     </a>
@@ -13,8 +13,10 @@
 
                 <div class="media-body">
                     <h4 class="media-heading">
-                        @if($comment->getUser())
+                        @if($comment->getUser() && !$comment->getUser()->isAdmin())
                             <a href="{{ $comment->getUser()->getProfileUrl() }}">{{ $comment->getUser()->getUsername() }}</a>
+                        @else
+                            {{ $comment->getUser()->getUsername() }}
                         @endif
                         <small>{{ $comment->getCreatedAt()->format('M d, Y') }}</small>
                     </h4>
