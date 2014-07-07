@@ -9,6 +9,7 @@ use Zidisha\Comment\CommentService;
 use Zidisha\Flash\Flash;
 use Zidisha\Lender\Exceptions\InsufficientLenderBalanceException;
 use Zidisha\Loan\Bid;
+use Zidisha\Loan\Form\AdminCategoryForm;
 use Zidisha\Loan\Form\BidForm;
 use Zidisha\Loan\Loan;
 use Zidisha\Loan\LoanQuery;
@@ -38,6 +39,7 @@ class LoanController extends BaseController
      */
     private $loanService;
     private $borrowerService;
+    private $adminCategoryForm;
 
     public function  __construct(
         LoanQuery $loanQuery,
@@ -45,7 +47,8 @@ class LoanController extends BaseController
         BidQuery $bidQuery,
         \Zidisha\Payment\Form\PlaceBidForm $bidForm,
         LoanService $loanService,
-        BorrowerService $borrowerService
+        BorrowerService $borrowerService,
+        AdminCategoryForm $adminCategoryForm
     ) {
         $this->loanQuery = $loanQuery;
         $this->bidQuery = $bidQuery;
@@ -53,6 +56,7 @@ class LoanController extends BaseController
         $this->bidForm = $bidForm;
         $this->loanService = $loanService;
         $this->borrowerService = $borrowerService;
+        $this->adminCategoryForm = $adminCategoryForm;
     }
 
     public function getIndex($loanId)
@@ -92,7 +96,7 @@ class LoanController extends BaseController
             'pages.loan',
             compact('loan', 'borrower' , 'bids', 'totalRaised', 'stillNeeded', 'comments', 'raised', 'totalInterest',
                 'transactionFee', 'previousLoans'),
-            ['form' => $this->bidForm,]
+            ['form' => $this->bidForm, 'formCategory' =>$this->adminCategoryForm]
         );
     }
 

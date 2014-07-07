@@ -11,6 +11,7 @@ use Zidisha\Borrower\FeedbackMessageQuery;
 use Zidisha\Country\CountryQuery;
 use Zidisha\Currency\CurrencyService;
 use Zidisha\Lender\LenderQuery;
+use Zidisha\Loan\Form\AdminCategoryForm;
 use Zidisha\Loan\LoanQuery;
 use Zidisha\Loan\LoanService;
 use Zidisha\Loan\Loan;
@@ -25,6 +26,7 @@ class AdminController extends BaseController
     private $currencyService;
     private $featureFeedbackForm;
     private $borrowerService;
+    private $adminCategoryForm;
 
     public function  __construct(
         LenderQuery $lenderQuery,
@@ -37,7 +39,8 @@ class AdminController extends BaseController
         CurrencyService $currencyService,
         ExchangeRateForm $exchangeRateForm,
         FeatureFeedbackForm $featureFeedbackForm,
-        BorrowerService $borrowerService
+        BorrowerService $borrowerService,
+        AdminCategoryForm $adminCategoryForm
     ) {
         $this->lenderQuery = $lenderQuery;
         $this->$borrowerQuery = $borrowerQuery;
@@ -50,6 +53,7 @@ class AdminController extends BaseController
         $this->currencyService = $currencyService;
         $this->featureFeedbackForm = $featureFeedbackForm;
         $this->borrowerService = $borrowerService;
+        $this->adminCategoryForm = $adminCategoryForm;
     }
 
     public
@@ -243,5 +247,24 @@ class AdminController extends BaseController
         }
 
         return Redirect::route('admin:loan-feedback', $loanId)->withForm($form);
+    }
+
+    public function postAdminCategory($loanId)
+    {
+        $form = $this->adminCategoryForm;
+        $form->handleRequest(Request::instance());
+
+        if ($form->isValid()) {
+        $data = $form->getData();
+
+        $this->loanService->addLoanCategories($loanId, $data);
+
+        \Flash::success("Categories successfully set!");
+        return Redirect::route('loan:index', $loanId);
+    }
+
+        \Flash::success("Couldn't set categories!");
+        return Redirect::route('loan:index', $loanId)->withForm($form);
+
     }
 }
