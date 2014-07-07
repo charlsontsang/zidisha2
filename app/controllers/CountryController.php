@@ -28,4 +28,15 @@ class CountryController extends BaseController
         return View::make('admin.country.index', compact('countries'));
     }
 
+    public function editCountry($id)
+    {
+        $country = CountryQuery::create()
+            ->findOneById($id);
+
+        $form = new EditForm($country);
+
+        return View::make('admin.country.edit', compact('form', 'country'));
+
+    }
+
 }
