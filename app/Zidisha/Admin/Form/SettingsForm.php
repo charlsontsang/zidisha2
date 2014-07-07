@@ -33,7 +33,7 @@ class SettingsForm extends AbstractForm
 
         foreach ($groups as $group => $groupSettings) {
             foreach ($groupSettings as $name => $options) {
-                $rules[str_replace('.', '_', $name)] = $options['rule'];
+                $rules[str_replace('.', '_', $name)] = 'required|' . $options['rule'];
             }
         }
 

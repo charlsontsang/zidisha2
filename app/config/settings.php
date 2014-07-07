@@ -1,11 +1,13 @@
 <?php
 
+// Don't add the "required" validation rule!
+
 return [
     'Site' => [
         'site.replyTo' => [
             'label' => 'Reply To',
             'default' => 'service@zidisha.org',
-            'rule' => 'required|email',
+            'rule' => 'email',
         ],
     ],
     'API' => [
