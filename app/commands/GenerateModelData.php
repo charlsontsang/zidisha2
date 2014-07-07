@@ -85,7 +85,6 @@ class GenerateModelData extends Command
             $this->call('fake', array('model' => 'Loan', 'size' => 150));
             $this->call('fake', array('model' => 'Bid', 'size' => 50));
             $this->call('fake', array('model' => 'Transaction', 'size' => 200));
-            $this->call('fake', array('model' => 'Setting', 'size' => 1));
             $this->call('fake', array('model' => 'Installment', 'size' => 200));
             $this->call('fake', array('model' => 'Invite', 'size' => 200));
 
@@ -119,7 +118,6 @@ class GenerateModelData extends Command
             ->getData();
 
         $categories = include(app_path() . '/database/LoanCategories.php');
-        $settings = include(app_path() . '/database/AdminSettings.php');
         $loanService = App::make('\Zidisha\Loan\LoanService');
 
         $this->line("Generate $model");
@@ -342,19 +340,6 @@ class GenerateModelData extends Command
                 $country->setPhoneNumberLength(9);
                 $country->setInstallmentPeriod($faker->randomElement([Loan::WEEKLY_INSTALLMENT, Loan::MONTHLY_INSTALLMENT]));
                 $country->save();
-            }
-
-            if ($model == "Setting") {
-                if ($i >= 2) {
-                    continue;
-                }
-
-                $oneSetting = $settings[$i - 1];
-
-                $setting = new Setting();
-                $setting->setName($oneSetting[0]);
-                $setting->setValue($oneSetting[1]);
-                $setting->save();
             }
 
             if ($model == "Category") {

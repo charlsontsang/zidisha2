@@ -197,6 +197,7 @@ return array(
         'BootstrapForm'   => 'Zidisha\Html\BootstrapForm',
         'Image'           => 'Intervention\Image\Facades\Image',
         'Debugbar'        => 'Barryvdh\Debugbar\Facade',
+        'Setting'         => 'Zidisha\Admin\Setting',
 	),
 
 );

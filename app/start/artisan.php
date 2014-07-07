@@ -13,3 +13,4 @@
 
 Artisan::add(new ApplicationSetup);
 Artisan::add(new GenerateModelData);
+Artisan::add(new Settings);
