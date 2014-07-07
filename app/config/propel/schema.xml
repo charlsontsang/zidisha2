@@ -330,6 +330,7 @@
     <table name="settings" phpName="Setting" namespace="Admin">
         <column name="name" type="VARCHAR" size="45" required="true" primaryKey="true"/>
         <column name="value" type="VARCHAR" size="45" required="true" defaultValue="0"/>
+        <behavior name="timestampable"/>
     </table>
 
     <table name="installments" phpName="Installment" namespace="Repayment">
@@ -340,6 +341,7 @@
         <column name="native_amount" type="DECIMAL" size="10" scale="2" phpType="string"/>
         <column name="paid_date" type="TIMESTAMP"/>
         <column name="native_paid_amount" type="DECIMAL" size="10" scale="2" phpType="string"/>
+        <behavior name="timestampable"/>
         <foreign-key foreignTable="loans">
             <reference local="loan_id" foreign="id"/>
         </foreign-key>
@@ -355,6 +357,7 @@
         <column name="loan_id" type="INTEGER" required="true"/>
         <column name="paid_date" type="TIMESTAMP" required="true"/>
         <column name="paid_amount" type="DECIMAL" size="15" scale="4" phpType="string" required="true"/>
+        <behavior name="timestampable"/>
         <foreign-key foreignTable="loans">
             <reference local="loan_id" foreign="id"/>
         </foreign-key>
@@ -381,6 +384,7 @@
         <column name="phone" type="VARCHAR" size="45" required="true"/>
         <column name="details" type="LONGVARCHAR" required="true"/>
         <column name="error" type="LONGVARCHAR"/>
+        <behavior name="timestampable"/>
         <foreign-key foreignTable="borrowers">
             <reference local="borrower_id" foreign="id"/>
         </foreign-key>
