@@ -87,6 +87,7 @@
 
                     <ul class="dropdown-menu">
                         <li><a href="{{ route('admin:countries') }}">Countries</a></li>
+                        <li><a href="{{ route('admin:settings') }}">Other Settings</a></li>
                     </ul>
                 </li>
                 @endif
