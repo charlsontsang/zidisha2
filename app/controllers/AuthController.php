@@ -6,6 +6,7 @@ use Zidisha\Borrower\JoinLogQuery;
 use Zidisha\User\UserQuery;
 use Zidisha\Vendor\Facebook\FacebookService;
 use Zidisha\Vendor\Mixpanel;
+use Zidisha\Vendor\SiftScience\SiftScienceService;
 
 class AuthController extends BaseController
 {
@@ -13,10 +14,13 @@ class AuthController extends BaseController
     private $facebookService;
     private $authService;
 
-    public function __construct(FacebookService $facebookService, AuthService $authService)
+    private $siftScienceService;
+
+    public function __construct(FacebookService $facebookService, AuthService $authService, siftScienceService $siftScienceService)
     {
         $this->facebookService = $facebookService;
         $this->authService = $authService;
+        $this->siftScienceService = $siftScienceService;
     }
 
     public function getLogin()
@@ -38,12 +42,17 @@ class AuthController extends BaseController
             return $this->login();
         }
 
+        $this->siftScienceService->sendInvalidLoginEvent();
+
         Flash::error("Wrong username or password!");
         return Redirect::route('login');
     }
 
     public function getLogout()
     {
+        $user = \Auth::user();
+        $this->siftScienceService->sendLogoutEvent($user);
+
         Auth::logout();
         Session::flush();
         Session::regenerate();
@@ -93,6 +102,7 @@ class AuthController extends BaseController
             )
         );
         Mixpanel::track('Logged in');
+        $this->siftScienceService->sendLoginEvent($user);
 
         if ($role == 'lender') {
             return Redirect::route('lender:dashboard');

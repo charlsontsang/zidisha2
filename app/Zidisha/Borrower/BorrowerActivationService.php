@@ -7,6 +7,7 @@ use Zidisha\Borrower\Borrower;
 use Zidisha\Mail\BorrowerMailer;
 use Zidisha\User\User;
 use Zidisha\Vendor\PropelDB;
+use Zidisha\Vendor\SiftScience\SiftScienceService;
 
 class BorrowerActivationService
 {
@@ -15,10 +16,15 @@ class BorrowerActivationService
      * @var \Zidisha\Mail\BorrowerMailer
      */
     private $borrowerMailer;
+    /**
+     * @var siftScienceService
+     */
+    private $siftScienceService;
 
-    public function __construct(BorrowerMailer $borrowerMailer)
+    public function __construct(BorrowerMailer $borrowerMailer, siftScienceService $siftScienceService)
     {
         $this->borrowerMailer = $borrowerMailer;
+        $this->siftScienceService = $siftScienceService;
     }
     
     public function review(Borrower $borrower, User $user, $data)
@@ -88,6 +94,7 @@ class BorrowerActivationService
             $this->borrowerMailer->sendApprovedConfirmationMail($borrower);
         } else {
             $this->borrowerMailer->sendDeclinedConfirmationMail($borrower);
+            $this->siftScienceService->sendBorrowerDeclinedEvent($borrower);
         }
     }
 }
