@@ -177,39 +177,6 @@ class AdminController extends BaseController
         return Redirect::route('admin:exchange-rates', $countrySlug)->withForm($form);
     }
 
-    public function getPendingActivation()
-    {
-        $page = Request::query('page') ?: 1;
-        
-        $paginator = BorrowerQuery::create()
-            ->filterByVerified(true)
-            ->orderByCreatedAt() // Todo registration date
-            ->joinWith('Profile')
-            ->paginate($page, 50);
-        
-        $paginator->populateRelation('Contact');
-        $paginator->populateRelation('User');
-        $paginator->populateRelation('Country');
-
-        return View::make('admin.pending-activation', compact('paginator'));
-    }
-
-    public function getBorrowerPendingActivation($borrowerId)
-    {
-        $borrower = BorrowerQuery::create()
-            ->filterById($borrowerId)
-            ->findOne();
-
-        if (!$borrower) {
-            App::abort(404);
-        }
-
-        return View::make(
-            'admin.pending-borrower-activation',
-            compact('borrower')
-        );
-    }
-
     public function getLoanFeedback($loanId)
     {
         $loan = LoanQuery::create()
