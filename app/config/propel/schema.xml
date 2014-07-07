@@ -49,6 +49,7 @@
         <column name="borrower_country" type="BOOLEAN"/>
         <column name="registration_fee" type="DECIMAL" size="10" scale="2" defaultValue="0.00" phpType="string"/>
         <column name="installment_period" type="ENUM" valueSet="monthly, weekly"/>
+        <column name="repayment_instructions" type="LONGVARCHAR" required="false"/>
         <index name="name">
             <index-column name="name"/>
         </index>

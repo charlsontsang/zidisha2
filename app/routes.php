@@ -221,6 +221,10 @@ Route::group(
         Route::get('loan/{id}/translate', array('uses' => 'AdminController@getTranslate', 'as' => 'admin:get-translate'));
         Route::post('loan/{id}/translate', array('uses' => 'AdminController@postTranslate', 'as' => 'admin:post-translate',
                 'before' => 'csrf'));
+        Route::post('loan/{id}', array('uses' => 'AdminController@postAdminCategory', 'as' => 'admin:post-category'));
+        Route::get('countries', array('uses' => 'CountryController@getCountries', 'as' => 'admin:countries'));
+        Route::get('countries/edit/{id}', array('uses' => 'CountryController@editCountry', 'as' => 'admin:edit:country'));
+        Route::post('countries/edit/{id}', array('uses' => 'CountryController@postEditCountry', 'as' => 'admin:post:edit:country'));
     }
 );
 /**
