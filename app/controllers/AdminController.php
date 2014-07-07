@@ -251,17 +251,18 @@ class AdminController extends BaseController
 
     public function postAdminCategory($loanId)
     {
+        $loan = LoanQuery::create()
+            ->findOneById($loanId);
+
+        if (!$loan) {
+            App::abort(404);
+        }
+
         $form = $this->adminCategoryForm;
         $form->handleRequest(Request::instance());
 
         if ($form->isValid()) {
             $data = $form->getData();
-            $loan = LoanQuery::create()
-                ->findOneById($loanId);
-            if(!$loan){
-                App::abort(404);
-            }
-
             $this->loanService->updateLoanCategories($loan, $data);
 
             \Flash::success("Categories successfully set!");
