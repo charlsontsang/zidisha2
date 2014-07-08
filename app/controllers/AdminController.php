@@ -16,11 +16,13 @@ use Zidisha\Comment\CommentQuery;
 use Zidisha\Borrower\Form\AdminEditForm;
 use Zidisha\Country\CountryQuery;
 use Zidisha\Currency\CurrencyService;
+use Zidisha\Lender\GiftCardQuery;
 use Zidisha\Lender\LenderQuery;
 use Zidisha\Loan\Form\AdminCategoryForm;
 use Zidisha\Loan\LoanQuery;
 use Zidisha\Loan\LoanService;
 use Zidisha\Loan\Loan;
+use Zidisha\Mail\LenderMailer;
 
 class AdminController extends BaseController
 {
@@ -34,6 +36,7 @@ class AdminController extends BaseController
     private $borrowerService;
     private $adminCategoryForm;
     protected $translateForm;
+    private $lenderMailer;
 
     public function  __construct(
         LenderQuery $lenderQuery,
@@ -49,7 +52,8 @@ class AdminController extends BaseController
         BorrowerService $borrowerService,
         AdminCategoryForm $adminCategoryForm,
         TranslateForm $translateForm,
-        TranslationFeedForm $translationFeedForm
+        TranslationFeedForm $translationFeedForm,
+        LenderMailer $lenderMailer
     ) {
         $this->lenderQuery = $lenderQuery;
         $this->$borrowerQuery = $borrowerQuery;
@@ -65,6 +69,7 @@ class AdminController extends BaseController
         $this->adminCategoryForm = $adminCategoryForm;
         $this->translateForm = $translateForm;
         $this->translationFeedForm = $translationFeedForm;
+        $this->lenderMailer = $lenderMailer;
     }
 
     public
@@ -433,5 +438,28 @@ class AdminController extends BaseController
                 'type', 'loans', 'comments', 'paginator'
             ), ['form' => $this->translationFeedForm,]
         );
+    }
+
+    public function getGiftCards()
+    {
+        $page = Request::query('page') ? : 1;
+
+        $paginator = GiftCardQuery::create()
+            ->orderByDate('desc')
+            ->paginate($page, 10);
+
+        return View::make('admin.gift-cards', compact('paginator'));
+    }
+
+    public function resendEmailToRecipient($id)
+    {
+        $giftCard = GiftCardQuery::create()
+            ->findOneById($id);
+
+        $this->lenderMailer->sendGiftCardMailToRecipient($giftCard);
+
+        \Flash::success("Email successfully sent!");
+        return Redirect::route('admin:get:gift-cards');
+
     }
 }
