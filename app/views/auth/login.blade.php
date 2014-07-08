@@ -9,7 +9,7 @@
             </a>
         </div>
 
-        {{ BootstrapForm::open(array('url' => 'login', 'translationDomain' => 'login.form')) }}
+        {{ BootstrapForm::open(array('action' => 'AuthController@postLogin', 'translationDomain' => 'login.form')) }}
         
         {{ BootstrapForm::text('username') }}
         {{ BootstrapForm::password('password') }}
