@@ -76,7 +76,7 @@ class ApplicationForm extends AbstractForm
                 ->orderBySortableRank()
                 ->findByAdminOnly(false);
 
-        if($language->getLanguageCode() == 'IN' || $language->getLanguageCode() == 'FR')
+        if($language->getLanguageCode() != 'EN')
         {
             foreach($categories as $category){
                 $translation = CategoryTranslationQuery::create()
