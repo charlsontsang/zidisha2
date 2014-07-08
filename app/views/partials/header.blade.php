@@ -69,6 +69,7 @@
                         <li><a href="{{ route('admin:borrowers') }}">Find Borrowers</a></li>
                         <li><a href="{{ route('admin:borrower-activation') }}">Pending Activation</a></li>
                         <li><a href="{{ route('admin:loans') }}">Find Loans</a></li>
+                        <li><a href="{{ route('admin:get:translation-feed') }}">Translation Feed</a></li>
                     </ul>
                 </li>
                 <li class="dropdown">
@@ -78,6 +79,7 @@
 
                     <ul class="dropdown-menu">
                         <li><a href="{{ route('admin:lenders') }}">Find Lenders</a></li>
+                        <li><a href="{{ route('admin:get:gift-cards') }}">Gift Cards</a></li>
                      </ul>
                 </li>
                 <li class="dropdown">

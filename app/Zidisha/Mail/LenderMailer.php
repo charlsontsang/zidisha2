@@ -4,6 +4,7 @@ namespace Zidisha\Mail;
 
 use Carbon\Carbon;
 use Symfony\Component\Translation\Tests\String;
+use Zidisha\Lender\GiftCard;
 use Zidisha\Lender\Invite;
 use Zidisha\Lender\Lender;
 use Zidisha\Loan\Bid;
@@ -38,8 +39,8 @@ class LenderMailer
         $this->mailer->send(
             'emails.loan.placed-first-bid',
             [
-                'to' => $email,
-                'from' => 'service@zidisha.com',
+                'to'      => $email,
+                'from'    => 'service@zidisha.com',
                 'subject' => 'Congratulations you have made your first Bid on Zidisha.'
             ]
         );
@@ -56,8 +57,8 @@ class LenderMailer
         $this->mailer->send(
             'emails.loan.loan-completed',
             [
-                'to' => $email,
-                'from' => 'service@zidisha.com',
+                'to'      => $email,
+                'from'    => 'service@zidisha.com',
                 'subject' => 'The loan is fully funded.'
             ]
         );
@@ -73,8 +74,8 @@ class LenderMailer
         $this->mailer->send(
             'emails.loan.bid-placed',
             [
-                'to' => $email,
-                'from' => 'service@zidisha.com',
+                'to'      => $email,
+                'from'    => 'service@zidisha.com',
                 'subject' => 'Congratulations your Bid is successfully placed on Zidisha.'
             ]
         );
@@ -94,12 +95,44 @@ class LenderMailer
     public function sendLenderIntroMail(Lender $lender)
     {
         $time = Carbon::create()->addDay();
-        $this->mailer->later($time, 'emails.lender.introduction',
-        [
-            'to' => $lender->getUser()->getEmail(),
-            'from' => 'service@zidisha.com',
-            'subject' => 'Welcome to Zidisha!'
-        ]
+        $this->mailer->later(
+            $time,
+            'emails.lender.introduction',
+            [
+                'to'      => $lender->getUser()->getEmail(),
+                'from'    => 'service@zidisha.com',
+                'subject' => 'Welcome to Zidisha!'
+            ]
+        );
+    }
+
+    public function sendGiftCardMailToSender(GiftCard $giftCard)
+    {
+        $email = $giftCard->getLender()->getUser()->getEmail();
+
+        $this->mailer->send(
+            'emails.lender.gift-card-sender',
+            [
+                'card'    => $giftCard,
+                'to'      => $email,
+                'from'    => 'service@zidisha.com',
+                'subject' => 'Your Gift Card Order.'
+            ]
+        );
+    }
+
+    public function sendGiftCardMailToRecipient(GiftCard $giftCard)
+    {
+        $email = $giftCard->getRecipientEmail();
+
+        $this->mailer->send(
+            'emails.lender.gift-card-receiver',
+            [
+                'card'    => $giftCard,
+                'to'      => $email,
+                'from'    => 'service@zidisha.com',
+                'subject' => 'Your Gift Card Order.'
+            ]
         );
     }
 }

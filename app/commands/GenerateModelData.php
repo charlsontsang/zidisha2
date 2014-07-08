@@ -16,6 +16,7 @@ use Zidisha\Country\Language;
 use Zidisha\Currency\Money;
 use Zidisha\Borrower\Borrower;
 
+use Zidisha\Lender\GiftCard;
 use Zidisha\Lender\Invite;
 use Zidisha\Lender\LenderQuery;
 use Zidisha\Loan\Bid;
@@ -100,6 +101,7 @@ class GenerateModelData extends Command
             $this->call('fake', array('model' => 'Installment', 'size' => 200));
             $this->call('fake', array('model' => 'Invite', 'size' => 200));
             $this->call('fake', array('model' => 'Comment', 'size' => 200));
+            $this->call('fake', array('model' => 'GiftCard', 'size' => 100));
 
             $this->line('Done!');
             return;
@@ -559,6 +561,35 @@ class GenerateModelData extends Command
                 }
 
                 $comment->save();
+            }
+
+            if($model == "GiftCard") {
+                $lender = $allLenders[array_rand($allLenders->getData())];
+                $amount = Money::create(rand(15, 1000), 'USD');
+                $faker = Faker::create();
+                $orderTypes = [0,1];
+                $isClaimed = $randArray[array_rand($randArray)];
+
+
+                $giftCard = new GiftCard();
+                $giftCard->setLender($lender)
+                    ->setOrderType(array_rand([0,1]))
+                    ->setCardAmount($amount)
+                    ->setFromName($lender->getName())
+                    ->setMessage($faker->sentence(10))
+                    ->setRecipientEmail($faker->email)
+                    ->setDate(new \DateTime())
+                    ->setExpireDate(strtotime('+1 year'))
+                    ->setCardCode($faker->creditCardNumber);
+
+                if($isClaimed){
+                    $recipient = $allLenders[array_rand($allLenders->getData())];
+                    $giftCard->setClaimed(1)
+                        ->setRecipientName($recipient->getName())
+                        ->setRecipient($recipient);
+                }
+
+                $giftCard->save();
             }
         }
     }

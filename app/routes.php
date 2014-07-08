@@ -420,6 +420,10 @@ Route::group(
                     )
                 );
 
+                Route::get('gift-cards', array('uses' => 'AdminController@getGiftCards', 'as' => 'admin:get:gift-cards'));
+                Route::get('gift-cards/resend/{id}', array('uses' => 'AdminController@resendEmailToRecipient', 'as' => 'admin:resend'));
+
+                Route::controller('paypal', 'PayPalController');
             }
         );
         /**
@@ -440,10 +444,5 @@ Route::group(
             'invite',
             array('uses' => 'LenderInviteController@postInvite', 'as' => 'lender:post-invite', 'before' => 'csrf')
         );
-
-        /**
-         * Routes for PayPal Payments Processing
-         */
-        Route::controller('paypal', 'PayPalController');
     }
 );

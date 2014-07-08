@@ -8,15 +8,18 @@ use Zidisha\Balance\Map\TransactionTableMap;
 use Zidisha\Balance\TransactionService;
 use Zidisha\Currency\Money;
 use Faker\Factory as Faker;
+use Zidisha\Mail\LenderMailer;
 
 class GiftCardService
 {
 
     private $transactionService;
+    private $lenderMailer;
 
-    public function __construct(TransactionService $transactionService)
+    public function __construct(TransactionService $transactionService, LenderMailer $lenderMailer)
     {
         $this->transactionService = $transactionService;
+        $this->lenderMailer = $lenderMailer;
     }
 
     public function validateCode($redemptionCode)
@@ -91,7 +94,8 @@ class GiftCardService
             throw $e;
         }
 
-        // Todo send email
+        $this->lenderMailer->sendGiftCardMailToSender($giftCard);
+        $this->lenderMailer->sendGiftCardMailToRecipient($giftCard);
 
         return $giftCard;
     }
