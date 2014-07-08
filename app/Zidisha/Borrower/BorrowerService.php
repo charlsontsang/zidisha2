@@ -118,7 +118,7 @@ class BorrowerService
         PropelDB::transaction(function($con) use($borrower, $data, $updatedContacts) {
             $profile = $borrower->getProfile();
             $profile->setAddress($data['address']);
-            $profile->setAddressInstructions($data['addressInstruction']);
+            $profile->setAddressInstructions($data['addressInstructions']);
             $profile->setCity($data['city']);
             $profile->setNationalIdNumber($data['nationalIdNumber']);
             $profile->setPhoneNumber($data['phoneNumber']);
@@ -169,6 +169,21 @@ class BorrowerService
         foreach ($updatedContacts as $contact) {
             $this->borrowerSmsService->sendBorrowerJoinedContactConfirmationSms($contact);
         }
+    }
+
+
+    public function updateProfileInformation(Borrower $borrower, $data)
+    {
+        $borrower->setFirstName($data['firstName']);
+        $borrower->setLastName($data['lastName']);
+        $borrower->getUser()->setEmail($data['email']);
+        $borrower->setCountryId($data['countryId']);
+
+        if (!empty($data['password'])) {
+            $borrower->getUser()->setPassword($data['password']);
+        }
+
+        $borrower->save();
     }
 
     public function editBorrower(Borrower $borrower, $data, $files = [])

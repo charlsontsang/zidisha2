@@ -13,6 +13,7 @@ use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Borrower\BorrowerService;
 use Zidisha\Borrower\FeedbackMessageQuery;
 use Zidisha\Comment\CommentQuery;
+use Zidisha\Borrower\Form\AdminEditForm;
 use Zidisha\Country\CountryQuery;
 use Zidisha\Currency\CurrencyService;
 use Zidisha\Lender\LenderQuery;
@@ -112,6 +113,51 @@ class AdminController extends BaseController
             ->filterByBorrowerId($borrowerId);
 
         return View::make('admin.borrower', compact('borrower', 'personalInformation', 'loans'));
+    }
+
+    public function getBorrowerEdit($borrowerId)
+    {
+        $borrower = BorrowerQuery::create()
+            ->filterById($borrowerId)
+            ->findOne();
+
+        if (!$borrower) {
+            App::abort(404);
+        }
+
+        $form = new AdminEditForm($borrower);
+
+        return \View::make(
+            'admin.borrower-information',
+            compact('form', 'borrower', 'borrowerId')
+        );
+    }
+
+    public function postBorrowerEdit($borrowerId)
+    {
+        $borrower = BorrowerQuery::create()
+            ->filterById($borrowerId)
+            ->findOne();
+
+        if (!$borrower) {
+            App::abort(404);
+        }
+
+        $form = new AdminEditForm($borrower);
+        $form->handleRequest(Request::instance());
+
+        if ($form->isValid()) {
+            $this->borrowerService->updatePersonalInformation($borrower, $form->getNestedData());
+
+            $data = $form->getData();
+            $this->borrowerService->updateProfileInformation($borrower, $data);
+
+            Flash::success('Changes updated.');
+            return Redirect::route('admin:borrower:edit', $borrowerId);
+        }
+
+        Flash::error('Please submit correct data.');
+        return Redirect::route('admin:borrower:edit', $borrowerId)->withForm($form);
     }
 
     public function getLenders()

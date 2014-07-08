@@ -201,6 +201,8 @@ Route::group(
         Route::get('dashboard', array('uses' => 'AdminController@getDashboard', 'as' => 'admin:dashboard'));
         Route::get('borrowers', array('uses' => 'AdminController@getBorrowers', 'as' => 'admin:borrowers'));
         Route::get('borrowers/{borrowerId}', array('uses' => 'AdminController@getBorrower', 'as' => 'admin:borrower'));
+        Route::get('borrowers/{borrowerId}/edit', array('uses' => 'AdminController@getBorrowerEdit', 'as' => 'admin:borrower:edit'));
+        Route::post('borrowers/{borrowerId}/edit', array('uses' => 'AdminController@postBorrowerEdit', 'as' => 'admin:borrower:edit:post'));
         Route::get('lenders', array('uses' => 'AdminController@getLenders', 'as' => 'admin:lenders'));
         Route::get('loans', array('uses' => 'AdminController@getLoans', 'as' => 'admin:loans'));
         Route::get('/settings/exchange-rates/{countryName?}', array('uses' => 'AdminController@getExchangeRates' ,
