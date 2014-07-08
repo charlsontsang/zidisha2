@@ -118,7 +118,7 @@ class BorrowerService
         PropelDB::transaction(function($con) use($borrower, $data, $updatedContacts) {
             $profile = $borrower->getProfile();
             $profile->setAddress($data['address']);
-            $profile->setAddressInstructions($data['addressInstruction']);
+            $profile->setAddressInstructions($data['addressInstructions']);
             $profile->setCity($data['city']);
             $profile->setNationalIdNumber($data['nationalIdNumber']);
             $profile->setPhoneNumber($data['phoneNumber']);
