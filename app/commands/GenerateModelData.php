@@ -22,6 +22,7 @@ use Zidisha\Lender\LenderQuery;
 use Zidisha\Loan\Bid;
 use Zidisha\Loan\Category;
 use Zidisha\Loan\CategoryQuery;
+use Zidisha\Loan\CategoryTranslation;
 use Zidisha\Loan\Loan;
 use Zidisha\Loan\LoanQuery;
 use Zidisha\Loan\Stage;
@@ -102,6 +103,7 @@ class GenerateModelData extends Command
             $this->call('fake', array('model' => 'Invite', 'size' => 200));
             $this->call('fake', array('model' => 'Comment', 'size' => 200));
             $this->call('fake', array('model' => 'GiftCard', 'size' => 100));
+            $this->call('fake', array('model' => 'CategoryTranslation', 'size' => 10));
 
             $this->line('Done!');
             return;
@@ -123,6 +125,12 @@ class GenerateModelData extends Command
         $allCategories = CategoryQuery::create()
             ->filterByAdminOnly(false)
             ->orderByRank()
+            ->find()
+            ->getData();
+
+
+        $allLanguages = \Zidisha\Country\LanguageQuery::create()
+            ->filterByActive(true)
             ->find()
             ->getData();
 
@@ -189,6 +197,29 @@ class GenerateModelData extends Command
                 $lang->setActive($language[2]);
                 $lang->save();
 
+            }
+        }
+
+        if ($model == "CategoryTranslation") {
+
+            $allCategories = CategoryQuery::create()
+                ->filterByAdminOnly(false)
+                ->find();
+
+            $allLanguages = \Zidisha\Country\LanguageQuery::create()
+                ->filterByActive(true)
+                ->find();
+
+            foreach($allCategories as $Category)
+            {
+                foreach($allLanguages as $language)
+                {
+                    $translation = new CategoryTranslation();
+                    $translation->setCategory($Category)
+                        ->setLanguage($language)
+                        ->setTranslation($Category->getName(). $language->getLanguageCode());
+                    $translation->save();
+                }
             }
         }
 
@@ -567,7 +598,6 @@ class GenerateModelData extends Command
                 $lender = $allLenders[array_rand($allLenders->getData())];
                 $amount = Money::create(rand(15, 1000), 'USD');
                 $faker = Faker::create();
-                $orderTypes = [0,1];
                 $isClaimed = $randArray[array_rand($randArray)];
 
 
