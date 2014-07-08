@@ -15,7 +15,7 @@ class GiftCard extends AbstractForm
             'amount' => 'required|in:' . implode(',', array_keys($this->getAmounts())),
             'orderType' => 'required|in:Email,Self-Print',
             'template' => 'required|in:' . implode(',', array_keys($this->getTemplates())),
-            'recipientEmail' => 'email',
+            'recipientEmail' => 'email|required_if:orderType,Email',
             'recipientName' => '',
             'fromName' => '',
             'message' => '',
