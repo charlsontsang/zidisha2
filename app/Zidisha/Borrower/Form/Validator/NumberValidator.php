@@ -4,6 +4,7 @@ namespace Zidisha\Borrower\Form\Validator;
 use Illuminate\Validation\Validator;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Zidisha\Borrower\ProfileQuery;
+use Zidisha\User\UserQuery;
 
 class NumberValidator extends Validator
 {
@@ -25,6 +26,26 @@ class NumberValidator extends Validator
     }
 
     protected function replaceUniqueNumber($message, $attribute, $rule, $parameters)
+    {
+        return $attribute . ' already exits in the database.';
+    }
+
+    public function validateUniqueEmail($attribute, $value, $parameters)
+    {
+        $id = $parameters[0];
+
+        $userEmail = UserQuery::create()
+            ->filterById( $id, Criteria::NOT_EQUAL)
+            ->filterByEmail($value)
+            ->count();
+
+        if ($userEmail) {
+            return false;
+        }
+        return true;
+    }
+
+    protected function ReplaceUniqueEmail($message, $attribute, $rule, $parameters)
     {
         return $attribute . ' already exits in the database.';
     }
