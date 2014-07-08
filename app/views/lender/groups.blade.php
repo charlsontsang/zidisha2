@@ -32,7 +32,11 @@ Lending Groups
     <tbody>
     @foreach($paginator as $group)
     <tr>
-        <td>{{ $group->getName() }}</td>
+        <td>{{ $group->getName() }}
+            @if($group->getGroupProfilePicture())
+                <img src="{{ $group->getGroupProfilePicture()->getImageUrl('small-profile-picture') }}" alt=""/>
+            @endif
+        </td>
         <td></td>
         <td></td>
         <td></td>
