@@ -110,7 +110,7 @@ class AuthController extends BaseController
             return Redirect::route('borrower:dashboard');
         }
 
-        return Redirect::route('admin:dashboard');
+        return Redirect::action('AdminController@getDashboard');
     }
 
     public function verifyBorrower($verificationCode)
