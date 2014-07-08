@@ -6,7 +6,7 @@
 
 @section('content')
 <div class="page-header">
-    <h1>Borrower Details</h1>
+    <h1>Borrower Details <a href="{{ route('admin:borrower:edit', $borrower->getId()) }}"> <i class="fa fa-pencil-square-o fa-lg"></i> </a></h1>
 </div>
 
 <div class="row">

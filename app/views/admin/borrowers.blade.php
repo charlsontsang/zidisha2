@@ -40,7 +40,7 @@ Borrowers
             <a href="{{ route('admin:borrower', $borrower->getId()) }}">
                 <i class="fa fa-info-circle fa-lg"></i>
             </a>
-            <a href="{{ route('admin:borrower', $borrower->getId()) }}">
+            <a href="{{ route('admin:borrower:edit', $borrower->getId()) }}">
                 <i class="fa fa-pencil-square-o fa-lg"></i>
             </a>
         </td>
