@@ -3,13 +3,13 @@
 namespace Zidisha\Loan;
 
 use Propel\Runtime\Connection\ConnectionInterface;
-use Propel\Runtime\Propel;
 use Zidisha\Analytics\MixpanelService;
 use Zidisha\Balance\Map\TransactionTableMap;
 use Zidisha\Balance\TransactionQuery;
 use Zidisha\Balance\TransactionService;
 use Zidisha\Borrower\Borrower;
-use Zidisha\Currency\CurrencyService;
+use Zidisha\Currency\Converter;
+use Zidisha\Currency\ExchangeRateQuery;
 use Zidisha\Currency\Money;
 use Zidisha\Lender\Lender;
 use Zidisha\Mail\BorrowerMailer;
@@ -20,7 +20,7 @@ use Zidisha\Vendor\PropelDB;
 class LoanService
 {
     /**
-     * @var CurrencyService
+     * @var \Zidisha\Balance\TransactionService
      */
     private $transactionService;
     /**
@@ -31,32 +31,30 @@ class LoanService
      * @var MixpanelService
      */
     private $mixpanelService;
+
     /**
-     * @var \Zidisha\Currency\CurrencyService
+     * @var \Zidisha\Mail\BorrowerMailer
      */
-    private $currencyService;
     private $borrowerMailer;
+
+    protected $loanIndex;
 
     public function __construct(
         TransactionService $transactionService,
         LenderMailer $lenderMailer,
         MixpanelService $mixpanelService,
-        CurrencyService $currencyService,
         BorrowerMailer $borrowerMailer
     )
     {
         $this->transactionService = $transactionService;
         $this->lenderMailer = $lenderMailer;
         $this->mixpanelService = $mixpanelService;
-        $this->currencyService = $currencyService;
         $this->borrowerMailer = $borrowerMailer;
     }
 
-    protected $loanIndex;
-
     public function applyForLoan(Borrower $borrower, $data)
     {
-        $exchangeRate = $this->currencyService->getExchangeRate($borrower->getCountry()->getCurrency());
+        $exchangeRate = ExchangeRateQuery::create()->findCurrent($borrower->getCountry()->getCurrency());
         
         $data['currencyCode'] = $borrower->getCountry()->getCurrencyCode();
 
@@ -64,7 +62,7 @@ class LoanService
             ->findOneById($data['categoryId']);
 
         $data['nativeAmount'] = $data['amount']; // TODO
-        $data['amount'] = $this->currencyService->convertToUSD(
+        $data['amount'] = Converter::toUSD(
             Money::create($data['nativeAmount'], $data['currencyCode']),
             $exchangeRate
         )->getAmount();
