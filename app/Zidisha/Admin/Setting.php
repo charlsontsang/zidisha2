@@ -20,11 +20,13 @@ class Setting extends BaseSetting
                     throw new \Exception("Setting $name should be in camelcase.");
                 }
                 $groups[$group][$name] += [
-                    'type' => 'text',
-                    'default' => '',
-                    'rule' => '',
+                    'type'        => 'text',
+                    'default'     => '',
+                    'rule'        => '',
                     'description' => '',
-                    'label' => $name,
+                    'label'       => $name,
+                    'prepend'     => null,
+                    'append'      => null,
                 ];
             }
         }

@@ -24,7 +24,12 @@ Settings
     @foreach($groups as $group => $groupSettings)
         <div class="tab-pane {{ $i ? '' : 'active' }}" id="{{ snake_case($group) }}">
             @foreach($groupSettings as $name => $options)
-                {{ BootstrapForm::input($options['type'], str_replace('.', '_', $name), null, ['label' => $options['label'], 'description' => $options['description']]) }}
+                {{ BootstrapForm::input($options['type'], str_replace('.', '_', $name), null, [
+                    'label' => $options['label'], 
+                    'description' => $options['description'],
+                    'prepend' => $options['prepend'],
+                    'append' => $options['append']
+                ]) }}
             @endforeach
         </div>
         <?php $i += 1; ?>
