@@ -171,6 +171,21 @@ class BorrowerService
         }
     }
 
+
+    public function updateProfileInformation(Borrower $borrower, $data)
+    {
+        $borrower->setFirstName($data['firstName']);
+        $borrower->setLastName($data['lastName']);
+        $borrower->getUser()->setEmail($data['email']);
+        $borrower->setCountryId($data['countryId']);
+
+        if (!empty($data['password'])) {
+            $borrower->getUser()->setPassword($data['password']);
+        }
+
+        $borrower->save();
+    }
+
     public function editBorrower(Borrower $borrower, $data, $files = [])
     {
         $borrower->getUser()->setEmail($data['email']);
