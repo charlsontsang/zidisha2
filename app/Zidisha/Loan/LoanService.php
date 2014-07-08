@@ -124,7 +124,7 @@ class LoanService
         return $loanIndex;
     }
 
-    public function searchLoans($conditions = array(), $page = 1)
+    public function searchLoans($conditions = array(), $page = 1, $limit = 20)
     {
         $conditions += ['search' => false];
         $search = $conditions['search'];
@@ -153,8 +153,8 @@ class LoanService
             $query->setFilter($filterAnd);
         }
 
-        $query->setFrom(($page - 1) * 2);
-        $query->setSize($page * 2);
+        $query->setFrom(($page - 1) * $limit);
+        $query->setSize($page * $limit);
 
         $results = $loanIndex->search($query);
 
@@ -183,7 +183,7 @@ class LoanService
         return $paginatorFactory->make(
             $sortedLoans,
             $results->getTotalHits(),
-            2
+            $limit
         );
     }
 
