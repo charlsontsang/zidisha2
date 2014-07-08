@@ -458,5 +458,25 @@ Route::group(
             'invite',
             array('uses' => 'LenderInviteController@postInvite', 'as' => 'lender:post-invite', 'before' => 'csrf')
         );
+        Route::get('groups', array(
+            'uses' => 'GroupController@getGroups',
+            'as'   => 'lender:groups'
+            )
+        );
+        Route::get('groups/{id}', array(
+                'uses' => 'GroupController@getGroup',
+                'as'   => 'lender:group'
+            )
+        );
+        Route::get('groups/{id}/join', array(
+                'uses' => 'GroupController@joinGroup',
+                'as'   => 'lender:group:join'
+            )
+        );
+        Route::get('groups/{id}/leave', array(
+                'uses' => 'GroupController@leaveGroup',
+                'as'   => 'lender:group:leave'
+            )
+        );
     }
 );
