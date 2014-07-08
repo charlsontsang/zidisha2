@@ -8,6 +8,8 @@ use Zidisha\Currency\ExchangeRateQuery;
 use Zidisha\Form\AbstractForm;
 use Zidisha\Loan\Calculator\LoanCalculator;
 use Zidisha\Loan\CategoryQuery;
+use Zidisha\Loan\CategoryTranslation;
+use Zidisha\Loan\CategoryTranslationQuery;
 use Zidisha\Loan\Loan;
 
 class ApplicationForm extends AbstractForm
@@ -66,9 +68,27 @@ class ApplicationForm extends AbstractForm
 
     public function getCategories()
     {
-        $categories = CategoryQuery::create()
-            ->orderBySortableRank()
-            ->findByAdminOnly(false);
+
+        $language = \Auth::user()->getBorrower()->getCountry()->getLanguage();
+        $values = [];
+
+            $categories = CategoryQuery::create()
+                ->orderBySortableRank()
+                ->findByAdminOnly(false);
+
+        if($language->getLanguageCode() == 'IN' || $language->getLanguageCode() == 'FR')
+        {
+            foreach($categories as $category){
+                $translation = CategoryTranslationQuery::create()
+                    ->filterByCategory($category)
+                    ->filterByLanguage($language)
+                    ->findOne();
+
+                $values[$category->getId()] = $translation->getTranslation();
+            }
+
+            return $values;
+        }
 
         return $categories->toKeyValue('id', 'name');
     }
