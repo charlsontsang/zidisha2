@@ -51,13 +51,13 @@
         <column name="installment_period" type="ENUM" valueSet="monthly, weekly"/>
         <column name="repayment_instructions" type="LONGVARCHAR" required="false"/>
         <column name="language_code" type="VARCHAR" size="10"/>
+        <behavior name="timestampable"/>
         <index name="name">
             <index-column name="name"/>
         </index>
         <index name="country_code">
             <index-column name="country_code"/>
         </index>
-        <behavior name="timestampable"/>
         <foreign-key foreignTable="languages">
             <reference local="language_code" foreign="language_code"/>
         </foreign-key>
@@ -713,5 +713,22 @@
         <column name="language_code" type="VARCHAR" size="10" primaryKey="true" required="true"/>
         <column name="name" type="VARCHAR" required="true"/>
         <column name="active" type="BOOLEAN" defaultValue="false"/>
+    </table>
+
+    <table name="category_translations" phpName="CategoryTranslation" namespace="Loan">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="category_id" type="INTEGER" required="true"/>
+        <column name="language_code" type="VARCHAR" size="10"/>
+        <column name="translation" type="LONGVARCHAR"/>
+        <unique>
+            <unique-column name="category_id"/>
+            <unique-column name="language_code"/>
+        </unique>
+        <foreign-key foreignTable="languages">
+            <reference local="language_code" foreign="language_code"/>
+        </foreign-key>
+        <foreign-key foreignTable="loan_categories">
+            <reference local="category_id" foreign="id"/>
+        </foreign-key>
     </table>
 </database>
