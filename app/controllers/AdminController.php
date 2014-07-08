@@ -13,6 +13,7 @@ use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Borrower\BorrowerService;
 use Zidisha\Borrower\FeedbackMessageQuery;
 use Zidisha\Comment\CommentQuery;
+use Zidisha\Borrower\Form\AdminEditForm;
 use Zidisha\Country\CountryQuery;
 use Zidisha\Currency\CurrencyService;
 use Zidisha\Lender\LenderQuery;
@@ -112,6 +113,24 @@ class AdminController extends BaseController
             ->filterByBorrowerId($borrowerId);
 
         return View::make('admin.borrower', compact('borrower', 'personalInformation', 'loans'));
+    }
+
+    public function getBorrowerEdit($borrowerId)
+    {
+        $borrower = BorrowerQuery::create()
+            ->filterById($borrowerId)
+            ->findOne();
+
+        if (!$borrower) {
+            App::abort(404);
+        }
+
+        $form = new AdminEditForm($borrower);
+
+        return \View::make(
+            'admin.borrower-information',
+            compact('form', 'borrower', 'borrowerId')
+        );
     }
 
     public function getLenders()
