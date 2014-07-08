@@ -9,8 +9,10 @@ use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Borrower\JoinLog;
 use Zidisha\Borrower\VolunteerMentor;
 use Zidisha\Borrower\VolunteerMentorQuery;
+use Zidisha\Comment\Comment;
 use Zidisha\Country\Country;
 use Zidisha\Country\CountryQuery;
+use Zidisha\Country\Language;
 use Zidisha\Currency\Money;
 use Zidisha\Borrower\Borrower;
 
@@ -82,7 +84,10 @@ class GenerateModelData extends Command
             exec("curl -XDELETE 'http://localhost:9200/loans/' -s");
 
             $this->line('Generate data');
+
             Setting::import($settings);
+
+            $this->call('fake', array('model' => 'Language', 'size' => 1));
             $this->call('fake', array('model' => 'Country', 'size' => 10));
             $this->call('fake', array('model' => 'Category', 'size' => 10));
             $this->call('fake', array('model' => 'Admin', 'size' => 1));
@@ -94,7 +99,7 @@ class GenerateModelData extends Command
             $this->call('fake', array('model' => 'Transaction', 'size' => 200));
             $this->call('fake', array('model' => 'Installment', 'size' => 200));
             $this->call('fake', array('model' => 'Invite', 'size' => 200));
-
+            $this->call('fake', array('model' => 'Comment', 'size' => 200));
 
             $this->line('Done!');
             return;
@@ -164,6 +169,25 @@ class GenerateModelData extends Command
             $user->setPassword('1234567890');
             $user->setEmail('yc@mail.com');
             $user->save();
+        }
+
+        if($model == "Language") {
+
+            $languages = [
+              [ 'IN','Bahasa Indonesia',true,],
+                [ 'FR','Français',true,],
+               [ 'HI','Hindi',false,],
+               [ 'EN','English',false,],
+            ];
+
+            foreach($languages as $language){
+                $lang = new Language();
+                $lang->setLanguageCode($language[0]);
+                $lang->setName($language[1]);
+                $lang->setActive($language[2]);
+                $lang->save();
+
+            }
         }
 
         if ($model == "ExchangeRate") {
@@ -346,6 +370,17 @@ class GenerateModelData extends Command
                 $country->setCurrencyCode($oneCountry[2]);
                 $country->setPhoneNumberLength(9);
                 $country->setInstallmentPeriod($faker->randomElement([Loan::WEEKLY_INSTALLMENT, Loan::MONTHLY_INSTALLMENT]));
+                if($i<3){
+                    $language = \Zidisha\Country\LanguageQuery::create()
+                        ->filterByLanguageCode('FR')
+                        ->findOne();
+                    $country->setLanguage($language);
+                }elseif($i<5){
+                    $language = \Zidisha\Country\LanguageQuery::create()
+                        ->filterByLanguageCode('IN')
+                        ->findOne();
+                    $country->setLanguage($language);
+                }
                 $country->save();
             }
 
@@ -500,6 +535,30 @@ class GenerateModelData extends Command
                 $oneBid->setLender($oneLender);
                 $oneBid->setBorrower($oneLoan->getBorrower());
                 $oneBid->save();
+            }
+
+
+            if ($model == "Comment") {
+
+                $borrower = $allBorrowers[array_rand($allBorrowers)];
+                $user = $allBorrowers[array_rand($allBorrowers)];
+                $isTranslated = $randArray[array_rand($randArray)];
+
+                $comment = new Comment();
+
+                $comment->setBorrower($borrower)
+                    ->setUser($user->getUser())
+                    ->setMessage($faker->paragraph(3))
+                    ->setLevel(0);
+
+                if($isTranslated){
+                    $comment->setMessageTranslation($faker->paragraph(3))
+                        ->setTranslatorId(1);
+                }elseif($i<100){
+                    $comment->setUser($borrower->getUser());
+                }
+
+                $comment->save();
             }
         }
     }

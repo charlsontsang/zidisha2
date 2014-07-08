@@ -8,8 +8,11 @@ use Zidisha\Admin\Form\FilterLoans;
 use Zidisha\Admin\Form\SettingsForm;
 use Zidisha\Admin\Setting;
 use Zidisha\Admin\Form\TranslateForm;
+use Zidisha\Admin\Form\TranslationFeedForm;
 use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Borrower\BorrowerService;
+use Zidisha\Borrower\FeedbackMessageQuery;
+use Zidisha\Comment\CommentQuery;
 use Zidisha\Country\CountryQuery;
 use Zidisha\Currency\CurrencyService;
 use Zidisha\Lender\LenderQuery;
@@ -22,7 +25,7 @@ class AdminController extends BaseController
 {
 
     protected $lenderQuery, $borrowerQuery, $countryQuery;
-    protected $borrowersForm, $lendersForm, $loansForm;
+    protected $borrowersForm, $lendersForm, $loansForm, $translationFeedForm;
     private $loanService;
     private $exchangeRateForm;
     private $currencyService;
@@ -44,7 +47,8 @@ class AdminController extends BaseController
         FeatureFeedbackForm $featureFeedbackForm,
         BorrowerService $borrowerService,
         AdminCategoryForm $adminCategoryForm,
-        TranslateForm $translateForm
+        TranslateForm $translateForm,
+        TranslationFeedForm $translationFeedForm
     ) {
         $this->lenderQuery = $lenderQuery;
         $this->$borrowerQuery = $borrowerQuery;
@@ -59,6 +63,7 @@ class AdminController extends BaseController
         $this->borrowerService = $borrowerService;
         $this->adminCategoryForm = $adminCategoryForm;
         $this->translateForm = $translateForm;
+        $this->translationFeedForm = $translationFeedForm;
     }
 
     public
@@ -326,5 +331,61 @@ class AdminController extends BaseController
 
         \Flash::error("Couldn't save Translations!");
         return Redirect::route('loan:index', $loanId)->withForm($form);
+    }
+
+    public function getTranslationFeed($type = null)
+    {
+        $languageCode = Request::query('language') ? : null;
+
+        if($type == 'loans')
+        {
+            $loans = LoanQuery::create()
+            ->condition('summery', 'Loan.SummaryTranslation IS NULL')
+            ->condition('proposal', 'Loan.ProposalTranslation IS NULL')
+            ->where(array('summery', 'proposal'), 'or')
+                ->_or()
+                ->useBorrowerQuery()
+                    ->useProfileQuery()
+                        ->condition('aboutMe', 'Profile.AboutMeTranslation IS NULL')
+                        ->condition('aboutBusiness', 'Profile.AboutBusinessTranslation IS NULL')
+                        ->where(array('aboutMe', 'aboutBusiness'), 'or')
+                    ->endUse()
+                ->endUse();
+
+            if($languageCode){
+                $loans->filterByLanguageCode($languageCode);
+            }
+
+            $page = Request::query('page') ? : 1;
+            $paginator = $loans->paginate($page, 10);
+
+        }else{
+            $type = 'comments';
+            $comments = CommentQuery::create()
+                ->where('Comment.BorrowerId = Comment.UserId')
+                ->filterByMessageTranslation(null);
+
+
+            if($languageCode){
+                $comments->useBorrowerQuery()
+                    ->useCountryQuery()
+                        ->useLanguageQuery()
+                            ->filterByLanguageCode($languageCode)
+                            ->endUse()
+                        ->endUse()
+                    ->endUse();
+            }
+
+            $page = Request::query('page') ? : 1;
+            $paginator = $comments->paginate($page, 10);
+
+        }
+
+        return View::make(
+            'admin.translation-feed',
+            compact(
+                'type', 'loans', 'comments', 'paginator'
+            ), ['form' => $this->translationFeedForm,]
+        );
     }
 }
