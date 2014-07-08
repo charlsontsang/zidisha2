@@ -17,6 +17,9 @@ use Zidisha\Currency\Money;
 use Zidisha\Borrower\Borrower;
 
 use Zidisha\Lender\GiftCard;
+use Zidisha\Lender\Group;
+use Zidisha\Lender\GroupMember;
+use Zidisha\Lender\GroupQuery;
 use Zidisha\Lender\Invite;
 use Zidisha\Lender\LenderQuery;
 use Zidisha\Loan\Bid;
@@ -104,6 +107,8 @@ class GenerateModelData extends Command
             $this->call('fake', array('model' => 'Comment', 'size' => 200));
             $this->call('fake', array('model' => 'GiftCard', 'size' => 100));
             $this->call('fake', array('model' => 'CategoryTranslation', 'size' => 10));
+            $this->call('fake', array('model' => 'LenderGroup', 'size' => 50));
+            $this->call('fake', array('model' => 'LenderGroupMember', 'size' => 200));
 
             $this->line('Done!');
             return;
@@ -112,6 +117,10 @@ class GenerateModelData extends Command
         $randArray = [true, false, false, false, false, true, false, false, false, true, false];
 
         $allLenders = LenderQuery::create()
+            ->orderById()
+            ->find();
+
+        $allGroups = GroupQuery::create()
             ->orderById()
             ->find();
 
@@ -620,6 +629,29 @@ class GenerateModelData extends Command
                 }
 
                 $giftCard->save();
+            }
+
+            if($model == "LenderGroup")
+            {
+                $leader = $allLenders[array_rand($allLenders->getData())];
+
+                $group = new Group();
+                $group->setCreator($leader)
+                    ->setLeader($leader)
+                    ->setAbout($faker->paragraph(2))
+                    ->setName($faker->sentence(2));
+                $group->save();
+            }
+
+            if($model == "LenderGroupMember")
+            {
+                $member = $allLenders[array_rand($allLenders->getData())];
+                $group = $allGroups[array_rand($allGroups->getData())];
+
+                $groupMember = new GroupMember();
+                $groupMember->setMember($member)
+                    ->setGroup($group);
+                $groupMember->save();
             }
         }
     }
