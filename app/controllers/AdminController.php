@@ -133,6 +133,33 @@ class AdminController extends BaseController
         );
     }
 
+    public function postBorrowerEdit($borrowerId)
+    {
+        $borrower = BorrowerQuery::create()
+            ->filterById($borrowerId)
+            ->findOne();
+
+        if (!$borrower) {
+            App::abort(404);
+        }
+
+        $form = new AdminEditForm($borrower);
+        $form->handleRequest(Request::instance());
+
+        if ($form->isValid()) {
+            $this->borrowerService->updatePersonalInformation($borrower, $form->getNestedData());
+
+            $data = $form->getData();
+            $this->borrowerService->updateProfileInformation($borrower, $data);
+
+            Flash::success('Changes updated.');
+            return Redirect::route('admin:borrower:edit', $borrowerId);
+        }
+
+        Flash::error('Please submit correct data.');
+        return Redirect::route('admin:borrower:edit', $borrowerId)->withForm($form);
+    }
+
     public function getLenders()
     {
         $page = Request::query('page') ? : 1;
