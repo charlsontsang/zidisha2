@@ -66,7 +66,7 @@ class Borrower extends BaseBorrower
 
         $data = [
             'address' => $profile->getAddress(),
-            'addressInstruction' => $profile->getAddressInstructions(),
+            'addressInstructions' => $profile->getAddressInstructions(),
             'city' => $profile->getCity(),
             'nationalIdNumber' => $profile->getNationalIdNumber(),
             'phoneNumber' => $profile->getPhoneNumber(),
