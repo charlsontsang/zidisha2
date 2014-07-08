@@ -178,6 +178,20 @@ Route::group(
                         'as'   => 'lender:gift-cards:track'
                     )
                 );
+                Route::get(
+                    '/groups/create',
+                    array(
+                        'uses' => 'GroupController@getCreateGroup',
+                        'as'   => 'lender:groups:create'
+                    )
+                );
+                Route::post(
+                    '/groups/create',
+                    array(
+                        'uses' => 'GroupController@postCreateGroup',
+                        'as'   => 'lender:groups:post-create'
+                    )
+                );
 
             }
         );
