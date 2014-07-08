@@ -18,4 +18,22 @@ use Zidisha\Currency\Base\ExchangeRateQuery as BaseExchangeRateQuery;
 class ExchangeRateQuery extends BaseExchangeRateQuery
 {
 
+    public function filterByDate(\DateTime $date)
+    {
+        return $this
+            ->condition('start', 'ExchangeRate.StartDate <= ?', $date)
+            ->condition('endDate', 'ExchangeRate.EndDate > ?', $date)
+            ->condition('endNull', 'ExchangeRate.EndDate IS NULL')
+            ->combine(['endDate', 'endNull'], 'or', 'end')
+            ->where(['start', 'end'], 'and');
+    }
+
+    public function findCurrent(Currency $currency)
+    {
+        return $this
+            ->filterByCurrencyCode($currency->getCode())
+            ->filterByDate(new \DateTime())
+            ->findOne();
+    }
+    
 } // ExchangeRateQuery

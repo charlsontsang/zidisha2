@@ -36,11 +36,7 @@ class CurrencyService
 
         return ExchangeRateQuery::create()
             ->filterByCurrencyCode($currency->getCode())
-            ->condition('start', 'ExchangeRate.StartDate <= ?', $date)
-            ->condition('endDate', 'ExchangeRate.EndDate > ?', $date)
-            ->condition('endNull', 'ExchangeRate.EndDate IS NULL')
-            ->combine(['endDate', 'endNull'], 'or', 'end')
-            ->where(['start', 'end'], 'and')
+            ->filterByDate($date)
             ->findOne();
     }
 
