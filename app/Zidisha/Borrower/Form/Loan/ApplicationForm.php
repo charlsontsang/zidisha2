@@ -1,17 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Singularity Guy
- * Date: 6/12/14
- * Time: 11:13 AM
- */
 
 namespace Zidisha\Borrower\Form\Loan;
 
-use Illuminate\Http\Request;
 use Zidisha\Borrower\Borrower;
 use Zidisha\Borrower\Form\Validator\LoanValidator;
-use Zidisha\Currency\Money;
+use Zidisha\Currency\ExchangeRateQuery;
 use Zidisha\Form\AbstractForm;
 use Zidisha\Loan\Calculator\LoanCalculator;
 use Zidisha\Loan\CategoryQuery;
@@ -34,11 +27,22 @@ class ApplicationForm extends AbstractForm
      */
     protected $currency;
 
+    /**
+     * @var mixed|\Zidisha\Currency\ExchangeRate
+     */
+    protected $exchangeRate;
+
     public function __construct(Borrower $borrower)
     {
         $this->borrower = $borrower;
         $this->currency = $this->borrower->getCountry()->getCurrency();
-        $this->loanCalculator = new LoanCalculator($borrower);
+        $this->exchangeRate = ExchangeRateQuery::create()->findCurrent($this->currency);
+        $this->loanCalculator = new LoanCalculator($borrower, $this->exchangeRate);
+    }
+    
+    public function getExchangeRate()
+    {
+        return $this->exchangeRate;
     }
 
     public function getRules($data)
