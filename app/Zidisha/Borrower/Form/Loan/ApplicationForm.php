@@ -68,29 +68,23 @@ class ApplicationForm extends AbstractForm
 
     public function getCategories()
     {
+        $languageCode = $this->borrower->getCountry()->getLanguageCode();
 
-        $language = \Auth::user()->getBorrower()->getCountry()->getLanguage();
-        $values = [];
+        $categories = CategoryQuery::create()
+            ->orderBySortableRank()
+            ->findByAdminOnly(false);
+        $values = $categories->toKeyValue('id', 'name');
 
-            $categories = CategoryQuery::create()
-                ->orderBySortableRank()
-                ->findByAdminOnly(false);
-
-        if($language->getLanguageCode() != 'EN')
+        if ($languageCode != 'EN')
         {
-            foreach($categories as $category){
-                $translation = CategoryTranslationQuery::create()
-                    ->filterByCategory($category)
-                    ->filterByLanguage($language)
-                    ->findOne();
+            $translations = CategoryTranslationQuery::create()
+                ->filterByLanguageCode($languageCode)
+                ->find();
 
-                $values[$category->getId()] = $translation->getTranslation();
-            }
-
-            return $values;
+            $values = $translations->toKeyValue('categoryId', 'translation') + $values;
         }
 
-        return $categories->toKeyValue('id', 'name');
+        return $values;
     }
 
     protected function getDaysInPeriod()
