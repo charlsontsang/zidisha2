@@ -757,4 +757,18 @@
             <unique-column name="website"/>
         </unique>
     </table>
+
+    <table name="lending_group_members" phpName="GroupMember" namespace="Lender">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="group_id" type="INTEGER" required="true"/>
+        <column name="member_id" type="INTEGER" required="true"/>
+        <column name="leaved" type="BOOLEAN" defaultValue="FALSE"/>
+        <behavior name="timestampable"/>
+        <foreign-key foreignTable="lenders" phpName="Member">
+            <reference local="member_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="lender_groups">
+            <reference local="group_id" foreign="id"/>
+        </foreign-key>
+    </table>
 </database>
