@@ -5,9 +5,22 @@
 return [
     'Site' => [
         'site.replyTo' => [
-            'label' => 'Reply To',
+            'label'   => 'Reply To',
             'default' => 'service@zidisha.org',
-            'rule' => 'email',
+            'rule'    => 'email',
+        ],
+    ],
+    'Loan' => [
+        'loan.minimumAmount' => [
+            'label'   => 'Minimum loan amount',
+            'default' => '10',
+            'rule'    => 'numeric',
+            'prepend' => 'USD',
+        ],
+        'loan.maximumPeriod' => [
+            'label'   => 'Maximum loan period for applications (months)',
+            'default' => '24',
+            'rule'    => 'numeric',
         ],
     ],
     'API' => [
