@@ -19,7 +19,7 @@ class LendingGroupController extends BaseController
 
     public function getCreateGroup()
     {
-        return View::make('lender.create-group', ['form' => $this->createGroupForm,]);
+        return View::make('lender.create-lending-group', ['form' => $this->createGroupForm,]);
     }
 
     public function postCreateGroup()
@@ -54,7 +54,7 @@ class LendingGroupController extends BaseController
             ->paginate($page, 10);
 
 
-        return View::make('lender.groups', compact('paginator'));
+        return View::make('lender.lending-groups', compact('paginator'));
     }
 
     public function getGroup($id)
@@ -73,7 +73,7 @@ class LendingGroupController extends BaseController
         $membersCount = count($members);
         $leaderId = $group->getLeader()->getId();
 
-        return View::make('lender.group', compact('group', 'membersCount', 'members', 'leaderId'));
+        return View::make('lender.lending-group', compact('group', 'membersCount', 'members', 'leaderId'));
     }
 
     public function joinGroup($id)
@@ -87,7 +87,7 @@ class LendingGroupController extends BaseController
 
         $lender = Auth::user()->getLender();
 
-        $this->lendingGroupService->joinLendingGroup($lender, $group);
+        $this->lendingGroupService->joinLendingGroup($group, $lender);
 
         \Flash::success("Successfully Joined!");
         return Redirect::route('lender:group', $group->getId());
@@ -103,15 +103,11 @@ class LendingGroupController extends BaseController
         }
 
         $lender = Auth::user()->getLender();
-        $this->lendingGroupService->leaveLendingGroup($group, $lender);
-
-        $member = LendingGroupMemberQuery::create()
-            ->filterByLendingGroup($group)
-            ->filterByMember($lender)
-            ->findone();
-
-        $member->setLeaved(true);
-        $member->save();
+        $leaved = $this->lendingGroupService->leaveLendingGroup($group, $lender);
+        if(!$leaved){
+            \Flash::success("Leader can't leave the group!");
+            return Redirect::route('lender:group', $group->getId());
+        }
 
         \Flash::success("Successfully Leaved!");
         return Redirect::route('lender:group', $group->getId());
@@ -133,7 +129,7 @@ class LendingGroupController extends BaseController
 
 
         $editGroupForm = new EditGroupForm($group);
-        return View::make('lender.edit-group', ['form' => $editGroupForm,], compact('group'));
+        return View::make('lender.edit-lending-group', ['form' => $editGroupForm,], compact('group'));
     }
 
     public function postEditGroup($id)

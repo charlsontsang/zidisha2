@@ -79,8 +79,12 @@ class LendingGroupService
             ->findone();
 
         if($member){
+            if($group->getLeader()->getId() == $member->getMemberId()){
+                return false;
+            }
             $member->setLeaved(true);
             $member->save();
+            return true;
         }
     }
 
