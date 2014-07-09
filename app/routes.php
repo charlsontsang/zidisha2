@@ -181,15 +181,39 @@ Route::group(
                 Route::get(
                     '/groups/create',
                     array(
-                        'uses' => 'GroupController@getCreateGroup',
+                        'uses' => 'LendingGroupController@getCreateGroup',
                         'as'   => 'lender:groups:create'
                     )
                 );
                 Route::post(
                     '/groups/create',
                     array(
-                        'uses' => 'GroupController@postCreateGroup',
+                        'uses' => 'LendingGroupController@postCreateGroup',
                         'as'   => 'lender:groups:post-create'
+                    )
+                );
+                Route::get('groups/{id}/join', array(
+                        'uses' => 'LendingGroupController@joinGroup',
+                        'as'   => 'lender:group:join'
+                    )
+                );
+                Route::get('groups/{id}/leave', array(
+                        'uses' => 'LendingGroupController@leaveGroup',
+                        'as'   => 'lender:group:leave'
+                    )
+                );
+                Route::get(
+                    '/groups/{id}/edit',
+                    array(
+                        'uses' => 'LendingGroupController@getEditGroup',
+                        'as'   => 'lender:groups:edit'
+                    )
+                );
+                Route::post(
+                    '/groups/{id}/edit',
+                    array(
+                        'uses' => 'LendingGroupController@postEditGroup',
+                        'as'   => 'lender:groups:post-edit'
                     )
                 );
 
@@ -459,23 +483,13 @@ Route::group(
             array('uses' => 'LenderInviteController@postInvite', 'as' => 'lender:post-invite', 'before' => 'csrf')
         );
         Route::get('groups', array(
-            'uses' => 'GroupController@getGroups',
+            'uses' => 'LendingGroupController@getGroups',
             'as'   => 'lender:groups'
             )
         );
         Route::get('groups/{id}', array(
-                'uses' => 'GroupController@getGroup',
+                'uses' => 'LendingGroupController@getGroup',
                 'as'   => 'lender:group'
-            )
-        );
-        Route::get('groups/{id}/join', array(
-                'uses' => 'GroupController@joinGroup',
-                'as'   => 'lender:group:join'
-            )
-        );
-        Route::get('groups/{id}/leave', array(
-                'uses' => 'GroupController@leaveGroup',
-                'as'   => 'lender:group:leave'
             )
         );
     }

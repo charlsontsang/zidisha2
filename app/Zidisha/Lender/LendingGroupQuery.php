@@ -2,11 +2,11 @@
 
 namespace Zidisha\Lender;
 
-use Zidisha\Lender\Base\GroupQuery as BaseGroupQuery;
+use Zidisha\Lender\Base\LendingGroupQuery as BaseLendingGroupQuery;
 
 
 /**
- * Skeleton subclass for performing query and update operations on the 'lender_groups' table.
+ * Skeleton subclass for performing query and update operations on the 'lending_groups' table.
  *
  *
  *
@@ -15,7 +15,7 @@ use Zidisha\Lender\Base\GroupQuery as BaseGroupQuery;
  * long as it does not already exist in the output directory.
  *
  */
-class GroupQuery extends BaseGroupQuery
+class LendingGroupQuery extends BaseLendingGroupQuery
 {
 
-} // GroupQuery
+} // LendingGroupQuery

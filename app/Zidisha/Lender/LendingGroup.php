@@ -2,14 +2,14 @@
 
 namespace Zidisha\Lender;
 
-use Zidisha\Lender\Base\Group as BaseGroup;
+use Zidisha\Lender\Base\LendingGroup as BaseLendingGroup;
 
-class Group extends BaseGroup
+class LendingGroup extends BaseLendingGroup
 {
 
     public function isMember(Lender $lender)
     {
-        $count = GroupMemberQuery::create()
+        $count = LendingGroupMemberQuery::create()
             ->filterByGroupId($this->getId())
             ->filterByMember($lender)
             ->filterByLeaved(false)
@@ -17,4 +17,5 @@ class Group extends BaseGroup
 
         return $count > 0;
     }
+
 }

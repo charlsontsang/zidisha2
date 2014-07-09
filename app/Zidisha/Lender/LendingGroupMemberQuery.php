@@ -2,7 +2,7 @@
 
 namespace Zidisha\Lender;
 
-use Zidisha\Lender\Base\GroupMemberQuery as BaseGroupMemberQuery;
+use Zidisha\Lender\Base\LendingGroupMemberQuery as BaseLendingGroupMemberQuery;
 
 
 /**
@@ -15,7 +15,7 @@ use Zidisha\Lender\Base\GroupMemberQuery as BaseGroupMemberQuery;
  * long as it does not already exist in the output directory.
  *
  */
-class GroupMemberQuery extends BaseGroupMemberQuery
+class LendingGroupMemberQuery extends BaseLendingGroupMemberQuery
 {
 
-} // GroupMemberQuery
+} // LendingGroupMemberQuery
