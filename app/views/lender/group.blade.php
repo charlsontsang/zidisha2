@@ -17,7 +17,7 @@ Lending Groups
                 <p>{{ $group->getAbout() }}</p>
 
                 @if(Auth::check() && Auth::getUser()->isLender())
-                @if($group->isMember(Auth::getUser()->getLender()))
+                @if($group->isMember(Auth::User()->getLender()))
                 <a href="{{ route('lender:group:leave', $group->getId()) }}" class="btn btn-primary">
                     Leave this group
                 </a>
@@ -26,6 +26,14 @@ Lending Groups
                     Join this group
                 </a>
                 @endif
+                <br><br>
+                <div>
+                    @if(Auth::User()->getLender()->getId() == $leaderId)
+                        <a href="{{ route('lender:groups:edit', $group->getId()) }}" class="btn btn-primary">
+                            Edit Group
+                        </a>
+                    @endif
+                </div>
                 @endif
                 <br>
                 {{ $membersCount }} Members
@@ -39,6 +47,9 @@ Lending Groups
                         <p><a href="{{ route('lender:public-profile', $member->getMember()->getUser()->getUserName()) }}">{{
                                 $member->getMember()->getUser()->getUserName() }}
                             </a>
+                            @if($member->getMemberId() == $leaderId)
+                            <span class="label label-info">Leader</span>
+                            @endif
                         </p>
                         @endforeach
                     </div>

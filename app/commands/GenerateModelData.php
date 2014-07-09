@@ -14,12 +14,11 @@ use Zidisha\Country\Country;
 use Zidisha\Country\CountryQuery;
 use Zidisha\Country\Language;
 use Zidisha\Currency\Money;
-use Zidisha\Borrower\Borrower;
 
 use Zidisha\Lender\GiftCard;
-use Zidisha\Lender\Group;
-use Zidisha\Lender\GroupMember;
-use Zidisha\Lender\GroupQuery;
+use Zidisha\Lender\LendingGroup;
+use Zidisha\Lender\LendingGroupMember;
+use Zidisha\Lender\LendingGroupQuery;
 use Zidisha\Lender\Invite;
 use Zidisha\Lender\LenderQuery;
 use Zidisha\Loan\Bid;
@@ -120,7 +119,7 @@ class GenerateModelData extends Command
             ->orderById()
             ->find();
 
-        $allGroups = GroupQuery::create()
+        $allGroups = LendingGroupQuery::create()
             ->orderById()
             ->find();
 
@@ -635,13 +634,19 @@ class GenerateModelData extends Command
             {
                 $leader = $allLenders[array_rand($allLenders->getData())];
 
-                $group = new Group();
+                $group = new LendingGroup();
                 $group->setCreator($leader)
                     ->setLeader($leader)
                     ->setCreator($leader)
                     ->setAbout($faker->paragraph(2))
                     ->setName($faker->sentence(2));
-                $group->save();
+
+                $groupMember = new LendingGroupMember();
+                $groupMember->setMember($leader)
+                    ->setLendingGroup($group);
+
+                $groupMember->save();
+
             }
 
             if($model == "LenderGroupMember")
@@ -649,9 +654,9 @@ class GenerateModelData extends Command
                 $member = $allLenders[array_rand($allLenders->getData())];
                 $group = $allGroups[array_rand($allGroups->getData())];
 
-                $groupMember = new GroupMember();
+                $groupMember = new LendingGroupMember();
                 $groupMember->setMember($member)
-                    ->setGroup($group);
+                    ->setLendingGroup($group);
                 $groupMember->save();
             }
         }
