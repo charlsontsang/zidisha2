@@ -27,6 +27,7 @@ class LendingGroupService
         }
 
         $group->save();
+        $this->joinLendingGroup($group, $creator);
 
         return $group;
     }
