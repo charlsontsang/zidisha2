@@ -28,13 +28,15 @@ class GroupController extends BaseController
 
         if ($form->isValid()) {
             $data = $form->getData();
+            $creator = \Auth::user()->getLender();
+            $image = null;
 
-           $group =  $this->groupService->AddGroup($data);
+            if (Input::hasFile('groupProfilePictureId')) {
+                $image = Input::file('groupProfilePictureId');
 
-            if (Input::hasFile('profile_picture_id')) {
-                $image = Input::file('profile_picture_id');
-                $this->groupService->uploadPicture($group, $image);
             }
+
+            $group =  $this->groupService->addGroup($creator, $data, $image);
 
             \Flash::success("Group created!");
             return Redirect::route('lender:group', $group->getId());
@@ -58,14 +60,16 @@ class GroupController extends BaseController
     {
         $group = GroupQuery::create()
             ->findOneById($id);
-        $membersCount = GroupMemberQuery::create()
-            ->filterByGroup($group)
-            ->filterByLeaved(false)
-            ->count();
+
+        if (!$group) {
+            App::abort(404);
+        }
+
         $members = GroupMemberQuery::create()
             ->filterByGroup($group)
             ->filterByLeaved(false)
             ->find();
+        $membersCount = count($members);
 
 
         return View::make('lender.group', compact('group', 'membersCount', 'members'));
@@ -75,6 +79,11 @@ class GroupController extends BaseController
     {
         $group = GroupQuery::create()
             ->findOneById($id);
+
+        if (!$group) {
+            App::abort(404);
+        }
+
         $lender = Auth::user()->getLender();
 
         $member = new \Zidisha\Lender\GroupMember();
@@ -90,6 +99,11 @@ class GroupController extends BaseController
     {
         $group = GroupQuery::create()
             ->findOneById($id);
+
+        if (!$group) {
+            App::abort(404);
+        }
+
         $lender = Auth::user()->getLender();
 
         $member = GroupMemberQuery::create()

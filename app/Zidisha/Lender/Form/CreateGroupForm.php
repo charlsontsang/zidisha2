@@ -12,16 +12,16 @@ class CreateGroupForm extends  AbstractForm
     public function getRules($data)
     {
         return [
-            'name'               => 'required|max:20|unique:lender_groups,name',
-            'website'            => 'unique:lender_groups,website',
-            'about'              => 'required|min:100',
-            'profile_picture_id' => 'image|max:2048'
+            'name'                  => 'required|max:20|unique:lender_groups,name',
+            'website'               => 'unique:lender_groups,website',
+            'about'                 => 'required|min:100',
+            'groupProfilePictureId' => 'image|max:2048'
         ];
     }
 
     public function getDataFromRequest(Request $request) {
         $data = parent::getDataFromRequest($request);
-        $data['profile_picture_id'] = $request->file('profile_picture_id');
+        $data['groupProfilePictureId'] = $request->file('groupProfilePictureId');
 
         return $data;
     }

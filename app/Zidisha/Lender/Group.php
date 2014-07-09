@@ -9,14 +9,12 @@ class Group extends BaseGroup
 
     public function isMember(Lender $lender)
     {
-        $member = GroupMemberQuery::create()
+        $count = GroupMemberQuery::create()
             ->filterByGroupId($this->getId())
             ->filterByMember($lender)
             ->filterByLeaved(false)
-            ->findOne();
-        if($member){
-            return true;
-        }
-        return false;
+            ->count();
+
+        return $count > 0;
     }
 }

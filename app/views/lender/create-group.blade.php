@@ -14,7 +14,7 @@ Create Group
 
 {{ BootstrapForm::text('website') }}
 
-{{ BootstrapForm::file('profile_picture_id') }}
+{{ BootstrapForm::file('groupProfilePictureId') }}
 
 {{ BootstrapForm::textarea('about') }}
 
