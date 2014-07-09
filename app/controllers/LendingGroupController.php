@@ -123,7 +123,7 @@ class LendingGroupController extends BaseController
         }
         $lender = Auth::user()->getLender();
 
-        if ($lender != $group->getLeader()){
+        if (!$group->isLeader($lender)){
             App::abort(404);
         }
 
@@ -157,7 +157,7 @@ class LendingGroupController extends BaseController
                 $image = Input::file('groupProfilePictureId');
             }
 
-             $this->lendingGroupService->editLendingGroup($group, $data, $image);
+             $this->lendingGroupService->updateLendingGroup($group, $data, $image);
 
             \Flash::success("Group Edited!");
             return Redirect::route('lender:group', $id);

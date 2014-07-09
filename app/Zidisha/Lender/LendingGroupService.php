@@ -32,7 +32,7 @@ class LendingGroupService
         return $group;
     }
 
-    public function editLendingGroup(LendingGroup $group, $data, $image)
+    public function updateLendingGroup(LendingGroup $group, $data, $image)
     {
         $leader = UserQuery::create()
             ->findOneById($data['userId']);

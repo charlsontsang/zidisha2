@@ -18,4 +18,10 @@ class LendingGroup extends BaseLendingGroup
         return $count > 0;
     }
 
+    public function isLeader(Lender $lender)
+    {
+        return $this->getLeader() == $lender;
+    }
+
+
 }

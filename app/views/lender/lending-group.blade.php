@@ -28,7 +28,7 @@ Lending Groups
                 @endif
                 <br><br>
                 <div>
-                    @if(Auth::User()->getLender()->getId() == $leaderId)
+                    @if($group->isLeader(Auth::User()->getLender())
                         <a href="{{ route('lender:groups:edit', $group->getId()) }}" class="btn btn-primary">
                             Edit Group
                         </a>
@@ -47,7 +47,7 @@ Lending Groups
                         <p><a href="{{ route('lender:public-profile', $member->getMember()->getUser()->getUserName()) }}">{{
                                 $member->getMember()->getUser()->getUserName() }}
                             </a>
-                            @if($member->getMemberId() == $leaderId)
+                            @if($group->isLeader($member->getMember()))
                             <span class="label label-info">Leader</span>
                             @endif
                         </p>
