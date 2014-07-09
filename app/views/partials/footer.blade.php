@@ -77,7 +77,7 @@
                         <li><a href="#">Blog</a></li>
                         <li><a href="#">Facebook</a></li>
                         <li><a href="#">Twitter</a></li>
-                        <li><a href="#">Groups</a></li>
+                        <li><a href="{{ route('lender:groups') }}">Groups</a></li>
                         <li><a href="#">Forum</a></li>
                     </ul>
                 </div>
