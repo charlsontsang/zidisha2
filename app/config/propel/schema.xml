@@ -731,4 +731,44 @@
             <reference local="category_id" foreign="id"/>
         </foreign-key>
     </table>
+
+    <table name="lending_groups" phpName="LendingGroup" namespace="Lender">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="name" type="VARCHAR" size="50" required="true"/>
+        <column name="website" type="VARCHAR"/>
+        <column name="group_profile_picture_id" type="INTEGER" required="false"/>
+        <column name="about" type="LONGVARCHAR" required="true"/>
+        <column name="creator_id" type="INTEGER" required="true"/>
+        <column name="leader_id" type="INTEGER"/>
+        <behavior name="timestampable"/>
+        <foreign-key foreignTable="lenders" phpName="Creator">
+            <reference local="creator_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="lenders" phpName="Leader">
+            <reference local="leader_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="uploads" phpName="GroupProfilePicture">
+            <reference local="group_profile_picture_id" foreign="id"/>
+        </foreign-key>
+        <unique>
+            <unique-column name="name"/>
+        </unique>
+        <unique>
+            <unique-column name="website"/>
+        </unique>
+    </table>
+
+    <table name="lending_group_members" phpName="LendingGroupMember" namespace="Lender">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="group_id" type="INTEGER" required="true"/>
+        <column name="member_id" type="INTEGER" required="true"/>
+        <column name="leaved" type="BOOLEAN" defaultValue="FALSE"/>
+        <behavior name="timestampable"/>
+        <foreign-key foreignTable="lenders" phpName="Member">
+            <reference local="member_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="lending_groups">
+            <reference local="group_id" foreign="id"/>
+        </foreign-key>
+    </table>
 </database>
