@@ -18,4 +18,14 @@ use Zidisha\Translation\Base\TranslationLabelQuery as BaseTranslationLabelQuery;
 class TranslationLabelQuery extends BaseTranslationLabelQuery
 {
 
+    public function getTotals()
+    {
+        return $this
+            ->select(array('filename', 'totalUntranslated', 'totalUpdated'))
+            ->withColumn('SUM(CASE WHEN translated THEN 0 ELSE 1 END)', 'totalUntranslated')
+            ->withColumn('SUM(CASE WHEN updated THEN 1 ELSE 0 END)', 'totalUpdated')
+            ->groupByFilename()
+            ->find();
+    }
+
 } // TranslationLabelQuery
