@@ -80,7 +80,7 @@ class LendingGroupService
             ->findone();
 
         if($member){
-            if($group->getLeader()->getId() == $member->getMemberId()){
+            if($group->isLeader($member->getMember())){
                 return false;
             }
             $member->setLeaved(true);
