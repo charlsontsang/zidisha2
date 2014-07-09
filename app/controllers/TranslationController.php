@@ -19,6 +19,7 @@ class TranslationController extends BaseController
 
     public function getTranslations($filename, $languageCode)
     {
+        // TODO remove
         $this->translationService->loadLanguageFilesToDatabase();
 
         //TODO : get locale array from admin
@@ -58,9 +59,9 @@ class TranslationController extends BaseController
             \App::abort(404, 'Given language not found.');
         }
 
-        $fileLabels = $this->translationService->fileExists($filename);
+        $fileExists = $this->translationService->fileExists($filename);
 
-        if (!$fileLabels) {
+        if (!$fileExists) {
             \App::abort(404, 'Given file not found.');
         }
 
@@ -72,4 +73,21 @@ class TranslationController extends BaseController
         return Redirect::action('TranslationController@getTranslations', compact('filename', 'languageCode'));
     }
 
+    public function getTranslation()
+    {
+        //Todo: get language files from admin
+        $languageCodes = ['fr', 'in'];
+
+        if (Input::has('languageCode') && !in_array(Input::get('languageCode'), $languageCodes)) {
+            \App::abort(404, 'No Language given');
+        }
+
+        $languageCode = Input::get('languageCode', $languageCodes[0]);
+
+        $files = TranslationLabelQuery::create()
+            ->filterByLanguageCode($languageCode)
+            ->getTotals();
+
+        return View::make('translation.index', compact('languageCodes', 'languageCode', 'files'));
+    }
 }
