@@ -15,7 +15,8 @@ class GroupService
         $group->setName($data['name'])
             ->setAbout($data['about'])
             ->setWebsite($data['website'] ? $data['website'] : null )
-            ->setCreator($creator);
+            ->setCreator($creator)
+            ->setLeader($creator);
 
         if ($image) {
             $user = $group->getCreator()->getUser();
@@ -27,5 +28,21 @@ class GroupService
         $group->save();
 
         return $group;
+    }
+
+    public function wasMember(Lender $lender, Group $group)
+    {
+
+        $member = GroupMemberQuery::create()
+            ->filterByMember($lender)
+            ->filterByGroup($group)
+            ->filterByLeaved(true)
+            ->findOne();
+        if($member){
+            $member->setLeaved(false);
+            $member->save();
+            return true;
+        }
+        return false;
     }
 }

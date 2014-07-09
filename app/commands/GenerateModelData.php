@@ -638,6 +638,7 @@ class GenerateModelData extends Command
                 $group = new Group();
                 $group->setCreator($leader)
                     ->setLeader($leader)
+                    ->setCreator($leader)
                     ->setAbout($faker->paragraph(2))
                     ->setName($faker->sentence(2));
                 $group->save();

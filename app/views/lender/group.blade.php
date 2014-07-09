@@ -52,7 +52,9 @@ Lending Groups
     <div class="col-xs-5">
         <a href="{{ route('lender:groups') }}">Back to Lending Groups</a>
         <br>
+        @if($group->getGroupProfilePicture())
             <img src="{{ $group->getGroupProfilePicture()->getImageUrl('small-profile-picture') }}" alt=""/>
+        @endif
     </div>
 </div>
 
