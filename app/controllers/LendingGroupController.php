@@ -1,16 +1,17 @@
 <?php
 
 use Zidisha\Lender\Form\CreateGroupForm;
-use Zidisha\Lender\GroupMemberQuery;
-use Zidisha\Lender\GroupQuery;
-use Zidisha\Lender\GroupService;
+use Zidisha\Lender\Form\EditGroupForm;
+use Zidisha\Lender\LendingGroupMemberQuery;
+use Zidisha\Lender\LendingGroupQuery;
+use Zidisha\Lender\LendingGroupService;
 
-class GroupController extends BaseController
+class LendingGroupController extends BaseController
 {
     private $createGroupForm;
     private $groupService;
 
-    public function __construct(CreateGroupForm $createGroupForm, GroupService $groupService)
+    public function __construct(CreateGroupForm $createGroupForm, LendingGroupService $groupService)
     {
         $this->createGroupForm = $createGroupForm;
         $this->groupService = $groupService;
@@ -48,7 +49,7 @@ class GroupController extends BaseController
     {
         $page = Request::query('page') ? : 1;
 
-        $paginator = GroupQuery::create()
+        $paginator = LendingGroupQuery::create()
             ->orderByCreatedAt()
             ->paginate($page, 10);
 
@@ -58,26 +59,26 @@ class GroupController extends BaseController
 
     public function getGroup($id)
     {
-        $group = GroupQuery::create()
+        $group = LendingGroupQuery::create()
             ->findOneById($id);
 
         if (!$group) {
             App::abort(404);
         }
 
-        $members = GroupMemberQuery::create()
-            ->filterByGroup($group)
+        $members = LendingGroupMemberQuery::create()
+            ->filterByLendingGroup($group)
             ->filterByLeaved(false)
             ->find();
         $membersCount = count($members);
+        $leaderId = $group->getLeader()->getId();
 
-
-        return View::make('lender.group', compact('group', 'membersCount', 'members'));
+        return View::make('lender.group', compact('group', 'membersCount', 'members', 'leaderId'));
     }
 
     public function joinGroup($id)
     {
-        $group = GroupQuery::create()
+        $group = LendingGroupQuery::create()
             ->findOneById($id);
 
         if (!$group) {
@@ -89,9 +90,9 @@ class GroupController extends BaseController
         if($this->groupService->wasMember($lender, $group)){
 
         }else{
-            $member = new \Zidisha\Lender\GroupMember();
+            $member = new \Zidisha\Lender\LendingGroupMember();
             $member->setMember($lender)
-                ->setGroup($group);
+                ->setLendingGroup($group);
             $member->save();
         }
 
@@ -101,7 +102,7 @@ class GroupController extends BaseController
 
     public function leaveGroup($id)
     {
-        $group = GroupQuery::create()
+        $group = LendingGroupQuery::create()
             ->findOneById($id);
 
         if (!$group) {
@@ -110,8 +111,8 @@ class GroupController extends BaseController
 
         $lender = Auth::user()->getLender();
 
-        $member = GroupMemberQuery::create()
-            ->filterByGroup($group)
+        $member = LendingGroupMemberQuery::create()
+            ->filterByLendingGroup($group)
             ->filterByMember($lender)
             ->findone();
 
@@ -120,5 +121,57 @@ class GroupController extends BaseController
 
         \Flash::success("Successfully Leaved!");
         return Redirect::route('lender:group', $group->getId());
+    }
+
+    public function getEditGroup($id)
+    {
+        $group = LendingGroupQuery::create()
+            ->findOneById($id);
+
+        if (!$group) {
+            App::abort(404);
+        }
+        $lender = Auth::user()->getLender();
+
+        if ($lender != $group->getLeader()){
+            App::abort(404);
+        }
+
+
+        $editGroupForm = new EditGroupForm($group);
+        return View::make('lender.edit-group', ['form' => $editGroupForm,], compact('group'));
+    }
+
+    public function postEditGroup($id)
+    {
+        $group = LendingGroupQuery::create()
+            ->findOneById($id);
+
+        if (!$group) {
+            App::abort(404);
+        }
+        $lender = Auth::user()->getLender();
+
+        if ($lender != $group->getLeader()){
+            App::abort(404);
+        }
+
+        $form = new EditGroupForm($group);
+        $form->handleRequest(Request::instance());
+
+        if ($form->isValid()) {
+            $data = $form->getData();
+            $image = null;
+
+            if (Input::hasFile('groupProfilePictureId')) {
+                $image = Input::file('groupProfilePictureId');
+            }
+
+             $this->groupService->editGroup($group, $data, $image);
+
+            \Flash::success("Group Edited!");
+            return Redirect::route('lender:group', $id);
+        }
+        return Redirect::route('lender:groups:edit', $id)->withForm($form);
     }
 } 
