@@ -468,6 +468,11 @@ Route::group(
                 );
 
                 Route::get(
+                    'translation',
+                    ['uses' => 'TranslationController@getTranslation', 'as' => 'admin:translation:index']
+                );
+
+                Route::get(
                     'translation/{filename}/{languageCode}',
                     ['uses' => 'TranslationController@getTranslations', 'as' => 'admin:translation']
                 );
