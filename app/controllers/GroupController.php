@@ -86,10 +86,14 @@ class GroupController extends BaseController
 
         $lender = Auth::user()->getLender();
 
-        $member = new \Zidisha\Lender\GroupMember();
-        $member->setMember($lender)
-            ->setGroup($group);
-        $member->save();
+        if($this->groupService->wasMember($lender, $group)){
+
+        }else{
+            $member = new \Zidisha\Lender\GroupMember();
+            $member->setMember($lender)
+                ->setGroup($group);
+            $member->save();
+        }
 
         \Flash::success("Successfully Joined!");
         return Redirect::route('lender:group', $group->getId());
