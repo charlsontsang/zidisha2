@@ -9,12 +9,12 @@ use Zidisha\Lender\LendingGroupService;
 class LendingGroupController extends BaseController
 {
     private $createGroupForm;
-    private $groupService;
+    private $lendingGroupService;
 
-    public function __construct(CreateGroupForm $createGroupForm, LendingGroupService $groupService)
+    public function __construct(CreateGroupForm $createGroupForm, LendingGroupService $lendingGroupService)
     {
         $this->createGroupForm = $createGroupForm;
-        $this->groupService = $groupService;
+        $this->lendingGroupService = $lendingGroupService;
     }
 
     public function getCreateGroup()
@@ -37,7 +37,7 @@ class LendingGroupController extends BaseController
 
             }
 
-            $group =  $this->groupService->addGroup($creator, $data, $image);
+            $group =  $this->lendingGroupService->addLendingGroup($creator, $data, $image);
 
             \Flash::success("Group created!");
             return Redirect::route('lender:group', $group->getId());
@@ -87,14 +87,7 @@ class LendingGroupController extends BaseController
 
         $lender = Auth::user()->getLender();
 
-        if($this->groupService->wasMember($lender, $group)){
-
-        }else{
-            $member = new \Zidisha\Lender\LendingGroupMember();
-            $member->setMember($lender)
-                ->setLendingGroup($group);
-            $member->save();
-        }
+        $this->lendingGroupService->joinLendingGroup($lender, $group);
 
         \Flash::success("Successfully Joined!");
         return Redirect::route('lender:group', $group->getId());
@@ -110,6 +103,7 @@ class LendingGroupController extends BaseController
         }
 
         $lender = Auth::user()->getLender();
+        $this->lendingGroupService->leaveLendingGroup($group, $lender);
 
         $member = LendingGroupMemberQuery::create()
             ->filterByLendingGroup($group)
@@ -167,7 +161,7 @@ class LendingGroupController extends BaseController
                 $image = Input::file('groupProfilePictureId');
             }
 
-             $this->groupService->editGroup($group, $data, $image);
+             $this->lendingGroupService->editLendingGroup($group, $data, $image);
 
             \Flash::success("Group Edited!");
             return Redirect::route('lender:group', $id);

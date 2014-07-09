@@ -9,7 +9,7 @@ use Zidisha\User\UserQuery;
 class LendingGroupService
 {
 
-    public function addGroup(Lender $creator, $data, $image)
+    public function addLendingGroup(Lender $creator, $data, $image)
     {
 
         $group = new LendingGroup();
@@ -31,25 +31,8 @@ class LendingGroupService
         return $group;
     }
 
-    public function wasMember(Lender $lender, LendingGroup $group)
+    public function editLendingGroup(LendingGroup $group, $data, $image)
     {
-
-        $member = LendingGroupMemberQuery::create()
-            ->filterByMember($lender)
-            ->filterByLendingGroup($group)
-            ->filterByLeaved(true)
-            ->findOne();
-        if($member){
-            $member->setLeaved(false);
-            $member->save();
-            return true;
-        }
-        return false;
-    }
-
-    public function editGroup(LendingGroup $group, $data, $image)
-    {
-
         $leader = UserQuery::create()
             ->findOneById($data['userId']);
 
@@ -65,6 +48,40 @@ class LendingGroupService
             $group->setGroupProfilePicture($upload);
         }
         $group->save();
+    }
+
+    public function joinLendingGroup(LendingGroup $group, Lender $lender)
+    {
+        $member = LendingGroupMemberQuery::create()
+            ->filterByMember($lender)
+            ->filterByLendingGroup($group)
+            ->findOne();
+        
+        if($member){
+            if($member->getLeaved() == false){
+                return;
+            }
+            $member->setLeaved(false);
+            $member->save();
+        }else{
+            $member = new LendingGroupMember();
+            $member->setMember($lender)
+                ->setLendingGroup($group);
+            $member->save();
+        }
+    }
+
+    public function leaveLendingGroup(LendingGroup $group, Lender $lender)
+    {
+        $member = LendingGroupMemberQuery::create()
+            ->filterByLendingGroup($group)
+            ->filterByMember($lender)
+            ->findone();
+
+        if($member){
+            $member->setLeaved(true);
+            $member->save();
+        }
     }
 
 }
