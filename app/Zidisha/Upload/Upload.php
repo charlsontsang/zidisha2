@@ -6,8 +6,10 @@ use Config;
 use Illuminate\Filesystem\Filesystem;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Zidisha\Upload\Base\Upload as BaseUpload;
 use Zidisha\Upload\Exceptions\ConfigurationNotFoundException;
+use Zidisha\Upload\Exceptions\FileTypeMisMatchException;
 
 class Upload extends BaseUpload
 {
@@ -26,7 +28,7 @@ class Upload extends BaseUpload
             throw new ConfigurationNotFoundException();
         }
 
-        if(!$this->isImage()){
+        if (!$this->isImage()) {
             throw new FileTypeMisMatchException();
         }
 
@@ -61,7 +63,7 @@ class Upload extends BaseUpload
         return true;
     }
 
-    public static function createFromFile(File $file)
+    public static function createFromFile(UploadedFile $file)
     {
         $upload = new Upload();
 
