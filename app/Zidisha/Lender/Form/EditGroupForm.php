@@ -22,9 +22,9 @@ class EditGroupForm extends  AbstractForm
     public function getRules($data)
     {
         return [
-            'name'                  => 'required|max:20|unique:lending_groups,name,'. $this->group->getId() . ',id',
+            'name'                  => 'required|unique:lending_groups,name,'. $this->group->getId() . ',id',
             'website'               => 'unique:lending_groups,website,'. $this->group->getId() . ',id',
-            'about'                 => 'required|min:100',
+            'about'                 => 'required',
             'groupProfilePictureId' => 'image|max:2048',
             'userId'              => 'required|in:' . implode(',', array_keys($this->getMembers())),
         ];

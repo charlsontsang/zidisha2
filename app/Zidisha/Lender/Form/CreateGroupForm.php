@@ -12,9 +12,9 @@ class CreateGroupForm extends  AbstractForm
     public function getRules($data)
     {
         return [
-            'name'                  => 'required|max:20|unique:lending_groups,name',
+            'name'                  => 'required|unique:lending_groups,name',
             'website'               => 'unique:lending_groups,website',
-            'about'                 => 'required|min:100',
+            'about'                 => 'required',
             'groupProfilePictureId' => 'image|max:2048'
         ];
     }
