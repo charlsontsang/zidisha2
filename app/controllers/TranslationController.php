@@ -1,5 +1,6 @@
 <?php
 
+use Zidisha\Country\LanguageQuery;
 use Zidisha\Translation\TranslationLabelQuery;
 use Zidisha\Translation\TranslationService;
 use Zidisha\Utility\Utility;
@@ -11,21 +12,24 @@ class TranslationController extends BaseController
      */
     private $translationService;
 
+    private $languageCodes;
+
+    private $borrowerLanguages;
+
     public function __construct(TranslationService $translationService)
     {
         $this->translationService = $translationService;
-    }
 
+        $this->borrowerLanguages = LanguageQuery::create()
+            ->filterBorrowerLanguages()
+            ->find();
+
+        $this->languageCodes = $this->borrowerLanguages->toKeyValue('LanguageCode', 'LanguageCode');
+    }
 
     public function getTranslations($filename, $languageCode)
     {
-        // TODO remove
-        $this->translationService->loadLanguageFilesToDatabase();
-
-        //TODO : get locale array from admin
-        $languageCodes = ['fr', 'in'];
-
-        if (!in_array($languageCode, $languageCodes)) {
+        if (!in_array($languageCode, $this->languageCodes)) {
             \App::abort(404, 'Given language not found.');
         }
 
@@ -40,22 +44,25 @@ class TranslationController extends BaseController
             ->filterByLanguageCode($languageCode)
             ->find();
 
+        $keyToTranslationLabel = [];
+        foreach ($translationLabels as $translationLabel) {
+            $keyToTranslationLabel[$translationLabel->getKey()] = $translationLabel;
+        }
+
         $keyToValue = $translationLabels->toKeyValue('key', 'value');
         $defaultValues = Utility::toInputNames($keyToValue);
+        $keyToTranslationLabel = Utility::toInputNames($keyToTranslationLabel);
 
         if (!$defaultValues) {
             \App::abort(404, 'The given file not found.');
         }
 
-        return View::make('translation.form', compact('file', 'fileLabels', 'defaultValues', 'filename'));
+        return View::make('translation.form', compact('file', 'fileLabels', 'defaultValues', 'filename', 'keyToTranslationLabel'));
     }
 
     public function postTranslations($filename, $languageCode)
     {
-        //TODO : get locale array from admin
-        $languageCodes = ['fr', 'in'];
-
-        if (!in_array($languageCode, $languageCodes)) {
+        if (!in_array($languageCode, $this->languageCodes)) {
             \App::abort(404, 'Given language not found.');
         }
 
@@ -75,19 +82,16 @@ class TranslationController extends BaseController
 
     public function getTranslation()
     {
-        //Todo: get language files from admin
-        $languageCodes = ['fr', 'in'];
-
-        if (Input::has('languageCode') && !in_array(Input::get('languageCode'), $languageCodes)) {
+        if (Input::has('languageCode') && !in_array(Input::get('languageCode'), $this->languageCodes)) {
             \App::abort(404, 'No Language given');
         }
 
-        $languageCode = Input::get('languageCode', $languageCodes[0]);
+        $languageCode = Input::get('languageCode', reset($this->languageCodes));
 
         $files = TranslationLabelQuery::create()
-            ->filterByLanguageCode($languageCode)
+            ->filterByLanguageCode(strtolower($languageCode))
             ->getTotals();
 
-        return View::make('translation.index', compact('languageCodes', 'languageCode', 'files'));
+        return View::make('translation.index', ['languageCode' => $languageCode, 'borrowerLanguages' => $this->borrowerLanguages, 'files' => $files]);
     }
 }

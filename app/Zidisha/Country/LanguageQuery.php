@@ -3,6 +3,7 @@
 namespace Zidisha\Country;
 
 use Zidisha\Country\Base\LanguageQuery as BaseLanguageQuery;
+use Zidisha\Country\CountryQuery;
 
 
 /**
@@ -17,5 +18,16 @@ use Zidisha\Country\Base\LanguageQuery as BaseLanguageQuery;
  */
 class LanguageQuery extends BaseLanguageQuery
 {
+
+    public function filterBorrowerLanguages()
+    {
+        $languageCodes = CountryQuery::create()
+            ->filterByBorrowerCountry(true)
+            ->distinct()
+            ->select(['language_code'])
+            ->find();
+
+        return $this->filterByLanguageCode($languageCodes->getData());
+    }
 
 } // LanguageQuery

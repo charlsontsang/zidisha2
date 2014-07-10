@@ -4,6 +4,7 @@ namespace Zidisha\Translation;
 
 
 use Illuminate\Filesystem\Filesystem;
+use Zidisha\Country\LanguageQuery;
 use Zidisha\Translation\TranslationLabelQuery;
 use Zidisha\Vendor\PropelDB;
 
@@ -14,9 +15,6 @@ class TranslationService
      * @var \Illuminate\Filesystem\Filesystem
      */
     private $filesystem;
-
-    //Todo: get languages from admin
-    protected $languageCodes = ['en', 'fr', 'in'];
 
     public function __construct(Filesystem $filesystem)
     {
@@ -32,9 +30,15 @@ class TranslationService
             $fileLabels = $this->getFlattenedFileLabels($filename);
 
             PropelDB::transaction(function($con) use($filename, $fileLabels) {
-                    $updatedKeys = [];
+                $updatedKeys = [];
 
-                    foreach ($this->languageCodes as $languageCode) {
+                $languageCodes = LanguageQuery::create()
+                    ->filterBorrowerLanguages()
+                    ->find()->toKeyValue('LanguageCode', 'LanguageCode');
+
+                array_unshift($languageCodes, "en");
+
+                foreach ($languageCodes as $languageCode) {
                     $_labels = TranslationLabelQuery::create()
                         ->filterByFilename($filename)
                         ->filterByLanguageCode($languageCode)
@@ -73,6 +77,18 @@ class TranslationService
                             $translationLabel->setUpdated(true);
                         }
                         $translationLabel->save($con);
+                    }
+
+                    foreach ($labels as $label) {
+                        if (!isset($fileLabels[$label->getKey()])){
+                            $deprecatedLabel = TranslationLabelQuery::create()
+                                ->filterByKey($label->getKey())
+                                ->filterByFilename($filename)
+                                ->filterByLanguageCode($languageCode)
+                                ->findOne();
+
+                            $deprecatedLabel->delete();
+                        }
                     }
                 }
             });

@@ -195,10 +195,10 @@ class GenerateModelData extends Command
         if($model == "Language") {
 
             $languages = [
-              [ 'IN','Bahasa Indonesia',true,],
-                [ 'FR','Français',true,],
-               [ 'HI','Hindi',false,],
-               [ 'EN','English',false,],
+                ['in', 'Bahasa Indonesia', true,],
+                ['fr', 'Français', true,],
+                ['hi', 'Hindi', false,],
+                ['en', 'English', false,],
             ];
 
             foreach($languages as $language){
@@ -424,12 +424,12 @@ class GenerateModelData extends Command
                 $country->setInstallmentPeriod($faker->randomElement([Loan::WEEKLY_INSTALLMENT, Loan::MONTHLY_INSTALLMENT]));
                 if($i<3){
                     $language = \Zidisha\Country\LanguageQuery::create()
-                        ->filterByLanguageCode('FR')
+                        ->filterByLanguageCode('fr')
                         ->findOne();
                     $country->setLanguage($language);
-                }elseif($i<5){
+                }elseif($i>2){
                     $language = \Zidisha\Country\LanguageQuery::create()
-                        ->filterByLanguageCode('IN')
+                        ->filterByLanguageCode('in')
                         ->findOne();
                     $country->setLanguage($language);
                 }
