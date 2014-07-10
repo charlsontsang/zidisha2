@@ -13,14 +13,17 @@
                 </div>
 
                 <div class="col-md-6">
-                    @if(!$translatedState[$group.'_'.$key]->getTranslated())
-                        <div class="has-error">
-                    @elseif(!$translatedState[$key]->getUpdated())
-                        <div class="has-warning">
+                    @if(!$keyToTranslationLabel[$group.'_'.$key]->getTranslated())
+                        <div class="has-error has-feedback">
+                        <span class="glyphicon glyphicon-remove form-control-feedback"></span>
+                    @elseif($keyToTranslationLabel[$group.'_'.$key]->getUpdated())
+                        <div class="has-warning has-feedback">
+                        <span class="glyphicon glyphicon-warning-sign form-control-feedback"></span>
                     @else
                         <div>
                     @endif
                         {{ BootstrapForm::textarea($group . '_' . str_replace('.', '_', $key), null, ['label' => false, 'rows' => 5]) }}
+
                     </div>
                 </div>
             </div>
