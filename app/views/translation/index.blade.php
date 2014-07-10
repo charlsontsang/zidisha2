@@ -23,19 +23,25 @@
     </thead>
     <tbody>
         @foreach($files as $file)
-            <tr>
-                <td>
-                    <a href="{{ route('admin:translation', [$file['filename'], 'languageCode' => $languageCode]) }}">
-                        {{ $file['filename'] }}
-                    </a>
-                </td>
-                <td>
-                    {{ $file['totalUntranslated'] }}
-                </td>
-                <td>
-                    {{ $file['totalUpdated'] }}
-                </td>
-            </tr>
+            @if($file['totalUntranslated'] > 0)
+                <tr class="danger">
+            @elseif($file['totalUpdated'] > 0)
+                <tr class="warning">
+            @else
+                <tr>
+            @endif
+                    <td>
+                        <a href="{{ route('admin:translation', [$file['filename'], 'languageCode' => $languageCode]) }}">
+                            {{ $file['filename'] }}
+                        </a>
+                    </td>
+                    <td>
+                        {{ $file['totalUntranslated'] }}
+                    </td>
+                    <td>
+                        {{ $file['totalUpdated'] }}
+                    </td>
+                </tr>
         @endforeach
     </tbody>
 </table>
