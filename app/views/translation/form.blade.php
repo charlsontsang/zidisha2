@@ -2,6 +2,10 @@
 
 @section('content')
 <div class="row">
+    <a href=" {{ route('admin:translation:index') }} ">Translation Index</a>
+</div>
+
+<div class="row">
     <div class="col-md-10">
         {{ BootstrapForm::open() }}
         {{ BootstrapForm::model($defaultValues) }}
