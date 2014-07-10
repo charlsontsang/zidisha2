@@ -783,6 +783,7 @@
         <column name="translated" type="BOOLEAN" required="false" defaultValue="false"/>
         <column name="updated" type="BOOLEAN" defaultValue="false"/>
         <behavior name="timestampable"/>
+        <behavior name="archivable" />
     </table>
 
     <table name="notifications" phpName="Notification" namespace="Notification">
