@@ -12,7 +12,7 @@
         {{ BootstrapForm::open() }}
         {{ BootstrapForm::model($defaultValues) }}
 
-        @include('translation.form-section',['labels' => $fileLabels, 'level' => 2, 'group' => $filename, 'title' => $filename])
+        @include('translation.form-section',['labels' => $fileLabels, 'level' => 2, 'group' => '', 'title' => $filename])
 
         {{ BootstrapForm::submit('Save') }}
         {{ BootstrapForm::close() }}
