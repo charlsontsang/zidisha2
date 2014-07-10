@@ -135,4 +135,16 @@ class LenderMailer
             ]
         );
     }
+
+    public function sendAbandonedMail(Lender $lender)
+    {
+        $this->mailer->send(
+            'emails.lender.abandoned',
+            [
+                'to'      => $lender->getUser()->getEmail(),
+                'from'    => 'service@zidisha.com',
+                'subject' => 'Login to Zidisha'
+            ]
+        );
+    }
 }
