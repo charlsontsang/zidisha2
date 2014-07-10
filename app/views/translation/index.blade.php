@@ -17,8 +17,8 @@
     <thead>
         <tr>
             <th>File</th>
-            <th>Untranslated</th>
-            <th>Updated</th>
+            <th><span id="untranslated" data-toggle="tooltip" data-placement="top" title="Untranslated fields in the file">Untranslated</span></th>
+            <th><span id="updated" data-toggle="tooltip" data-placement="top" title="Updated fields in the file">Updated</span></th>
         </tr>
     </thead>
     <tbody>
@@ -45,4 +45,11 @@
         @endforeach
     </tbody>
 </table>
+@stop
+
+@section('script-footer')
+    <script>
+        $('#untranslated').tooltip()
+        $('#updated').tooltip()
+    </script>
 @stop
