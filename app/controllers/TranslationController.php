@@ -19,11 +19,16 @@ class TranslationController extends BaseController
 
     public function getTranslations($filename, $languageCode)
     {
-        // TODO remove
-        $this->translationService->loadLanguageFilesToDatabase();
+        $languageCodes = [];
+        $languages = \Zidisha\Country\CountryQuery::create()
+            ->filterByBorrowerCountry(true)
+            ->find();
 
-        //TODO : get locale array from admin
-        $languageCodes = ['fr', 'in'];
+        foreach ($languages as $language) {
+            if (!in_array($language->getLanguageCode(), $languageCodes)) {
+                $languageCodes[] = $language->getLanguageCode();
+            }
+        }
 
         if (!in_array($languageCode, $languageCodes)) {
             \App::abort(404, 'Given language not found.');
@@ -57,8 +62,16 @@ class TranslationController extends BaseController
 
     public function postTranslations($filename, $languageCode)
     {
-        //TODO : get locale array from admin
-        $languageCodes = ['fr', 'in'];
+        $languageCodes = [];
+        $languages = \Zidisha\Country\CountryQuery::create()
+            ->filterByBorrowerCountry(true)
+            ->find();
+
+        foreach ($languages as $language) {
+            if (!in_array($language->getLanguageCode(), $languageCodes)) {
+                $languageCodes[] = $language->getLanguageCode();
+            }
+        }
 
         if (!in_array($languageCode, $languageCodes)) {
             \App::abort(404, 'Given language not found.');
@@ -80,8 +93,19 @@ class TranslationController extends BaseController
 
     public function getTranslation()
     {
-        //Todo: get language files from admin
-        $languageCodes = ['fr', 'in'];
+        $borrowerLanguages = [];
+        $languageCodes = [];
+        $languages = \Zidisha\Country\CountryQuery::create()
+            ->filterByBorrowerCountry(true)
+            ->find();
+
+        foreach ($languages as $language) {
+            $borrowerLanguages[$language->getLanguageCode()] = $language->getLanguage()->getName();
+
+            if (!in_array($language->getLanguageCode(), $languageCodes)) {
+                $languageCodes[] = $language->getLanguageCode();
+            }
+        }
 
         if (Input::has('languageCode') && !in_array(Input::get('languageCode'), $languageCodes)) {
             \App::abort(404, 'No Language given');
@@ -93,6 +117,6 @@ class TranslationController extends BaseController
             ->filterByLanguageCode($languageCode)
             ->getTotals();
 
-        return View::make('translation.index', compact('languageCodes', 'languageCode', 'files'));
+        return View::make('translation.index', compact('languageCodes', 'languageCode', 'borrowerLanguages', 'files'));
     }
 }
