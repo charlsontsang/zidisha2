@@ -6,13 +6,7 @@ class ImportTranslationsCommand extends Command {
 
 	protected $name = 'import-translations';
 
-	protected $description = 'Used to import language file to the databse.';
-
-
-    public function __construct()
-	{
-		parent::__construct();
-    }
+	protected $description = 'Used to import language file to the database.';
 
 	public function fire()
 	{
