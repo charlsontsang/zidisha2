@@ -8,8 +8,8 @@
 <h1>Translations</h1>
 <hr/>
 <ul class="nav nav-tabs" role="tablist">
-    @foreach($languageCodes as $code)
-        <li class="{{ $code == $languageCode ? 'active' : '' }}"><a href="{{ route('admin:translation:index') }}?languageCode={{$code}}">{{ $borrowerLanguages[$code] }}</a></li>
+    @foreach($borrowerLanguages as $code)
+        <li class="{{ $code->getLanguageCode() == $languageCode ? 'active' : '' }}"><a href="{{ route('admin:translation:index') }}?languageCode={{$code->getLanguageCode()}}">{{ $code->getName() }}</a></li>
     @endforeach
 </ul>
 
