@@ -4,6 +4,7 @@ use Illuminate\Support\Collection;
 use Symfony\Component\Translation\MessageSelector;
 use Symfony\Component\Translation\TranslatorInterface;
 use Zidisha\Utility\NamespacedItemResolver;
+use Zidisha\Utility\Utility;
 
 class Translator extends NamespacedItemResolver implements TranslatorInterface {
 
@@ -216,6 +217,18 @@ class Translator extends NamespacedItemResolver implements TranslatorInterface {
         $lines = $this->loader->load($locale, $folder, $group, $namespace);
 
         $this->loaded[$namespace][$folder][$group][$locale] = $lines;
+    }
+
+    private function loadFromDb($locale, $group)
+    {
+        $labels = TranslationLabelQuery::create()
+            ->filterByLanguageCode($locale)
+            ->filterByFilename($group)
+            ->find()->toKeyValue('key', 'value');
+
+        $nestedLabels = Utility::nestedArray($labels, '.');
+
+        return $nestedLabels;
     }
 
     /**
