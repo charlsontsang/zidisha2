@@ -155,12 +155,12 @@ class Utility {
         return $truncate;
     }
 
-    public static function nestedArray($data)
+    public static function nestedArray($data, $separator = '_')
     {
         $nestedData = [];
 
         foreach ($data as $k => $v) {
-            $keys = explode('_', $k);
+            $keys = explode($separator, $k);
             $count = count($keys);
             $parent = & $nestedData;
             foreach ($keys as $key) {
