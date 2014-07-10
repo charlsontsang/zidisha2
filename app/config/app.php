@@ -116,7 +116,6 @@ return array(
 		'Illuminate\Remote\RemoteServiceProvider',
 		'Illuminate\Database\SeedServiceProvider',
 		'Illuminate\Session\SessionServiceProvider',
-		'Illuminate\Translation\TranslationServiceProvider',
 		'Illuminate\Validation\ValidationServiceProvider',
 		'Illuminate\View\ViewServiceProvider',
 		'Illuminate\Workbench\WorkbenchServiceProvider',
@@ -126,6 +125,7 @@ return array(
         'Zidisha\Html\BootstrapFormServiceProvider',
         'Zidisha\Http\RedirectorServiceProvider',
         'Barryvdh\Debugbar\ServiceProvider',
+        'Zidisha\Translation\TranslationServiceProvider'
 
     ),
 

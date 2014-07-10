@@ -1,8 +1,9 @@
 <h{{ $level }} id="{{ $group }}"> {{ ucfirst($title) }} </h{{ $level }}>
 
 @foreach ($labels as $key => $value)
+    <?php $groupKey = ltrim($group . '_' . $key, '_') ?>
     @if (is_array($value))
-        @include('translation.form-section', ['labels' => $value, 'level' => $level + 1, 'group' => $group . '_' . $key, 'title' => $key])
+        @include('translation.form-section', ['labels' => $value, 'level' => $level + 1, 'group' => $groupKey, 'title' => $key])
     @else
             {{ BootstrapForm::label($key, null, ['style' => 'display:none;']) }}
             <div class="row">
@@ -13,17 +14,16 @@
                 </div>
 
                 <div class="col-md-6">
-                    @if(!$keyToTranslationLabel[$group.'_'.$key]->getTranslated())
+                    @if(!$keyToTranslationLabel[$groupKey]->getTranslated())
                         <div class="has-error has-feedback">
                         <span class="glyphicon glyphicon-remove form-control-feedback"></span>
-                    @elseif($keyToTranslationLabel[$group.'_'.$key]->getUpdated())
+                    @elseif($keyToTranslationLabel[$groupKey]->getUpdated())
                         <div class="has-warning has-feedback">
                         <span class="glyphicon glyphicon-warning-sign form-control-feedback"></span>
                     @else
                         <div>
                     @endif
-                        {{ BootstrapForm::textarea($group . '_' . str_replace('.', '_', $key), null, ['label' => false, 'rows' => 5]) }}
-
+                        {{ BootstrapForm::textarea(str_replace('.', '_', $groupKey), null, ['label' => false, 'rows' => 5]) }}
                     </div>
                 </div>
             </div>
