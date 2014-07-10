@@ -155,7 +155,7 @@ class TransactionService
 
         $feeTransactionAdmin = new Transaction();
         $feeTransactionAdmin
-            ->setUserId(\Config::get('adminId'))
+            ->setUserId(Setting::get('site.adminId'))
             ->setAmount($amount->multiply(2.5))
             ->setDescription('Registration Fee')
             ->setLoan($loan)
@@ -293,7 +293,7 @@ class TransactionService
 
         $transaction = new Transaction();
         $transaction
-            ->setUserId(\Config::get('adminId'))
+            ->setUserId(Setting::get('site.adminId'))
             ->setAmount($amount)
             ->setDescription('Fee')
             ->setLoan($loan)
@@ -329,7 +329,7 @@ class TransactionService
 
         $transaction = new Transaction();
         $transaction
-            ->setUserId(\Config::get('YCAccountId'))
+            ->setUserId(Setting::get('site.YCAccountId'))
             ->setAmount($amount)
             ->setDescription('Loan repayment received')
             ->setLoan($loan)
@@ -387,7 +387,7 @@ class TransactionService
 
         $transactionDonation = new Transaction();
         $transactionDonation
-            ->setUserId(\Config::get('adminId'))
+            ->setUserId(Setting::get('site.adminId'))
             ->setAmount($amount)
             ->setDescription('Donation from lender')
             ->setTransactionDate(new \DateTime())

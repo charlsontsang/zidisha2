@@ -1,5 +1,6 @@
 <?php
 
+use Zidisha\Admin\Setting;
 use Zidisha\Balance\TransactionQuery;
 use Zidisha\Lender\Form\Invite;
 use Zidisha\Lender\InviteQuery;
@@ -127,7 +128,7 @@ class LenderInviteController extends BaseController
         }
 
         $ycAccountCredit = TransactionQuery::create()
-            ->filterByUserId(\Config::get('YCAccount.Id'))
+            ->filterByUserId(Setting::get('site.YCAccountId'))
             ->getTotalBalance();
 
         if ($ycAccountCredit->getAmount() < 5000) {

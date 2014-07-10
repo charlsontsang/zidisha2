@@ -9,6 +9,14 @@ return [
             'default' => 'service@zidisha.org',
             'rule'    => 'email',
         ],
+        'site.adminId' => [
+            'label' => 'Admin id',
+            'rule'  => 'numeric',
+        ],
+        'site.YCAccountId' => [
+            'label' => 'YCAccount id',
+            'rule'  => 'numeric',
+        ],
     ],
     'Loan' => [
         'loan.minimumAmount' => [
