@@ -73,7 +73,7 @@ abstract class AbstractPaymentForm extends AbstractForm
 
     protected function validate($data, $rules)
     {
-        $data['currentBalance'] = $this->getCurrentBalance();
+        $data['currentBalance'] = $this->getCurrentBalance()->getAmount();
 
         parent::validate($data, $rules);
     }

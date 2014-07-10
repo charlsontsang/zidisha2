@@ -106,7 +106,8 @@ class LoanController extends BaseController
         if ($form->isValid()) {
            return $form->makePayment();
         }
-
+      //  var_dump($_POST);
+      //  dd($form->getMessageBag()->getMessages());
         Flash::error("Entered Amounts are invalid!");
         return Redirect::route('loan:index',$loanId)->withForm($form);
     }

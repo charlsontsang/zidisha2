@@ -42,8 +42,9 @@ function parseMoney(value) {
     return Number(value.replace(/[^0-9\.]+/g, ""));
 }
 
-function formatMoney(value) {
-    return value.toFixed(2);
+function formatMoney(value, scale) {
+    scale = scale || 4;
+    return value.toFixed(scale);
 }
 
 function paymentForm(config) {
@@ -89,8 +90,8 @@ function paymentForm(config) {
 
         $transactionFeeAmount.val(formatMoney(transactionFeeAmount));
         $totalAmount.val(formatMoney(totalAmount));
-        $transactionFeeAmountDisplay.text(formatMoney(transactionFeeAmount));
-        $totalAmountDisplay.text(formatMoney(totalAmount));
+        $transactionFeeAmountDisplay.text(formatMoney(transactionFeeAmount, 2));
+        $totalAmountDisplay.text(formatMoney(totalAmount, 2));
         
         if (totalAmount > 0) {
             $paymentMethods.show();

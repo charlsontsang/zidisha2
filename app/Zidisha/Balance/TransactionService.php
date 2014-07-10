@@ -3,6 +3,7 @@
 namespace Zidisha\Balance;
 
 use Propel\Runtime\Connection\ConnectionInterface;
+use Zidisha\Admin\Setting;
 use Zidisha\Currency\Money;
 use Zidisha\Lender\GiftCard;
 use Zidisha\Lender\GiftCardTransaction;
@@ -239,7 +240,7 @@ class TransactionService
 
             $transactionStripeAdmin = new Transaction();
             $transactionStripeAdmin
-                ->setUserId(\Config::get('app.AdminId'))
+                ->setUserId(Setting::get('site.adminId'))
                 ->setAmount($payment->getTransactionFee())
                 ->setDescription('Lender transaction fee')
                 ->setTransactionDate(new \DateTime())
@@ -262,7 +263,7 @@ class TransactionService
 
         $donationTransaction = new Transaction();
         $donationTransaction
-            ->setUserId(\Config::get('app.AdminId'))
+            ->setUserId(Setting::get('site.adminId'))
             ->setAmount($payment->getDonationAmount())
             ->setDescription('Donation from lender')
             ->setTransactionDate(new \DateTime())
@@ -351,7 +352,7 @@ class TransactionService
         $giftCardTransaction->save($con);
 
         $giftCardTransaction = new Transaction();
-        $giftCardTransaction->setUserId(\Config::get('app.AdminId'))
+        $giftCardTransaction->setUserId(Setting::get('site.adminId'))
             ->setAmount($giftCard->getCardAmount())
             ->setDescription("Gift Card Purchase")
             ->setTransactionDate(new \DateTime())
