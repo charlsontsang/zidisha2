@@ -195,10 +195,10 @@ class GenerateModelData extends Command
         if($model == "Language") {
 
             $languages = [
-              [ 'in','Bahasa Indonesia',true,],
-                [ 'fr','Français',true,],
-               [ 'hi','Hindi',false,],
-               [ 'en','English',false,],
+                ['in', 'Bahasa Indonesia', true,],
+                ['fr', 'Français', true,],
+                ['hi', 'Hindi', false,],
+                ['en', 'English', false,],
             ];
 
             foreach($languages as $language){
