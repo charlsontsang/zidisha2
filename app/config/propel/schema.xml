@@ -771,4 +771,15 @@
             <reference local="group_id" foreign="id"/>
         </foreign-key>
     </table>
+
+    <table name="translation_labels" phpName="TranslationLabel" namespace="Translation">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="key" type="VARCHAR" required="true"/>
+        <column name="value" type="LONGVARCHAR" required="false"/>
+        <column name="language_code" type="CHAR" size="5" required="true"/>
+        <column name="filename" type="VARCHAR" required="true"/>
+        <column name="translated" type="BOOLEAN" required="false" defaultValue="false"/>
+        <column name="updated" type="BOOLEAN" defaultValue="false"/>
+        <behavior name="timestampable"/>
+    </table>
 </database>

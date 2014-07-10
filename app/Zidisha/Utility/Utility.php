@@ -178,4 +178,26 @@ class Utility {
 
         return $nestedData;
     }
+
+    public static function toInputNames($data)
+    {
+        $result = [];
+
+        foreach ($data as $key => $value) {
+            $result[str_replace('.', '_', $key)] = $value;
+        }
+
+        return $result;
+    }
+
+    public static function fromInputNames($data)
+    {
+        $result = [];
+
+        foreach ($data as $key => $value) {
+            $result[str_replace('_', '.', $key)] = $value;
+        }
+
+        return $result;
+    }
 }

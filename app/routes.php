@@ -458,12 +458,37 @@ Route::group(
                     )
                 );
 
-                Route::get('gift-cards', array('uses' => 'AdminController@getGiftCards', 'as' => 'admin:get:gift-cards'));
-                Route::get('gift-cards/resend/{id}', array('uses' => 'AdminController@resendEmailToRecipient', 'as' => 'admin:resend'));
+                Route::get(
+                    'gift-cards',
+                    array('uses' => 'AdminController@getGiftCards', 'as' => 'admin:get:gift-cards')
+                );
+                Route::get(
+                    'gift-cards/resend/{id}',
+                    array('uses' => 'AdminController@resendEmailToRecipient', 'as' => 'admin:resend')
+                );
 
-                Route::controller('paypal', 'PayPalController');
+                Route::get(
+                    'translation',
+                    ['uses' => 'TranslationController@getTranslation', 'as' => 'admin:translation:index']
+                );
+
+                Route::get(
+                    'translation/{filename}/{languageCode}',
+                    ['uses' => 'TranslationController@getTranslations', 'as' => 'admin:translation']
+                );
+
+                Route::post(
+                    'translation/{filename}/{languageCode}',
+                    ['uses' => 'TranslationController@postTranslations', 'as' => 'admin:translation:post']
+                );
             }
         );
+
+        /**
+         * PayPal Controller
+         */
+        Route::controller('paypal', 'PayPalController');
+
         /**
          * Image resize route
          */
