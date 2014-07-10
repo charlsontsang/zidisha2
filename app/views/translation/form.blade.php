@@ -3,6 +3,8 @@
 @section('content')
 <div class="row">
     <a href=" {{ route('admin:translation:index') }} ">Translation Index</a>
+    <br/>
+    <a href="#" id="toggle-label">Toggle Labels</a>
 </div>
 
 <div class="row">
@@ -22,4 +24,12 @@
         </nav>
     </div>
 </div>
+@stop
+
+@section('script-footer')
+<script>
+    $("#toggle-label").click(function() {
+        $( "label" ).toggle();
+    });
+</script>
 @stop
