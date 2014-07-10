@@ -9,4 +9,8 @@ class Lender extends BaseLender
     public function getName(){
         return $this->getFirstName() . " " . $this->getLastName();
     }
+
+    public function isActive(){
+        return $this->getActive();
+    }
 }

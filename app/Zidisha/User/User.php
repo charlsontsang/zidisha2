@@ -17,7 +17,6 @@ class User extends BaseUser implements UserInterface, RemindableInterface
 
     public function preSave(ConnectionInterface $con = null)
     {
-        $this->setLastLoginAt(new \DateTime());
         return true;
     }
 
