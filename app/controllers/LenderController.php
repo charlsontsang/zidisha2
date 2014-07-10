@@ -19,14 +19,6 @@ class LenderController extends BaseController
     private $editProfileForm, $fundsForm, $cardForm;
 
     private $lenderService;
-    /**
-     * @var StripeService
-     */
-    private $stripeService;
-
-    /**
-     * @var Zidisha\Payment\Form\UploadFundForm
-     */
     private $uploadFundForm;
 
 

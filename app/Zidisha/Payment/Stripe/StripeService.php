@@ -15,9 +15,6 @@ use Zidisha\Payment\Stripe\StripeLog;
 
 class StripeService extends PaymentService
 {
-    /**
-     * @var \Zidisha\Payment\PaymentBus
-     */
     private $paymentBus;
 
     public function __construct(PaymentBus $paymentBus)
