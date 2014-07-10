@@ -13,7 +13,15 @@
                 </div>
 
                 <div class="col-md-6">
-                    {{ BootstrapForm::textarea($group . '_' . str_replace('.', '_', $key), null, ['label' => false, 'rows' => 5]) }}
+                    @if(!$translatedState[$group.'_'.$key]->getTranslated())
+                        <div class="has-error">
+                    @elseif(!$translatedState[$key]->getUpdated())
+                        <div class="has-warning">
+                    @else
+                        <div>
+                    @endif
+                        {{ BootstrapForm::textarea($group . '_' . str_replace('.', '_', $key), null, ['label' => false, 'rows' => 5]) }}
+                    </div>
                 </div>
             </div>
     @endif

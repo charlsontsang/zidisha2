@@ -40,6 +40,11 @@ class TranslationController extends BaseController
             ->filterByLanguageCode($languageCode)
             ->find();
 
+        $translatedState = [];
+        foreach ($translationLabels as $translationLabel) {
+            $translatedState[str_replace('.', '_', $translationLabel->getKey())] = $translationLabel;
+        }
+
         $keyToValue = $translationLabels->toKeyValue('key', 'value');
         $defaultValues = Utility::toInputNames($keyToValue);
 
@@ -47,7 +52,7 @@ class TranslationController extends BaseController
             \App::abort(404, 'The given file not found.');
         }
 
-        return View::make('translation.form', compact('file', 'fileLabels', 'defaultValues', 'filename'));
+        return View::make('translation.form', compact('file', 'fileLabels', 'defaultValues', 'filename', 'translatedState'));
     }
 
     public function postTranslations($filename, $languageCode)
