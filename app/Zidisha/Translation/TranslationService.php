@@ -124,14 +124,7 @@ class TranslationService
 
     public function getFlattenedFileLabels($filename)
     {
-        $fileLabels = array_dot($this->getFileLabels($filename));
-
-        $result = [];
-        foreach ($fileLabels as $key => $value) {
-            $result[$filename . '.' . $key] = $value;
-        }
-
-        return $result;
+        return array_dot($this->getFileLabels($filename));
     }
 
     protected function getAssociativeLabels($labels)
