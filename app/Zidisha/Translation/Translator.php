@@ -214,7 +214,11 @@ class Translator extends NamespacedItemResolver implements TranslatorInterface {
         // The loader is responsible for returning the array of language lines for the
         // given namespace, group, and locale. We'll set the lines in this array of
         // lines that have already been loaded so that we can easily access them.
-        $lines = $this->loader->load($locale, $folder, $group, $namespace);
+        if ($locale != 'en' && $folder == 'borrower') {
+            $lines = $this->loadFromDb($locale, $folder, $group, $namespace);
+        } else {
+            $lines = $this->loader->load($locale, $folder, $group, $namespace);
+        }
 
         $this->loaded[$namespace][$folder][$group][$locale] = $lines;
     }
