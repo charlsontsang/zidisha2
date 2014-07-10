@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use Faker\Factory as Faker;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -96,7 +97,7 @@ class GenerateModelData extends Command
             $this->call('fake', array('model' => 'Category', 'size' => 10));
             $this->call('fake', array('model' => 'Admin', 'size' => 1));
             $this->call('fake', array('model' => 'Borrower', 'size' => 200));
-            $this->call('fake', array('model' => 'Lender', 'size' => 30));
+            $this->call('fake', array('model' => 'Lender', 'size' => 50));
             $this->call('fake', array('model' => 'ExchangeRate', 'size' => 30));
             $this->call('fake', array('model' => 'Loan', 'size' => 150));
             $this->call('fake', array('model' => 'Bid', 'size' => 50));
@@ -180,12 +181,14 @@ class GenerateModelData extends Command
             $user->setPassword($password);
             $user->setEmail($email);
             $user->setRole('admin');
+            $user->setLastLoginAt(new Carbon());
             $user->save();
 
             $user = new \Zidisha\User\User();
             $user->setUsername('YC');
             $user->setPassword('1234567890');
             $user->setEmail('yc@mail.com');
+            $user->setLastLoginAt(new Carbon());
             $user->save();
         }
 
@@ -289,6 +292,13 @@ class GenerateModelData extends Command
                 $user->setPassword($password);
                 $user->setEmail($email);
                 $user->setRole('lender');
+                if($i<5){
+                    $user->setLastLoginAt(new Carbon('first day of July 2013'));
+                }elseif($i<10){
+                    $user->setLastLoginAt(new Carbon('first day of June 2013'));
+                }else{
+                    $user->setLastLoginAt(new Carbon());
+                }
 
                 $firstName = 'lender' . $i;
                 $lastName = 'last' . $i;
@@ -322,6 +332,7 @@ class GenerateModelData extends Command
                 $user->setUsername($userName);
                 $user->setPassword($password);
                 $user->setEmail($email);
+                $user->setLastLoginAt(new Carbon());
                 $user->setRole('borrower');
 
                 $firstName = 'borrower' . $i;
