@@ -5,6 +5,7 @@ namespace Zidisha\Payment\Form;
 use Zidisha\Balance\TransactionQuery;
 use Zidisha\Currency\Money;
 use Zidisha\Form\AbstractForm;
+use Zidisha\Payment\BalanceWithdrawService;
 use Zidisha\Payment\PaymentBus;
 use Zidisha\Payment\Paypal\PayPalService;
 use Zidisha\Payment\Stripe\StripeService;
@@ -13,7 +14,7 @@ abstract class AbstractPaymentForm extends AbstractForm
 {
     protected $currentBalance;
 
-    protected $allowedServices = ['paypal', 'stripe'];
+    protected $allowedServices = ['paypal', 'stripe', 'balanceWithdraw'];
 
     protected $validatorClass = 'Zidisha\Payment\Form\Validator\PaymentValidator';
 
@@ -23,7 +24,7 @@ abstract class AbstractPaymentForm extends AbstractForm
             'creditAmount'       => 'required|numeric|creditAmount',
             'donationAmount'     => 'required|numeric',
             'transactionFee'     => 'required|numeric|totalFee',
-            'totalAmount'        => 'required|numeric|assertTotal|greaterThan:0',
+            'totalAmount'        => 'required|numeric|assertTotal|min:0',
             'paymentMethod'      => 'required|in:' . implode(',', $this->allowedServices),
             'stripeToken'        => 'required_if:paymentMethod,stripe',
             'transactionFeeRate' => '',
@@ -61,6 +62,8 @@ abstract class AbstractPaymentForm extends AbstractForm
             return new PayPalService($paymentBus);
         } elseif ($this->data['paymentMethod'] == 'stripe') {
             return new StripeService($paymentBus);
+        } elseif ($this->data['paymentMethod'] == 'balanceWithdraw') {
+            return new BalanceWithdrawService($paymentBus);
         }
 
         throw new \Exception();

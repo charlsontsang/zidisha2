@@ -8,14 +8,7 @@ use Zidisha\Payment\PaymentHandler;
 class CompletedHandler extends PaymentHandler
 {
 
-
-    /**
-     * @var \Zidisha\Loan\LoanService
-     */
     private $loanService;
-    /**
-     * @var \Zidisha\Payment\BalanceService
-     */
     private $balanceService;
 
     public function __construct(BalanceService $balanceService, LoanService $loanService)
@@ -33,7 +26,9 @@ class CompletedHandler extends PaymentHandler
             'amount' => $payment->getBidAmount()->getAmount()
         ];
 
-        $this->balanceService->uploadFunds($payment);
+        if ($payment->getPaymentMethod() != 'balanceWithdraw') {
+            $this->balanceService->uploadFunds($payment);
+        }
         $this->loanService->placeBid($payment->getLoan(), $payment->getLender(), $data);
 
         return $this;

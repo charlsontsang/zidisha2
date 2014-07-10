@@ -96,9 +96,11 @@ function paymentForm(config) {
         if (totalAmount > 0) {
             $paymentMethods.show();
             $creditSubmit.hide();
+            $("#payment-method").val("papal");
         } else {
             $paymentMethods.hide();
             $creditSubmit.show();
+            $("#payment-method").val("balanceWithdraw");
         }
     }
 
