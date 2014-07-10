@@ -32,9 +32,9 @@ class TranslationService
             $fileLabels = $this->getFlattenedFileLabels($filename);
 
             PropelDB::transaction(function($con) use($filename, $fileLabels) {
-                    $updatedKeys = [];
+                $updatedKeys = [];
 
-                    foreach ($this->languageCodes as $languageCode) {
+                foreach ($this->languageCodes as $languageCode) {
                     $_labels = TranslationLabelQuery::create()
                         ->filterByFilename($filename)
                         ->filterByLanguageCode($languageCode)
@@ -73,6 +73,18 @@ class TranslationService
                             $translationLabel->setUpdated(true);
                         }
                         $translationLabel->save($con);
+                    }
+
+                    foreach ($labels as $label) {
+                        if (!isset($fileLabels[$label->getKey()])){
+                            $deprecatedLabel = TranslationLabelQuery::create()
+                                ->filterByKey($label->getKey())
+                                ->filterByFilename($filename)
+                                ->filterByLanguageCode($languageCode)
+                                ->findOne();
+
+                            $deprecatedLabel->delete();
+                        }
                     }
                 }
             });
