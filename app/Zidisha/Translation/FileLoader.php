@@ -1,29 +1,132 @@
-<?php
-namespace Zidisha\Translation;
+<?php namespace Zidisha\Translation;
 
 use Illuminate\Filesystem\Filesystem;
 
-class FileLoader {
+class FileLoader implements LoaderInterface {
 
+    /**
+     * The filesystem instance.
+     *
+     * @var \Illuminate\Filesystem\Filesystem
+     */
     protected $files;
 
     /**
-     * @var \Illuminate\Filesystem\Filesystem
+     * The default path for the loader.
+     *
+     * @var string
      */
-    private $filesystem;
+    protected $path;
 
-    public function __construct(Filesystem $filesystem)
+    /**
+     * All of the namespace hints.
+     *
+     * @var array
+     */
+    protected $hints = array();
+
+    /**
+     * Create a new file loader instance.
+     *
+     * @param  \Illuminate\Filesystem\Filesystem  $files
+     * @param  string  $path
+     * @return void
+     */
+    public function __construct(Filesystem $files, $path)
     {
-        $this->filesystem = $filesystem;
+        $this->path = $path;
+        $this->files = $files;
     }
 
-    public function loadAllFiles()
+    /**
+     * Load the messages for the given locale.
+     *
+     * @param  string  $locale
+     * @param  string  $group
+     * @param  string  $namespace
+     * @return array
+     */
+    public function load($locale, $folder, $group, $namespace = null)
     {
-        $this->files = $this->filesystem->allFiles(app_path().'/lang/en/borrower/');
+        if (is_null($namespace) || $namespace == '*')
+        {
+            return $this->loadPath($this->path, $locale, $folder, $group);
+        }
+        else
+        {
+            return $this->loadNamespaced($locale, $folder, $group, $namespace);
+        }
     }
 
-    public function showAllFiles()
+    /**
+     * Load a namespaced translation group.
+     *
+     * @param  string  $locale
+     * @param  string  $group
+     * @param  string  $namespace
+     * @return array
+     */
+    protected function loadNamespaced($locale, $folder, $group, $namespace)
     {
-        return $this->files;
+        if (isset($this->hints[$namespace]))
+        {
+            $lines = $this->loadPath($this->hints[$namespace], $locale, $folder,  $group);
+
+            return $this->loadNamespaceOverrides($lines, $locale, $group, $namespace);
+        }
+
+        return array();
     }
+
+    /**
+     * Load a local namespaced translation group for overrides.
+     *
+     * @param  array  $lines
+     * @param  string  $locale
+     * @param  string  $group
+     * @param  string  $namespace
+     * @return array
+     */
+    protected function loadNamespaceOverrides(array $lines, $locale, $group, $namespace)
+    {
+        $file = "{$this->path}/packages/{$locale}/{$namespace}/{$group}.php";
+
+        if ($this->files->exists($file))
+        {
+            return array_replace_recursive($lines, $this->files->getRequire($file));
+        }
+
+        return $lines;
+    }
+
+    /**
+     * Load a locale from a given path.
+     *
+     * @param  string  $path
+     * @param  string  $locale
+     * @param  string  $group
+     * @return array
+     */
+    protected function loadPath($path, $locale, $folder, $group)
+    {
+        if ($this->files->exists($full = "{$path}/{$locale}/{$folder}/{$group}.php"))
+        {
+            return $this->files->getRequire($full);
+        }
+
+        return array();
+    }
+
+    /**
+     * Add a new namespace to the loader.
+     *
+     * @param  string  $namespace
+     * @param  string  $hint
+     * @return void
+     */
+    public function addNamespace($namespace, $hint)
+    {
+        $this->hints[$namespace] = $hint;
+    }
+
 }
