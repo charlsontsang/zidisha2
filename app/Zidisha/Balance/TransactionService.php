@@ -369,4 +369,29 @@ class TransactionService
         $giftPurchaseTransaction->save($con);
 
     }
+
+    public function addConvertToDonationTransaction(ConnectionInterface $con,Lender $lender,Money $amount)
+    {
+        $this->assertAmount($amount);
+
+        $transaction = new Transaction();
+        $transaction
+            ->setUserId($lender->getId())
+            ->setAmount($amount->multiply(-1))
+            ->setDescription('Donation to Zidisha')
+            ->setTransactionDate(new \DateTime())
+            ->setType(Transaction::DONATION)
+            ->setSubType(Transaction::DONATE_BY_ADMIN);
+        $transaction->save($con);
+
+        $transactionDonation = new Transaction();
+        $transactionDonation
+            ->setUserId(\Config::get('adminId'))
+            ->setAmount($amount)
+            ->setDescription('Donation from lender')
+            ->setTransactionDate(new \DateTime())
+            ->setType(Transaction::DONATION)
+            ->setSubType(Transaction::DONATE_BY_ADMIN);
+        $transactionDonation->save($con);
+    }
 }

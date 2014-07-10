@@ -2,6 +2,7 @@
 
 namespace Zidisha\User;
 
+use Faker\Provider\DateTime;
 use Zidisha\User\Base\UserQuery as BaseUserQuery;
 
 
@@ -18,4 +19,8 @@ use Zidisha\User\Base\UserQuery as BaseUserQuery;
 class UserQuery extends BaseUserQuery
 {
 
+    public function filterAbandoned(\DateTime $dateTime)
+    {
+        return $this->filterByActive(true)->filterByLastLoginAt(['max' => $dateTime]);
+    }
 } // UserQuery
