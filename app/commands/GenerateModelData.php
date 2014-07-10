@@ -427,7 +427,7 @@ class GenerateModelData extends Command
                         ->filterByLanguageCode('FR')
                         ->findOne();
                     $country->setLanguage($language);
-                }elseif($i<5){
+                }elseif($i>2){
                     $language = \Zidisha\Country\LanguageQuery::create()
                         ->filterByLanguageCode('IN')
                         ->findOne();
