@@ -18,6 +18,8 @@ abstract class AbstractForm implements MessageProviderInterface
      * @var array
      */
     protected $data;
+    
+    protected $validatorClass = 'Zidisha\Form\ZidishaValidator';
 
     public function handleData(array $data)
     {
@@ -77,6 +79,17 @@ abstract class AbstractForm implements MessageProviderInterface
     }
     
     protected function validate($data, $rules) {
+        \Validator::resolver(
+            function ($translator, $data, $rules, $messages, $parameters) {
+                $class = $this->validatorClass;
+                /** @var ZidishaValidator $validator */
+                $validator = new $class($translator, $data, $rules, $messages, $parameters);
+                $validator->setForm($this);
+                
+                return $validator;
+            }
+        );
+        
         $this->validator = \Validator::make($data, $rules);
     }
 

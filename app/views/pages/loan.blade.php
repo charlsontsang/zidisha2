@@ -182,7 +182,7 @@
 
         @if($loan->isOpen())
         <div>
-            {{ BootstrapForm::open(array('route' => 'loan:post-bid', 'translationDomain' => 'bid', 'id' => 'funds-upload')) }}
+            {{ BootstrapForm::open(array('route' => ['loan:place-bid', $loan->getId()], 'translationDomain' => 'bid', 'id' => 'funds-upload')) }}
             {{ BootstrapForm::populate($form) }}
 
             {{ BootstrapForm::text('amount', null, ['id' => 'amount']) }}

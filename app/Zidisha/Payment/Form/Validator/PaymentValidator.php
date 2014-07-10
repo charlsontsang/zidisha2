@@ -1,22 +1,11 @@
 <?php
 namespace Zidisha\Payment\Form\Validator;
 
-use Illuminate\Validation\Validator;
-use Zidisha\Balance\TransactionQuery;
 use Zidisha\Currency\Money;
+use Zidisha\Form\ZidishaValidator;
 
-class GreaterThanValidator extends Validator
+class PaymentValidator extends ZidishaValidator
 {
-    public function validateGreaterThan($attribute, $value, $parameters)
-    {
-        return $value > $parameters[0];
-    }
-
-    protected function replaceGreaterThan($message, $attribute, $rule, $parameters)
-    {
-        return $attribute.' should be greater than zero.';
-    }
-
     public function validateAssertTotal($attribute, $value, $parameters)
     {
         return Money::create($this->data['creditAmount'])
@@ -27,7 +16,7 @@ class GreaterThanValidator extends Validator
 
     protected function replaceAssertTotal($message, $attribute, $rule, $parameters)
     {
-        return $attribute.' should be equal to sum of Amount, Transaction Fee and Donation Amount.';
+        return $attribute . ' should be equal to sum of Amount, Transaction Fee and Donation Amount.';
     }
 
     public function validateTotalFee($attribute, $value, $parameters)
@@ -40,7 +29,7 @@ class GreaterThanValidator extends Validator
 
     protected function replaceTotalFee($message, $attribute, $rule, $parameters)
     {
-        return $attribute.' Total fee should be amount times the rate.';
+        return $attribute . ' total fee should be amount times the rate.';
     }
     
     public function validateCreditAmount($attribute, $value, $parameters)
@@ -56,6 +45,6 @@ class GreaterThanValidator extends Validator
 
     protected function replaceCreditAmount($message, $attribute, $rule, $parameters)
     {
-        return 'Credit Amount Does not match.';
+        return 'Credit amount does not match.';
     }
 }

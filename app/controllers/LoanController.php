@@ -10,11 +10,11 @@ use Zidisha\Flash\Flash;
 use Zidisha\Lender\Exceptions\InsufficientLenderBalanceException;
 use Zidisha\Loan\Bid;
 use Zidisha\Loan\Form\AdminCategoryForm;
-use Zidisha\Loan\Form\BidForm;
 use Zidisha\Loan\Loan;
 use Zidisha\Loan\LoanQuery;
 use Zidisha\Loan\BidQuery;
 use Zidisha\Loan\LoanService;
+use Zidisha\Payment\Form\PlaceBidForm;
 
 class LoanController extends BaseController
 {
@@ -31,10 +31,6 @@ class LoanController extends BaseController
     protected $bidQuery;
 
     /**
-     * @var Zidisha\Payment\Form\PlaceBidForm
-     */
-    protected $bidForm;
-    /**
      * @var Zidisha\Loan\LoanService
      */
     private $loanService;
@@ -45,7 +41,6 @@ class LoanController extends BaseController
         LoanQuery $loanQuery,
         CommentService $commentService,
         BidQuery $bidQuery,
-        \Zidisha\Payment\Form\PlaceBidForm $bidForm,
         LoanService $loanService,
         BorrowerService $borrowerService,
         AdminCategoryForm $adminCategoryForm
@@ -53,7 +48,6 @@ class LoanController extends BaseController
         $this->loanQuery = $loanQuery;
         $this->bidQuery = $bidQuery;
         $this->commentService = $commentService;
-        $this->bidForm = $bidForm;
         $this->loanService = $loanService;
         $this->borrowerService = $borrowerService;
         $this->adminCategoryForm = $adminCategoryForm;
@@ -65,6 +59,10 @@ class LoanController extends BaseController
         $loan = $this->loanQuery
             ->filterById($loanId)
             ->findOne();
+        
+        if (!$loan) {
+            App::abort(404);
+        }
 
         $borrower = $loan->getBorrower();
         $comments = $this->commentService->getPaginatedComments($borrower, 1, 10);
@@ -92,17 +90,27 @@ class LoanController extends BaseController
         $transactionFee = $this->loanService->calculateTransactionFee($loan);
         $previousLoans = $this->borrowerService->getPreviousLoans($borrower, $loan);
 
+        $placeBidForm = new PlaceBidForm($loan);
+
         return View::make(
             'pages.loan',
             compact('loan', 'borrower' , 'bids', 'totalRaised', 'stillNeeded', 'comments', 'raised', 'totalInterest',
                 'transactionFee', 'previousLoans'),
-            ['form' => $this->bidForm, 'categoryForm' =>$this->adminCategoryForm]
+            ['placeBidForm' => $placeBidForm, 'categoryForm' =>$this->adminCategoryForm]
         );
     }
 
-    public function postBid()
+    public function placeBid($loanId)
     {
-        $form = $this->bidForm;
+        $loan = $this->loanQuery
+            ->filterById($loanId)
+            ->findOne();
+
+        if (!$loan) {
+            App::abort(404);
+        }
+        
+        $form = new PlaceBidForm($loan);
         $form->handleRequest(Request::instance());
         $data = $form->getData();
 

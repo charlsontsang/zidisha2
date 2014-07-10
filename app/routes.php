@@ -310,8 +310,8 @@ Route::group(
         /**
          * Routes for loan page
          */
-        Route::get('loan/{id}', array('uses' => 'LoanController@getIndex', 'as' => 'loan:index'));
-        Route::post('cart', array('uses' => 'LoanController@postBid', 'as' => 'loan:post-bid', 'before' => 'csrf'));
+        Route::get('loan/{loanId}', array('uses' => 'LoanController@getIndex', 'as' => 'loan:index'));
+        Route::post('loan/{loanId}/place-bid', array('uses' => 'LoanController@placeBid', 'as' => 'loan:place-bid', 'before' => 'csrf'));
 
         /**
          * Routes for Comments controller

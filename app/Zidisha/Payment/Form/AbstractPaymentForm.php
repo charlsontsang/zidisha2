@@ -5,7 +5,6 @@ namespace Zidisha\Payment\Form;
 use Zidisha\Balance\TransactionQuery;
 use Zidisha\Currency\Money;
 use Zidisha\Form\AbstractForm;
-use Zidisha\Payment\Form\Validator\GreaterThanValidator;
 use Zidisha\Payment\PaymentBus;
 use Zidisha\Payment\Paypal\PayPalService;
 use Zidisha\Payment\Stripe\StripeService;
@@ -13,41 +12,35 @@ use Zidisha\Payment\Stripe\StripeService;
 abstract class AbstractPaymentForm extends AbstractForm
 {
     protected $currentBalance;
-    /**
-     * @var \Zidisha\Payment\Paypal\PayPalService
-     */
-    private $payPalService;
-    /**
-     * @var \Zidisha\Payment\Stripe\StripeService
-     */
-    private $stripeService;
 
     protected $allowedServices = ['paypal', 'stripe'];
+
+    protected $validatorClass = 'Zidisha\Payment\Form\Validator\PaymentValidator';
 
     public function getRules($data)
     {
         return [
-            'creditAmount' => 'required|numeric|creditAmount',
-            'donationAmount' => 'required|numeric',
-            'transactionFee' => 'required|numeric|totalFee',
-            'totalAmount' => 'required|numeric|assertTotal|greaterThan:0',
-            'paymentMethod' => 'required|in:'. implode(',', $this->allowedServices),
-            'stripeToken' => 'required_if:paymentMethod,stripe',
+            'creditAmount'       => 'required|numeric|creditAmount',
+            'donationAmount'     => 'required|numeric',
+            'transactionFee'     => 'required|numeric|totalFee',
+            'totalAmount'        => 'required|numeric|assertTotal|greaterThan:0',
+            'paymentMethod'      => 'required|in:' . implode(',', $this->allowedServices),
+            'stripeToken'        => 'required_if:paymentMethod,stripe',
             'transactionFeeRate' => '',
-            'amount' => '',
+            'amount'             => '',
         ];
     }
 
     public function getDefaultData()
     {
         return [
-            'creditAmount' => 0,
-            'donationAmount' => 0,
-            'totalAmount' => 0,
-            'paymentMethod' => 'paypal',
+            'creditAmount'       => 0,
+            'donationAmount'     => 0,
+            'totalAmount'        => 0,
+            'paymentMethod'      => 'paypal',
             'transactionFeeRate' => 0.035, //Todo: get this transaction fee from the config;
-            'amount' => 30,
-            'currentBalance' => $this->getCurrentBalance()->getAmount()
+            'amount'             => 30,
+            'currentBalance'     => $this->getCurrentBalance()->getAmount()
         ];
     }
 
@@ -82,13 +75,7 @@ abstract class AbstractPaymentForm extends AbstractForm
     {
         $data['currentBalance'] = $this->getCurrentBalance();
 
-        \Validator::resolver(
-            function ($translator, $data, $rules, $messages, $parameters) {
-                return new GreaterThanValidator($translator, $data, $rules, $messages, $parameters);
-            }
-        );
-
-        parent::validate($data, $this->getRules($data));
+        parent::validate($data, $rules);
     }
 
     public function getCurrentBalance()

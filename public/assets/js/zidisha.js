@@ -83,9 +83,9 @@ function paymentForm(config) {
 
     function calculateAmounts() {
         var donationAmount = parseMoney($donationAmount.val()),
-            amount = parseMoney($creditAmount.val()),
-            transactionFeeAmount = amount * feePercentage,
-            totalAmount = amount + transactionFeeAmount + donationAmount;
+            creditAmount = parseMoney($creditAmount.val()),
+            transactionFeeAmount = creditAmount * feePercentage,
+            totalAmount = creditAmount + transactionFeeAmount + donationAmount;
 
         $transactionFeeAmount.val(formatMoney(transactionFeeAmount));
         $totalAmount.val(formatMoney(totalAmount));
@@ -104,7 +104,7 @@ function paymentForm(config) {
     $donationAmount.on('keyup', calculateAmounts);
     $amount.on('keyup', function() {
         var amount = parseMoney($amount.val()),
-            creditAmount = amount >= currentBalance ? amount - currentBalance: 0;
+            creditAmount = (amount >= currentBalance) ? amount - currentBalance : 0;
         $creditAmount.val(creditAmount);
         calculateAmounts();
     });
