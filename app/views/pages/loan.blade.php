@@ -183,13 +183,13 @@
         @if($loan->isOpen())
         <div>
             {{ BootstrapForm::open(array('route' => ['loan:place-bid', $loan->getId()], 'translationDomain' => 'bid', 'id' => 'funds-upload')) }}
-            {{ BootstrapForm::populate($form) }}
+            {{ BootstrapForm::populate($placeBidForm) }}
 
             {{ BootstrapForm::text('amount', null, ['id' => 'amount']) }}
             {{ BootstrapForm::hidden('creditAmount', null, ['id' => 'credit-amount']) }}
             {{ BootstrapForm::text('donationAmount', null, ['id' => 'donation-amount']) }}
 
-            {{ BootstrapForm::select('interestRate', $form->getRates()) }}
+            {{ BootstrapForm::select('interestRate', $placeBidForm->getRates()) }}
             {{ BootstrapForm::hidden('loanId', $loan->getId()) }}
 
             {{ BootstrapForm::hidden('transactionFee', null, ['id' => 'transaction-fee-amount']) }}
@@ -200,8 +200,8 @@
             {{ BootstrapForm::hidden('stripeToken', null, ['id' => 'stripe-token']) }}
             {{ BootstrapForm::hidden('paymentMethod', null, ['id' => 'payment-method']) }}
 
-            @if($form->getCurrentBalance()->isPositive())
-            {{ BootstrapForm::label("Current Balance") }}: {{ $form->getCurrentBalance() }}
+            @if($placeBidForm->getCurrentBalance()->isPositive())
+            {{ BootstrapForm::label("Current Balance") }}: {{ $placeBidForm->getCurrentBalance() }}
             <br/>
             @endif
 
