@@ -9,7 +9,7 @@
 <hr/>
 <ul class="nav nav-tabs" role="tablist">
     @foreach($languageCodes as $code)
-        <li class="{{ $code == $languageCode ? 'active' : '' }}"><a href="{{ route('admin:translation:index') }}?languageCode={{$code}}">{{ $code}}</a></li>
+        <li class="{{ $code == $languageCode ? 'active' : '' }}"><a href="{{ route('admin:translation:index') }}?languageCode={{$code}}">{{ $borrowerLanguages[$code] }}</a></li>
     @endforeach
 </ul>
 
