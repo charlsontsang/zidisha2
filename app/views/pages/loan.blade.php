@@ -261,7 +261,7 @@
 <script type="text/javascript">
     $(function () {
         paymentForm({
-            stripeToken: "{{ \Config::get('stripe.public_key') }}",
+            stripeToken: "{{ \Zidisha\Admin\Setting::get('stripe.publicKey') }}",
             email: "{{ \Auth::check() ? \Auth::user()->getEmail() : '' }}",
             amount: $('#amount')
         });

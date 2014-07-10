@@ -20,19 +20,8 @@ class LoanController extends BaseController
 {
 
     protected $loanQuery;
-    /**
-     * @var Zidisha\Comment\CommentService
-     */
     private $commentService;
-
-    /**
-     * @var Zidisha\Loan\BidQuery
-     */
     protected $bidQuery;
-
-    /**
-     * @var Zidisha\Loan\LoanService
-     */
     private $loanService;
     private $borrowerService;
     private $adminCategoryForm;
@@ -119,7 +108,7 @@ class LoanController extends BaseController
         }
 
         Flash::error("Entered Amounts are invalid!");
-        return Redirect::route('loan:index',$data['loanId'])->withForm($form);
+        return Redirect::route('loan:index',$loanId)->withForm($form);
     }
 
     public function postEditBid()
