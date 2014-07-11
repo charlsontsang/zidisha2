@@ -17,6 +17,11 @@ return [
             'label' => 'YCAccount id',
             'rule'  => 'numeric',
         ],
+        'site.countriesCodesBlockedFromUploadFunds' =>[
+            'default' => 'CN,ID,SG',
+            'label' => 'Countries Codes Blocked From Upload Funds',
+            'rule'  => ['regex:/^[A-Z,]+$/'],
+        ],
     ],
     'Loan' => [
         'loan.minimumAmount' => [
