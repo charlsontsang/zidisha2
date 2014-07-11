@@ -50,14 +50,12 @@ USD <span id="fee-amount-display"></span>
 USD <span id="total-amount-display"></span>
 
 <br/>
-<button id="stripe-payment" class="btn btn-primary">Pay With Card</button>
+<button type="submit" id="stripe-payment" class="btn btn-primary">Pay With Card</button>
 <input type="submit" id="paypal-payment" class="btn btn-primary" value="Pay With Paypal" name="submit_paypal">
 
 
 @else
-<a class="btn btn-primary">
-    Accept and Continue
-</a>
+<button type="submit" class="btn btn-primary">Accept and Continue</button>
 @endif
 {{ BootstrapForm::close() }}
 @stop

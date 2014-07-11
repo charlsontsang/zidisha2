@@ -57,9 +57,10 @@ class GiftCardService
     public function addGiftCard(Lender $lender, $data)
     {
         $data += [
-            'recipientName' => null,
-            'fromName' => null,
-            'message' => null,
+            'recipientEmail'    => null,
+            'recipientName'     => null,
+            'fromName'          => null,
+            'message'           => null,
             'confirmationEmail' => null,
         ];
 
@@ -95,7 +96,9 @@ class GiftCardService
         }
 
         $this->lenderMailer->sendGiftCardMailToSender($giftCard);
-        $this->lenderMailer->sendGiftCardMailToRecipient($giftCard);
+        if ($data['recipientEmail']) {
+            $this->lenderMailer->sendGiftCardMailToRecipient($giftCard);
+        }
 
         return $giftCard;
     }
