@@ -21,12 +21,13 @@ Funds
 {{ BootstrapForm::open(array('route' => 'lender:post-funds', 'translationDomain' => 'fund', 'id' => 'funds-upload')) }}
 {{ BootstrapForm::populate($form) }}
 
-{{ BootstrapForm::text('creditAmount', null, ['id' => 'credit-amount']) }}
+{{ BootstrapForm::text('amount', null, ['id' => 'amount']) }}
+{{ BootstrapForm::hidden('creditAmount', null, ['id' => 'credit-amount']) }}
 {{ BootstrapForm::text('donationAmount', null, ['id' => 'donation-amount']) }}
 
 {{ BootstrapForm::hidden('transactionFee', null, ['id' => 'transaction-fee-amount']) }}
-{{ BootstrapForm::hidden('transactionFeeRate', null, ['id' => 'fee-amount-rate']) }}
-{{ BootstrapForm::hidden('currentBalance', 0, ['id' => 'fee-amount-rate']) }}
+{{ BootstrapForm::hidden('transactionFeeRate', null, ['id' => 'transaction-fee-rate']) }}
+{{ BootstrapForm::hidden('currentBalance', 0, ['id' => 'current-balance']) }}
 {{ BootstrapForm::hidden('totalAmount', null, ['id' => 'total-amount']) }}
 
 {{ BootstrapForm::hidden('stripeToken', null, ['id' => 'stripe-token']) }}
@@ -67,9 +68,9 @@ USD <span id="total-amount-display"></span>
 <script type="text/javascript">
     $(function() {
         paymentForm({
-            stripeToken: "{{ \Config::get('stripe.public_key') }}",
-            email: "{{ \Auth::user()->getEmail() }}",
-            amount: $('credit-amount')
+            stripeToken: "{{ \Zidisha\Admin\Setting::get('stripe.publicKey') }}",
+            email: "{{ \Auth::check() ? \Auth::user()->getEmail() : '' }}",
+            amount: $('#amount')
         })
     });
 </script>

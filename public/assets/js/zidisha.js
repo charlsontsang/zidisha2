@@ -48,15 +48,15 @@ function formatMoney(value, scale) {
 }
 
 function paymentForm(config) {
-
-    var handler = StripeCheckout.configure({
-        key: config.stripeToken,
-        token: function (token, args) {
-            $("#stripe-token").val(token.id);
-            $("#payment-method").val("stripe");
-            $('#funds-upload').submit();
-        }
-    });
+//
+//    var handler = StripeCheckout.configure({
+//        key: config.stripeToken,
+//        token: function (token, args) {
+//            $("#stripe-token").val(token.id);
+//            $("#payment-method").val("stripe");
+//            $('#funds-upload').submit();
+//        }
+//    });
     $(function () {
         $('#stripe-payment').click(function (e) {
             handler.open({
@@ -76,7 +76,7 @@ function paymentForm(config) {
         $totalAmount = $('#total-amount'),
         $transactionFeeAmountDisplay = $('#fee-amount-display'),
         $totalAmountDisplay = $('#total-amount-display'),
-        feePercentage = Number($('#fee-amount-rate').val()),
+        feePercentage = Number($('#transaction-fee-rate').val()),
         currentBalance = Number($('#current-balance').val()),
         $paymentMethods = $('#stripe-payment, #paypal-payment'),
         $creditSubmit = $('#credit-payment'),
@@ -96,7 +96,7 @@ function paymentForm(config) {
         if (totalAmount > 0) {
             $paymentMethods.show();
             $creditSubmit.hide();
-            $("#payment-method").val("papal");
+            $("#payment-method").val("paypal");
         } else {
             $paymentMethods.hide();
             $creditSubmit.show();
@@ -104,13 +104,18 @@ function paymentForm(config) {
         }
     }
 
-    $donationAmount.on('keyup', calculateAmounts);
-    $amount.on('keyup', function() {
+    function calculateCreditAmount() {
         var amount = parseMoney($amount.val()),
             creditAmount = (amount >= currentBalance) ? amount - currentBalance : 0;
         $creditAmount.val(creditAmount);
+    }
+
+    $donationAmount.on('keyup', calculateAmounts);
+    $amount.on('keyup', function() {
+        calculateCreditAmount();
         calculateAmounts();
     });
 
+    calculateCreditAmount();
     calculateAmounts();
 }

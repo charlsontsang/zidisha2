@@ -549,7 +549,7 @@ class GenerateModelData extends Command
 
                 $transaction = new Transaction();
                 $transaction->setUser($oneLender->getUser());
-                $transaction->setAmount(Money::create(rand(-100, 100), 'USD'));
+                $transaction->setAmount(Money::create(rand(-100, 200), 'USD'));
                 $transaction->setLoan($oneLoan);
                 $transaction->setDescription('description');
                 $transaction->setTransactionDate(new \DateTime());
