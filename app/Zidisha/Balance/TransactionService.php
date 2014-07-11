@@ -218,7 +218,7 @@ class TransactionService
         $transactionUpload->save($con);
 
 
-        if ($payment->getTransactionFee()->greaterThan(Money::create(0))) {
+        if ($payment->getTransactionFee()->isPositive()) {
             if ($payment->getPaymentMethod() == 'stripe') {
                 $transactionType = Transaction::STRIPE_FEE;
                 $description = 'Stripe transaction fee';

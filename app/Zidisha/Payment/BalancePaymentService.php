@@ -3,7 +3,7 @@
 namespace Zidisha\Payment;
 
 
-class BalanceWithdrawService extends PaymentService
+class BalancePaymentService extends PaymentService
 {
     private $paymentBus;
 

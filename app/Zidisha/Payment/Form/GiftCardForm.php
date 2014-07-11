@@ -24,6 +24,7 @@ class GiftCardForm extends AbstractPaymentForm
         $giftCardPayment
             ->setAmount(Money::create($data['amount']))
             ->setDonationAmount(Money::create($data['donationAmount']))
+            ->setDonationCreditAmount(Money::create($data['donationCreditAmount']))
             ->setTransactionFee(Money::create($data['transactionFee']))
             ->setTotalAmount(Money::create($data['totalAmount']))
             ->setInterestRate($data['interestRate'])
