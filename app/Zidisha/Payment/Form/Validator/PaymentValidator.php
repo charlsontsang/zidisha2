@@ -54,7 +54,7 @@ class PaymentValidator extends ZidishaValidator
         $donationAmount = Money::create($this->data['donationAmount']);
         $donationCreditAmount = Money::create($this->data['donationCreditAmount']);
         $currentBalance = Money::create($this->data['currentBalance']);
-        $newBalance = $amount->greaterThan($currentBalance) ? 0 : $currentBalance->subtract($amount);
+        $newBalance = Money::create($amount->greaterThan($currentBalance) ? 0 : $currentBalance->subtract($amount));
 
         $amountDifference = $donationAmount->greaterThan($newBalance) ? $donationAmount->subtract($newBalance) : Money::create(0);
 
