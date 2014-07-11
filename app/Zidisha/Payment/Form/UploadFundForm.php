@@ -33,4 +33,9 @@ class UploadFundForm  extends AbstractPaymentForm{
 
         return $uploadPayment;
     }
+
+    public  function getCurrentBalance()
+    {
+        return Money::create(0);
+    }
 }
