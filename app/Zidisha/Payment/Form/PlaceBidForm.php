@@ -22,7 +22,6 @@ class PlaceBidForm extends AbstractPaymentForm
     public function getRules($data)
     {
         return [
-            'amount' => '',
             'interestRate' => '',
         ] + parent::getRules($data);
     }
@@ -41,6 +40,7 @@ class PlaceBidForm extends AbstractPaymentForm
         $placeBidPayment
             ->setCreditAmount(Money::create($data['creditAmount']))
             ->setDonationAmount(Money::create($data['donationAmount']))
+            ->setDonationCreditAmount(Money::create($data['donationCreditAmount']))
             ->setTransactionFee(Money::create($data['transactionFee']))
             ->setTotalAmount(Money::create($data['totalAmount']))
             ->setLoan($this->loan)

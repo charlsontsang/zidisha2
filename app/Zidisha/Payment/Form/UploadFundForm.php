@@ -7,13 +7,6 @@ use Zidisha\Payment\UploadFundPayment;
 
 class UploadFundForm  extends AbstractPaymentForm{
 
-    public function getRules($data)
-    {
-        return [
-            'amount' => '',
-        ] + parent::getRules($data);
-    }
-
     public function getPayment()
     {
         if(!\Auth::user()){
@@ -27,6 +20,7 @@ class UploadFundForm  extends AbstractPaymentForm{
         $uploadPayment
             ->setCreditAmount(Money::create($data['creditAmount']))
             ->setDonationAmount(Money::create($data['donationAmount']))
+            ->setDonationCreditAmount(Money::create($data['donationCreditAmount']))
             ->setTransactionFee(Money::create($data['transactionFee']))
             ->setTotalAmount(Money::create($data['totalAmount']))
             ->setLender($lender);

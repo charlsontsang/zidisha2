@@ -27,9 +27,11 @@ class BalanceService
         $con->beginTransaction();
 
         try {
-            $this->transactionService->addUploadFundTransaction($con, $payment);
+            if ($payment->getTotalAmount()->isPositive()) {
+                $this->transactionService->addUploadFundTransaction($con, $payment);
+            }
 
-            if ($payment->getDonationAmount()->greaterThan(Money::create(0))) {
+            if ($payment->getDonationAmount()->isPositive()) {
                 $this->transactionService->addDonation($con, $payment);
             }
         } catch (\Exception $e) {

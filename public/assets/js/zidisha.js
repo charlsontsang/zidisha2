@@ -48,15 +48,15 @@ function formatMoney(value, scale) {
 }
 
 function paymentForm(config) {
-//
-//    var handler = StripeCheckout.configure({
-//        key: config.stripeToken,
-//        token: function (token, args) {
-//            $("#stripe-token").val(token.id);
-//            $("#payment-method").val("stripe");
-//            $('#funds-upload').submit();
-//        }
-//    });
+
+    var handler = StripeCheckout.configure({
+        key: config.stripeToken,
+        token: function (token, args) {
+            $("#stripe-token").val(token.id);
+            $("#payment-method").val("stripe");
+            $('#funds-upload').submit();
+        }
+    });
     $(function () {
         $('#stripe-payment').click(function (e) {
             handler.open({
@@ -71,6 +71,7 @@ function paymentForm(config) {
     });
 
     var $donationAmount = $('#donation-amount'),
+        $donationCreditAmount = $('#donation-credit-amount'),
         $creditAmount = $('#credit-amount'),
         $transactionFeeAmount = $('#transaction-fee-amount'),
         $totalAmount = $('#total-amount'),
@@ -80,14 +81,19 @@ function paymentForm(config) {
         currentBalance = Number($('#current-balance').val()),
         $paymentMethods = $('#stripe-payment, #paypal-payment'),
         $creditSubmit = $('#credit-payment'),
-        $amount = config.amount;
+        $amount = $('#amount');
 
     function calculateAmounts() {
-        var donationAmount = parseMoney($donationAmount.val()),
-            creditAmount = parseMoney($creditAmount.val()),
+        var amount = parseMoney($amount.val()),
+            donationAmount = parseMoney($donationAmount.val()),
+            creditAmount = (amount >= currentBalance) ? amount - currentBalance : 0,
+            newBalance = (amount >= currentBalance) ? 0 : currentBalance - amount,
             transactionFeeAmount = creditAmount * feePercentage,
-            totalAmount = creditAmount + transactionFeeAmount + donationAmount;
+            donationCreditAmount = (donationAmount >= newBalance) ? donationAmount - newBalance : 0,
+            totalAmount = creditAmount + transactionFeeAmount + donationCreditAmount;
 
+        $creditAmount.val(formatMoney(creditAmount));
+        $donationCreditAmount.val(formatMoney(donationCreditAmount));
         $transactionFeeAmount.val(formatMoney(transactionFeeAmount));
         $totalAmount.val(formatMoney(totalAmount));
         $transactionFeeAmountDisplay.text(formatMoney(transactionFeeAmount, 2));
@@ -100,22 +106,12 @@ function paymentForm(config) {
         } else {
             $paymentMethods.hide();
             $creditSubmit.show();
-            $("#payment-method").val("balanceWithdraw");
+            $("#payment-method").val("balance");
         }
     }
 
-    function calculateCreditAmount() {
-        var amount = parseMoney($amount.val()),
-            creditAmount = (amount >= currentBalance) ? amount - currentBalance : 0;
-        $creditAmount.val(creditAmount);
-    }
-
     $donationAmount.on('keyup', calculateAmounts);
-    $amount.on('keyup', function() {
-        calculateCreditAmount();
-        calculateAmounts();
-    });
+    $amount.on('keyup', calculateAmounts);
 
-    calculateCreditAmount();
     calculateAmounts();
 }

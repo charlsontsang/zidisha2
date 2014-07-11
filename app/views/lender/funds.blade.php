@@ -24,6 +24,7 @@ Funds
 {{ BootstrapForm::text('amount', null, ['id' => 'amount']) }}
 {{ BootstrapForm::hidden('creditAmount', null, ['id' => 'credit-amount']) }}
 {{ BootstrapForm::text('donationAmount', null, ['id' => 'donation-amount']) }}
+{{ BootstrapForm::hidden('donationCreditAmount', null, ['id' => 'donation-credit-amount']) }}
 
 {{ BootstrapForm::hidden('transactionFee', null, ['id' => 'transaction-fee-amount']) }}
 {{ BootstrapForm::hidden('transactionFeeRate', null, ['id' => 'transaction-fee-rate']) }}
@@ -69,8 +70,7 @@ USD <span id="total-amount-display"></span>
     $(function() {
         paymentForm({
             stripeToken: "{{ \Zidisha\Admin\Setting::get('stripe.publicKey') }}",
-            email: "{{ \Auth::check() ? \Auth::user()->getEmail() : '' }}",
-            amount: $('#amount')
+            email: "{{ \Auth::check() ? \Auth::user()->getEmail() : '' }}"
         })
     });
 </script>

@@ -26,9 +26,7 @@ class CompletedHandler extends PaymentHandler
             'amount' => $payment->getBidAmount()->getAmount()
         ];
 
-        if ($payment->getPaymentMethod() != 'balanceWithdraw') {
-            $this->balanceService->uploadFunds($payment);
-        }
+        $this->balanceService->uploadFunds($payment);
         $this->loanService->placeBid($payment->getLoan(), $payment->getLender(), $data);
 
         return $this;

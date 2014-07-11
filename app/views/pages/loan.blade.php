@@ -188,6 +188,7 @@
             {{ BootstrapForm::text('amount', null, ['id' => 'amount']) }}
             {{ BootstrapForm::hidden('creditAmount', null, ['id' => 'credit-amount']) }}
             {{ BootstrapForm::text('donationAmount', null, ['id' => 'donation-amount']) }}
+            {{ BootstrapForm::hidden('donationCreditAmount', null, ['id' => 'donation-credit-amount']) }}
 
             {{ BootstrapForm::select('interestRate', $placeBidForm->getRates()) }}
             {{ BootstrapForm::hidden('loanId', $loan->getId()) }}
@@ -216,7 +217,7 @@
             <br/>
 
             <button id="stripe-payment" class="btn btn-primary">Pay With Card</button>
-            <input type="submit" id="paypal-payment" class=zi"btn btn-primary" value="Pay With Paypal" name="submit_paypal">
+            <input type="submit" id="paypal-payment" class="btn btn-primary" value="Pay With Paypal" name="submit_paypal">
             <input type="submit" id="credit-payment" class="btn btn-primary" value="Pay" name="submit_credit">
 
             {{ BootstrapForm::close() }}

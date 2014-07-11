@@ -9,7 +9,7 @@ class PaymentValidator extends ZidishaValidator
     public function validateAssertTotal($attribute, $value, $parameters)
     {
         return Money::create($this->data['creditAmount'])
-            ->add(Money::create($this->data['donationAmount']))
+            ->add(Money::create($this->data['donationCreditAmount']))
             ->add(Money::create($this->data['transactionFee']))
             ->equals(Money::create($this->data['totalAmount']));
     }
@@ -46,5 +46,23 @@ class PaymentValidator extends ZidishaValidator
     protected function replaceCreditAmount($message, $attribute, $rule, $parameters)
     {
         return 'Credit amount does not match.';
+    }
+
+    public function validateDonationCreditAmount($attribute, $value, $parameters)
+    {
+        $amount = Money::create($this->data['amount']);
+        $donationAmount = Money::create($this->data['donationAmount']);
+        $donationCreditAmount = Money::create($this->data['donationCreditAmount']);
+        $currentBalance = Money::create($this->data['currentBalance']);
+        $newBalance = $amount->greaterThan($currentBalance) ? 0 : $currentBalance->subtract($amount);
+
+        $amountDifference = $donationAmount->greaterThan($newBalance) ? $donationAmount->subtract($newBalance) : Money::create(0);
+
+        return $donationCreditAmount->equals($amountDifference);
+    }
+
+    protected function replaceDonationCreditAmount($message, $attribute, $rule, $parameters)
+    {
+        return 'Donation Credit amount does not match.';
     }
 }

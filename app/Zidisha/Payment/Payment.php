@@ -27,6 +27,16 @@ class Payment extends BasePayment
         return parent::setDonationAmount($money->getAmount());
     }
 
+    public function getDonationCreditAmount()
+    {
+        return Money::create(parent::getDonationCreditAmount(), 'USD');
+    }
+
+    public function setDonationCreditAmount($money)
+    {
+        return parent::setDonationCreditAmount($money->getAmount());
+    }
+
     public function getTransactionFee()
     {
         return Money::create(parent::getTransactionFee(), 'USD');
