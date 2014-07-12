@@ -32,6 +32,13 @@ class GiftCardController extends BaseController
         return View::make('lender.gift-cards', ['form' => $this->cardForm,]);
     }
 
+    public function getTermsAccept(){
+        $data = Session::get('giftCard');
+        $amount = $data['amount'];
+        $paymentForm = new GiftCardForm($this->giftCardService);
+        return View::make('lender.gift-cards-terms', compact('amount'), ['paymentForm' => $paymentForm,]);
+    }
+
     public function postGiftCards()
     {
         $form = $this->cardForm;
@@ -42,40 +49,23 @@ class GiftCardController extends BaseController
 
             Session::put('giftCard', $data);
 
-            $currentBalance = $this->transactionQuery
-                ->filterByUserId(Auth::getUser()->getId())
-                ->getTotalAmount();
-            $data = Session::get('giftCard');
-            $amount = Money::create($data['amount'], 'USD');
-            $enoughBalance = 1;
-            if ($currentBalance < $amount) {
-                $enoughBalance = 0;
-            }
+           return Redirect::route('lender:gift-cards:terms-accept');
 
-            return View::make('lender.gift-cards-terms', compact('enoughBalance'));
         }
         return Redirect::route('lender:gift-cards')->withForm($form);
     }
 
     public function postTermsAccept()
     {
-        $form = $this->giftCardForm;
+        $form = new GiftCardForm($this->giftCardService);
         $form->handleRequest(\Request::instance());
-        $formData = $form->getData();
 
-        $data = Session::get('giftCard');
-        $lender = Auth::getUser()->getLender();
-
-        if ($formData['amount']) {
-           return $form->makePayment();
-        } else {
-            $giftCard = $this->giftCardService->addGiftCard($lender, $data);
+        if ($form->isValid()) {
+            return $form->makePayment();
         }
-
-        Session::forget('giftCard');
-        Flash::success("GiftCard Successfully Made.");
-
-        return Redirect::route('lender:gift-cards:track');
+        \Flash::error("Entered Amounts are invalid!");
+        $formCard = $this->cardForm;
+        return Redirect::route('lender:gift-cards')->withForm($formCard);
     }
 
     public function postRedeemCard()
