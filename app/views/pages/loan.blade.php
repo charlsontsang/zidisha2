@@ -218,7 +218,7 @@
 
             <button id="stripe-payment" class="btn btn-primary">Pay With Card</button>
             <input type="submit" id="paypal-payment" class="btn btn-primary" value="Pay With Paypal" name="submit_paypal">
-            <input type="submit" id="credit-payment" class="btn btn-primary" value="Pay" name="submit_credit">
+            <input type="submit" id="balance-payment" class="btn btn-primary" value="Pay" name="submit_credit">
 
             {{ BootstrapForm::close() }}
 
