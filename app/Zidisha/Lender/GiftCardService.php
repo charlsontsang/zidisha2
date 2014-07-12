@@ -9,6 +9,8 @@ use Zidisha\Balance\TransactionService;
 use Zidisha\Currency\Money;
 use Faker\Factory as Faker;
 use Zidisha\Mail\LenderMailer;
+use Zidisha\Payment\GiftCardPayment;
+use Zidisha\Payment\Payment;
 
 class GiftCardService
 {
@@ -126,6 +128,22 @@ class GiftCardService
         }
 
         return $giftCard;
+    }
+
+    public function UpdateGiftCardStatus(Payment $payment)
+    {
+        $giftCardTransaction = $payment->getGiftCardTransaction();
+        $giftCardTransaction->setStatus(1);
+        $giftCardTransaction->save();
+
+        $giftCards = GiftCardQuery::create()
+            ->filterByGiftCardTransaction($giftCardTransaction)
+            ->find();
+
+        foreach ($giftCards as $giftCard) {
+            $giftCard->setStatus(1);
+            $giftCard->save();
+        }
     }
 
 }

@@ -503,6 +503,7 @@
     <table name="payments" phpName="Payment" namespace="Payment" abstract="true">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="credit_amount" type="DECIMAL" size="10" scale="2" required="true" phpType="string"/>
+        <column name="amount" type="DECIMAL" size="10" scale="2" required="true" phpType="string"/>
         <column name="donation_amount" type="DECIMAL" size="10" scale="2" required="true" phpType="string"/>
         <column name="donation_credit_amount" type="DECIMAL" size="10" scale="2" required="true" phpType="string"/>
         <column name="transaction_fee" type="DECIMAL" size="10" scale="2" required="true" phpType="string"/>
@@ -511,13 +512,16 @@
         <column name="lender_id" type="INTEGER" required="true"/>
         <column name="loan_id" type="INTEGER" required="false"/>
         <column name="interest_rate" type="DECIMAL" required="false" size="5" scale="2" phpType="string"/>
-        <column name="bid_amount" type="DECIMAL" size="10" scale="2" required="false" phpType="string"/>
+        <column name="gift_card_transaction_id" type="INTEGER" size="10"/>
         <behavior name="timestampable"/>
         <foreign-key foreignTable="lenders">
             <reference local="lender_id" foreign="id"/>
         </foreign-key>
         <foreign-key foreignTable="loans">
             <reference local="loan_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="gift_card_transaction">
+            <reference local="gift_card_transaction_id" foreign="id"/>
         </foreign-key>
         <column name="class_key" type="INTEGER" inheritance="single">
             <inheritance key="1" class="UploadFundPayment"/>
@@ -544,11 +548,15 @@
         <column name="claimed" type="TINYINT" size="1" defaultValue="0"/>
         <column name="recipient_id" type="INTEGER"/>
         <column name="donated" type="TINYINT" size="1" defaultValue="0"/>
+        <column name="gift_card_transaction_id" type="INTEGER" size="10"/>
         <foreign-key foreignTable="lenders" phpName="Lender">
             <reference local="Lender_id" foreign="id"/>
         </foreign-key>
         <foreign-key foreignTable="lenders" phpName="Recipient">
             <reference local="recipient_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="gift_card_transaction">
+            <reference local="gift_card_transaction_id" foreign="id"/>
         </foreign-key>
     </table>
 
@@ -563,6 +571,7 @@
         <column name="amount" type="DECIMAL" size="10" scale="2" required="true"/>
         <column name="donation" type="DECIMAL" size="10" scale="2"/>
         <column name="date" type="TIMESTAMP" required="true"/>
+        <behavior name="timestampable"/>
         <foreign-key foreignTable="lenders">
             <reference local="lender_id" foreign="id"/>
         </foreign-key>

@@ -21,7 +21,6 @@ class PaymentValidator extends ZidishaValidator
 
     public function validateTotalFee($attribute, $value, $parameters)
     {
-        //Todo: get transaction fee rate from the Configuration.
         return Money::create($this->data['creditAmount'])
             ->multiply($this->data['transactionFeeRate'])
             ->equals(Money::create($this->data['transactionFee']));

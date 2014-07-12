@@ -80,10 +80,10 @@ function paymentForm(config) {
         feePercentage = Number($('#transaction-fee-rate').val()),
         currentBalance = Number($('#current-balance').val()),
         $paymentMethods = $('#stripe-payment, #paypal-payment'),
-        $creditSubmit = $('#credit-payment'),
+        $balanceSubmit = $('#balance-payment'),
         $amount = $('#amount');
 
-    function calculateAmounts() {
+    function calculateAmounts() {console.log(currentBalance);
         var amount = parseMoney($amount.val()),
             donationAmount = parseMoney($donationAmount.val()),
             creditAmount = (amount >= currentBalance) ? amount - currentBalance : 0,
@@ -101,11 +101,11 @@ function paymentForm(config) {
         
         if (totalAmount > 0) {
             $paymentMethods.show();
-            $creditSubmit.hide();
+            $balanceSubmit.hide();
             $("#payment-method").val("paypal");
         } else {
             $paymentMethods.hide();
-            $creditSubmit.show();
+            $balanceSubmit.show();
             $("#payment-method").val("balance");
         }
     }

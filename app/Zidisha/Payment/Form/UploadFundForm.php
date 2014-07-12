@@ -23,6 +23,7 @@ class UploadFundForm  extends AbstractPaymentForm{
             ->setDonationCreditAmount(Money::create($data['donationCreditAmount']))
             ->setTransactionFee(Money::create($data['transactionFee']))
             ->setTotalAmount(Money::create($data['totalAmount']))
+            ->setAmount(Money::create($data['amount']))
             ->setLender($lender);
 
         return $uploadPayment;

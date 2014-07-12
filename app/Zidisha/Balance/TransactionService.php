@@ -366,8 +366,9 @@ class TransactionService
             ->setDate(new \DateTime())
             ->setTotalCards(1)
             ->setTransactionType("Gift Card");
+        $giftCard->setGiftCardTransaction($giftPurchaseTransaction);
 
-        $giftPurchaseTransaction->save($con);
+        $giftCard->save($con);
 
     }
 

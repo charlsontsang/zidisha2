@@ -22,10 +22,8 @@ class CompletedHandler extends PaymentHandler
     {
         $payment = $this->payment;
 
-        $data = \Session::get('giftCard');
-
         $this->balanceService->uploadFunds($payment);
-        $this->giftCardService->addGiftCard($payment->getLender(), $data);
+        $this->giftCardService->UpdateGiftCardStatus($payment);
 
         return $this;
     }
