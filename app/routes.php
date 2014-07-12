@@ -86,6 +86,7 @@ Route::group(
         Route::get('/login', array('uses' => 'AuthController@getLogin', 'as' => 'login'));
         Route::post('/login', array('uses' => 'AuthController@postLogin', 'before' => 'csrf'));
         Route::get('facebook/login', array('uses' => 'AuthController@getFacebookLogin', 'as' => 'facebook:login'));
+        Route::get('google/login', array('uses' => 'AuthController@getGoogleLogin', 'as' => 'google:login'));
 
         Route::get('/logout', array('uses' => 'AuthController@getLogout', 'as' => 'logout'));
 

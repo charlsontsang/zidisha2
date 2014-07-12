@@ -5,6 +5,7 @@ use Zidisha\Borrower\BorrowerGuestQuery;
 use Zidisha\Borrower\JoinLogQuery;
 use Zidisha\User\UserQuery;
 use Zidisha\Vendor\Facebook\FacebookService;
+use Zidisha\Vendor\Google\GoogleService;
 use Zidisha\Vendor\Mixpanel;
 use Zidisha\Vendor\SiftScience\SiftScienceService;
 
@@ -13,14 +14,16 @@ class AuthController extends BaseController
 
     private $facebookService;
     private $authService;
-
     private $siftScienceService;
+    private $googleService;
 
-    public function __construct(FacebookService $facebookService, AuthService $authService, siftScienceService $siftScienceService)
+    public function __construct(FacebookService $facebookService, AuthService $authService,
+        siftScienceService $siftScienceService, GoogleService $googleService)
     {
         $this->facebookService = $facebookService;
         $this->authService = $authService;
         $this->siftScienceService = $siftScienceService;
+        $this->googleService = $googleService;
     }
 
     public function getLogin()
@@ -29,6 +32,7 @@ class AuthController extends BaseController
             'auth.login',
             [
                 'facebookLoginUrl' => $this->facebookService->getLoginUrl('facebook:login'),
+                'googleLoginUrl'   => $this->googleService->getLoginUrl('google:login'),
             ]
         );
     }
@@ -176,5 +180,10 @@ class AuthController extends BaseController
         return \Redirect::route('borrower:resumeApplication', [
                 'code' => $code
             ]);
+    }
+
+    public function getGoogleLogin()
+    {
+
     }
 }

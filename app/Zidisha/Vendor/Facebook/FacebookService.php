@@ -2,6 +2,8 @@
 
 namespace Zidisha\Vendor\Facebook;
 
+use Zidisha\Admin\Setting;
+
 class FacebookService
 {
 
@@ -10,8 +12,8 @@ class FacebookService
     public function __construct()
     {
         $this->facebook = new \Facebook(array(
-            'appId' => \Config::get('facebook.app_id'),
-            'secret' => \Config::get('facebook.app_secret')
+            'appId' => Setting::get('facebook.appId'),
+            'secret' => Setting::get('facebook.appSecret')
         ));
     }
 
