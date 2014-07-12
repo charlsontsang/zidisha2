@@ -44,8 +44,8 @@ class PlaceBidForm extends AbstractPaymentForm
             ->setTransactionFee(Money::create($data['transactionFee']))
             ->setTotalAmount(Money::create($data['totalAmount']))
             ->setLoan($this->loan)
+            ->setAmount(Money::create($data['amount']))
             ->setInterestRate($data['interestRate'])
-            ->setBidAmount(Money::create($data['amount']))
             ->setLender($lender);
 
         return $placeBidPayment;

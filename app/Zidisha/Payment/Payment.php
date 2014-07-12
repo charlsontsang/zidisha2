@@ -57,13 +57,13 @@ class Payment extends BasePayment
         return parent::setTotalAmount($money->getAmount());
     }
 
-    public function getBidAmount()
+    public function getAmount()
     {
-        return Money::create(parent::getBidAmount(), 'USD');
+        return Money::create(parent::getAmount(), 'USD');
     }
 
-    public function setBidAmount($money)
+    public function setAmount($money)
     {
-        return parent::setBidAmount($money->getAmount());
+        return parent::setAmount($money->getAmount());
     }
 }
