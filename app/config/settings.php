@@ -47,6 +47,12 @@ return [
         'facebook.appSecret' => [
             'label' => 'Facebook App Secret',
         ],
+        'google.clientId' => [
+            'label' => 'Google Client ID',
+        ],
+        'google.clientSecret' => [
+            'label' => 'Google Client Secret',
+        ],
         'mixpanel.token' => [
             'label' => 'Mixpanel Token',
         ],

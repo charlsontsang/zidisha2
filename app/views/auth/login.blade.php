@@ -8,6 +8,12 @@
                 @lang('login.facebook_login')
             </a>
         </div>
+        <br>
+        <div style="text-align: center">
+            <a href="{{$googleLoginUrl}}" class="btn btn-lg btn-primary">
+                @lang('login.google_login')
+            </a>
+        </div>
 
         {{ BootstrapForm::open(array('action' => 'AuthController@postLogin', 'translationDomain' => 'login.form')) }}
         
