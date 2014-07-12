@@ -22,6 +22,10 @@ return [
             'label' => 'Countries Codes Blocked From Upload Funds',
             'rule'  => ['regex:/^[A-Z,]+$/'],
         ],
+        'site.paymentTransactionFeeRate' =>[
+            'label' => 'Payment Transaction Fee Rate',
+            'rule'  => 'numeric',
+        ],
     ],
     'Loan' => [
         'loan.minimumAmount' => [

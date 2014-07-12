@@ -41,7 +41,7 @@ abstract class AbstractPaymentForm extends AbstractForm
             'donationCreditAmount' => 0,
             'totalAmount'          => 0,
             'paymentMethod'        => 'paypal',
-            'transactionFeeRate'   => 0.035, //Todo: get this transaction fee from the config;
+            'transactionFeeRate'   => \Setting::get('site.paymentTransactionFeeRate'),
             'amount'               => 30,
             'currentBalance'       => $this->getCurrentBalance()->getAmount()
         ];
