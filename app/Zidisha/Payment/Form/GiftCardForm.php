@@ -27,7 +27,7 @@ class GiftCardForm extends AbstractPaymentForm
 
         $data = $this->getData();
         $giftCardData = \Session::get('giftCard');
-        $giftCard = $this->giftCardService->addGiftCard($lender, $giftCardData);
+        $giftCardTransaction = $this->giftCardService->addGiftCardTransaction($lender, [$giftCardData]);
 
         $giftCardPayment = new GiftCardPayment();
         $giftCardPayment
@@ -37,7 +37,7 @@ class GiftCardForm extends AbstractPaymentForm
             ->setDonationCreditAmount(Money::create($data['donationCreditAmount']))
             ->setTransactionFee(Money::create($data['transactionFee']))
             ->setTotalAmount(Money::create($data['totalAmount']))
-            ->setGiftCardTransaction($giftCard->getGiftCardTransaction())
+            ->setGiftCardTransaction($giftCardTransaction)
             ->setLender($lender);
 
         return $giftCardPayment;

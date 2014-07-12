@@ -64,7 +64,7 @@ function paymentForm(config) {
                 description: 'Payment to Zidisha',
                 amount: (parseMoney($("#total-amount").val()) * 100).toFixed(0),
                 email: config.email,
-                panelLabel: "Pay @{{amount}}"
+                panelLabel: "Pay {{amount}}"
             });
             e.preventDefault();
         });

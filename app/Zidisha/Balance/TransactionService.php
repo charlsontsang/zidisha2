@@ -359,17 +359,7 @@ class TransactionService
             ->setType(Transaction::GIFT_PURCHASE);
         $giftCardTransaction->save($con);
 
-        $giftPurchaseTransaction = new GiftCardTransaction();
-        $giftPurchaseTransaction->setLender($giftCard->getLender())
-            ->setAmount($giftCard->getCardAmount()->getAmount())
-            ->setTransactionId($giftCardTransaction->getId())
-            ->setDate(new \DateTime())
-            ->setTotalCards(1)
-            ->setTransactionType("Gift Card");
-        $giftCard->setGiftCardTransaction($giftPurchaseTransaction);
-
         $giftCard->save($con);
-
     }
 
     public function addConvertToDonationTransaction(ConnectionInterface $con,Lender $lender,Money $amount)

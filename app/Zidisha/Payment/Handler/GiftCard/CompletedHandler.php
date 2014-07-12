@@ -23,7 +23,7 @@ class CompletedHandler extends PaymentHandler
         $payment = $this->payment;
 
         $this->balanceService->uploadFunds($payment);
-        $this->giftCardService->UpdateGiftCardStatus($payment);
+        $this->giftCardService->completeGiftCardTransaction($payment->getGiftCardTransaction());
 
         return $this;
     }

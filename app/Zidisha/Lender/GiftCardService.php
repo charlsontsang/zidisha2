@@ -11,6 +11,7 @@ use Faker\Factory as Faker;
 use Zidisha\Mail\LenderMailer;
 use Zidisha\Payment\GiftCardPayment;
 use Zidisha\Payment\Payment;
+use Zidisha\Vendor\PropelDB;
 
 class GiftCardService
 {
@@ -56,53 +57,52 @@ class GiftCardService
         }
     }
 
-    public function addGiftCard(Lender $lender, $data)
+    public function addGiftCardTransaction(Lender $lender, array $giftCards)
     {
-        $data += [
-            'recipientEmail'    => null,
-            'recipientName'     => null,
-            'fromName'          => null,
-            'message'           => null,
-            'confirmationEmail' => null,
-        ];
+        $giftCardTransaction = new GiftCardTransaction();
 
-        $amount = Money::create($data['amount'], 'USD');
-        $faker = Faker::create();
+        PropelDB::transaction(function($con) use ($lender, $giftCards, $giftCardTransaction) {
+            $giftCardTransaction->setLender($lender)
+                ->setDate(new \DateTime())
+                ->setTransactionType("Gift Card");
 
-        $con = Propel::getWriteConnection(TransactionTableMap::DATABASE_NAME);
-        $con->beginTransaction();
+            foreach ($giftCards as $data) {
+                $data += [
+                    'recipientEmail'    => null,
+                    'recipientName'     => null,
+                    'fromName'          => null,
+                    'message'           => null,
+                    'confirmationEmail' => null,
+                ];
 
-        $giftCard = new GiftCard();
-        $giftCard
-            ->setLender($lender)
-            ->setTemplate($data['template'])
-            ->setOrderType($data['orderType'])
-            ->setCardAmount($amount)
-            ->setRecipientEmail($data['recipientEmail'])
-            ->setRecipientName($data['recipientName'])
-            ->setFromName($data['fromName'])
-            ->setMessage($data['message'])
-            ->setDate(new \DateTime())
-            ->setExpireDate(strtotime('+1 year'))
-            ->setCardCode($faker->creditCardNumber)
-            ->setConfirmationEmail($data['confirmationEmail']);
+                $amount = Money::create($data['amount'], 'USD');
+                $faker = Faker::create();
 
-        try {
-            $giftCard->save($con);
+                $giftCard = new GiftCard();
+                $giftCard
+                    ->setLender($lender)
+                    ->setTemplate($data['template'])
+                    ->setOrderType($data['orderType'])
+                    ->setCardAmount($amount)
+                    ->setRecipientEmail($data['recipientEmail'])
+                    ->setRecipientName($data['recipientName'])
+                    ->setFromName($data['fromName'])
+                    ->setMessage($data['message'])
+                    ->setDate(new \DateTime())
+                    ->setExpireDate(strtotime('+1 year'))
+                    ->setCardCode($faker->creditCardNumber)
+                    ->setConfirmationEmail($data['confirmationEmail']);
 
-            $this->transactionService->purchaseGiftCardTransaction($con, $giftCard);
-            $con->commit();
-        } catch (Exception $e) {
-            $con->rollBack();
-            throw $e;
-        }
+                $giftCardTransaction
+                    ->setAmount($giftCardTransaction->getAmount()->add($amount))
+                    ->setTotalCards($giftCardTransaction->getTotalCards() + 1)
+                    ->addGiftCard($giftCard);
+            }
 
-        $this->lenderMailer->sendGiftCardMailToSender($giftCard);
-        if ($data['recipientEmail']) {
-            $this->lenderMailer->sendGiftCardMailToRecipient($giftCard);
-        }
+            $giftCardTransaction->save($con);
+        });
 
-        return $giftCard;
+        return $giftCardTransaction;
     }
 
     public function redeemGiftCard(Lender $recipient, $redemptionCode)
@@ -130,19 +130,24 @@ class GiftCardService
         return $giftCard;
     }
 
-    public function UpdateGiftCardStatus(Payment $payment)
+    public function completeGiftCardTransaction(GiftCardTransaction $giftCardTransaction)
     {
-        $giftCardTransaction = $payment->getGiftCardTransaction();
-        $giftCardTransaction->setStatus(1);
-        $giftCardTransaction->save();
+        PropelDB::transaction(function($con) use ($giftCardTransaction) {
+            $giftCardTransaction->setStatus(1);
+            $giftCardTransaction->save($con);
 
-        $giftCards = GiftCardQuery::create()
-            ->filterByGiftCardTransaction($giftCardTransaction)
-            ->find();
+            foreach ($giftCardTransaction->getGiftCards() as $giftCard) {
+                $giftCard->setStatus(1);
+                $giftCard->save($con);
+                $this->transactionService->purchaseGiftCardTransaction($con, $giftCard);
+            }
+        });
 
-        foreach ($giftCards as $giftCard) {
-            $giftCard->setStatus(1);
-            $giftCard->save();
+        foreach ($giftCardTransaction->getGiftCards() as $giftCard) {
+            $this->lenderMailer->sendGiftCardMailToSender($giftCard);
+            if ($giftCard->getOrderType() == 'email') {
+                $this->lenderMailer->sendGiftCardMailToRecipient($giftCard);
+            }
         }
     }
 

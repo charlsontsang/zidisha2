@@ -95,6 +95,7 @@ class GiftCardController extends BaseController
         $countRedeemed = $countQuery->filterByClaimed(1)->count();
         $cards = GiftCardQuery::create()
             ->filterByLender(Auth::getUser()->getLender())
+            ->orderByDate('desc')
             ->find();
 
         return View::make('lender.gift-cards-track', compact('countCards', 'countRedeemed', 'cards'));
