@@ -9,6 +9,23 @@ return [
             'default' => 'service@zidisha.org',
             'rule'    => 'email',
         ],
+        'site.adminId' => [
+            'label' => 'Admin id',
+            'rule'  => 'numeric',
+        ],
+        'site.YCAccountId' => [
+            'label' => 'YCAccount id',
+            'rule'  => 'numeric',
+        ],
+        'site.countriesCodesBlockedFromUploadFunds' =>[
+            'default' => 'CN,ID,SG',
+            'label' => 'Countries Codes Blocked From Upload Funds',
+            'rule'  => ['regex:/^[A-Z,]+$/'],
+        ],
+        'site.paymentTransactionFeeRate' =>[
+            'label' => 'Payment Transaction Fee Rate',
+            'rule'  => 'numeric',
+        ],
     ],
     'Loan' => [
         'loan.minimumAmount' => [

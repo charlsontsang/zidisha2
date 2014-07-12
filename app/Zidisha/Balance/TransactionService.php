@@ -3,6 +3,7 @@
 namespace Zidisha\Balance;
 
 use Propel\Runtime\Connection\ConnectionInterface;
+use Zidisha\Admin\Setting;
 use Zidisha\Currency\Money;
 use Zidisha\Lender\GiftCard;
 use Zidisha\Lender\GiftCardTransaction;
@@ -154,7 +155,7 @@ class TransactionService
 
         $feeTransactionAdmin = new Transaction();
         $feeTransactionAdmin
-            ->setUserId(\Config::get('adminId'))
+            ->setUserId(Setting::get('site.adminId'))
             ->setAmount($amount->multiply(2.5))
             ->setDescription('Registration Fee')
             ->setLoan($loan)
@@ -217,7 +218,7 @@ class TransactionService
         $transactionUpload->save($con);
 
 
-        if ($payment->getTransactionFee()->greaterThan(Money::create(0))) {
+        if ($payment->getTransactionFee()->isPositive()) {
             if ($payment->getPaymentMethod() == 'stripe') {
                 $transactionType = Transaction::STRIPE_FEE;
                 $description = 'Stripe transaction fee';
@@ -239,7 +240,7 @@ class TransactionService
 
             $transactionStripeAdmin = new Transaction();
             $transactionStripeAdmin
-                ->setUserId(\Config::get('app.AdminId'))
+                ->setUserId(Setting::get('site.adminId'))
                 ->setAmount($payment->getTransactionFee())
                 ->setDescription('Lender transaction fee')
                 ->setTransactionDate(new \DateTime())
@@ -262,7 +263,7 @@ class TransactionService
 
         $donationTransaction = new Transaction();
         $donationTransaction
-            ->setUserId(\Config::get('app.AdminId'))
+            ->setUserId(Setting::get('site.adminId'))
             ->setAmount($payment->getDonationAmount())
             ->setDescription('Donation from lender')
             ->setTransactionDate(new \DateTime())
@@ -292,7 +293,7 @@ class TransactionService
 
         $transaction = new Transaction();
         $transaction
-            ->setUserId(\Config::get('adminId'))
+            ->setUserId(Setting::get('site.adminId'))
             ->setAmount($amount)
             ->setDescription('Fee')
             ->setLoan($loan)
@@ -328,7 +329,7 @@ class TransactionService
 
         $transaction = new Transaction();
         $transaction
-            ->setUserId(\Config::get('YCAccountId'))
+            ->setUserId(Setting::get('site.YCAccountId'))
             ->setAmount($amount)
             ->setDescription('Loan repayment received')
             ->setLoan($loan)
@@ -351,23 +352,14 @@ class TransactionService
         $giftCardTransaction->save($con);
 
         $giftCardTransaction = new Transaction();
-        $giftCardTransaction->setUserId(\Config::get('app.AdminId'))
+        $giftCardTransaction->setUserId(Setting::get('site.adminId'))
             ->setAmount($giftCard->getCardAmount())
             ->setDescription("Gift Card Purchase")
             ->setTransactionDate(new \DateTime())
             ->setType(Transaction::GIFT_PURCHASE);
         $giftCardTransaction->save($con);
 
-        $giftPurchaseTransaction = new GiftCardTransaction();
-        $giftPurchaseTransaction->setLender($giftCard->getLender())
-            ->setAmount($giftCard->getCardAmount()->getAmount())
-            ->setTransactionId($giftCardTransaction->getId())
-            ->setDate(new \DateTime())
-            ->setTotalCards(1)
-            ->setTransactionType("Gift Card");
-
-        $giftPurchaseTransaction->save($con);
-
+        $giftCard->save($con);
     }
 
     public function addConvertToDonationTransaction(ConnectionInterface $con,Lender $lender,Money $amount)
@@ -386,7 +378,7 @@ class TransactionService
 
         $transactionDonation = new Transaction();
         $transactionDonation
-            ->setUserId(\Config::get('adminId'))
+            ->setUserId(Setting::get('site.adminId'))
             ->setAmount($amount)
             ->setDescription('Donation from lender')
             ->setTransactionDate(new \DateTime())

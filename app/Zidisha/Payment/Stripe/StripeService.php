@@ -6,6 +6,7 @@ use Stripe_AuthenticationError;
 use Stripe_CardError;
 use Stripe_Error;
 use Stripe_InvalidRequestError;
+use Zidisha\Admin\Setting;
 use Zidisha\Payment\Error\PaymentError;
 use Zidisha\Payment\Payment;
 use Zidisha\Payment\PaymentBus;
@@ -14,9 +15,6 @@ use Zidisha\Payment\Stripe\StripeLog;
 
 class StripeService extends PaymentService
 {
-    /**
-     * @var \Zidisha\Payment\PaymentBus
-     */
     private $paymentBus;
 
     public function __construct(PaymentBus $paymentBus)
@@ -40,7 +38,7 @@ class StripeService extends PaymentService
             ->setPaymentId($payment->getId());
         $stripeTransaction->save();
 
-        \Stripe::setApiKey(\Config::get('stripe.secret_key'));
+        \Stripe::setApiKey(Setting::get('stripe.secretKey'));
 
         $paymentError = $charge = null;
         try {

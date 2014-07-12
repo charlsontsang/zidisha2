@@ -183,25 +183,26 @@
         @if($loan->isOpen())
         <div>
             {{ BootstrapForm::open(array('route' => ['loan:place-bid', $loan->getId()], 'translationDomain' => 'bid', 'id' => 'funds-upload')) }}
-            {{ BootstrapForm::populate($form) }}
+            {{ BootstrapForm::populate($placeBidForm) }}
 
             {{ BootstrapForm::text('amount', null, ['id' => 'amount']) }}
             {{ BootstrapForm::hidden('creditAmount', null, ['id' => 'credit-amount']) }}
             {{ BootstrapForm::text('donationAmount', null, ['id' => 'donation-amount']) }}
+            {{ BootstrapForm::hidden('donationCreditAmount', null, ['id' => 'donation-credit-amount']) }}
 
-            {{ BootstrapForm::select('interestRate', $form->getRates()) }}
+            {{ BootstrapForm::select('interestRate', $placeBidForm->getRates()) }}
             {{ BootstrapForm::hidden('loanId', $loan->getId()) }}
 
             {{ BootstrapForm::hidden('transactionFee', null, ['id' => 'transaction-fee-amount']) }}
-            {{ BootstrapForm::hidden('transactionFeeRate', null, ['id' => 'fee-amount-rate']) }}
+            {{ BootstrapForm::hidden('transactionFeeRate', null, ['id' => 'transaction-fee-rate']) }}
             {{ BootstrapForm::hidden('currentBalance', null, ['id' => 'current-balance']) }}
             {{ BootstrapForm::hidden('totalAmount', null, ['id' => 'total-amount']) }}
 
             {{ BootstrapForm::hidden('stripeToken', null, ['id' => 'stripe-token']) }}
             {{ BootstrapForm::hidden('paymentMethod', null, ['id' => 'payment-method']) }}
 
-            @if($form->getCurrentBalance()->isPositive())
-            {{ BootstrapForm::label("Current Balance") }}: {{ $form->getCurrentBalance() }}
+            @if($placeBidForm->getCurrentBalance()->isPositive())
+            {{ BootstrapForm::label("Current Balance") }}: {{ $placeBidForm->getCurrentBalance() }}
             <br/>
             @endif
 
@@ -217,7 +218,7 @@
 
             <button id="stripe-payment" class="btn btn-primary">Pay With Card</button>
             <input type="submit" id="paypal-payment" class="btn btn-primary" value="Pay With Paypal" name="submit_paypal">
-            <input type="submit" id="credit-payment" class="btn btn-primary" value="Pay" name="submit_credit">
+            <input type="submit" id="balance-payment" class="btn btn-primary" value="Pay" name="submit_credit">
 
             {{ BootstrapForm::close() }}
 
@@ -261,7 +262,7 @@
 <script type="text/javascript">
     $(function () {
         paymentForm({
-            stripeToken: "{{ \Config::get('stripe.public_key') }}",
+            stripeToken: "{{ \Zidisha\Admin\Setting::get('stripe.publicKey') }}",
             email: "{{ \Auth::check() ? \Auth::user()->getEmail() : '' }}",
             amount: $('#amount')
         });

@@ -42,8 +42,9 @@ function parseMoney(value) {
     return Number(value.replace(/[^0-9\.]+/g, ""));
 }
 
-function formatMoney(value) {
-    return value.toFixed(2);
+function formatMoney(value, scale) {
+    scale = scale || 4;
+    return value.toFixed(scale);
 }
 
 function paymentForm(config) {
@@ -63,51 +64,54 @@ function paymentForm(config) {
                 description: 'Payment to Zidisha',
                 amount: (parseMoney($("#total-amount").val()) * 100).toFixed(0),
                 email: config.email,
-                panelLabel: "Pay @{{amount}}"
+                panelLabel: "Pay {{amount}}"
             });
             e.preventDefault();
         });
     });
 
     var $donationAmount = $('#donation-amount'),
+        $donationCreditAmount = $('#donation-credit-amount'),
         $creditAmount = $('#credit-amount'),
         $transactionFeeAmount = $('#transaction-fee-amount'),
         $totalAmount = $('#total-amount'),
         $transactionFeeAmountDisplay = $('#fee-amount-display'),
         $totalAmountDisplay = $('#total-amount-display'),
-        feePercentage = Number($('#fee-amount-rate').val()),
+        feePercentage = Number($('#transaction-fee-rate').val()),
         currentBalance = Number($('#current-balance').val()),
         $paymentMethods = $('#stripe-payment, #paypal-payment'),
-        $creditSubmit = $('#credit-payment'),
-        $amount = config.amount;
+        $balanceSubmit = $('#balance-payment'),
+        $amount = $('#amount');
 
-    function calculateAmounts() {
-        var donationAmount = parseMoney($donationAmount.val()),
-            creditAmount = parseMoney($creditAmount.val()),
+    function calculateAmounts() {console.log(currentBalance);
+        var amount = parseMoney($amount.val()),
+            donationAmount = parseMoney($donationAmount.val()),
+            creditAmount = (amount >= currentBalance) ? amount - currentBalance : 0,
+            newBalance = (amount >= currentBalance) ? 0 : currentBalance - amount,
             transactionFeeAmount = creditAmount * feePercentage,
-            totalAmount = creditAmount + transactionFeeAmount + donationAmount;
+            donationCreditAmount = (donationAmount >= newBalance) ? donationAmount - newBalance : 0,
+            totalAmount = creditAmount + transactionFeeAmount + donationCreditAmount;
 
+        $creditAmount.val(formatMoney(creditAmount));
+        $donationCreditAmount.val(formatMoney(donationCreditAmount));
         $transactionFeeAmount.val(formatMoney(transactionFeeAmount));
         $totalAmount.val(formatMoney(totalAmount));
-        $transactionFeeAmountDisplay.text(formatMoney(transactionFeeAmount));
-        $totalAmountDisplay.text(formatMoney(totalAmount));
+        $transactionFeeAmountDisplay.text(formatMoney(transactionFeeAmount, 2));
+        $totalAmountDisplay.text(formatMoney(totalAmount, 2));
         
         if (totalAmount > 0) {
             $paymentMethods.show();
-            $creditSubmit.hide();
+            $balanceSubmit.hide();
+            $("#payment-method").val("paypal");
         } else {
             $paymentMethods.hide();
-            $creditSubmit.show();
+            $balanceSubmit.show();
+            $("#payment-method").val("balance");
         }
     }
 
     $donationAmount.on('keyup', calculateAmounts);
-    $amount.on('keyup', function() {
-        var amount = parseMoney($amount.val()),
-            creditAmount = (amount >= currentBalance) ? amount - currentBalance : 0;
-        $creditAmount.val(creditAmount);
-        calculateAmounts();
-    });
+    $amount.on('keyup', calculateAmounts);
 
     calculateAmounts();
 }

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\View;
+use Zidisha\Admin\Setting;
 use Zidisha\Balance\TransactionQuery;
 use Zidisha\Currency\Money;
 use Zidisha\Lender\Form\EditProfile;
@@ -19,14 +20,6 @@ class LenderController extends BaseController
     private $editProfileForm, $fundsForm, $cardForm;
 
     private $lenderService;
-    /**
-     * @var StripeService
-     */
-    private $stripeService;
-
-    /**
-     * @var Zidisha\Payment\Form\UploadFundForm
-     */
     private $uploadFundForm;
 
 
@@ -148,7 +141,8 @@ class LenderController extends BaseController
 
         if ($form->isValid()) {
             $country = Utility::getCountryCodeByIP();
-            $blockedCountries = \Config::get('blockedCountries.codes');
+            $blockedCountries = Setting::get('site.countriesCodesBlockedFromUploadFunds');
+            $blockedCountries = explode(',', $blockedCountries);
 
             if (in_array($country['code'], $blockedCountries)) {
                 \Flash::error("Something went wrong!");

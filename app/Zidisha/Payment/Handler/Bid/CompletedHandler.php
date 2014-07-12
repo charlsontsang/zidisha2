@@ -8,14 +8,7 @@ use Zidisha\Payment\PaymentHandler;
 class CompletedHandler extends PaymentHandler
 {
 
-
-    /**
-     * @var \Zidisha\Loan\LoanService
-     */
     private $loanService;
-    /**
-     * @var \Zidisha\Payment\BalanceService
-     */
     private $balanceService;
 
     public function __construct(BalanceService $balanceService, LoanService $loanService)
@@ -30,7 +23,7 @@ class CompletedHandler extends PaymentHandler
 
         $data = [
             'interestRate' => $payment->getInterestRate(),
-            'amount' => $payment->getBidAmount()->getAmount()
+            'amount' => $payment->getAmount()->getAmount()
         ];
 
         $this->balanceService->uploadFunds($payment);
@@ -42,7 +35,7 @@ class CompletedHandler extends PaymentHandler
     public function redirect()
     {
         //Todo: sucess message
-        \Flash::success("Place bid successfully " . $this->payment->getBidAmount()->getAmount());
+        \Flash::success("Place bid successfully " . $this->payment->getAmount()->getAmount());
         return \Redirect::route('loan:index', ['id' => $this->payment->getLoanId()]);
     }
 }

@@ -155,12 +155,18 @@ Route::group(
                     )
                 );
 
-
+                Route::get(
+                    '/gift-cards/accept',
+                    array(
+                        'uses' => 'GiftCardController@getTermsAccept',
+                        'as'   => 'lender:gift-cards:terms-accept'
+                    )
+                );
                 Route::post(
                     '/gift-cards/accept',
                     array(
                         'uses' => 'GiftCardController@postTermsAccept',
-                        'as'   => 'lender:gift-cards:terms-accept'
+                        'as'   => 'lender:gift-cards:post-terms-accept'
                     )
                 );
                 Route::post(

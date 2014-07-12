@@ -116,7 +116,8 @@ class Loan extends BaseLoan
     public function calculateAmountRaised(Money $totalBidAmount)
     {
         if ($totalBidAmount->lessThan($this->getAmount())) {
-            $percentAmountRaised = $totalBidAmount->divide($this->getAmount())->multiply(100)->round(2)->getAmount();
+            $percentAmountRaised = $totalBidAmount->divide($this->getAmount()->getAmount())->multiply(100)->round(2)
+                    ->getAmount();
         } else {
             $percentAmountRaised = 100;
         }
