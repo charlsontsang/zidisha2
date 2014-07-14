@@ -33,7 +33,6 @@ class LenderJoinController extends BaseController
 
     public function getJoin()
     {
-
         $country = Utility::getCountryCodeByIP();
 
         return View::make(
@@ -58,7 +57,6 @@ class LenderJoinController extends BaseController
             Flash::error('Oops, something went wrong');
             return Redirect::route('lender:join')->withForm($form);
         }
-        dd($form->getData());
 
         $user = $this->userService->joinUser($form->getData());
 
@@ -71,7 +69,9 @@ class LenderJoinController extends BaseController
         $facebookUser = $this->getFacebookUser();
 
         if ($facebookUser) {
-            return View::make('lender.facebook-join');
+            $country = Utility::getCountryCodeByIP();
+            return View::make('lender.facebook-join',
+                compact('country'), ['form' => $this->joinForm,]);
         }
 
         Flash::error('No Facebook account connected.');
@@ -155,7 +155,9 @@ class LenderJoinController extends BaseController
                 Session::set('accessToken', $accessToken);
                 $googleUser = $this->googleService->getGoogleUser($accessToken);
                 if ($googleUser) {
-                    return View::make('lender.google-join');
+                    $country = Utility::getCountryCodeByIP();
+                    return View::make('lender.google-join',
+                        compact('country'), ['form' => $this->joinForm,]);
                 }
             }
         }

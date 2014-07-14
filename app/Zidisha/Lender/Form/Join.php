@@ -29,8 +29,7 @@ class Join extends AbstractForm
         
         $rules = [
             'username' => 'required|max:20|unique:users,username',
-           // 'countryId' => ['required', 'in:'.$listOfEnabledCountries]
-            'countryId' => ['in:'.$listOfEnabledCountries] //TODO use upper line
+            'countryId' => ['required', 'in:'.$listOfEnabledCountries]
         ];
         
         if (!$this->facebookJoin && !$this->googleJoin) {

@@ -58,9 +58,7 @@ class UserService
             ->setUser($user)
             ->setFirstName($facebookUser['first_name'])
             ->setLastName($facebookUser['last_name'])
-            // TODO
-            //->setCountry($facebookUser['location']);
-            ->setCountryId(1);
+            ->setCountryId($data['countryId']);
 
         $profile = new Profile();
         $profile->setAboutMe($data['aboutMe']);
@@ -106,9 +104,7 @@ class UserService
             ->setUser($user)
             ->setFirstName($googleUser->getGivenName())
             ->setLastName($googleUser->getFamilyName())
-            // TODO
-            //->setCountry($facebookUser['location']);
-            ->setCountryId(1);
+            ->setCountryId($data['countryId']);
 
         $profile = new Profile();
         $profile->setAboutMe($data['aboutMe']);
