@@ -1,5 +1,5 @@
 @if(\Auth::check())
-    @include('partials.comments.partial.reply', ['borrower' => $borrower, 'comment' => $comment] )
+    @include('partials.comments.partial.reply', ['receiver' => $receiver, 'comment' => $comment] )
     @if($comment->getUser() == \Auth::user())
         @include('partials.comments.partial.edit', ['comment' => $comment] )
             @if(\Auth::user()->getRole() == 'lender')

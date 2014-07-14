@@ -5,14 +5,27 @@ use Zidisha\Borrower\Borrower;
 use Zidisha\Upload\Upload;
 use Zidisha\User\User;
 
-class CommentService
+abstract class CommentService
 {
-    public function postComment($data, User $user, Borrower $borrower, $files = [])
+    protected $receiver;
+
+    /**
+     * @return Comment
+     */
+    protected abstract function createComment();
+
+    /**
+     * @return CommentQuery
+     */
+    protected abstract function createCommentQuery();
+
+    public function postComment($data, User $user,CommentReceiverInterface $receiver, $files = [])
     {
-        $comment = new Comment();
+        //Abstract
+        $comment = $this->createComment();
         $comment->setUserId($user->getId());
         $comment->setMessage($data['message']);
-        $comment->setBorrowerId($borrower->getId());
+        $comment->setCommentReceiverId($comment, $receiver->getCommentReceiverId());
         $comment->setParentId(null);
         $comment->setLevel(0);
         $comment->save();
@@ -24,6 +37,7 @@ class CommentService
             foreach ($files as $file) {
                 $upload = Upload::createFromFile($file);
                 $upload->setUser($user);
+                $upload->save();
                 $comment->addUpload($upload);
             }
             $comment->save();
@@ -31,12 +45,12 @@ class CommentService
         return $comment;
     }
 
-    public function postReply($data, User $user, Borrower $borrower, Comment $parentComment)
+    public function postReply($data, User $user, CommentReceiverInterface $receiver, Comment $parentComment)
     {
-        $comment = new Comment();
+        $comment = $this->createComment();
         $comment->setUserId($user->getId());
         $comment->setMessage($data['message']);
-        $comment->setBorrowerId($borrower->getId());
+        $comment->setCommentReceiverId($comment, $receiver->getCommentReceiverId());
         $comment->setParentId($parentComment->getId());
         $comment->setLevel($parentComment->getLevel() + 1);
         $comment->setRootId($parentComment->getRootId());
@@ -78,15 +92,15 @@ class CommentService
         }
     }
 
-    public function getPaginatedComments(Borrower $borrower, $page, $maxPerPage)
+    public function getPaginatedComments(CommentReceiverInterface $receiver, $page, $maxPerPage)
     {
-        $roots = CommentQuery::create()
-            ->filterByBorrowerId($borrower->getId())
+        $roots = $this->createCommentQuery()
+            ->filterByReceiverId($receiver->getCommentReceiverId())
             ->filterByLevel(0)
             ->orderById('desc')
             ->paginate($page, $maxPerPage);
 
-        $comments = CommentQuery::create()
+        $comments = $this->createCommentQuery()
             ->filterByRootId($roots->toKeyValue('id', 'id'))
             ->filterByLevel(['min' => 1])
             ->orderById('asc')
@@ -125,4 +139,5 @@ class CommentService
 
         $upload->delete();
     }
+
 } 

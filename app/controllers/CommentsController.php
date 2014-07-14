@@ -2,38 +2,51 @@
 
 use Illuminate\Support\Facades\Input;
 use Zidisha\Borrower\BorrowerQuery;
-use Zidisha\Comment\CommentQuery;
+use Zidisha\Comment\BorrowerCommentQuery;
+use Zidisha\Comment\BorrowerCommentService;
+use Zidisha\Comment\LendingGroupCommentQuery;
+use Zidisha\Comment\LendingGroupCommentService;
 use Zidisha\Flash\Flash;
+use Zidisha\Lender\LendingGroupQuery;
 
 class CommentsController extends BaseController
 {
+    protected $commentType;
 
-    /**
-     * @var Zidisha\Comment\CommentService
-     */
-    private $commentService;
+    protected $service;
 
-    public function __construct(\Zidisha\Comment\CommentService $commentService)
+    public function __construct()
     {
-        $this->commentService = $commentService;
+        if ( !Input::has('commentType') ) {
+            App::abort(404, 'Bad Request');
+        }
+
+        $this->commentType = Input::get('commentType');
+        $this->service = $this->getService($this->commentType);
     }
 
     public function postComment()
     {
+        if (!Input::has('receiver_id')) {
+            App::abort(404, 'Bad Request');
+        }
+
         $message = trim(Input::get('message'));
-        $borrower = BorrowerQuery::create()
-            ->filterById(Input::get('borrower_id'))
+        $receiverId = Input::get('receiver_id');
+
+        $receiver = $this->getReceiverQuery()
+            ->filterById($receiverId)
             ->findOne();
 
         $user = \Auth::user();
 
-        if (!$borrower || $message == '') {
+        if (!$receiver || $message == '') {
             App::abort(404, 'Bad Request');
         }
 
         $files = $this->getInputFiles();
 
-        $comment = $this->commentService->postComment(compact('message'), $user, $borrower, $files);
+        $comment = $this->service->postComment(compact('message'), $user, $receiver, $files);
 
         Flash::success(\Lang::get('comments.flash.post'));
         return Redirect::backAppend("#comment-" . $comment->getId());
@@ -62,7 +75,7 @@ class CommentsController extends BaseController
         $commentId = Input::get('comment_id');
         $message = trim(Input::get('message'));
 
-        $comment = CommentQuery::create()
+        $comment = $this->getCommentQuery()
             ->filterById($commentId)
             ->findOne();
 
@@ -73,7 +86,7 @@ class CommentsController extends BaseController
 
         $files = $this->getInputFiles();
 
-        $this->commentService->editComment(compact('message'), $user, $comment, $files);
+        $this->service->editComment(compact('message'), $user, $comment, $files);
 
         Flash::success(\Lang::get('comments.flash.edit'));
         return Redirect::backAppend("#comment-" . $comment->getId());
@@ -81,24 +94,28 @@ class CommentsController extends BaseController
 
     public function postReply()
     {
+        if (!Input::has('receiver_id')) {
+            App::abort(404, 'Bad Request');
+        }
+
         $message = trim(Input::get('message'));
         $parentId = Input::get('parent_id');
 
-        $borrower = BorrowerQuery::create()
-            ->filterById(Input::get('borrower_id'))
+        $receiver = $this->getReceiverQuery()
+            ->filterById(Input::get('receiver_id'))
             ->findOne();
 
         $user = \Auth::user();
 
-        $parentComment = CommentQuery::create()
+        $parentComment = $this->getCommentQuery()
             ->filterById($parentId)
             ->findOne();
 
-        if (!$borrower || $message == '' || !$parentComment || $parentComment->isOrphanDeleted()) {
+        if (!$receiver || $message == '' || !$parentComment || $parentComment->isOrphanDeleted()) {
             App::abort(404, 'Bad Request');
         }
 
-        $comment = $this->commentService->postReply(compact('message'), $user, $borrower, $parentComment);
+        $comment = $this->service->postReply(compact('message'), $user, $receiver, $parentComment);
 
         Flash::success(\Lang::get('comments.flash.reply'));
         return Redirect::backAppend("#comment-" . $comment->getId());
@@ -106,9 +123,10 @@ class CommentsController extends BaseController
 
     public function postDelete()
     {
+
         $commentId = Input::get('comment_id');
 
-        $comment = CommentQuery::create()
+        $comment = $this->getCommentQuery()
             ->filterById($commentId)
             ->findOne();
 
@@ -118,7 +136,7 @@ class CommentsController extends BaseController
             App::abort(404, 'Bad Request');
         }
 
-        $this->commentService->deleteComment($comment);
+        $this->service->deleteComment($comment);
 
         Flash::success(\Lang::get('comments.flash.delete'));
         return Redirect::back();
@@ -129,7 +147,7 @@ class CommentsController extends BaseController
         $commentId = Input::get('comment_id');
         $message = trim(Input::get('message'));
 
-        $comment = CommentQuery::create()
+        $comment = $this->getCommentQuery()
             ->filterById($commentId)
             ->findOne();
 
@@ -139,7 +157,7 @@ class CommentsController extends BaseController
             App::abort(404, 'Bad Request');
         }
 
-        $this->commentService->translateComment(compact('message'), $comment);
+        $this->service->translateComment(compact('message'), $comment);
 
         Flash::success(\Lang::get('comments.flash.translate'));
         return Redirect::backAppend("#comment-" . $comment->getId());
@@ -147,7 +165,10 @@ class CommentsController extends BaseController
 
     public function postDeleteUpload()
     {
-        $comment = CommentQuery::create()->filterById(\Input::get('comment_id'))->findOne();
+        $comment = $this->getCommentQuery()
+            ->filterById(\Input::get('receiver_id'))
+            ->findOne();
+
         $upload = \Zidisha\Upload\UploadQuery::create()->filterById(\Input::get('upload_id'))->findOne();
 
         $user = \Auth::user();
@@ -156,9 +177,36 @@ class CommentsController extends BaseController
             App::abort(404, 'Bad Request');
         }
 
-        $this->commentService->deleteUpload($comment, $upload);
+        $this->service->deleteUpload($comment, $upload);
 
         Flash::success(\Lang::get('comments.flash.file-deleted'));
         return Redirect::back();
+    }
+
+    private function getReceiverQuery()
+    {
+        if ($this->commentType == 'lendingGroupComment') {
+            return new LendingGroupQuery();
+        } elseif ($this->commentType == 'borrowerComment') {
+            return new BorrowerQuery();
+        }
+    }
+
+    private function getService()
+    {
+        if ($this->commentType == 'lendingGroupComment') {
+            return new LendingGroupCommentService();
+        } elseif ($this->commentType == 'borrowerComment') {
+            return new BorrowerCommentService();
+        }
+    }
+
+    private function getCommentQuery()
+    {
+        if ($this->commentType == 'lendingGroupComment') {
+            return new LendingGroupCommentQuery();
+        } elseif ($this->commentType == 'borrowerComment') {
+            return new BorrowerCommentQuery();
+        }
     }
 }

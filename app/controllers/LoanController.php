@@ -5,6 +5,7 @@ use SupremeNewMedia\Finance\Core\Money;
 use Zidisha\Balance\TransactionQuery;
 use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Borrower\BorrowerService;
+use Zidisha\Comment\BorrowerCommentService;
 use Zidisha\Comment\CommentService;
 use Zidisha\Flash\Flash;
 use Zidisha\Lender\Exceptions\InsufficientLenderBalanceException;
@@ -21,7 +22,10 @@ class LoanController extends BaseController
 {
 
     protected $loanQuery;
-    private $commentService;
+
+    /**
+     * @var Zidisha\Loan\BidQuery
+     */
     protected $bidQuery;
     private $loanService;
     private $borrowerService;
@@ -29,18 +33,18 @@ class LoanController extends BaseController
 
     public function  __construct(
         LoanQuery $loanQuery,
-        CommentService $commentService,
         BidQuery $bidQuery,
         LoanService $loanService,
         BorrowerService $borrowerService,
-        AdminCategoryForm $adminCategoryForm
+        AdminCategoryForm $adminCategoryForm,
+        BorrowerCommentService $borrowerCommentService
     ) {
         $this->loanQuery = $loanQuery;
         $this->bidQuery = $bidQuery;
-        $this->commentService = $commentService;
         $this->loanService = $loanService;
         $this->borrowerService = $borrowerService;
         $this->adminCategoryForm = $adminCategoryForm;
+        $this->borrowerCommentService = $borrowerCommentService;
     }
 
     public function getIndex($loanId)
@@ -54,8 +58,8 @@ class LoanController extends BaseController
             App::abort(404);
         }
 
-        $borrower = $loan->getBorrower();
-        $comments = $this->commentService->getPaginatedComments($borrower, 1, 10);
+        $borrower = $receiver = $loan->getBorrower();
+        $comments = $this->borrowerCommentService->getPaginatedComments($borrower, 1, 10);
 
         $bids = $this->bidQuery->create()
             ->filterByLoan($loan)
@@ -68,14 +72,14 @@ class LoanController extends BaseController
 
         $placeBidForm = new PlaceBidForm($loan);
 
+
+        $commentType = 'borrowerComment';
+
         return View::make(
             'pages.loan',
-            compact(
-                'loan', 'borrower',
-                'bids', 'comments', 'previousLoans',
-                'totalInterest', 'transactionFee'
-            ),
-            ['placeBidForm' => $placeBidForm, 'categoryForm' =>$this->adminCategoryForm]
+            compact('loan', 'commentType', 'borrower', 'receiver', 'bids', 'totalRaised', 'stillNeeded', 'comments', 'raised', 'totalInterest',
+                'transactionFee', 'previousLoans'),
+            ['form' => $placeBidForm, 'categoryForm' =>$this->adminCategoryForm]
         );
     }
 

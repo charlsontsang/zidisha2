@@ -2,7 +2,7 @@
     @include('partials.comments.partial.post')
     <ul class="list-unstyled">
         @foreach($comments as $comment)
-        @include("partials.comments.root", ['comment' => $comment])
+        @include("partials.comments.root", ['comment' => $comment, 'commentType'=> $commentType ])
         @endforeach
     </ul>
 </div>

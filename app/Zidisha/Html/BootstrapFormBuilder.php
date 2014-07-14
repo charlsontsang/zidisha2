@@ -136,7 +136,7 @@ class BootstrapFormBuilder
 
     public function select($name, $list = [], $selected = null, $options = [])
     {
-        $label = array_get($options, 'label', $this->translationDomain ? $this->translationDomain . '.' . $name : $name);
+        $label = $this->getFormattedLabel($options, $name);
         unset($options['label']);
         $label = \Lang::get($label);
 
@@ -175,7 +175,7 @@ class BootstrapFormBuilder
      */
     public function checkbox($name, $value = 1, $checked = null, $options = array())
     {
-        $label = array_get($options, 'label', $this->translationDomain ? $this->translationDomain . '.' . $name : $name);
+        $label = $this->getFormattedLabel($options, $name);
         unset($options['label']);
         $label = \Lang::get($label);
 
@@ -189,7 +189,7 @@ class BootstrapFormBuilder
 
     public function radio($name, $value = 1, $checked = null, $options = array())
     {
-        $label = array_get($options, 'label', $this->translationDomain ? $this->translationDomain . '.' . $name : $name);
+        $label = $this->getFormattedLabel($options, $name);
         unset($options['label']);
         $label = \Lang::get($label);
 
@@ -208,7 +208,7 @@ class BootstrapFormBuilder
         $view = $this->form->label($groupName);
         array_shift($nameArray);
         foreach ($nameArray as $name) {
-            $label = array_get($options, 'label', $this->translationDomain ? $this->translationDomain . '.' . $name : $name);
+            $label = $this->getFormattedLabel($options, $name);
             unset($options['label']);
             $label = \Lang::get($label);
 
@@ -278,7 +278,7 @@ class BootstrapFormBuilder
      */
     public function input($type, $name, $value = null, $options = [])
     {
-        $label = array_get($options, 'label', $this->translationDomain ? $this->translationDomain . '.' . $name : $name);
+        $label = $this->getFormattedLabel($options, $name);
         unset($options['label']);
         
         $options = $this->getFieldOptions($options);
@@ -432,5 +432,10 @@ class BootstrapFormBuilder
     protected function getFieldErrorClass($field, $class = 'has-error')
     {
         return $this->getFieldError($field) ? $class : null;
+    }
+
+    protected function getFormattedLabel($options, $name)
+    {
+        return array_get($options, 'label', $this->translationDomain ? $this->translationDomain . '.' . snake_case($name, '-') : snake_case($name, '-'));
     }
 }

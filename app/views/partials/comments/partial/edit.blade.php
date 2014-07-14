@@ -3,6 +3,8 @@
 
 {{ BootstrapForm::textarea('message', $comment->getMessage()) }}
 {{ BootstrapForm::hidden('comment_id', $comment->getId()) }}
+{{ BootstrapForm::hidden('commentType', $commentType) }}
+
     <div class="comment-upload-inputs">
         {{ BootstrapForm::file('file[]', ['label' => 'comments.upload-file']) }}
     </div>

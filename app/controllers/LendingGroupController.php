@@ -1,5 +1,6 @@
 <?php
 
+use Zidisha\Comment\LendingGroupCommentService;
 use Zidisha\Lender\Form\CreateGroupForm;
 use Zidisha\Lender\Form\EditGroupForm;
 use Zidisha\Lender\LendingGroupMemberQuery;
@@ -10,11 +11,16 @@ class LendingGroupController extends BaseController
 {
     private $createGroupForm;
     private $lendingGroupService;
+    /**
+     * @var LendingGroupCommentService
+     */
+    private $lenderGroupCommentService;
 
-    public function __construct(CreateGroupForm $createGroupForm, LendingGroupService $lendingGroupService)
+    public function __construct(CreateGroupForm $createGroupForm, LendingGroupService $lendingGroupService, LendingGroupCommentService $lenderGroupCommentService)
     {
         $this->createGroupForm = $createGroupForm;
         $this->lendingGroupService = $lendingGroupService;
+        $this->lenderGroupCommentService = $lenderGroupCommentService;
     }
 
     public function getCreateGroup()
@@ -59,7 +65,7 @@ class LendingGroupController extends BaseController
 
     public function getGroup($id)
     {
-        $group = LendingGroupQuery::create()
+        $group = $receiver = LendingGroupQuery::create()
             ->findOneById($id);
 
         if (!$group) {
@@ -73,7 +79,11 @@ class LendingGroupController extends BaseController
         $membersCount = count($members);
         $leaderId = $group->getLeader()->getId();
 
-        return View::make('lender.lending-group', compact('group', 'membersCount', 'members', 'leaderId'));
+        $comments = $this->lenderGroupCommentService->getPaginatedComments($group, 1, 10);
+
+        $commentType = 'lendingGroupComment';
+
+        return View::make('lender.lending-group', compact('group', 'receiver', 'membersCount', 'members', 'leaderId', 'comments', 'commentType'));
     }
 
     public function joinGroup($id)

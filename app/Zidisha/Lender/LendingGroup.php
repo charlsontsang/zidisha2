@@ -2,9 +2,10 @@
 
 namespace Zidisha\Lender;
 
+use Zidisha\Comment\CommentReceiverInterface;
 use Zidisha\Lender\Base\LendingGroup as BaseLendingGroup;
 
-class LendingGroup extends BaseLendingGroup
+class LendingGroup extends BaseLendingGroup implements CommentReceiverInterface
 {
 
     public function isMember(Lender $lender)
@@ -23,5 +24,8 @@ class LendingGroup extends BaseLendingGroup
         return $this->getLeader() == $lender;
     }
 
-
+    public function getCommentReceiverId()
+    {
+        return $this->getId();
+    }
 }

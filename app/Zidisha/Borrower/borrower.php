@@ -3,8 +3,9 @@
 namespace Zidisha\Borrower;
 
 use Zidisha\Borrower\Base\Borrower as BaseBorrower;
+use Zidisha\Comment\CommentReceiverInterface;
 
-class Borrower extends BaseBorrower
+class Borrower extends BaseBorrower implements CommentReceiverInterface
 {
 
     // TODO move to Payment?
@@ -130,4 +131,10 @@ class Borrower extends BaseBorrower
     {
         return $this->getVerified();
     }
+
+    public function getCommentReceiverId()
+    {
+        return $this->getId();
+    }
+
 }
