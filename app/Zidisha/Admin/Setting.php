@@ -63,7 +63,7 @@ class Setting extends BaseSetting
 
     public static function updateSettings($data)
     {
-        static::$nameToValue = [];
+        static::$nameToValue = null;
         
         $settings = SettingQuery::create()->find();
         PropelDB::transaction(function() use($settings, $data) {
@@ -94,7 +94,7 @@ class Setting extends BaseSetting
 
     public static function import($defaults = [])
     {
-        static::$nameToValue = [];
+        static::$nameToValue = null;
         $groups = Setting::getGroups();
 
         $settings = SettingQuery::create()->find();
