@@ -58,8 +58,13 @@ class LoanController extends BaseController
             App::abort(404);
         }
 
+        $page = 1;
+        if (Input::has('page')) {
+            $page = Input::get('page');
+        }
+
         $borrower = $receiver = $loan->getBorrower();
-        $comments = $this->borrowerCommentService->getPaginatedComments($borrower, 1, 10);
+        $comments = $this->borrowerCommentService->getPaginatedComments($borrower, $page, 10);
 
         $bids = $this->bidQuery->create()
             ->filterByLoan($loan)
