@@ -79,18 +79,9 @@ class LoanController extends BaseController
 
         return View::make(
             'pages.loan',
-<<<<<<< HEAD
-            compact(
-                'loan', 'borrower',
-                'bids', 'comments', 'previousLoans',
-                'totalInterest', 'transactionFee'
-            ),
-            ['placeBidForm' => $placeBidForm, 'categoryForm' =>$this->adminCategoryForm]
-=======
             compact('loan', 'borrower' , 'bids', 'totalRaised', 'stillNeeded', 'comments', 'raised', 'totalInterest',
                 'transactionFee', 'previousLoans'),
             ['form' => $placeBidForm, 'categoryForm' =>$this->adminCategoryForm]
->>>>>>> Add comments to lending group
         );
     }
 
