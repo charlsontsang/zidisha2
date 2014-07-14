@@ -299,7 +299,7 @@
         </foreign-key>
     </table>
 
-    <table name="lender_group_comments" phpName="LenderGroupComment" namespace="Comment">
+    <table name="lending_group_comments" phpName="LendingGroupComment" namespace="Comment">
         <behavior name="concrete_inheritance">
             <parameter name="extends" value="comments" />
             <parameter name="copy_data_to_parent" value="false" />
@@ -336,7 +336,7 @@
     <table name="lending_group_comment_uploads" namespace="Comment" isCrossRef="true">
         <column name="comment_id" type="INTEGER" required="true" primaryKey="true"/>
         <column name="upload_id" type="INTEGER" required="true" primaryKey="true"/>
-        <foreign-key foreignTable="lender_group_comments" phpName="Comment">
+        <foreign-key foreignTable="lending_group_comments" phpName="Comment">
             <reference local="comment_id" foreign="id"/>
         </foreign-key>
         <foreign-key foreignTable="uploads" phpName="Upload">
