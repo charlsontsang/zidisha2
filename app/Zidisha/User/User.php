@@ -82,6 +82,13 @@ class User extends BaseUser implements UserInterface, RemindableInterface
     {
         if ($this->hasProfilePicture()) {
             return $this->getProfilePicture()->getImageUrl($format);
+        }elseif ($this->getFacebookId()) {
+           $width =  \Config::get("image.formats.$format.width");
+           $height = \Config::get("image.formats.$format.height");
+            return 'https://graph.facebook.com/'.$this->getFacebookId().'/picture?width='.$width.'&height='.$height;
+        }elseif ($this->getGoogleId()) {
+            $width =  \Config::get("image.formats.$format.width");
+            return  ($this->getGooglePicture(). '?sz='.$width);
         }
 
         return $this->getDefaultPicture();

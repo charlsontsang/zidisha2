@@ -3,22 +3,22 @@
 namespace Zidisha\User;
 
 use Zidisha\Lender\Lender;
+use Zidisha\Lender\LenderService;
 use Zidisha\Lender\Profile;
 use Zidisha\Mail\LenderMailer;
 
 class UserService
 {
 
-    /**
-     * @var UserQuery
-     */
     private $userQuery;
     private $lenderMailer;
+    private $lenderService;
 
-    public function __construct(UserQuery $userQuery, LenderMailer $lenderMailer)
+    public function __construct(UserQuery $userQuery, LenderMailer $lenderMailer, LenderService $lenderService)
     {
         $this->userQuery = $userQuery;
         $this->lenderMailer = $lenderMailer;
+        $this->lenderService = $lenderService;
     }
     
     public function joinUser($data)
@@ -96,8 +96,8 @@ class UserService
             ->setUsername($data['username'])
             ->setEmail($googleUser->getEmail())
             ->setRole("lender")
-            ->setGoogleId($googleUser->getId());
-        //TODO upload profile picture and save profile_picture_id
+            ->setGoogleId($googleUser->getId())
+            ->setGooglePicture($googleUser->getPicture());
 
         $lender = new Lender();
         $lender

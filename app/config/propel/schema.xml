@@ -9,6 +9,7 @@
         <column name="profile_picture_id" type="INTEGER" required="false"/>
         <column name="facebook_id" type="BIGINT" required="false"/>
         <column name="google_id" type="VARCHAR" required="false"/>
+        <column name="google_picture" type="LONGVARCHAR" required="false"/>
         <column name="remember_token" type="VARCHAR" size="100" required="false"/>
         <column name="role" type="ENUM" valueSet="lender, borrower, admin"/>
         <column name="sub_role" type="ENUM" valueSet="volunteer, volunteerMentor"/>

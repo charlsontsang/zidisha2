@@ -10,6 +10,7 @@ use Zidisha\Balance\TransactionService;
 use Zidisha\Mail\LenderMailer;
 use Zidisha\Notification\Notification;
 use Zidisha\Notification\NotificationQuery;
+use Zidisha\Upload\Upload;
 use Zidisha\User\UserQuery;
 use Zidisha\Vendor\PropelDB;
 
