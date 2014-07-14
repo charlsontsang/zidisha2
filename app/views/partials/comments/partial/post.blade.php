@@ -1,6 +1,7 @@
 <div class="comment">
     {{ BootstrapForm::open(array('route' => 'comment:post', 'translationDomain' => 'comments', 'files' => true)) }}
-    {{ BootstrapForm::hidden('borrower_id', $borrower->getId()) }}
+    {{ BootstrapForm::hidden('receiver_id', $receiver->getId()) }}
+    {{ BootstrapForm::hidden('commentType', $commentType) }}
     {{ BootstrapForm::textarea('message') }}
 
     <div class="comment-upload-inputs">

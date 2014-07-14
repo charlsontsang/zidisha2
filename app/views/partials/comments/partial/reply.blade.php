@@ -2,7 +2,8 @@
     {{ BootstrapForm::open(array('route' => 'comment:reply', 'translationDomain' => 'comments')) }}
 
     {{ BootstrapForm::textarea('message') }}
-    {{ BootstrapForm::hidden('borrower_id', $borrower->getId()) }}
+    {{ BootstrapForm::hidden('receiver_id', $receiver->getId()) }}
+    {{ BootstrapForm::hidden('commentType', $commentType) }}
     {{ BootstrapForm::hidden('parent_id', $comment->getId()) }}
     {{ BootstrapForm::submit('reply') }}
 

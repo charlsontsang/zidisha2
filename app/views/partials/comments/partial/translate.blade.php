@@ -3,6 +3,7 @@
 
     {{ BootstrapForm::textarea('message') }}
     {{ BootstrapForm::hidden('comment_id', $comment->getId()) }}
+    {{ BootstrapForm::hidden('commentType', $commentType) }}
     {{ BootstrapForm::submit('translate') }}
 
     {{ BootstrapForm::close() }}
