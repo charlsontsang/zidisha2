@@ -11,8 +11,8 @@ class BorrowerCommentService extends CommentService
         return new BorrowerComment();
     }
 
-    protected function getCommentQuery()
+    protected function createCommentQuery()
     {
-        return new BorrowerCommentQuery();
+        return BorrowerCommentQuery::create();
     }
 }
