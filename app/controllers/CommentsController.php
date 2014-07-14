@@ -1,21 +1,22 @@
 <?php
 
 use Illuminate\Support\Facades\Input;
+use Zidisha\Borrower\BorrowerCommentService;
 use Zidisha\Borrower\BorrowerQuery;
-use Zidisha\Comment\CommentQuery;
+use Zidisha\Comment\BorrowerCommentQuery;
 use Zidisha\Flash\Flash;
 
 class CommentsController extends BaseController
 {
 
     /**
-     * @var Zidisha\Comment\CommentService
+     * @var Zidisha\Borrower\BorrowerCommentService
      */
-    private $commentService;
+    private $borrowerCommentService;
 
-    public function __construct(\Zidisha\Comment\CommentService $commentService)
+    public function __construct(BorrowerCommentService $borrowerCommentService)
     {
-        $this->commentService = $commentService;
+        $this->borrowerCommentService = $borrowerCommentService;
     }
 
     public function postComment()
@@ -33,7 +34,7 @@ class CommentsController extends BaseController
 
         $files = $this->getInputFiles();
 
-        $comment = $this->commentService->postComment(compact('message'), $user, $borrower, $files);
+        $comment = $this->borrowerCommentService->postComment(compact('message'), $user, $borrower, $files);
 
         Flash::success(\Lang::get('comments.flash.post'));
         return Redirect::backAppend("#comment-" . $comment->getId());
@@ -62,7 +63,7 @@ class CommentsController extends BaseController
         $commentId = Input::get('comment_id');
         $message = trim(Input::get('message'));
 
-        $comment = CommentQuery::create()
+        $comment = BorrowerCommentQuery::create()
             ->filterById($commentId)
             ->findOne();
 
@@ -73,7 +74,7 @@ class CommentsController extends BaseController
 
         $files = $this->getInputFiles();
 
-        $this->commentService->editComment(compact('message'), $user, $comment, $files);
+        $this->borrowerCommentService->editComment(compact('message'), $user, $comment, $files);
 
         Flash::success(\Lang::get('comments.flash.edit'));
         return Redirect::backAppend("#comment-" . $comment->getId());
@@ -90,7 +91,7 @@ class CommentsController extends BaseController
 
         $user = \Auth::user();
 
-        $parentComment = CommentQuery::create()
+        $parentComment =BorrowerCommentQuery::create()
             ->filterById($parentId)
             ->findOne();
 
@@ -98,7 +99,7 @@ class CommentsController extends BaseController
             App::abort(404, 'Bad Request');
         }
 
-        $comment = $this->commentService->postReply(compact('message'), $user, $borrower, $parentComment);
+        $comment = $this->borrowerCommentService->postReply(compact('message'), $user, $borrower, $parentComment);
 
         Flash::success(\Lang::get('comments.flash.reply'));
         return Redirect::backAppend("#comment-" . $comment->getId());
@@ -108,7 +109,7 @@ class CommentsController extends BaseController
     {
         $commentId = Input::get('comment_id');
 
-        $comment = CommentQuery::create()
+        $comment = BorrowerCommentQuery::create()
             ->filterById($commentId)
             ->findOne();
 
@@ -118,7 +119,7 @@ class CommentsController extends BaseController
             App::abort(404, 'Bad Request');
         }
 
-        $this->commentService->deleteComment($comment);
+        $this->borrowerCommentService->deleteComment($comment);
 
         Flash::success(\Lang::get('comments.flash.delete'));
         return Redirect::back();
@@ -129,7 +130,7 @@ class CommentsController extends BaseController
         $commentId = Input::get('comment_id');
         $message = trim(Input::get('message'));
 
-        $comment = CommentQuery::create()
+        $comment = BorrowerCommentQuery::create()
             ->filterById($commentId)
             ->findOne();
 
@@ -139,7 +140,7 @@ class CommentsController extends BaseController
             App::abort(404, 'Bad Request');
         }
 
-        $this->commentService->translateComment(compact('message'), $comment);
+        $this->borrowerCommentService->translateComment(compact('message'), $comment);
 
         Flash::success(\Lang::get('comments.flash.translate'));
         return Redirect::backAppend("#comment-" . $comment->getId());
@@ -147,7 +148,7 @@ class CommentsController extends BaseController
 
     public function postDeleteUpload()
     {
-        $comment = CommentQuery::create()->filterById(\Input::get('comment_id'))->findOne();
+        $comment = BorrowerCommentQuery::create()->filterById(\Input::get('comment_id'))->findOne();
         $upload = \Zidisha\Upload\UploadQuery::create()->filterById(\Input::get('upload_id'))->findOne();
 
         $user = \Auth::user();
@@ -156,7 +157,7 @@ class CommentsController extends BaseController
             App::abort(404, 'Bad Request');
         }
 
-        $this->commentService->deleteUpload($comment, $upload);
+        $this->borrowerCommentService->deleteUpload($comment, $upload);
 
         Flash::success(\Lang::get('comments.flash.file-deleted'));
         return Redirect::back();

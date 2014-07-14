@@ -17,18 +17,18 @@ Lending Groups
                 <p>{{ $group->getAbout() }}</p>
 
                 @if(Auth::check() && Auth::getUser()->isLender())
-                @if($group->isMember(Auth::User()->getLender()))
-                <a href="{{ route('lender:group:leave', $group->getId()) }}" class="btn btn-primary">
-                    Leave this group
-                </a>
-                @else
-                <a href="{{ route('lender:group:join', $group->getId()) }}" class="btn btn-primary">
-                    Join this group
-                </a>
-                @endif
+                    @if($group->isMember(Auth::User()->getLender()))
+                    <a href="{{ route('lender:group:leave', $group->getId()) }}" class="btn btn-primary">
+                        Leave this group
+                    </a>
+                    @else
+                    <a href="{{ route('lender:group:join', $group->getId()) }}" class="btn btn-primary">
+                        Join this group
+                    </a>
+                    @endif
                 <br><br>
                 <div>
-                    @if($group->isLeader(Auth::User()->getLender())
+                    @if($group->isLeader(Auth::User()->getLender()))
                         <a href="{{ route('lender:groups:edit', $group->getId()) }}" class="btn btn-primary">
                             Edit Group
                         </a>
@@ -44,17 +44,23 @@ Lending Groups
 
                     <div id="toggle-example" class="collapse">
                         @foreach($members as $member)
-                        <p><a href="{{ route('lender:public-profile', $member->getMember()->getUser()->getUserName()) }}">{{
-                                $member->getMember()->getUser()->getUserName() }}
+                        <p>
+                            <a href="{{ route('lender:public-profile', $member->getMember()->getUser()->getUserName()) }}">
+                                {{ $member->getMember()->getUser()->getUserName() }}
                             </a>
                             @if($group->isLeader($member->getMember()))
-                            <span class="label label-info">Leader</span>
+                                <span class="label label-info">Leader</span>
                             @endif
                         </p>
                         @endforeach
                     </div>
                 </div>
                 @endif
+
+                <br/>
+                <br/>
+                <h4>Comments</h4>
+                @include('partials.comments.comments', ['comments' => $comments])
             </div>
         </div>
 

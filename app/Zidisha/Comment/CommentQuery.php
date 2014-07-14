@@ -15,7 +15,7 @@ use Zidisha\Comment\Base\CommentQuery as BaseCommentQuery;
  * long as it does not already exist in the output directory.
  *
  */
-class CommentQuery extends BaseCommentQuery
+abstract class CommentQuery extends BaseCommentQuery
 {
-
+    public abstract function filterByReceiverId($id);
 } // CommentQuery

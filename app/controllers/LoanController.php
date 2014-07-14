@@ -3,6 +3,7 @@
 use SupremeNewMedia\Finance\Core\Currency;
 use SupremeNewMedia\Finance\Core\Money;
 use Zidisha\Balance\TransactionQuery;
+use Zidisha\Borrower\BorrowerCommentService;
 use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Borrower\BorrowerService;
 use Zidisha\Comment\CommentService;
@@ -21,26 +22,34 @@ class LoanController extends BaseController
 {
 
     protected $loanQuery;
-    private $commentService;
+
+    /**
+     * @var Zidisha\Loan\BidQuery
+     */
     protected $bidQuery;
     private $loanService;
     private $borrowerService;
     private $adminCategoryForm;
+    /**
+     * @var Zidisha\Borrower\BorrowerCommentService
+     */
+    private $borrowerCommentService;
 
     public function  __construct(
         LoanQuery $loanQuery,
-        CommentService $commentService,
         BidQuery $bidQuery,
         LoanService $loanService,
         BorrowerService $borrowerService,
-        AdminCategoryForm $adminCategoryForm
+        AdminCategoryForm $adminCategoryForm,
+        BorrowerCommentService $borrowerCommentService
     ) {
         $this->loanQuery = $loanQuery;
         $this->bidQuery = $bidQuery;
-        $this->commentService = $commentService;
+        $this->borrowerCommentService = $borrowerCommentService;
         $this->loanService = $loanService;
         $this->borrowerService = $borrowerService;
         $this->adminCategoryForm = $adminCategoryForm;
+        $this->borrowerCommentService = $borrowerCommentService;
     }
 
     public function getIndex($loanId)
@@ -55,7 +64,7 @@ class LoanController extends BaseController
         }
 
         $borrower = $loan->getBorrower();
-        $comments = $this->commentService->getPaginatedComments($borrower, 1, 10);
+        $comments = $this->borrowerCommentService->getPaginatedComments($borrower, 1, 10);
 
         $bids = $this->bidQuery->create()
             ->filterByLoan($loan)
@@ -70,12 +79,18 @@ class LoanController extends BaseController
 
         return View::make(
             'pages.loan',
+<<<<<<< HEAD
             compact(
                 'loan', 'borrower',
                 'bids', 'comments', 'previousLoans',
                 'totalInterest', 'transactionFee'
             ),
             ['placeBidForm' => $placeBidForm, 'categoryForm' =>$this->adminCategoryForm]
+=======
+            compact('loan', 'borrower' , 'bids', 'totalRaised', 'stillNeeded', 'comments', 'raised', 'totalInterest',
+                'transactionFee', 'previousLoans'),
+            ['form' => $placeBidForm, 'categoryForm' =>$this->adminCategoryForm]
+>>>>>>> Add comments to lending group
         );
     }
 

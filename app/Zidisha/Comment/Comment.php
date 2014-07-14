@@ -4,7 +4,7 @@ namespace Zidisha\Comment;
 
 use Zidisha\Comment\Base\Comment as BaseComment;
 
-class Comment extends BaseComment
+abstract class Comment extends BaseComment
 {
     private $children = array();
 
@@ -59,4 +59,12 @@ class Comment extends BaseComment
     {
         return $this->getMessageTranslation() ? true : false;
     }
+
+    abstract public function setCommentReceiverId($comment, $id);
+
+    abstract public function getCommentReceiverId();
+
+    abstract public function setCommentReceiver($comment, $receiver);
+
+    abstract public function getCommentReceiver();
 }
