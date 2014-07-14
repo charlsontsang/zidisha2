@@ -26,6 +26,7 @@ class EditForm extends AbstractForm
             'registration_fee'       => $this->country->getRegistrationFee(),
             'installment_period'     => $this->country->getInstallmentPeriod(),
             'repayment_instructions' => $this->country->getRepaymentInstructions(),
+            'accept_bids_note'       => $this->country->getAcceptBidsNote(),
         ];
     }
 
@@ -38,6 +39,7 @@ class EditForm extends AbstractForm
             'registration_fee'       => 'required',
             'installment_period'     => 'required',
             'repayment_instructions' => 'required',
+            'accept_bids_note'       => ''
         ];
     }
 
