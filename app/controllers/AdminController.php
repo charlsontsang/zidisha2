@@ -374,7 +374,7 @@ class AdminController extends BaseController
         if ($form->isValid()) {
             $data = $form->getData();
 
-            $this->loanService->AddTranslations($loan, $data);
+            $this->loanService->addTranslations($loan, $data);
 
             \Flash::success("Translations successfully saved!");
             return Redirect::route('loan:index', $loanId);

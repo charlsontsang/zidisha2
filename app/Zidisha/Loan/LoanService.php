@@ -708,7 +708,7 @@ class LoanService
 
     }
 
-    public function AddTranslations(Loan $loan, $data)
+    public function addTranslations(Loan $loan, $data)
     {
         $profile = $loan->getBorrower()->getProfile();
 
