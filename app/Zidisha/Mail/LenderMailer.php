@@ -32,12 +32,12 @@ class LenderMailer
     /**
      * @param Bid $bid
      */
-    public function sendPlaceBidMail(Bid $bid)
+    public function sendFirstBidConfirmationMail(Bid $bid)
     {
         $email = $bid->getLender()->getUser()->getEmail();
 
         $this->mailer->send(
-            'emails.loan.placed-first-bid',
+            'emails.lender.loan.first-bid-confirmation',
             [
                 'to'      => $email,
                 'from'    => 'service@zidisha.com',
@@ -46,37 +46,19 @@ class LenderMailer
         );
     }
 
-
     /**
      * @param Bid $bid
      */
-    public function loanCompletionMail(Bid $bid)
+    public function sendLoanFullyFundedMail(Bid $bid)
     {
         $email = $bid->getLender()->getUser()->getEmail();
 
         $this->mailer->send(
-            'emails.loan.loan-completed',
+            'emails.lender.loan.loan-fully-funded',
             [
                 'to'      => $email,
                 'from'    => 'service@zidisha.com',
                 'subject' => 'The loan is fully funded.'
-            ]
-        );
-    }
-
-    /**
-     * @param Bid $bid
-     */
-    public function bidPlaceMail(Bid $bid)
-    {
-        $email = $bid->getLender()->getUser()->getEmail();
-
-        $this->mailer->send(
-            'emails.loan.bid-placed',
-            [
-                'to'      => $email,
-                'from'    => 'service@zidisha.com',
-                'subject' => 'Congratulations your Bid is successfully placed on Zidisha.'
             ]
         );
     }

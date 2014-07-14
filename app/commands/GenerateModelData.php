@@ -508,7 +508,7 @@ class GenerateModelData extends Command
                     $borrower->setLoanStatus(Loan::ACTIVE);
                     $borrower->setActiveLoan($Loan);
                     $Loan->setStatus(Loan::ACTIVE);
-                    $Loan->setAmountRaised($amount - $amount/3);
+                    $Loan->setRaisedAmount(Money::create($amount - $amount/3));
                     $Loan->setDisbursedDate(new \DateTime());
                     $Stage->setStatus(Loan::ACTIVE);
                 } elseif ($i < ($status * 5)) {

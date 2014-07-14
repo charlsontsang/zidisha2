@@ -45,6 +45,9 @@ class Loan extends BaseLoan
         return $loan;
     }
 
+    /**
+     * @return Money
+     */
     public function getNativeAmount()
     {
         return Money::create(parent::getNativeAmount(), $this->getCurrencyCode());
@@ -58,7 +61,10 @@ class Loan extends BaseLoan
     {
         return parent::setNativeAmount($money->getAmount());
     }
-    
+
+    /**
+     * @return Money
+     */
     public function getAmount()
     {
         return Money::create(parent::getAmount(), 'USD');
@@ -113,16 +119,36 @@ class Loan extends BaseLoan
         return $this->setInstallmentCount($installmentCount);
     }
 
-    public function calculateAmountRaised(Money $totalBidAmount)
+    /**
+     * @param Money $totalBidAmount
+     * @return $this|Loan
+     */
+    public function setRaisedAmount($totalBidAmount)
     {
         if ($totalBidAmount->lessThan($this->getAmount())) {
-            $percentAmountRaised = $totalBidAmount->divide($this->getAmount()->getAmount())->multiply(100)->round(2)
-                    ->getAmount();
+            $raisedPercentage = $totalBidAmount
+                ->divide($this->getAmount()->getAmount())
+                ->multiply(100)->round(2)
+                ->getAmount();
         } else {
-            $percentAmountRaised = 100;
+            $raisedPercentage = 100;
         }
 
-        return $this->setAmountRaised($percentAmountRaised);
+        $this->setRaisedPercentage($raisedPercentage);
+        return parent::setRaisedAmount($raisedPercentage);
+    }
+
+    /**
+     * @return Money
+     */
+    public function getRaisedAmount()
+    {
+        return Money::create(parent::getRaisedAmount(), 'USD');
+    }
+    
+    public function getStillNeededAmount()
+    {
+        return $this->getAmount()->subtract($this->getRaisedAmount())->max(Money::create(0));
     }
 
     public function isWeeklyInstallment()
@@ -138,5 +164,10 @@ class Loan extends BaseLoan
     public function isActive()
     {
         return $this->getStatus() == static::ACTIVE;
+    }
+
+    public function isFullyFunded()
+    {
+        return !$this->getAmount()->greaterThan($this->getRaisedAmount());
     }
 }

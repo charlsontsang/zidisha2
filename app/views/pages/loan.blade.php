@@ -178,7 +178,7 @@
         </div>
         @endif
 
-        @include('partials/_progress', [ 'raised' => $raised])
+        @include('partials/_progress', [ 'raised' => $loan->getRaisedPercentage() ])
 
         @if($loan->isOpen())
         <div>
@@ -246,8 +246,8 @@
             @endforeach
             </tbody>
         </table>
-        <strong>Raised: </strong> USD {{ $totalRaised }}
-        <strong>Still Needed: </strong> USD {{ $stillNeeded }}
+        <strong>Raised: </strong> USD {{ $loan->getRaisedAmount()->getAmount() }}
+        <strong>Still Needed: </strong> USD {{ $loan->getStillNeededAmount() }}
 
         @if(Auth::check() && Auth::getUser()->isAdmin())
         <br><br>

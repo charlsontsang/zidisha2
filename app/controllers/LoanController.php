@@ -56,24 +56,10 @@ class LoanController extends BaseController
         $borrower = $loan->getBorrower();
         $comments = $this->commentService->getPaginatedComments($borrower, 1, 10);
 
-        $totalRaised = $this->bidQuery
-            ->select(array('total'))
-            ->withColumn('SUM(bid_amount)', 'total')
-            ->filterByLoan($loan)
-            ->findOne();
-
         $bids = $this->bidQuery->create()
             ->filterByLoan($loan)
             ->orderByBidDate()
             ->find();
-
-        $stillNeeded = $loan->getAmount()->getAmount() - $totalRaised;
-
-        if($loan->getAmount() <= $totalRaised){
-            $raised = 100;
-        }else{
-            $raised = intval(($totalRaised/($loan->getAmount()->getAmount()))*100);
-        }
 
         $totalInterest = $this->loanService->calculateTotalInterest($loan);
         $transactionFee = $this->loanService->calculateTransactionFee($loan);
@@ -83,7 +69,7 @@ class LoanController extends BaseController
 
         return View::make(
             'pages.loan',
-            compact('loan', 'borrower' , 'bids', 'totalRaised', 'stillNeeded', 'comments', 'raised', 'totalInterest',
+            compact('loan', 'borrower' , 'bids', 'comments', 'totalInterest',
                 'transactionFee', 'previousLoans'),
             ['placeBidForm' => $placeBidForm, 'categoryForm' =>$this->adminCategoryForm]
         );
@@ -119,6 +105,10 @@ class LoanController extends BaseController
         $loan = LoanQuery::create()
             ->filterById($data['loanId'])
             ->findOne();
+        
+        if (!$loan) {
+            App::abort(404);
+        }
 
         $totalLoanAmount = $loan->getAmount();
 

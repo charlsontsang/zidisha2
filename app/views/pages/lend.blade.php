@@ -117,7 +117,7 @@
                             array('exact' => false)) }} <a href="{{ route('loan:index', $loan->getId()) }}">Read More</a></p>
                         <strong>@lang('lend.loan.amount'): </strong> {{ $loan->getAmount() }} USD
                         <strong>@lang('lend.loan.interest-rate'): </strong> {{ $loan->getInterestRate() }} %
-                        @include('partials/_progress', [ 'raised' => rand(1,100)])
+                        @include('partials/_progress', [ 'raised' => $loan->getRaisedPercentage() ])
                     </li>
                     <br>
                 </ul>

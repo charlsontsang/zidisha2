@@ -205,16 +205,16 @@ class LoanService
         $loanType = $loanIndex->getType('loan');
 
         $data = array(
-            'id' => $loan->getId(),
-            'category' => $loan->getCategory()->getName(),
-            'categoryId' => $loan->getCategory()->getId(),
-            'countryId' => $loan->getBorrower()->getCountry()->getId(),
-            'country_code' => $loan->getBorrower()->getCountry()->getCountryCode(),
-            'summary' => $loan->getSummary(),
-            'proposal' => $loan->getProposal(),
-            'status' => $loan->getStatus(),
-            'created_at' => $loan->getCreatedAt()->getTimestamp(),
-            'amount_raised' => $loan->getAmountRaised(),
+            'id'                => $loan->getId(),
+            'category'          => $loan->getCategory()->getName(),
+            'categoryId'        => $loan->getCategory()->getId(),
+            'countryId'         => $loan->getBorrower()->getCountry()->getId(),
+            'country_code'      => $loan->getBorrower()->getCountry()->getCountryCode(),
+            'summary'           => $loan->getSummary(),
+            'proposal'          => $loan->getProposal(),
+            'status'            => $loan->getStatus(),
+            'created_at'        => $loan->getCreatedAt()->getTimestamp(),
+            'raised_percentage' => $loan->getRaisedPercentage(),
         );
 
         $loanDocument = new \Elastica\Document($loan->getId(), $data);
@@ -226,37 +226,35 @@ class LoanService
     {
         /** @var Bid $bid */
         $bid = PropelDB::transaction(function($con) use($loan, $lender, $data) {
-            return  $this->createBid($con, $loan, $lender, $data);    
+            $bid = $this->createBid($con, $loan, $lender, $data);
+
+            $totalBidAmount = BidQuery::create()
+                ->filterByLoan($loan)
+                ->getTotalBidAmount();
+            
+            $loan->setRaisedAmount($totalBidAmount);
+            $loan->save();
+            
+            return $bid;
         });
 
-        // loop and send emails
-
-        // Send bid confirmation mail
-        $this->lenderMailer->bidPlaceMail($bid);
-
         if ($bid->isFirstBid()) {
-            $this->lenderMailer->sendPlaceBidMail($bid);
+            $this->lenderMailer->sendFirstBidConfirmationMail($bid);
         }
 
         $this->mixpanelService->trackPlacedBid($bid);
 
-        $totalBidAmount = BidQuery::create()
-            ->filterByLoan($loan)
-            ->getTotalBidAmount();
-
-        if ($totalBidAmount->compare($loan->getAmount()) != -1) {
-
+        if ($loan->isFullyFunded()) {
             $bids = BidQuery::create()
                 ->filterByLoan($loan)
+                ->joinWith('Lender')
+                ->joinWith('Lender.User')
                 ->find();
 
-            foreach ($bids as $oneBid) {
-                $this->lenderMailer->loanCompletionMail($oneBid);
+            foreach ($bids as $_bid) {
+                $this->lenderMailer->sendLoanFullyFundedMail($_bid);
             }
         }
-
-        $loan->calculateAmountRaised($totalBidAmount);
-        $loan->save();
 
         //Todo: refresh elastic search index.
         //Todo: Lender Invite Credit.

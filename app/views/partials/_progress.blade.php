@@ -3,7 +3,7 @@
         <div class="progress">
             <div class="progress-bar" role="progressbar" aria-valuenow="{{$raised}}" aria-valuemin="0"
                  aria-valuemax="100"
-                 style="width: {{$raised}}%;">
+                 style="width: {{ $raised }}%;">
             </div>
         </div>
     </div>
