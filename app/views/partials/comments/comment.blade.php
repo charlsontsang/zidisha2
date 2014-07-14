@@ -16,7 +16,7 @@
                         @if($comment->getUser() && !$comment->getUser()->isAdmin())
                             <a href="{{ $comment->getUser()->getProfileUrl() }}">{{ $comment->getUser()->getUsername() }}</a>
                         @else
-                            {{ $comment->getUser()->getUsername() }}
+                             Deleted
                         @endif
                         <small>{{ $comment->getCreatedAt()->format('M d, Y') }}</small>
                     </h4>
@@ -48,7 +48,7 @@
                                 @include("partials.comments.partial.comment-actions", ['comment' => $comment])
                         </div>
                         <div class="comment-forms">
-                            @include("partials.comments.partial.comment-action-forms", ['borrower' => $borrower, 'comment' => $comment])
+                            @include("partials.comments.partial.comment-action-forms", ['receiver' => $receiver, 'comment' => $comment])
                         </div>
                     @endif
                 </div>
