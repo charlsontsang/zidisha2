@@ -17,8 +17,6 @@ class BorrowerJoinController extends BaseController
 
     protected $facebookService;
 
-    protected $userService;
-
     protected $profileForm;
 
     protected $countryForm;
@@ -26,14 +24,11 @@ class BorrowerJoinController extends BaseController
     protected $borrowerService;
 
     protected $authService;
-    /**
-     * @var Zidisha\Mail\BorrowerMailer
-     */
+
     private $borrowerMailer;
 
     public function __construct(
         \Zidisha\Vendor\Facebook\FacebookService $facebookService,
-        \Zidisha\User\UserService $userService,
         \Zidisha\Borrower\Form\Join\ProfileForm $profileForm,
         \Zidisha\Borrower\Form\Join\CountryForm $countryForm,
         \Zidisha\Borrower\BorrowerService $borrowerService,
@@ -42,7 +37,6 @@ class BorrowerJoinController extends BaseController
     ) {
         $this->beforeFilter('@stepsBeforeFilter');
         $this->facebookService = $facebookService;
-        $this->userService = $userService;
         $this->profileForm = $profileForm;
         $this->countryForm = $countryForm;
         $this->borrowerService = $borrowerService;

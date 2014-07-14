@@ -3,25 +3,23 @@
 namespace Zidisha\Vendor\Google;
 
 use Google_Service_Oauth2;
-use Illuminate\Http\Request;
 use Zidisha\Admin\Setting;
-use Zidisha\User\UserService;
+use Zidisha\Lender\LenderService;
 
 class GoogleService
 {
 
     protected $google;
-    private $userService;
+    private $lenderService;
 
-    public function __construct(UserService $userService)
+    public function __construct(LenderService $lenderService)
     {
         $google = new \Google_Client();
         $google->setClientId(Setting::get('google.clientId') . '.apps.googleusercontent.com');
         $google->setClientSecret(Setting::get('google.clientSecret'));
         //$google->setApprovalPrompt('force');
         $this->google = $google;
-
-        $this->userService = $userService;
+        $this->lenderService = $lenderService;
     }
 
     public function getLoginUrl($route, $params = [])
@@ -52,7 +50,7 @@ class GoogleService
         $googleUser = $this->getUserProfile($accessToken);
 
         if ($googleUser) {
-            $errors = $this->userService->validateConnectingGoogleUser(
+            $errors = $this->lenderService->validateConnectingGoogleUser(
                 $googleUser
             );
 

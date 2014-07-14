@@ -12,20 +12,17 @@ use Zidisha\Vendor\Google\GoogleService;
 class LenderJoinController extends BaseController
 {
     private $facebookService;
-    private $userService;
     private $joinForm;
     private $lenderService;
     private $googleService;
 
     public function __construct(
         FacebookService $facebookService,
-        UserService $userService,
         Join $joinForm,
         LenderService $lenderService,
         GoogleService $googleService
     ) {
         $this->facebookService = $facebookService;
-        $this->userService = $userService;
         $this->joinForm = $joinForm;
         $this->lenderService = $lenderService;
         $this->googleService = $googleService;
@@ -58,7 +55,7 @@ class LenderJoinController extends BaseController
             return Redirect::route('lender:join')->withForm($form);
         }
 
-        $user = $this->userService->joinUser($form->getData());
+        $user = $this->lenderService->joinLender($form->getData());
 
         return $this->join($user);
     }
@@ -91,7 +88,7 @@ class LenderJoinController extends BaseController
                 return Redirect::route('lender:facebook-join')->withForm($form);
             }
 
-            $user = $this->userService->joinFacebookUser(
+            $user = $this->lenderService->joinFacebookUser(
                 $facebookUser,
                 $form->getData()
             );
@@ -108,7 +105,7 @@ class LenderJoinController extends BaseController
         $facebookUser = $this->facebookService->getUserProfile();
 
         if ($facebookUser) {
-            $errors = $this->userService->validateConnectingFacebookUser(
+            $errors = $this->lenderService->validateConnectingFacebookUser(
                 $facebookUser
             );
 
@@ -180,7 +177,7 @@ class LenderJoinController extends BaseController
                 return Redirect::route('lender:google-join')->withForm($form);
             }
 
-            $user = $this->userService->joinGoogleUser(
+            $user = $this->lenderService->joinGoogleUser(
                 $googleUser,
                 $form->getData()
             );
