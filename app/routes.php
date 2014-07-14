@@ -59,7 +59,8 @@ Route::group(
          */
         Route::get('/join', array('uses' => 'AuthController@getJoin', 'as' => 'join'));
         Route::get('lender/join', array('uses' => 'LenderJoinController@getJoin', 'as' => 'lender:join'));
-        Route::post('lender/join', array('uses' => 'LenderJoinController@postJoin', 'before' => 'csrf'));
+        Route::post('lender/join', array('uses' => 'LenderJoinController@postJoin','as' => 'lender:post-join',
+                                         'before' => 'csrf'));
 
         Route::get(
             'lender/facebook/join',
@@ -67,7 +68,15 @@ Route::group(
         );
         Route::post(
             'lender/facebook/join',
-            array('uses' => 'LenderJoinController@postFacebookJoin', 'before' => 'csrf')
+            array('uses' => 'LenderJoinController@postFacebookJoin', 'as' => 'lender:post-facebook-join', 'before' => 'csrf')
+        );
+        Route::get(
+            'lender/google/join',
+            array('uses' => 'LenderJoinController@getGoogleJoin', 'as' => 'lender:google-join')
+        );
+        Route::post(
+            'lender/google/join',
+            array('uses' => 'LenderJoinController@postGoogleJoin','as' => 'lender:post-google-join', 'before' => 'csrf')
         );
 
         Route::get('borrower/join', array('uses' => 'BorrowerJoinController@getCountry', 'as' => 'borrower:join'));

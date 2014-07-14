@@ -184,6 +184,35 @@ class AuthController extends BaseController
 
     public function getGoogleLogin()
     {
+        $accessCode = Input::get('code');
 
+        if ($accessCode) {
+            $accessToken = $this->googleService->getAccessToken('google:login', $accessCode);
+
+            if ($accessToken) {
+                Session::set('accessToken', $accessToken);
+                $googleUser = $this->googleService->getGoogleUserForLogin($accessToken);
+                if ($googleUser) {
+                    $googleUserId = $googleUser->getId();
+                    if ($googleUserId) {
+                        $checkUser = UserQuery::create()
+                            ->filterByGoogleId($googleUserId)
+                            ->findOne();
+
+                        if ($checkUser) {
+                            Auth::loginUsingId($checkUser->getId());
+                        } else {
+                            Flash::error('You are not registered to use Google. Please sign up with Google first.');
+                            return Redirect::to('login');
+                        }
+                        return $this->login();
+                    }
+                }
+            }
+        }
+
+        Flash::error('Some Error Occurred');
+        return Redirect::to('login');
     }
+
 }

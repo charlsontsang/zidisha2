@@ -7,10 +7,16 @@
 <div class="row">
     <div class="col-md-offset-3 col-md-6">
         <div style="text-align: center">
-            <a href="{{$facebookJoinUrl}}" class="btn btn-lg btn-primary">Join with facebook</a>
+            <a href="{{$facebookJoinUrl}}" class="btn btn-lg btn-primary">Join with Facebook</a>
+        </div>
+        <br>
+        <div style="text-align: center">
+            <a href="{{$googleLoginUrl}}" class="btn btn-lg btn-primary">
+                Join with Google
+            </a>
         </div>
 
-        {{ BootstrapForm::open(array('route' => 'lender:join', 'translationDomain' => 'join.form')) }}
+        {{ BootstrapForm::open(array('route' => 'lender:post-join', 'translationDomain' => 'join.form')) }}
         {{ BootstrapForm::populate($form) }}
 
         {{ BootstrapForm::text('username') }}

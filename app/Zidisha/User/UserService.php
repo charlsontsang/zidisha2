@@ -2,7 +2,6 @@
 
 namespace Zidisha\User;
 
-
 use Zidisha\Lender\Lender;
 use Zidisha\Lender\Profile;
 use Zidisha\Mail\LenderMailer;
@@ -24,6 +23,7 @@ class UserService
     
     public function joinUser($data)
     {
+
         $user = new User();
         $user->setPassword($data['password']);
         $user->setEmail($data['email']);
@@ -50,6 +50,7 @@ class UserService
         $user
             ->setUsername($data['username'])
             ->setEmail($facebookUser['email'])
+            ->setRole("lender")
             ->setFacebookId($facebookUser['id']);
 
         $lender = new Lender();
@@ -84,6 +85,54 @@ class UserService
                 $errors[] = 'This facebook account already linked with another account on our website.';
             } else {
                 $errors[] = 'The email address linked to the facebook account is already linked with another account on our website.';
+            }
+        }
+
+        return $errors;
+    }
+
+    public function joinGoogleUser(\Google_Service_Oauth2_Userinfoplus $googleUser, $data)
+    {
+        $user = new User();
+        $user
+            ->setUsername($data['username'])
+            ->setEmail($googleUser->getEmail())
+            ->setRole("lender")
+            ->setGoogleId($googleUser->getId());
+        //TODO upload profile picture and save profile_picture_id
+
+        $lender = new Lender();
+        $lender
+            ->setUser($user)
+            ->setFirstName($googleUser->getGivenName())
+            ->setLastName($googleUser->getFamilyName())
+            // TODO
+            //->setCountry($facebookUser['location']);
+            ->setCountryId(1);
+
+        $profile = new Profile();
+        $profile->setAboutMe($data['aboutMe']);
+        $lender->setProfile($profile);
+
+        $lender->save();
+
+        return $lender;
+    }
+
+    public function validateConnectingGoogleUser(\Google_Service_Oauth2_Userinfoplus $googleUser)
+    {
+        $checkUser = $this->userQuery
+            ->filterByGoogleId($googleUser->getId())
+            ->_or()
+            ->filterByEmail($googleUser->getEmail())
+            ->findOne();
+
+        $errors = array();
+        if ($checkUser) {
+            if ($checkUser->getGoogleId() == $googleUser->getId()) {
+                $errors[] = 'This google account already linked with another account on our website.';
+            } else {
+                $errors[] = 'The email address linked to the google account is already linked with another account on our website.';
             }
         }
 
