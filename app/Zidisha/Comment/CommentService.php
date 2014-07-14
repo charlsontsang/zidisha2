@@ -14,7 +14,10 @@ abstract class CommentService
      */
     protected abstract function createComment();
 
-    protected abstract function getCommentQuery();
+    /**
+     * @return CommentQuery
+     */
+    protected abstract function createCommentQuery();
 
     public function postComment($data, User $user,CommentReceiverInterface $receiver, $files = [])
     {
@@ -58,7 +61,6 @@ abstract class CommentService
 
     public function editComment($data, User $user, Comment $comment, $files = [])
     {
-        dd($comment);
         $comment->setMessage($data['message']);
         $comment->save();
 
@@ -92,14 +94,13 @@ abstract class CommentService
 
     public function getPaginatedComments(CommentReceiverInterface $receiver, $page, $maxPerPage)
     {
-        $commentQuery = $this->getCommentQuery();
-        $roots = $commentQuery
+        $roots = $this->createCommentQuery()
             ->filterByReceiverId($receiver->getCommentReceiverId())
             ->filterByLevel(0)
             ->orderById('desc')
             ->paginate($page, $maxPerPage);
 
-        $comments = $commentQuery
+        $comments = $this->createCommentQuery()
             ->filterByRootId($roots->toKeyValue('id', 'id'))
             ->filterByLevel(['min' => 1])
             ->orderById('asc')
