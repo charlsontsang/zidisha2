@@ -3,7 +3,7 @@ namespace Zidisha\Mail;
 
 
 use Carbon\Carbon;
-use Symfony\Component\Translation\Tests\String;
+use Zidisha\Currency\Money;
 use Zidisha\Lender\GiftCard;
 use Zidisha\Lender\Invite;
 use Zidisha\Lender\Lender;
@@ -42,6 +42,32 @@ class LenderMailer
                 'to'      => $email,
                 'from'    => 'service@zidisha.com',
                 'subject' => 'Congratulations you have made your first Bid on Zidisha.'
+            ]
+        );
+    }
+
+    public function sendOutbidMail($changedBid)
+    {
+        /** @var Bid $bid*/
+        $bid = $changedBid['bid'];
+        /** @var Money $acceptedAmount */
+        $acceptedAmount = $changedBid['acceptedAmount'];
+        /** @var Money $changedAmount */
+        $changedAmount = $changedBid['changedAmount'];
+        $email = $bid->getLender()->getUser()->getEmail();
+
+        $this->mailer->send(
+            $acceptedAmount->isZero() ? 'emails.lender.loan.fully-outbid' : 'emails.lender.loan.partially-outbid',
+            [
+                'to'              => $email,
+                'from'            => 'service@zidisha.com',
+                'subject'         => 'Outbid Notification.',
+                'bidAmount'       => $bid->getBidAmount()->round(2)->getAmount(),
+                'bidInterestRate' => $bid->getInterestRate(),
+                'outbidAmount'    => $changedAmount->round(2)->getAmount(),
+                'acceptedAmount'  => $acceptedAmount->round(2)->getAmount(),
+                'borrowerLink'    => $bid->getLoan()->getBorrower()->getUser()->getProfileUrl(),
+                'borrowerName'    => $bid->getLoan()->getBorrower()->getName(),
             ]
         );
     }

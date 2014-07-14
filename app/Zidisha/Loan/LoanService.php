@@ -225,8 +225,18 @@ class LoanService
     public function placeBid(Loan $loan, Lender $lender, $data)
     {
         /** @var Bid $bid */
-        $bid = PropelDB::transaction(function($con) use($loan, $lender, $data) {
+        list($bid, $changedBids) = PropelDB::transaction(function($con) use($loan, $lender, $data) {
+            $oldBids = BidQuery::create()
+                ->getOrderedBids($loan)
+                ->find();
+            
             $bid = $this->createBid($con, $loan, $lender, $data);
+
+            $newBids = BidQuery::create()
+                ->getOrderedBids($loan)
+                ->find();
+
+            $changedBids = $this->processBids($con, $loan, $oldBids, $newBids);
 
             $totalBidAmount = BidQuery::create()
                 ->filterByLoan($loan)
@@ -235,15 +245,30 @@ class LoanService
             $loan->setRaisedAmount($totalBidAmount);
             $loan->save();
             
-            return $bid;
+            return [$bid, $changedBids];
         });
 
-        if ($bid->isFirstBid()) {
+        // Mixpanel
+        $this->mixpanelService->trackPlacedBid($bid);
+
+        // Emails
+        // First bid placed confirmation
+        $isFirstBid = BidQuery::create()
+            ->filterByLender($lender)
+            ->count() == 1;
+
+        if ($isFirstBid) {
             $this->lenderMailer->sendFirstBidConfirmationMail($bid);
         }
 
-        $this->mixpanelService->trackPlacedBid($bid);
-
+        // Outbid notification
+        foreach ($changedBids as $bidId => $changedBid) {
+            if ($changedBid['type'] == 'out_bid') {
+                $this->lenderMailer->sendOutbidMail($changedBid);
+            }
+        }
+        
+        // Fully Funded notifications
         if ($loan->isFullyFunded()) {
             $bids = BidQuery::create()
                 ->filterByLoan($loan)
@@ -258,6 +283,25 @@ class LoanService
 
         //Todo: refresh elastic search index.
         //Todo: Lender Invite Credit.
+
+        return $bid;
+    }
+
+    protected function createBid(ConnectionInterface $con, Loan $loan, Lender $lender, $data)
+    {
+        $bidAmount = Money::create($data['amount'], 'USD');
+
+        $bid = new Bid();
+        $bid
+            ->setLoan($loan)
+            ->setLender($lender)
+            ->setBorrower($loan->getBorrower())
+            ->setBidAmount($bidAmount)
+            ->setInterestRate($data['interestRate'])
+            ->setActive(true)
+            ->setBidDate(new \DateTime());
+
+        $bid->save($con);
 
         return $bid;
     }
@@ -294,33 +338,36 @@ class LoanService
         $changedBids = [];
 
         foreach ($newAcceptedBids as $bidId => $acceptedBid) {
+            /** @var Money $acceptedAmount */
             $acceptedAmount = $acceptedBid['acceptedAmount'];
+            /** @var Bid $bid */
             $bid = $acceptedBid['bid'];
             if (isset($oldAcceptedBids[$bidId])) {
+                /** @var Money $oldAcceptedAmount */
                 $oldAcceptedAmount = $oldAcceptedBids[$bidId]['acceptedAmount'];
                 if ($oldAcceptedAmount->greaterThan($acceptedAmount)) {
                     $changedBids[$bidId] = [
-                        'bid' => $bid,
+                        'bid'            => $bid,
                         'acceptedAmount' => $acceptedAmount,
-                        'type' => 'out_bid',
-                        'changedAmount' => $oldAcceptedAmount->subtract($acceptedAmount),
+                        'type'           => 'out_bid',
+                        'changedAmount'  => $oldAcceptedAmount->subtract($acceptedAmount),
                     ];
                 } else {
                     if ($oldAcceptedAmount->lessThan($acceptedAmount)) {
                         $changedBids[$bidId] = [
-                            'bid' => $bid,
+                            'bid'            => $bid,
                             'acceptedAmount' => $acceptedAmount,
-                            'type' => 'update_bid',
-                            'changedAmount' => $acceptedAmount->subtract($oldAcceptedAmount),
+                            'type'           => 'update_bid',
+                            'changedAmount'  => $acceptedAmount->subtract($oldAcceptedAmount),
                         ];
                     }
                 }
             } elseif ($acceptedAmount->greaterThan(Money::create(0))) {
                 $changedBids[$bidId] = [
-                    'bid' => $bid,
+                    'bid'            => $bid,
                     'acceptedAmount' => $acceptedAmount,
-                    'type' => 'place_bid',
-                    'changedAmount' => $acceptedAmount,
+                    'type'           => 'place_bid',
+                    'changedAmount'  => $acceptedAmount,
                 ];
             }
         }
@@ -328,34 +375,8 @@ class LoanService
         return $changedBids;
     }
 
-    protected function createBid(ConnectionInterface $con, Loan $loan, Lender $lender, $data)
+    private function processBids($con, Loan $loan, $oldBids, $newBids)
     {
-        $bidAmount = Money::create($data['amount'], 'USD');
-
-        $oldBids = BidQuery::create()
-            ->getOrderedBids($loan)
-            ->find();
-
-        $bid = new Bid();
-        $bid
-            ->setLoan($loan)
-            ->setLender($lender)
-            ->setBorrower($loan->getBorrower())
-            ->setBidAmount($bidAmount)
-            ->setInterestRate($data['interestRate'])
-            ->setActive(true)
-            ->setBidDate(new \DateTime());
-
-        $bidSuccess = $bid->save($con);
-
-        if (!$bidSuccess) {
-            throw new \Exception();
-        }
-
-        $newBids = BidQuery::create()
-            ->getOrderedBids($loan)
-            ->find();
-
         $oldAcceptedBids = $this->getAcceptedBids($oldBids, $loan->getAmount());
         $newAcceptedBids = $this->getAcceptedBids($newBids, $loan->getAmount());
         $changedBids = $this->getChangedBids($oldAcceptedBids, $newAcceptedBids);
@@ -385,7 +406,7 @@ class LoanService
             }
         }
 
-        return $bid;
+        return $changedBids;
     }
 
     public function editBid(Bid $bid, $data)
