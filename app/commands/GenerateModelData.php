@@ -612,6 +612,8 @@ class GenerateModelData extends Command
                 }
 
                 $comment->save();
+                $comment->setRootId($comment->getId());
+                $comment->save();
             }
 
             if($model == "GiftCard") {
