@@ -17,5 +17,9 @@ use Zidisha\Comment\Base\CommentQuery as BaseCommentQuery;
  */
 abstract class CommentQuery extends BaseCommentQuery
 {
+    /**
+     * @param $id
+     * @return CommentQuery
+     */
     public abstract function filterByReceiverId($id);
 } // CommentQuery
