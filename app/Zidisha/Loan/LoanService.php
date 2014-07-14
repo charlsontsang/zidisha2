@@ -435,32 +435,32 @@ class LoanService
 
     public function acceptBids(Loan $loan)
     {
-        $newBids = BidQuery::create()
+        $bids = BidQuery::create()
             ->getOrderedBids($loan)
             ->find();
 
-        $newAcceptedBids = $this->getAcceptedBids($newBids, $loan->getAmount());
+        $acceptedBids = $this->getAcceptedBids($bids, $loan->getAmount());
 
-        PropelDB::transaction(function($con) use ($newAcceptedBids, $loan) {
+        PropelDB::transaction(function($con) use ($acceptedBids, $loan) {
             $totalAmount = Money::create(0);
 
-            foreach ($newAcceptedBids as $bidId => $acceptedBid) {
+            foreach ($acceptedBids as $bidId => $acceptedBid) {
+                /** @var Money $acceptedAmount */
                 $acceptedAmount = $acceptedBid['acceptedAmount'];
+                /** @var Bid $bid */
                 $bid = $acceptedBid['bid'];
                 if ($acceptedAmount->greaterThan(Money::create(0))) {
-                    $bid->setActive(0)
+                    $bid
+                        ->setActive(0)
                         ->setAcceptedAmount($acceptedAmount);
-                    $success = $bid->save($con);
-                    if (!$success) {
-                        // Todo: Notify admin.
-                        throw new \Exception();
-                    }
+                    $bid->save($con);
                     $totalAmount = $totalAmount->add($acceptedAmount->multiply(0.01 * $bid->getInterestRate()));
                 }
             }
 
             $totalInterest = $totalAmount->divide($loan->getAmount())->round(2)->getAmount();
-            $loan->setStatus(Loan::FUNDED)
+            $loan
+                ->setStatus(Loan::FUNDED)
                 ->setInterestRate($totalInterest)
                 ->setAcceptedDate(new \DateTime())
                 ->setFinalInterestRate($totalInterest)
