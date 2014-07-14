@@ -270,7 +270,6 @@
     <table name="comments" phpName="Comment" namespace="Comment">
         <column name="id" type="INTEGER" autoIncrement="true" primaryKey="true"/>
         <column name="user_id" type="INTEGER" required="false"/>
-        <column name="borrower_id" type="INTEGER" required="true"/>
         <column name="message" type="LONGVARCHAR"/>
         <column name="message_translation" type="LONGVARCHAR" required="false"/>
         <column name="translator_id" type="INTEGER" required="false"/>
@@ -297,6 +296,17 @@
         <column name="borrower_id" type="INTEGER" required="true"/>
         <foreign-key foreignTable="borrowers">
             <reference local="borrower_id" foreign="id"/>
+        </foreign-key>
+    </table>
+
+    <table name="lender_group_comments" phpName="LenderGroupComment" namespace="Comment">
+        <behavior name="concrete_inheritance">
+            <parameter name="extends" value="comments" />
+            <parameter name="copy_data_to_parent" value="false" />
+        </behavior>
+        <column name="lending_group_id" type="INTEGER" required="true"/>
+        <foreign-key foreignTable="lending_groups">
+            <reference local="lending_group_id" foreign="id"/>
         </foreign-key>
     </table>
 
