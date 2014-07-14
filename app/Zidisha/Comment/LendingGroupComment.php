@@ -8,7 +8,7 @@ class LendingGroupComment extends BaseLendingGroupComment
 {
     public function setCommentReceiverId($comment, $id)
     {
-        $comment->setLendingGroupId($id);
+        return $comment->setLendingGroupId($id);
     }
 
     public function getCommentReceiverId()
@@ -18,7 +18,7 @@ class LendingGroupComment extends BaseLendingGroupComment
 
     public function setCommentReceiver($comment, $receiver)
     {
-        $comment->setLendingGroup($receiver);
+        return $comment->setLendingGroup($receiver);
     }
 
     public function getCommentReceiver()

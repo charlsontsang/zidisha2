@@ -9,7 +9,7 @@ class BorrowerComment extends BaseBorrowerComment
 
     public function setCommentReceiverId($comment, $id)
     {
-        $comment->setBorrowerId($id);
+        return $comment->setBorrowerId($id);
     }
 
     public function getCommentReceiverId()
@@ -19,7 +19,7 @@ class BorrowerComment extends BaseBorrowerComment
 
     public function setCommentReceiver($comment, $receiver)
     {
-        $comment->setBorrower($receiver);
+        return $comment->setBorrower($receiver);
     }
 
     public function getCommentReceiver()
