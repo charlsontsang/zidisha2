@@ -2,12 +2,12 @@
 
 use Propel\Runtime\Connection\ConnectionInterface;
 use Propel\Runtime\Propel;
-use Zidisha\Balance\Map\TransactionTableMap;
 use Zidisha\Balance\Transaction;
 use Zidisha\Currency\Money;
 use Zidisha\Lender\Lender;
 use Zidisha\Loan\Bid;
 use Zidisha\Loan\Loan;
+use Zidisha\User\Map\UserTableMap;
 
 class LoanServiceCest
 {
@@ -26,12 +26,16 @@ class LoanServiceCest
      */
     protected $con;
 
+    public function __construct()
+    {
+        $this->con = Propel::getWriteConnection(UserTableMap::DATABASE_NAME);
+    }
+
     public function _before(UnitTester $I)
     {
         $this->loanService = $I->grabService('Zidisha\Loan\LoanService');
         $this->transactionService = $I->grabService('Zidisha\Balance\TransactionService');
 
-        $this->con = Propel::getWriteConnection(TransactionTableMap::DATABASE_NAME);
         $this->con->beginTransaction();
     }
 
