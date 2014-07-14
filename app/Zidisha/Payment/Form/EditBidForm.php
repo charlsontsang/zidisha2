@@ -3,27 +3,33 @@ namespace Zidisha\Payment\Form;
 
 
 use Zidisha\Currency\Money;
-use Zidisha\Loan\Loan;
+use Zidisha\Loan\Bid;
 use Zidisha\Payment\BidPayment;
 
-class PlaceBidForm extends AbstractPaymentForm
+class EditBidForm extends AbstractPaymentForm
 {
 
     /**
      * @var \Zidisha\Loan\Loan
      */
     private $loan;
+    
+    /**
+     * @var \Zidisha\Loan\Bid
+     */
+    private $bid;
 
-    public function __construct(Loan $loan)
+    public function __construct(Bid $bid)
     {
-        $this->loan = $loan;
+        $this->bid = $bid;
+        $this->loan = $bid->getLoan();
     }
     
     public function getRules($data)
     {
         return [
-            'interestRate' => '', // TODO
-            'amount'       => '', // TODO
+            'interestRate' => 'max:' . $this->bid->getInterestRate(), // TODO
+            'amount'       => 'min:' . $this->bid->getBidAmount()->getAmount() . '|max:' . $this->loan->getAmount(), // TODO
         ] + parent::getRules($data);
     }
 
@@ -47,6 +53,7 @@ class PlaceBidForm extends AbstractPaymentForm
             ->setLoan($this->loan)
             ->setAmount(Money::create($data['amount']))
             ->setInterestRate($data['interestRate'])
+            // TODO edit bid
             ->setLender($lender);
 
         return $placeBidPayment;

@@ -233,6 +233,8 @@
                 <th>Date</th>
                 <th>Lender</th>
                 <th>Amount (USD)</th>
+                <th></th>
+                <th></th>
             </tr>
             </thead>
             <tbody>
@@ -241,7 +243,17 @@
                 <td>{{ $bid->getBidDate()->format('d-m-Y') }}</td>
                 <td><a href="{{ route('lender:public-profile', $bid->getLender()->getUser()->getUserName()) }}">{{
                         $bid->getLender()->getUser()->getUserName() }}</a></td>
-                <td>{{ $bid->getBidAmount() }}</td>
+                <td>{{ $bid->getBidAmount()->getAmount() }}</td>
+                <td>
+                    @if($bid->getLenderId() == Auth::id())
+                        {{ $bid->getInterestRate() }}% 
+                    @endif
+                </td>
+                <td>
+                    @if($bid->getLenderId() == Auth::id())
+                        <a href="{{ route('loan:edit-bid', $bid->getId()) }}"><i class="fa fa-pencil fa-fw"></i></a>
+                    @endif
+                </td>
             </tr>
             @endforeach
             </tbody>

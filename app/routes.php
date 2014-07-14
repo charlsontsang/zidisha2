@@ -143,6 +143,13 @@ Route::group(
                     'funds',
                     array('uses' => 'LenderController@postFunds', 'as' => 'lender:post-funds', 'before' => 'csrf')
                 );
+
+                /**
+                 * Routes for loan page
+                 */
+                Route::post('loan/{loanId}/place-bid', array('uses' => 'LoanController@postPlaceBid', 'as' => 'loan:place-bid', 'before' => 'csrf'));
+                Route::post('loan/{loanId}/edit-bid/{bidId}', array('uses' => 'LoanController@postEditBid', 'as' => 'loan:edit-bid', 'before' => 'csrf'));
+                
                 Route::get(
                     'gift-cards',
                     array('uses' => 'GiftCardController@getGiftCards', 'as' => 'lender:gift-cards')
@@ -318,7 +325,6 @@ Route::group(
          * Routes for loan page
          */
         Route::get('loan/{loanId}', array('uses' => 'LoanController@getIndex', 'as' => 'loan:index'));
-        Route::post('loan/{loanId}/place-bid', array('uses' => 'LoanController@placeBid', 'as' => 'loan:place-bid', 'before' => 'csrf'));
 
         /**
          * Routes for Comments controller

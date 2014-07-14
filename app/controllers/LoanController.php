@@ -14,6 +14,7 @@ use Zidisha\Loan\Loan;
 use Zidisha\Loan\LoanQuery;
 use Zidisha\Loan\BidQuery;
 use Zidisha\Loan\LoanService;
+use Zidisha\Payment\Form\EditBidForm;
 use Zidisha\Payment\Form\PlaceBidForm;
 
 class LoanController extends BaseController
@@ -69,13 +70,16 @@ class LoanController extends BaseController
 
         return View::make(
             'pages.loan',
-            compact('loan', 'borrower' , 'bids', 'comments', 'totalInterest',
-                'transactionFee', 'previousLoans'),
+            compact(
+                'loan', 'borrower',
+                'bids', 'comments', 'previousLoans',
+                'totalInterest', 'transactionFee'
+            ),
             ['placeBidForm' => $placeBidForm, 'categoryForm' =>$this->adminCategoryForm]
         );
     }
 
-    public function placeBid($loanId)
+    public function postPlaceBid($loanId)
     {
         $loan = $this->loanQuery
             ->filterById($loanId)
@@ -96,52 +100,34 @@ class LoanController extends BaseController
         return Redirect::route('loan:index',$loanId)->withForm($form);
     }
 
-    public function postEditBid()
+    public function postEditBid($loanId, $bidId)
     {
         $data = \Input::all();
 
         $lender = \Auth::user()->getLender();
 
-        $loan = LoanQuery::create()
-            ->filterById($data['loanId'])
+        $bid = BidQuery::create()
+            ->filterById($bidId)
+            ->filterByLoanId($loanId)
+            ->filterByLender($lender)
             ->findOne();
-        
-        if (!$loan) {
+
+        if (!$bid) {
             App::abort(404);
         }
-
-        $totalLoanAmount = $loan->getAmount();
-
-        $amount =  Money::valueOf($data['amount'], Currency::valueOf('USD'));
-
-        $oldBid = BidQuery::create()
-            ->filterByLender($lender)
-            ->filterByLoan($loan)
-            ->findOne();
-
-        if($oldBid->getBidAmount()->compare($amount) != -1){
-            \Flash::error(\Lang::get('Loan.edit-bid.amount'));
-            return Redirect::back()->withInput();
+        
+        $editBidForm = new EditBidForm($bid);
+        $editBidForm->handleRequest(Request::instance());
+            
+        if (!$editBidForm->isValid()) {
+            Flash::success(\Lang::get('Loan.edit-bid.failed') . $data['amount']);
+            return Redirect::route('loan:index', $bid->getLoanId());
         }
 
-        if($totalLoanAmount->getAmount() <= $data['amount']){
-            \Flash::error(\Lang::get('Loan.edit-bid.interest-rate'));
-            return Redirect::back()->withInput();
-        }
+        // TODO form->makePayment
+        $bid = $this->loanService->editBid($bid, $data);
 
-        if($data['interestRate'] <= $oldBid->getInterestRate()){
-            \Flash::error(\Lang::get('Loan.edit-bid.bid-amount-exceded'));
-            return Redirect::back()->withInput();
-        }
-
-        $bid = BidQuery::create()
-            ->filterByLoan($loan)
-            ->filterByLender($lender)
-            ->findOne();
-
-        $this->loanService->editBid($bid, $data);
-
-        Flash::success(\Lang::get('Loan.edit-bid.success') . $data['amount']);
-        return Redirect::route('loan:index', $data['loanId']);
+        Flash::success(\Lang::get('Loan.edit-bid.success') . $bid->getBidAmount());
+        return Redirect::route('loan:index', $bid->getLoanId());
     }
 }
