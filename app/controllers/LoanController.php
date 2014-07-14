@@ -79,7 +79,7 @@ class LoanController extends BaseController
             'pages.loan',
             compact('loan', 'commentType', 'borrower', 'receiver', 'bids', 'totalRaised', 'stillNeeded', 'comments', 'raised', 'totalInterest',
                 'transactionFee', 'previousLoans'),
-            ['form' => $placeBidForm, 'categoryForm' =>$this->adminCategoryForm]
+            ['placeBidForm' => $placeBidForm, 'categoryForm' =>$this->adminCategoryForm]
         );
     }
 
