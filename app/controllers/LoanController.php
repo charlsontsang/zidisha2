@@ -3,9 +3,9 @@
 use SupremeNewMedia\Finance\Core\Currency;
 use SupremeNewMedia\Finance\Core\Money;
 use Zidisha\Balance\TransactionQuery;
-use Zidisha\Borrower\BorrowerCommentService;
 use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Borrower\BorrowerService;
+use Zidisha\Comment\BorrowerCommentService;
 use Zidisha\Comment\CommentService;
 use Zidisha\Flash\Flash;
 use Zidisha\Lender\Exceptions\InsufficientLenderBalanceException;
@@ -30,10 +30,6 @@ class LoanController extends BaseController
     private $loanService;
     private $borrowerService;
     private $adminCategoryForm;
-    /**
-     * @var Zidisha\Borrower\BorrowerCommentService
-     */
-    private $borrowerCommentService;
 
     public function  __construct(
         LoanQuery $loanQuery,
@@ -45,7 +41,6 @@ class LoanController extends BaseController
     ) {
         $this->loanQuery = $loanQuery;
         $this->bidQuery = $bidQuery;
-        $this->borrowerCommentService = $borrowerCommentService;
         $this->loanService = $loanService;
         $this->borrowerService = $borrowerService;
         $this->adminCategoryForm = $adminCategoryForm;
@@ -63,7 +58,7 @@ class LoanController extends BaseController
             App::abort(404);
         }
 
-        $borrower = $loan->getBorrower();
+        $borrower = $receiver = $loan->getBorrower();
         $comments = $this->borrowerCommentService->getPaginatedComments($borrower, 1, 10);
 
         $bids = $this->bidQuery->create()
@@ -77,9 +72,12 @@ class LoanController extends BaseController
 
         $placeBidForm = new PlaceBidForm($loan);
 
+
+        $commentType = 'borrowerComment';
+
         return View::make(
             'pages.loan',
-            compact('loan', 'borrower' , 'bids', 'totalRaised', 'stillNeeded', 'comments', 'raised', 'totalInterest',
+            compact('loan', 'commentType', 'borrower', 'receiver', 'bids', 'totalRaised', 'stillNeeded', 'comments', 'raised', 'totalInterest',
                 'transactionFee', 'previousLoans'),
             ['form' => $placeBidForm, 'categoryForm' =>$this->adminCategoryForm]
         );
