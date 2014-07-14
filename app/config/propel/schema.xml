@@ -280,9 +280,6 @@
         <foreign-key foreignTable="users" phpName="User">
             <reference local="user_id" foreign="id"/>
         </foreign-key>
-        <foreign-key foreignTable="comments">
-            <reference local="parent_id" foreign="id"/>
-        </foreign-key>
         <foreign-key foreignTable="users" phpName="Translator">
             <reference local="translator_id" foreign="id"/>
         </foreign-key>
@@ -297,6 +294,12 @@
         <foreign-key foreignTable="borrowers">
             <reference local="borrower_id" foreign="id"/>
         </foreign-key>
+        <foreign-key foreignTable="borrower_comments" phpName="Parent">
+            <reference local="parent_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="borrower_comments" phpName="Root">
+            <reference local="root_id" foreign="id"/>
+        </foreign-key>
     </table>
 
     <table name="lending_group_comments" phpName="LendingGroupComment" namespace="Comment">
@@ -307,6 +310,12 @@
         <column name="lending_group_id" type="INTEGER" required="true"/>
         <foreign-key foreignTable="lending_groups">
             <reference local="lending_group_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="lending_group_comments" phpName="Parent">
+            <reference local="parent_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="lending_group_comments" phpName="Root">
+            <reference local="root_id" foreign="id"/>
         </foreign-key>
     </table>
 

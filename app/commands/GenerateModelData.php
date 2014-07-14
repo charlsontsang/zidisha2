@@ -10,6 +10,7 @@ use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Borrower\JoinLog;
 use Zidisha\Borrower\VolunteerMentor;
 use Zidisha\Borrower\VolunteerMentorQuery;
+use Zidisha\Comment\BorrowerComment;
 use Zidisha\Comment\Comment;
 use Zidisha\Country\Country;
 use Zidisha\Country\CountryQuery;
@@ -596,7 +597,7 @@ class GenerateModelData extends Command
                 $user = $allBorrowers[array_rand($allBorrowers)];
                 $isTranslated = $randArray[array_rand($randArray)];
 
-                $comment = new Comment();
+                $comment = new BorrowerComment();
 
                 $comment->setBorrower($borrower)
                     ->setUser($user->getUser())
@@ -610,6 +611,8 @@ class GenerateModelData extends Command
                     $comment->setUser($borrower->getUser());
                 }
 
+                $comment->save();
+                $comment->setRootId($comment->getId());
                 $comment->save();
             }
 

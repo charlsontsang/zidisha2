@@ -72,6 +72,11 @@ class LendingGroupController extends BaseController
             App::abort(404);
         }
 
+        $page = 1;
+        if (Input::has('page')) {
+            $page = Input::get('page');
+        }
+
         $members = LendingGroupMemberQuery::create()
             ->filterByLendingGroup($group)
             ->filterByLeaved(false)
@@ -79,7 +84,7 @@ class LendingGroupController extends BaseController
         $membersCount = count($members);
         $leaderId = $group->getLeader()->getId();
 
-        $comments = $this->lenderGroupCommentService->getPaginatedComments($group, 1, 10);
+        $comments = $this->lenderGroupCommentService->getPaginatedComments($group, $page, 10);
 
         $commentType = 'lendingGroupComment';
 
