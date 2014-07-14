@@ -322,10 +322,17 @@
         </foreign-key>
     </table>
 
-    <table name="comment_upload" namespace="Comment" isCrossRef="true">
+    <table name="borrower_comment_uploads" namespace="Comment" isCrossRef="true">
         <column name="comment_id" type="INTEGER" required="true" primaryKey="true"/>
         <column name="upload_id" type="INTEGER" required="true" primaryKey="true"/>
-        <foreign-key foreignTable="comments" phpName="Comment">
+        <foreign-key foreignTable="borrower_comments" phpName="BorrowerComment">
+            <reference local="comment_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="uploads" phpName="Upload">
+            <reference local="upload_id" foreign="id"/>
+        </foreign-key>
+    </table>
+
             <reference local="comment_id" foreign="id"/>
         </foreign-key>
         <foreign-key foreignTable="uploads" phpName="Upload">
