@@ -3,12 +3,10 @@
 namespace Zidisha\Borrower\Form\Loan;
 
 use Zidisha\Borrower\Borrower;
-use Zidisha\Borrower\Form\Validator\LoanValidator;
 use Zidisha\Currency\ExchangeRateQuery;
 use Zidisha\Form\AbstractForm;
 use Zidisha\Loan\Calculator\LoanCalculator;
 use Zidisha\Loan\CategoryQuery;
-use Zidisha\Loan\CategoryTranslation;
 use Zidisha\Loan\CategoryTranslationQuery;
 use Zidisha\Loan\Loan;
 
@@ -33,6 +31,8 @@ class ApplicationForm extends AbstractForm
      * @var mixed|\Zidisha\Currency\ExchangeRate
      */
     protected $exchangeRate;
+
+    protected $validatorClass = 'Zidisha\Borrower\Form\Validator\LoanValidator';
 
     public function __construct(Borrower $borrower)
     {
@@ -104,16 +104,5 @@ class ApplicationForm extends AbstractForm
     public function getDefaultData()
     {
         return \Session::get('loan_data');
-    }
-
-    protected function validate($data, $rules)
-    {
-        \Validator::resolver(
-            function ($translator, $data, $rules, $messages, $parameters) {
-                return new LoanValidator($translator, $data, $rules, $messages, $parameters);
-            }
-        );
-
-        parent::validate($data, $rules);
     }
 }

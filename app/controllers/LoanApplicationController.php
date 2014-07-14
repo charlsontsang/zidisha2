@@ -103,7 +103,6 @@ class LoanApplicationController extends BaseController
 
     public function getPublish()
     {
-
         $data = Session::get('loan_data');
 
         return $this->stepView('publish', compact('data'));
@@ -111,7 +110,6 @@ class LoanApplicationController extends BaseController
 
     public function postPublish()
     {
-
         $data = Session::get('loan_data');
 
         $borrower = Auth::user()->getBorrower();

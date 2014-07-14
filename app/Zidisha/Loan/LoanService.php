@@ -74,8 +74,13 @@ class LoanService
             ->setBorrower($borrower)
             ->setStatus(Loan::OPEN);
         
-        PropelDB::transaction(function($con) use ($loan) {
+        $borrower
+            ->setActiveLoan($loan)
+            ->setLoanStatus(Loan::OPEN);
+        
+        PropelDB::transaction(function($con) use ($loan, $borrower) {
             $loan->save($con);
+            $borrower->save();
 
             $this->changeLoanStage($con, $loan, null, Loan::OPEN);
         });
@@ -84,6 +89,8 @@ class LoanService
         // TODO send mail to lenders
         
         $this->addToLoanIndex($loan);
+        
+        return $loan;
     }
 
     protected function getLoanIndex()

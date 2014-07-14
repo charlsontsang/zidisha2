@@ -167,31 +167,35 @@ class LoanServiceCest
         $con = Propel::getWriteConnection(TransactionTableMap::DATABASE_NAME);
         $con->beginTransaction();
 
-
         $borrower = \Zidisha\Borrower\BorrowerQuery::create()
-            ->findOneById(12);
+            ->filterByLoanStatus(Loan::NO_LOAN)
+            ->findOne();
 
         $borrowerId = $borrower->getId();
         $data = [
-            'categoryId' => '7',
-            'amount' => '798097',
-            'summary' => 'suasdasd',
-            'proposal' => 'asdasda',
+            'categoryId'        => '7',
+            'amount'            => '798097',
+            'summary'           => 'suasdasd',
+            'proposal'          => 'asdasda',
             'installmentAmount' => '2312',
-            'installmentDay' => '1',
-            'amountRaised' => 0,
-            'interestRate' => 10
+            'installmentDay'    => '1',
         ];
 
         try {
-            $this->loanService->applyForLoan($borrower, $data);
-
-            $LoanCount = \Zidisha\Loan\LoanQuery::create()
+            $oldLoanCount = \Zidisha\Loan\LoanQuery::create()
                 ->filterByStatus(Loan::OPEN)
                 ->filterByBorrowerId($borrowerId)->count();
+            
+            $loan = $this->loanService->applyForLoan($borrower, $data);
 
-
-            verify($LoanCount)->greaterThan(0);
+            verify($borrower->getLoanStatus())->equals(Loan::OPEN);
+            verify($borrower->getActiveLoanId())->equals($loan->getId());
+            
+            $loanCount = \Zidisha\Loan\LoanQuery::create()
+                ->filterByStatus(Loan::OPEN)
+                ->filterByBorrowerId($borrowerId)->count();
+            
+            verify($loanCount)->equals($oldLoanCount + 1);
         } catch (\Exception $e){
             $con->rollBack();
             throw $e;

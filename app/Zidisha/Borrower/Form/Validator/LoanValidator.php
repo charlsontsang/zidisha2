@@ -1,9 +1,9 @@
 <?php
 namespace Zidisha\Borrower\Form\Validator;
 
-use Illuminate\Validation\Validator;
+use Zidisha\Form\ZidishaValidator;
 
-class LoanValidator extends Validator
+class LoanValidator extends ZidishaValidator
 {
     public function validateGreaterThan($attribute, $value, $parameters)
     {
