@@ -53,6 +53,7 @@
         <column name="registration_fee" type="DECIMAL" size="10" scale="2" defaultValue="0.00" phpType="string"/>
         <column name="installment_period" type="ENUM" valueSet="monthly, weekly"/>
         <column name="repayment_instructions" type="LONGVARCHAR" required="false"/>
+        <column name="accept_bids_note" type="LONGVARCHAR" required="false"/>
         <column name="language_code" type="VARCHAR" size="10"/>
         <behavior name="timestampable"/>
         <index name="name">
