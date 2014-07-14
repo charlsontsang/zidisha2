@@ -19,12 +19,13 @@ return [
         ],
         'site.countriesCodesBlockedFromUploadFunds' =>[
             'default' => 'CN,ID,SG',
-            'label' => 'Countries Codes Blocked From Upload Funds',
-            'rule'  => ['regex:/^[A-Z,]+$/'],
+            'label'   => 'Countries Codes Blocked From Upload Funds',
+            'rule'    => ['regex:/^[A-Z,]+$/'],
         ],
         'site.paymentTransactionFeeRate' =>[
-            'label' => 'Payment Transaction Fee Rate',
-            'rule'  => 'numeric',
+            'label'   => 'Payment Transaction Fee Rate',
+            'default' => '3.5',
+            'rule'    => 'numeric',
         ],
     ],
     'Loan' => [
