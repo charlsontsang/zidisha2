@@ -458,7 +458,7 @@ class LoanService
                 }
             }
 
-            $totalInterest = $totalAmount->divide($loan->getAmount())->round(2)->getAmount();
+            $totalInterest = $totalAmount->divide($loan->getAmount()->getAmount())->round(2)->getAmount();
             $loan
                 ->setStatus(Loan::FUNDED)
                 ->setInterestRate($totalInterest)
