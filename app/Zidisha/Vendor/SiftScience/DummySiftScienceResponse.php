@@ -4,7 +4,7 @@ namespace Zidisha\Vendor\SiftScience;
 
 class DummySiftScienceResponse
 {
-    protected $body;
+    public $body;
 
     public function isOk()
     {

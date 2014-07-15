@@ -14,7 +14,7 @@ class SiftScienceService
 
     public function __construct()
     {
-        if (\App::environment() == 'local') {
+        if (\App::environment() != 'production') { // TODO
             $this->sift = new DummySiftScienceClient();
         } else {
             $this->sift = new SiftClient(\Setting::get('sift-science.api'));
