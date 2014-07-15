@@ -70,9 +70,8 @@ class LoanService
         $loanCategory = CategoryQuery::create()
             ->findOneById($data['categoryId']);
 
-        $data['nativeAmount'] = $data['amount']; // TODO
-        $data['amount'] = Converter::toUSD(
-            Money::create($data['nativeAmount'], $data['currencyCode']),
+        $data['usdAmount'] = Converter::toUSD(
+            Money::create($data['amount'], $data['currencyCode']),
             $exchangeRate
         )->getAmount();
 
@@ -254,7 +253,7 @@ class LoanService
                 ->filterByLoan($loan)
                 ->getTotalBidAmount();
             
-            $loan->setRaisedAmount($totalBidAmount);
+            $loan->setRaisedUsdAmount($totalBidAmount);
             $loan->save();
             
             return [$bid, $changedBids];

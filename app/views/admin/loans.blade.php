@@ -31,7 +31,7 @@ Loans
         <td><a href="{{ route('loan:index', $loan->getId()) }}">{{
                 $loan->getSummary() }}</a>
 
-            <p>{{ $loan->getAmount() }} USD</p>
+            <p>{{ $loan->getUsdAmount() }} USD</p>
 
             <p>{{ Request::query('status')?: 'Fund Raising' }}</p>
         </td>

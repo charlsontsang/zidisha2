@@ -31,9 +31,9 @@ class Loan extends BaseLoan
         $loan->setProposal($data['proposal']);
 
         $loan->setCurrencyCode($data['currencyCode']);
-        $loan->setNativeAmount(Money::create($data['nativeAmount'], $currency));
+        $loan->setAmount(Money::create($data['amount'], $currency));
 
-        $loan->setAmount(Money::create($data['amount'], 'USD'));
+        $loan->setUsdAmount(Money::create($data['usdAmount'], 'USD'));
         $loan->setRegistrationFeeRate('5');
         $loan->setInstallmentPeriod('monthly'); // TODO $borrower->getCountry()->getInstallmentPeriod()
         $loan->setInterestRate(20); // TODO
@@ -48,18 +48,18 @@ class Loan extends BaseLoan
     /**
      * @return Money
      */
-    public function getNativeAmount()
+    public function getUsdAmount()
     {
-        return Money::create(parent::getNativeAmount(), $this->getCurrencyCode());
+        return Money::create(parent::getUsdAmount(), 'USD');
     }
 
     /**
      * @param Money $money
      * @return $this|Loan
      */
-    public function setNativeAmount($money)
+    public function setUsdAmount($money)
     {
-        return parent::setNativeAmount($money->getAmount());
+        return parent::setUsdAmount($money->getAmount());
     }
 
     /**
@@ -67,7 +67,7 @@ class Loan extends BaseLoan
      */
     public function getAmount()
     {
-        return Money::create(parent::getAmount(), 'USD');
+        return Money::create(parent::getAmount(), $this->getCurrencyCode());
     }
 
     /**
@@ -104,7 +104,7 @@ class Loan extends BaseLoan
 
     public function calculateInstallmentCount(Money $nativeInstallmentAmount)
     {
-        $maxYearlyInterest = $this->getNativeAmount()->multiply($this->getInterestRate() / 100);
+        $maxYearlyInterest = $this->getAmount()->multiply($this->getInterestRate() / 100);
         
         if ($this->isWeeklyInstallment()) {
             $maxInstallmentInterest = $maxYearlyInterest->divide(52);
@@ -114,41 +114,41 @@ class Loan extends BaseLoan
         
         $maxNativeInstallmentAmount = $nativeInstallmentAmount->subtract($maxInstallmentInterest);
         
-        $installmentCount = ceil($this->getNativeAmount()->getAmount() / $maxNativeInstallmentAmount->getAmount());
+        $installmentCount = ceil($this->getAmount()->getAmount() / $maxNativeInstallmentAmount->getAmount());
 
         return $this->setInstallmentCount($installmentCount);
     }
 
     /**
-     * @param Money $totalBidAmount
+     * @param Money $raisedUsdAmount
      * @return $this|Loan
      */
-    public function setRaisedAmount($totalBidAmount)
+    public function setRaisedUsdAmount($raisedUsdAmount)
     {
-        if ($totalBidAmount->lessThan($this->getAmount())) {
-            $raisedPercentage = $totalBidAmount
-                ->divide($this->getAmount()->getAmount())
+        if ($raisedUsdAmount->lessThan($this->getUsdAmount())) {
+            $raisedPercentage = $raisedUsdAmount
+                ->divide($this->getUsdAmount()->getAmount())
                 ->multiply(100)->round(2)
                 ->getAmount();
         } else {
             $raisedPercentage = 100;
         }
-
+        
         $this->setRaisedPercentage($raisedPercentage);
-        return parent::setRaisedAmount($raisedPercentage);
+        return parent::setRaisedUsdAmount($raisedUsdAmount->getAmount());
     }
 
     /**
      * @return Money
      */
-    public function getRaisedAmount()
+    public function getRaisedUsdAmount()
     {
-        return Money::create(parent::getRaisedAmount(), 'USD');
+        return Money::create(parent::getRaisedUsdAmount(), 'USD');
     }
     
-    public function getStillNeededAmount()
+    public function getStillNeededUsdAmount()
     {
-        return $this->getAmount()->subtract($this->getRaisedAmount())->max(Money::create(0));
+        return $this->getUsdAmount()->subtract($this->getRaisedUsdAmount())->max(Money::create(0));
     }
 
     public function isWeeklyInstallment()
@@ -168,6 +168,6 @@ class Loan extends BaseLoan
 
     public function isFullyFunded()
     {
-        return !$this->getAmount()->greaterThan($this->getRaisedAmount());
+        return !$this->getAmount()->greaterThan($this->getRaisedUsdAmount());
     }
 }

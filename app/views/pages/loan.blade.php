@@ -258,8 +258,8 @@
             @endforeach
             </tbody>
         </table>
-        <strong>Raised: </strong> USD {{ $loan->getRaisedAmount()->getAmount() }}
-        <strong>Still Needed: </strong> USD {{ $loan->getStillNeededAmount() }}
+        <strong>Raised: </strong> USD {{ $loan->getRaisedUsdAmount()->getAmount() }}
+        <strong>Still Needed: </strong> USD {{ $loan->getStillNeededUsdAmount() }}
 
         @if(Auth::check() && Auth::getUser()->isAdmin())
         <br><br>

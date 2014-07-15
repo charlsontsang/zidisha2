@@ -115,7 +115,7 @@
 
                         <p>{{ Zidisha\Utility\Utility::truncate($loan->getProposal(), 200,
                             array('exact' => false)) }} <a href="{{ route('loan:index', $loan->getId()) }}">Read More</a></p>
-                        <strong>@lang('lend.loan.amount'): </strong> {{ $loan->getAmount() }} USD
+                        <strong>@lang('lend.loan.amount'): </strong> {{ $loan->getUsdAmount() }} USD
                         <strong>@lang('lend.loan.interest-rate'): </strong> {{ $loan->getInterestRate() }} %
                         @include('partials/_progress', [ 'raised' => $loan->getRaisedPercentage() ])
                     </li>

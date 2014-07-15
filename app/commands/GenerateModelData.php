@@ -473,19 +473,18 @@ class GenerateModelData extends Command
                 $data = array();
                 $data['summary'] = $faker->sentence(8);
                 $data['proposal'] = $faker->paragraph(7);
-                $data['nativeAmount'] = $amount;
+                $data['amount'] = $amount;
                 $data['currencyCode'] = 'KES';
-                $data['amount'] = $amount / 2;
+                $data['usdAmount'] = $amount / 2;
                 $installmentAmount = (int)$data['amount'] / 12;
                 $data['installmentAmount'] = $installmentAmount;
                 $data['registrationFeeRate'] = '5';
                 $data['applicationDate'] = new \DateTime();
                 $data['installmentDay'] = $installmentDay;
                 $data['categoryId'] = $loanCategory->getId();
-                $data['amountRaised'] = 40;
+                $data['raisedUsdAmount'] = $data['usdAmount']/rand(2, 6);
 
                 if ($i < $status) {
-                    $data['amountRaised'] = 0;
                     $loanService->applyForLoan($borrower, $data);
                     continue;
                 }
@@ -498,6 +497,8 @@ class GenerateModelData extends Command
                 $Stage->setLoan($Loan);
                 $Stage->setBorrower($borrower);
 
+                $Loan->setRaisedUsdAmount(Money::create($data['raisedUsdAmount']));
+
                 if ($i < ($status * 3)) {
                     $borrower->setLoanStatus(Loan::FUNDED);
                     $borrower->setActiveLoan($Loan);
@@ -509,7 +510,6 @@ class GenerateModelData extends Command
                     $borrower->setLoanStatus(Loan::ACTIVE);
                     $borrower->setActiveLoan($Loan);
                     $Loan->setStatus(Loan::ACTIVE);
-                    $Loan->setRaisedAmount(Money::create($amount - $amount/3));
                     $Loan->setDisbursedDate(new \DateTime());
                     $Stage->setStatus(Loan::ACTIVE);
                 } elseif ($i < ($status * 5)) {
