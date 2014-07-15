@@ -478,7 +478,6 @@ class GenerateModelData extends Command
                 $data['usdAmount'] = $amount / 2;
                 $installmentAmount = (int)$data['amount'] / 12;
                 $data['installmentAmount'] = $installmentAmount;
-                $data['registrationFeeRate'] = '5';
                 $data['applicationDate'] = new \DateTime();
                 $data['installmentDay'] = $installmentDay;
                 $data['categoryId'] = $loanCategory->getId();

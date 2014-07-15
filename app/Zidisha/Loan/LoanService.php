@@ -4,7 +4,6 @@ namespace Zidisha\Loan;
 
 use Propel\Runtime\Connection\ConnectionInterface;
 use Zidisha\Analytics\MixpanelService;
-use Zidisha\Balance\Map\TransactionTableMap;
 use Zidisha\Balance\TransactionQuery;
 use Zidisha\Balance\TransactionService;
 use Zidisha\Borrower\Borrower;
@@ -79,9 +78,17 @@ class LoanService
 
         $loan = Loan::createFromData($data);
 
+        $isFirstLoan = LoanQuery::create()
+            ->filterByBorrower($borrower)
+            ->filterByStatus(Loan::REPAID) // TODO correct?
+            ->count();
+
+        $registrationFee = $isFirstLoan ? $borrower->getCountry()->getRegistrationFee() : 0; 
+        
         $loan
             ->setCategory($loanCategory)
             ->setBorrower($borrower)
+            ->setRegistrationFee($registrationFee)
             ->setStatus(Loan::OPEN)
             ->setSiftScienceScore($siftScienceScore);
         

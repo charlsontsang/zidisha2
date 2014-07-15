@@ -34,7 +34,6 @@ class Loan extends BaseLoan
         $loan->setAmount(Money::create($data['amount'], $currency));
 
         $loan->setUsdAmount(Money::create($data['usdAmount'], 'USD'));
-        $loan->setRegistrationFeeRate('5');
         $loan->setInstallmentPeriod('monthly'); // TODO $borrower->getCountry()->getInstallmentPeriod()
         $loan->setInterestRate(20); // TODO
 
