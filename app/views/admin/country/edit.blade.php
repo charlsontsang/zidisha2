@@ -26,7 +26,7 @@ Edit Country
 
     {{ BootstrapForm::textarea('repayment_instructions', null, ['label' => 'Repayment Instructions', 'description' => "This instruction is included in disbursement confirmation emails sent to borrowers and displayed in borrowers' accounts."]) }}
 
-    {{ BootstrapForm::textarea('accept_bids_note', null, ['label' => 'Accept Bid Notes']) }}
+    {{ BootstrapForm::textarea('accept_bids_note', null, ['label' => 'Accept Bids Note']) }}
 
     {{ BootstrapForm::submit('Submit') }}
 
