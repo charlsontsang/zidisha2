@@ -314,6 +314,8 @@ Route::group(
                     array('uses' => 'BorrowerController@resendVerificationMail', 'as' => 'borrower:resend:verification')
                 );
 
+                Route::get('loan/{loanId}', [ 'uses' => 'BorrowerLoanController@getLoanInformation', 'as' => 'borrower:loan-information' ] );
+                Route::post('loan/{loanId}/accept-bids', 'BorrowerLoanController@postAcceptBids');
             }
         );
 
