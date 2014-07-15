@@ -96,6 +96,7 @@
         <column name="installment_period" type="ENUM" valueSet="monthly, weekly"/>
         <column name="installment_count" type="INTEGER"/>
         <column name="accept_bids_note" type="LONGVARCHAR" required="false"/>
+        <column name="sift_science_score" type="DECIMAL" required="false"/>
         <behavior name="timestampable"/>
         <foreign-key foreignTable="loan_categories" phpName="Category">
             <reference local="category_id" foreign="id"/>
