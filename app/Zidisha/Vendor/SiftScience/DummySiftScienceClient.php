@@ -1,7 +1,7 @@
 <?php
 namespace Zidisha\Vendor\SiftScience;
 
-class dummySiftScience
+class DummySiftScienceClient
 {
     public function track($event, $properties)
     {
@@ -44,8 +44,8 @@ class dummySiftScience
             }
         );
 
-        $response = new dummySiftResponse();
-        $response->setBody([ 'score' => '0.03030' ]);
+        $response = new DummySiftScienceResponse();
+        $response->setBody([ 'score' => rand(0, 10) / 10 ]);
 
         return $response ;
     }

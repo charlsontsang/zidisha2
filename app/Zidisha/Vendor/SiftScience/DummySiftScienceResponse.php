@@ -2,7 +2,7 @@
 
 namespace Zidisha\Vendor\SiftScience;
 
-class dummySiftResponse
+class DummySiftScienceResponse
 {
     protected $body;
 

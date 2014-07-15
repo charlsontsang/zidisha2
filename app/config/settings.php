@@ -64,7 +64,7 @@ return [
             'label' => 'Stripe Secret Key',
         ],
         'sift-science.api' => [
-            'label' => 'Sift Science Api keys'
+            'label' => 'Sift Science Api key'
         ]
     ],
 ];
