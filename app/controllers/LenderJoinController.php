@@ -166,7 +166,6 @@ class LenderJoinController extends BaseController
     public function postGoogleJoin()
     {
         $googleUser = $this->googleService->getGoogleUser(Session::get('accessToken'));
-        Session::forget('accessToken');
 
         if ($googleUser) {
             $form = $this->joinForm;
@@ -177,15 +176,47 @@ class LenderJoinController extends BaseController
                 return Redirect::route('lender:google-join')->withForm($form);
             }
 
+
             $user = $this->lenderService->joinGoogleUser(
                 $googleUser,
                 $form->getData()
             );
 
-            return $this->join($user);
+            $contacts = $this->googleService->getContacts($googleUser, Session::get('accessToken'));
+            Session::forget('accessToken');
+
+            $response = $this->join($user);
+            if ($contacts) {
+                return View::make('lender.invite-google-contacts',
+                    compact('contacts'));
+            }
+            return $response;
         } else {
             Flash::error(\Lang::get('comments.flash.welcome'));
             return Redirect::route('lender:join');
         }
+    }
+
+    public function postGoogleInvite()
+    {
+        $emails = Input::get('emails');
+        $emails = is_array($emails) ? $emails : [];
+
+        $subject = "Join the Global P2P microLending Movement";
+        $lender = Auth::user()->getLender();
+        $custom_message = "You are Invited to join Zidisha!";
+
+        $countInvites = 0;
+        foreach ($emails as $email) {
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                continue;
+            }
+            // TODO, remove already existing user and remove emails that are aready invited before
+            $countInvites += 1;
+            $this->lenderService->lenderInviteViaEmail($lender, $email, $subject, $custom_message);
+        }
+
+        Flash::success(\Lang::choice('comments.flash.invite-success', $countInvites, array('count' => $countInvites)));
+        return Redirect::route('lender:invite');
     }
 }

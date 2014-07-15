@@ -78,6 +78,10 @@ Route::group(
             'lender/google/join',
             array('uses' => 'LenderJoinController@postGoogleJoin','as' => 'lender:post-google-join', 'before' => 'csrf')
         );
+        Route::post(
+            'lender/google/invite',
+            array('uses' => 'LenderJoinController@postGoogleInvite','as' => 'lender:post-invite-google', 'before' => 'csrf')
+        );
 
         Route::get('borrower/join', array('uses' => 'BorrowerJoinController@getCountry', 'as' => 'borrower:join'));
         Route::get(
