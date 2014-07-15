@@ -4,6 +4,7 @@ namespace Zidisha\Borrower;
 
 use Zidisha\Borrower\Base\Borrower as BaseBorrower;
 use Zidisha\Comment\CommentReceiverInterface;
+use Zidisha\Loan\Loan;
 
 class Borrower extends BaseBorrower implements CommentReceiverInterface
 {
@@ -139,6 +140,6 @@ class Borrower extends BaseBorrower implements CommentReceiverInterface
 
     public function hasActiveLoan()
     {
-        return $this->getActive();
+        return (boolean) $this->getActiveLoanId();
     }
 }
