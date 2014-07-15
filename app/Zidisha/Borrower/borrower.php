@@ -137,4 +137,8 @@ class Borrower extends BaseBorrower implements CommentReceiverInterface
         return $this->getId();
     }
 
+    public function hasActiveLoan()
+    {
+        return $this->getActive();
+    }
 }
