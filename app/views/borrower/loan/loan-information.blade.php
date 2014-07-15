@@ -24,10 +24,12 @@
                 </ul>
             @endif
 
-            <h2>Accept Bid notes</h2>
+            <h2>Accept Bid note</h2>
             <p> {{ $borrower->getCountry()->getAcceptBidsNote() }} </p>
 
             {{ BootstrapForm::open(['action' => ['BorrowerLoanController@postAcceptBids', $loan->getId()], 'translationDomain' => 'borrower.accept-bids']) }}
+
+            {{ BootstrapForm::textarea('acceptBidsNote') }}
 
             {{ BootstrapForm::submit('accept-bids') }}
 
