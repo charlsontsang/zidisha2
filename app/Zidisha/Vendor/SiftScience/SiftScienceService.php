@@ -2,94 +2,88 @@
 
 namespace Zidisha\Vendor\SiftScience;
 
+use SiftClient;
 use Zidisha\Borrower\Borrower;
 use Zidisha\User\User;
 
 class SiftScienceService
 {
-    protected $siftScienceKey;
-
-    protected $siftScienceUrl;
+    protected $sift;
 
     protected $sessionId;
 
     public function __construct()
     {
-        $this->siftScienceKey = \Config::get('siftscience.api_key');
-        $this->siftScienceUrl = "https://api.siftscience.com/v203/events";
+        if (\App::environment() == 'local') {
+            $this->sift = new dummySiftScience();
+        } else {
+            $this->sift = new SiftClient(\Setting::get('sift-science.api'));
+        }
+
         $this->sessionId = \Session::getId();
     }
 
     public function sendLoginEvent(User $user)
     {
-        $data = [
-            '$type'         => '$login',
-            '$api_key'      => $this->siftScienceKey,
-            '$user_id'      => $user->getId(),
-            '$session_id'   => $this->sessionId,
-            '$login_status' => '$success',
-            '$time'         => time()
-        ];
-
-        $this->sendEvent($this->siftScienceUrl, json_encode($data));
+        $this->sift->track(
+            '$login',
+            [
+                '$user_id'      => $user->getId(),
+                '$session_id'   => $this->sessionId,
+                '$login_status' => '$success',
+                '$time'         => time()
+            ]
+        );
     }
 
     public function sendInvalidLoginEvent()
     {
-        $data = array(
-            '$type'         => '$login',
-            '$api_key'      => $this->siftScienceKey,
-            '$session_id'   => $this->sessionId,
-            '$login_status' => '$failure',
-            '$time'         => time()
+        $this->sift->track(
+            '$login',
+            [
+                '$session_id'   => $this->sessionId,
+                '$login_status' => '$failure',
+                '$time'         => time()
+            ]
         );
-
-        $this->sendEvent($this->siftScienceUrl, json_encode($data));
     }
 
     public function sendLogoutEvent(User $user)
     {
-        $data = array(
-            '$type'       => '$logout',
-            '$api_key'    => $this->siftScienceKey,
-            '$user_id'    => $user->getId(),
-            '$session_id' => $this->sessionId
+        $this->sift->track(
+            '$logout',
+            [
+                '$user_id'    => $user->getId(),
+                '$session_id' => $this->sessionId
+            ]
         );
-
-        $this->sendEvent($this->siftScienceUrl, json_encode($data));
     }
 
     public function sendBorrowerDeclinedEvent(Borrower $borrower)
     {
         $userId = $borrower->getId();
 
-        $data = array(
-            '$type'        => 'decline',
-            '$api_key'     => $this->siftScienceKey,
-            '$user_id'     => $userId,
-            '$is_bad'      => true,
-            'reasons'      => 'Declined',
-            '$description' => 'Borrower application declined',
-            '$time'        => time()
+        $this->sift->label(
+            $userId,
+            array(
+                '$is_bad'      => true,
+                '$type'        => 'decline',
+                '$user_id'     => $userId,
+                '$reasons'     => 'Declined',
+                '$description' => 'Borrower application declined',
+                '$time'        => time()
+            )
         );
-
-        $siftScienceUrl = "https://api.siftscience.com/v203/users/" . $userId . "/labels";
-        $this->sendEvent($siftScienceUrl, json_encode($data));
     }
 
-    protected function sendEvent($url, $post)
+    public function getSiftScore(User $user)
     {
-        if (\App::environment() == 'local') {
-            \Mail::send(
-                'emails.siftScience.sendData',
-                ['siftData' => $post],
-                function ($mail) {
-                    $mail
-                        ->to('siftScience@gmail.com')
-                        ->from('siftScience@zidisha.com')
-                        ->subject("siftScienceEvent");
-                }
-            );
+        $response = $this->sift->score($user->getId());
+
+        if ($response->isOk()) {
+            return $response->body['score']; // => 0.030301357270181357
+        } else {
+            throw new \Exception('sift api error');
         }
     }
 }
