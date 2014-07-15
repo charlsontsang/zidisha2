@@ -16,6 +16,7 @@ use Zidisha\Mail\BorrowerMailer;
 use Zidisha\Mail\LenderMailer;
 use Zidisha\Repayment\Installment;
 use Zidisha\Vendor\PropelDB;
+use Zidisha\Vendor\SiftScience\SiftScienceService;
 
 class LoanService
 {
@@ -38,22 +39,30 @@ class LoanService
     private $borrowerMailer;
 
     protected $loanIndex;
+    /**
+     * @var \Zidisha\Vendor\SiftScience\SiftScienceService
+     */
+    private $siftScienceService;
 
     public function __construct(
         TransactionService $transactionService,
         LenderMailer $lenderMailer,
         MixpanelService $mixpanelService,
-        BorrowerMailer $borrowerMailer
+        BorrowerMailer $borrowerMailer,
+        SiftScienceService $siftScienceService
     )
     {
         $this->transactionService = $transactionService;
         $this->lenderMailer = $lenderMailer;
         $this->mixpanelService = $mixpanelService;
         $this->borrowerMailer = $borrowerMailer;
+        $this->siftScienceService = $siftScienceService;
     }
 
     public function applyForLoan(Borrower $borrower, $data)
     {
+        $user = $borrower->getUser();
+
         $exchangeRate = ExchangeRateQuery::create()->findCurrent($borrower->getCountry()->getCurrency());
         
         $data['currencyCode'] = $borrower->getCountry()->getCurrencyCode();
@@ -67,12 +76,15 @@ class LoanService
             $exchangeRate
         )->getAmount();
 
+        $siftScienceScore = $this->siftScienceService->getSiftScore($user);
+
         $loan = Loan::createFromData($data);
 
         $loan
             ->setCategory($loanCategory)
             ->setBorrower($borrower)
-            ->setStatus(Loan::OPEN);
+            ->setStatus(Loan::OPEN)
+            ->setSiftScienceScore($siftScienceScore);
         
         $borrower
             ->setActiveLoan($loan)
