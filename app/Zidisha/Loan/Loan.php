@@ -38,7 +38,7 @@ class Loan extends BaseLoan
         $loan->setInterestRate(20); // TODO
 
         $loan->setInstallmentDay($data['installmentDay']);
-        $loan->setApplicationDate(new \DateTime());
+        $loan->setAppliedAt(new \DateTime());
         $loan->calculateInstallmentCount(Money::create($data['installmentAmount'], $currency));
 
         return $loan;
