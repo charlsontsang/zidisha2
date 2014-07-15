@@ -101,23 +101,6 @@ class Loan extends BaseLoan
         return $this->setExtraDays($extraDays);
     }
 
-    public function calculateInstallmentCount(Money $nativeInstallmentAmount)
-    {
-        $maxYearlyInterest = $this->getAmount()->multiply($this->getInterestRate() / 100);
-        
-        if ($this->isWeeklyInstallment()) {
-            $maxInstallmentInterest = $maxYearlyInterest->divide(52);
-        } else {
-            $maxInstallmentInterest = $maxYearlyInterest->divide(12);
-        }
-        
-        $maxNativeInstallmentAmount = $nativeInstallmentAmount->subtract($maxInstallmentInterest);
-        
-        $installmentCount = ceil($this->getAmount()->getAmount() / $maxNativeInstallmentAmount->getAmount());
-
-        return $this->setInstallmentCount($installmentCount);
-    }
-
     /**
      * @param Money $raisedUsdAmount
      * @return $this|Loan

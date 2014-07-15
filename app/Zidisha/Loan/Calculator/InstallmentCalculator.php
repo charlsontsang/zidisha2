@@ -3,6 +3,7 @@ namespace Zidisha\Loan\Calculator;
 
 
 use Carbon\Carbon;
+use Zidisha\Currency\Money;
 use Zidisha\Loan\Loan;
 
 class InstallmentCalculator
@@ -15,6 +16,23 @@ class InstallmentCalculator
     public function __construct(Loan $loan)
     {
         $this->loan = $loan;
+    }
+
+    public function calculateInstallmentCount(Money $installmentAmount)
+    {
+        $maxYearlyInterest = $this->loan->getAmount()->multiply($this->loan->getInterestRate() / 100);
+
+        if ($this->loan->isWeeklyInstallment()) {
+            $maxInstallmentInterest = $maxYearlyInterest->divide(52);
+        } else {
+            $maxInstallmentInterest = $maxYearlyInterest->divide(12);
+        }
+
+        $minInstallmentAmount = $installmentAmount->subtract($maxInstallmentInterest);
+
+        $installmentCount = ceil($this->loan->getAmount()->getAmount() / $minInstallmentAmount->getAmount());
+
+        return $installmentCount;
     }
 
     public function yearlyInterestRateRatio()
