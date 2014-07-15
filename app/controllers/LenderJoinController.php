@@ -138,7 +138,7 @@ class LenderJoinController extends BaseController
         }
 
         Auth::login($user->getUser());
-       // return Redirect::route('lender:dashboard');
+        return Redirect::route('lender:dashboard');
     }
 
     public function getGoogleJoin()
@@ -185,11 +185,12 @@ class LenderJoinController extends BaseController
             $contacts = $this->googleService->getContacts($googleUser, Session::get('accessToken'));
             Session::forget('accessToken');
 
-            $this->join($user);
+            $response = $this->join($user);
             if ($contacts) {
                 return View::make('lender.invite-google-contacts',
                     compact('contacts'));
             }
+            return $response;
         } else {
             Flash::error(\Lang::get('comments.flash.welcome'));
             return Redirect::route('lender:join');
