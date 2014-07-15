@@ -6,9 +6,11 @@ use Zidisha\Admin\Form\FilterBorrowers;
 use Zidisha\Admin\Form\FilterLenders;
 use Zidisha\Admin\Form\FilterLoans;
 use Zidisha\Admin\Form\SettingsForm;
+use Zidisha\Admin\Form\WithdrawalRequestsForm;
 use Zidisha\Admin\Setting;
 use Zidisha\Admin\Form\TranslateForm;
 use Zidisha\Admin\Form\TranslationFeedForm;
+use Zidisha\Balance\WithdrawalRequestQuery;
 use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Borrower\BorrowerService;
 use Zidisha\Borrower\FeedbackMessageQuery;
@@ -37,6 +39,7 @@ class AdminController extends BaseController
     private $adminCategoryForm;
     protected $translateForm;
     private $lenderMailer;
+    private $withdrawalRequestsForm;
 
     public function  __construct(
         LenderQuery $lenderQuery,
@@ -53,7 +56,8 @@ class AdminController extends BaseController
         AdminCategoryForm $adminCategoryForm,
         TranslateForm $translateForm,
         TranslationFeedForm $translationFeedForm,
-        LenderMailer $lenderMailer
+        LenderMailer $lenderMailer,
+        WithdrawalRequestsForm $withdrawalRequestsForm
     ) {
         $this->lenderQuery = $lenderQuery;
         $this->$borrowerQuery = $borrowerQuery;
@@ -70,6 +74,7 @@ class AdminController extends BaseController
         $this->translateForm = $translateForm;
         $this->translationFeedForm = $translationFeedForm;
         $this->lenderMailer = $lenderMailer;
+        $this->withdrawalRequestsForm = $withdrawalRequestsForm;
     }
 
     public
@@ -460,6 +465,34 @@ class AdminController extends BaseController
 
         \Flash::success("Email successfully sent!");
         return Redirect::route('admin:get:gift-cards');
+    }
 
+    public function getWithdrawalRequests()
+    {
+        $page = Request::query('page') ? : 1;
+
+        $paginator = WithdrawalRequestQuery::create()
+            ->orderByCreatedAt('desc')
+            ->paginate($page, 10);
+
+        return View::make('admin.withdrawal-requests', compact('paginator'), ['form' => $this->withdrawalRequestsForm,]);
+    }
+
+    public function postWithdrawalRequests($withdrawalRequestId)
+    {
+        $form = $this->withdrawalRequestsForm;
+        $form->handleRequest(Request::instance());
+
+        if ($form->isValid()) {
+            $withdrawalRequest = WithdrawalRequestQuery::create()
+                ->findOneById($withdrawalRequestId);
+            $withdrawalRequest->setPaid(true);
+            $withdrawalRequest->save();
+            \Flash::success("Successfully paid!");
+            return Redirect::route('admin:get:withdrawal-requests');
+        }
+
+        \Flash::error('Some error occured!');
+        return Redirect::route('admin:get:withdrawal-requests')->withForm($form);
     }
 }

@@ -7,6 +7,8 @@ use Zidisha\Analytics\MixpanelService;
 use Zidisha\Balance\Map\TransactionTableMap;
 use Zidisha\Balance\TransactionQuery;
 use Zidisha\Balance\TransactionService;
+use Zidisha\Balance\WithdrawalRequest;
+use Zidisha\Currency\Money;
 use Zidisha\Mail\LenderMailer;
 use Zidisha\Notification\Notification;
 use Zidisha\Notification\NotificationQuery;
@@ -20,20 +22,19 @@ class LenderService
 
     private $lenderMailer;
     private $mixpanelService;
-    private $transactionService;
     private $userQuery;
-    private $lenderService;
+    private $transactionService;
 
     public function __construct(
         LenderMailer $lenderMailer,
         MixpanelService $mixpanelService,
-        TransactionService $transactionService,
-        UserQuery $userQuery
+        UserQuery $userQuery,
+        TransactionService $transactionService
     ) {
         $this->lenderMailer = $lenderMailer;
         $this->mixpanelService = $mixpanelService;
-        $this->transactionService = $transactionService;
         $this->userQuery = $userQuery;
+        $this->transactionService = $transactionService;
     }
 
     public function editProfile(Lender $lender, $data)
@@ -307,5 +308,19 @@ class LenderService
         }
 
         return $errors;
+    }
+
+    public function addWithdrawRequest(Lender $lender, $data)
+    {
+        $amount = Money::create($data['withdrawAmount']);
+        $withdrawRequest = new WithdrawalRequest();
+        $withdrawRequest->setLender($lender)
+            ->setAmount($amount)
+            ->setPaypalEmail($data['paypalEmail']);
+
+        PropelDB::transaction(function($con) use ($lender, $amount, $withdrawRequest) {
+                $this->transactionService->addWithdrawFundTransaction($con, $amount, $lender);
+                $withdrawRequest->save($con);
+            });
     }
 }

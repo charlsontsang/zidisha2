@@ -198,6 +198,14 @@ Route::group(
                         'before' => 'csrf'
                     )
                 );
+                Route::post(
+                    'withdraw',
+                    array(
+                        'uses'   => 'LenderController@postWithdrawalFund',
+                        'as'     => 'lender:post-withdraw-funds',
+                        'before' => 'csrf'
+                    )
+                );
                 Route::get(
                     '/gift-cards/track',
                     array(
@@ -538,6 +546,16 @@ Route::group(
                 Route::post(
                     'pending-disbursements/disbursed',
                     ['uses' => 'PendingDisbursementsController@postDisburse']
+                );
+
+                Route::get(
+                    'withdrawal-requests',
+                    array('uses' => 'AdminController@getWithdrawalRequests', 'as' => 'admin:get:withdrawal-requests')
+                );
+                Route::get(
+                    'withdrawal-requests/{withdrawalRequestId}/pay',
+                    array('uses' => 'AdminController@postWithdrawalRequests', 'as' => 'admin:post:withdrawal-requests')
+
                 );
             }
         );

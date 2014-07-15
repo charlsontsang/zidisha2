@@ -98,13 +98,13 @@ class GenerateModelData extends Command
             $this->call('fake', array('model' => 'Country', 'size' => 10));
             $this->call('fake', array('model' => 'Category', 'size' => 10));
             $this->call('fake', array('model' => 'Admin', 'size' => 1));
-            $this->call('fake', array('model' => 'Borrower', 'size' => 200));
+            $this->call('fake', array('model' => 'Borrower', 'size' => 20));
             $this->call('fake', array('model' => 'Lender', 'size' => 50));
             $this->call('fake', array('model' => 'ExchangeRate', 'size' => 30));
-            $this->call('fake', array('model' => 'Loan', 'size' => 150));
-            $this->call('fake', array('model' => 'Bid', 'size' => 50));
+            //$this->call('fake', array('model' => 'Loan', 'size' => 150));
+            //$this->call('fake', array('model' => 'Bid', 'size' => 50));
             $this->call('fake', array('model' => 'Transaction', 'size' => 200));
-            $this->call('fake', array('model' => 'Installment', 'size' => 200));
+            //$this->call('fake', array('model' => 'Installment', 'size' => 200));
             $this->call('fake', array('model' => 'Invite', 'size' => 200));
             $this->call('fake', array('model' => 'Comment', 'size' => 200));
             $this->call('fake', array('model' => 'GiftCard', 'size' => 100));
@@ -547,12 +547,12 @@ class GenerateModelData extends Command
             if ($model == "Transaction") {
 
                 $oneLender = $allLenders[array_rand($allLenders->getData())];
-                $oneLoan = $allLoans[array_rand($allLoans->getData())];
+                //$oneLoan = $allLoans[array_rand($allLoans->getData())];
 
                 $transaction = new Transaction();
                 $transaction->setUser($oneLender->getUser());
                 $transaction->setAmount(Money::create(rand(-100, 200), 'USD'));
-                $transaction->setLoan($oneLoan);
+                //$transaction->setLoan($oneLoan);
                 $transaction->setDescription('description');
                 $transaction->setTransactionDate(new \DateTime());
                 $transaction->setType(Transaction::FUND_WITHDRAW);
