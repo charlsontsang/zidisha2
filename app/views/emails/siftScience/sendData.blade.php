@@ -1,3 +1,4 @@
 <pre>
-    {{ $siftData }}
+    {{ var_dump($siftData) }}
+    {{ var_dump($type) }}
 </pre>
