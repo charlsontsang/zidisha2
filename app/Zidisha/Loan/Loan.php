@@ -22,28 +22,6 @@ class Loan extends BaseLoan
     const WEEKLY_INSTALLMENT  = 'weekly';
     const MONTHLY_INSTALLMENT = 'monthly';
 
-    public static function createFromData($data)
-    {
-        $currency = $data['currencyCode'];
-
-        $loan = new Loan();
-        $loan->setSummary($data['summary']);
-        $loan->setProposal($data['proposal']);
-
-        $loan->setCurrencyCode($data['currencyCode']);
-        $loan->setAmount(Money::create($data['amount'], $currency));
-
-        $loan->setUsdAmount(Money::create($data['usdAmount'], 'USD'));
-        $loan->setInstallmentPeriod('monthly'); // TODO $borrower->getCountry()->getInstallmentPeriod()
-        $loan->setInterestRate(20); // TODO
-
-        $loan->setInstallmentDay($data['installmentDay']);
-        $loan->setAppliedAt(new \DateTime());
-        $loan->calculateInstallmentCount(Money::create($data['installmentAmount'], $currency));
-
-        return $loan;
-    }
-
     /**
      * @return Money
      */

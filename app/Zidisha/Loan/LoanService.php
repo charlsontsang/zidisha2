@@ -11,6 +11,7 @@ use Zidisha\Currency\Converter;
 use Zidisha\Currency\ExchangeRateQuery;
 use Zidisha\Currency\Money;
 use Zidisha\Lender\Lender;
+use Zidisha\Loan\Calculator\InstallmentCalculator;
 use Zidisha\Mail\BorrowerMailer;
 use Zidisha\Mail\LenderMailer;
 use Zidisha\Repayment\Installment;
@@ -60,37 +61,7 @@ class LoanService
 
     public function applyForLoan(Borrower $borrower, $data)
     {
-        $user = $borrower->getUser();
-
-        $exchangeRate = ExchangeRateQuery::create()->findCurrent($borrower->getCountry()->getCurrency());
-        
-        $data['currencyCode'] = $borrower->getCountry()->getCurrencyCode();
-
-        $loanCategory = CategoryQuery::create()
-            ->findOneById($data['categoryId']);
-
-        $data['usdAmount'] = Converter::toUSD(
-            Money::create($data['amount'], $data['currencyCode']),
-            $exchangeRate
-        )->getAmount();
-
-        $siftScienceScore = $this->siftScienceService->getSiftScore($user);
-
-        $loan = Loan::createFromData($data);
-
-        $isFirstLoan = LoanQuery::create()
-            ->filterByBorrower($borrower)
-            ->filterByStatus(Loan::REPAID) // TODO correct?
-            ->count();
-
-        $registrationFee = $isFirstLoan ? $borrower->getCountry()->getRegistrationFee() : 0; 
-        
-        $loan
-            ->setCategory($loanCategory)
-            ->setBorrower($borrower)
-            ->setRegistrationFee($registrationFee)
-            ->setStatus(Loan::OPEN)
-            ->setSiftScienceScore($siftScienceScore);
+        $loan = $this->createLoan($borrower, $data);
         
         $borrower
             ->setActiveLoan($loan)
@@ -98,16 +69,58 @@ class LoanService
         
         PropelDB::transaction(function($con) use ($loan, $borrower) {
             $loan->save($con);
-            $borrower->save();
+            $borrower->save($con);
 
             $this->changeLoanStage($con, $loan, null, Loan::OPEN);
         });
 
         $this->borrowerMailer->sendLoanConfirmation($borrower, $loan);
-        // TODO send mail to lenders
+        // TODO send mail to previous lenders
         
         $this->addToLoanIndex($loan);
         
+        return $loan;
+    }
+
+    public function createLoan(Borrower $borrower, $data)
+    {
+        $exchangeRate = ExchangeRateQuery::create()->findCurrent($borrower->getCountry()->getCurrency());
+        $currencyCode = $borrower->getCountry()->getCurrencyCode();
+        $data['usdAmount'] = Converter::toUSD(
+            Money::create($data['amount'], $currencyCode),
+            $exchangeRate
+        )->getAmount();
+
+        $siftScienceScore = $this->siftScienceService->getSiftScore($borrower->getUser());
+
+        $isFirstLoan = LoanQuery::create()
+            ->filterByBorrower($borrower)
+            ->filterByStatus(Loan::REPAID) // TODO correct?
+            ->count();
+        $registrationFee = $isFirstLoan ? $borrower->getCountry()->getRegistrationFee() : 0;
+        
+        $loan = new Loan();
+        $loan->setSummary($data['summary'])
+            ->setProposal($data['proposal'])
+            ->setCurrencyCode($currencyCode)
+            ->setAmount(Money::create($data['amount'], $currencyCode))
+            ->setUsdAmount(Money::create($data['usdAmount'], 'USD'))
+            ->setInstallmentPeriod($borrower->getCountry()->getInstallmentPeriod())
+            ->setInterestRate(20) // TODO from settings serviceFee or limit
+            ->setInstallmentDay($data['installmentDay'])
+            ->setAppliedAt(new \DateTime())
+            ->setCategoryId($data['categoryId'])
+            ->setBorrower($borrower)
+            ->setRegistrationFee($registrationFee)
+            ->setStatus(Loan::OPEN)
+            ->setSiftScienceScore($siftScienceScore);
+
+        $calculator = new InstallmentCalculator($loan);
+        $installmentAmount = Money::create($data['installmentAmount'], $currencyCode);
+        $installmentCount = $calculator->calculateInstallmentCount($installmentAmount);
+        
+        $loan->setInstallmentCount($installmentCount);            
+
         return $loan;
     }
 

@@ -29,6 +29,7 @@ use Zidisha\Loan\CategoryQuery;
 use Zidisha\Loan\CategoryTranslation;
 use Zidisha\Loan\Loan;
 use Zidisha\Loan\LoanQuery;
+use Zidisha\Loan\LoanService;
 use Zidisha\Loan\Stage;
 
 class GenerateModelData extends Command
@@ -150,6 +151,7 @@ class GenerateModelData extends Command
             ->getData();
 
         $categories = include(app_path() . '/database/LoanCategories.php');
+        /** @var LoanService $loanService */
         $loanService = App::make('\Zidisha\Loan\LoanService');
 
         $this->line("Generate $model");
@@ -488,7 +490,7 @@ class GenerateModelData extends Command
                     continue;
                 }
 
-                $Loan = Loan::createFromData($data);
+                $Loan = $loanService->createLoan($borrower, $data);
                 $Loan->setCategory($loanCategory);
                 $Loan->setBorrower($borrower);
 
