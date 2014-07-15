@@ -7,39 +7,40 @@ use Zidisha\Lender\LenderService;
 use Zidisha\Utility\Utility;
 use Zidisha\Vendor\Facebook\FacebookService;
 use Zidisha\User\UserService;
+use Zidisha\Vendor\Google\GoogleService;
 
 class LenderJoinController extends BaseController
 {
     private $facebookService;
-    private $userService;
     private $joinForm;
     private $lenderService;
+    private $googleService;
 
     public function __construct(
         FacebookService $facebookService,
-        UserService $userService,
         Join $joinForm,
-        LenderService $lenderService
+        LenderService $lenderService,
+        GoogleService $googleService
     ) {
         $this->facebookService = $facebookService;
-        $this->userService = $userService;
         $this->joinForm = $joinForm;
         $this->lenderService = $lenderService;
+        $this->googleService = $googleService;
     }
 
     public function getJoin()
     {
-
         $country = Utility::getCountryCodeByIP();
 
         return View::make(
             'lender.join',
             compact('country'),
             [
-                'form' => $this->joinForm,
+                'form'            => $this->joinForm,
                 'facebookJoinUrl' => $this->facebookService->getLoginUrl(
                         'lender:facebook-join'
                     ),
+                'googleLoginUrl'  => $this->googleService->getLoginUrl('lender:google-join') . '&max_auth_age=0',
             ]
         );
     }
@@ -54,7 +55,7 @@ class LenderJoinController extends BaseController
             return Redirect::route('lender:join')->withForm($form);
         }
 
-        $user = $this->userService->joinUser($form->getData());
+        $user = $this->lenderService->joinLender($form->getData());
 
         return $this->join($user);
     }
@@ -65,7 +66,9 @@ class LenderJoinController extends BaseController
         $facebookUser = $this->getFacebookUser();
 
         if ($facebookUser) {
-            return View::make('lender.facebook-join');
+            $country = Utility::getCountryCodeByIP();
+            return View::make('lender.facebook-join',
+                compact('country'), ['form' => $this->joinForm,]);
         }
 
         Flash::error('No Facebook account connected.');
@@ -85,7 +88,7 @@ class LenderJoinController extends BaseController
                 return Redirect::route('lender:facebook-join')->withForm($form);
             }
 
-            $user = $this->userService->joinFacebookUser(
+            $user = $this->lenderService->joinFacebookUser(
                 $facebookUser,
                 $form->getData()
             );
@@ -102,7 +105,7 @@ class LenderJoinController extends BaseController
         $facebookUser = $this->facebookService->getUserProfile();
 
         if ($facebookUser) {
-            $errors = $this->userService->validateConnectingFacebookUser(
+            $errors = $this->lenderService->validateConnectingFacebookUser(
                 $facebookUser
             );
 
@@ -118,6 +121,7 @@ class LenderJoinController extends BaseController
 
         return false;
     }
+
 
     protected function join(Lender $user)
     {
@@ -135,5 +139,53 @@ class LenderJoinController extends BaseController
 
         Auth::login($user->getUser());
         return Redirect::route('lender:dashboard');
+    }
+
+    public function getGoogleJoin()
+    {
+        $accessCode = Input::get('code');
+
+        if ($accessCode) {
+            $accessToken = $this->googleService->getAccessToken('lender:google-join', $accessCode);
+
+            if ($accessToken) {
+                Session::set('accessToken', $accessToken);
+                $googleUser = $this->googleService->getGoogleUser($accessToken);
+                if ($googleUser) {
+                    $country = Utility::getCountryCodeByIP();
+                    return View::make('lender.google-join',
+                        compact('country'), ['form' => $this->joinForm,]);
+                }
+            }
+        }
+
+        Flash::error('No Google account connected.');
+        return Redirect::route('lender:join');
+    }
+
+    public function postGoogleJoin()
+    {
+        $googleUser = $this->googleService->getGoogleUser(Session::get('accessToken'));
+        Session::forget('accessToken');
+
+        if ($googleUser) {
+            $form = $this->joinForm;
+            $form->setGoogleJoin(true);
+            $form->handleRequest(Request::instance());
+
+            if (!$form->isValid()) {
+                return Redirect::route('lender:google-join')->withForm($form);
+            }
+
+            $user = $this->lenderService->joinGoogleUser(
+                $googleUser,
+                $form->getData()
+            );
+
+            return $this->join($user);
+        } else {
+            Flash::error(\Lang::get('comments.flash.welcome'));
+            return Redirect::route('lender:join');
+        }
     }
 }

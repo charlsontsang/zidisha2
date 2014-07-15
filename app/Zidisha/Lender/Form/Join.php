@@ -3,27 +3,23 @@
 namespace Zidisha\Lender\Form;
 
 
+use Zidisha\Country\CountryQuery;
 use Zidisha\Form\AbstractForm;
 
 class Join extends AbstractForm
 {
     
     protected $facebookJoin = false;
+    protected $googleJoin = false;
 
-    /**
-     * @param boolean $facebookJoin
-     */
     public function setFacebookJoin($facebookJoin)
     {
         $this->facebookJoin = $facebookJoin;
     }
 
-    /**
-     * @return boolean
-     */
-    public function isFacebookJoin()
+    public function setGoogleJoin($googleJoin)
     {
-        return $this->facebookJoin;
+        $this->googleJoin = $googleJoin;
     }
 
     public function getRules($data)
@@ -36,7 +32,7 @@ class Join extends AbstractForm
             'countryId' => ['required', 'in:'.$listOfEnabledCountries]
         ];
         
-        if (!$this->isFacebookJoin()) {
+        if (!$this->facebookJoin && !$this->googleJoin) {
             $rules += [
                 'email'    => 'required|email|unique:users,email',
                 'password' => 'required|confirmed'
@@ -50,7 +46,7 @@ class Join extends AbstractForm
 
     public function getCountries()
     {
-        $countries = \Zidisha\Country\CountryQuery::create()->find();
+        $countries = CountryQuery::create()->find();
 
         return $countries;
     }
