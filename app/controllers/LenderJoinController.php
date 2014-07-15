@@ -200,14 +200,20 @@ class LenderJoinController extends BaseController
     public function postGoogleInvite()
     {
         $emails = Input::get('emails');
+        $emails = is_array($emails) ? $emails : [];
+
         $subject = "Join the Global P2P microLending Movement";
         $lender = Auth::user()->getLender();
         $custom_message = "You are Invited to join Zidisha!";
 
         $countInvites = 0;
         foreach ($emails as $email) {
-                $countInvites += 1;
-                $this->lenderService->lenderInviteViaEmail($lender, $email, $subject, $custom_message);
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                continue;
+            }
+            // TODO, remove already existing user and remove emails that are aready invited before
+            $countInvites += 1;
+            $this->lenderService->lenderInviteViaEmail($lender, $email, $subject, $custom_message);
         }
 
         Flash::success(\Lang::choice('comments.flash.invite-success', $countInvites, array('count' => $countInvites)));
