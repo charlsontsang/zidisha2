@@ -65,14 +65,14 @@ class SiftScienceService
 
         $this->sift->label(
             $userId,
-            array(
+            [
                 '$is_bad'      => true,
                 '$type'        => 'decline',
                 '$user_id'     => $userId,
                 '$reasons'     => 'Declined',
                 '$description' => 'Borrower application declined',
                 '$time'        => time()
-            )
+            ]
         );
     }
 
@@ -81,7 +81,7 @@ class SiftScienceService
         $response = $this->sift->score($user->getId());
 
         if ($response->isOk()) {
-            return $response->body['score']; // => 0.030301357270181357
+            return $response->body['score'];
         } else {
             throw new \Exception('sift api error');
         }

@@ -45,7 +45,7 @@ class DummySiftScienceClient
         );
 
         $response = new DummySiftScienceResponse();
-        $response->setBody([ 'score' => rand(0, 10) / 10 ]);
+        $response->setBody([ 'score' => mt_rand() / mt_getrandmax() ]);
 
         return $response ;
     }
