@@ -50,6 +50,11 @@ class BorrowerLoanController extends BaseController
             App::abort('404', 'Loan is not open');
         }
 
+        if (!empty(Input::get('acceptBidsNote'))) {
+            $loan->setAcceptBidsNote(Input::get('acceptBidsNote'));
+            $loan->save();
+        }
+
         $this->loanService->acceptBids($loan);
 
         \Flash::success('You have accepted the loan bids successfully.');
