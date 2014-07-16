@@ -168,9 +168,11 @@ class LenderController extends BaseController
         if ($form->isValid()) {
             $data = $form->getData();
             $lender = Auth::user()->getLender();
-            $this->lenderService->addWithdrawRequest($lender, $data);
-            \Flash::success("Your withdrawal has been successfully processed, and the requested amount should be credited to your PayPal account within one week. Thanks for your participation!");
-            return Redirect::route('lender:funds');
+            $withdrawalRequest = $this->lenderService->addWithdrawRequest($lender, $data);
+            if ($withdrawalRequest) {
+                \Flash::success("Your withdrawal has been successfully processed, and the requested amount should be credited to your PayPal account within one week. Thanks for your participation!");
+                return Redirect::route('lender:funds');
+            }
         }
 
         \Flash::error("Entered Values are invalid!");
