@@ -64,7 +64,7 @@ class AdminReportsController extends BaseController
 
         $loans = \Zidisha\Loan\LoanQuery::create()
             ->useBorrowerQuery()
-            ->filterByCountry($country)
+                ->filterByCountry($country)
             ->endUse()
             ->filterByStatus(Loan::FUNDED)
             ->joinWith('Borrower')
