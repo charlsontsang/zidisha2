@@ -563,6 +563,16 @@ Route::group(
                     array('uses' => 'AdminController@postWithdrawalRequests', 'as' => 'admin:post:withdrawal-requests')
 
                 );
+
+                Route::get(
+                    'publish-comments',
+                    array('uses' => 'AdminController@getPublishComments', 'as' => 'admin:moderate-comments')
+                );
+
+                Route::post(
+                    'publish-comments',
+                    array('uses' => 'AdminController@postPublishComments', 'as' => 'admin:post:moderate-comments')
+                );
             }
         );
 
