@@ -5,7 +5,7 @@
         <div class="text-center wizard-stepnum">Step {{ $i }}</div>
         <div class="progress"><div class="progress-bar"></div></div>
         <a href="{{ action($options['action']) }}" class="wizard-dot"></a>
-        <div class="wizard-info text-center">@lang("loan.application.$name-page.step")</div>
+        <div class="wizard-info text-center">@lang("borrower.loan-application.progress-bar.$name-page")</div>
     </div>
     <?php $i += 1 ?>
     @endforeach
