@@ -10,50 +10,50 @@ class Installment extends BaseInstallment
     /**
      * @return Money
      */
-    public function getNativeAmount()
+    public function getAmount()
     {
-        return Money::create(parent::getNativeAmount(), 'USD');
+        return Money::create(parent::getAmount(), 'USD');
     }
 
     /**
      * @param Money $money
      * @return $this|Installment
      */
-    public function setNativeAmount($money)
+    public function setAmount($money)
     {
-        return parent::setNativeAmount($money->getAmount());
+        return parent::setAmount($money->getAmount());
     }
 
     /**
      * @return Money
      */
-    public function getNativePaidAmount()
+    public function getPaidAmount()
     {
-        return Money::create(parent::getNativePaidAmount(), 'USD');
+        return Money::create(parent::getPaidAmount(), 'USD');
     }
 
     /**
      * @param Money $money
      * @return $this|Installment
      */
-    public function setNativePaidAmount($money)
+    public function setPaidAmount($money)
     {
-        return parent::setNativePaidAmount($money->getAmount());
+        return parent::setPaidAmount($money->getAmount());
     }
 
     public function isRepaid()
     {
-        return $this->getNativeAmount()->equals($this->getNativePaidAmount());
+        return $this->getAmount()->equals($this->getPaidAmount());
     }
 
     public function getUnpaidAmount()
     {
-        return $this->getNativeAmount()->subtract($this->getNativePaidAmount());
+        return $this->getAmount()->subtract($this->getPaidAmount());
     }
 
     public function payAmount(Money $amount)
     {
-        $this->setNativePaidAmount($this->getNativePaidAmount()->add($amount));
+        $this->setPaidAmount($this->getPaidAmount()->add($amount));
         
         return $this;
     }
