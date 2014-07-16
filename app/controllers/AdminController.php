@@ -14,6 +14,8 @@ use Zidisha\Balance\TransactionQuery;
 use Zidisha\Balance\WithdrawalRequestQuery;
 use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Borrower\BorrowerService;
+use Zidisha\Borrower\FeedbackMessageQuery;
+use Zidisha\Comment\BorrowerCommentQuery;
 use Zidisha\Comment\CommentQuery;
 use Zidisha\Borrower\Form\AdminEditForm;
 use Zidisha\Country\CountryQuery;
@@ -538,5 +540,18 @@ class AdminController extends BaseController
         }
         \Flash::success("Successfully processed!");
         return Redirect::route('admin:get:withdrawal-requests');
+    }
+
+    public function getPublishComments()
+    {
+        $page = Request::query('page') ? : 1;
+
+        $comments = BorrowerCommentQuery::create()
+            ->filterByPublished(false)
+            ->filterByCreatedAt(array('min' => time() - 2 * 30 * 24 * 60 * 60))
+            ->joinWith('User')
+            ->paginate($page, 10);
+
+        return View::make('admin.publish-comments', compact('comments'));
     }
 }
