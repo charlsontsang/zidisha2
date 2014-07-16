@@ -6,6 +6,8 @@ use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Zidisha\Admin\Setting;
 use Zidisha\Balance\Transaction;
+use Zidisha\Balance\TransactionQuery;
+use Zidisha\Balance\WithdrawalRequest;
 use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Borrower\JoinLog;
 use Zidisha\Borrower\VolunteerMentor;
@@ -98,19 +100,20 @@ class GenerateModelData extends Command
             $this->call('fake', array('model' => 'Country', 'size' => 10));
             $this->call('fake', array('model' => 'Category', 'size' => 10));
             $this->call('fake', array('model' => 'Admin', 'size' => 1));
-            $this->call('fake', array('model' => 'Borrower', 'size' => 20));
+            $this->call('fake', array('model' => 'Borrower', 'size' => 200));
             $this->call('fake', array('model' => 'Lender', 'size' => 50));
             $this->call('fake', array('model' => 'ExchangeRate', 'size' => 30));
-            //$this->call('fake', array('model' => 'Loan', 'size' => 150));
-            //$this->call('fake', array('model' => 'Bid', 'size' => 50));
+            $this->call('fake', array('model' => 'Loan', 'size' => 150));
+            $this->call('fake', array('model' => 'Bid', 'size' => 50));
             $this->call('fake', array('model' => 'Transaction', 'size' => 200));
-            //$this->call('fake', array('model' => 'Installment', 'size' => 200));
+            $this->call('fake', array('model' => 'Installment', 'size' => 200));
             $this->call('fake', array('model' => 'Invite', 'size' => 200));
             $this->call('fake', array('model' => 'Comment', 'size' => 200));
             $this->call('fake', array('model' => 'GiftCard', 'size' => 100));
             $this->call('fake', array('model' => 'CategoryTranslation', 'size' => 10));
             $this->call('fake', array('model' => 'LenderGroup', 'size' => 50));
             $this->call('fake', array('model' => 'LenderGroupMember', 'size' => 200));
+            $this->call('fake', array('model' => 'WithdrawalRequest', 'size' => 200));
 
             $this->line('Done!');
             return;
@@ -547,17 +550,35 @@ class GenerateModelData extends Command
             if ($model == "Transaction") {
 
                 $oneLender = $allLenders[array_rand($allLenders->getData())];
-                //$oneLoan = $allLoans[array_rand($allLoans->getData())];
+                $oneLoan = $allLoans[array_rand($allLoans->getData())];
+                $isTrue = $randArray[array_rand($randArray)];
 
                 $transaction = new Transaction();
                 $transaction->setUser($oneLender->getUser());
-                $transaction->setAmount(Money::create(rand(-100, 200), 'USD'));
-                //$transaction->setLoan($oneLoan);
+                $transaction->setAmount(Money::create(rand(0, 200), 'USD'));
                 $transaction->setDescription('description');
                 $transaction->setTransactionDate(new \DateTime());
-                $transaction->setType(Transaction::FUND_WITHDRAW);
+                $transaction->setType(Transaction::FUND_UPLOAD);
                 $transaction->save();
 
+                if ($isTrue || $i < 20) {
+                    $transaction = new Transaction();
+                    $transaction->setUser($oneLender->getUser());
+                    $transaction->setAmount(Money::create(rand(0, 20), 'USD'));
+                    $transaction->setLoan($oneLoan);
+                    $transaction->setDescription('description');
+                    $transaction->setTransactionDate(new \DateTime());
+                    $transaction->setType(Transaction::LOAN_BACK_LENDER);
+                    $transaction->save();
+
+                    $transaction = new Transaction();
+                    $transaction->setUser($oneLender->getUser());
+                    $transaction->setAmount(Money::create(rand(-100, 0), 'USD'));
+                    $transaction->setDescription('description');
+                    $transaction->setTransactionDate(new \DateTime());
+                    $transaction->setType(Transaction::FUND_WITHDRAW);
+                    $transaction->save();
+                }
 
                 if ($temp == true) {
                     $yc = \Zidisha\User\UserQuery::create()
@@ -673,6 +694,25 @@ class GenerateModelData extends Command
                 $groupMember->setMember($member)
                     ->setLendingGroup($group);
                 $groupMember->save();
+            }
+
+
+            if($model == "WithdrawalRequest")
+            {
+                $lender = $allLenders[array_rand($allLenders->getData())];
+                $isPaid = $randArray[array_rand($randArray)];
+                $currentBalance = TransactionQuery::create()
+                    ->filterByUserId($lender->getUser()->getId())
+                    ->getTotalAmount();
+
+                $withdrawalRequest = new WithdrawalRequest();
+                $withdrawalRequest->setLender($lender)
+                    ->setAmount(Money::create(rand(1, $currentBalance->getAmount())))
+                    ->setPaypalEmail($faker->email);
+                if ($isPaid) {
+                    $withdrawalRequest->setPaid(true);
+                }
+                $withdrawalRequest->save();
             }
         }
     }
