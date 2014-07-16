@@ -1,9 +1,5 @@
 <?php
 
-use PayPal\PayPalAPI\MassPayReq;
-use PayPal\PayPalAPI\MassPayRequestItemType;
-use PayPal\PayPalAPI\MassPayRequestType;
-use PayPal\Service\PayPalAPIInterfaceServiceService;
 use Zidisha\Admin\Form\ExchangeRateForm;
 use Zidisha\Admin\Form\FeatureFeedbackForm;
 use Zidisha\Admin\Form\FilterBorrowers;
@@ -18,7 +14,6 @@ use Zidisha\Balance\TransactionQuery;
 use Zidisha\Balance\WithdrawalRequestQuery;
 use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Borrower\BorrowerService;
-use Zidisha\Borrower\FeedbackMessageQuery;
 use Zidisha\Comment\CommentQuery;
 use Zidisha\Borrower\Form\AdminEditForm;
 use Zidisha\Country\CountryQuery;
@@ -30,6 +25,7 @@ use Zidisha\Loan\LoanQuery;
 use Zidisha\Loan\LoanService;
 use Zidisha\Loan\Loan;
 use Zidisha\Mail\LenderMailer;
+use Zidisha\Payment\Paypal\PayPalService;
 
 class AdminController extends BaseController
 {
@@ -45,6 +41,7 @@ class AdminController extends BaseController
     protected $translateForm;
     private $lenderMailer;
     private $withdrawalRequestsForm;
+    private $payPalService;
 
     public function  __construct(
         LenderQuery $lenderQuery,
@@ -62,7 +59,8 @@ class AdminController extends BaseController
         TranslateForm $translateForm,
         TranslationFeedForm $translationFeedForm,
         LenderMailer $lenderMailer,
-        WithdrawalRequestsForm $withdrawalRequestsForm
+        WithdrawalRequestsForm $withdrawalRequestsForm,
+        PayPalService $payPalService
     ) {
         $this->lenderQuery = $lenderQuery;
         $this->$borrowerQuery = $borrowerQuery;
@@ -80,6 +78,7 @@ class AdminController extends BaseController
         $this->translationFeedForm = $translationFeedForm;
         $this->lenderMailer = $lenderMailer;
         $this->withdrawalRequestsForm = $withdrawalRequestsForm;
+        $this->payPalService = $payPalService;
     }
 
     public
@@ -530,55 +529,8 @@ class AdminController extends BaseController
         if (!is_array($ids)) {
             App::abort(404);
         }
-        // The MassPay API lets you send payments to up to 250 recipients with a single API call.
-        $ids = array_slice($ids, 0, 250);
-        $requests = WithdrawalRequestQuery::create()
-            ->filterById($ids)
-            ->find();
+        $this->payPalService->processMassPayment($ids);
+        return Redirect::route('admin:get:withdrawal-requests');
 
-        $massPayItems = array();
-        $processedIds = array();
-        foreach ($requests as $request) {
-            $massPayItem = new MassPayRequestItemType();
-            $massPayItem->Amount = $request->getAmount()->getAmount();
-            $massPayItem->ReceiverEmail = $request->getPaypalEmail();
-            $massPayItems[] = $massPayItem;
-            $processedIds[] = $request->getId();
-        }
-
-        $massPayReq = new MassPayReq();
-        $massPayReq->MassPayRequest = new MassPayRequestType($massPayItems);
-        $service = new PayPalAPIInterfaceServiceService(array(
-            'mode'            => Setting::get('paypal.mode'),
-            'acct1.UserName'  => Setting::get('paypal.username'),
-            'acct1.Password'  => Setting::get('paypal.password'),
-            'acct1.Signature' => Setting::get('paypal.signature'),
-        ));
-
-        try {
-            $response = $service->MassPay($massPayReq);
-        } catch (Exception $e) {
-            $error = 'Mass Pay Service Error Message: ' . $e->getMessage();
-            \Flash::error('Some error occurred!' . $error);
-            return Redirect::route('admin:get:withdrawal-requests');
-        }
-
-        if (strtoupper($response->Ack) == 'SUCCESS') {
-            foreach ($processedIds as $processedId) {
-                $requestComplete = WithdrawalRequestQuery::create()
-                    ->findOneById($processedId);
-                $requestComplete->setPaid(true);
-                $requestComplete->save();
-            }
-            \Flash::success("Successfully processed!");
-            return Redirect::route('admin:get:withdrawal-requests');
-        } else {
-            $error = 'Mass Pay Error Message:<br/>';
-            foreach ($response->Errors as $e) {
-                $error .= $e->LongMessage . '<br/>';
-            }
-            \Flash::error('Some errors occurred!' . $error);
-            return Redirect::route('admin:get:withdrawal-requests');
-        }
     }
 }
