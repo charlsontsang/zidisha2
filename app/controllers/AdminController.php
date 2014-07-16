@@ -25,6 +25,7 @@ use Zidisha\Loan\LoanQuery;
 use Zidisha\Loan\LoanService;
 use Zidisha\Loan\Loan;
 use Zidisha\Mail\LenderMailer;
+use Zidisha\Payment\Paypal\PaypalMassPaymentException;
 use Zidisha\Payment\Paypal\PayPalService;
 
 class AdminController extends BaseController
@@ -529,8 +530,13 @@ class AdminController extends BaseController
         if (!is_array($ids)) {
             App::abort(404);
         }
-        $this->payPalService->processMassPayment($ids);
+        try{
+            $this->payPalService->processMassPayment($ids);
+        }catch (PaypalMassPaymentException $e) {
+            \Flash::error('Some error occured!' . $e->getMessage());
+            return Redirect::route('admin:get:withdrawal-requests');
+        }
+        \Flash::success("Successfully processed!");
         return Redirect::route('admin:get:withdrawal-requests');
-
     }
 }
