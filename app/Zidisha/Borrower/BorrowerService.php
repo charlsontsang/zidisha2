@@ -6,6 +6,7 @@ use Zidisha\Loan\Loan;
 use Zidisha\Loan\LoanQuery;
 use Zidisha\Mail\BorrowerMailer;
 use Zidisha\Sms\BorrowerSmsService;
+use Zidisha\Translation\TranslationLabelQuery;
 use Zidisha\Upload\Upload;
 use Zidisha\User\User;
 use Zidisha\User\UserQuery;
@@ -389,5 +390,15 @@ class BorrowerService
         $borrowerRequiresFacebook = $borrower->getCountry()->isFacebookRequired();
 
         return $borrowerRequiresFacebook && !$facebookId && ($createdAt > $requiredDate);
+    }
+
+    public function setTranslateUrl($languageCode)
+    {
+        $isTranslated = TranslationLabelQuery::create()
+            ->filterByLanguageCode($languageCode)
+            ->filterByTranslated(true)
+            ->findOne();
+        //return $isTranslated;
+        return true;
     }
 }

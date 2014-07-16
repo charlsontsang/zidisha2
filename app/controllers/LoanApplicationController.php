@@ -40,6 +40,12 @@ class LoanApplicationController extends BaseController
 
     public function getInstructions()
     {
+        $borrower = Auth::user()->getBorrower();
+        $isAllowed = $this->loanService->isNewLoanAllowed($borrower);
+        if (!$isAllowed) {
+            \Flash::error('You are not allowed to make new loan right now.');
+            return Redirect::route('borrower:dashboard');
+        }
         return $this->stepView('instructions');
     }
 

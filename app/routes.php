@@ -1,8 +1,11 @@
 <?php
 $languages = ['fr', 'in'];
-$locale = Request::segment(1);
+$locale = Request::segment(1) ? Request::segment(1) : \Session::get('languageCode');
 if (in_array($locale, $languages)) {
     \App::setLocale($locale);
+    if ($locale != \Session::get('languageCode')) {
+        \Session::set('languageCode', $locale);
+    }
 } else {
     $locale = null;
 }

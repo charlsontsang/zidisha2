@@ -2,6 +2,7 @@
 
 use Zidisha\Auth\AuthService;
 use Zidisha\Borrower\BorrowerGuestQuery;
+use Zidisha\Borrower\BorrowerService;
 use Zidisha\Borrower\JoinLogQuery;
 use Zidisha\User\UserQuery;
 use Zidisha\Vendor\Facebook\FacebookService;
@@ -16,14 +17,16 @@ class AuthController extends BaseController
     private $authService;
     private $siftScienceService;
     private $googleService;
+    private $borrowerService;
 
     public function __construct(FacebookService $facebookService, AuthService $authService,
-        siftScienceService $siftScienceService, GoogleService $googleService)
+        siftScienceService $siftScienceService, GoogleService $googleService, BorrowerService $borrowerService)
     {
         $this->facebookService = $facebookService;
         $this->authService = $authService;
         $this->siftScienceService = $siftScienceService;
         $this->googleService = $googleService;
+        $this->borrowerService = $borrowerService;
     }
 
     public function getLogin()
@@ -111,6 +114,14 @@ class AuthController extends BaseController
         if ($role == 'lender') {
             return Redirect::route('lender:dashboard');
         } elseif ($role == 'borrower') {
+            $languageCode = $user->getBorrower()->getCountry()->getLanguageCode();
+
+            $isTranslated = $this->borrowerService->setTranslateUrl($languageCode);
+            if ($isTranslated) {
+
+                \Session::set('languageCode', $languageCode);
+            }
+            \App::setLocale($languageCode);
             return Redirect::route('borrower:dashboard');
         }
 

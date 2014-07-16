@@ -854,6 +854,9 @@
         <column name="updated" type="BOOLEAN" defaultValue="false"/>
         <behavior name="timestampable"/>
         <behavior name="archivable" />
+        <foreign-key foreignTable="languages">
+            <reference local="language_code" foreign="language_code"/>
+        </foreign-key>
     </table>
 
     <table name="notifications" phpName="Notification" namespace="Notification">
