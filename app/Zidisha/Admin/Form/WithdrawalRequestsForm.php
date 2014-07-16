@@ -10,6 +10,8 @@ class WithdrawalRequestsForm extends AbstractForm
 
     public function getRules($data)
     {
+        return [
 
+        ];
     }
 }

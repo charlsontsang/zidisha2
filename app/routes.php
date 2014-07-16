@@ -552,7 +552,7 @@ Route::group(
                     'withdrawal-requests',
                     array('uses' => 'AdminController@getWithdrawalRequests', 'as' => 'admin:get:withdrawal-requests')
                 );
-                Route::get(
+                Route::post(
                     'withdrawal-requests/{withdrawalRequestId}/pay',
                     array('uses' => 'AdminController@postWithdrawalRequests', 'as' => 'admin:post:withdrawal-requests')
 

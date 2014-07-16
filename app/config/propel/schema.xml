@@ -869,9 +869,9 @@
     <table name="withdrawal_requests" phpName="WithdrawalRequest" namespace="Balance">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="lender_id" type="INTEGER" required="true"/>
-        <column name="amount" type="DECIMAL" size="10" scale="2" phpType="string"/>
+        <column name="amount" type="DECIMAL" size="10" scale="2" phpType="string" required="true"/>
         <column name="paid" type="BOOLEAN" defaultValue="false"/>
-        <column name="paypal_email" type="VARCHAR" size="100"/>
+        <column name="paypal_email" type="VARCHAR" size="100" required="true"/>
         <behavior name="timestampable"/>
         <foreign-key foreignTable="lenders">
             <reference local="lender_id" foreign="id"/>
