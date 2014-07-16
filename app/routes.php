@@ -553,6 +553,12 @@ Route::group(
                     array('uses' => 'AdminController@getWithdrawalRequests', 'as' => 'admin:get:withdrawal-requests')
                 );
                 Route::post(
+                    'withdrawal-requests/paypal/pay',
+                    array('uses' => 'AdminController@postPaypalWithdrawalRequests',
+                          'as' => 'admin:post:paypal-withdrawal-requests')
+
+                );
+                Route::post(
                     'withdrawal-requests/{withdrawalRequestId}/pay',
                     array('uses' => 'AdminController@postWithdrawalRequests', 'as' => 'admin:post:withdrawal-requests')
 

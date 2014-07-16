@@ -1,5 +1,9 @@
 <?php
 
+use PayPal\PayPalAPI\MassPayReq;
+use PayPal\PayPalAPI\MassPayRequestItemType;
+use PayPal\PayPalAPI\MassPayRequestType;
+use PayPal\Service\PayPalAPIInterfaceServiceService;
 use Zidisha\Admin\Form\ExchangeRateForm;
 use Zidisha\Admin\Form\FeatureFeedbackForm;
 use Zidisha\Admin\Form\FilterBorrowers;
@@ -475,7 +479,7 @@ class AdminController extends BaseController
         $paginator = WithdrawalRequestQuery::create()
             ->joinWith('Lender')
             ->joinWith('Lender.User')
-            ->orderByCreatedAt('desc')
+            ->orderByUpdatedAt('desc')
             ->paginate($page, 10);
 
         $userIds = $paginator->toKeyValue('lenderId', 'lenderId');
@@ -498,12 +502,17 @@ class AdminController extends BaseController
 
     public function postWithdrawalRequests($withdrawalRequestId)
     {
+        $withdrawalRequest = WithdrawalRequestQuery::create()
+            ->findOneById($withdrawalRequestId);
+
+        if (!$withdrawalRequest) {
+            App::abort(404);
+        }
+
         $form = $this->withdrawalRequestsForm;
         $form->handleRequest(Request::instance());
 
         if ($form->isValid()) {
-            $withdrawalRequest = WithdrawalRequestQuery::create()
-                ->findOneById($withdrawalRequestId);
             $withdrawalRequest->setPaid(true);
             $withdrawalRequest->save();
             \Flash::success("Successfully paid!");
@@ -512,5 +521,64 @@ class AdminController extends BaseController
 
         \Flash::error('Some error occured!');
         return Redirect::route('admin:get:withdrawal-requests')->withForm($form);
+    }
+
+    public function postPaypalWithdrawalRequests()
+    {
+        $ids = Input::get('ids');
+
+        if (!is_array($ids)) {
+            App::abort(404);
+        }
+        // The MassPay API lets you send payments to up to 250 recipients with a single API call.
+        $ids = array_slice($ids, 0, 250);
+        $requests = WithdrawalRequestQuery::create()
+            ->filterById($ids)
+            ->find();
+
+        $massPayItems = array();
+        $processedIds = array();
+        foreach ($requests as $request) {
+            $massPayItem = new MassPayRequestItemType();
+            $massPayItem->Amount = $request->getAmount()->getAmount();
+            $massPayItem->ReceiverEmail = $request->getPaypalEmail();
+            $massPayItems[] = $massPayItem;
+            $processedIds[] = $request->getId();
+        }
+
+        $massPayReq = new MassPayReq();
+        $massPayReq->MassPayRequest = new MassPayRequestType($massPayItems);
+        $service = new PayPalAPIInterfaceServiceService(array(
+            'mode'            => Setting::get('paypal.mode'),
+            'acct1.UserName'  => Setting::get('paypal.username'),
+            'acct1.Password'  => Setting::get('paypal.password'),
+            'acct1.Signature' => Setting::get('paypal.signature'),
+        ));
+
+        try {
+            $response = $service->MassPay($massPayReq);
+        } catch (Exception $e) {
+            $error = 'Mass Pay Service Error Message: ' . $e->getMessage();
+            \Flash::error('Some error occurred!' . $error);
+            return Redirect::route('admin:get:withdrawal-requests');
+        }
+
+        if (strtoupper($response->Ack) == 'SUCCESS') {
+            foreach ($processedIds as $processedId) {
+                $requestComplete = WithdrawalRequestQuery::create()
+                    ->findOneById($processedId);
+                $requestComplete->setPaid(true);
+                $requestComplete->save();
+            }
+            \Flash::success("Successfully processed!");
+            return Redirect::route('admin:get:withdrawal-requests');
+        } else {
+            $error = 'Mass Pay Error Message:<br/>';
+            foreach ($response->Errors as $e) {
+                $error .= $e->LongMessage . '<br/>';
+            }
+            \Flash::error('Some errors occurred!' . $error);
+            return Redirect::route('admin:get:withdrawal-requests');
+        }
     }
 }
