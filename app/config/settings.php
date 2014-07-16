@@ -70,6 +70,18 @@ return [
         ],
         'sift-science.api' => [
             'label' => 'Sift Science Api Key'
-        ]
+        ],
+        'paypal.mode' => [
+            'label' => 'PayPal Process Mode'
+        ],
+        'paypal.username' => [
+            'label' => 'PayPal Username'
+        ],
+        'paypal.password' => [
+            'label' => 'PayPal Password'
+        ],
+        'paypal.signature' => [
+            'label' => 'PayPal Signature'
+        ],
     ],
 ];

@@ -14,7 +14,6 @@ use Zidisha\Balance\TransactionQuery;
 use Zidisha\Balance\WithdrawalRequestQuery;
 use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Borrower\BorrowerService;
-use Zidisha\Borrower\FeedbackMessageQuery;
 use Zidisha\Comment\CommentQuery;
 use Zidisha\Borrower\Form\AdminEditForm;
 use Zidisha\Country\CountryQuery;
@@ -26,6 +25,8 @@ use Zidisha\Loan\LoanQuery;
 use Zidisha\Loan\LoanService;
 use Zidisha\Loan\Loan;
 use Zidisha\Mail\LenderMailer;
+use Zidisha\Payment\Paypal\PaypalMassPaymentException;
+use Zidisha\Payment\Paypal\PayPalService;
 
 class AdminController extends BaseController
 {
@@ -41,6 +42,7 @@ class AdminController extends BaseController
     protected $translateForm;
     private $lenderMailer;
     private $withdrawalRequestsForm;
+    private $payPalService;
 
     public function  __construct(
         LenderQuery $lenderQuery,
@@ -58,7 +60,8 @@ class AdminController extends BaseController
         TranslateForm $translateForm,
         TranslationFeedForm $translationFeedForm,
         LenderMailer $lenderMailer,
-        WithdrawalRequestsForm $withdrawalRequestsForm
+        WithdrawalRequestsForm $withdrawalRequestsForm,
+        PayPalService $payPalService
     ) {
         $this->lenderQuery = $lenderQuery;
         $this->$borrowerQuery = $borrowerQuery;
@@ -76,6 +79,7 @@ class AdminController extends BaseController
         $this->translationFeedForm = $translationFeedForm;
         $this->lenderMailer = $lenderMailer;
         $this->withdrawalRequestsForm = $withdrawalRequestsForm;
+        $this->payPalService = $payPalService;
     }
 
     public
@@ -475,7 +479,7 @@ class AdminController extends BaseController
         $paginator = WithdrawalRequestQuery::create()
             ->joinWith('Lender')
             ->joinWith('Lender.User')
-            ->orderByCreatedAt('desc')
+            ->orderByUpdatedAt('desc')
             ->paginate($page, 10);
 
         $userIds = $paginator->toKeyValue('lenderId', 'lenderId');
@@ -498,12 +502,17 @@ class AdminController extends BaseController
 
     public function postWithdrawalRequests($withdrawalRequestId)
     {
+        $withdrawalRequest = WithdrawalRequestQuery::create()
+            ->findOneById($withdrawalRequestId);
+
+        if (!$withdrawalRequest) {
+            App::abort(404);
+        }
+
         $form = $this->withdrawalRequestsForm;
         $form->handleRequest(Request::instance());
 
         if ($form->isValid()) {
-            $withdrawalRequest = WithdrawalRequestQuery::create()
-                ->findOneById($withdrawalRequestId);
             $withdrawalRequest->setPaid(true);
             $withdrawalRequest->save();
             \Flash::success("Successfully paid!");
@@ -512,5 +521,22 @@ class AdminController extends BaseController
 
         \Flash::error('Some error occured!');
         return Redirect::route('admin:get:withdrawal-requests')->withForm($form);
+    }
+
+    public function postPaypalWithdrawalRequests()
+    {
+        $ids = Input::get('ids');
+
+        if (!is_array($ids)) {
+            App::abort(404);
+        }
+        try{
+            $this->payPalService->processMassPayment($ids);
+        }catch (PaypalMassPaymentException $e) {
+            \Flash::error('Some error occured!' . $e->getMessage());
+            return Redirect::route('admin:get:withdrawal-requests');
+        }
+        \Flash::success("Successfully processed!");
+        return Redirect::route('admin:get:withdrawal-requests');
     }
 }

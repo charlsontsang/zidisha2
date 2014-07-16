@@ -12,9 +12,14 @@ use PayPal\PayPalAPI\DoExpressCheckoutPaymentReq;
 use PayPal\PayPalAPI\DoExpressCheckoutPaymentRequestType;
 use PayPal\PayPalAPI\GetExpressCheckoutDetailsReq;
 use PayPal\PayPalAPI\GetExpressCheckoutDetailsRequestType;
+use PayPal\PayPalAPI\MassPayReq;
+use PayPal\PayPalAPI\MassPayRequestItemType;
+use PayPal\PayPalAPI\MassPayRequestType;
 use PayPal\PayPalAPI\SetExpressCheckoutReq;
 use PayPal\PayPalAPI\SetExpressCheckoutRequestType;
 use PayPal\Service\PayPalAPIInterfaceServiceService;
+use Zidisha\Admin\Setting;
+use Zidisha\Balance\WithdrawalRequestQuery;
 use Zidisha\Currency\Money;
 use Zidisha\Payment\Error\PaymentError;
 use Zidisha\Payment\Payment;
@@ -35,7 +40,14 @@ class PayPalService extends PaymentService
 
     public function __construct(PaymentBus $paymentBus)
     {
-        $this->payPalApi = new PayPalAPIInterfaceServiceService(\Config::get('paypal'));
+        $this->payPalApi = new PayPalAPIInterfaceServiceService([
+            'mode' => \Setting::get('paypal.mode'),
+            'acct1.UserName' => \Setting::get('paypal.username'),
+            'acct1.Password' => \Setting::get('paypal.password'),
+            'acct1.Signature' => \Setting::get('paypal.signature'),
+            'currency_code' => 'USD',
+            'ipn_url' => '---'
+        ]);
         $this->paymentBus = $paymentBus;
     }
 
@@ -297,5 +309,48 @@ class PayPalService extends PaymentService
     protected function getIpnUrl()
     {
         return \Config::get('paypal.ipn_url', action('PayPalController@postIpn'));
+    }
+
+    public function processMassPayment($ids)
+    {
+        // The MassPay API lets you send payments to up to 250 recipients with a single API call.
+        $ids = array_slice($ids, 0, 250);
+        $requests = WithdrawalRequestQuery::create()
+            ->filterById($ids)
+            ->find();
+
+        $massPayItems = array();
+        $processedIds = array();
+        foreach ($requests as $request) {
+            $massPayItem = new MassPayRequestItemType();
+            $massPayItem->Amount = $request->getAmount()->getAmount();
+            $massPayItem->ReceiverEmail = $request->getPaypalEmail();
+            $massPayItems[] = $massPayItem;
+            $processedIds[] = $request->getId();
+        }
+
+        $massPayReq = new MassPayReq();
+        $massPayReq->MassPayRequest = new MassPayRequestType($massPayItems);
+
+        try {
+            $response = $this->payPalApi->MassPay($massPayReq);
+        } catch (Exception $e) {
+            throw new PaypalMassPaymentException($e);
+        }
+
+        if (strtoupper($response->Ack) == 'SUCCESS') {
+            foreach ($processedIds as $processedId) {
+                $requestComplete = WithdrawalRequestQuery::create()
+                    ->findOneById($processedId);
+                $requestComplete->setPaid(true);
+                $requestComplete->save();
+            }
+        } else {
+            $error = 'Mass Pay Error Message:<br/>';
+            foreach ($response->Errors as $e) {
+                $error .= $e->LongMessage . '<br/>';
+            }
+            throw new PaypalMassPaymentException($error);
+        }
     }
 }

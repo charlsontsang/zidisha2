@@ -19,7 +19,7 @@ class GoogleService
     public function __construct(LenderService $lenderService)
     {
         $google = new \Google_Client();
-        $google->setClientId(Setting::get('google.clientId') . '.apps.googleusercontent.com');
+        $google->setClientId(Setting::get('google.clientId'));
         $google->setClientSecret(Setting::get('google.clientSecret'));
         //$google->setApprovalPrompt('force');
         $this->google = $google;
