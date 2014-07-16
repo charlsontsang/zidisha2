@@ -40,7 +40,14 @@ class PayPalService extends PaymentService
 
     public function __construct(PaymentBus $paymentBus)
     {
-        $this->payPalApi = new PayPalAPIInterfaceServiceService(\Config::get('paypal'));
+        $this->payPalApi = new PayPalAPIInterfaceServiceService([
+            'mode' => \Setting::get('paypal.mode'),
+            'acct1.UserName' => \Setting::get('paypal.username'),
+            'acct1.Password' => \Setting::get('paypal.password'),
+            'acct1.Signature' => \Setting::get('paypal.signature'),
+            'currency_code' => 'USD',
+            'ipn_url' => '---'
+        ]);
         $this->paymentBus = $paymentBus;
     }
 
