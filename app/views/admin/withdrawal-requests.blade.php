@@ -27,9 +27,9 @@ Withdrawal Requests
                 {{ $request->getLender()->getName() }}</a></p>
         <p>{{ $request->getLender()->getUser()->getEmail() }}</p>
         </td>
-        <td><p>Uploaded: </p>
-            <p>Repaid: </p>
-            <p>Withdrawn: </p>
+        <td><p>Uploaded: {{ $uploaded[$request->getLenderId()] }}</p>
+            <p>Repaid: {{ $repaid[$request->getLenderId()] }}</p>
+            <p>Withdrawn: {{ $withdrawn[$request->getLenderId()]->multiply(-1) }}</p>
         </td>
         <td>{{ $request->getPaypalEmail() }}</td>
         <td>{{ $request->getAmount() }}</td>

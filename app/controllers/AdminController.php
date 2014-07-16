@@ -10,6 +10,7 @@ use Zidisha\Admin\Form\WithdrawalRequestsForm;
 use Zidisha\Admin\Setting;
 use Zidisha\Admin\Form\TranslateForm;
 use Zidisha\Admin\Form\TranslationFeedForm;
+use Zidisha\Balance\TransactionQuery;
 use Zidisha\Balance\WithdrawalRequestQuery;
 use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Borrower\BorrowerService;
@@ -472,10 +473,27 @@ class AdminController extends BaseController
         $page = Request::query('page') ? : 1;
 
         $paginator = WithdrawalRequestQuery::create()
+            ->joinWith('Lender')
+            ->joinWith('Lender.User')
             ->orderByCreatedAt('desc')
             ->paginate($page, 10);
 
-        return View::make('admin.withdrawal-requests', compact('paginator'), ['form' => $this->withdrawalRequestsForm,]);
+        $userIds = $paginator->toKeyValue('lenderId', 'lenderId');
+
+        $uploaded = TransactionQuery::create()
+            ->filterFundUpload()
+            ->getTotalAmounts($userIds);
+
+        $repaid = TransactionQuery::create()
+            ->filterRepaidToLender()
+            ->getTotalAmounts($userIds);
+
+        $withdrawn = TransactionQuery::create()
+            ->filterFundWithdraw()
+            ->getTotalAmounts($userIds);
+
+        return View::make('admin.withdrawal-requests', compact('paginator', 'uploaded', 'repaid', 'withdrawn'),
+            ['form' => $this->withdrawalRequestsForm,]);
     }
 
     public function postWithdrawalRequests($withdrawalRequestId)
