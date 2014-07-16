@@ -313,14 +313,15 @@ class LenderService
     public function addWithdrawRequest(Lender $lender, $data)
     {
         $amount = Money::create($data['withdrawAmount']);
-        $withdrawRequest = new WithdrawalRequest();
-        $withdrawRequest->setLender($lender)
+        $withdrawalRequest = new WithdrawalRequest();
+        $withdrawalRequest->setLender($lender)
             ->setAmount($amount)
             ->setPaypalEmail($data['paypalEmail']);
 
-        PropelDB::transaction(function($con) use ($lender, $amount, $withdrawRequest) {
+        PropelDB::transaction(function($con) use ($lender, $amount, $withdrawalRequest) {
                 $this->transactionService->addWithdrawFundTransaction($con, $amount, $lender);
-                $withdrawRequest->save($con);
+                $withdrawalRequest->save($con);
             });
+        return $withdrawalRequest;
     }
 }
