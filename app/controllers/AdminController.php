@@ -554,4 +554,23 @@ class AdminController extends BaseController
 
         return View::make('admin.publish-comments', compact('comments'));
     }
+
+    public function postPublishComments()
+    {
+        $borrowerCommentId = Input::get('borrowerCommentId');
+
+        $comment = BorrowerCommentQuery::create()
+            ->findOneById($borrowerCommentId);
+
+        if (!$comment) {
+            App::abort(404, 'No comment with this id found.');
+        }
+
+        $comment->setPublished(true);
+        $comment->save();
+
+        \Flash::success('Comment is published');
+
+        return Redirect::back();
+    }
 }
