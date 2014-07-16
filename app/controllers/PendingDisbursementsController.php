@@ -6,7 +6,7 @@ use Zidisha\Currency\Money;
 use Zidisha\Loan\Loan;
 use Zidisha\Loan\LoanService;
 
-class AdminReportsController extends BaseController
+class PendingDisbursementsController extends BaseController
 {
     /**
      * @var Zidisha\Loan\LoanService
@@ -24,7 +24,7 @@ class AdminReportsController extends BaseController
             ->filterByBorrowerCountry(1)
             ->find();
 
-        return View::make('admin.reports.pending-disbursements-select-country', compact('countries'));
+        return View::make('admin.pending-disbursements.pending-disbursements-select-country', compact('countries'));
     }
 
     public function postPendingDisbursements()
@@ -43,12 +43,7 @@ class AdminReportsController extends BaseController
 
     public function getPendingDisbursementsByCountry($countryCode)
     {
-        $page = 1;
-
-        if (\Input::has('page')) {
-            $page = Input::get('page');
-        }
-
+        $page = Input::get('page', 1);
 
         $country = CountryQuery::create()
             ->findOneByCountryCode(strtoupper($countryCode));
@@ -74,7 +69,7 @@ class AdminReportsController extends BaseController
 
         $loans->populateRelation('LoanNote');
 
-        return View::make('admin.reports.pending-disbursements', compact('loans', 'exchangeRate', 'currency'));
+        return View::make('admin.pending-disbursements.pending-disbursements', compact('loans', 'exchangeRate', 'currency'));
     }
 
     public function postLoanNote()
@@ -102,7 +97,7 @@ class AdminReportsController extends BaseController
         return \Redirect::back();
     }
 
-    public function postAuthorizedDate()
+    public function postAuthorize()
     {
         $loanId = Input::get('loanId');
         $authorizedAt = \DateTime::createFromFormat('m/d/Y', Input::get('authorizedAt'));
@@ -120,7 +115,7 @@ class AdminReportsController extends BaseController
         return \Redirect::back();
     }
 
-    public function postDisbursedDate()
+    public function postDisburse()
     {
         $loanId = Input::get('loanId');
         $date  = \DateTime::createFromFormat('m/d/Y', Input::get('disbursedDate'));

@@ -512,32 +512,32 @@ Route::group(
 
                 Route::get(
                     'pending-disbursements',
-                    ['uses' => 'AdminReportsController@getPendingDisbursements', 'as' => 'admin:pending-disbursements:select-country']
+                    ['uses' => 'PendingDisbursementsController@getPendingDisbursements', 'as' => 'admin:pending-disbursements:select-country']
                 );
 
                 Route::post(
                     'pending-disbursements',
-                    ['uses' => 'AdminReportsController@postPendingDisbursements']
+                    ['uses' => 'PendingDisbursementsController@postPendingDisbursements']
                 );
 
                 Route::get(
                     'pending-disbursements/{countryId}',
-                    ['uses' => 'AdminReportsController@getPendingDisbursementsByCountry', 'as' => 'admin:pending-disbursements:country']
+                    ['uses' => 'PendingDisbursementsController@getPendingDisbursementsByCountry', 'as' => 'admin:pending-disbursements:country']
                 );
 
                 Route::post(
                     'pending-disbursements/loanNote',
-                    ['uses' => 'AdminReportsController@postLoanNote']
+                    ['uses' => 'PendingDisbursementsController@postLoanNote']
                 );
 
                 Route::post(
                     'pending-disbursements/authorize',
-                    ['uses' => 'AdminReportsController@postAuthorizedDate']
+                    ['uses' => 'PendingDisbursementsController@postAuthorize']
                 );
 
                 Route::post(
                     'pending-disbursements/disbursed',
-                    ['uses' => 'AdminReportsController@postDisbursedDate']
+                    ['uses' => 'PendingDisbursementsController@postDisburse']
                 );
             }
         );

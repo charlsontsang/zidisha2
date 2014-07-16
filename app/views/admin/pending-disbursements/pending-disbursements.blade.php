@@ -42,7 +42,7 @@
                             @if(!$loan->isAuthorized())
                                 Pending Authorization
                                 <br/>
-                                {{ BootstrapForm::open(array('action' => 'AdminReportsController@postAuthorizedDate', 'translationDomain' => 'admin.reports.pending-disbursements.date-authorized')) }}
+                                {{ BootstrapForm::open(array('action' => 'PendingDisbursementsController@postAuthorize', 'translationDomain' => 'admin.reports.pending-disbursements.date-authorized')) }}
                                     {{ BootstrapForm::text('authorizedAt') }}
                                     {{ BootstrapForm::hidden('loanId', $loan->getId()) }}
                                     {{ BootstrapForm::submit('Confirm Authorization') }}
@@ -53,7 +53,7 @@
                                 <br/>
                                 Date : {{ $loan->getAuthorizedAt('M D, Y') }}
 
-                                {{ BootstrapForm::open(array('action' => 'AdminReportsController@postDisbursedDate', 'translationDomain' => 'admin.reports.pending-disbursements.loan-notes')) }}
+                                {{ BootstrapForm::open(array('action' => 'PendingDisbursementsController@postDisburse', 'translationDomain' => 'admin.reports.pending-disbursements.loan-notes')) }}
                                     {{ BootstrapForm::text('disbursedDate') }}
                                     {{ BootstrapForm::hidden('loanId', $loan->getId()) }}
                                     {{ BootstrapForm::hidden('principalAmount', $principalAmount->getAmount()) }}
@@ -74,7 +74,7 @@
                                 </ul>
                             @endif
 
-                            {{ BootstrapForm::open(array('action' => 'AdminReportsController@postLoanNote', 'translationDomain' => 'admin.reports.pending-disbursements.loan-notes')) }}
+                            {{ BootstrapForm::open(array('action' => 'PendingDisbursementsController@postLoanNote', 'translationDomain' => 'admin.reports.pending-disbursements.loan-notes')) }}
                                 {{ BootstrapForm::textarea('note') }}
                                 {{ BootstrapForm::hidden('loanId', $loan->getId()) }}
                                 {{ BootstrapForm::submit('Submit') }}

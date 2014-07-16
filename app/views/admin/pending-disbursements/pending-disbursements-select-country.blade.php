@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('content')
-    {{ BootstrapForm::open(array('controller' => 'AdminReportsController@postPendingDisbursements', 'translationDomain' => 'admin.reports.pending-disbursements')) }}
+    {{ BootstrapForm::open(array('controller' => 'PendingDisbursementsController@postPendingDisbursements', 'translationDomain' => 'admin.reports.pending-disbursements')) }}
 
     {{ BootstrapForm::select('CountryCode', $countries->toKeyValue('CountryCode', 'name')) }}
 
