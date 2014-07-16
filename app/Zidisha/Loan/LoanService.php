@@ -708,7 +708,7 @@ class LoanService
         $graceInstallment
             ->setLoan($loan)
             ->setBorrower($loan->getBorrower())
-            ->setAmount(Money::create(0))
+            ->setAmount(Money::create(0, $loan->getCurrencyCode()))
             ->setDueDate($calculator->installmentGraceDate());
 
         $installments[] = $graceInstallment;

@@ -107,13 +107,16 @@ class LoanApplicationController extends BaseController
         $data = Session::get('loan_data');
         $borrower = Auth::user()->getBorrower();
 
+        //TODO: fetch maximum interest rate from settings
+        $maxInterestRate = 20;
+
         $loan = $this->loanService->createLoan($borrower, $data);
+        $loan->setDisbursedDate(new \DateTime());
+
         $calculator = new InstallmentCalculator($loan);
         $installments = $this->loanService->generateLoanInstallments($loan);
-        
-        // TODO ...
 
-        return $this->stepView('publish', compact('data'));
+        return $this->stepView('publish', compact('data', 'calculator', 'installments', 'loan', 'maxInterestRate'));
     }
 
     public function postPublish()
