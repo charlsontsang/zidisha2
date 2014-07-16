@@ -696,7 +696,7 @@ class LoanService
         return $refunds;
     }
 
-    protected function generateLoanInstallments(Loan $loan)
+    public function generateLoanInstallments(Loan $loan)
     {
         $calculator = new Calculator\InstallmentCalculator($loan);
         $installmentAmount = $calculator->installmentAmount();

@@ -1,6 +1,7 @@
 <?php
 use Zidisha\Borrower\Form\Loan\ApplicationForm;
 use Zidisha\Borrower\Form\Loan\ProfileForm;
+use Zidisha\Loan\Calculator\InstallmentCalculator;
 use Zidisha\Loan\Loan;
 use Zidisha\Loan\CategoryQuery;
 use Zidisha\Loan\LoanQuery;
@@ -104,6 +105,13 @@ class LoanApplicationController extends BaseController
     public function getPublish()
     {
         $data = Session::get('loan_data');
+        $borrower = Auth::user()->getBorrower();
+
+        $loan = $this->loanService->createLoan($borrower, $data);
+        $calculator = new InstallmentCalculator($loan);
+        $installments = $this->loanService->generateLoanInstallments($loan);
+        
+        // TODO ...
 
         return $this->stepView('publish', compact('data'));
     }
