@@ -23,7 +23,7 @@
                 <?php
 
                 $loanAmount = Zidisha\Currency\Converter::fromUSD($loan->getAmount(), $currency, $exchangeRate);
-                $serviceFee = Zidisha\Currency\Money::create($loan->getServiceFeeRate(), $currency);
+                $serviceFee = Zidisha\Currency\Money::create($loan->getRegistrationFee(), $currency);
                 $principalAmount = $loanAmount->subtract($serviceFee);
 
                 ?>
