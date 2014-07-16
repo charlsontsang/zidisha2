@@ -21,7 +21,7 @@ class PendingDisbursementsController extends BaseController
     public function getPendingDisbursements()
     {
         $countries = CountryQuery::create()
-            ->filterByBorrowerCountry(1)
+            ->filterByBorrowerCountry(true)
             ->find();
 
         return View::make('admin.pending-disbursements.pending-disbursements-select-country', compact('countries'));
@@ -29,14 +29,14 @@ class PendingDisbursementsController extends BaseController
 
     public function postPendingDisbursements()
     {
-        if (!\Input::get('country')) {
-            \App::abort(404, 'please select proper country');
+        if (!\Input::get('countryCode')) {
+            \App::abort(404, 'Please select proper country');
         }
 
-        $countryCode = \Input::get('CountryCode');
+        $countryCode = \Input::get('countryCode');
 
         return Redirect::action(
-            'AdminReportsController@getPendingDisbursementsByCountry',
+            'PendingDisbursementsController@getPendingDisbursementsByCountry',
             ['countryCode' => $countryCode]
         );
     }

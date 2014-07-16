@@ -3,7 +3,7 @@
 @section('content')
     {{ BootstrapForm::open(array('controller' => 'PendingDisbursementsController@postPendingDisbursements', 'translationDomain' => 'admin.reports.pending-disbursements')) }}
 
-    {{ BootstrapForm::select('CountryCode', $countries->toKeyValue('CountryCode', 'name')) }}
+    {{ BootstrapForm::select('countryCode', $countries->toKeyValue('countryCode', 'name')) }}
 
     {{ BootstrapForm::submit('Select') }}
 
