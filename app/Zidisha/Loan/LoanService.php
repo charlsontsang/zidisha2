@@ -3,6 +3,7 @@
 namespace Zidisha\Loan;
 
 use Propel\Runtime\Connection\ConnectionInterface;
+use Zidisha\Admin\Setting;
 use Zidisha\Analytics\MixpanelService;
 use Zidisha\Balance\TransactionQuery;
 use Zidisha\Balance\TransactionService;
@@ -651,13 +652,12 @@ class LoanService
                 $this->transactionService->addFeeTransaction($con, $nativeAmount, $loan);
             }
 
-            //TODO service fee rate
             $loan
                 ->setStatus(Loan::ACTIVE)
                 ->setDisbursedAmount($nativeAmount)
                 ->setDisbursedAt($disbursedAt)
                 ->calculateExtraDays($disbursedAt)
-                ->setServiceFeeRate(2.5);
+                ->setServiceFeeRate(Setting::get('loan.serviceFeeRate'));
             $loan->save($con);
 
             $this->changeLoanStage($con, $loan, Loan::FUNDED, Loan::ACTIVE);
@@ -669,7 +669,6 @@ class LoanService
             }
         });
 
-        //TODO Add repayment schedule
         //TODO Send email / sift sience event
     }
 

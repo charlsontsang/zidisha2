@@ -40,6 +40,11 @@ return [
             'default' => '24',
             'rule'    => 'numeric',
         ],
+        'loan.serviceFeeRate' => [
+            'label'   => 'Borrower transaction fee rate (% of loan principal per annum)',
+            'default' => '5',
+            'rule'    => 'numeric',
+        ],
     ],
     'API' => [
         'facebook.appId' => [
