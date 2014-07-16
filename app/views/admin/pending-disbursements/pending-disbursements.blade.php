@@ -34,7 +34,7 @@
                         <td> {{ $loan->getBorrower()->getProfile()->getNationalIdNumber() }} </td>
                         <td> {{ $loan->getBorrower()->getProfile()->getPhoneNumber() }} </td>
                         <td> {{ $loan->getAcceptBidsNote() }} </td>
-                        <td> {{ $loan->getAcceptedDate('D M, YY') }} </td>
+                        <td> {{ $loan->getAcceptedAt('D M, YY') }} </td>
                         <td> {{ $principalAmount }} </td>
 
                         <!-- Loan Status Column -->

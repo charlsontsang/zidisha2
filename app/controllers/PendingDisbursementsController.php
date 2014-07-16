@@ -62,9 +62,9 @@ class PendingDisbursementsController extends BaseController
                 ->filterByCountry($country)
             ->endUse()
             ->filterByStatus(Loan::FUNDED)
+            ->orderByAcceptedAt('desc')
             ->joinWith('Borrower')
             ->joinWith('Borrower.Profile')
-            ->orderBy('accepted_date', 'desc')
             ->paginate($page, 10);
 
         $loans->populateRelation('LoanNote');

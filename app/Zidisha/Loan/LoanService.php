@@ -494,7 +494,7 @@ class LoanService
             $loan
                 ->setStatus(Loan::FUNDED)
                 ->setInterestRate($totalInterest)
-                ->setAcceptedDate(new \DateTime())
+                ->setAcceptedAt(new \DateTime())
                 ->setFinalInterestRate($totalInterest)
                 ->save($con);
 

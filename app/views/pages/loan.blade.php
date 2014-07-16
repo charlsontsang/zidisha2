@@ -125,7 +125,7 @@
                         @foreach($previousLoans as $oneLoan)
                         <p><a href="{{ route('loan:index', $oneLoan->getId()) }}">USD {{ $oneLoan->getNativeAmount() }}
                                 {{ $oneLoan->getAppliedAt()->format('d-m-Y') }}
-                                {{-- TODO $oneLoan->getAcceptedDate()->format('d-m-Y')
+                                {{-- TODO $oneLoan->getAcceptedAt()->format('d-m-Y')
                                 $oneLoan->getExpiredDate()->format('d-m-Y')
                                 TODO change nativeAmount to disbursedAmount in USD
                                 --}}

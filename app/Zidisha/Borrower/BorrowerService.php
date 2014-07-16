@@ -364,7 +364,7 @@ class BorrowerService
     {
         $loans = LoanQuery::create()
             ->filterByBorrower($borrower)
-            ->orderByAcceptedDate('desc')
+            ->orderByAcceptedAt('desc')
             ->find();
 
         $previousLoans = [];
