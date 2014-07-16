@@ -1,5 +1,11 @@
 <?php
 return [
+    'progress-bar' => [
+        'instructions-page' => 'Instructions',
+        'profile-page' => 'Complete your profile',
+        'application-page' => 'Loan application',
+        'publish-page' => 'Review and publish',
+    ],
     'publish-loan' => [
         'amount-requested'                      => 'Amount Requested',
         'maximum-interest-rate'                 => 'Maximum Interest Rate',
