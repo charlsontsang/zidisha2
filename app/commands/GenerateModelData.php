@@ -507,20 +507,20 @@ class GenerateModelData extends Command
                     $borrower->setLoanStatus(Loan::FUNDED);
                     $borrower->setActiveLoan($Loan);
                     $Loan->setStatus(Loan::FUNDED);
-                    $Loan->setNativeDisbursedAmount($amount);
-                    $Loan->setDisbursedDate(new \DateTime());
+                    $Loan->setDisbursedAmount($amount);
+                    $Loan->setDisbursedAt(new \DateTime());
                     $Stage->setStatus(Loan::FUNDED);
                 } elseif ($i < ($status * 4)) {
                     $borrower->setLoanStatus(Loan::ACTIVE);
                     $borrower->setActiveLoan($Loan);
                     $Loan->setStatus(Loan::ACTIVE);
-                    $Loan->setDisbursedDate(new \DateTime());
+                    $Loan->setDisbursedAt(new \DateTime());
                     $Stage->setStatus(Loan::ACTIVE);
                 } elseif ($i < ($status * 5)) {
                     $borrower->setLoanStatus(Loan::REPAID);
                     $borrower->setActiveLoan($Loan);
-                    $Loan->setNativeDisbursedAmount($amount);
-                    $Loan->setDisbursedDate(strtotime("-1 year"));
+                    $Loan->setDisbursedAmount($amount);
+                    $Loan->setDisbursedAt(strtotime("-1 year"));
                     $Loan->setStatus(Loan::REPAID);
                     $Stage->setStatus(Loan::REPAID);
                 } elseif ($i < ($status * 6)) {

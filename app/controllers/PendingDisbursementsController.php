@@ -118,8 +118,7 @@ class PendingDisbursementsController extends BaseController
     public function postDisburse()
     {
         $loanId = Input::get('loanId');
-        $date  = \DateTime::createFromFormat('m/d/Y', Input::get('disbursedDate'));
-
+        $disbursedAt  = \DateTime::createFromFormat('m/d/Y', Input::get('disbursedAt'));
 
         $loan = \Zidisha\Loan\LoanQuery::create()
             ->findOneById($loanId);
@@ -130,10 +129,10 @@ class PendingDisbursementsController extends BaseController
             App::abort(404, 'Loan not found');
         }
 
-        $loan->setDisbursedDate($date);
+        $loan->setDisbursedAt($disbursedAt);
         $loan->save();
 
-        $this->loanService->disburseLoan($loan, $date, $principalAmount);
+        $this->loanService->disburseLoan($loan, $disbursedAt, $principalAmount);
 
         return \Redirect::back();
     }

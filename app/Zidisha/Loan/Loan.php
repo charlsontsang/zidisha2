@@ -61,9 +61,9 @@ class Loan extends BaseLoan
         return Currency::valueOf($this->getCurrencyCode());
     }
 
-    public function calculateExtraDays($disbursedDate)
+    public function calculateExtraDays($disbursedAt)
     {
-        $date = Carbon::instance($disbursedDate);
+        $date = Carbon::instance($disbursedAt);
         
         if ($this->isWeeklyInstallment()) {
             $extraDays = ($this->getInstallmentDay() - $date->dayOfWeek + 7) % 7;
@@ -73,7 +73,7 @@ class Loan extends BaseLoan
                 $date->addMonth();
             }
             $date->day($this->getInstallmentDay());
-            $extraDays = $date->diffInDays(Carbon::instance($disbursedDate));
+            $extraDays = $date->diffInDays(Carbon::instance($disbursedAt));
         }
         
         return $this->setExtraDays($extraDays);

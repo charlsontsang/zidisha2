@@ -54,7 +54,7 @@
                                 Date : {{ $loan->getAuthorizedAt('M D, Y') }}
 
                                 {{ BootstrapForm::open(array('action' => 'PendingDisbursementsController@postDisburse', 'translationDomain' => 'admin.reports.pending-disbursements.loan-notes')) }}
-                                    {{ BootstrapForm::text('disbursedDate') }}
+                                    {{ BootstrapForm::text('disbursedAt') }}
                                     {{ BootstrapForm::hidden('loanId', $loan->getId()) }}
                                     {{ BootstrapForm::hidden('principalAmount', $principalAmount->getAmount()) }}
                                     {{ BootstrapForm::submit('Confirm Disbursement') }}

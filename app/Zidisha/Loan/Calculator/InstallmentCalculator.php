@@ -75,7 +75,7 @@ class InstallmentCalculator
 
     public function installmentGraceDate()
     {
-        $date = Carbon::instance($this->loan->getDisbursedDate());
+        $date = Carbon::instance($this->loan->getDisbursedAt());
 
         return $date->addDays($this->loan->getExtraDays());
     }

@@ -118,8 +118,8 @@ class RepaymentCalculator extends InstallmentCalculator
     public function repaymentAmountForLenders()
     {
         // TODO use disbursed amount in lenderInterest
-        $totalLendersAmount = $this->loan->getNativeDisbursedAmount()->add($this->lenderInterest());
-        $ratio = $this->loan->getNativeDisbursedAmount()->divide($totalLendersAmount);
+        $totalLendersAmount = $this->loan->getDisbursedAmount()->add($this->lenderInterest());
+        $ratio = $this->loan->getDisbursedAmount()->divide($totalLendersAmount);
         
         $repaymentAmountForLenders = $this->repaymentAmount->subtract($this->installmentServiceFee());
 

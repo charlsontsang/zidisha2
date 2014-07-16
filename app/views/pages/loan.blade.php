@@ -150,9 +150,9 @@
         <div class="panel panel-default">
             <div class="panel-heading"><b>About this Loan</b></div>
             <div class="panel-body">
-                <p><b>Loan Principal Disbursed: </b>USD {{ $loan->getNativeDisbursedAmount() }}</p>
+                <p><b>Loan Principal Disbursed: </b>USD {{ $loan->getDisbursedAmount() }}</p>
 
-                <p><b>Date Disbursed: </b> {{ $loan->getDisbursedDate()->format('d-m-Y') }}</p>
+                <p><b>Date Disbursed: </b> {{ $loan->getDisbursedAt()->format('d-m-Y') }}</p>
 
                 <p><b>Repayment period: </b> <a href="#" class="repaymentPeriod" data-toggle="tooltip">(?)</a>
                     {{ $loan->getInstallmentCount() }}

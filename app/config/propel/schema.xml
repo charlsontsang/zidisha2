@@ -85,13 +85,13 @@
         <column name="applied_at" type="TIMESTAMP" required="true"/>
         <column name="accepted_at" type="TIMESTAMP"/>
         <column name="expired_date" type="TIMESTAMP"/>
+        <column name="disbursed_at" type="TIMESTAMP" required="false"/>
+        <column name="disbursed_amount" type="DECIMAL" size="10" scale="2" phpType="string"/>
         <column name="registration_fee" type="DECIMAL" size="10" scale="2" defaultValue="0.00" phpType="string"/>
         <column name="raised_usd_amount" type="DECIMAL" size="10" scale="2" phpType="string" default="0"/>
         <column name="raised_percentage" type="INTEGER" size="3" required="false" default="0"/>
-        <column name="native_disbursed_amount" type="DECIMAL" size="10" scale="2" phpType="string"/>
-        <column name="disbursed_date" type="TIMESTAMP" required="false"/>
-        <column name="extra_days" type="INTEGER"/>
         <column name="service_fee_rate" type="DECIMAL" size="5" scale="2" phpType="string"/>
+        <column name="extra_days" type="INTEGER"/>
         <column name="currency_code" type="VARCHAR" size="3" required="true"/>
         <column name="installment_period" type="ENUM" valueSet="monthly, weekly"/>
         <column name="installment_count" type="INTEGER"/>

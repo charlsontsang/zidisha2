@@ -629,7 +629,7 @@ class LoanService
         }
     }
 
-    public function disburseLoan(Loan $loan, \DateTime $disbursedDate, Money $nativeAmount)
+    public function disburseLoan(Loan $loan, \DateTime $disbursedAt, Money $nativeAmount)
     {
         $isDisbursed = TransactionQuery::create()
             ->filterByLoan($loan)
@@ -641,7 +641,7 @@ class LoanService
             return;
         }
 
-        PropelDB::transaction(function($con) use ($loan, $disbursedDate, $nativeAmount) {
+        PropelDB::transaction(function($con) use ($loan, $disbursedAt, $nativeAmount) {
             $this->transactionService->addDisbursementTransaction($con, $nativeAmount, $loan);
 
             $loans = LoanQuery::create()
@@ -654,9 +654,9 @@ class LoanService
             //TODO service fee rate
             $loan
                 ->setStatus(Loan::ACTIVE)
-                ->setNativeDisbursedAmount($nativeAmount)
-                ->setDisbursedDate($disbursedDate)
-                ->calculateExtraDays($disbursedDate)
+                ->setDisbursedAmount($nativeAmount)
+                ->setDisbursedAt($disbursedAt)
+                ->calculateExtraDays($disbursedAt)
                 ->setServiceFeeRate(2.5);
             $loan->save($con);
 
@@ -730,10 +730,10 @@ class LoanService
     {
         if($loan->getInstallmentPeriod() == 0){
 
-            $totalInterest = ($loan->getNativeDisbursedAmount())*($loan->getInterestRate()/100)*($loan->getInstallmentCount()
+            $totalInterest = ($loan->getDisbursedAmount())*($loan->getInterestRate()/100)*($loan->getInstallmentCount()
                     /12);
         }else{
-            $totalInterest = ($loan->getNativeDisbursedAmount())*($loan->getInterestRate()/100)*($loan->getInstallmentCount()
+            $totalInterest = ($loan->getDisbursedAmount())*($loan->getInterestRate()/100)*($loan->getInstallmentCount()
                     /52);
         }
         //TODO. change nativeAmount to USD
@@ -743,7 +743,7 @@ class LoanService
 
     public function calculateTransactionFee(Loan $loan)
     {
-        return $loan->getNativeDisbursedAmount()*(5/100);
+        return $loan->getDisbursedAmount()*(5/100);
         //TODO. change nativeAmount to USD
     }
 
