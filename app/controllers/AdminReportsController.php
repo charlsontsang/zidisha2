@@ -33,7 +33,7 @@ class AdminReportsController extends BaseController
             \App::abort(404, 'please select proper country');
         }
 
-        $countryCode = \Input::get('country');
+        $countryCode = \Input::get('CountryCode');
 
         return Redirect::action(
             'AdminReportsController@getPendingDisbursementsByCountry',
