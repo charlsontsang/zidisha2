@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('content')
-<a href="{{ route('admin:pending-disbursements:select-country') }}">Back</a>
+<a href="{{ route('admin:pending-disbursements') }}">Back</a>
     @if($loans)
         <table class="table table-striped">
             <thead>

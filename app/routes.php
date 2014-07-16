@@ -520,12 +520,12 @@ Route::group(
 
                 Route::get(
                     'pending-disbursements',
-                    ['uses' => 'PendingDisbursementsController@getPendingDisbursements', 'as' => 'admin:pending-disbursements:select-country']
+                    ['uses' => 'PendingDisbursementsController@getPendingDisbursements', 'as' => 'admin:pending-disbursements']
                 );
 
                 Route::post(
                     'pending-disbursements',
-                    ['uses' => 'PendingDisbursementsController@postPendingDisbursements']
+                    ['uses' => 'PendingDisbursementsController@postPendingDisbursements', 'as' => 'admin:pending-disbursements']
                 );
 
                 Route::get(
