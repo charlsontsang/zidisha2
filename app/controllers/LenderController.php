@@ -7,6 +7,7 @@ use Zidisha\Currency\Money;
 use Zidisha\Lender\Form\EditProfile;
 use Zidisha\Lender\Form\Funds;
 use Zidisha\Lender\Form\GiftCard;
+use Zidisha\Lender\Form\WithdrawFundsForm;
 use Zidisha\Lender\LenderQuery;
 use Zidisha\Lender\LenderService;
 use Zidisha\Payment\Form\UploadFundForm;
@@ -21,6 +22,7 @@ class LenderController extends BaseController
 
     private $lenderService;
     private $uploadFundForm;
+    private $withdrawFundsForm;
 
 
     public function __construct(
@@ -29,7 +31,8 @@ class LenderController extends BaseController
         Funds $fundsForm,
         LenderService $lenderService,
         GiftCard $cardForm,
-        UploadFundForm $uploadFundForm
+        UploadFundForm $uploadFundForm,
+        WithdrawFundsForm $withdrawFundsForm
 
     ) {
         $this->editProfileForm = $editProfileForm;
@@ -38,6 +41,7 @@ class LenderController extends BaseController
         $this->lenderService = $lenderService;
         $this->cardForm = $cardForm;
         $this->uploadFundForm = $uploadFundForm;
+        $this->withdrawFundsForm = $withdrawFundsForm;
     }
 
     public function getPublicProfile($username)
@@ -153,6 +157,25 @@ class LenderController extends BaseController
         }
 
         \Flash::error("Entered Amounts are invalid!");
+        return Redirect::route('lender:funds')->withForm($form);
+    }
+
+    public function postWithdrawalFund()
+    {
+        $form = $this->withdrawFundsForm;
+        $form->handleRequest(\Request::instance());
+
+        if ($form->isValid()) {
+            $data = $form->getData();
+            $lender = Auth::user()->getLender();
+            $withdrawalRequest = $this->lenderService->addWithdrawRequest($lender, $data);
+            if ($withdrawalRequest) {
+                \Flash::success("Your withdrawal has been successfully processed, and the requested amount should be credited to your PayPal account within one week. Thanks for your participation!");
+                return Redirect::route('lender:funds');
+            }
+        }
+
+        \Flash::error("Entered Values are invalid!");
         return Redirect::route('lender:funds')->withForm($form);
     }
 }

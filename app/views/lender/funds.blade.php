@@ -47,7 +47,7 @@ USD <span id="total-amount-display"></span>
 <input type="submit" id="paypal-payment" class="btn btn-primary" value="Pay With Paypal" name="submit_paypal">
 
 {{ BootstrapForm::close() }}
-
+<br><br>
 <div>
     <strong>Redeem Gift Card</strong>
 </div>
@@ -57,10 +57,30 @@ USD <span id="total-amount-display"></span>
 
 {{ BootstrapForm::text('redemptionCode') }}
 
-<br/>
 <button id="stripe-payment" class="btn btn-primary">Submit</button>
 
 {{ BootstrapForm::close() }}
+<br><br>
+<div>
+    <strong>WithDraw Funds</strong>
+</div>
+<br>
+<p>You may request withdrawal of your available balance here. The requested withdrawal amount will be transferred to your
+PayPal account</p>
+<br/>
+
+<div>
+    <p>Balance available: USD {{ $currentBalance }} </p>
+</div>
+{{ BootstrapForm::open(array('route' => 'lender:post-withdraw-funds', 'translationDomain' => 'withdrawFunds')) }}
+
+{{ BootstrapForm::text('paypalEmail') }}
+{{ BootstrapForm::text('withdrawAmount') }}
+
+<button id="stripe-payment" class="btn btn-primary">Withdraw</button>
+
+{{ BootstrapForm::close() }}
+<br><br>
 
 @stop
 

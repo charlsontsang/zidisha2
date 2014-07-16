@@ -386,4 +386,19 @@ class TransactionService
             ->setSubType(Transaction::DONATE_BY_ADMIN);
         $transactionDonation->save($con);
     }
+
+    public function addWithdrawFundTransaction(ConnectionInterface $con, Money $amount, Lender $lender)
+    {
+        $this->assertAmount($amount);
+
+        $transaction = new Transaction();
+        $transaction
+            ->setAmount($amount->multiply(-1))
+            ->setUserId($lender->getId())
+            ->setType(Transaction::FUND_WITHDRAW)
+            ->setTransactionDate(new \DateTime())
+            ->setDescription('Lender Fund Withdraw');
+
+        $transaction->save($con);
+    }
 }

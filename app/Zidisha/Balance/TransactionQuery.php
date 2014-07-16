@@ -29,6 +29,26 @@ class TransactionQuery extends BaseTransactionQuery
         return Money::create($total, 'USD');
     }
 
+    public function getTotalAmounts($userIds)
+    {
+        $amounts = [];
+        $totals = $this
+            ->filterByUserId($userIds)
+            ->groupByUserId()
+            ->select(array('user_id', 'total'))
+            ->withColumn('SUM(amount)', 'total')
+            ->find();
+
+        foreach ($totals as $total) {
+            $amounts[$total['user_id']] = Money::create($total['total']);
+        }
+        foreach ($userIds as $userId) {
+            $amounts = $amounts + [$userId => Money::create(0)];
+        }
+
+        return $amounts;
+    }
+
     public function filterLoanBids()
     {
         return $this->filterByType([Transaction::LOAN_BID, Transaction::LOAN_OUTBID]);
@@ -42,6 +62,20 @@ class TransactionQuery extends BaseTransactionQuery
     public function filterServiceFee()
     {
         return $this->filterByType(Transaction::FEE);
+    }
+
+    public function filterFundUpload()
+    {
+        return $this->filterByType(Transaction::FUND_UPLOAD);
+    }
+
+    public function filterFundWithdraw()
+    {
+        return $this->filterByType(Transaction::FUND_WITHDRAW);
+    }
+    public function filterRepaidToLender()
+    {
+        return $this->filterByType(Transaction::LOAN_BACK_LENDER);
     }
     
     public function getNativeTotalAmount(Currency $currency)
