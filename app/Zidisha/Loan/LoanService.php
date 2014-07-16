@@ -100,7 +100,8 @@ class LoanService
         $registrationFee = $isFirstLoan ? $borrower->getCountry()->getRegistrationFee() : 0;
         
         $loan = new Loan();
-        $loan->setSummary($data['summary'])
+        $loan
+            ->setSummary($data['summary'])
             ->setProposal($data['proposal'])
             ->setCurrencyCode($currencyCode)
             ->setAmount(Money::create($data['amount'], $currencyCode))
