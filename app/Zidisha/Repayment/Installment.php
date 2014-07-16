@@ -12,7 +12,7 @@ class Installment extends BaseInstallment
      */
     public function getAmount()
     {
-        return Money::create(parent::getAmount(), 'USD');
+        return Money::create(parent::getAmount(), $this->getLoan()->getCurrencyCode());
     }
 
     /**
@@ -29,7 +29,7 @@ class Installment extends BaseInstallment
      */
     public function getPaidAmount()
     {
-        return Money::create(parent::getPaidAmount(), 'USD');
+        return Money::create(parent::getPaidAmount(), $this->getLoan()->getCurrencyCode());
     }
 
     /**
