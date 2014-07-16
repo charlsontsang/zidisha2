@@ -130,4 +130,9 @@ class Loan extends BaseLoan
     {
         return !$this->getAmount()->greaterThan($this->getRaisedUsdAmount());
     }
+
+    public function isAuthorized()
+    {
+        return (boolean) $this->getAuthorizedAt();
+    }
 }

@@ -509,6 +509,36 @@ Route::group(
                     'translation/{filename}/{languageCode}',
                     ['uses' => 'TranslationController@postTranslations', 'as' => 'admin:translation:post']
                 );
+
+                Route::get(
+                    'pending-disbursements',
+                    ['uses' => 'PendingDisbursementsController@getPendingDisbursements', 'as' => 'admin:pending-disbursements:select-country']
+                );
+
+                Route::post(
+                    'pending-disbursements',
+                    ['uses' => 'PendingDisbursementsController@postPendingDisbursements']
+                );
+
+                Route::get(
+                    'pending-disbursements/{countryId}',
+                    ['uses' => 'PendingDisbursementsController@getPendingDisbursementsByCountry', 'as' => 'admin:pending-disbursements:country']
+                );
+
+                Route::post(
+                    'pending-disbursements/loanNote',
+                    ['uses' => 'PendingDisbursementsController@postLoanNote']
+                );
+
+                Route::post(
+                    'pending-disbursements/authorize',
+                    ['uses' => 'PendingDisbursementsController@postAuthorize']
+                );
+
+                Route::post(
+                    'pending-disbursements/disbursed',
+                    ['uses' => 'PendingDisbursementsController@postDisburse']
+                );
             }
         );
 
