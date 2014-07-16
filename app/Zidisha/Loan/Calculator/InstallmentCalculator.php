@@ -48,13 +48,13 @@ class InstallmentCalculator
 
     public function lenderInterest()
     {
-        return $this->loan->getNativeAmount()
+        return $this->loan->getAmount()
             ->multiply($this->yearlyInterestRateRatio() * $this->loan->getFinalInterestRate() / 100);
     }
 
     public function serviceFee()
     {
-        return $this->loan->getNativeAmount()
+        return $this->loan->getAmount()
             ->multiply($this->yearlyInterestRateRatio() * $this->loan->getServiceFeeRate() / 100);
     }
 
@@ -65,7 +65,7 @@ class InstallmentCalculator
 
     public function totalAmount()
     {
-        return $this->loan->getNativeAmount()->add($this->totalInterest());
+        return $this->loan->getAmount()->add($this->totalInterest());
     }
 
     public function installmentAmount()
