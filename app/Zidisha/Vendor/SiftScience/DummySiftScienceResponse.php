@@ -4,16 +4,11 @@ namespace Zidisha\Vendor\SiftScience;
 
 class DummySiftScienceResponse
 {
-    public $body;
+    public  $body;
 
     public function isOk()
     {
         return true;
-    }
-
-    public function getBody()
-    {
-        return $this->body;
     }
 
     public function setBody($body)
