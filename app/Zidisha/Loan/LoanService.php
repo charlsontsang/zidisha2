@@ -471,7 +471,7 @@ class LoanService
             ->getOrderedBids($loan)
             ->find();
 
-        $acceptedBids = $this->getAcceptedBids($bids, $loan->getAmount());
+        $acceptedBids = $this->getAcceptedBids($bids, $loan->getUsdAmount());
 
         PropelDB::transaction(function($con) use ($acceptedBids, $loan) {
             $totalAmount = Money::create(0);
