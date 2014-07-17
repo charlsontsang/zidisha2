@@ -9,6 +9,17 @@ use Zidisha\Vendor\Mixpanel;
 
 class MixpanelService
 {
+
+    public function trackLenderJoined(Lender $lender)
+    {
+        Mixpanel::alias($lender->getId());
+        Mixpanel::track('Signed up', array(
+            'username'  => $lender->getUser()->getUsername(),
+            'userlevel' => 'lender',
+            'email'     => $lender->getUser()->getEmail(),
+        ));
+    }
+    
     public function trackPlacedBid(Bid $bid)
     {
         $amount = $bid->getBidAmount()->getAmount();

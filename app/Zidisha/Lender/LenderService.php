@@ -213,6 +213,8 @@ class LenderService
         $lender->setProfile($profile);
         $lender->save();
 
+        $this->mixpanelService->trackLenderJoined($lender);
+        
         $this->lenderMailer->sendIntroductionMail($lender);
 
         return $lender;
