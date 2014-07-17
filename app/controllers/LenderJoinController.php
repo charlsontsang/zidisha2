@@ -1,6 +1,6 @@
 <?php
 
-use Zidisha\Lender\Form\Join;
+use Zidisha\Lender\Form\JoinForm;
 use Zidisha\Lender\InviteVisitQuery;
 use Zidisha\Lender\Lender;
 use Zidisha\Lender\LenderService;
@@ -16,7 +16,7 @@ class LenderJoinController extends BaseController
     private $facebookService;
 
     /**
-     * @var Zidisha\Lender\Form\Join
+     * @var Zidisha\Lender\Form\JoinForm
      */
     private $joinForm;
 
@@ -32,7 +32,7 @@ class LenderJoinController extends BaseController
 
     public function __construct(
         FacebookService $facebookService,
-        Join $joinForm,
+        JoinForm $joinForm,
         LenderService $lenderService,
         GoogleService $googleService
     ) {

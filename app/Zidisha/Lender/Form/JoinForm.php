@@ -6,7 +6,7 @@ namespace Zidisha\Lender\Form;
 use Zidisha\Country\CountryQuery;
 use Zidisha\Form\AbstractForm;
 
-class Join extends AbstractForm
+class JoinForm extends AbstractForm
 {
     
     protected $facebookJoin = false;
