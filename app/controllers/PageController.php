@@ -1,5 +1,8 @@
 <?php
 
+use Zidisha\Comment\BorrowerComment;
+use Zidisha\Comment\BorrowerCommentQuery;
+
 class PageController extends BaseController {
 
 	public function getOurStory() {
@@ -42,5 +45,18 @@ class PageController extends BaseController {
     {
         //TODO change links on this page
         return View::make('borrower.feature-criteria');
+    }
+
+    public function getProjectUpdates()
+    {
+        $page = Input::get('page', 1);
+
+        $comments = BorrowerCommentQuery::create()
+            ->filterByPublished(true)
+            ->orderByCreatedAt('desc')
+            ->joinWith('User')
+            ->paginateWithUploads($page, 10);
+
+        return View::make('pages.project-updates', compact('comments'));
     }
 }

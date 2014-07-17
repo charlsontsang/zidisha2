@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use Zidisha\Admin\Form\ExchangeRateForm;
 use Zidisha\Admin\Form\FeatureFeedbackForm;
 use Zidisha\Admin\Form\FilterBorrowers;
@@ -14,6 +15,8 @@ use Zidisha\Balance\TransactionQuery;
 use Zidisha\Balance\WithdrawalRequestQuery;
 use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Borrower\BorrowerService;
+use Zidisha\Borrower\FeedbackMessageQuery;
+use Zidisha\Comment\BorrowerCommentQuery;
 use Zidisha\Comment\CommentQuery;
 use Zidisha\Borrower\Form\AdminEditForm;
 use Zidisha\Country\CountryQuery;
@@ -538,5 +541,38 @@ class AdminController extends BaseController
         }
         \Flash::success("Successfully processed!");
         return Redirect::route('admin:get:withdrawal-requests');
+    }
+
+    public function getPublishComments()
+    {
+        $page = Input::get('page', 1);
+
+        $comments = BorrowerCommentQuery::create()
+            ->filterByPublished(false)
+            ->filterByCreatedAt(array('min' => Carbon::create()->subMonth()))
+            ->orderByCreatedAt('desc')
+            ->joinWith('User')
+            ->paginateWithUploads($page, 10);
+
+        return View::make('admin.publish-comments', compact('comments'));
+    }
+
+    public function postPublishComments()
+    {
+        $borrowerCommentId = Input::get('borrowerCommentId');
+
+        $comment = BorrowerCommentQuery::create()
+            ->findOneById($borrowerCommentId);
+
+        if (!$comment) {
+            App::abort(404, 'No comment with this id found.');
+        }
+
+        $comment->setPublished(true);
+        $comment->save();
+
+        \Flash::success('Comment is published');
+
+        return Redirect::back();
     }
 }

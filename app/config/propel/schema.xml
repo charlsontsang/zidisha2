@@ -307,6 +307,7 @@
     </table>
 
     <table name="borrower_comments" phpName="BorrowerComment" namespace="Comment">
+        <column name="published" type="BOOLEAN" defaultValue="false"/>
         <behavior name="concrete_inheritance">
             <parameter name="extends" value="comments" />
             <parameter name="copy_data_to_parent" value="false" />
@@ -374,7 +375,7 @@
         </foreign-key>
     </table>
 
-    <table name="borrower_upload" namespace="Borrower" isCrossRef="true">
+    <table name="borrower_uploads" namespace="Borrower" isCrossRef="true">
         <column name="borrower_id" type="INTEGER" required="true" primaryKey="true"/>
         <column name="upload_id" type="INTEGER" required="true" primaryKey="true"/>
         <foreign-key foreignTable="borrowers" phpName="Borrower">

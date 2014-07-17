@@ -563,6 +563,16 @@ Route::group(
                     array('uses' => 'AdminController@postWithdrawalRequests', 'as' => 'admin:post:withdrawal-requests')
 
                 );
+
+                Route::get(
+                    'publish-comments',
+                    array('uses' => 'AdminController@getPublishComments', 'as' => 'admin:moderate-comments')
+                );
+
+                Route::post(
+                    'publish-comments',
+                    array('uses' => 'AdminController@postPublishComments', 'as' => 'admin:post:moderate-comments')
+                );
             }
         );
 
@@ -597,6 +607,15 @@ Route::group(
         Route::get('groups/{id}', array(
                 'uses' => 'LendingGroupController@getGroup',
                 'as'   => 'lender:group'
+            )
+        );
+
+        /**
+         * Route for project updates
+         */
+        Route::get('project-updates', array(
+                'uses' => 'PageController@getProjectUpdates',
+                'as'   => 'project-updates'
             )
         );
     }
