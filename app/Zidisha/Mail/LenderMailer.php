@@ -102,13 +102,11 @@ class LenderMailer
 
     public function sendIntroductionMail(Lender $lender)
     {
-        $time = Carbon::create()->addDay();
         $this->mailer->later(
             3600 * 24,
             'emails.lender.introduction',
             [
                 'to'      => $lender->getUser()->getEmail(),
-                'from'    => 'service@zidisha.com',
                 'subject' => 'Welcome to Zidisha!'
             ]
         );

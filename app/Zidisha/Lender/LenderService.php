@@ -47,7 +47,6 @@ class LenderService
 
         if (!empty($data['password'])) {
             $lender->getUser()->setPassword($data['password']);
-
         }
 
         $lender->save();
@@ -310,6 +309,7 @@ class LenderService
         return $errors;
     }
 
+    // TODO Move to BalanceService
     public function addWithdrawRequest(Lender $lender, $data)
     {
         $amount = Money::create($data['withdrawAmount']);
