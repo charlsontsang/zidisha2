@@ -48,7 +48,7 @@ class AuthController extends BaseController
 
         $this->siftScienceService->sendInvalidLoginEvent();
 
-        Flash::error("Wrong username or password!");
+        Flash::error('borrower.login.flash.login-error');
         return Redirect::route('login');
     }
 

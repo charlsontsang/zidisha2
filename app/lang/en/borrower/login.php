@@ -8,5 +8,8 @@ return [
         'password' => 'Password',
         'remember-me' => 'Remember Me',
         'submit' => 'Login',
+    ],
+    'flash' => [
+        'login-error' => 'Wrong username or password!',
     ]
 ];
