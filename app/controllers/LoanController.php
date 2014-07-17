@@ -71,19 +71,18 @@ class LoanController extends BaseController
             ->orderByBidDate()
             ->find();
 
-        $totalInterest = $this->loanService->calculateTotalInterest($loan);
-        $transactionFee = $this->loanService->calculateTransactionFee($loan);
+        $calculator = new \Zidisha\Loan\Calculator\InstallmentCalculator($loan);
+        $totalInterest = $calculator->totalInterest();
+        $serviceFee = $calculator->serviceFee();
         $previousLoans = $this->borrowerService->getPreviousLoans($borrower, $loan);
 
         $placeBidForm = new PlaceBidForm($loan);
 
-
-        $commentType = 'borrowerComment';
-
         return View::make(
             'pages.loan',
-            compact('loan', 'commentType', 'borrower', 'receiver', 'bids', 'totalRaised', 'stillNeeded', 'comments', 'raised', 'totalInterest',
-                'transactionFee', 'previousLoans'),
+            compact(
+                'loan', 'borrower', 'bids', 'comments',
+                'totalInterest', 'serviceFee', 'previousLoans'),
             ['placeBidForm' => $placeBidForm, 'categoryForm' =>$this->adminCategoryForm]
         );
     }

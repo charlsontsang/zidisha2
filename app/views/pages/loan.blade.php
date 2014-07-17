@@ -79,7 +79,7 @@
         <br/>
         <br/>
         <h4>Comments</h4>
-        @include('partials.comments.comments', ['comments' => $comments])
+        @include('partials.comments.comments', ['comments' => $comments, 'receiver' => $borrower, 'commentType' => 'borrowerComment'])
     </div>
 
     <div class="col-xs-4">
@@ -105,7 +105,7 @@
 
         <h2>{{ $loan->getBorrower()->getFirstName() }} {{ $loan->getBorrower()->getLastName() }}</h2>
         <h4>{{ $loan->getBorrower()->getCountry()->getName() }}</h4>
-        <strong>Amount Requested: </strong> USD {{ $loan->getAmount() }}
+        <strong>Amount Requested: </strong> {{ $loan->getUsdAmount() }}
 
         <div class="panel panel-default">
             <div class="panel-heading"><b>About {{ $borrower->getName() }}</b></div>
