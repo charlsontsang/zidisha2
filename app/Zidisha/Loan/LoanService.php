@@ -410,8 +410,8 @@ class LoanService
 
     private function processBids($con, Loan $loan, $oldBids, $newBids)
     {
-        $oldAcceptedBids = $this->getAcceptedBids($oldBids, $loan->getAmount());
-        $newAcceptedBids = $this->getAcceptedBids($newBids, $loan->getAmount());
+        $oldAcceptedBids = $this->getAcceptedBids($oldBids, $loan->getUsdAmount());
+        $newAcceptedBids = $this->getAcceptedBids($newBids, $loan->getUsdAmount());
         $changedBids = $this->getChangedBids($oldAcceptedBids, $newAcceptedBids);
 
         foreach ($changedBids as $bidId => $changedBid) {
