@@ -215,6 +215,7 @@ class LenderService
 
         $this->mixpanelService->trackLenderJoined($lender);
         
+        $this->lenderMailer->sendWelcomeMail($lender);
         $this->lenderMailer->sendIntroductionMail($lender);
 
         return $lender;

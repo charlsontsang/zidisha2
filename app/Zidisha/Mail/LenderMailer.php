@@ -100,6 +100,12 @@ class LenderMailer
         //TODO
     }
 
+
+    public function sendWelcomeMail($lender)
+    {
+        // See sendWelcomeMailToLender in session.php
+    }
+    
     public function sendIntroductionMail(Lender $lender)
     {
         $this->mailer->later(
