@@ -3,6 +3,7 @@ namespace Zidisha\Mail;
 
 use Config;
 use Mail;
+use Zidisha\Admin\Setting;
 
 class Mailer
 {
@@ -16,6 +17,9 @@ class Mailer
 
     public function send($view, $data)
     {
+        $data += [
+            'from' => Setting::get('site.replyTo'),
+        ];
         if ($this->driver == 'laravel') {
             \Mail::send(
                 $view,
@@ -32,6 +36,9 @@ class Mailer
 
     public function queue($view, $data)
     {
+        $data += [
+            'from' => Setting::get('site.replyTo'),
+        ];
         if ($this->driver == 'laravel') {
             \Mail::queue(
                 $view,
@@ -48,6 +55,9 @@ class Mailer
 
     public function later($delay, $view, $data)
     {
+        $data += [
+            'from' => Setting::get('site.replyTo'),
+        ];
         if ($this->driver == 'laravel') {
             \Mail::later(
                 $delay,
