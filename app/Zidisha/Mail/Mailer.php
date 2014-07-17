@@ -11,13 +11,13 @@ class Mailer
 
     public function __construct()
     {
-        $this->driver = Config::get('mail.mailer.driver');
+        $this->driver = \Config::get('mail.mailer.driver');
     }
 
     public function send($view, $data)
     {
         if ($this->driver == 'laravel') {
-            Mail::send(
+            \Mail::send(
                 $view,
                 $data,
                 function ($message) use ($data) {
@@ -33,7 +33,7 @@ class Mailer
     public function queue($view, $data)
     {
         if ($this->driver == 'laravel') {
-            Mail::queue(
+            \Mail::queue(
                 $view,
                 $data,
                 function ($message) use ($data) {
@@ -46,11 +46,11 @@ class Mailer
         }
     }
 
-    public function later($time, $view, $data)
+    public function later($delay, $view, $data)
     {
         if ($this->driver == 'laravel') {
-            Queue::later(
-                $time,
+            \Mail::later(
+                $delay,
                 $view,
                 $data,
                 function ($message) use ($data) {
