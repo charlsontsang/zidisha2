@@ -116,6 +116,7 @@ class Upload extends BaseUpload
                 Config::get("image.formats.$format.height"),
                 function ($constraint) {
                     $constraint->aspectRatio();
+                    $constraint->upsize();
                 }
             );
 
