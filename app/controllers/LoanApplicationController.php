@@ -111,7 +111,7 @@ class LoanApplicationController extends BaseController
         $maxInterestRate = 20;
 
         $loan = $this->loanService->createLoan($borrower, $data);
-        $loan->setDisbursedDate(new \DateTime());
+        $loan->setDisbursedAt(new \DateTime());
 
         $calculator = new InstallmentCalculator($loan);
         $installments = $this->loanService->generateLoanInstallments($loan);
