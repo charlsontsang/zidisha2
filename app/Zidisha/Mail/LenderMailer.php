@@ -100,11 +100,11 @@ class LenderMailer
         //TODO
     }
 
-    public function sendLenderIntroMail(Lender $lender)
+    public function sendIntroductionMail(Lender $lender)
     {
         $time = Carbon::create()->addDay();
         $this->mailer->later(
-            $time,
+            3600 * 24,
             'emails.lender.introduction',
             [
                 'to'      => $lender->getUser()->getEmail(),

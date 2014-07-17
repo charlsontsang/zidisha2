@@ -214,7 +214,7 @@ class LenderService
         $lender->setProfile($profile);
         $lender->save();
 
-        $this->lenderMailer->sendLenderIntroMail($lender);
+        $this->lenderMailer->sendIntroductionMail($lender);
 
         return $lender;
     }
