@@ -5,17 +5,17 @@
     <div class="col-md-offset-3 col-md-6">
         <div style="text-align: center">
             <a href="{{$facebookLoginUrl}}" class="btn btn-lg btn-primary">
-                @lang('login.facebook_login')
+                @lang('borrower.login.facebook-login')
             </a>
         </div>
         <br>
         <div style="text-align: center">
             <a href="{{$googleLoginUrl}}" class="btn btn-lg btn-primary">
-                @lang('login.google_login')
+                @lang('borrower.login.google-login')
             </a>
         </div>
 
-        {{ BootstrapForm::open(array('action' => 'AuthController@postLogin', 'translationDomain' => 'login.form')) }}
+        {{ BootstrapForm::open(array('action' => 'AuthController@postLogin', 'translationDomain' => 'borrower.login.form')) }}
         
         {{ BootstrapForm::text('username') }}
         {{ BootstrapForm::password('password') }}

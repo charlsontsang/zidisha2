@@ -1,11 +1,12 @@
 <?php
 
 return [
-    'facebook_login' => 'Login With Facebook',
+    'facebook-login' => 'Login With Facebook',
+    'google-login' => 'Login With Google',
     'form' => [
         'username' => 'Username or Email',
         'password' => 'Password',
-        'remember_me' => 'Remember Me',
+        'remember-me' => 'Remember Me',
         'submit' => 'Login',
     ]
 ];
