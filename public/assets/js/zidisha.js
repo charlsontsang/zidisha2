@@ -83,7 +83,7 @@ function paymentForm(config) {
         $balanceSubmit = $('#balance-payment'),
         $amount = $('#amount');
 
-    function calculateAmounts() {console.log(currentBalance);
+    function calculateAmounts() {
         var amount = parseMoney($amount.val()),
             donationAmount = parseMoney($donationAmount.val()),
             creditAmount = (amount >= currentBalance) ? amount - currentBalance : 0,
