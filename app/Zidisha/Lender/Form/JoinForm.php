@@ -28,7 +28,7 @@ class JoinForm extends AbstractForm
         $listOfEnabledCountries= implode(",", $countries);
         
         $rules = [
-            'username' => 'required|max:20|unique:users,username',
+            'username'  => 'required|max:20|unique:users,username',
             'countryId' => ['required', 'in:'.$listOfEnabledCountries]
         ];
         
