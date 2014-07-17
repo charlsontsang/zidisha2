@@ -35,7 +35,7 @@ class JoinForm extends AbstractForm
         if (!$this->facebookJoin && !$this->googleJoin) {
             $rules += [
                 'email'    => 'required|email|unique:users,email',
-                'password' => 'required|confirmed'
+                'password' => 'required|min:7|confirmed'
             ];
         } else {
             $rules['aboutMe'] = '';
