@@ -11,10 +11,10 @@ class PropelDB {
 
     public static function transaction($closure, $retry = 3) {
         $con = Propel::getWriteConnection(UserTableMap::DATABASE_NAME);
-        $con->beginTransaction();
         
         $result = null;
         for ($i = 1; $i <= $retry; $i++) {
+            $con->beginTransaction();
             try {
                 $result = $closure($con);
                 $con->commit();
