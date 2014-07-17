@@ -6,14 +6,28 @@ use Zidisha\Lender\Lender;
 use Zidisha\Lender\LenderService;
 use Zidisha\Utility\Utility;
 use Zidisha\Vendor\Facebook\FacebookService;
-use Zidisha\User\UserService;
 use Zidisha\Vendor\Google\GoogleService;
 
 class LenderJoinController extends BaseController
 {
+    /**
+     * @var Zidisha\Vendor\Facebook\FacebookService
+     */
     private $facebookService;
+
+    /**
+     * @var Zidisha\Lender\Form\Join
+     */
     private $joinForm;
+
+    /**
+     * @var Zidisha\Lender\LenderService
+     */
     private $lenderService;
+
+    /**
+     * @var Zidisha\Vendor\Google\GoogleService
+     */
     private $googleService;
 
     public function __construct(
@@ -37,9 +51,7 @@ class LenderJoinController extends BaseController
             compact('country'),
             [
                 'form'            => $this->joinForm,
-                'facebookJoinUrl' => $this->facebookService->getLoginUrl(
-                        'lender:facebook-join'
-                    ),
+                'facebookJoinUrl' => $this->facebookService->getLoginUrl('lender:facebook-join'),
                 'googleLoginUrl'  => $this->googleService->getLoginUrl('lender:google-join') . '&max_auth_age=0',
             ]
         );

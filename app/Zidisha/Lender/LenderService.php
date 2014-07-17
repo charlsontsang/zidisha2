@@ -177,28 +177,28 @@ class LenderService
 
     public function deactivateLender(Lender $lender)
     {
-        if(!$lender->isActive()){
+        if (!$lender->isActive()) {
             return false;
         }
         $currentBalance = TransactionQuery::create()
             ->filterByUser($lender->getUser())
             ->getTotalAmount();
 
-        if($currentBalance->isPositive()){
+        if ($currentBalance->isPositive()) {
             PropelDB::transaction(function($con) use ($lender, $currentBalance) {
-                    $this->transactionService->addConvertToDonationTransaction($con, $lender, $currentBalance);
-                    $lender
-                        ->setAdminDonate(true)
-                        ->setActive(false);
-                    $lender->save($con);
-                });            }
+                $this->transactionService->addConvertToDonationTransaction($con, $lender, $currentBalance);
+                $lender
+                    ->setAdminDonate(true)
+                    ->setActive(false);
+                $lender->save($con);
+            });
+        }
 
         return true;
     }
 
     public function joinLender($data)
     {
-
         $user = new User();
         $user->setPassword($data['password']);
         $user->setEmail($data['email']);
