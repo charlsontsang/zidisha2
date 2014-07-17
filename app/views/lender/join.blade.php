@@ -16,7 +16,7 @@
             </a>
         </div>
 
-        {{ BootstrapForm::open(array('route' => 'lender:post-join', 'translationDomain' => 'join.form')) }}
+        {{ BootstrapForm::open(array('route' => 'lender:post-join', 'translationDomain' => 'lender.join.form')) }}
         {{ BootstrapForm::populate($form) }}
 
         {{ BootstrapForm::text('username') }}
