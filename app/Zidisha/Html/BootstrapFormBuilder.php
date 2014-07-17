@@ -437,6 +437,14 @@ class BootstrapFormBuilder
 
     protected function getFormattedLabel($options, $name)
     {
-        return array_get($options, 'label', $this->translationDomain ? $this->translationDomain . '.' . snake_case($name, '-') : snake_case($name, '-'));
+        if (isset($options['label'])) {
+            return $options['label'];
+        }
+        
+        $snakeCase = snake_case($name, '-');
+        // Make sure we don't have underscores because it would break the translation labels
+        $snakeCase = str_replace('_', '-', $snakeCase);
+        
+        return $this->translationDomain ? $this->translationDomain . '.' . $snakeCase : $snakeCase;
     }
 }
