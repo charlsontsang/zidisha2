@@ -4,6 +4,7 @@ namespace Zidisha\Balance;
 
 use Propel\Runtime\Connection\ConnectionInterface;
 use Zidisha\Admin\Setting;
+use Zidisha\Currency\Base\ExchangeRate;
 use Zidisha\Currency\Money;
 use Zidisha\Lender\GiftCard;
 use Zidisha\Lender\GiftCardTransaction;
@@ -271,13 +272,14 @@ class TransactionService
         $donationTransaction->save($con);
     }
 
-    public function addInstallmentTransaction(ConnectionInterface $con, Money $amount, Loan $loan, \DateTime $date)
+    public function addInstallmentTransaction(ConnectionInterface $con, ExchangeRate $exchangeRate, Money $amount, Loan $loan, \DateTime $date)
     {
         $this->assertAmount($amount);
 
         $transaction = new Transaction();
         $transaction
             ->setUserId($loan->getBorrowerId())
+            ->setExchangeRate($exchangeRate)
             ->setAmount($amount)
             ->setDescription('Loan installment')
             ->setLoan($loan)
@@ -287,13 +289,14 @@ class TransactionService
         $transaction->save($con);
     }
 
-    public function addInstallmentFeeTransaction(ConnectionInterface $con, Money $amount, Loan $loan, \DateTime $date)
+    public function addInstallmentFeeTransaction(ConnectionInterface $con, ExchangeRate $exchangeRate, Money $amount, Loan $loan, \DateTime $date)
     {
         $this->assertAmount($amount);
 
         $transaction = new Transaction();
         $transaction
             ->setUserId(Setting::get('site.adminId'))
+            ->setExchangeRate($exchangeRate)
             ->setAmount($amount)
             ->setDescription('Fee')
             ->setLoan($loan)

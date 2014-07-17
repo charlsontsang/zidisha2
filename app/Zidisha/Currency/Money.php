@@ -765,6 +765,11 @@ class Money
         return self::valueOf($amount, $this->currency);
     }
 
+    public function ratio(Money $money)
+    {
+        return bcdiv($this->amount, $money->getAmount(), self::BCSCALE);
+    }
+
     /**
      * Are these to money equal?
      *

@@ -111,6 +111,23 @@ class Loan extends BaseLoan
         return $this->getUsdAmount()->subtract($this->getRaisedUsdAmount())->max(Money::create(0));
     }
 
+    /**
+     * @return Money
+     */
+    public function getDisbursedAmount()
+    {
+        return Money::create(parent::getDisbursedAmount(), $this->getCurrencyCode());
+    }
+
+    /**
+     * @param Money $money
+     * @return $this|Loan
+     */
+    public function setDisbursedAmount($money)
+    {
+        return parent::setDisbursedAmount($money->getAmount());
+    }
+
     public function isWeeklyInstallment()
     {
         return $this->getInstallmentPeriod() == self::WEEKLY_INSTALLMENT;

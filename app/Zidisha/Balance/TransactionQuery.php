@@ -78,7 +78,7 @@ class TransactionQuery extends BaseTransactionQuery
         return $this->filterByType(Transaction::LOAN_BACK_LENDER);
     }
     
-    public function getNativeTotalAmount(Currency $currency)
+    public function getForeignTotalAmount(Currency $currency)
     {
         $total = $this
             ->select(array('total'))

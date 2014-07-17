@@ -20,7 +20,7 @@ use Zidisha\Repayment\Base\InstallmentQuery as BaseInstallmentQuery;
 class InstallmentQuery extends BaseInstallmentQuery
 {
 
-    public function getNativeAmounts(Currency $currency)
+    public function getForeignAmounts(Currency $currency)
     {
         $result = $this
             ->select(['totalAmount', 'paidAmount'])

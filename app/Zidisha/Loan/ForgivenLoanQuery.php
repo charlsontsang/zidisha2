@@ -28,7 +28,7 @@ class ForgivenLoanQuery extends BaseForgivenLoanQuery
         return Money::create($total, 'USD');
     }
 
-    public function getNativeTotalAmount()
+    public function getForeignTotalAmount()
     {
         $total = $this
             ->select(array('total'))

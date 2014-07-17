@@ -5,7 +5,6 @@ namespace Zidisha\Repayment;
 
 use Zidisha\Currency\Money;
 use Zidisha\Lender\Lender;
-use Zidisha\Loan\Bid;
 
 class LoanRepayment {
 
@@ -23,18 +22,12 @@ class LoanRepayment {
      * @var Money
      */
     protected $lenderInviteCredit;
-
-    /**
-     * @var array
-     */
-    protected $bids = [];
-    
-    protected $share = 0;
-
+        
     public function __construct(Lender $lender)
     {
         $this->lender = $lender;
-        $this->amount = $this->lenderInviteCredit = Money::create(0);
+        $this->amount  = Money::create(0);
+        $this->lenderInviteCredit = Money::create(0);
     }
 
     /**
@@ -45,36 +38,29 @@ class LoanRepayment {
         return $this->lender;
     }
     
-    public function addBid(Bid $bid)
+    public function addRepaidAmount(Money $repaidAmount, $lenderInviteCredit)
     {
-        if ($bid->getLenderInviteCredit()) {
-            $this->lenderInviteCredit->add($bid->getAcceptedAmount());
+        if ($lenderInviteCredit) {
+            $this->lenderInviteCredit->add($repaidAmount);
         } else {
-            $this->amount->add($bid->getAcceptedAmount());
+            $this->amount->add($repaidAmount);
         }
         
         return $this;
     }
     
-    public function getTotalAcceptedAmount()
+    public function getTotalAmount()
     {
         return $this->amount->add($this->lenderInviteCredit);
-    }
-
-    public function setShare($share)
-    {
-        $this->share = $share;
-        
-        return $this;
     }
     
     public function getAmount()
     {
-        return $this->amount->multiply($this->share);
+        return $this->amount;
     }
     
     public function getLenderInviteCredit()
     {
-        return $this->amount->multiply($this->share);
+        return $this->lenderInviteCredit;
     }
 }

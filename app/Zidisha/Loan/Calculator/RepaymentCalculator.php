@@ -100,30 +100,25 @@ class RepaymentCalculator extends InstallmentCalculator
         return Money::create(0);
     }
 
-    public function installmentServiceFee()
+    public function openAmount()
     {
-        $unpaidServiceFee = $this->serviceFee()->subtract($this->paidServiceFee);
-        // todo AmountGot
-        // todo totalamount confusion
-        $openAmount = $this->totalAmount()
+        return $this
+            ->totalAmount()
             ->subtract($this->paidAmount)
             ->subtract($this->forgivenAmount);
-        // Todo money divide (times, ...)
-        $ratio = $this->repaymentAmount->divide($openAmount);
+    }
+
+    public function repaymentServiceFee()
+    {
+        $unpaidServiceFee = $this->serviceFee()->subtract($this->paidServiceFee);
+        $ratio = $this->repaymentAmount->ratio($this->openAmount());
         
         return $unpaidServiceFee->multiply($ratio);
-
     }
     
     public function repaymentAmountForLenders()
     {
-        // TODO use disbursed amount in lenderInterest
-        $totalLendersAmount = $this->loan->getDisbursedAmount()->add($this->lenderInterest());
-        $ratio = $this->loan->getDisbursedAmount()->divide($totalLendersAmount);
-        
-        $repaymentAmountForLenders = $this->repaymentAmount->subtract($this->installmentServiceFee());
-
-        return $repaymentAmountForLenders->multiply($ratio);
+        return $this->repaymentAmount->subtract($this->repaymentServiceFee());
     }
 
     /**
@@ -132,30 +127,37 @@ class RepaymentCalculator extends InstallmentCalculator
      */
     public function loanRepayments($bids)
     {
-        $installmentPayments = [];
+        $loanRepayments = [];
         $totalAmount = Money::create(0);
+        
+        $repaymentAmountForLenders = $this->repaymentAmountForLenders();
 
         /* @var $bid Bid */
         foreach ($bids as $bid) {
-            $lender = $bid->getLender();
-            if (isset($installmentPayments[$lender->getId()])) {
-                $installmentPayment = $installmentPayments[$lender->getId()];
-            } else {
-                $installmentPayment = new LoanRepayment($lender);
-            }
-            
-            $installmentPayment->addBid($bid);
-
-            // TODO why is this not equal to $loan->getAmount()
             $totalAmount = $totalAmount->add($bid->getAcceptedAmount());
         }
-
-        /* @var $installmentPayment LoanRepayment */
-        foreach ($installmentPayments as $installmentPayment) {
-            $share = $installmentPayment->getTotalAcceptedAmount()->divide($totalAmount);
-            $installmentPayment->setShare($share);
+        
+        /* @var $bid Bid */
+        foreach ($bids as $bid) {
+            $lender = $bid->getLender();
+            if (isset($loanRepayments[$lender->getId()])) {
+                $loanRepayment = $loanRepayments[$lender->getId()];
+            } else {
+                $loanRepayment = new LoanRepayment($lender);
+            }
+            $share = $bid->getAcceptedAmount()->ratio($totalAmount);
+            $repaidAmount = $repaymentAmountForLenders->multiply($share);
+            
+            $loanRepayment->addRepaidAmount($repaidAmount, $bid->getLenderInviteCredit());
         }
         
-        return $installmentPayments;
+        return $loanRepayments;
+    }
+
+    public function isRepaid()
+    {
+        return $this->unpaidAmount()
+            ->subtract($this->repaymentAmount)
+            ->lessThan(Money::create(1, $this->repaymentAmount->getCurrency()));
     }
 }

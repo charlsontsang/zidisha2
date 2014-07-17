@@ -39,4 +39,14 @@ class BidQuery extends BaseBidQuery
             ->orderByBidDate();
     }
 
+    public function filterBidsToRepay(Loan $loan)
+    {
+        $loanId = $loan->getId();
+        
+        return $this
+            ->filterByLoan($loan)
+            ->filterByActive(true)
+            ->where("Bid.lender_id NOT IN (SELECT lender_id from forgiven_loans where loan_id = $loanId)");
+    }
+
 } // BidQuery

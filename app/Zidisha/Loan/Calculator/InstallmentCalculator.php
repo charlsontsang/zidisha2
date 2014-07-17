@@ -18,9 +18,17 @@ class InstallmentCalculator
         $this->loan = $loan;
     }
 
+    /**
+     * @return Money
+     */
+    public function amount()
+    {
+        return $this->loan->getDisbursedAmount() ?: $this->loan->getAmount();
+    }
+    
     public function calculateInstallmentCount(Money $installmentAmount)
     {
-        $maxYearlyInterest = $this->loan->getAmount()->multiply($this->loan->getInterestRate() / 100);
+        $maxYearlyInterest = $this->amount()->multiply($this->loan->getInterestRate() / 100);
 
         if ($this->loan->isWeeklyInstallment()) {
             $maxInstallmentInterest = $maxYearlyInterest->divide(52);
@@ -30,7 +38,7 @@ class InstallmentCalculator
 
         $minInstallmentAmount = $installmentAmount->subtract($maxInstallmentInterest);
 
-        $installmentCount = ceil($this->loan->getAmount()->getAmount() / $minInstallmentAmount->getAmount());
+        $installmentCount = ceil($this->amount()->getAmount() / $minInstallmentAmount->getAmount());
 
         return $installmentCount;
     }
@@ -48,13 +56,13 @@ class InstallmentCalculator
 
     public function lenderInterest()
     {
-        return $this->loan->getAmount()
+        return $this->amount()
             ->multiply($this->yearlyInterestRateRatio() * $this->loan->getFinalInterestRate() / 100);
     }
 
     public function serviceFee()
     {
-        return $this->loan->getAmount()
+        return $this->amount()
             ->multiply($this->yearlyInterestRateRatio() * $this->loan->getServiceFeeRate() / 100);
     }
 
@@ -65,7 +73,7 @@ class InstallmentCalculator
 
     public function totalAmount()
     {
-        return $this->loan->getAmount()->add($this->totalInterest());
+        return $this->amount()->add($this->totalInterest());
     }
 
     public function installmentAmount()
