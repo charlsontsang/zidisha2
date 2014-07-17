@@ -28,6 +28,7 @@ class LoanApplicationController extends BaseController
     public function __construct(ProfileForm $form, LoanService $loanService)
     {
         $this->beforeFilter('@stepsBeforeFilter');
+        $this->beforeFilter('@isNewLoanAllowedFilter');
         $this->editForm = $form;
         $this->applicationForm = new ApplicationForm(\Auth::user()->getBorrower());
         $this->loanService = $loanService;
@@ -40,12 +41,6 @@ class LoanApplicationController extends BaseController
 
     public function getInstructions()
     {
-        $borrower = Auth::user()->getBorrower();
-        $isAllowed = $this->loanService->isNewLoanAllowed($borrower);
-        if (!$isAllowed) {
-            \Flash::error('You are not allowed to make new loan right now.');
-            return Redirect::route('borrower:dashboard');
-        }
         return $this->stepView('instructions');
     }
 

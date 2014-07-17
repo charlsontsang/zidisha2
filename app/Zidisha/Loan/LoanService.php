@@ -771,23 +771,6 @@ class LoanService
         $profile->save();
         $loan->save();
     }
-
-    public function isNewLoanAllowed($borrower)
-    {
-        $loans = LoanQuery::create()
-            ->filterByBorrower($borrower)
-            ->find();
-        if ($loans->count() > 0) {
-            foreach ($loans as $loan) {
-                if (!in_array($loan->getStatus(), array(Loan::CANCELED, Loan::REPAID, Loan::EXPIRED,
-                            Loan::NO_LOAN)) || ($loan->getStatus() == Loan::DEFAULTED)) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
 }
 
 

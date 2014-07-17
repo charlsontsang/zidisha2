@@ -142,4 +142,13 @@ class Borrower extends BaseBorrower implements CommentReceiverInterface
     {
         return (boolean) $this->getActiveLoanId();
     }
+
+    public function isNewLoanAllowed()
+    {
+        if (!in_array($this->getLoanStatus(), array(Loan::CANCELED, Loan::REPAID, Loan::EXPIRED,
+                    Loan::NO_LOAN)) || $this->getLoanStatus() == Loan::DEFAULTED) {
+            return false;
+        }
+        return true;
+    }
 }

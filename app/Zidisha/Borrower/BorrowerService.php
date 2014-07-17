@@ -391,13 +391,4 @@ class BorrowerService
 
         return $borrowerRequiresFacebook && !$facebookId && ($createdAt > $requiredDate);
     }
-
-    public function setTranslateUrl($languageCode)
-    {
-        $isTranslated = TranslationLabelQuery::create()
-            ->filterByLanguageCode($languageCode)
-            ->filterByTranslated(true)
-            ->findOne();
-        return $isTranslated;
-    }
 }

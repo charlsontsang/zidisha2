@@ -3,9 +3,9 @@ $languages = ['fr', 'in'];
 $locale = Request::segment(1);
 if (in_array($locale, $languages)) {
     \App::setLocale($locale);
-//    if ($locale != \Session::get('languageCode')) {
-//        \Session::set('languageCode', $locale);
-//    }
+    if ($locale != \Session::get('languageCode')) {
+        \Session::set('languageCode', $locale);
+    }
 }
     else {
     $locale = null;

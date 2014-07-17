@@ -115,16 +115,6 @@ class AuthController extends BaseController
         if ($role == 'lender') {
             return Redirect::route('lender:dashboard');
         } elseif ($role == 'borrower') {
-            $languageCode = $user->getBorrower()->getCountry()->getLanguageCode();
-
-            $isTranslated = $this->borrowerService->setTranslateUrl($languageCode);
-            if ($isTranslated) {
-                \Session::set('languageCode', $languageCode);
-                \App::setLocale($languageCode);
-                $route = route('borrower:dashboard');
-                $localizedRoute = getLocalizedRoute($route, $languageCode);
-                return Redirect::to($localizedRoute);
-            }
             return Redirect::route('borrower:dashboard');
         }
 
