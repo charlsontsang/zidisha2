@@ -48,6 +48,7 @@ class FlashNotifier
     public function message($message, $level = 'info')
     {
         $type = 'message';
+        $message = \Lang::get($message);
         $this->notifications[] = compact('message', 'level', 'type');
         $this->session->flash('flash_notifications', $this->notifications);
     }
