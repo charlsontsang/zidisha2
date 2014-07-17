@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Routing\UrlGenerator;
 use Zidisha\Auth\AuthService;
 use Zidisha\Borrower\BorrowerGuestQuery;
 use Zidisha\Borrower\BorrowerService;
@@ -118,10 +119,12 @@ class AuthController extends BaseController
 
             $isTranslated = $this->borrowerService->setTranslateUrl($languageCode);
             if ($isTranslated) {
-
                 \Session::set('languageCode', $languageCode);
+                \App::setLocale($languageCode);
+                $route = route('borrower:dashboard');
+                $localizedRoute = getLocalizedRoute($route, $languageCode);
+                return Redirect::to($localizedRoute);
             }
-            \App::setLocale($languageCode);
             return Redirect::route('borrower:dashboard');
         }
 

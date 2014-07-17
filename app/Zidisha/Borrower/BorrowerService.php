@@ -398,7 +398,6 @@ class BorrowerService
             ->filterByLanguageCode($languageCode)
             ->filterByTranslated(true)
             ->findOne();
-        //return $isTranslated;
-        return true;
+        return $isTranslated;
     }
 }
