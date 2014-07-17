@@ -24,13 +24,12 @@ class RemindersController extends Controller {
 		switch ($response = Password::remind(Input::only('username')))
 		{
 			case Password::INVALID_USER:
-                Flash::error(Lang::get($response));
+                Flash::error("borrower.$response");
                 return Redirect::back();
-
-			case Password::REMINDER_SENT:
-                Flash::success(Lang::get($response));
+            case Password::REMINDER_SENT:
+                Flash::success("borrower.$response");
                 return Redirect::back();
-		}
+        }
 	}
 
 	/**
@@ -67,7 +66,7 @@ class RemindersController extends Controller {
 			case Password::INVALID_PASSWORD:
 			case Password::INVALID_TOKEN:
 			case Password::INVALID_USER:
-                Flash::error(Lang::get($response));
+                Flash::error("borrower.$response");
                 return Redirect::back();
 
 			case Password::PASSWORD_RESET:
