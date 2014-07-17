@@ -6,6 +6,7 @@ use Illuminate\Config\Repository as Config;
 use Illuminate\Html\HtmlBuilder;
 use Illuminate\Html\FormBuilder;
 use Illuminate\Session\SessionManager as Session;
+use Zidisha\Form\AbstractForm;
 
 class BootstrapFormBuilder
 {
@@ -75,7 +76,7 @@ class BootstrapFormBuilder
         return $this->form->model($model, $options);
     }
 
-    public function populate($form, array $options = array())
+    public function populate(AbstractForm $form, array $options = array())
     {
         return $this->form->model($form->getData(), $options);
     }
