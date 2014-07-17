@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use Zidisha\Admin\Form\ExchangeRateForm;
 use Zidisha\Admin\Form\FeatureFeedbackForm;
 use Zidisha\Admin\Form\FilterBorrowers;
@@ -548,7 +549,7 @@ class AdminController extends BaseController
 
         $comments = BorrowerCommentQuery::create()
             ->filterByPublished(false)
-            ->filterByCreatedAt(array('min' => time() - 2 * 30 * 24 * 60 * 60))
+            ->filterByCreatedAt(array('min' => Carbon::create()->subMonth()))
             ->orderByCreatedAt('desc')
             ->joinWith('User')
             ->paginateWithUploads($page, 10);
