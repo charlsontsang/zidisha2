@@ -11,5 +11,9 @@ return [
             'width' => '400',
             'height' => null
         ],
+        'comment-picture' => [
+            'width' => '300',
+            'height' => null
+        ],
     ],
 ];

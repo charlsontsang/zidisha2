@@ -544,13 +544,14 @@ class AdminController extends BaseController
 
     public function getPublishComments()
     {
-        $page = Request::query('page') ? : 1;
+        $page = Input::get('page', 1);
 
         $comments = BorrowerCommentQuery::create()
             ->filterByPublished(false)
             ->filterByCreatedAt(array('min' => time() - 2 * 30 * 24 * 60 * 60))
+            ->orderByCreatedAt('desc')
             ->joinWith('User')
-            ->paginate($page, 10);
+            ->paginateWithUploads($page, 10);
 
         return View::make('admin.publish-comments', compact('comments'));
     }

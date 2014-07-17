@@ -609,5 +609,14 @@ Route::group(
                 'as'   => 'lender:group'
             )
         );
+
+        /**
+         * Route for project updates
+         */
+        Route::get('project-updates', array(
+                'uses' => 'PageController@getProjectUpdates',
+                'as'   => 'project-updates'
+            )
+        );
     }
 );

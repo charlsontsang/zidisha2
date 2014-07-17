@@ -40,7 +40,7 @@ class CommentsController extends BaseController
 
         $user = \Auth::user();
 
-        if (!$receiver || $message == '') {
+        if (!$receiver || $message == '' || !$user) {
             App::abort(404, 'Bad Request');
         }
 
