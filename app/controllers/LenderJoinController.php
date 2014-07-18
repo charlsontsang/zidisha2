@@ -48,7 +48,7 @@ class LenderJoinController extends BaseController
         $form->handleRequest(Request::instance());
 
         if (!$form->isValid()) {
-            Flash::error(\Lang::get('lender.join.flash.oops'));
+            Flash::error('lender.join.flash.oops');
             return Redirect::route('lender:join')->withForm($form);
         }
 
@@ -68,7 +68,7 @@ class LenderJoinController extends BaseController
                 compact('country'), ['form' => $this->joinForm,]);
         }
 
-        Flash::error(\Lang::get('lender.join.flash.facebook-no-account-connected'));
+        Flash::error('lender.join.flash.facebook-no-account-connected');
         return Redirect::route('lender:join');
     }
 
@@ -92,7 +92,7 @@ class LenderJoinController extends BaseController
 
             return $this->join($user);
         } else {
-            Flash::error(\Lang::get('comments.flash.welcome'));
+            Flash::error('comments.flash.welcome');
             return Redirect::route('lender:join');
         }
     }
@@ -131,7 +131,7 @@ class LenderJoinController extends BaseController
             Session::forget('lenderInviteVisitId');
             Flash::modal(View::make('lender.invite-new-account', compact('inviter'))->render());
         } else {
-            Flash::success(\Lang::get('comments.flash.welcome'));
+            Flash::success('comments.flash.welcome');
         }
 
         Auth::login($user->getUser());
@@ -156,7 +156,7 @@ class LenderJoinController extends BaseController
             }
         }
 
-        Flash::error(\Lang::get('lender.join.flash.facebook-no-account-connected'));
+        Flash::error('lender.join.flash.facebook-no-account-connected');
         return Redirect::route('lender:join');
     }
 
@@ -189,7 +189,7 @@ class LenderJoinController extends BaseController
             }
             return $response;
         } else {
-            Flash::error(\Lang::get('comments.flash.welcome'));
+            Flash::error('comments.flash.welcome');
             return Redirect::route('lender:join');
         }
     }

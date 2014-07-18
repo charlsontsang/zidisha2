@@ -261,9 +261,9 @@ class LenderService
         $errors = array();
         if ($checkUser) {
             if ($checkUser->getFacebookId() == $facebookUser['id']) {
-                $errors[] = \Lang::get('lender.join.validation.facebook-account-exists');
+                $errors[] = 'lender.join.validation.facebook-account-exists';
             } else {
-                $errors[] = \Lang::get('lender.join.validation.facebook-email-exists');
+                $errors[] = 'lender.join.validation.facebook-email-exists';
             }
         }
 
@@ -294,9 +294,9 @@ class LenderService
         $errors = array();
         if ($checkUser) {
             if ($checkUser->getGoogleId() == $googleUser->getId()) {
-                $errors[] = \Lang::get('lender.join.validation.google-account-exists');
+                $errors[] = 'lender.join.validation.google-account-exists';
             } else {
-                $errors[] = \Lang::get('lender.join.validation.google-email-exists');
+                $errors[] = 'lender.join.validation.google-email-exists';
             }
         }
 
