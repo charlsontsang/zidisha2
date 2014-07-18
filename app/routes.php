@@ -3,7 +3,11 @@ $languages = ['fr', 'in'];
 $locale = Request::segment(1);
 if (in_array($locale, $languages)) {
     \App::setLocale($locale);
-} else {
+    if ($locale != \Session::get('languageCode')) {
+        \Session::set('languageCode', $locale);
+    }
+}
+    else {
     $locale = null;
 }
 
@@ -97,7 +101,7 @@ Route::group(
 
 
         Route::get('/login', array('uses' => 'AuthController@getLogin', 'as' => 'login'));
-        Route::post('/login', array('uses' => 'AuthController@postLogin', 'before' => 'csrf'));
+        Route::post('/login', array('uses' => 'AuthController@postLogin', 'before' => ''));
         Route::get('facebook/login', array('uses' => 'AuthController@getFacebookLogin', 'as' => 'facebook:login'));
         Route::get('google/login', array('uses' => 'AuthController@getGoogleLogin', 'as' => 'google:login'));
 

@@ -28,6 +28,7 @@ class LoanApplicationController extends BaseController
     public function __construct(ProfileForm $form, LoanService $loanService)
     {
         $this->beforeFilter('@stepsBeforeFilter');
+        $this->beforeFilter('@isNewLoanAllowedFilter');
         $this->editForm = $form;
         $this->applicationForm = new ApplicationForm(\Auth::user()->getBorrower());
         $this->loanService = $loanService;

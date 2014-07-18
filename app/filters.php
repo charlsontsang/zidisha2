@@ -11,6 +11,9 @@
 |
 */
 
+use Zidisha\Country\CountryQuery;
+use Zidisha\Utility\Utility;
+
 App::before(function($request)
 {
 	//
@@ -110,3 +113,20 @@ Route::filter(
         }
     }
 );
+//
+//Route::filter(
+//    'forceBorrowerLanguage',
+//    function ($route, $request) {
+//        $url = Request::url();
+//        $countryCode = Utility::getCountryCodeByIP();
+//        $country = CountryQuery::create()
+//            ->findOneByCountryCode($countryCode);
+//       // if($country && $country->isBorrowerCountry()) {
+//            $languageCode = $country->getLanguageCode();
+//            \Session::set('languageCode', $languageCode);
+//            \App::setLocale($languageCode);
+//            $localizedRoute = getLocalizedRoute($url, $languageCode);
+//            return Redirect::to($localizedRoute);
+//      //  }
+//    }
+//);

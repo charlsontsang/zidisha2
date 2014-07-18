@@ -750,7 +750,6 @@ class LoanService
         $profile->save();
         $loan->save();
     }
-
 }
 
 

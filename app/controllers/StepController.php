@@ -82,4 +82,14 @@ trait StepController
 
         $this->setCurrentStep($routeStep);
     }
+
+    public function isNewLoanAllowedFilter()
+    {
+        $borrower = \Auth::user()->getBorrower();
+
+        if (!$borrower->isNewLoanAllowed()) {
+            \Flash::error('You are not allowed to make new loan right now.');
+            return Redirect::route('borrower:dashboard');
+        }
+    }
 }
