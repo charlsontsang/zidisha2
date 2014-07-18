@@ -261,9 +261,9 @@ class LenderService
         $errors = array();
         if ($checkUser) {
             if ($checkUser->getFacebookId() == $facebookUser['id']) {
-                $errors[] = 'This facebook account already linked with another account on our website.';
+                $errors[] = \Lang::get('lender.join.validation.facebook-account-exists');
             } else {
-                $errors[] = 'The email address linked to the facebook account is already linked with another account on our website.';
+                $errors[] = \Lang::get('lender.join.validation.facebook-email-exists');
             }
         }
 
