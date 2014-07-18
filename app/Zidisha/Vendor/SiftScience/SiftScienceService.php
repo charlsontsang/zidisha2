@@ -14,7 +14,7 @@ class SiftScienceService
 
     public function __construct(DummySiftScienceClient $siftScienceClient)
     {
-        if (\Config::get('services.sift-science.enabled')) { // TODO
+        if (\Config::get('services.sift-science.enabled')) {
             $this->sift = new SiftClient(\Setting::get('sift-science.api-key'));
         } else {
             $this->sift = $siftScienceClient;
