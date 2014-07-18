@@ -577,6 +577,16 @@ Route::group(
                     'publish-comments',
                     array('uses' => 'AdminController@postPublishComments', 'as' => 'admin:post:moderate-comments')
                 );
+
+                Route::get(
+                    'test-mails',
+                    ['uses' => 'MailTesterController@getAllMails', 'as' => 'admin:mail:test-mails']
+                );
+
+                Route::post(
+                    'test-mails',
+                    ['uses' => 'MailTesterController@postMail', 'as' => 'admin:mail:post:mail']
+                );
             }
         );
 
