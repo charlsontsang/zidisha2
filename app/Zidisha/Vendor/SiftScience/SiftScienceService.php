@@ -12,12 +12,12 @@ class SiftScienceService
 
     protected $sessionId;
 
-    public function __construct(DummySiftScienceClient $siftScienceClient)
+    public function __construct(DummySiftScienceClient $dummySiftScienceClient)
     {
         if (\Config::get('services.sift-science.enabled')) {
             $this->sift = new SiftClient(\Setting::get('sift-science.api-key'));
         } else {
-            $this->sift = $siftScienceClient;
+            $this->sift = $dummySiftScienceClient;
         }
 
         $this->sessionId = \Session::getId();
