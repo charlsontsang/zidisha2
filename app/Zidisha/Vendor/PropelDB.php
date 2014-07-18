@@ -4,6 +4,7 @@
 namespace Zidisha\Vendor;
 
 
+use PDO;
 use Propel\Runtime\Propel;
 use Zidisha\User\Map\UserTableMap;
 
@@ -32,4 +33,14 @@ class PropelDB {
         return $result;
     }
     
+    public static function fetchNumber($sql, $parameters = [])
+    {
+        $con = Propel::getWriteConnection(UserTableMap::DATABASE_NAME);
+        $stmt = $con->prepare($sql);
+        $stmt->execute($parameters);
+        $row = $stmt->fetch(PDO::FETCH_NUM);
+        
+        return $row[0];
+    }
+
 }
