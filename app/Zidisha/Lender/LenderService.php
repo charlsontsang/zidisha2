@@ -325,10 +325,7 @@ class LenderService
 
     public function updateAccountPreferences(Lender $lender, $data)
     {
-        $preferences = PreferencesQuery::create()
-            ->findOneByLenderId($lender->getId());
-        if ($preferences) {
-            $preferences
+            $lender->getPreferences()
                 ->setHideLendingActivity($data['hideLendingActivity'])
                 ->setHideKarma($data['hideKarma'])
                 ->setNotifyLoanFullyFunded($data['notifyLoanFullyFunded'])
@@ -337,10 +334,8 @@ class LenderService
                 ->setNotifyComment($data['notifyComment'])
                 ->setNotifyLoanApplication($data['notifyLoanApplication'])
                 ->setNotifyInviteAccepted($data['notifyInviteAccepted'])
-                ->setNotifyLoanRepayment($data['notifyLoanRepayment']);
-            $preferences->save();
-            return $preferences;
-        }
-        return false;
+                ->setNotifyLoanRepayment($data['notifyLoanRepayment'])
+                ->save();
+            return $lender->getPreferences();
     }
 }

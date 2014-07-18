@@ -27,8 +27,7 @@ class AccountPreferencesForm extends AbstractForm
     public function getDefaultData()
     {
         $lender = \Auth::user()->getLender();
-        $preference = PreferencesQuery::create()
-            ->findOneByLenderId($lender->getId());
+        $preference = $lender->getPreferences();
 
         return [
             'hideLendingActivity'     => $preference->getHideLendingActivity()? 'true' : 'false',
@@ -46,12 +45,12 @@ class AccountPreferencesForm extends AbstractForm
     public function getNotifyLoanRepayment()
     {
         $array = [
-            0   => 'Do not notify me about repayments',
             1   => 'Every time I receive a repayment',
             10  => 'When my credit balance reaches $10',
             25  => 'When my credit balance reaches $25',
             50  => 'When my credit balance reaches $50',
             100 => 'When my credit balance reaches $100',
+            0   => 'Do not notify me about repayments',
         ];
 
         return $array;
