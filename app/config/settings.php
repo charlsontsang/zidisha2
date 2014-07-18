@@ -84,4 +84,12 @@ return [
             'label' => 'PayPal Signature'
         ],
     ],
+    'Sendwithus' => [
+        'api_key'     => [
+            'label' => 'Send with us api key'
+        ],
+        'templateIds' => [
+            'label' => 'Template Ids'
+        ]
+    ]
 ];
