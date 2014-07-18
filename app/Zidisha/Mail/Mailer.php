@@ -39,46 +39,6 @@ class Mailer
         }
     }
 
-    public function addToQueue($view, $data)
-    {
-        $data += [
-            'from' => Setting::get('site.replyTo'),
-        ];
-        if ($this->driver == 'laravel' && $this->enabled) {
-            \Mail::queue(
-                $view,
-                $data,
-                function ($message) use ($data) {
-                    $message
-                        ->to($data['to'])
-                        ->from($data['from'])
-                        ->subject($data['subject']);
-                }
-            );
-        }
-    }
-
-    public function processLater($delay, $view, $data)
-    {
-        $data += [
-            'from' => Setting::get('site.replyTo'),
-        ];
-
-        if ($this->driver == 'laravel' && $this->enabled) {
-            \Mail::later(
-                $delay,
-                $view,
-                $data,
-                function ($message) use ($data) {
-                    $message
-                        ->to($data['to'])
-                        ->from($data['from'])
-                        ->subject($data['subject']);
-                }
-            );
-        }
-    }
-
     /**
      * Queue a new e-mail message for sending on the given queue.
      *
