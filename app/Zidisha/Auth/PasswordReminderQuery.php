@@ -1,8 +1,8 @@
 <?php
 
-namespace Zidisha\PasswordReminder;
+namespace Zidisha\Auth;
 
-use Zidisha\PasswordReminder\Base\PasswordReminderQuery as BasePasswordReminderQuery;
+use Zidisha\Auth\Base\PasswordReminderQuery as BasePasswordReminderQuery;
 
 
 /**
