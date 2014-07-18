@@ -99,6 +99,8 @@ class AuthController extends BaseController
     protected function login()
     {
         $user = \Auth::user();
+        $user->setLastLoginAt(new \DateTime());
+        $user->save();
         $role = $user->getRole();
 
         Mixpanel::identify(

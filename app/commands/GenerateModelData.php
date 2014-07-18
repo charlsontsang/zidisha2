@@ -32,6 +32,7 @@ use Zidisha\Loan\CategoryTranslation;
 use Zidisha\Loan\Loan;
 use Zidisha\Loan\LoanQuery;
 use Zidisha\Loan\LoanService;
+use Zidisha\Lender\LenderService;
 use Zidisha\Loan\Stage;
 
 class GenerateModelData extends Command
@@ -159,6 +160,7 @@ class GenerateModelData extends Command
         $categories = include(app_path() . '/database/LoanCategories.php');
         /** @var LoanService $loanService */
         $loanService = App::make('\Zidisha\Loan\LoanService');
+        $lenderService = App::make('\Zidisha\Lender\LenderService');
 
         $this->line("Generate $model");
 
@@ -303,38 +305,21 @@ class GenerateModelData extends Command
             }
 
             if ($model == "Lender") {
-
-                $userName = 'lender' . $i;
-                $password = '1234567890';
-                $email = 'lender' . $i . '@mail.com';
+                $data = array();
+                $data['username'] = 'lender' . $i;
+                $data['password'] = '1234567890';
+                $data['email'] = 'lender' . $i . '@mail.com';
                 $oneCountry = $allCountries[array_rand($allCountries->getData())];
+                $data['countryId'] = $oneCountry->getId();
+                $lenderService->joinLender($data);
 
-                $user = new \Zidisha\User\User();
-                $user->setUsername($userName);
-                $user->setPassword($password);
-                $user->setEmail($email);
-                $user->setRole('lender');
-                if($i<5){
-                    $user->setLastLoginAt(new Carbon('first day of July 2013'));
-                }elseif($i<10){
-                    $user->setLastLoginAt(new Carbon('first day of June 2013'));
-                }else{
-                    $user->setLastLoginAt(new Carbon());
-                }
-
-                $firstName = 'lender' . $i;
-                $lastName = 'last' . $i;
-
-                $lender = new \Zidisha\Lender\Lender();
-                $lender->setFirstName($firstName);
-                $lender->setLastName($lastName);
-                $lender->setCountry($oneCountry);
-                $lender->setUser($user);
-
-                $lender_profile = new \Zidisha\Lender\Profile();
-                $lender_profile->setAboutMe($faker->paragraph(7));
-                $lender_profile->setLender($lender);
-                $lender_profile->save();
+//                if($i<5){
+//                    $user->setLastLoginAt(new Carbon('first day of July 2013'));
+//                }elseif($i<10){
+//                    $user->setLastLoginAt(new Carbon('first day of June 2013'));
+//                }else{
+//                    $user->setLastLoginAt(new Carbon());
+//                }
             }
 
             if ($model == "Borrower") {

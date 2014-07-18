@@ -198,18 +198,35 @@ class LenderService
 
     public function joinLender($data)
     {
+        $data += [
+            'googleId'      => null,
+            'googlePicture' => null,
+            'firstName'     => null,
+            'lastName'      => null,
+            'aboutMe'       => null,
+            'facebookId'    => null,
+            'password'      => null,
+        ];
+
         $user = new User();
-        $user->setPassword($data['password']);
-        $user->setEmail($data['email']);
-        $user->setUsername($data['username']);
-        $user->setRole('lender');
+        $user
+            ->setPassword($data['password'])
+            ->setEmail($data['email'])
+            ->setUsername($data['username'])
+            ->setRole('lender')
+            ->setGoogleId($data['googleId'])
+            ->setFacebookId($data['facebookId'])
+            ->setGooglePicture($data['googlePicture']);
 
         $lender = new Lender();
         $lender
             ->setUser($user)
-            ->setCountryId($data['countryId']);
+            ->setCountryId($data['countryId'])
+            ->setFirstName($data['firstName'])
+            ->setLastName($data['lastName']);
 
         $profile = new Profile();
+        $profile->setAboutMe($data['aboutMe']);
         $lender->setProfile($profile);
         $lender->save();
 
@@ -223,27 +240,14 @@ class LenderService
 
     public function joinFacebookUser($facebookUser, $data)
     {
-        $user = new User();
-        $user
-            ->setUsername($data['username'])
-            ->setEmail($facebookUser['email'])
-            ->setRole("lender")
-            ->setFacebookId($facebookUser['id']);
+        $data += [
+            'email'      => $facebookUser['email'],
+            'facebookId' => $facebookUser['id'],
+            'firstName'  => $facebookUser['first_name'],
+            'lastName'   => $facebookUser['last_name'],
+        ];
 
-        $lender = new Lender();
-        $lender
-            ->setUser($user)
-            ->setFirstName($facebookUser['first_name'])
-            ->setLastName($facebookUser['last_name'])
-            ->setCountryId($data['countryId']);
-
-        $profile = new Profile();
-        $profile->setAboutMe($data['aboutMe']);
-        $lender->setProfile($profile);
-
-        $lender->save();
-
-        return $lender;
+        return $this->joinLender($data);
     }
 
     public function validateConnectingFacebookUser($facebookUser)
@@ -257,9 +261,9 @@ class LenderService
         $errors = array();
         if ($checkUser) {
             if ($checkUser->getFacebookId() == $facebookUser['id']) {
-                $errors[] = 'This facebook account already linked with another account on our website.';
+                $errors[] = 'lender.join.validation.facebook-account-exists';
             } else {
-                $errors[] = 'The email address linked to the facebook account is already linked with another account on our website.';
+                $errors[] = 'lender.join.validation.facebook-email-exists';
             }
         }
 
@@ -268,28 +272,15 @@ class LenderService
 
     public function joinGoogleUser(\Google_Service_Oauth2_Userinfoplus $googleUser, $data)
     {
-        $user = new User();
-        $user
-            ->setUsername($data['username'])
-            ->setEmail($googleUser->getEmail())
-            ->setRole("lender")
-            ->setGoogleId($googleUser->getId())
-            ->setGooglePicture($googleUser->getPicture());
+        $data += [
+            'email'         => $googleUser->getEmail(),
+            'googleId'      => $googleUser->getId(),
+            'googlePicture' => $googleUser->getPicture(),
+            'firstName'     => $googleUser->getGivenName(),
+            'lastName'      => $googleUser->getFamilyName()
+        ];
 
-        $lender = new Lender();
-        $lender
-            ->setUser($user)
-            ->setFirstName($googleUser->getGivenName())
-            ->setLastName($googleUser->getFamilyName())
-            ->setCountryId($data['countryId']);
-
-        $profile = new Profile();
-        $profile->setAboutMe($data['aboutMe']);
-        $lender->setProfile($profile);
-
-        $lender->save();
-
-        return $lender;
+        return $this->joinLender($data);
     }
 
     public function validateConnectingGoogleUser(\Google_Service_Oauth2_Userinfoplus $googleUser)
@@ -303,9 +294,9 @@ class LenderService
         $errors = array();
         if ($checkUser) {
             if ($checkUser->getGoogleId() == $googleUser->getId()) {
-                $errors[] = 'This google account already linked with another account on our website.';
+                $errors[] = 'lender.join.validation.google-account-exists';
             } else {
-                $errors[] = 'The email address linked to the google account is already linked with another account on our website.';
+                $errors[] = 'lender.join.validation.google-email-exists';
             }
         }
 
