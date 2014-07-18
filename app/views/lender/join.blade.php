@@ -62,7 +62,7 @@
 $(function() {
     $('#joinForm').submit(function() {
         if (!$('[name=termsOfUse]').is(':checked')) {
-            alert('ljhglj');
+            alert('Please Confirm acceptance of Terms of Use. Thanks!');
             return false;
         }
     });
