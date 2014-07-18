@@ -100,11 +100,14 @@ class GenerateModelData extends Command
             $this->call('fake', array('model' => 'Country', 'size' => 10));
             $this->call('fake', array('model' => 'Category', 'size' => 10));
             $this->call('fake', array('model' => 'Admin', 'size' => 1));
-            $this->call('fake', array('model' => 'Borrower', 'size' => 200));
+            $this->call('fake', array('model' => 'Borrower', 'size' => 80));
             $this->call('fake', array('model' => 'Lender', 'size' => 50));
             $this->call('fake', array('model' => 'ExchangeRate', 'size' => 30));
-            $this->call('fake', array('model' => 'Loan', 'size' => 150));
+            //$this->call('fake', array('model' => 'LoanOld', 'size' => 150));
+            $this->call('fake', array('model' => 'Loan', 'size' => 50));
+            //$this->call('fake', array('model' => 'BidOld', 'size' => 50));
             $this->call('fake', array('model' => 'Bid', 'size' => 50));
+            $this->call('fake', array('model' => 'AcceptBid', 'size' => 1));
             $this->call('fake', array('model' => 'Transaction', 'size' => 200));
             $this->call('fake', array('model' => 'Installment', 'size' => 200));
             $this->call('fake', array('model' => 'Invite', 'size' => 200));
@@ -214,6 +217,19 @@ class GenerateModelData extends Command
                 $lang->setActive($language[2]);
                 $lang->save();
 
+            }
+        }
+
+        if ($model == "AcceptBid") {
+            $raisedLoans = LoanQuery::create()
+                ->filterByRaisedPercentage(100)
+                ->find();
+
+            foreach ($raisedLoans as $loan) {
+                if (rand(1,3) <= 2) {
+                    $loanService->acceptBids($loan);
+                    $this->line('Loan :'. $loan->getId());
+                }
             }
         }
 
@@ -458,7 +474,7 @@ class GenerateModelData extends Command
                 $category->save();
             }
 
-            if ($model == "Loan") {
+            if ($model == "LoanOld") {
                 if ($i >= 30) {
                     $installmentDay = $i - (int)(25 - $i);
                     $amount = 30 + ($i * 100);
@@ -594,7 +610,7 @@ class GenerateModelData extends Command
                 }
             }
 
-            if ($model == "Bid") {
+            if ($model == "BidOld") {
 
                 $openLoans = LoanQuery::create()
                     ->filterByStatus(0)
@@ -713,6 +729,53 @@ class GenerateModelData extends Command
                     $withdrawalRequest->setPaid(true);
                 }
                 $withdrawalRequest->save();
+            }
+
+            if ($model == "Loan") {
+                if ($i >= 30) {
+                    $installmentDay = $i - (int)(25 - $i);
+                    $amount = 30 + ($i * 100);
+                } else {
+                    $installmentDay = $i;
+                    $amount = 30 + ($i * 200);
+                }
+                $loanCategory = $allCategories[array_rand($allCategories)];
+
+                if($i > 50 && $i < 55 ){
+                    $borrower = $allBorrowers[50];
+                }else{
+                    $borrower = $allBorrowers[$i - 1];
+                }
+
+                $data = array();
+                $data['summary'] = $faker->sentence(8);
+                $data['proposal'] = $faker->paragraph(7);
+                $data['amount'] = $amount;
+                $installmentAmount = (int)$data['amount'] / 12;
+                $data['installmentAmount'] = $installmentAmount;
+                $data['currencyCode'] = $borrower->getCountry()->getCurrencyCode();
+                $data['usdAmount'] = $amount / 2;
+                $data['installmentDay'] = $installmentDay;
+                $data['applicationDate'] = new \DateTime();
+                $data['categoryId'] = $loanCategory->getId();
+
+                $loanService->applyForLoan($borrower, $data);
+            }
+
+            if ($model == "Bid") {
+                $openLoans = LoanQuery::create()
+                    ->filterByStatus(0)
+                    ->find();
+                $oneLoan = $openLoans[array_rand($openLoans->getData())];
+                $numberOfBids = rand(2,5);
+                $data = array();
+
+                for ( $j=0; $j<=$numberOfBids; $j++) {
+                    $oneLender = $allLenders[array_rand($allLenders->getData())];
+                    $data['amount'] = rand(5, $oneLoan->getUsdAmount()->divide(2)->getAmount());
+                    $data['interestRate'] = rand(0, 15);
+                    $loanService->placeBid($oneLoan, $oneLender, $data);
+                }
             }
         }
     }
