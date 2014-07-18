@@ -882,4 +882,20 @@
             <reference local="lender_id" foreign="id"/>
         </foreign-key>
     </table>
+
+    <table name="followers" phpName="Follower" namespace="Lender">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="lender_id" type="INTEGER" required="true"/>
+        <column name="borrower_id" type="INTEGER" required="true"/>
+        <column name="active" type="BOOLEAN" defaultValue="true"/>
+        <column name="notify_loan_application" type="BOOLEAN" defaultValue="false"/>
+        <column name="notify_comment" type="BOOLEAN" defaultValue="false"/>
+        <behavior name="timestampable"/>
+        <foreign-key foreignTable="lenders">
+            <reference local="lender_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="borrowers">
+            <reference local="borrower_id" foreign="id"/>
+        </foreign-key>
+    </table>
 </database>
