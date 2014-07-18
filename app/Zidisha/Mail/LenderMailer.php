@@ -100,10 +100,18 @@ class LenderMailer
         //TODO
     }
 
-
-    public function sendWelcomeMail($lender)
+    public function sendWelcomeMail(Lender $lender)
     {
-        // See sendWelcomeMailToLender in session.php
+        $email = $lender->getUser()->getEmail();
+
+        $this->mailer->send(
+            'emails.lender.welcome',
+            [
+                'to'      => $email,
+                'from'    => 'service@zidisha.com',
+                'subject' => 'Welcome to Zidisha!'
+            ]
+        );
     }
     
     public function sendIntroductionMail(Lender $lender)
