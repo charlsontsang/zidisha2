@@ -73,7 +73,7 @@ return [
         'stripe.secretKey' => [
             'label' => 'Stripe Secret Key',
         ],
-        'sift-science.api' => [
+        'sift-science.api-key' => [
             'label' => 'Sift Science Api Key'
         ],
         'paypal.mode' => [

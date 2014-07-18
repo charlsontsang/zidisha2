@@ -12,12 +12,12 @@ class SiftScienceService
 
     protected $sessionId;
 
-    public function __construct()
+    public function __construct(DummySiftScienceClient $dummySiftScienceClient)
     {
-        if (\App::environment() != 'production') { // TODO
-            $this->sift = new DummySiftScienceClient();
+        if (\Config::get('services.sift-science.enabled')) {
+            $this->sift = new SiftClient(\Setting::get('sift-science.api-key'));
         } else {
-            $this->sift = new SiftClient(\Setting::get('sift-science.api'));
+            $this->sift = $dummySiftScienceClient;
         }
 
         $this->sessionId = \Session::getId();

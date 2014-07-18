@@ -30,5 +30,8 @@ return array(
 
     'sendwithus' => [
         'enabled' => false
+    ],
+    'sift-science' => [
+        'enabled' => false
     ]
 );

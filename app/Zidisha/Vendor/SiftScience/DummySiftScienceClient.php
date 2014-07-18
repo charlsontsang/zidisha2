@@ -1,47 +1,41 @@
 <?php
 namespace Zidisha\Vendor\SiftScience;
 
+use Zidisha\Mail\Mailer;
+
 class DummySiftScienceClient
 {
+    /**
+     * @var \Zidisha\Mail\Mailer
+     */
+    private $mailer;
+
+    public function __construct(Mailer $mailer)
+    {
+        $this->mailer = $mailer;
+    }
+
     public function track($event, $properties)
     {
-        \Mail::send(
+        $this->mailer->send(
             'emails.siftScience.sendData',
-            ['siftData' => $properties, 'type' => 'track'],
-            function ($mail) {
-                $mail
-                    ->to('siftScience@gmail.com')
-                    ->from('siftScience@zidisha.com')
-                    ->subject('sift-Science track event');
-            }
+            ['to' => 'siftscience@test.com', 'siftData' => $properties, 'type' => 'track', 'subject' => 'sift-Science track event']
         );
     }
 
     public function label($userId, $properties)
     {
-        \Mail::send(
+        $this->mailer->send(
             'emails.siftScience.sendData',
-            ['siftData' => $properties, 'type' => 'label'],
-            function ($mail) {
-                $mail
-                    ->to('siftScience@gmail.com')
-                    ->from('siftScience@zidisha.com')
-                    ->subject('sift-Science label user');
-            }
+            ['to' => 'siftscience@test.com', 'siftData' => $properties, 'type' => 'label', 'subject' => 'sift-Science label user']
         );
     }
 
     public function score($userId)
     {
-        \Mail::send(
+        $this->mailer->send(
             'emails.siftScience.sendData',
-            ['siftData' => 'NOT APPLICABLE', 'type' => 'score'],
-            function ($mail) {
-                $mail
-                    ->to('siftScience@gmail.com')
-                    ->from('siftScience@zidisha.com')
-                    ->subject('sift-Science user score');
-            }
+            ['to' => 'siftscience@test.com', 'siftData' => 'NOT APPLICABLE', 'type' => 'score', 'subject' => 'sift-Science score user']
         );
 
         $response = new DummySiftScienceResponse();
