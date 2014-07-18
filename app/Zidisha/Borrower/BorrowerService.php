@@ -6,7 +6,6 @@ use Zidisha\Loan\Loan;
 use Zidisha\Loan\LoanQuery;
 use Zidisha\Mail\BorrowerMailer;
 use Zidisha\Sms\BorrowerSmsService;
-use Zidisha\Translation\TranslationLabelQuery;
 use Zidisha\Upload\Upload;
 use Zidisha\User\User;
 use Zidisha\User\UserQuery;
