@@ -10,8 +10,11 @@ class Mailer
 
     public $driver;
 
+    protected $enabled;
+
     public function __construct()
     {
+        $this->enabled = \Config::get('mail.mailer.enabled');
         $this->driver = \Config::get('mail.mailer.driver');
     }
 
@@ -20,7 +23,7 @@ class Mailer
         $data += [
             'from' => Setting::get('site.replyTo'),
         ];
-        if ($this->driver == 'laravel') {
+        if ($this->driver == 'laravel' && $this->enabled) {
             \Mail::send(
                 $view,
                 $data,
@@ -39,7 +42,7 @@ class Mailer
         $data += [
             'from' => Setting::get('site.replyTo'),
         ];
-        if ($this->driver == 'laravel') {
+        if ($this->driver == 'laravel' && $this->enabled) {
             \Mail::queue(
                 $view,
                 $data,
@@ -58,7 +61,7 @@ class Mailer
         $data += [
             'from' => Setting::get('site.replyTo'),
         ];
-        if ($this->driver == 'laravel') {
+        if ($this->driver == 'laravel' && $this->enabled) {
             \Mail::later(
                 $delay,
                 $view,
