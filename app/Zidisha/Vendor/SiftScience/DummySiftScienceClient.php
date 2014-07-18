@@ -35,7 +35,7 @@ class DummySiftScienceClient
     {
         $this->mailer->send(
             'emails.siftScience.sendData',
-            ['to' => 'siftscience@test.com', 'siftData' => 'NOT APPLICABLE', 'type' => 'score', 'subject' => 'sift-Science label user']
+            ['to' => 'siftscience@test.com', 'siftData' => 'NOT APPLICABLE', 'type' => 'score', 'subject' => 'sift-Science score user']
         );
 
         $response = new DummySiftScienceResponse();
