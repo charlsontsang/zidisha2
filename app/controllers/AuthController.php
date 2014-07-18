@@ -55,12 +55,16 @@ class AuthController extends BaseController
     public function getLogout()
     {
         $user = \Auth::user();
-        $this->siftScienceService->sendLogoutEvent($user);
-
+        
+        if ($user) {
+            $this->siftScienceService->sendLogoutEvent($user);
+        }
+        
         Auth::logout();
         Session::flush();
         Session::regenerate();
         $this->facebookService->logout();
+        
         return Redirect::route('home');
     }
 
