@@ -1,9 +1,7 @@
 <?php
 
-use Illuminate\Routing\UrlGenerator;
 use Zidisha\Auth\AuthService;
 use Zidisha\Borrower\BorrowerGuestQuery;
-use Zidisha\Borrower\BorrowerService;
 use Zidisha\Borrower\JoinLogQuery;
 use Zidisha\User\UserQuery;
 use Zidisha\Vendor\Facebook\FacebookService;
@@ -18,16 +16,14 @@ class AuthController extends BaseController
     private $authService;
     private $siftScienceService;
     private $googleService;
-    private $borrowerService;
 
     public function __construct(FacebookService $facebookService, AuthService $authService,
-        siftScienceService $siftScienceService, GoogleService $googleService, BorrowerService $borrowerService)
+        siftScienceService $siftScienceService, GoogleService $googleService)
     {
         $this->facebookService = $facebookService;
         $this->authService = $authService;
         $this->siftScienceService = $siftScienceService;
         $this->googleService = $googleService;
-        $this->borrowerService = $borrowerService;
     }
 
     public function getLogin()
