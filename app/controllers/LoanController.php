@@ -9,6 +9,7 @@ use Zidisha\Comment\BorrowerCommentService;
 use Zidisha\Comment\CommentService;
 use Zidisha\Flash\Flash;
 use Zidisha\Lender\Exceptions\InsufficientLenderBalanceException;
+use Zidisha\Lender\FollowerService;
 use Zidisha\Loan\Bid;
 use Zidisha\Loan\Form\AdminCategoryForm;
 use Zidisha\Loan\Loan;
@@ -30,6 +31,10 @@ class LoanController extends BaseController
     private $loanService;
     private $borrowerService;
     private $adminCategoryForm;
+    /**
+     * @var Zidisha\Lender\FollowerService
+     */
+    private $followerService;
 
     public function  __construct(
         LoanQuery $loanQuery,
@@ -37,7 +42,8 @@ class LoanController extends BaseController
         LoanService $loanService,
         BorrowerService $borrowerService,
         AdminCategoryForm $adminCategoryForm,
-        BorrowerCommentService $borrowerCommentService
+        BorrowerCommentService $borrowerCommentService,
+        FollowerService $followerService
     ) {
         $this->loanQuery = $loanQuery;
         $this->bidQuery = $bidQuery;
@@ -45,6 +51,7 @@ class LoanController extends BaseController
         $this->borrowerService = $borrowerService;
         $this->adminCategoryForm = $adminCategoryForm;
         $this->borrowerCommentService = $borrowerCommentService;
+        $this->followerService = $followerService;
     }
 
     public function getIndex($loanId)
@@ -77,12 +84,25 @@ class LoanController extends BaseController
         $previousLoans = $this->borrowerService->getPreviousLoans($borrower, $loan);
 
         $placeBidForm = new PlaceBidForm($loan);
+        
+        $followersCount = $this->followerService->getFollowerCount($borrower);
+        $hasFundedBorrower = false;
+        $follower = false;
+        if (\Auth::check() && \Auth::user()->isLender()) {
+            $hasFundedBorrower = $this->loanService->hasFunded(\Auth::user()->getLender(), $borrower);
+            $follower = \Zidisha\Lender\Base\FollowerQuery::create()
+                ->filterByLenderId(\Auth::id())
+                ->filterByBorrower($borrower)
+                ->findOne();
+        }
 
         return View::make(
             'pages.loan',
             compact(
                 'loan', 'borrower', 'bids', 'comments',
-                'totalInterest', 'serviceFee', 'previousLoans'),
+                'totalInterest', 'serviceFee', 'previousLoans',
+                'followersCount', 'hasFundedBorrower', 'follower'
+            ),
             ['placeBidForm' => $placeBidForm, 'categoryForm' =>$this->adminCategoryForm]
         );
     }

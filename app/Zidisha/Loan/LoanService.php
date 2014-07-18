@@ -750,6 +750,19 @@ class LoanService
         $profile->save();
         $loan->save();
     }
+
+    public function hasFunded(Lender $lender, Borrower $borrower)
+    {
+        $count = BidQuery::create()
+            ->filterByLender($lender)
+            ->filterByActive(true)
+            ->useLoanQuery()
+                ->filterByBorrower($borrower)
+            ->endUse()
+            ->count();
+        
+        return $count > 0;
+    }
 }
 
 

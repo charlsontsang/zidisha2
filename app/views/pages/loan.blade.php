@@ -78,6 +78,38 @@
         @endif
         <br/>
         <br/>
+
+
+        <?php
+        //if ($session->userlevel == LENDER_LEVEL) {
+        //    $follow_by_default = $database->hasFunded($session->userid, $borrower_id);
+        //}
+        ?>
+
+        <h3>
+            @lang('lender.follow.title', ['name' => $borrower->getName()])
+            @if ($followersCount)
+                <small>(@choice('lender.follow.count', $followersCount))</small>
+            @endif
+        </h3>
+
+        @lang('lender.follow.description', ['firstName' => $borrower->getFirstName()])
+        <br/><br/>
+
+        @if(\Auth::check() && \Auth::user()->isLender())
+            @include('lender.follow.follower', [
+                'borrower'        => $borrower,
+                'followByDefault' => $hasFundedBorrower,
+                'lender'          => \Auth::user()->getLender(),
+                'follower'        => $follower
+            ])
+        @else
+            @lang('lender.follow.prompt-login', ['link' => route('login'), 'name' => $borrower->getName()])
+        @endif
+        
+        <br/>
+        <br/>
+        
         <h4>Comments</h4>
         @include('partials.comments.comments', ['comments' => $comments, 'receiver' => $borrower, 'commentType' => 'borrowerComment'])
     </div>
@@ -339,4 +371,6 @@
         });
     });
 </script>
+# TODO
+<script src="/static/js/follow.js"></script>
 @stop

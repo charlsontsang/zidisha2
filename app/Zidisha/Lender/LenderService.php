@@ -228,6 +228,10 @@ class LenderService
         $profile = new Profile();
         $profile->setAboutMe($data['aboutMe']);
         $lender->setProfile($profile);
+
+        $preferences = new Preferences();
+        $lender->setPreferences($preferences);
+        
         $lender->save();
 
         $this->mixpanelService->trackLenderJoined($lender);
