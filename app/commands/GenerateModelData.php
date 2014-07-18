@@ -105,6 +105,7 @@ class GenerateModelData extends Command
             $this->call('fake', array('model' => 'ExchangeRate', 'size' => 30));
             //$this->call('fake', array('model' => 'LoanOld', 'size' => 150));
             $this->call('fake', array('model' => 'Loan', 'size' => 50));
+            //$this->call('fake', array('model' => 'BidOld', 'size' => 50));
             $this->call('fake', array('model' => 'Bid', 'size' => 50));
             $this->call('fake', array('model' => 'Transaction', 'size' => 200));
             $this->call('fake', array('model' => 'Installment', 'size' => 200));
@@ -595,7 +596,7 @@ class GenerateModelData extends Command
                 }
             }
 
-            if ($model == "Bid") {
+            if ($model == "BidOld") {
 
                 $openLoans = LoanQuery::create()
                     ->filterByStatus(0)
@@ -745,6 +746,22 @@ class GenerateModelData extends Command
                 $data['categoryId'] = $loanCategory->getId();
 
                 $loanService->applyForLoan($borrower, $data);
+            }
+
+            if ($model == "Bid") {
+                $openLoans = LoanQuery::create()
+                    ->filterByStatus(0)
+                    ->find();
+                $oneLoan = $openLoans[array_rand($openLoans->getData())];
+                $numberOfBids = rand(2,5);
+                $data = array();
+
+                for ( $j=0; $j<=$numberOfBids; $j++) {
+                    $oneLender = $allLenders[array_rand($allLenders->getData())];
+                    $data['amount'] = rand(5, $oneLoan->getUsdAmount()->divide(2)->getAmount());
+                    $data['interestRate'] = rand(0, 15);
+                    $loanService->placeBid($oneLoan, $oneLender, $data);
+                }
             }
         }
     }
