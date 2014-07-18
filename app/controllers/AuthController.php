@@ -3,7 +3,9 @@
 use Zidisha\Auth\AuthService;
 use Zidisha\Borrower\BorrowerGuestQuery;
 use Zidisha\Borrower\JoinLogQuery;
+use Zidisha\Country\CountryQuery;
 use Zidisha\User\UserQuery;
+use Zidisha\Utility\Utility;
 use Zidisha\Vendor\Facebook\FacebookService;
 use Zidisha\Vendor\Google\GoogleService;
 use Zidisha\Vendor\Mixpanel;
@@ -92,7 +94,15 @@ class AuthController extends BaseController
 
     public function getJoin()
     {
-        // TODO
+        $country = Utility::getCountryCodeByIP();
+        $borrowerCountriesCodes = CountryQuery::create()
+            ->filterByBorrowerCountry(true)
+            ->select('country_code')
+            ->find();
+
+        if (in_array($country['code'], $borrowerCountriesCodes->getData())) {
+            return Redirect::route('borrower:join');
+        }
         return Redirect::route('lender:join');
     }
 
