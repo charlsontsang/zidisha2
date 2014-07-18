@@ -198,18 +198,32 @@ class LenderService
 
     public function joinLender($data)
     {
+        $data += [
+                'googleId' => null,
+                'googlePicture' => null,
+                'firstName' => null,
+                'lastName' => null,
+                'aboutMe' => null,
+            ];
+
         $user = new User();
-        $user->setPassword($data['password']);
-        $user->setEmail($data['email']);
-        $user->setUsername($data['username']);
-        $user->setRole('lender');
+        $user
+            ->setPassword($data['password'])
+            ->setEmail($data['email'])
+            ->setUsername($data['username'])
+            ->setRole('lender')
+            ->setGoogleId($data['googleId'])
+            ->setGooglePicture($data['googlePicture']);
 
         $lender = new Lender();
         $lender
             ->setUser($user)
-            ->setCountryId($data['countryId']);
+            ->setCountryId($data['countryId'])
+            ->setFirstName($data['firstName'])
+            ->setLastName($data['lastName']);
 
         $profile = new Profile();
+        $profile->setAboutMe($data['aboutMe']);
         $lender->setProfile($profile);
         $lender->save();
 
@@ -268,28 +282,15 @@ class LenderService
 
     public function joinGoogleUser(\Google_Service_Oauth2_Userinfoplus $googleUser, $data)
     {
-        $user = new User();
-        $user
-            ->setUsername($data['username'])
-            ->setEmail($googleUser->getEmail())
-            ->setRole("lender")
-            ->setGoogleId($googleUser->getId())
-            ->setGooglePicture($googleUser->getPicture());
+        $data += [
+                'email' => $googleUser->getEmail(),
+                'googleId' => $googleUser->getId(),
+                'googlePicture' => $googleUser->getPicture(),
+                'firstName' => $googleUser->getGivenName(),
+                'lastName' => $googleUser->getFamilyName()
+            ];
 
-        $lender = new Lender();
-        $lender
-            ->setUser($user)
-            ->setFirstName($googleUser->getGivenName())
-            ->setLastName($googleUser->getFamilyName())
-            ->setCountryId($data['countryId']);
-
-        $profile = new Profile();
-        $profile->setAboutMe($data['aboutMe']);
-        $lender->setProfile($profile);
-
-        $lender->save();
-
-        return $lender;
+        return $this->joinLender($data);
     }
 
     public function validateConnectingGoogleUser(\Google_Service_Oauth2_Userinfoplus $googleUser)
