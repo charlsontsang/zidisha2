@@ -901,8 +901,16 @@
 
     <table name="lender_preferences" phpName="Preferences" namespace="Lender">
         <column name="lender_id" type="INTEGER" primaryKey="true"/>
+        <column name="hide_lending_activity" type="BOOLEAN" defaultValue="false"/>
+        <column name="hide_karma" type="BOOLEAN" defaultValue="true"/>
+        <column name="notify_loan_fully_funded" type="BOOLEAN" defaultValue="true"/>
+        <column name="notify_loan_about_to_expire" type="BOOLEAN" defaultValue="true"/>
+        <column name="notify_loan_expired" type="BOOLEAN" defaultValue="true"/>
+        <column name="notify_loan_disbursed" type="BOOLEAN" defaultValue="true"/>
         <column name="notify_comment" type="BOOLEAN" defaultValue="true"/>
         <column name="notify_loan_application" type="BOOLEAN" defaultValue="true"/>
+        <column name="notify_invite_accepted" type="BOOLEAN" defaultValue="true"/>
+        <column name="notify_loan_repayment" type="ENUM" valueSet="0, 1, 10, 25, 50, 100" defaultValue="1"/>
         <behavior name="timestampable"/>
         <foreign-key foreignTable="lenders">
             <reference local="lender_id" foreign="id"/>
