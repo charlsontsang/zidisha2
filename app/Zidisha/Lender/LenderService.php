@@ -294,9 +294,9 @@ class LenderService
         $errors = array();
         if ($checkUser) {
             if ($checkUser->getGoogleId() == $googleUser->getId()) {
-                $errors[] = 'This google account already linked with another account on our website.';
+                $errors[] = \Lang::get('lender.join.validation.google-account-exists');
             } else {
-                $errors[] = 'The email address linked to the google account is already linked with another account on our website.';
+                $errors[] = \Lang::get('lender.join.validation.google-email-exists');
             }
         }
 
