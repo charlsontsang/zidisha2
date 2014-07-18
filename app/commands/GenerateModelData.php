@@ -232,7 +232,6 @@ class GenerateModelData extends Command
             foreach ($raisedLoans as $loan) {
                 if (rand(1,3) <= 2) {
                     $loanService->acceptBids($loan);
-                    $this->line('Loan :'. $loan->getId());
                 }
             }
         }
