@@ -256,6 +256,20 @@ Route::group(
                     )
                 );
 
+                Route::get(
+                    '/preferences',
+                    array(
+                        'uses' => 'LenderPreferencesController@getAccountPreference',
+                        'as'   => 'lender:preference'
+                    )
+                );
+                Route::post(
+                    '/preferences',
+                    array(
+                        'uses' => 'LenderPreferencesController@postAccountPreference',
+                        'as'   => 'lender:post:preference'
+                    )
+                );
             }
         );
 

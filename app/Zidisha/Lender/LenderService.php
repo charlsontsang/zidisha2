@@ -322,4 +322,20 @@ class LenderService
             });
         return $withdrawalRequest;
     }
+
+    public function updateAccountPreferences(Lender $lender, $data)
+    {
+            $lender->getPreferences()
+                ->setHideLendingActivity($data['hideLendingActivity'])
+                ->setHideKarma($data['hideKarma'])
+                ->setNotifyLoanFullyFunded($data['notifyLoanFullyFunded'])
+                ->setNotifyLoanAboutToExpire($data['notifyLoanAboutToExpire'])
+                ->setNotifyLoanDisbursed($data['notifyLoanDisbursed'])
+                ->setNotifyComment($data['notifyComment'])
+                ->setNotifyLoanApplication($data['notifyLoanApplication'])
+                ->setNotifyInviteAccepted($data['notifyInviteAccepted'])
+                ->setNotifyLoanRepayment($data['notifyLoanRepayment'])
+                ->save();
+            return $lender->getPreferences();
+    }
 }
