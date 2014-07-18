@@ -167,6 +167,7 @@
         <column name="first_name" type="VARCHAR" size="50" required="false"/>
         <column name="last_name" type="VARCHAR" size="50" required="false"/>
         <column name="admin_donate" type="BOOLEAN" defaultValue="false"/>
+        <column name="active" type="BOOLEAN" defaultValue="true"/>
         <behavior name="timestampable"/>
         <foreign-key foreignTable="users">
             <reference local="id" foreign="id"/>
