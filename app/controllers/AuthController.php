@@ -95,12 +95,12 @@ class AuthController extends BaseController
     public function getJoin()
     {
         $country = Utility::getCountryCodeByIP();
-        $borrowerCountriesCodes = CountryQuery::create()
+        $isBorrowerCountry = CountryQuery::create()
             ->filterByBorrowerCountry(true)
-            ->select('country_code')
-            ->find();
+            ->filterByCountryCode($country['code'])
+            ->count();
 
-        if (in_array($country['code'], $borrowerCountriesCodes->getData())) {
+        if ($isBorrowerCountry) {
             return Redirect::route('borrower:join');
         }
         return Redirect::route('lender:join');
