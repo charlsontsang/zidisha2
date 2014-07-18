@@ -107,6 +107,7 @@ class GenerateModelData extends Command
             $this->call('fake', array('model' => 'Loan', 'size' => 50));
             //$this->call('fake', array('model' => 'BidOld', 'size' => 50));
             $this->call('fake', array('model' => 'Bid', 'size' => 50));
+            $this->call('fake', array('model' => 'AcceptBid', 'size' => 1));
             $this->call('fake', array('model' => 'Transaction', 'size' => 200));
             $this->call('fake', array('model' => 'Installment', 'size' => 200));
             $this->call('fake', array('model' => 'Invite', 'size' => 200));
@@ -216,6 +217,19 @@ class GenerateModelData extends Command
                 $lang->setActive($language[2]);
                 $lang->save();
 
+            }
+        }
+
+        if ($model == "AcceptBid") {
+            $raisedLoans = LoanQuery::create()
+                ->filterByRaisedPercentage(100)
+                ->find();
+
+            foreach ($raisedLoans as $loan) {
+                if (rand(1,3) <= 2) {
+                    $loanService->acceptBids($loan);
+                    $this->line('Loan :'. $loan->getId());
+                }
             }
         }
 
