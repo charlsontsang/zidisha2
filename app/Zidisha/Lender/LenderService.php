@@ -205,6 +205,7 @@ class LenderService
             'lastName'      => null,
             'aboutMe'       => null,
             'facebookId'    => null,
+            'password'      => null,
         ];
 
         $user = new User();
