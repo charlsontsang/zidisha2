@@ -199,12 +199,13 @@ class LenderService
     public function joinLender($data)
     {
         $data += [
-                'googleId' => null,
-                'googlePicture' => null,
-                'firstName' => null,
-                'lastName' => null,
-                'aboutMe' => null,
-            ];
+            'googleId'      => null,
+            'googlePicture' => null,
+            'firstName'     => null,
+            'lastName'      => null,
+            'aboutMe'       => null,
+            'facebookId'    => null,
+        ];
 
         $user = new User();
         $user
@@ -213,6 +214,7 @@ class LenderService
             ->setUsername($data['username'])
             ->setRole('lender')
             ->setGoogleId($data['googleId'])
+            ->setFacebookId($data['facebookId'])
             ->setGooglePicture($data['googlePicture']);
 
         $lender = new Lender();
@@ -237,27 +239,14 @@ class LenderService
 
     public function joinFacebookUser($facebookUser, $data)
     {
-        $user = new User();
-        $user
-            ->setUsername($data['username'])
-            ->setEmail($facebookUser['email'])
-            ->setRole("lender")
-            ->setFacebookId($facebookUser['id']);
+        $data += [
+            'email'      => $facebookUser['email'],
+            'facebookId' => $facebookUser['id'],
+            'firstName'  => $facebookUser['first_name'],
+            'lastName'   => $facebookUser['last_name'],
+        ];
 
-        $lender = new Lender();
-        $lender
-            ->setUser($user)
-            ->setFirstName($facebookUser['first_name'])
-            ->setLastName($facebookUser['last_name'])
-            ->setCountryId($data['countryId']);
-
-        $profile = new Profile();
-        $profile->setAboutMe($data['aboutMe']);
-        $lender->setProfile($profile);
-
-        $lender->save();
-
-        return $lender;
+        return $this->joinLender($data);
     }
 
     public function validateConnectingFacebookUser($facebookUser)
@@ -283,12 +272,12 @@ class LenderService
     public function joinGoogleUser(\Google_Service_Oauth2_Userinfoplus $googleUser, $data)
     {
         $data += [
-                'email' => $googleUser->getEmail(),
-                'googleId' => $googleUser->getId(),
-                'googlePicture' => $googleUser->getPicture(),
-                'firstName' => $googleUser->getGivenName(),
-                'lastName' => $googleUser->getFamilyName()
-            ];
+            'email'         => $googleUser->getEmail(),
+            'googleId'      => $googleUser->getId(),
+            'googlePicture' => $googleUser->getPicture(),
+            'firstName'     => $googleUser->getGivenName(),
+            'lastName'      => $googleUser->getFamilyName()
+        ];
 
         return $this->joinLender($data);
     }
