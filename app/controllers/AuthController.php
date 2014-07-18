@@ -1,9 +1,11 @@
 <?php
 
+use Zidisha\Analytics\MixpanelService;
 use Zidisha\Auth\AuthService;
 use Zidisha\Borrower\BorrowerGuestQuery;
 use Zidisha\Borrower\JoinLogQuery;
 use Zidisha\Country\CountryQuery;
+use Zidisha\User\User;
 use Zidisha\User\UserQuery;
 use Zidisha\Utility\Utility;
 use Zidisha\Vendor\Facebook\FacebookService;
@@ -24,7 +26,7 @@ class AuthController extends BaseController
     private $mixpanel;
 
     public function __construct(FacebookService $facebookService, AuthService $authService,
-        siftScienceService $siftScienceService, GoogleService $googleService, Mixpanel $mixpanel)
+        siftScienceService $siftScienceService, GoogleService $googleService, MixpanelService $mixpanel)
     {
         $this->facebookService = $facebookService;
         $this->authService = $authService;
@@ -113,25 +115,18 @@ class AuthController extends BaseController
 
     protected function login()
     {
+        /** @var User $user */
         $user = \Auth::user();
         $user->setLastLoginAt(new \DateTime());
         $user->save();
-        $role = $user->getRole();
 
-        $this->mixpanel->identify(
-            $user->getId(),
-            array(
-                'username' => $user->getUsername(),
-                'userlevel' => $role,
-                'email' => $user->getEmail(),
-            )
-        );
-        $this->mixpanel->track('Logged in');
+        $this->mixpanel->identify($user);
+        $this->mixpanel->trackLoggedIn();
         $this->siftScienceService->sendLoginEvent($user);
 
-        if ($role == 'lender') {
+        if ($user->isLender()) {
             return Redirect::route('lender:dashboard');
-        } elseif ($role == 'borrower') {
+        } elseif ($user->isBorrower()) {
             return Redirect::route('borrower:dashboard');
         }
 

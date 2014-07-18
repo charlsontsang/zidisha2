@@ -5,6 +5,7 @@ use Zidisha\Lender\Invite;
 use Zidisha\Lender\InviteVisit;
 use Zidisha\Lender\Lender;
 use Zidisha\Loan\Bid;
+use Zidisha\User\User;
 use Zidisha\Vendor\DummyMixpanel;
 use Zidisha\Vendor\Mixpanel;
 
@@ -22,6 +23,18 @@ class MixpanelService
         } else {
             $this->mixpanel = $dummyMixpanel;
         }
+    }
+
+    public function identify(User $user)
+    {
+        $this->mixpanel->identify(
+            $user->getId(),
+            [
+                'username'  => $user->getUsername(),
+                'userlevel' => $user->getRole(),
+                'email'     => $user->getEmail(),
+            ]
+        );
     }
 
     public function trackLenderJoined(Lender $lender)
@@ -85,6 +98,11 @@ class MixpanelService
                 'lender_id' => $invite->getLenderId()
             )
         );
+    }
+
+    public function trackLoggedIn()
+    {
+        $this->mixpanel->track('Logged in');
     }
 
 } 
