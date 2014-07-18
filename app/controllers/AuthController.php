@@ -3,7 +3,9 @@
 use Zidisha\Auth\AuthService;
 use Zidisha\Borrower\BorrowerGuestQuery;
 use Zidisha\Borrower\JoinLogQuery;
+use Zidisha\Country\CountryQuery;
 use Zidisha\User\UserQuery;
+use Zidisha\Utility\Utility;
 use Zidisha\Vendor\Facebook\FacebookService;
 use Zidisha\Vendor\Google\GoogleService;
 use Zidisha\Vendor\Mixpanel;
@@ -80,7 +82,7 @@ class AuthController extends BaseController
             if ($checkUser) {
                 Auth::loginUsingId($checkUser->getId());
             } else {
-                Flash::error('You are not registered to use Facebook. Please sign up with Facebook first.');
+                Flash::error('borrower.login.flash.not-registered-facebook');
                 return Redirect::to('login');
             }
 
@@ -92,7 +94,15 @@ class AuthController extends BaseController
 
     public function getJoin()
     {
-        // TODO
+        $country = Utility::getCountryCodeByIP();
+        $isBorrowerCountry = CountryQuery::create()
+            ->filterByBorrowerCountry(true)
+            ->filterByCountryCode($country['code'])
+            ->count();
+
+        if ($isBorrowerCountry) {
+            return Redirect::route('borrower:join');
+        }
         return Redirect::route('lender:join');
     }
 
@@ -131,7 +141,7 @@ class AuthController extends BaseController
             ->findOne();
 
         if (!$joinLog) {
-            \Flash::error('The code is not valid');
+            \Flash::error('borrower.login.flash.code-not-valid');
             return \Redirect::home();
         }
 
@@ -147,7 +157,7 @@ class AuthController extends BaseController
 
         Auth::loginUsingId($borrower->getId());
 
-        \Flash::info('You are verified.');
+        \Flash::info('borrower.login.flash.verified');
         return $this->login();
     }
 
@@ -208,7 +218,7 @@ class AuthController extends BaseController
                         if ($checkUser) {
                             Auth::loginUsingId($checkUser->getId());
                         } else {
-                            Flash::error('You are not registered to use Google. Please sign up with Google first.');
+                            \Flash::error('borrower.login.flash.not-registered-google');
                             return Redirect::to('login');
                         }
                         return $this->login();
@@ -217,7 +227,7 @@ class AuthController extends BaseController
             }
         }
 
-        Flash::error('Some Error Occurred');
+        \Flash::error('borrower.login.flash.oops');
         return Redirect::to('login');
     }
 

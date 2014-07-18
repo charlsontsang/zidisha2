@@ -10,6 +10,11 @@ return [
         'submit' => 'Login',
     ],
     'flash' => [
-        'login-error' => 'Wrong username or password!',
+        'login-error'             => 'Wrong username or password!',
+        'not-registered-facebook' => 'You are not registered to use Facebook. Please sign up with Facebook first.',
+        'code-not-valid'          => 'The code is not valid',
+        'verified'                => 'You are verified.',
+        'not-registered-google'   => 'You are not registered to use Google. Please sign up with Google first.',
+        'oops'                    => 'Some Error Occurred',
     ]
 ];
