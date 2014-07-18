@@ -116,13 +116,11 @@ class LenderMailer
 
     public function sendIntroductionMail(Lender $lender)
     {
-        $email = $lender->getUser()->getEmail();
-
         $this->mailer->send(
-            'emails.lender-introduction-mail',
+            'emails.hero',
             [
-                'to'      => $email,
-                'subject' => 'Welcome to Zidisha!',
+                'to'         => $lender->getUser()->getEmail(),
+                'subject'    => 'Welcome to Zidisha!',
                 'templateId' => \Setting::get('sendwithus.introduction-template-id'),
             ]
         );

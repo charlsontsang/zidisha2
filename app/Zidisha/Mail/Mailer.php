@@ -40,7 +40,7 @@ class Mailer
         }
 
         $data += [
-            'from'    => Setting::get('site.fromToEmailAddress'),
+            'from'    => Setting::get('site.fromEmailAddress'),
             'replyTo' => Setting::get('site.replyToEmailAddress'),
             'subject' => $data['subject'],
         ];

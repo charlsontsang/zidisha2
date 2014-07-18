@@ -8,7 +8,7 @@ class LaravelMailerDriver implements MailDriverInterface
     {
         \Mail::send(
             $view,
-            $data,
+            $data + compact('data'),
             function ($message) use ($data) {
                 $message
                     ->to($data['to'])
