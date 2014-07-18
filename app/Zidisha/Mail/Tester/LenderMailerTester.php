@@ -72,4 +72,15 @@ class LenderMailerTester
 
         $this->lenderMailer->sendOutbidMail($changedBid);
     }
+
+    public function sendLenderWelcomeMail()
+    {
+        $user = new User();
+        $user->setEmail('lender@test.com');
+
+        $lender = new Lender();
+        $lender->setUser($user);
+
+        $this->lenderMailer->sendWelcomeMail($lender);
+    }
 } 
