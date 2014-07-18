@@ -126,5 +126,5 @@ return array(
      */
     'mailer.driver' => 'laravel',
 
-    'mailer.enabled' => 'true'
+    'enabled' => 'true'
 );

@@ -33,5 +33,8 @@ return array(
     ],
     'sift-science' => [
         'enabled' => false
+    ],
+    'mixpanel' => [
+        'enabled' => false
     ]
 );

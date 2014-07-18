@@ -27,7 +27,7 @@ class Mailer
     public function __construct(LaravelMailerDriver $laravelMailerDriver, SendwithusDriver $sendwithusDriver)
     {
         $this->useSendWithUs = \Config::get('services.sendwithus.enabled');
-        $this->enabled = \Config::get('mail.mailer.enabled');
+        $this->enabled = \Config::get('mail.enabled');
         $this->driver = \Config::get('mail.mailer.driver');
         $this->laravelMailerDriver = $laravelMailerDriver;
         $this->sendwithusDriver = $sendwithusDriver;
