@@ -41,7 +41,7 @@ SNIPPET;
         }
     }
 
-    public static function identify($userID, $properties = array())
+    public function identify($userID, $properties = array())
     {
         static::addHeadScript("mixpanel.identify('$userID');");
 
@@ -49,12 +49,12 @@ SNIPPET;
         static::addHeadScript("mixpanel.register($propertiesJson);");
     }
 
-    public static function alias($userID)
+    public function alias($userID)
     {
         static::addHeadScript("mixpanel.alias('$userID');");
     }
 
-    public static function track($eventName, $properties = array())
+    public function track($eventName, $properties = array())
     {
         $propertiesJson = json_encode($properties);
         static::addBodyScript("mixpanel.track('$eventName', $propertiesJson);");
