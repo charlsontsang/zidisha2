@@ -59,6 +59,8 @@ class GenerateModelData extends Command
      */
     public function fire()
     {
+        \Config::set('mail.mailer.enabled', false);
+        
         try {
             $settings = Setting::getAll();
         } catch (\Exception $e) {
