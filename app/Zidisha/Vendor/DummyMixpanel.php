@@ -16,24 +16,24 @@ class DummyMixpanel
         $this->mailer = $mailer;
     }
 
-    public function identify($userID, $properties = array())
+    public function identify($userId, $properties = array())
     {
         $data['to'] = 'mixpanel@mixpanel.com';
         $data['subject'] = 'identity called';
         $data['data'] = [
-            'userId'     => $userID,
+            'userId'     => $userId,
             'properties' => $properties
         ];
 
         $this->mailer->send('emails.mix-panel.send-data', $data);
     }
 
-    public function alias($userID)
+    public function alias($userId)
     {
         $data['to'] = 'mixpanel@mixpanel.com';
         $data['subject'] = 'alias called';
         $data['data'] = [
-            'userId' => $userID
+            'userId' => $userId
         ];
 
         $this->mailer->send('emails.mix-panel.send-data', $data);

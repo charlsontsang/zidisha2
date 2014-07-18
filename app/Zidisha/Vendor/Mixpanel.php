@@ -23,10 +23,10 @@ SNIPPET;
 
     public static function headScript()
     {
-        if (\Setting::get('API.mixpanel.token')) {
+        if (\Setting::get('mixpanel.token')) {
             echo '<script type="text/javascript">';
             echo static::$snippet;
-            echo "mixpanel.init('" . \Setting::get('API.mixpanel.token') . "');";
+            echo "mixpanel.init('" . \Setting::get('mixpanel.token') . "');";
             echo \Session::pull('mixpanel_head_script');
             echo '</script>';
         }
@@ -34,24 +34,24 @@ SNIPPET;
 
     public static function bodyScript()
     {
-        if (\Setting::get('API.mixpanel.token')) {
+        if (\Setting::get('mixpanel.token')) {
             echo '<script type="text/javascript">';
             echo \Session::pull('mixpanel_body_script');
             echo '</script>';
         }
     }
 
-    public function identify($userID, $properties = array())
+    public function identify($userId, $properties = array())
     {
-        static::addHeadScript("mixpanel.identify('$userID');");
+        static::addHeadScript("mixpanel.identify('$userId');");
 
         $propertiesJson = json_encode($properties);
         static::addHeadScript("mixpanel.register($propertiesJson);");
     }
 
-    public function alias($userID)
+    public function alias($userId)
     {
-        static::addHeadScript("mixpanel.alias('$userID');");
+        static::addHeadScript("mixpanel.alias('$userId');");
     }
 
     public function track($eventName, $properties = array())
