@@ -117,7 +117,7 @@
         <column name="borrower_id" type="INTEGER" required="true"/>
         <column name="bid_amount" type="DECIMAL" size="10" scale="2" required="true" phpType="string"/>
         <column name="interest_rate" type="DECIMAL" size="5" scale="2" required="true"/>
-        <column name="active" type="TINYINT" size="1" required="true" defaultValue="0"/>
+        <column name="active" type="BOOLEAN" required="true" defaultValue="false"/>
         <column name="accepted_amount" type="DECIMAL" size="10" scale="2" required="true" defaultValue="0.00"
                 phpType="string"/>
         <column name="bid_date" type="TIMESTAMP" required="true"/>
