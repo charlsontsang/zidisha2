@@ -3,8 +3,8 @@
 
 use Illuminate\Auth\Reminders\RemindableInterface;
 use Illuminate\Auth\Reminders\ReminderRepositoryInterface;
-use Zidisha\PasswordReminder\PasswordReminder;
-use Zidisha\PasswordReminder\PasswordReminderQuery;
+use Zidisha\Auth\PasswordReminder;
+use Zidisha\Auth\PasswordReminderQuery;
 
 
 class PropelReminderRepository implements ReminderRepositoryInterface

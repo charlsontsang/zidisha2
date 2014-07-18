@@ -149,7 +149,7 @@
         <behavior name="timestampable"/>
     </table>
 
-    <table name="password_reminders" phpName="PasswordReminder" namespace="PasswordReminder">
+    <table name="password_reminders" phpName="PasswordReminder" namespace="Auth">
         <column name="email" type="VARCHAR" size="100" required="true"/>
         <column name="token" type="VARCHAR" size="100" required="true"/>
         <behavior name="timestampable"/>
