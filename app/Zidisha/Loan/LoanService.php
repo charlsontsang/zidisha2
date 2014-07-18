@@ -75,7 +75,7 @@ class LoanService
             $this->changeLoanStage($con, $loan, null, Loan::OPEN);
         });
 
-        $this->borrowerMailer->sendLoanConfirmation($borrower, $loan);
+        $this->borrowerMailer->sendLoanConfirmationMail($borrower, $loan);
         // TODO send mail to previous lenders
         
         $this->addToLoanIndex($loan);

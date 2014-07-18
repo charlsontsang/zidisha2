@@ -91,7 +91,7 @@ class BorrowerMailer{
         }
     }
 
-    public function sendLoanConfirmation(Borrower $borrower, Loan $loan)
+    public function sendLoanConfirmationMail(Borrower $borrower, Loan $loan)
     {
         $subject = \Lang::get('emails.loan-confirmation-subject');
         $data = [
