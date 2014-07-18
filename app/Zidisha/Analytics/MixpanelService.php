@@ -5,28 +5,42 @@ use Zidisha\Lender\Invite;
 use Zidisha\Lender\InviteVisit;
 use Zidisha\Lender\Lender;
 use Zidisha\Loan\Bid;
+use Zidisha\Vendor\DummyMixpanel;
 use Zidisha\Vendor\Mixpanel;
 
 class MixpanelService
 {
+    /**
+     * @var \Zidisha\Vendor\Mixpanel
+     */
+    private $mixpanel;
+
+    public function __construct(Mixpanel $mixpanel, DummyMixpanel $dummyMixpanel)
+    {
+        if (\Config::get('services.mixpanel.enabled')) {
+            $this->mixpanel = $mixpanel;
+        } else {
+            $this->mixpanel = $dummyMixpanel;
+        }
+    }
 
     public function trackLenderJoined(Lender $lender)
     {
-        Mixpanel::alias($lender->getId());
-        Mixpanel::track('Signed up', array(
+        $this->mixpanel->alias($lender->getId());
+        $this->mixpanel->track('Signed up', array(
             'username'  => $lender->getUser()->getUsername(),
             'userlevel' => 'lender',
             'email'     => $lender->getUser()->getEmail(),
         ));
     }
-    
+
     public function trackPlacedBid(Bid $bid)
     {
         $amount = $bid->getBidAmount()->getAmount();
         $interest = $bid->getInterestRate();
         $bidId = $bid->getId();
 
-        Mixpanel::track(
+        $this->mixpanel->track(
             'Purchased an Item',
             array(
                 'amount' => $amount,
@@ -42,7 +56,7 @@ class MixpanelService
     public function trackInvitePage(Lender $lender, InviteVisit $inviteVisit, $shareType)
     {
         if ($inviteVisit->getLenderInviteId() != null) {
-            Mixpanel::track(
+            $this->mixpanel->track(
                 'Invite page viewed',
                 array(
                     'share_type' => $shareType,
@@ -51,7 +65,7 @@ class MixpanelService
                 )
             );
         } else {
-            Mixpanel::track(
+            $this->mixpanel->track(
                 'Invite page viewed',
                 array(
                     'share_type' => $inviteVisit->getHumanShareType(),
@@ -63,7 +77,7 @@ class MixpanelService
 
     public function trackInviteAccept(Invite $invite)
     {
-        Mixpanel::track(
+        $this->mixpanel->track(
             'Invite accepted',
             array(
                 'username' => $invite->getInvitee()->getUser()->getUsername(),
