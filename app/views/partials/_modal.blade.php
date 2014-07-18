@@ -7,8 +7,12 @@
                 <h4 class="modal-title">{{ $title }}</h4>
             </div>
             @endif
-            <div class="modal-body">
-                <p>{{ $body }}</p>
+            <div class="modal-body" @if(!empty($scrollable))style="height: 400px;overflow-y: scroll"@endif>
+                @if(isset($body))
+                    <p>{{ $body }}</p>
+                @else
+                    @include($template)
+                @endif
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

@@ -16,7 +16,11 @@
             </a>
         </div>
 
-        {{ BootstrapForm::open(array('route' => 'lender:post-join', 'translationDomain' => 'lender.join.form')) }}
+        {{ BootstrapForm::open([
+               'route' => 'lender:post-join',
+               'translationDomain' => 'lender.join.form',
+               'id' => 'joinForm']
+        ) }}
         {{ BootstrapForm::populate($form) }}
 
         {{ BootstrapForm::text('username') }}
@@ -31,6 +35,9 @@
                 'name' => $country['name']
             ]
         ) }}
+        {{ BootstrapForm::checkbox('termsOfUse') }}
+        I have read and agree to the <a href="#" data-toggle="modal" data-target="#termsOfUseModal">Zidisha Terms of Use</a>
+        and <a target="_blank" href="http://www.iubenda.com/privacy-policy/629677/legal">Privacy Policy</a>
         {{ BootstrapForm::submit('submit') }}
 
         {{ BootstrapForm::close() }}
@@ -41,4 +48,25 @@
 
     </div>
 </div>
+
+@include('partials._modal', [
+    'title' => 'Terms of use',
+    'template' => 'lender.terms-of-use',
+    'id' => 'termsOfUseModal',
+    'scrollable' => true
+])
+@stop
+
+@section('script-footer')
+<script type="text/javascript">
+$(function() {
+    $('#joinForm').submit(function() {
+        if (!$('[name=termsOfUse]').is(':checked')) {
+            alert('ljhglj');
+            return false;
+        }
+    });
+});
+</script>
+
 @stop
