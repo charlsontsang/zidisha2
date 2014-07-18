@@ -13,29 +13,42 @@ class Mailer
     public $driver;
 
     protected $enabled;
+    /**
+     * @var LaravelMailerDriver
+     */
+    private $laravelMailerDriver;
+    /**
+     * @var SendwithusDriver
+     */
+    private $sendwithusDriver;
 
-    public function __construct()
+    protected $useSendWithUs;
+
+    public function __construct(LaravelMailerDriver $laravelMailerDriver, SendwithusDriver $sendwithusDriver)
     {
+        $this->useSendWithUs = \Config::get('services.sendwithus.enabled');
         $this->enabled = \Config::get('mail.mailer.enabled');
         $this->driver = \Config::get('mail.mailer.driver');
+        $this->laravelMailerDriver = $laravelMailerDriver;
+        $this->sendwithusDriver = $sendwithusDriver;
     }
 
     public function send($view, $data)
     {
+        if (!$this->enabled) {
+            return;
+        }
+
         $data += [
-            'from' => Setting::get('site.replyTo'),
+            'from'    => Setting::get('site.fromToEmailAddress'),
+            'replyTo' => Setting::get('site.replyToEmailAddress'),
+            'subject' => $data['subject'],
         ];
-        if ($this->driver == 'laravel' && $this->enabled) {
-            \Mail::send(
-                $view,
-                $data,
-                function ($message) use ($data) {
-                    $message
-                        ->to($data['to'])
-                        ->from($data['from'])
-                        ->subject($data['subject']);
-                }
-            );
+
+        if (array_get($data, 'templateId') && $this->useSendWithUs) {
+            $this->sendwithusDriver->send($view, $data);
+        } else {
+            $this->laravelMailerDriver->send($view, $data);
         }
     }
 
@@ -45,14 +58,15 @@ class Mailer
      * @param  string  $queue
      * @param  string|array  $view
      * @param  array   $data
-     * @param  Closure|string  $callback
      * @return void
      */
-    public function queue($view, array $data, $callback, $queue = null)
+    public function queue($view, array $data, $queue = null)
     {
-        $callback = $this->buildQueueCallable($callback);
+        if (!$this->enabled) {
+            return;
+        }
 
-        \Queue::push('Zidisha\Mail\mailer@handleQueuedMessage', compact('view', 'data', 'callback'), $queue);
+        \Queue::push('Zidisha\Mail\Mailer@handleQueuedMessage', compact('view', 'data'), $queue);
     }
 
     /**
@@ -61,29 +75,18 @@ class Mailer
      * @param  int  $delay
      * @param  string|array  $view
      * @param  array  $data
-     * @param  Closure|string  $callback
      * @param  string  $queue
      * @return void
      */
-    public function later($delay, $view, array $data, $callback, $queue = null)
+    public function later($delay, $view, array $data, $queue = null)
     {
-        $callback = $this->buildQueueCallable($callback);
+        if (!$this->enabled) {
+            return;
+        }
 
-        \Queue::later($delay, 'mailer@handleQueuedMessage', compact('view', 'data', 'callback'), $queue);
+        \Queue::later($delay, 'Zidisha\Mail\Mailer@handleQueuedMessage', compact('view', 'data'), $queue);
     }
 
-    /**
-     * Build the callable for a queued e-mail job.
-     *
-     * @param  mixed  $callback
-     * @return mixed
-     */
-    protected function buildQueueCallable($callback)
-    {
-        if ( ! $callback instanceof Closure) return $callback;
-
-        return serialize(new SerializableClosure($callback));
-    }
 
     /**
      * Handle a queued e-mail message job.
@@ -94,24 +97,8 @@ class Mailer
      */
     public function handleQueuedMessage($job, $data)
     {
-        $this->send($data['view'], $data['data'], $this->getQueuedCallable($data));
+        $this->send($data['view'], $data['data']);
 
         $job->delete();
-    }
-
-    /**
-     * Get the true callable for a queued e-mail message.
-     *
-     * @param  array  $data
-     * @return mixed
-     */
-    protected function getQueuedCallable(array $data)
-    {
-        if (str_contains($data['callback'], 'SerializableClosure'))
-        {
-            return with(unserialize($data['callback']))->getClosure();
-        }
-
-        return $data['callback'];
     }
 }
