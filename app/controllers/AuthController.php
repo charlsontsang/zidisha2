@@ -18,14 +18,19 @@ class AuthController extends BaseController
     private $authService;
     private $siftScienceService;
     private $googleService;
+    /**
+     * @var Zidisha\Vendor\Mixpanel
+     */
+    private $mixpanel;
 
     public function __construct(FacebookService $facebookService, AuthService $authService,
-        siftScienceService $siftScienceService, GoogleService $googleService)
+        siftScienceService $siftScienceService, GoogleService $googleService, Mixpanel $mixpanel)
     {
         $this->facebookService = $facebookService;
         $this->authService = $authService;
         $this->siftScienceService = $siftScienceService;
         $this->googleService = $googleService;
+        $this->mixpanel = $mixpanel;
     }
 
     public function getLogin()
@@ -113,7 +118,7 @@ class AuthController extends BaseController
         $user->save();
         $role = $user->getRole();
 
-        Mixpanel::identify(
+        $this->mixpanel->identify(
             $user->getId(),
             array(
                 'username' => $user->getUsername(),
@@ -121,7 +126,7 @@ class AuthController extends BaseController
                 'email' => $user->getEmail(),
             )
         );
-        Mixpanel::track('Logged in');
+        $this->mixpanel->track('Logged in');
         $this->siftScienceService->sendLoginEvent($user);
 
         if ($role == 'lender') {
