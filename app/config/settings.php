@@ -4,8 +4,13 @@
 
 return [
     'Site' => [
-        'site.replyTo' => [
-            'label'   => 'Reply To',
+        'site.replyToEmailAddress' => [
+            'label'   => 'Reply To Email Address',
+            'default' => 'service@zidisha.org',
+            'rule'    => 'email',
+        ],
+        'site.fromEmailAddress' => [
+            'label'   => 'Reply To Email Address',
             'default' => 'service@zidisha.org',
             'rule'    => 'email',
         ],
@@ -84,12 +89,12 @@ return [
             'label' => 'PayPal Signature'
         ],
     ],
-    'Sendwithus' => [
-        'api_key'     => [
-            'label' => 'Send with us api key'
+    'sendwithus' => [
+        'introduction-template-id' => [
+            'label' => 'Introduction template id'
         ],
-        'templateIds' => [
-            'label' => 'Template Ids'
+        'apiKey'     => [
+            'label' => 'Send with us api key'
         ]
     ]
 ];
