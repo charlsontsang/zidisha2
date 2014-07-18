@@ -83,4 +83,15 @@ class LenderMailerTester
 
         $this->lenderMailer->sendWelcomeMail($lender);
     }
-} 
+
+    public function sendIntroductionMail()
+    {
+        $user = new User();
+        $user->setEmail('email@test.com');
+
+        $lender = new Lender();
+        $lender->setUser($user);
+
+        $this->lenderMailer->sendIntroductionMail($lender);
+    }
+}

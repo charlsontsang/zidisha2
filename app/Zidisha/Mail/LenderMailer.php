@@ -113,15 +113,15 @@ class LenderMailer
             ]
         );
     }
-    
+
     public function sendIntroductionMail(Lender $lender)
     {
-        $this->mailer->later(
-            3600 * 24,
-            'emails.lender.introduction',
+        $this->mailer->send(
+            'emails.hero',
             [
-                'to'      => $lender->getUser()->getEmail(),
-                'subject' => 'Welcome to Zidisha!'
+                'to'         => $lender->getUser()->getEmail(),
+                'subject'    => 'Welcome to Zidisha!',
+                'templateId' => \Setting::get('sendwithus.introduction-template-id'),
             ]
         );
     }

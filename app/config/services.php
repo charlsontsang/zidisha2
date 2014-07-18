@@ -28,4 +28,7 @@ return array(
 		'secret' => '',
 	),
 
+    'sendwithus' => [
+        'enabled' => false
+    ]
 );

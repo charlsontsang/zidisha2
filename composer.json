@@ -15,7 +15,8 @@
         "phpexcel/phpexcel": "1.7.*",
         "paypal/merchant-sdk-php":"v3.6.106",
         "siftscience/sift-php" : "1.*",
-        "google/apiclient": "1.0.*@beta"
+        "google/apiclient": "1.0.*@beta",
+        "sendwithus/api": "dev-master"
     },
 	"autoload": {
 		"classmap": [
