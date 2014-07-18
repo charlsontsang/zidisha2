@@ -10,24 +10,9 @@ use Zidisha\Vendor\Google\GoogleService;
 
 class LenderJoinController extends BaseController
 {
-    /**
-     * @var Zidisha\Vendor\Facebook\FacebookService
-     */
     private $facebookService;
-
-    /**
-     * @var Zidisha\Lender\Form\JoinForm
-     */
     private $joinForm;
-
-    /**
-     * @var Zidisha\Lender\LenderService
-     */
     private $lenderService;
-
-    /**
-     * @var Zidisha\Vendor\Google\GoogleService
-     */
     private $googleService;
 
     public function __construct(
@@ -63,7 +48,7 @@ class LenderJoinController extends BaseController
         $form->handleRequest(Request::instance());
 
         if (!$form->isValid()) {
-            Flash::error('Oops, something went wrong');
+            Flash::error(\Lang::get('lender.join.flash.oops'));
             return Redirect::route('lender:join')->withForm($form);
         }
 
@@ -83,7 +68,7 @@ class LenderJoinController extends BaseController
                 compact('country'), ['form' => $this->joinForm,]);
         }
 
-        Flash::error('No Facebook account connected.');
+        Flash::error(\Lang::get('lender.join.flash.facebook-no-account-connected'));
         return Redirect::route('lender:join');
     }
 
@@ -171,7 +156,7 @@ class LenderJoinController extends BaseController
             }
         }
 
-        Flash::error('No Google account connected.');
+        Flash::error(\Lang::get('lender.join.flash.facebook-no-account-connected'));
         return Redirect::route('lender:join');
     }
 
