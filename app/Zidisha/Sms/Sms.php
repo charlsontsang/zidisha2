@@ -1,6 +1,8 @@
 <?php
 namespace Zidisha\Sms;
 
+require_once base_path() . '/vendor/telerivet/telerivet-php-client/telerivet.php';
+
 use Telerivet_API;
 
 class Sms
