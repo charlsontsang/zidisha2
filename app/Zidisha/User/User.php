@@ -10,6 +10,10 @@ use Zidisha\User\Exceptions\InvalidUserRoleException;
 
 class User extends BaseUser implements UserInterface, RemindableInterface
 {
+    const ROLE_LENDER = 'lender';
+    const ROLE_BORROWER = 'borrower';
+    const ROLE_ADMIN = 'admin';
+
     public function setPassword($password)
     {
         return parent::setPassword(\Hash::make($password));
