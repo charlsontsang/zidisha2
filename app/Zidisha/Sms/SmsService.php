@@ -1,35 +1,35 @@
 <?php
-
 namespace Zidisha\Sms;
 
+class SmsService
+{
 
-class SmsService {
-    
+    /**
+     * @var Sms
+     */
+    private $sms;
+
+    public function __construct(dummySms $dummySms, Sms $sms)
+    {
+        if (\Config::get('services.sms.enabled')) {
+            $this->sms = $sms;
+        } else {
+            $this->sms = $dummySms;
+        }
+    }
+
     public function send($phoneNumber, $text)
     {
-        \Mail::send(
-            'emails.sms',
-            compact('text'),
-            function ($mail) use ($phoneNumber) {
-                $mail
-                    ->to('sms@zidisha.com', $phoneNumber)
-                    ->from('sms@zidisha.com')
-                    ->subject("SMS for $phoneNumber");
-            }
-        );
+        $this->sms->send($phoneNumber, $text);
     }
 
     public function queue($phoneNumber, $text)
     {
-        \Mail::queue(
-            'emails.sms',
-            compact('text'),
-            function ($mail) use ($phoneNumber) {
-                $mail
-                    ->to('sms@zidisha.com', $phoneNumber)
-                    ->from('sms@zidisha.com')
-                    ->subject("SMS for $phoneNumber");
-            }
-        );
+        $this->sms->queue($phoneNumber, $text);
+    }
+
+    public function later($phoneNumber, $text)
+    {
+        $this->sms->later('60*30', $phoneNumber, $text);
     }
 }
