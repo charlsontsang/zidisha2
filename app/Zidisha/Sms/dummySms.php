@@ -17,7 +17,7 @@ class dummySms
 
     public function send($phoneNumber, $text)
     {
-        $data['to'] = $phoneNumber;
+        $data['to'] = $phoneNumber.'@test.com';
         $data['from'] = 'sms@zidisha.com';
         $data['subject'] = "SMS for " . $phoneNumber;
         $data['data'] = $text;
@@ -27,7 +27,7 @@ class dummySms
 
     public function queue($phoneNumber, $text)
     {
-        $data['to'] = $phoneNumber;
+        $data['to'] = $phoneNumber.'@test.com';
         $data['from'] = 'sms@zidisha.com';
         $data['subject'] = "SMS for " . $phoneNumber;
         $data['data'] = $text;
@@ -37,7 +37,7 @@ class dummySms
 
     public function later($time, $phoneNumber, $text)
     {
-        $data['to'] = $phoneNumber;
+        $data['to'] = $phoneNumber.'@test.com';
         $data['from'] = 'sms@zidisha.com';
         $data['subject'] = "SMS for " . $phoneNumber;
         $data['data'] = $text;
