@@ -23,7 +23,7 @@ class InstallmentCalculator
      */
     public function amount()
     {
-        return $this->loan->getDisbursedAmount() ?: $this->loan->getAmount();
+        return $this->loan->getStatus() >= Loan::ACTIVE ? $this->loan->getDisbursedAmount() : $this->loan->getAmount();
     }
     
     public function calculateInstallmentCount(Money $installmentAmount)
