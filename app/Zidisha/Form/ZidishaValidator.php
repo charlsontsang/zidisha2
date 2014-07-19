@@ -4,6 +4,8 @@ namespace Zidisha\Form;
 
 
 use Illuminate\Validation\Validator;
+use Propel\Runtime\ActiveQuery\Criteria;
+use Zidisha\User\UserQuery;
 
 class ZidishaValidator extends Validator {
 
@@ -55,5 +57,24 @@ class ZidishaValidator extends Validator {
     {
         return $attribute . ' should be greater than ' .  $parameters[0] . '.';
     }
-    
+
+    public function validateUniqueUserEmail($attribute, $value, $parameters)
+    {
+        $id = $parameters[0];
+
+        $userEmail = UserQuery::create()
+            ->filterById($id, Criteria::NOT_EQUAL)
+            ->filterByEmail($value)
+            ->count();
+
+        if ($userEmail) {
+            return false;
+        }
+        return true;
+    }
+
+    protected function replaceUniqueUserEmail($message, $attribute, $rule, $parameters)
+    {
+        return $attribute . ' already exits in the database.';
+    }
 }
