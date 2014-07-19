@@ -484,7 +484,7 @@ class LoanService
                 $bid = $acceptedBid['bid'];
                 if ($acceptedAmount->greaterThan(Money::create(0))) {
                     $bid
-                        ->setActive(0)
+                        ->setActive(true)
                         ->setAcceptedAmount($acceptedAmount);
                     $bid->save($con);
                     $totalAmount = $totalAmount->add($acceptedAmount->multiply(0.01 * $bid->getInterestRate()));
