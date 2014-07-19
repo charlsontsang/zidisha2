@@ -16,7 +16,8 @@
         "paypal/merchant-sdk-php":"v3.6.106",
         "siftscience/sift-php" : "1.*",
         "google/apiclient": "1.0.*@beta",
-        "sendwithus/api": "dev-master"
+        "sendwithus/api": "dev-master",
+        "telerivet/telerivet-php-client": "dev-master"
     },
 	"autoload": {
 		"classmap": [

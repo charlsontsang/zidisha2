@@ -1,35 +1,42 @@
 <?php
-
 namespace Zidisha\Sms;
 
+class SmsService
+{
 
-class SmsService {
-    
-    public function send($phoneNumber, $text)
+    /**
+     * @var Telerivet
+     */
+    private $sms;
+
+    public function __construct(dummySms $dummySms, Telerivet $sms)
     {
-        \Mail::send(
-            'emails.sms',
-            compact('text'),
-            function ($mail) use ($phoneNumber) {
-                $mail
-                    ->to('sms@zidisha.com', $phoneNumber)
-                    ->from('sms@zidisha.com')
-                    ->subject("SMS for $phoneNumber");
-            }
-        );
+        if (\Config::get('services.sms.enabled')) {
+            $this->sms = $sms;
+        } else {
+            $this->sms = $dummySms;
+        }
     }
 
-    public function queue($phoneNumber, $text)
+    public function send($phoneNumber, $text)
     {
-        \Mail::queue(
-            'emails.sms',
-            compact('text'),
-            function ($mail) use ($phoneNumber) {
-                $mail
-                    ->to('sms@zidisha.com', $phoneNumber)
-                    ->from('sms@zidisha.com')
-                    ->subject("SMS for $phoneNumber");
-            }
-        );
+        $this->sms->send($phoneNumber, $text);
+    }
+
+    public function queue($phoneNumber, $text, $queue = null)
+    {
+        \Queue::push('Zidisha\Sms\SmsService@handleQueuedMessage', compact('phoneNumber', 'text'), $queue);
+    }
+
+    public function later($delay, $phoneNumber, $text, $queue = null)
+    {
+        \Queue::later($delay, 'Zidisha\Sms\SmsService@handleQueuedMessage', compact('phoneNumber', 'text'), $queue);
+    }
+
+    public function handleQueuedMessage($job, $data)
+    {
+        $this->send($data['phoneNumber'], $data['text']);
+
+        $job->delete();
     }
 }

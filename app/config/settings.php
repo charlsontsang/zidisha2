@@ -90,6 +90,12 @@ return [
         ],
         'sendwithus.apiKey' => [
             'label' => 'Sendwithus api key'
+        ],
+        'telerivet.apiKey' => [
+            'label' => 'Telerivet Api Key'
+        ],
+        'telerivet.projectId' => [
+            'label' => 'Telerivet Project Id'
         ]
     ],
     'Sendwithus' => [
