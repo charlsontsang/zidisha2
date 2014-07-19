@@ -190,6 +190,7 @@ class LenderService
                     ->setAdminDonate(true)
                     ->setActive(false);
                 $lender->save($con);
+                $lender->getUser()->setActive(false)->save($con);
             });
         }
 
