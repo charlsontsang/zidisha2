@@ -9,7 +9,7 @@ class SendwithusDriver implements MailDriverInterface
 
     public function __construct()
     {
-        $apiKey = \Setting::get('Sendwithus.apiKey');
+        $apiKey = \Setting::get('sendwithus.apiKey');
         $this->api = new API($apiKey);
     }
 

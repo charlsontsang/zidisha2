@@ -88,13 +88,13 @@ return [
         'paypal.signature' => [
             'label' => 'PayPal Signature'
         ],
+        'sendwithus.apiKey' => [
+            'label' => 'Sendwithus api key'
+        ]
     ],
-    'sendwithus' => [
-        'introduction-template-id' => [
+    'Sendwithus' => [
+        'sendwithus.introduction-template-id' => [
             'label' => 'Introduction template id'
         ],
-        'apiKey'     => [
-            'label' => 'Send with us api key'
-        ]
     ]
 ];
