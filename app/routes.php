@@ -601,6 +601,16 @@ Route::group(
                     'test-mails',
                     ['uses' => 'MailTesterController@postMail', 'as' => 'admin:mail:post:mail']
                 );
+
+                Route::get(
+                    'test-sms',
+                    ['uses' => 'SmsTesterController@getAllSms', 'as' => 'admin:sms:test-sms']
+                );
+
+                Route::post(
+                    'test-sms',
+                    ['uses' => 'SmsTesterController@postSms', 'as' => 'admin:sms:post:sms']
+                );
             }
         );
 
