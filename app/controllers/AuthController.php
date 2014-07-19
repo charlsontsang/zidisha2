@@ -69,10 +69,7 @@ class AuthController extends BaseController
             $this->siftScienceService->sendLogoutEvent($user);
         }
         
-        Auth::logout();
-        Session::flush();
-        Session::regenerate();
-        $this->facebookService->logout();
+        $this->flushLogout();
         
         return Redirect::route('home');
     }
@@ -117,6 +114,11 @@ class AuthController extends BaseController
     {
         /** @var User $user */
         $user = \Auth::user();
+        if (!$user->isActive()) {
+            $this->flushLogout();
+            Flash::error('borrower.login.flash.inactive');
+            return Redirect::to('login');
+        }
         $user->setLastLoginAt(new \DateTime());
         $user->save();
 
@@ -229,6 +231,13 @@ class AuthController extends BaseController
 
         \Flash::error('borrower.login.flash.oops');
         return Redirect::to('login');
+    }
+
+    protected function flushLogout() {
+        Auth::logout();
+        Session::flush();
+        Session::regenerate();
+        $this->facebookService->logout();
     }
 
 }
