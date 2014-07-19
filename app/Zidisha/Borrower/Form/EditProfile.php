@@ -4,18 +4,26 @@ namespace Zidisha\Borrower\Form;
 
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Zidisha\Borrower\Borrower;
 use Zidisha\Form\AbstractForm;
-use Zidisha\Borrower\Base\ProfileQuery;
-use Zidisha\Borrower\BorrowerQuery;
+use Zidisha\Form\ZidishaValidator;
 
 class EditProfile extends AbstractForm
 {
+    /**
+     * @var Borrower
+     */
+    private $borrower;
+
+    public function __construct(Borrower $borrower)
+    {
+        $this->borrower = $borrower;
+    }
 
     public function getRules($data)
     {
         return [
-            'email'         => 'required|email',
+            'email'         => 'required|email|uniqueUserEmail:' . $this->borrower->getId(),
             'password'      => 'confirmed',
             'aboutMe'       => '',
             'aboutBusiness' => '',

@@ -18,7 +18,7 @@ class LenderController extends BaseController
 {
     protected $transactionQuery;
 
-    private $editProfileForm, $fundsForm, $cardForm;
+    private $fundsForm, $cardForm;
 
     private $lenderService;
     private $uploadFundForm;
@@ -26,7 +26,6 @@ class LenderController extends BaseController
 
 
     public function __construct(
-        EditProfile $editProfileForm,
         TransactionQuery $transactionQuery,
         Funds $fundsForm,
         LenderService $lenderService,
@@ -35,7 +34,6 @@ class LenderController extends BaseController
         WithdrawFundsForm $withdrawFundsForm
 
     ) {
-        $this->editProfileForm = $editProfileForm;
         $this->transactionQuery = $transactionQuery;
         $this->fundsForm = $fundsForm;
         $this->lenderService = $lenderService;
@@ -63,15 +61,21 @@ class LenderController extends BaseController
 
     public function getEditProfile()
     {
+        $lender = \Auth::user()->getLender();
+
+        $form = new EditProfile($lender);
+
         return View::make(
             'lender.edit-profile',
-            ['form' => $this->editProfileForm,]
+            compact('form')
         );
     }
 
     public function postEditProfile()
     {
-        $form = $this->editProfileForm;
+        $lender = \Auth::user()->getLender();
+
+        $form = new EditProfile($lender);
         $form->handleRequest(Request::instance());
 
         if ($form->isValid()) {
