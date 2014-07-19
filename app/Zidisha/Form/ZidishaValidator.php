@@ -62,15 +62,12 @@ class ZidishaValidator extends Validator {
     {
         $id = $parameters[0];
 
-        $userEmail = UserQuery::create()
+        $userEmailCount = UserQuery::create()
             ->filterById($id, Criteria::NOT_EQUAL)
             ->filterByEmail($value)
             ->count();
 
-        if ($userEmail) {
-            return false;
-        }
-        return true;
+        return $userEmailCount == 0 ?  true : false;
     }
 
     protected function replaceUniqueUserEmail($message, $attribute, $rule, $parameters)
