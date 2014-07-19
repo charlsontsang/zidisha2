@@ -15,10 +15,6 @@ use Zidisha\Vendor\Facebook\FacebookService;
 class BorrowerController extends BaseController
 {
     /**
-     * @var Zidisha\Borrower\Form\EditProfile
-     */
-    private $editProfileForm;
-    /**
      * @var Zidisha\Borrower\BorrowerService
      */
     private $borrowerService;
@@ -38,13 +34,11 @@ class BorrowerController extends BaseController
 
 
     public function __construct(
-        EditProfile $editProfileForm,
         BorrowerService $borrowerService,
         BorrowerMailer $borrowerMailer,
         FacebookService $facebookService,
         BorrowerActivationService $borrowerActivationService
     ) {
-        $this->editProfileForm = $editProfileForm;
         $this->borrowerService = $borrowerService;
         $this->borrowerMailer = $borrowerMailer;
         $this->facebookService = $facebookService;
@@ -73,27 +67,31 @@ class BorrowerController extends BaseController
     {
         $borrower = \Auth::user()->getBorrower();
 
+        $form = new EditProfile($borrower);
+
         return View::make(
             'borrower.edit-profile',
-            ['form' => $this->editProfileForm, 'borrower' => $borrower]
+            compact('form', 'borrower')
         );
     }
 
     public function postEditProfile()
     {
-        $form = $this->editProfileForm;
+        $user = \Auth::user();
+        $borrower = $user->getBorrower();
+        $username = $user->getUsername();
+
+        $form = new EditProfile($borrower);
         $form->handleRequest(Request::instance());
 
         if ($form->isValid()) {
             $data = $form->getData();
 
-            $borrower = \Auth::user()->getBorrower();
-
             $files = $this->getInputFiles();
 
             $this->borrowerService->editBorrower($borrower, $data, $files);
 
-            return Redirect::route('borrower:public-profile', $data['username']);
+            return Redirect::route('borrower:public-profile', $username);
         }
 
         return Redirect::route('borrower:edit-profile')->withForm($form);
