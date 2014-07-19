@@ -100,7 +100,7 @@ Route::group(
         Route::controller('borrower/join', 'BorrowerJoinController', ['before' => 'csrf']);
 
 
-        Route::get('/login', array('uses' => 'AuthController@getLogin', 'as' => 'login'));
+        Route::get('/login', array('uses' => 'AuthController@getLogin', 'as' => 'login', 'before' => 'loggedIn'));
         Route::post('/login', array('uses' => 'AuthController@postLogin', 'before' => ''));
         Route::get('facebook/login', array('uses' => 'AuthController@getFacebookLogin', 'as' => 'facebook:login'));
         Route::get('google/login', array('uses' => 'AuthController@getGoogleLogin', 'as' => 'google:login'));

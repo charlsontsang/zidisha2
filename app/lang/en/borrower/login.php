@@ -16,5 +16,6 @@ return [
         'verified'                => 'You are verified.',
         'not-registered-google'   => 'You are not registered to use Google. Please sign up with Google first.',
         'oops'                    => 'Some Error Occurred',
+        'inactive'                => 'You are not allowed to login.',
     ]
 ];
