@@ -279,7 +279,7 @@ class TransactionService
         $transaction = new Transaction();
         $transaction
             ->setUserId($loan->getBorrowerId())
-            ->setExchangeRate($exchangeRate)
+            ->setExchangeRate($exchangeRate->getRate())
             ->setAmount($amount)
             ->setDescription('Loan installment')
             ->setLoan($loan)
@@ -296,7 +296,7 @@ class TransactionService
         $transaction = new Transaction();
         $transaction
             ->setUserId(Setting::get('site.adminId'))
-            ->setExchangeRate($exchangeRate)
+            ->setExchangeRate($exchangeRate->getRate())
             ->setAmount($amount)
             ->setDescription('Fee')
             ->setLoan($loan)

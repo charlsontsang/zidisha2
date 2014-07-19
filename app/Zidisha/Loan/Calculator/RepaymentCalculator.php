@@ -3,6 +3,8 @@
 namespace Zidisha\Loan\Calculator;
 
 
+use Zidisha\Currency\Converter;
+use Zidisha\Currency\ExchangeRate;
 use Zidisha\Currency\Money;
 use Zidisha\Loan\Bid;
 use Zidisha\Loan\Loan;
@@ -112,7 +114,7 @@ class RepaymentCalculator extends InstallmentCalculator
     {
         $unpaidServiceFee = $this->serviceFee()->subtract($this->paidServiceFee);
         $ratio = $this->repaymentAmount->ratio($this->openAmount());
-        
+
         return $unpaidServiceFee->multiply($ratio);
     }
     
@@ -125,18 +127,18 @@ class RepaymentCalculator extends InstallmentCalculator
      * @param $bids
      * @return array Bid
      */
-    public function loanRepayments($bids)
+    public function loanRepayments(ExchangeRate $exchangeRate, $bids)
     {
         $loanRepayments = [];
         $totalAmount = Money::create(0);
         
-        $repaymentAmountForLenders = $this->repaymentAmountForLenders();
+        $repaymentAmountForLenders = Converter::toUsd($this->repaymentAmountForLenders(), $exchangeRate);
 
         /* @var $bid Bid */
         foreach ($bids as $bid) {
             $totalAmount = $totalAmount->add($bid->getAcceptedAmount());
         }
-        
+
         /* @var $bid Bid */
         foreach ($bids as $bid) {
             $lender = $bid->getLender();
@@ -145,9 +147,10 @@ class RepaymentCalculator extends InstallmentCalculator
             } else {
                 $loanRepayment = new LoanRepayment($lender);
             }
+
             $share = $bid->getAcceptedAmount()->ratio($totalAmount);
             $repaidAmount = $repaymentAmountForLenders->multiply($share);
-            
+
             $loanRepayment->addRepaidAmount($repaidAmount, $bid->getLenderInviteCredit());
         }
         

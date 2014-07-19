@@ -144,7 +144,7 @@ class RepaymentService
 
         $forgivenAmount = ForgivenLoanQuery::create()
             ->filterByLoan($loan)
-            ->getForeignTotalAmount($loan);
+            ->getForeignTotalAmount($loan->getCurrency());
 
         $amounts = InstallmentQuery::create()
             ->filterByLoan($loan)
@@ -168,7 +168,7 @@ class RepaymentService
         if ($calculator->unpaidAmount()->isNegative()) {
             throw new \Exception('Unpaid amount is negative');
         }
-        
+
         list($loanRepayments) = PropelDB::transaction(function($con) use($calculator, $loan, $date, $amount) {
             $borrower = $loan->getBorrower();
 
@@ -188,11 +188,11 @@ class RepaymentService
             $this->transactionService->addInstallmentFeeTransaction($con, $exchangeRate, $feeAmountUsd, $loan, $date);
 
             $bids = BidQuery::create()
-                ->filterBidsToRepay($loan)
-                ->find();
-            $loanRepayments = $calculator->loanRepayments($bids);
+            ->filterBidsToRepay($loan)
+            ->find();
+            $loanRepayments = $calculator->loanRepayments($exchangeRate, $bids);
 
-            /** @var $loanRepayment LoanRepayment */
+                /** @var $loanRepayment LoanRepayment */
             foreach ($loanRepayments as $loanRepayment) {
                 $lender = $loanRepayment->getLender();
                 $lenderAmount = $loanRepayment->getAmount();

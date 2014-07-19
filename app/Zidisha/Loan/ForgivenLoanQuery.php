@@ -2,6 +2,7 @@
 
 namespace Zidisha\Loan;
 
+use Zidisha\Currency\Currency;
 use Zidisha\Currency\Money;
 use Zidisha\Loan\Base\ForgivenLoanQuery as BaseForgivenLoanQuery;
 
@@ -28,7 +29,7 @@ class ForgivenLoanQuery extends BaseForgivenLoanQuery
         return Money::create($total, 'USD');
     }
 
-    public function getForeignTotalAmount()
+    public function getForeignTotalAmount(Currency $currency)
     {
         $total = $this
             ->select(array('total'))
@@ -36,6 +37,6 @@ class ForgivenLoanQuery extends BaseForgivenLoanQuery
             ->findOne();
 
         // Todo currency
-        return Money::create($total, 'USD');
+        return Money::create($total, $currency);
     }
 } // ForgivenLoanQuery
