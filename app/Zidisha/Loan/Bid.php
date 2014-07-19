@@ -40,4 +40,21 @@ class Bid extends BaseBid
     {
         return parent::setAcceptedAmount($money->getAmount());
     }
+
+    /**
+     * @return Money
+     */
+    public function getLenderInviteCredit()
+    {
+        return Money::create(parent::getLenderInviteCredit(), 'USD');
+    }
+
+    /**
+     * @param Money $money
+     * @return $this|Bid
+     */
+    public function setLenderInviteCredit($money)
+    {
+        return parent::setLenderInviteCredit($money->getAmount());
+    }
 }
