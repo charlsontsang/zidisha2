@@ -10,9 +10,12 @@ use Zidisha\User\Exceptions\InvalidUserRoleException;
 
 class User extends BaseUser implements UserInterface, RemindableInterface
 {
-    const ROLE_LENDER = 'lender';
+    const ROLE_LENDER   = 'lender';
     const ROLE_BORROWER = 'borrower';
-    const ROLE_ADMIN = 'admin';
+    const ROLE_ADMIN    = 'admin';
+
+    const SUB_ROLE_VOLUNTEER        = 'volunteer';
+    const SUB_ROLE_VOLUNTEER_MENTOR = 'volunteerMentor';
 
     public function setPassword($password)
     {
@@ -66,7 +69,7 @@ class User extends BaseUser implements UserInterface, RemindableInterface
 
     public function getLender(ConnectionInterface $con = null)
     {
-        if ($this->getRole() != 'lender') {
+        if ($this->getRole() != User::ROLE_LENDER) {
             throw new InvalidUserRoleException;
         }
 
@@ -75,7 +78,7 @@ class User extends BaseUser implements UserInterface, RemindableInterface
 
     public function getBorrower(ConnectionInterface $con = null)
     {
-        if ($this->getRole() != 'borrower') {
+        if ($this->getRole() != User::ROLE_BORROWER) {
             throw new InvalidUserRoleException;
         }
 
@@ -117,27 +120,27 @@ class User extends BaseUser implements UserInterface, RemindableInterface
 
     public function isLender()
     {
-        return $this->getRole() == 'lender';
+        return $this->getRole() == User::ROLE_LENDER;
     }
 
     public function isBorrower()
     {
-        return $this->getRole() == 'borrower';
+        return $this->getRole() == User::ROLE_BORROWER;
     }
 
     public function isAdmin()
     {
-        return $this->getRole() == 'admin';
+        return $this->getRole() == User::ROLE_ADMIN;
     }
 
     public function isVolunteer()
     {
-        return $this->isLender() && $this->getSubRole() == 'volunteer';
+        return $this->isLender() && $this->getSubRole() == User::SUB_ROLE_VOLUNTEER;
     }
 
     public function isVolunteerMentor()
     {
-        return $this->isBorrower() && $this->getSubRole() == 'volunteerMentor';
+        return $this->isBorrower() && $this->getSubRole() == User::SUB_ROLE_VOLUNTEER_MENTOR;
     }
 
 }

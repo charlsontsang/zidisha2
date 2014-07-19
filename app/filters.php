@@ -118,12 +118,12 @@ Route::filter(
 Route::filter('loggedIn', function()
     {
         if (Auth::check()) {
-            $userRole = Auth::getUser()->getRole();
-            if($userRole == User::ROLE_LENDER) {
+            $user = Auth::user();
+            if($user->isLender()) {
                 return Redirect::route('lender:dashboard');
-            } elseif ($userRole == User::ROLE_BORROWER) {
+            } elseif ($user->isBorrower()) {
                 return Redirect::route('borrower:dashboard');
-            } elseif ($userRole == User::ROLE_ADMIN) {
+            } elseif ($user->isAdmin()) {
                 return Redirect::route('admin:dashboard');
             }
         }
