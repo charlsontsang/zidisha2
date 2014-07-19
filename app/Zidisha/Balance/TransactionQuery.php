@@ -82,9 +82,9 @@ class TransactionQuery extends BaseTransactionQuery
     {
         $total = $this
             ->select(array('total'))
-            ->withColumn('SUM(amount * exchangeRate)', 'total')
+            ->withColumn('SUM(amount * exchange_rate)', 'total')
             ->findOne();
 
-        return Money::create($total, $currency);
+        return Money::create($total ?: 0, $currency);
     }
 } // TransactionQuery
