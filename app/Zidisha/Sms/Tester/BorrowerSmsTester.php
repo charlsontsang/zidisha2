@@ -12,9 +12,9 @@ class BorrowerSmsTester {
 
     private $borrowerSmsService;
 
-    public function __construct(BorrowerSmsService $sms)
+    public function __construct(BorrowerSmsService $borrowerSmsService)
     {
-        $this->borrowerSmsService = $sms;
+        $this->borrowerSmsService = $borrowerSmsService;
     }
 
     public function sendBorrowerJoinedContactConfirmationSms()
