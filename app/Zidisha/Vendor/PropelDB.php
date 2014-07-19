@@ -43,4 +43,14 @@ class PropelDB {
         return $row[0];
     }
 
+    public static function fetchAll($sql, $parameters = [])
+    {
+        $con = Propel::getWriteConnection(UserTableMap::DATABASE_NAME);
+        $stmt = $con->prepare($sql);
+        $stmt->execute($parameters);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $rows;
+    }
+
 }

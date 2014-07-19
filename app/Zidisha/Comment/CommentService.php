@@ -19,6 +19,8 @@ abstract class CommentService
      */
     protected abstract function createCommentQuery();
 
+    protected abstract function notify(Comment $comment);
+
     public function postComment($data, User $user,CommentReceiverInterface $receiver, $files = [])
     {
         //Abstract
@@ -42,6 +44,9 @@ abstract class CommentService
             }
             $comment->save();
         }
+
+        $this->notify($comment);
+
         return $comment;
     }
 
@@ -55,6 +60,8 @@ abstract class CommentService
         $comment->setLevel($parentComment->getLevel() + 1);
         $comment->setRootId($parentComment->getRootId());
         $comment->save();
+
+        $this->notify($comment);
 
         return $comment;
     }

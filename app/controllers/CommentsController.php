@@ -3,9 +3,8 @@
 use Illuminate\Support\Facades\Input;
 use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Comment\BorrowerCommentQuery;
-use Zidisha\Comment\BorrowerCommentService;
+use Zidisha\Comment\CommentService;
 use Zidisha\Comment\LendingGroupCommentQuery;
-use Zidisha\Comment\LendingGroupCommentService;
 use Zidisha\Flash\Flash;
 use Zidisha\Lender\LendingGroupQuery;
 
@@ -192,12 +191,15 @@ class CommentsController extends BaseController
         }
     }
 
+    /**
+     * @return CommentService
+     */
     private function getService()
     {
         if ($this->commentType == 'lendingGroupComment') {
-            return new LendingGroupCommentService();
+            return App::make('Zidisha\Comment\LendingGroupCommentService');
         } elseif ($this->commentType == 'borrowerComment') {
-            return new BorrowerCommentService();
+            return App::make('Zidisha\Comment\BorrowerCommentService');
         }
     }
 

@@ -4,6 +4,7 @@ namespace Zidisha\Mail;
 
 use Zidisha\Borrower\Borrower;
 use Zidisha\Borrower\FeedbackMessage;
+use Zidisha\Comment\Comment;
 use Zidisha\Loan\Loan;
 
 class BorrowerMailer{
@@ -129,5 +130,10 @@ class BorrowerMailer{
         ];
 
         $this->mailer->send('emails.borrower.activation.declined-confirmation', $data);
+    }
+
+    public function sendBorrowerCommentNotification(Borrower $borrower, Comment $comment)
+    {
+
     }
 }
