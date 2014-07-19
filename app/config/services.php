@@ -36,5 +36,8 @@ return array(
     ],
     'mixpanel' => [
         'enabled' => false
+    ],
+    'sms' => [
+        'enabled' => false
     ]
 );
