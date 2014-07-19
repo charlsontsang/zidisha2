@@ -48,15 +48,4 @@ class EditProfile extends AbstractForm
             'aboutBusiness' => $borrower->getProfile()->getAboutBusiness(),
         ];
     }
-
-    protected function validate($data, $rules)
-    {
-        \Validator::resolver(
-            function ($translator, $data, $rules, $messages, $parameters) {
-                return new ZidishaValidator($translator, $data, $rules, $messages, $parameters);
-            }
-        );
-
-        parent::validate($data, $rules);
-    }
 }

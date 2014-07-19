@@ -53,15 +53,4 @@ class EditProfile extends AbstractForm
             'aboutMe'   => $lender->getProfile()->getAboutMe(),
         ];
     }
-
-    protected function validate($data, $rules)
-    {
-        \Validator::resolver(
-            function ($translator, $data, $rules, $messages, $parameters) {
-                return new ZidishaValidator($translator, $data, $rules, $messages, $parameters);
-            }
-        );
-
-        parent::validate($data, $rules);
-    }
 }
