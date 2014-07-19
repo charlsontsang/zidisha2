@@ -12,6 +12,7 @@
 */
 
 use Zidisha\Country\CountryQuery;
+use Zidisha\User\User;
 use Zidisha\Utility\Utility;
 
 App::before(function($request)
@@ -110,6 +111,21 @@ Route::filter(
         if (!$isAllowed) {
             Flash::error("You do not have proper permission to view this page");
             return Redirect::route('login');
+        }
+    }
+);
+
+Route::filter('loggedIn', function()
+    {
+        if (Auth::check()) {
+            $userRole = Auth::getUser()->getRole();
+            if($userRole == User::ROLE_LENDER) {
+                return Redirect::route('lender:dashboard');
+            } elseif ($userRole == User::ROLE_BORROWER) {
+                return Redirect::route('borrower:dashboard');
+            } elseif ($userRole == User::ROLE_ADMIN) {
+                return Redirect::route('admin:dashboard');
+            }
         }
     }
 );
