@@ -5,15 +5,13 @@ use Zidisha\Borrower\Borrower;
 use Zidisha\Borrower\Contact;
 use Zidisha\Borrower\Profile;
 use Zidisha\Sms\dummySms;
+use Zidisha\Sms\SmsService;
 
 class BorrowerSmsTester {
 
-    /**
-     * @var \Zidisha\Sms\dummySms
-     */
     private $sms;
 
-    public function __construct(dummySms $sms)
+    public function __construct(SmsService $sms)
     {
         $this->sms = $sms;
     }
@@ -39,6 +37,6 @@ class BorrowerSmsTester {
         ];
 
         $text = \Lang::get('borrower.join.sms.contact-confirmation', $arguments);
-        $this->sms->send($contact->getPhoneNumber(), $text);
+        $this->sms->queue($contact->getPhoneNumber(), $text);
     }
 }

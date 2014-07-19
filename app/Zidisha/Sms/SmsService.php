@@ -5,11 +5,11 @@ class SmsService
 {
 
     /**
-     * @var Sms
+     * @var Telerivet
      */
     private $sms;
 
-    public function __construct(dummySms $dummySms, Sms $sms)
+    public function __construct(dummySms $dummySms, Telerivet $sms)
     {
         if (\Config::get('services.sms.enabled')) {
             $this->sms = $sms;
@@ -23,13 +23,20 @@ class SmsService
         $this->sms->send($phoneNumber, $text);
     }
 
-    public function queue($phoneNumber, $text)
+    public function queue($phoneNumber, $text, $queue = null)
     {
-        $this->sms->queue($phoneNumber, $text);
+        \Queue::push('Zidisha\Sms\SmsService@handleQueuedMessage', compact('phoneNumber', 'text'), $queue);
     }
 
-    public function later($phoneNumber, $text)
+    public function later($delay, $phoneNumber, $text, $queue = null)
     {
-        $this->sms->later('60*30', $phoneNumber, $text);
+        \Queue::later($delay, 'Zidisha\Sms\SmsService@handleQueuedMessage', compact('phoneNumber', 'text'), $queue);
+    }
+
+    public function handleQueuedMessage($job, $data)
+    {
+        $this->send($data['phoneNumber'], $data['text']);
+
+        $job->delete();
     }
 }

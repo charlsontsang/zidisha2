@@ -24,24 +24,4 @@ class dummySms
 
         $this->mailer->send('emails.sms.send-data', $data);
     }
-
-    public function queue($phoneNumber, $text)
-    {
-        $data['to'] = $phoneNumber.'@test.com';
-        $data['from'] = 'sms@zidisha.com';
-        $data['subject'] = "SMS for " . $phoneNumber;
-        $data['data'] = $text;
-
-        $this->mailer->send('emails.sms.send-data', $data);
-    }
-
-    public function later($time, $phoneNumber, $text)
-    {
-        $data['to'] = $phoneNumber.'@test.com';
-        $data['from'] = 'sms@zidisha.com';
-        $data['subject'] = "SMS for " . $phoneNumber;
-        $data['data'] = $text;
-
-        $this->mailer->send('emails.sms.send-data', $data);
-    }
 }
