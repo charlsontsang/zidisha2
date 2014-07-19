@@ -4,13 +4,22 @@ namespace Zidisha\Lender\Form;
 
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Zidisha\Form\AbstractForm;
-use Zidisha\Lender\Base\ProfileQuery;
-use Zidisha\Lender\LenderQuery;
+use Zidisha\Form\ZidishaValidator;
+use Zidisha\Lender\Lender;
 
 class EditProfile extends AbstractForm
 {
+
+    /**
+     * @var Lender
+     */
+    private $lender;
+
+    public function __construct(Lender $lender)
+    {
+        $this->lender = $lender;
+    }
 
     public function getRules($data)
     {
@@ -18,7 +27,7 @@ class EditProfile extends AbstractForm
             'username'  => 'required|alpha_num',
             'firstName' => 'required|alpha_num',
             'lastName'  => 'required|alpha_num',
-            'email'     => 'required|email',
+            'email'     => 'required|email|uniqueUserEmail:' . $this->lender->getId(),
             'password'  => 'confirmed',
             'aboutMe'   => '',
             'picture'   => 'image|max:2048',
@@ -43,5 +52,16 @@ class EditProfile extends AbstractForm
             'email'     => $lender->getUser()->getEmail(),
             'aboutMe'   => $lender->getProfile()->getAboutMe(),
         ];
+    }
+
+    protected function validate($data, $rules)
+    {
+        \Validator::resolver(
+            function ($translator, $data, $rules, $messages, $parameters) {
+                return new ZidishaValidator($translator, $data, $rules, $messages, $parameters);
+            }
+        );
+
+        parent::validate($data, $rules);
     }
 }
