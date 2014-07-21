@@ -18,6 +18,7 @@ use Zidisha\Loan\BidQuery;
 use Zidisha\Loan\LoanService;
 use Zidisha\Payment\Form\EditBidForm;
 use Zidisha\Payment\Form\PlaceBidForm;
+use Zidisha\Repayment\RepaymentService;
 
 class LoanController extends BaseController
 {
@@ -35,6 +36,7 @@ class LoanController extends BaseController
      * @var Zidisha\Lender\FollowerService
      */
     private $followerService;
+    private $repaymentService;
 
     public function  __construct(
         LoanQuery $loanQuery,
@@ -43,7 +45,8 @@ class LoanController extends BaseController
         BorrowerService $borrowerService,
         AdminCategoryForm $adminCategoryForm,
         BorrowerCommentService $borrowerCommentService,
-        FollowerService $followerService
+        FollowerService $followerService,
+        RepaymentService $repaymentService
     ) {
         $this->loanQuery = $loanQuery;
         $this->bidQuery = $bidQuery;
@@ -52,6 +55,7 @@ class LoanController extends BaseController
         $this->adminCategoryForm = $adminCategoryForm;
         $this->borrowerCommentService = $borrowerCommentService;
         $this->followerService = $followerService;
+        $this->repaymentService = $repaymentService;
     }
 
     public function getIndex($loanId)
@@ -95,13 +99,14 @@ class LoanController extends BaseController
                 ->filterByBorrower($borrower)
                 ->findOne();
         }
+        $repaymentSchedules = $this->repaymentService->getRepaymentSchedule($loan);
 
         return View::make(
             'pages.loan',
             compact(
                 'loan', 'borrower', 'bids', 'comments',
                 'totalInterest', 'serviceFee', 'previousLoans',
-                'followersCount', 'hasFundedBorrower', 'follower'
+                'followersCount', 'hasFundedBorrower', 'follower' , 'repaymentSchedules'
             ),
             ['placeBidForm' => $placeBidForm, 'categoryForm' =>$this->adminCategoryForm]
         );
