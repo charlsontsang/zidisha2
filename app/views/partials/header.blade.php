@@ -14,10 +14,9 @@
         <div class="collapse navbar-collapse navbar-right">
             <ul class="nav navbar-nav">
                 <li><a href="{{ route('lend:index') }}">Lend</a></li>
-                <li><a href="{{ route('borrow.page') }}">Borrow</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        Learn More <b class="caret"></b>
+                        About <b class="caret"></b>
                     </a>
                     <ul class="dropdown-menu">
                         <li><a href="#">Member Updates &amp; Photos</a></li>
@@ -29,6 +28,18 @@
                         <li><a href="#">Team</a></li>
                         <li><a href="#">Statistics</a></li>
                         <li><a href="{{ route('page:press') }}">Press</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        Community <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Project Updates</a></li>
+                        <li><a href="{{ route('lender:groups') }}">Lending Groups</a></li>
+                        <li><a href="#">Forum</a></li>
+                        <li><a href="#">Volunteer</a></li>
+                        <li><a href="http://p2p-microlending-blog.zidisha.org/">Blog</a></li>
                     </ul>
                 </li>
                 @if(Auth::check() && Auth::getUser()->getRole() != 'admin')
