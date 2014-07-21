@@ -3,6 +3,7 @@ namespace Zidisha\Mail;
 
 
 use Carbon\Carbon;
+use Zidisha\Comment\Comment;
 use Zidisha\Currency\Money;
 use Zidisha\Lender\GiftCard;
 use Zidisha\Lender\Invite;
@@ -166,5 +167,10 @@ class LenderMailer
                 'subject' => 'Login to Zidisha'
             ]
         );
+    }
+
+    public function sendBorrowerCommentNotification(Lender $lender, Comment $comment)
+    {
+
     }
 }

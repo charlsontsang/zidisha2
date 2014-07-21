@@ -17,4 +17,9 @@ class LendingGroupCommentService extends CommentService
     {
         return LendingGroupCommentQuery::create();
     }
+
+    protected function notify(Comment $comment)
+    {
+        // TODO: Implement notify() method.
+    }
 }
