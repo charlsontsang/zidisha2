@@ -99,14 +99,14 @@ class LoanController extends BaseController
                 ->filterByBorrower($borrower)
                 ->findOne();
         }
-        $repaymentSchedules = $this->repaymentService->getRepaymentSchedule($loan);
+        $repaymentSchedule = $this->repaymentService->getRepaymentSchedule($loan);
 
         return View::make(
             'pages.loan',
             compact(
                 'loan', 'borrower', 'bids', 'comments',
                 'totalInterest', 'serviceFee', 'previousLoans',
-                'followersCount', 'hasFundedBorrower', 'follower' , 'repaymentSchedules'
+                'followersCount', 'hasFundedBorrower', 'follower' , 'repaymentSchedule'
             ),
             ['placeBidForm' => $placeBidForm, 'categoryForm' =>$this->adminCategoryForm]
         );
