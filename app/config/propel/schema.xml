@@ -420,7 +420,7 @@
 
     <table name="installment_payments" phpName="InstallmentPayment" namespace="Repayment">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
-        <column name="installment_id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="installment_id" type="INTEGER" required="true" autoIncrement="true"/>
         <column name="borrower_id" type="INTEGER" required="true"/>
         <column name="loan_id" type="INTEGER" required="true"/>
         <column name="paid_date" type="TIMESTAMP" required="true"/>

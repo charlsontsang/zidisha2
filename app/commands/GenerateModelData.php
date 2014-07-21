@@ -17,6 +17,8 @@ use Zidisha\Comment\Comment;
 use Zidisha\Country\Country;
 use Zidisha\Country\CountryQuery;
 use Zidisha\Country\Language;
+use Zidisha\Currency\Converter;
+use Zidisha\Currency\ExchangeRateQuery;
 use Zidisha\Currency\Money;
 
 use Zidisha\Lender\GiftCard;
@@ -33,6 +35,9 @@ use Zidisha\Loan\Loan;
 use Zidisha\Loan\LoanQuery;
 use Zidisha\Loan\LoanService;
 use Zidisha\Lender\LenderService;
+use Zidisha\Repayment\InstallmentQuery;
+use Zidisha\Repayment\RepaymentService;
+use Zidisha\Currency\CurrencyService;
 use Zidisha\Loan\Stage;
 
 class GenerateModelData extends Command
@@ -111,6 +116,8 @@ class GenerateModelData extends Command
             //$this->call('fake', array('model' => 'BidOld', 'size' => 50));
             $this->call('fake', array('model' => 'Bid', 'size' => 50));
             $this->call('fake', array('model' => 'AcceptBid', 'size' => 1));
+            $this->call('fake', array('model' => 'DisburseLoan', 'size' => 1));
+            $this->call('fake', array('model' => 'Repayment', 'size' => 1));
             $this->call('fake', array('model' => 'Transaction', 'size' => 200));
             $this->call('fake', array('model' => 'Installment', 'size' => 200));
             $this->call('fake', array('model' => 'Invite', 'size' => 200));
@@ -163,6 +170,10 @@ class GenerateModelData extends Command
         /** @var LoanService $loanService */
         $loanService = App::make('\Zidisha\Loan\LoanService');
         $lenderService = App::make('\Zidisha\Lender\LenderService');
+        /** @var RepaymentService $repaymentService */
+        $repaymentService = App::make('\Zidisha\Repayment\RepaymentService');
+        /** @var CurrencyService $currencyService */
+        $currencyService = App::make('\Zidisha\Currency\CurrencyService');
 
         $this->line("Generate $model");
 
@@ -232,6 +243,50 @@ class GenerateModelData extends Command
             foreach ($raisedLoans as $loan) {
                 if (rand(1,3) <= 2) {
                     $loanService->acceptBids($loan);
+                }
+            }
+        }
+
+        if ($model == "DisburseLoan") {
+            $fundedLoans = LoanQuery::create()
+                ->filterByStatus(Loan::FUNDED)
+                ->find();
+
+            foreach ($fundedLoans as $loan) {
+                if (rand(1,5) <= 4) {
+                    $loanService->disburseLoan($loan , new \DateTime(), $loan->getAmount());
+                }
+            }
+        }
+
+        if ($model == "Repayment") {
+            $activeLoans = LoanQuery::create()
+                ->filterByStatus(Loan::ACTIVE)
+                ->find();
+
+            foreach ($activeLoans as $loan) {
+                $installments = InstallmentQuery::create()
+                    ->filterByLoan($loan)
+                    ->orderById()// TODO order due date?
+                    ->find();
+                foreach ($installments as $installment) {
+                    if (!$installment->getAmount()->isPositive()){
+                        continue;
+                    }
+                    if (rand(1,4) <= 1) {
+                        break;
+                    }
+                    $installmentAmount = $installment->getAmount();
+                    if(rand(1,4) <= 1) {
+                        if(rand(1,2) <=1) {
+                            $installmentDate = $installment->getDueDate()->modify('+1 week');
+                        } else {
+                            $installmentDate = $installment->getDueDate()->modify('+2 week');
+                        }
+                        $repaymentService->addRepayment($loan, $installmentDate, $installmentAmount);
+                    } else {
+                        $repaymentService->addRepayment($loan, $installment->getDueDate(), $installmentAmount);
+                    }
                 }
             }
         }

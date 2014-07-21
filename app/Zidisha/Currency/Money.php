@@ -915,7 +915,7 @@ class Money
             $currency = Currency::valueOf($currency);
         }
 
-        return static::valueOf($amount, $currency);
+        return static::valueOf($amount ?: 0, $currency);
     }
 
     /**
