@@ -291,10 +291,8 @@ class RepaymentService
 
     public function getRepaymentSchedule(Loan $loan)
     {
-        $repaymentSchedule = [
+        $repaymentSchedule = [];
 
-        ];
-        $i = 0;
         $installments = InstallmentQuery::create()
             ->filterByLoan($loan)
             ->orderByDueDate('asc')
@@ -302,21 +300,19 @@ class RepaymentService
         $installmentsPayments = InstallmentPaymentQuery::create()
             ->filterByLoan($loan)
             ->orderByPaidDate('asc')
-            ->find();
-        $payments = $installmentsPayments->getData();
+            ->find()
+            ->getData();
 
         $zero = Money::create(0, $loan->getCurrency());
-        $currentPayment = next($payments);
+        $currentPayment = next($installmentsPayments);
         $currentAmount = $currentPayment ? $currentPayment->getPaidAmount() : $zero;
 
         foreach ($installments as $installment) {
             if (!$installment->getAmount()->isPositive()) {
                 continue;
             }
-            $repaymentSchedule[$i]['installment'] = $installment;
-            $repaymentSchedule[$i]['payments'] = [];
-
             $openAmount = $installment->getAmount();
+            $payments = [];
 
             while ($currentPayment && $openAmount->isPositive()) {
                 $payment = $currentPayment;
@@ -326,18 +322,17 @@ class RepaymentService
                     $openAmount = $zero;
                 } else {
                     $amount = $currentAmount;
-                    $currentPayment = next($payments);
+                    $currentPayment = next($installmentsPayments);
                     $currentAmount = $currentPayment ? $currentPayment->getPaidAmount() : $zero;
                     $openAmount = $openAmount->subtract($amount);
                 }
 
-                $repaymentSchedule[$i]['payments'][] = [
-                    'payment' => $payment,
-                    'amount'  => $amount
-                ];
+                $payments[] = new RepaymentScheduleInstallmentPayment($payment, $amount);
             }
-            $i++;
+
+            $repaymentSchedule[] = new RepaymentScheduleInstallment($installment, $payments);
         }
-        return $repaymentSchedule;
+
+        return new RepaymentSchedule($repaymentSchedule);
     }
 }
