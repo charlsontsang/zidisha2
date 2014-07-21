@@ -15,7 +15,7 @@ class BorrowerComment extends BaseBorrowerComment
 
     public function getCommentReceiverId()
     {
-        return $this->getCommentReceiverId();
+        return $this->getBorrowerId();
     }
 
     public function setCommentReceiver($comment, $receiver)
