@@ -307,24 +307,24 @@
                 </tr>
                 </thead>
                 <tbody>
-                @foreach($repaymentSchedules as $repaymentSchedule)
+                @foreach($repaymentSchedule as $repaymentScheduleInstallment)
                 <tr>
-                    <td>{{ $repaymentSchedule['installment']->getAmount() }}</td>
-                    <td>{{ $repaymentSchedule['installment']->getDueDate()->format('d-m-Y') }}</td>
+                    <td>{{ $repaymentScheduleInstallment->getInstallment()->getDueDate()->format('d-m-Y') }}</td>
+                    <td>{{ $repaymentScheduleInstallment->getInstallment()->getAmount() }}</td>
                     <?php $i = 0; ?>
-                    @foreach($repaymentSchedule['payments'] as $payment)
+                    @foreach($repaymentScheduleInstallment->getPayments() as $repaymentScheduleInstallmentPayment)
                         @if($i > 0)
                             <tr>
                                 <td></td>
                                 <td></td>
-                                <td>{{ $payment['payment']->getPaidDate()->format('d-m-Y') }}</td>
-                                <td>{{ $payment['amount']->getAmount() }}</td>
+                                <td>{{ $repaymentScheduleInstallmentPayment->getPayment()->getPaidDate()->format('d-m-Y') }}</td>
+                                <td>{{ $repaymentScheduleInstallmentPayment->getAmount() }}</td>
                             </tr>
                         @else
-                            <td>{{ $payment['payment']->getPaidDate()->format('d-m-Y') }}</td>
-                            <td>{{ $payment['amount']->getAmount() }}</td>
+                                <td>{{ $repaymentScheduleInstallmentPayment->getPayment()->getPaidDate()->format('d-m-Y') }}</td>
+                                <td>{{ $repaymentScheduleInstallmentPayment->getAmount() }}</td>
                         @endif
-                    <?php $i++; ?>
+                        <?php $i++; ?>
                     @endforeach
                 </tr>
                 @endforeach
