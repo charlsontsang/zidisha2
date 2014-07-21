@@ -481,7 +481,11 @@ class GenerateModelData extends Command
                 $country->setContinentCode('AF');
                 $country->setDialingCode('000');
                 $country->SetRegistrationFee($oneCountry[3]);
-                $country->SetBorrowerCountry(true);
+                if ($oneCountry[0] == 'IN') {
+                    $country->SetBorrowerCountry(false);
+                } else {
+                    $country->SetBorrowerCountry(true);
+                }
                 $country->setCurrencyCode($oneCountry[2]);
                 $country->setPhoneNumberLength(9);
                 $country->setInstallmentPeriod($faker->randomElement([Loan::WEEKLY_INSTALLMENT, Loan::MONTHLY_INSTALLMENT]));
