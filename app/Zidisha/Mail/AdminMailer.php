@@ -21,4 +21,9 @@ class AdminMailer
         //$admin = UserQuery::create()
         //    ->findOneById(\Settings::get('site.adminId'));
     }
+
+    public function sendLendingGroupCommentNotification(Comment $comment)
+    {
+
+    }
 }
