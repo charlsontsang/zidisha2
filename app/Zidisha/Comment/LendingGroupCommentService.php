@@ -41,11 +41,11 @@ class LendingGroupCommentService extends CommentService
         /** @var LendingGroup $lendingGroup */
         $lendingGroup = $comment->getCommentReceiver();
 
-        $groupSubscribers = $lendingGroup->getLendingGroupNotificationsJoinUser();
+        $lendingGroupSubscribers = $lendingGroup->getLendingGroupNotificationsJoinUser();
 
         $users = [];
-        foreach ($groupSubscribers as $groupSubscriber) {
-            $users[] = $groupSubscriber->getUser();
+        foreach ($lendingGroupSubscribers as $lendingGroupSubscriber) {
+            $users[] = $lendingGroupSubscriber->getUser();
         }
 
         foreach ($users as $user) {
