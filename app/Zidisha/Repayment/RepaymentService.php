@@ -288,4 +288,56 @@ class RepaymentService
         
         return $updatedInstallments;
     }
+
+    public function getRepaymentSchedule(Loan $loan)
+    {
+        $repaymentSchedule = [
+
+        ];
+        $i = 0;
+        $installments = InstallmentQuery::create()
+            ->filterByLoan($loan)
+            ->orderByDueDate('asc')
+            ->find();
+        $installmentsPayments = InstallmentPaymentQuery::create()
+            ->filterByLoan($loan)
+            ->orderByPaidDate('asc')
+            ->find();
+        $payments = $installmentsPayments->getData();
+
+        $zero = Money::create(0, $loan->getCurrency());
+        $currentPayment = next($payments);
+        $currentAmount = $currentPayment ? $currentPayment->getPaidAmount() : $zero;
+
+        foreach ($installments as $installment) {
+            if (!$installment->getAmount()->isPositive()) {
+                continue;
+            }
+            $repaymentSchedule[$i]['installment'] = $installment;
+            $repaymentSchedule[$i]['payments'] = [];
+
+            $openAmount = $installment->getAmount();
+
+            while ($currentPayment && $openAmount->isPositive()) {
+                $payment = $currentPayment;
+                if ($openAmount->lessThan($currentAmount)) {
+                    $amount = $openAmount;
+                    $currentAmount = $currentAmount->subtract($openAmount);
+                    $openAmount = $zero;
+                } else {
+                    $amount = $currentAmount;
+                    $currentPayment = next($payments);
+                    $currentAmount = $currentPayment ? $currentPayment->getPaidAmount() : $zero;
+                    $openAmount = $openAmount->subtract($amount);
+                }
+
+                $repaymentSchedule[$i]['payments'][] = [
+                    'payment' => $payment,
+                    'amount'  => $amount
+                ];
+            }
+            $i++;
+        }
+        return $repaymentSchedule;
+    }
 }
