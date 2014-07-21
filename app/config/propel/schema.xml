@@ -833,8 +833,8 @@
     </table>
 
     <table name="lending_group_notifications" phpName="LendingGroupNotification" namespace="Lender">
-        <column name="lending_group_id" type="INTEGER" required="true"/>
-        <column name="user_id" type="INTEGER" required="true"/>
+        <column name="lending_group_id" type="INTEGER" required="true" primaryKey="true"/>
+        <column name="user_id" type="INTEGER" required="true" primaryKey="true"/>
         <behavior name="timestampable"/>
         <foreign-key foreignTable="lending_groups">
             <reference local="lending_group_id" foreign="id"/>
