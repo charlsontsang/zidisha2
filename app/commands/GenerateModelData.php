@@ -276,7 +276,14 @@ class GenerateModelData extends Command
                     if (rand(1,4) <= 1) {
                         break;
                     }
-                    $installmentAmount = $installment->getAmount();
+                    if (rand(1,4) <= 1) {
+                        $installmentAmount = $installment->getAmount();
+                    } else {
+                        $installmentAmount = Money::create(rand($installment->getAmount()->subtract($installment->getAmount()->divide
+                                    (2))
+                                ->getAmount(),
+                            $installment->getAmount()->add($installment->getAmount()->divide(2))->getAmount()), $loan->getCurrency()) ;
+                    }
                     if(rand(1,4) <= 1) {
                         if(rand(1,2) <=1) {
                             $installmentDate = $installment->getDueDate()->modify('+1 week');

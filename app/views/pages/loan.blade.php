@@ -200,11 +200,11 @@
                     {{ $totalInterest }} ({{ $loan->getInterestRate() }}%)</p>
 
                 <p><b>Borrower Transaction Fees: </b> <a href="#" class="transactionFee" data-toggle="tooltip">(?)</a>USD
-                    {{ $transactionFee }} (5.00%)</p>
+                                        {{ $serviceFee->getAmount() }} (5.00%)</p>
 
                 <p><b>Total Amount (Including Interest and Transaction Fee) to be Repaid: </b> <a href="#" class="repaidAmount"
                                                                                                   data-toggle="tooltip">(?)</a>
-                    USD {{ $totalInterest+$transactionFee }} ({{5.00 + $loan->getInterestRate() }}%)
+                    USD {{ $totalInterest->add($serviceFee)->getAmount() }} ({{5.00 + $loan->getInterestRate() }}%)
                 </p>
             </div>
         </div>
@@ -292,6 +292,46 @@
         </table>
         <strong>Raised: </strong> USD {{ $loan->getRaisedUsdAmount()->getAmount() }}
         <strong>Still Needed: </strong> USD {{ $loan->getStillNeededUsdAmount() }}
+
+        @if($loan->getStatus() >= Zidisha\Loan\Loan::ACTIVE)
+        <br>
+        <div>
+            <strong>REPAYMENT SCHEDULE</strong>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Date Due</th>
+                    <th>Amount Due</th>
+                    <th>Date Paid</th>
+                    <th>Paid Amount</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach($repaymentSchedule as $repaymentScheduleInstallment)
+                <tr>
+                    <td>{{ $repaymentScheduleInstallment->getInstallment()->getDueDate()->format('d-m-Y') }}</td>
+                    <td>{{ $repaymentScheduleInstallment->getInstallment()->getAmount() }}</td>
+                    <?php $i = 0; ?>
+                    @foreach($repaymentScheduleInstallment->getPayments() as $repaymentScheduleInstallmentPayment)
+                        @if($i > 0)
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td>{{ $repaymentScheduleInstallmentPayment->getPayment()->getPaidDate()->format('d-m-Y') }}</td>
+                                <td>{{ $repaymentScheduleInstallmentPayment->getAmount() }}</td>
+                            </tr>
+                        @else
+                                <td>{{ $repaymentScheduleInstallmentPayment->getPayment()->getPaidDate()->format('d-m-Y') }}</td>
+                                <td>{{ $repaymentScheduleInstallmentPayment->getAmount() }}</td>
+                        @endif
+                        <?php $i++; ?>
+                    @endforeach
+                </tr>
+                @endforeach
+                </tbody>
+            </table>
+        </div>
+        @endif
 
         @if(Auth::check() && Auth::getUser()->isAdmin())
         <br><br>
