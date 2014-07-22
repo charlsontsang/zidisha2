@@ -9,7 +9,7 @@ use Zidisha\Comment\BorrowerCommentService;
 use Zidisha\Comment\CommentService;
 use Zidisha\Flash\Flash;
 use Zidisha\Lender\Exceptions\InsufficientLenderBalanceException;
-use Zidisha\Lender\FollowerService;
+use Zidisha\Lender\FollowService;
 use Zidisha\Loan\Bid;
 use Zidisha\Loan\Form\AdminCategoryForm;
 use Zidisha\Loan\Loan;
@@ -33,7 +33,7 @@ class LoanController extends BaseController
     private $borrowerService;
     private $adminCategoryForm;
     /**
-     * @var Zidisha\Lender\FollowerService
+     * @var Zidisha\Lender\FollowService
      */
     private $followerService;
     private $repaymentService;
@@ -45,7 +45,7 @@ class LoanController extends BaseController
         BorrowerService $borrowerService,
         AdminCategoryForm $adminCategoryForm,
         BorrowerCommentService $borrowerCommentService,
-        FollowerService $followerService,
+        FollowService $followerService,
         RepaymentService $repaymentService
     ) {
         $this->loanQuery = $loanQuery;

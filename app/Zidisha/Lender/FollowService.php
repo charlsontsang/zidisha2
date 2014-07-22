@@ -6,7 +6,7 @@ namespace Zidisha\Lender;
 use Zidisha\Borrower\Borrower;
 use Zidisha\Vendor\PropelDB;
 
-class FollowerService {
+class FollowService {
 
     function getFollowerCount(Borrower $borrower)
     {
