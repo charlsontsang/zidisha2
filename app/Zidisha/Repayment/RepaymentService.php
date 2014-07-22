@@ -332,7 +332,6 @@ class RepaymentService
 
             $repaymentSchedule[] = new RepaymentScheduleInstallment($installment, $payments);
         }
-
-        return new RepaymentSchedule($repaymentSchedule);
+        return new RepaymentSchedule($loan, $repaymentSchedule);
     }
 }
