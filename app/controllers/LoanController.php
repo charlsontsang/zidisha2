@@ -100,6 +100,7 @@ class LoanController extends BaseController
                 ->findOne();
         }
         $repaymentSchedule = $this->repaymentService->getRepaymentSchedule($loan);
+        $repaymentScore = $this->loanService->getOnTimeRepaymentScore($borrower);
 
         return View::make(
             'pages.loan',
