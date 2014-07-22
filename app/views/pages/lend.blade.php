@@ -86,36 +86,77 @@
         <h2>{{ $selectedCountry->getName(); }}</h2>
         <br>
         @endif
-
-        @foreach($paginator as $loan)
-        <div class="media">
-
-            <a class="pull-left"
-               href="{{ route('borrower:public-profile', $loan->getBorrower()->getUser()->getUsername()) }}"><img
-                    src="{{ $loan->getBorrower()->getUser()->getProfilePictureUrl() }}" width="200" height="200"></a>
-
-            <div class="media-body">
-                <ul class="list-unstyled">
-                    <li>
-                        <a href="{{ route('loan:index', $loan->getId()) }}"><h2>{{ $loan->getSummary() }}</h2></a>
-                        <p>{{ $loan->getBorrower()->getName() }} | {{ $loan->getBorrower()->getProfile()->getCity() }},
-                            {{ $loan->getBorrower()->getCountry()->getName() }}</p>
-                        <p>Category: <b>{{ $loan->getCategory()->getName() }}</b></p>
-
-                        <p>{{ Zidisha\Utility\Utility::truncate($loan->getProposal(), 200,
-                            array('exact' => false)) }} <a href="{{ route('loan:index', $loan->getId()) }}">Read More</a></p>
-                        <strong>@lang('lend.loan.amount'): </strong> {{ $loan->getUsdAmount() }} USD
-                        <strong>@lang('lend.loan.interest-rate'): </strong> {{ $loan->getInterestRate() }} %
-                        @include('partials/_progress', [ 'raised' => $loan->getRaisedPercentage() ])
-                    </li>
-                    <br>
-                </ul>
-            </div>
-        </div>
-        @endforeach
-        {{ $paginator->appends(['search' => $searchQuery])->links() }}
     </div>
 </div>
+
+<style>
+    .loan-category {
+        margin-bottom: 12px;
+        font-size: 12px;
+        font-weight: bolder;
+        text-transform: uppercase;
+    }
+    .loan h2 {
+        font-size: 32px;
+        color: #333;
+    }
+    .loan h2 a {
+        color: #333;
+    }
+    .loan-summary {
+        padding: 12px 0;
+    }
+    a.link-dark {
+        color: #333;
+    }
+</style>
+
+@foreach($paginator as $loan)
+<div class="row">
+
+    <div class="col-md-5">
+        <a class="pull-left" href="{{ route('borrower:public-profile', $loan->getBorrower()->getUser()->getUsername()) }}">
+            <img src="{{ $loan->getBorrower()->getUser()->getProfilePictureUrl() }}" width="100%">
+        </a>
+    </div>
+    
+    <div class="col-md-7 loan">
+        @if($loan->getCategory())
+            <div class="loan-category">
+                {{ $loan->getCategory()->getName() }}
+                @if($loan->getSecondaryCategory())
+                &nbsp;&nbsp;&nbsp;&nbsp;{{ $loan->getSecondaryCategory()->getName() }}
+                @endif
+            </div>
+        @endif
+        
+        <h2 class="alpha">
+            <a href="{{ route('loan:index', $loan->getId()) }}">
+                {{ $loan->getSummary() }}
+            </a>
+        </h2>
+        
+        <p>
+            {{ $loan->getBorrower()->getName() }}
+            <img class="leaf" src="{{ '/assets/images/leaf.png' }}"/>
+            {{ $loan->getBorrower()->getProfile()->getCity() }},
+            {{ $loan->getBorrower()->getCountry()->getName() }}
+        </p>
+
+        <p class="loan-summary">
+            <a href="{{ route('loan:index', $loan->getId()) }}" class="link-dark">
+                {{ Zidisha\Utility\Utility::truncate($loan->getProposal(), 200, array('exact' => false)) }}
+            </a>
+            <a href="{{ route('loan:index', $loan->getId()) }}">Read More</a>
+        </p>
+        
+        @include('partials/loan-progress', [ 'loan' => $loan ])
+    </div>
+</div>
+<hr/>
+@endforeach
+
+{{ $paginator->appends(['search' => $searchQuery])->links() }}
 
 <div id="filter-categories" class="hide">
     <ul class="list-unstyled">
