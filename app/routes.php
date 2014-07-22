@@ -394,6 +394,11 @@ Route::group(
          */
         Route::controller('borrowercomment/{id}', 'BorrowerCommentController');
 
+        /**
+         * Routes for LoanFeedbackComments
+         */
+        Route::controller('loanfeedback/{id}', 'LoanFeedbackController');
+
 
         /**
          * Routes for Admin
