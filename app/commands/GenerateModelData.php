@@ -590,7 +590,7 @@ class GenerateModelData extends Command
                     $Loan->setDisbursedAmount($amount);
                     $Loan->setDisbursedAt(strtotime("-1 year"));
                     $Loan->setStatus(Loan::REPAID);
-                    $Loan->setRepaidDate(new \DateTime());
+                    $Loan->setRepaidAt(new \DateTime());
                     $Stage->setStatus(Loan::REPAID);
                 } elseif ($i < ($status * 6)) {
                     $borrower->setLoanStatus(Loan::DEFAULTED);

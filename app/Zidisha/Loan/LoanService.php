@@ -514,7 +514,7 @@ class LoanService
     {        
         PropelDB::transaction(function($con) use ($loan) {
             $loan->setStatus(Loan::EXPIRED)
-                ->setExpiredDate(new \DateTime());
+                ->setExpiredAt(new \DateTime());
             $loan->save($con);
 
             $loan->getBorrower()
@@ -543,7 +543,7 @@ class LoanService
         PropelDB::transaction(function($con) use($loan) {
             $loan
                 ->setStatus(Loan::CANCELED)
-                ->setExpiredDate(new \DateTime());
+                ->setExpiredAt(new \DateTime());
             $loan->save($con);
 
             $borrower = $loan->getBorrower();
