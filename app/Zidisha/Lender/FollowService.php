@@ -8,7 +8,81 @@ use Zidisha\Vendor\PropelDB;
 
 class FollowService {
 
-    function getFollowerCount(Borrower $borrower)
+    public function follow(Lender $lender, Borrower $borrower, $data = [])
+    {
+        $follower = FollowerQuery::create()
+            ->filterByLender($lender)
+            ->filterByBorrower($borrower)
+            ->findone();
+        
+        if (!$follower) {
+            $follower = new Follower();
+            $follower
+                ->setLender($lender)
+                ->setBorrower($borrower);
+        }
+        
+        $follower
+            ->setActive(true)
+            ->setNotifyComment($data['notifyComment'])
+            ->setNotifyLoanApplication($data['notifyLoanApplication']);
+        $follower->save();
+
+        return $follower;
+    }
+
+    public function unfollow(Lender $lender, Borrower $borrower)
+    {
+        $follower = FollowerQuery::create()
+            ->filterByLender($lender)
+            ->filterByBorrower($borrower)
+            ->findone();
+
+        if (!$follower) {
+            $follower = new Follower();
+            $follower
+                ->setLender($lender)
+                ->setBorrower($borrower)
+                ->setNotifyComment($lender->getPreferences()->getNotifyComment())
+                ->setNotifyLoanApplication($lender->getPreferences()->getNotifyLoanApplication());
+        }
+
+        $follower->setActive(false);
+        $follower->save();
+
+        return $follower;
+    }
+
+    public function updateFollower(Lender $lender, Borrower $borrower, $data = [])
+    {
+        $follower = FollowerQuery::create()
+            ->filterByLender($lender)
+            ->filterByBorrower($borrower)
+            ->findone();
+
+        if (!$follower) {
+            $follower = new Follower();
+            $follower
+                ->setActive(true)
+                ->setLender($lender)
+                ->setBorrower($borrower)
+                ->setNotifyComment($lender->getPreferences()->getNotifyComment())
+                ->setNotifyLoanApplication($lender->getPreferences()->getNotifyLoanApplication());
+        }
+
+        if (isset($data['notifyComment'])) {
+            $follower->setNotifyComment($data['notifyComment']);  
+        }
+        if (isset($data['notifyLoanApplication'])) {
+            $follower->setNotifyLoanApplication($data['notifyLoanApplication']);
+        }
+
+        $follower->save();
+
+        return $follower;
+    }
+    
+    public function getFollowerCount(Borrower $borrower)
     {
         $count = FollowerQuery::create()
             ->filterByBorrower($borrower)
@@ -29,5 +103,5 @@ class FollowService {
 
         return $count;
     }
-    
+
 }

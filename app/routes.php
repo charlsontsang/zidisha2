@@ -270,6 +270,28 @@ Route::group(
                         'as'   => 'lender:post:preference'
                     )
                 );
+
+                Route::post(
+                    '/follow/{borrowerId}',
+                    array(
+                        'uses' => 'FollowController@postFollow',
+                        'as'   => 'lender:follow'
+                    )
+                );
+                Route::post(
+                    '/unfollow/{borrowerId}',
+                    array(
+                        'uses' => 'FollowController@postUnfollow',
+                        'as'   => 'lender:unfollow'
+                    )
+                );
+                Route::post(
+                    '/update-follower/{borrowerId}',
+                    array(
+                        'uses' => 'FollowController@postUpdateFollower',
+                        'as'   => 'lender:update-follower'
+                    )
+                );
             }
         );
 

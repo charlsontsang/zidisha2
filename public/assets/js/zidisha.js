@@ -45,6 +45,29 @@ $(function () {
             .text($this.data('toggle-text'))
             .data('toggle-text', oldText);
     });
+
+    $('.follow-notifications :checkbox').change(function() {
+        var $this = $(this),
+            $wrapper = $this.closest('.checkbox'),
+            $success = $wrapper.find('.text-success'),
+            url = $this.attr('target'),
+            data = {};
+        
+        if ($success.length == 0) {
+            $success = $this.closest('.follow-notifications').find('.text-success').last().clone().appendTo($wrapper);
+        }
+        console.log($success);
+        
+        data[$this.attr('name')] = $this.is(':checked') ? 1 : 0;
+        $success.show();
+        $.post(url, data, function() {
+            setTimeout(function() {
+                $success.hide();
+            }, 1500);
+        });
+        
+        return false;
+    });
 });
 
 function parseMoney(value) {

@@ -199,12 +199,6 @@
         
         <hr/>
         
-        <?php
-        //if ($session->userlevel == LENDER_LEVEL) {
-        //    $follow_by_default = $database->hasFunded($session->userid, $borrower_id);
-        //}
-        ?>
-
         <h3>
             @lang('lender.follow.title', ['name' => $borrower->getName()])
             @if ($followersCount)
@@ -498,6 +492,4 @@
         });
     });
 </script>
-# TODO
-<script src="/static/js/follow.js"></script>
 @stop
