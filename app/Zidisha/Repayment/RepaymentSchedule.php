@@ -112,7 +112,7 @@ class RepaymentSchedule implements \IteratorAggregate
         $this->paidOnTimeInstallmentCount = $paidOnTimeInstallmentCount;
     }
 
-    public function getInstallmentCount()
+    public function getPaidInstallmentCount()
     {
         return $this->paidInstallmentCount;
     }
@@ -122,7 +122,7 @@ class RepaymentSchedule implements \IteratorAggregate
         return $this->missedInstallmentCount;
     }
 
-    public function PaidOnTimeInstallmentCount()
+    public function getPaidOnTimeInstallmentCount()
     {
         return $this->paidOnTimeInstallmentCount;
     }

@@ -22,13 +22,7 @@ class RepaymentService
 
     private $paymentQuery;
     private $borrowerQuery;
-    /**
-     * @var \Zidisha\Currency\CurrencyService
-     */
     private $currencyService;
-    /**
-     * @var \Zidisha\Balance\TransactionService
-     */
     private $transactionService;
 
     public function __construct(BorrowerPaymentQuery $paymentQuery, BorrowerQuery $borrowerQuery, CurrencyService $currencyService, TransactionService $transactionService)
