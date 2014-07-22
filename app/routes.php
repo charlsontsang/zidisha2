@@ -401,6 +401,12 @@ Route::group(
 
 
         /**
+         * Routes for LendingGroupComments
+         */
+        Route::controller('lendinggroupcomment/{id}', 'LendingGroupCommentController');
+
+
+        /**
          * Routes for Admin
          */
         Route::group(
