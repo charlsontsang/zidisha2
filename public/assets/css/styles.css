@@ -7420,9 +7420,6 @@ button.close {
   padding-left: 2px;
   padding-right: 2px;
 }
-select {
-  border-radius: 0;
-}
 .alpha {
   margin-top: 0;
 }
@@ -7448,6 +7445,21 @@ h5.alpha {
   border-bottom: 1px solid #e0e0e0;
   margin-bottom: 22px;
   padding-bottom: 22px;
+}
+.page-section-inverted {
+  background-color: #333333;
+  color: #b3b3b3;
+}
+.page-section-inverted .h2,
+.h3 {
+  color: white;
+}
+.footer {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+.page-section-inverted a {
+  color: #b3b3b3;
 }
 .hr-text {
   position: relative;
