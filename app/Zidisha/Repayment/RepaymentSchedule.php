@@ -38,7 +38,7 @@ class RepaymentSchedule implements \IteratorAggregate
     {
         //TODO set $today as current Time
 //        $today = time();
-        $today = new Carbon("2014-10-16");
+        $today = new Carbon("2015-7-16");
         $repaymentThreshold = \Config::get('constants.repaymentThreshold');
         $repaymentThresholdAmount = Money::create(\Config::get('constants.repaymentAmountThreshold'), 'USD');
         $isActiveLoan = $this->loan->getStatus() == Loan::ACTIVE;
@@ -49,10 +49,6 @@ class RepaymentSchedule implements \IteratorAggregate
         $dueDateThreshold = $isActiveLoan ? $repaymentThreshold : 0;
         $endedAt = $this->loan->getEndedAt();
         $maximumDueDate = $endedAt ? $endedAt : $today->subDays($dueDateThreshold);
-        $exchangeRate = ExchangeRateQuery::create()
-            ->filterByCurrencyCode($this->loan->getCurrency()->getCode())
-            ->filterByEndDate(null)
-            ->findone();
         $zero = Money::create(0, $this->loan->getCurrency());
 
         if (!empty($this)) {
@@ -69,6 +65,7 @@ class RepaymentSchedule implements \IteratorAggregate
                 foreach ($repaymentScheduleInstallment->getPayments() as $repaymentScheduleInstallmentPayment) {
                     $installmentPaymentPaidDate = Carbon::instance($repaymentScheduleInstallmentPayment->getPayment()->getPaidDate());
                     $installmentPaymentPaidAmount = $repaymentScheduleInstallmentPayment->getAmount();
+                    $exchangeRate = $repaymentScheduleInstallmentPayment->getPayment()->getExchangeRate();
                     $thresholdAmount = Converter::fromUSD($repaymentThresholdAmount, $this->loan->getCurrency(), $exchangeRate);
                     if ($dueInstallmentAmount->lessThan($thresholdAmount) && $dueInstallmentAmount->isPositive()) {
                         $thresholdAmount = $dueInstallmentAmount;
@@ -105,10 +102,10 @@ class RepaymentSchedule implements \IteratorAggregate
             }
         }
 
-        var_dump($todayInstallmentCount);
-        var_dump($paidInstallmentCount);
-        var_dump($missedInstallmentCount);
-        dd($paidOnTimeInstallmentCount);
+//        var_dump($todayInstallmentCount);
+//        var_dump($paidInstallmentCount);
+//        var_dump($missedInstallmentCount);
+//        dd($paidOnTimeInstallmentCount);
         $this->todayInstallmentCount = $todayInstallmentCount;
         $this->paidInstallmentCount = $paidInstallmentCount;
         $this->missedInstallmentCount = $missedInstallmentCount;

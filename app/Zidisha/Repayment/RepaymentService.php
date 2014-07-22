@@ -274,13 +274,15 @@ class RepaymentService
         if ($updatedInstallments) {
             /** @var Installment $installment */
             $installment = $updatedInstallments[count($updatedInstallments) - 1];
-            
+            $exchangeRate = $this->currencyService->getExchangeRate($loan->getCurrency(), $date);
+
             $installmentPayment = new InstallmentPayment();
             $installmentPayment
                 ->setInstallmentId($installment->getId())
                 ->setBorrowerId($installment->getBorrowerId())
                 ->setLoanId($loan->getId())
                 ->setPaidAmount($amount)
+                ->setExchangeRate($exchangeRate)
                 ->setPaidDate($date);
             
             $installmentPayment->save($con);
