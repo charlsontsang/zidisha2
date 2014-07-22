@@ -1,8 +1,20 @@
 <div class="comments">
-    @include('partials.comments.partial.post')
+    @if($canPostComment)
+        @include('partials.comments.partial.post', ['controller' => $controller, 'receiver' => $receiver,  'canPostComment' => $canPostComment, 'canReplyComment' => $canReplyComment])
+    @else
+        <b>Please Login to comment</b>
+    @endif
+
+
     <ul class="list-unstyled">
         @foreach($comments as $comment)
-        @include("partials.comments.root", ['comment' => $comment, 'commentType'=> $commentType ])
+            @include("partials.comments.root", [
+                'comment' => $comment,
+                'controller' => $controller,
+                'receiver' => $receiver,
+                'canPostComment' => $canPostComment,
+                'canReplyComment' => $canReplyComment
+            ])
         @endforeach
     </ul>
 </div>
