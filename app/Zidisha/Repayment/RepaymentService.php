@@ -22,13 +22,7 @@ class RepaymentService
 
     private $paymentQuery;
     private $borrowerQuery;
-    /**
-     * @var \Zidisha\Currency\CurrencyService
-     */
     private $currencyService;
-    /**
-     * @var \Zidisha\Balance\TransactionService
-     */
     private $transactionService;
 
     public function __construct(BorrowerPaymentQuery $paymentQuery, BorrowerQuery $borrowerQuery, CurrencyService $currencyService, TransactionService $transactionService)
@@ -274,13 +268,15 @@ class RepaymentService
         if ($updatedInstallments) {
             /** @var Installment $installment */
             $installment = $updatedInstallments[count($updatedInstallments) - 1];
-            
+            $exchangeRate = $this->currencyService->getExchangeRate($loan->getCurrency(), $date);
+
             $installmentPayment = new InstallmentPayment();
             $installmentPayment
                 ->setInstallmentId($installment->getId())
                 ->setBorrowerId($installment->getBorrowerId())
                 ->setLoanId($loan->getId())
                 ->setPaidAmount($amount)
+                ->setExchangeRate($exchangeRate)
                 ->setPaidDate($date);
             
             $installmentPayment->save($con);
@@ -332,7 +328,6 @@ class RepaymentService
 
             $repaymentSchedule[] = new RepaymentScheduleInstallment($installment, $payments);
         }
-
-        return new RepaymentSchedule($repaymentSchedule);
+        return new RepaymentSchedule($loan, $repaymentSchedule);
     }
 }

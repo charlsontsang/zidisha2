@@ -16,6 +16,7 @@ use Zidisha\Loan\Calculator\InstallmentCalculator;
 use Zidisha\Mail\BorrowerMailer;
 use Zidisha\Mail\LenderMailer;
 use Zidisha\Repayment\Installment;
+use Zidisha\Repayment\RepaymentService;
 use Zidisha\Vendor\PropelDB;
 use Zidisha\Vendor\SiftScience\SiftScienceService;
 
@@ -44,13 +45,15 @@ class LoanService
      * @var \Zidisha\Vendor\SiftScience\SiftScienceService
      */
     private $siftScienceService;
+    private $repaymentService;
 
     public function __construct(
         TransactionService $transactionService,
         LenderMailer $lenderMailer,
         MixpanelService $mixpanelService,
         BorrowerMailer $borrowerMailer,
-        SiftScienceService $siftScienceService
+        SiftScienceService $siftScienceService,
+        RepaymentService $repaymentService
     )
     {
         $this->transactionService = $transactionService;
@@ -58,6 +61,7 @@ class LoanService
         $this->mixpanelService = $mixpanelService;
         $this->borrowerMailer = $borrowerMailer;
         $this->siftScienceService = $siftScienceService;
+        $this->repaymentService = $repaymentService;
     }
 
     public function applyForLoan(Borrower $borrower, $data)
@@ -514,7 +518,7 @@ class LoanService
     {        
         PropelDB::transaction(function($con) use ($loan) {
             $loan->setStatus(Loan::EXPIRED)
-                ->setExpiredDate(new \DateTime());
+                ->setExpiredAt(new \DateTime());
             $loan->save($con);
 
             $loan->getBorrower()
@@ -543,7 +547,7 @@ class LoanService
         PropelDB::transaction(function($con) use($loan) {
             $loan
                 ->setStatus(Loan::CANCELED)
-                ->setExpiredDate(new \DateTime());
+                ->setExpiredAt(new \DateTime());
             $loan->save($con);
 
             $borrower = $loan->getBorrower();
@@ -762,6 +766,32 @@ class LoanService
             ->count();
         
         return $count > 0;
+    }
+
+    public function getOnTimeRepaymentScore(Borrower $borrower)
+    {
+        $BorrowerLoans = LoanQuery::create()
+            ->filterByBorrower($borrower)
+            ->find();
+        $onTimeInstallmentCount=0;
+        $totalTodayInstallmentCount=0;
+
+        foreach ($BorrowerLoans as $loan) {
+            $repaymentSchedule = $this->repaymentService->getRepaymentSchedule($loan);
+            $totalTodayInstallmentCount += $repaymentSchedule->getTodayInstallmentCount();
+            $onTimeInstallmentCount += $repaymentSchedule->getPaidOnTimeInstallmentCount();
+        }
+        if ($totalTodayInstallmentCount == 0) {
+            $repaymentScore = 100;
+        }else {
+            $repaymentRate = ($onTimeInstallmentCount/$totalTodayInstallmentCount)*100;
+
+            if (empty($repaymentRate) || $repaymentRate < 0) {
+                $repaymentRate = 0;
+            }
+            $repaymentScore = number_format($repaymentRate,2, '.', ',');
+        }
+        return $repaymentScore;
     }
 }
 

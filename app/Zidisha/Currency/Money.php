@@ -968,4 +968,9 @@ class Money
     public function isPositive() {
         return $this->greaterThan(Money::create(0));
     }
+
+    public function lessThanOrEqual(Money $money)
+    {
+       return $this->lessThan($money) || $this->equals($money);
+    }
 }

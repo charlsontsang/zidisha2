@@ -176,4 +176,19 @@ class Loan extends BaseLoan
         
         return 3;
     }
+
+
+    public function isEnded()
+    {
+        return in_array($this->getStatus(), [Loan::REPAID, Loan::DEFAULTED]);
+    }
+
+    public function getEndedAt()
+    {
+        if ($this->getStatus() == Loan::REPAID) {
+            return $this->getRepaidDate();
+        } elseif ($this->getStatus() == Loan::DEFAULTED) {
+            return $this->getExpiredDate();
+        }
+    }
 }

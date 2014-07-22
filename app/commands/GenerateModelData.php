@@ -284,7 +284,7 @@ class GenerateModelData extends Command
                                 ->getAmount(),
                             $installment->getAmount()->add($installment->getAmount()->divide(2))->getAmount()), $loan->getCurrency()) ;
                     }
-                    if(rand(1,4) <= 1) {
+                    if(rand(1,10) <= 1) {
                         if(rand(1,2) <=1) {
                             $installmentDate = $installment->getDueDate()->modify('+1 week');
                         } else {
@@ -590,6 +590,7 @@ class GenerateModelData extends Command
                     $Loan->setDisbursedAmount($amount);
                     $Loan->setDisbursedAt(strtotime("-1 year"));
                     $Loan->setStatus(Loan::REPAID);
+                    $Loan->setRepaidAt(new \DateTime());
                     $Stage->setStatus(Loan::REPAID);
                 } elseif ($i < ($status * 6)) {
                     $borrower->setLoanStatus(Loan::DEFAULTED);
