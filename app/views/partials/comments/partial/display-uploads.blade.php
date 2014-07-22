@@ -4,7 +4,7 @@
             @foreach($comment->getUploads() as $upload)
                 @if($upload->isImage())
                     <div class="comment-form" data-comment-action="delete-upload">
-                        {{ BootstrapForm::open(array('route' => 'comment:delete-upload', 'translationDomain' => 'comments')) }}
+                        {{ BootstrapForm::open(array('action' => [ $controller.'@postDeleteUpload', 'id' => $receiver->getId()  ], 'translationDomain' => 'comments')) }}
 
                         <a href="{{ $upload->getImageUrl('small-profile-picture') }}">
                             <img src="{{ $upload->getImageUrl('small-profile-picture') }}" width="100px" height="100px" alt=""/>
@@ -17,7 +17,7 @@
                     </div>
                 @else
                     <div class="comment-form" data-comment-action="delete-upload">
-                        {{ BootstrapForm::open(array('route' => 'comment:delete-upload', 'translationDomain' => 'comments')) }}
+                        {{ BootstrapForm::open(array('action' => [ $controller.'@postDeleteUpload', 'id' => $receiver->getId()  ], 'translationDomain' => 'comments')) }}
 
                         <div class="well">
                             <a href="{{  $upload->getFileUrl()  }}">{{ $upload->getFilename() }}</a>

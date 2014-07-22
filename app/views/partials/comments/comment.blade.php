@@ -1,4 +1,8 @@
+@if($controller == 'LoanFeedbackController')
+<li id="feedback-{{ $comment->getId() }}" class="comment">
+@else
 <li id="comment-{{ $comment->getId() }}" class="comment">
+@endif
         <div>
             <div class="media">
                 @if($comment->getUser() && !$comment->getUser()->isAdmin())
@@ -41,14 +45,27 @@
                         </p>
                     @endif
 
-                    @include("partials.comments.partial.display-uploads", ['comment' => $comment])
+                    @if($controller == 'LoanFeedbackController' && $comment->isRoot())
+                            Rating Type:
+
+                                <b>
+                                    {{ $comment->getRatingType()}}
+                                </b>
+                    @endif
+
+
+                    @if($controller != 'LoanFeedbackController')
+                        @include("partials.comments.partial.display-uploads", ['comment' => $comment, 'controller' => $controller, 'receiver' => $receiver ])
+                        @include('partials.comments.partial.post', ['controller' => $controller, 'receiver' => $receiver ])
+                    @endif
+
 
                     @if(!$comment->isOrphanDeleted())
                         <div class="comment-actions">
-                                @include("partials.comments.partial.comment-actions", ['comment' => $comment])
+                                @include("partials.comments.partial.comment-actions", ['comment' => $comment, 'controller' => $controller,  'canPostComment' => $canPostComment, 'canReplyComment' => $canReplyComment])
                         </div>
                         <div class="comment-forms">
-                            @include("partials.comments.partial.comment-action-forms", ['receiver' => $receiver, 'comment' => $comment])
+                            @include("partials.comments.partial.comment-action-forms", ['receiver' => $receiver, 'comment' => $comment, 'controller' => $controller,  'canPostComment' => $canPostComment, 'canReplyComment' => $canReplyComment])
                         </div>
                     @endif
                 </div>
@@ -57,7 +74,7 @@
         </div>
     <ul>
         @foreach($comment->getChildren() as $child)
-            @include("partials.comments.comment", ['comment' => $child])
+            @include("partials.comments.comment", ['comment' => $child, 'controller' => $controller])
         @endforeach
     </ul>
 </li>
