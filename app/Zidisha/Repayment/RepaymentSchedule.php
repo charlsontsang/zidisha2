@@ -49,54 +49,54 @@ class RepaymentSchedule implements \IteratorAggregate
         $maximumDueDate = $endedAt ? $endedAt : $today->subDays($dueDateThreshold);
         $zero = Money::create(0, $this->loan->getCurrency());
 
-            /** @var RepaymentScheduleInstallment $repaymentScheduleInstallment */
-            foreach ($this as $repaymentScheduleInstallment) {
-                $thresholdAmount = $zero;
-                $missedInstallmentAmount = $zero;
-                $totalPaidInstallmentAmount = $zero;
-                $dueInstallmentAmount = $repaymentScheduleInstallment->getInstallment()->getAmount();
-                $dueInstallmentDate = Carbon::instance($repaymentScheduleInstallment->getInstallment()->getDueDate());
-                $isTodayInstallment = $dueInstallmentDate <= $maximumDueDate;
+        /** @var RepaymentScheduleInstallment $repaymentScheduleInstallment */
+        foreach ($this as $repaymentScheduleInstallment) {
+            $thresholdAmount = $zero;
+            $missedInstallmentAmount = $zero;
+            $totalPaidInstallmentAmount = $zero;
+            $dueInstallmentAmount = $repaymentScheduleInstallment->getInstallment()->getAmount();
+            $dueInstallmentDate = Carbon::instance($repaymentScheduleInstallment->getInstallment()->getDueDate());
+            $isTodayInstallment = $dueInstallmentDate <= $maximumDueDate;
 
-                /** @var RepaymentScheduleInstallmentPayment $repaymentScheduleInstallmentPayment */
-                foreach ($repaymentScheduleInstallment->getPayments() as $repaymentScheduleInstallmentPayment) {
-                    $installmentPaymentPaidDate = Carbon::instance($repaymentScheduleInstallmentPayment->getPayment()->getPaidDate());
-                    $installmentPaymentPaidAmount = $repaymentScheduleInstallmentPayment->getAmount();
-                    $exchangeRate = $repaymentScheduleInstallmentPayment->getPayment()->getExchangeRate();
-                    $thresholdAmount = Converter::fromUSD($repaymentThresholdAmount, $this->loan->getCurrency(), $exchangeRate);
-                    if ($dueInstallmentAmount->lessThan($thresholdAmount) && $dueInstallmentAmount->isPositive()) {
-                        $thresholdAmount = $dueInstallmentAmount;
-                    }
-                    if (empty($installmentPaymentPaidDate)) {
-                        $missedInstallmentAmount = $missedInstallmentAmount->add($dueInstallmentAmount);
-                    } elseif ($dueInstallmentDate->diffInDays($installmentPaymentPaidDate, false) > $repaymentThreshold) {
-                        $missedInstallmentAmount = $missedInstallmentAmount->add($installmentPaymentPaidAmount);
-                    }
-                    $totalPaidInstallmentAmount = $totalPaidInstallmentAmount->add($installmentPaymentPaidAmount);
+            /** @var RepaymentScheduleInstallmentPayment $repaymentScheduleInstallmentPayment */
+            foreach ($repaymentScheduleInstallment->getPayments() as $repaymentScheduleInstallmentPayment) {
+                $installmentPaymentPaidDate = Carbon::instance($repaymentScheduleInstallmentPayment->getPayment()->getPaidDate());
+                $installmentPaymentPaidAmount = $repaymentScheduleInstallmentPayment->getAmount();
+                $exchangeRate = $repaymentScheduleInstallmentPayment->getPayment()->getExchangeRate();
+                $thresholdAmount = Converter::fromUSD($repaymentThresholdAmount, $this->loan->getCurrency(), $exchangeRate);
+                if ($dueInstallmentAmount->lessThan($thresholdAmount) && $dueInstallmentAmount->isPositive()) {
+                    $thresholdAmount = $dueInstallmentAmount;
                 }
-                $isInstallmentPaid = $totalPaidInstallmentAmount && ($dueInstallmentAmount->subtract(
-                        $totalPaidInstallmentAmount
-                    )->lessThanOrEqual($thresholdAmount));
-                $isInstallmentPaidOnTime = $isInstallmentPaid && ($missedInstallmentAmount->lessThanOrEqual($thresholdAmount));
+                if (empty($installmentPaymentPaidDate)) {
+                    $missedInstallmentAmount = $missedInstallmentAmount->add($dueInstallmentAmount);
+                } elseif ($dueInstallmentDate->diffInDays($installmentPaymentPaidDate, false) > $repaymentThreshold) {
+                    $missedInstallmentAmount = $missedInstallmentAmount->add($installmentPaymentPaidAmount);
+                }
+                $totalPaidInstallmentAmount = $totalPaidInstallmentAmount->add($installmentPaymentPaidAmount);
+            }
+            $isInstallmentPaid = $totalPaidInstallmentAmount && ($dueInstallmentAmount->subtract(
+                    $totalPaidInstallmentAmount
+                )->lessThanOrEqual($thresholdAmount));
+            $isInstallmentPaidOnTime = $isInstallmentPaid && ($missedInstallmentAmount->lessThanOrEqual($thresholdAmount));
 
-                if ($isInstallmentPaid) {
-                    $paidInstallmentCount++;
-                }
-                if ($isInstallmentPaidOnTime && !$endedAt && $isActiveLoan
-                    && $today->diffInDays($dueInstallmentDate, false) >= $repaymentThreshold
-                ) {
-                    $isTodayInstallment = true;
-                }
+            if ($isInstallmentPaid) {
+                $paidInstallmentCount++;
+            }
+            if ($isInstallmentPaidOnTime && !$endedAt && $isActiveLoan
+                && $today->diffInDays($dueInstallmentDate, false) >= $repaymentThreshold
+            ) {
+                $isTodayInstallment = true;
+            }
 
-                if ($isTodayInstallment) {
-                    $todayInstallmentCount += 1;
-                    if ($isInstallmentPaidOnTime) {
-                        $paidOnTimeInstallmentCount += 1;
-                    } else {
-                        $missedInstallmentCount += 1;
-                    }
+            if ($isTodayInstallment) {
+                $todayInstallmentCount += 1;
+                if ($isInstallmentPaidOnTime) {
+                    $paidOnTimeInstallmentCount += 1;
+                } else {
+                    $missedInstallmentCount += 1;
                 }
             }
+        }
 
         $this->todayInstallmentCount = $todayInstallmentCount;
         $this->paidInstallmentCount = $paidInstallmentCount;
