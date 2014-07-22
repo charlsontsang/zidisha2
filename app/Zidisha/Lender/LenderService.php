@@ -5,10 +5,14 @@ use Carbon\Carbon;
 use Propel\Runtime\Propel;
 use Zidisha\Analytics\MixpanelService;
 use Zidisha\Balance\Map\TransactionTableMap;
+use Zidisha\Balance\Transaction;
 use Zidisha\Balance\TransactionQuery;
 use Zidisha\Balance\TransactionService;
 use Zidisha\Balance\WithdrawalRequest;
+use Zidisha\Comment\BorrowerCommentQuery;
 use Zidisha\Currency\Money;
+use Zidisha\Loan\BidQuery;
+use Zidisha\Loan\Loan;
 use Zidisha\Mail\LenderMailer;
 use Zidisha\Notification\Notification;
 use Zidisha\Notification\NotificationQuery;
@@ -339,5 +343,71 @@ class LenderService
                 ->setNotifyLoanRepayment($data['notifyLoanRepayment'])
                 ->save();
             return $lender->getPreferences();
+    }
+
+    public function getKarma(Lender $lender)
+    {
+        $totalImpact = $this->getMyImpact($lender);
+        $totalComments = $this->getUserCommentCount($lender);
+    }
+    function getKarmaScore($userid){
+        $total_impact = $this->getMyImpact($userid);
+        $total_comments = $this->getUserCommentCount($userid);
+        $karma = ($total_impact / 10) + $total_comments;
+        return $karma;
+    }
+
+    public function getMyImpact(Lender $lender)
+    {
+        $invites = InviteQuery::create()
+            ->filterByInvitee($lender)
+            ->find();
+        $invitesCount = $invites->count();
+        $giftCards = GiftCardQuery::create()
+            ->filterByLender($lender)
+            ->filterByClaimed(true)
+            ->where('GiftCard.recipient_id IS NOT IN ?' , $lender->getId())
+            ->filterByStatus(1)
+            ->find();
+        $giftCardsCount = $giftCards->count();
+        $inviteImpact = 0;
+        $giftCardImpact = 0;
+        $bidQuery = BidQuery::create();
+
+        if ($invitesCount > 0) {
+            foreach ($invites as $invite) {
+                $totalBidAmount = $bidQuery
+                    ->getTotalActiveBidAmount($invite->getInvitee());
+
+                $totalOpenLoanBidAmount = $bidQuery
+                    ->getTotalOpenLoanBidAmount($invite->getInvitee());
+
+                $inviteImpact += $totalBidAmount + $totalOpenLoanBidAmount;
+            }
+        }
+
+        if ($giftCardsCount > 0) {
+            foreach ($giftCards as $giftCard) {
+                $totalBidAmount = $bidQuery
+                    ->getTotalActiveBidAmount($giftCard->getRecipient());
+
+                $totalOpenLoanBidAmount = $bidQuery
+                    ->getTotalOpenLoanBidAmount($giftCard->getRecipient());
+
+                $giftCardImpact += $totalBidAmount + $totalOpenLoanBidAmount;
+            }
+        }
+        //total amount this lender has lent for loans already funded
+        $totalInvested = $bidQuery->getTotalActiveBidAmount($lender);
+        $totalActiveLoanBidAmount = $bidQuery->getTotalOpenLoanBidAmount($lender); //total amount in not yet funded bids
+        $totalImpact = $totalInvested + $totalActiveLoanBidAmount + $inviteImpact + $giftCardImpact;
+        return $totalImpact;
+    }
+
+    public function getUserCommentCount(Lender $lender)
+    {
+            return BorrowerCommentQuery::create()
+                ->filterByUser($lender->getUser())
+                ->count();
     }
 }
