@@ -36,9 +36,7 @@ class RepaymentSchedule implements \IteratorAggregate
 
     protected function calculateInstallmentsCounts()
     {
-        //TODO set $today as current Time
-//        $today = time();
-        $today = new Carbon("2015-7-16");
+        $today = new Carbon();
         $repaymentThreshold = \Config::get('constants.repaymentThreshold');
         $repaymentThresholdAmount = Money::create(\Config::get('constants.repaymentAmountThreshold'), 'USD');
         $isActiveLoan = $this->loan->getStatus() == Loan::ACTIVE;
@@ -102,10 +100,6 @@ class RepaymentSchedule implements \IteratorAggregate
             }
         }
 
-//        var_dump($todayInstallmentCount);
-//        var_dump($paidInstallmentCount);
-//        var_dump($missedInstallmentCount);
-//        dd($paidOnTimeInstallmentCount);
         $this->todayInstallmentCount = $todayInstallmentCount;
         $this->paidInstallmentCount = $paidInstallmentCount;
         $this->missedInstallmentCount = $missedInstallmentCount;
