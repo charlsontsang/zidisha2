@@ -36,6 +36,15 @@ $(function () {
         $borrowerEditForm.find('.borrower-upload-inputs').prepend($(borrowerUploadTemplate));
         return false;
     });
+    
+    $('body').on('click', '[data-toggle-text]', function() {
+        var $this = $(this),
+            oldText = $this.text();
+        
+        $this
+            .text($this.data('toggle-text'))
+            .data('toggle-text', oldText);
+    });
 });
 
 function parseMoney(value) {

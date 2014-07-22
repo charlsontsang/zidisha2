@@ -26,7 +26,7 @@
 <body>
 
     @include('partials.header')
-
+    
     @yield('content-top')
 
     <div class="container">

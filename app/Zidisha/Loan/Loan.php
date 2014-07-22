@@ -152,4 +152,28 @@ class Loan extends BaseLoan
     {
         return (boolean) $this->getAuthorizedAt();
     }
+
+    public function getDaysLeft()
+    {
+        // TODO
+//        $time_left = '';
+//        if ($this->isOpen()) {
+//            $deadline = $loan['applydate'] + ($this->getAdminSetting('deadline') * 24 * 60 * 60);
+//            $seconds_left = $deadline - time();
+//            if ($seconds_left <= 0){
+//                $time_left = 'Expired';
+//            } elseif ($seconds_left < (60*60)){
+//                $time_left = '<strong><font color = "red">'.ceil($seconds_left/60).' minutes</font></strong>';
+//            } elseif ($seconds_left < (60*60*24)){
+//                $time_left = '<strong><font color = "red">'.ceil($seconds_left/60/60).' hours</font></strong>';
+//            } else {
+//                $time_left = ceil($seconds_left/60/60/24).' days';
+//            }
+//        } else {
+//            $time_left = 'Expired';
+//        }
+//        return $time_left;
+        
+        return 3;
+    }
 }

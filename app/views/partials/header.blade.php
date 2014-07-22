@@ -8,7 +8,8 @@
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="{{ route('home') }}">
-                zidisha
+                <span class="sr-only">Zidisha</span>
+                <img src="{{ '/assets/images/logo-small-dark.jpg' }}" alt="Zidisha Logo"/>
             </a>
         </div>
         <div class="collapse navbar-collapse navbar-right">
@@ -110,19 +111,19 @@
                     </ul>
                 </li>
                 @endif
+                <li>
+                    @if(Auth::check())
+                    <a href="{{ route('logout') }}">
+                        Log out
+                    </a>
+                    @else
+                    <!--a href="{{ route('logout') }}" class="btn btn-primary" data-toggle="modal" data-target="#LoginModal"-->
+                    <a href="{{ route('login') }}">
+                        Log in
+                    </a>
+                    @endif
+                </li>
             </ul>
-            <form class="navbar-form navbar-left">
-                @if(Auth::check())
-                <a href="{{ route('logout') }}" class="btn btn-primary">
-                    Log out
-                </a>
-                @else
-                <!--a href="{{ route('logout') }}" class="btn btn-primary" data-toggle="modal" data-target="#LoginModal"-->
-                <a href="{{ route('login') }}" class="btn btn-primary">
-                    Log in
-                </a>
-                @endif
-            </form>
         </div>
     </div>
 </div>

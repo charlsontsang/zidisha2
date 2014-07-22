@@ -1,21 +1,53 @@
 @import "../vendor/bootstrap/less/bootstrap.less";
 @import "lato.less";
 @import "../vendor/font-awesome/less/font-awesome.less";
+@import "variables.less";
 
-@lato-path:            "../fonts/lato";
-@fa-font-path:         "../vendor/font-awesome/fonts";
-@icon-font-path:       "../vendor/bootstrap/fonts/";
+.text-light {
+  font-weight: 300;
+}
 
-@font-family-sans-serif: "Lato", Helvetica, Arial, sans-serif;
-@font-size-base:         16px;
-@headings-font-weight:   300;
+.text-large {
+  font-size: 22px;
+}
 
-@border-radius-base:        0px;
-@border-radius-large:       0px;
-@border-radius-small:       0px;
+.gutter-xs {
+  padding-left: 2px;
+  padding-right: 2px;
+}
 
-@navbar-margin-bottom: 20px;
-@container-large-desktop: ((970px + @grid-gutter-width));
+.alpha {
+  margin-top: 0;
+}
+
+h5 {
+  margin-top: 22px;
+}
+
+h5.alpha {
+  display: inline-block;
+}
+
+.omega {
+  margin-bottom: 0;
+}
+
+.navbar-brand {
+  padding-top: 11px;
+  padding-bottom: 17px;
+}
+
+.leaf {
+  margin-top: -12px;
+  padding: 0 2px 0 12px;
+}
+
+.page-section {
+  background-color: #f9f9f9;
+  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 22px;
+  padding-bottom: 22px;
+}
 
 .hr-text {
   position: relative;

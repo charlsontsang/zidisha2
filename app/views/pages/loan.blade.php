@@ -1,85 +1,204 @@
 @extends('layouts.master')
 
 @section('page-title')
-@lang('loan.page-title')
+    @lang('loan.page-title')
+@stop
+
+@section('content-top')
+    <div class="page-section">
+        <div class="container">
+            <h1>
+                {{{ $loan->getSummary() }}}
+            </h1>
+            {{{ $loan->getBorrower()->getName() }}}
+            <img class="leaf" src="{{ '/assets/images/leaf.png' }}"/>
+            {{ $loan->getBorrower()->getProfile()->getCity() }},
+            {{ $loan->getBorrower()->getCountry()->getName() }}
+        </div>
+    </div>
 @stop
 
 @section('content')
-<div class="page-header">
-    <h1>{{ $loan->getSummary()}}</h1>
-</div>
-
 <div class="row">
     <div class="col-xs-8">
-        <h3>My Story</h3>
+        <img src="{{ $loan->getBorrower()->getUser()->getProfilePictureUrl('large-profile-picture') }}" width="636px">
 
-        <p>{{ $loan->getBorrower()->getProfile()->getAboutMe() }}</p>
-        @if(Auth::check() && Auth::getUser()->isAdmin())
-        <a href="{{ route('admin:get-translate', $loan->getId()) }}#about-me">Edit translation</a>
-        @endif
-
-        @if($loan->getBorrower()->getProfile()->getAboutMeTranslation())
-        <div>
-            <a class="original-aboutMe" id="toggle-btn"
-               data-toggle="collapse" data-target="#toggle-aboutMe">Display posting in original Language</a>
-
-            <div id="toggle-aboutMe" class="collapse">
-
-                <p>
-                    {{ $loan->getBorrower()->getProfile()->getAboutMeTranslation() }}
-                </p>
-
-            </div>
-        </div>
-        @endif
-
-        <h3>About My Business</h3>
-
-        <p>{{ $loan->getBorrower()->getProfile()->getAboutBusiness() }}</p>
-        @if(Auth::check() && Auth::getUser()->isAdmin())
-        <a href="{{ route('admin:get-translate', $loan->getId()) }}#about-business">Edit translation</a>
-        @endif
-
-        @if($loan->getBorrower()->getProfile()->getAboutBusinessTranslation())
-        <div>
-            <a class="original-aboutBusiness" id="toggle-btn"
-               data-toggle="collapse" data-target="#toggle-aboutBusiness">Display posting in original Language</a>
-
-            <div id="toggle-aboutBusiness" class="collapse">
-
-                <p>
-                    {{ $loan->getBorrower()->getProfile()->getAboutBusinessTranslation() }}
-                </p>
-
-            </div>
-        </div>
-        @endif
-
-        <h3>My Loan Proposal</h3>
-
-        <p>{{ $loan->getProposal() }}</p>
-        @if(Auth::check() && Auth::getUser()->isAdmin())
-        <a href="{{ route('admin:get-translate', $loan->getId()) }}#proposal">Edit translation</a>
-        @endif
-
-        @if($loan->getProposalTranslation())
-        <div>
-            <a class="original-proposal" id="toggle-btn"
-               data-toggle="collapse" data-target="#toggle-proposal">Display posting in original Language</a>
-
-            <div id="toggle-proposal" class="collapse">
-
-                <p>
-                    {{ $loan->getProposalTranslation() }}
-                </p>
-
-            </div>
-        </div>
-        @endif
         <br/>
         <br/>
+        
+        <div class="row">
+            <div class="col-xs-2">
+                <span class="text-light">Summary</span>
+            </div>
+            <div class="col-xs-10">
+                <p class="omega">
+                    {{{ $loan->getSummary() }}}
+                </p>
+            </div>
+        </div>
 
+        <hr/>
+        
+        <div class="row">
+            <div class="col-xs-2">
+                <span class="text-light">Borrower</span>
+            </div>
+            <div class="col-xs-10">
+                <div class="row">
+                    <div class="col-sm-6">
+                        Name: 
+                        <strong>{{{ $loan->getBorrower()->getName() }}}</strong>
+                        <br/>
+                        Location:
+                        <strong>
+                            {{ $loan->getBorrower()->getProfile()->getCity() }},
+                            {{ $loan->getBorrower()->getCountry()->getName() }}
+                        </strong>
+                        <br/>
+                        Invited By:
+                        <strong>Someone</strong>
+                    </div>
+                    <div class="col-sm-6">
+                        On-Time Repayments: <a href="#" class="repayment" data-toggle="tooltip">(?)</a>
+                        <strong>TODO</strong>
+                        <br/>
 
+                        Feedback Rating: <a href="#" class="rating" data-toggle="tooltip">(?)</a>
+                        <strong>TODO</strong>
+                        <br/>
+
+                        <p><a href="#">View Lender Feedback</a></p>
+                        
+                        @if($previousLoans != null)
+                        <div class="DemoBS2">
+                            <!-- Toogle Buttons -->
+                            <a class="previous-loans" id="toggle-btn"
+                               data-toggle="collapse" data-target="#toggle-example">View Previous Loans</a>
+
+                            <div id="toggle-example" class="collapse">
+                                @foreach($previousLoans as $oneLoan)
+                                <p><a href="{{ route('loan:index', $oneLoan->getId()) }}">USD {{ $oneLoan->getNativeAmount() }}
+                                        {{ $oneLoan->getAppliedAt()->format('d-m-Y') }}
+                                        {{-- TODO $oneLoan->getAcceptedAt()->format('d-m-Y')
+                                        $oneLoan->getExpiredDate()->format('d-m-Y')
+                                        TODO change nativeAmount to disbursedAmount in USD
+                                        --}}
+                                    </a>
+                                </p>
+                                @endforeach
+                            </div>
+                        </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr/>
+
+        <div class="row">
+            <div class="col-xs-2">
+                <span class="text-light">This Loan</span>
+            </div>
+            <div class="col-xs-10">
+                <div class="row">
+                    <div class="col-sm-6">
+                        Amount:
+                        <strong>{{{ $loan->getUsdAmount() }}}</strong>
+                        <br/>
+                    </div>
+                    <div class="col-sm-6">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr/>
+        
+        <div class="row">
+            <div class="col-xs-2">
+                <span class="text-light">Story</span>
+            </div>
+            <div class="col-xs-10">
+                <h5 class="alpha">About Me</h5>
+
+                <p>{{ $loan->getBorrower()->getProfile()->getAboutMe() }}</p>
+                
+                @if(Auth::check() && Auth::getUser()->isAdmin())
+                    <a href="{{ route('admin:get-translate', $loan->getId()) }}#about-me">Edit translation</a>
+                @endif
+
+                @if($loan->getBorrower()->getProfile()->getAboutMeTranslation())
+                <div>
+                    <p class="text-right">
+                        <a data-toggle="collapse" data-target="#toggle-aboutMe" data-toggle-text="Hide original language">
+                            Display posting in original language
+                        </a>
+                    </p>
+
+                    <div id="toggle-aboutMe" class="collapse">
+                        <p>
+                            {{ $loan->getBorrower()->getProfile()->getAboutMeTranslation() }}
+                        </p>
+                    </div>
+                </div>
+                @endif
+
+                <h5>My Business</h5>
+
+                <p>{{ $loan->getBorrower()->getProfile()->getAboutBusiness() }}</p>
+                
+                @if(Auth::check() && Auth::getUser()->isAdmin())
+                    <a href="{{ route('admin:get-translate', $loan->getId()) }}#about-business">Edit translation</a>
+                @endif
+
+                @if($loan->getBorrower()->getProfile()->getAboutBusinessTranslation())
+                <div>
+                    <p class="text-right">
+                        <a data-toggle="collapse" data-target="#toggle-aboutBusiness" data-toggle-text="Hide original language">
+                            Display posting in original language
+                        </a>
+                    </p>
+
+                    <div id="toggle-aboutBusiness" class="collapse">
+                        <p>
+                            {{ $loan->getBorrower()->getProfile()->getAboutBusinessTranslation() }}
+                        </p>
+                    </div>
+                </div>
+                @endif
+
+                <h5>Loan Proposal</h5>
+
+                <p class="{{ $loan->getProposalTranslation() ? '' : 'omega' }}">
+                    {{ $loan->getProposal() }}
+                </p>
+                
+                @if(Auth::check() && Auth::getUser()->isAdmin())
+                    <a href="{{ route('admin:get-translate', $loan->getId()) }}#proposal">Edit translation</a>
+                @endif
+
+                @if($loan->getProposalTranslation())
+                <div>
+                    <p class="text-right">
+                        <a data-toggle="collapse" data-target="#toggle-proposal" data-toggle-text="Hide original language">
+                            Display posting in original language
+                        </a>
+                    </p>
+
+                    <div id="toggle-proposal" class="collapse">
+                        <p class="omega">
+                            {{ $loan->getProposalTranslation() }}
+                        </p>
+                    </div>
+                </div>
+                @endif
+            </div>
+        </div>
+        
+        <hr/>
+        
         <?php
         //if ($session->userlevel == LENDER_LEVEL) {
         //    $follow_by_default = $database->hasFunded($session->userid, $borrower_id);
@@ -107,16 +226,19 @@
             @lang('lender.follow.prompt-login', ['link' => route('login'), 'name' => $borrower->getName()])
         @endif
         
-        <br/>
-        <br/>
+        <hr/>
         
-        <h4>Comments</h4>
+        <h4>3 Comments</h4>
+
+        <p class="well">
+            Ask {{ $loan->getBorrower()->getFirstName() }} a question about this loan, inquire about the business, or send a simple note of thanks or inspiration.
+        </p>
+
         @include('partials.comments.comments', ['comments' => $comments, 'receiver' => $borrower, 'commentType' => 'borrowerComment'])
     </div>
 
     <div class="col-xs-4">
         @if(Auth::check() && Auth::getUser()->isAdmin())
-        <br><br>
         <div class="panel panel-default">
             <div class="panel-body">
                 {{ BootstrapForm::open(['route' => ['admin:post-category', $loan->getId()]]) }}
@@ -133,50 +255,6 @@
             </div>
         </div>
         @endif
-        <img src="{{ $loan->getBorrower()->getUser()->getProfilePictureUrl() }}" width="300" height="300">
-
-        <h2>{{ $loan->getBorrower()->getFirstName() }} {{ $loan->getBorrower()->getLastName() }}</h2>
-        <h4>{{ $loan->getBorrower()->getCountry()->getName() }}</h4>
-        <strong>Amount Requested: </strong> {{ $loan->getUsdAmount() }}
-
-        <div class="panel panel-default">
-            <div class="panel-heading"><b>About {{ $borrower->getName() }}</b></div>
-            <div class="panel-body">
-                <p><b>On-Time Repayments:</b>
-                    <a href="#" class="repayment" data-toggle="tooltip">(?)</a>
-                    //TODO
-                </p>
-
-                @if($previousLoans != null)
-                <div class="DemoBS2">
-                    <!-- Toogle Buttons -->
-                    <a class="previous-loans" id="toggle-btn"
-                       data-toggle="collapse" data-target="#toggle-example">View Previous Loans</a>
-
-                    <div id="toggle-example" class="collapse">
-                        @foreach($previousLoans as $oneLoan)
-                        <p><a href="{{ route('loan:index', $oneLoan->getId()) }}">USD {{ $oneLoan->getNativeAmount() }}
-                                {{ $oneLoan->getAppliedAt()->format('d-m-Y') }}
-                                {{-- TODO $oneLoan->getAcceptedAt()->format('d-m-Y')
-                                $oneLoan->getExpiredDate()->format('d-m-Y')
-                                TODO change nativeAmount to disbursedAmount in USD
-                                --}}
-                            </a>
-                        </p>
-                        @endforeach
-                    </div>
-                </div>
-                @endif
-
-                <p><b>Feedback Rating: </b> <a href="#" class="rating" data-toggle="tooltip">(?)</a>
-                    //TODO
-                </p>
-
-                <p><a href="#">View Lender Feedback</a></p>
-                <!-- Generated markup by the plugin -->
-
-            </div>
-        </div>
 
         @if($loan->isActive())
         <div class="panel panel-default">
@@ -210,50 +288,59 @@
         </div>
         @endif
 
-        @include('partials/_progress', [ 'raised' => $loan->getRaisedPercentage() ])
-
         @if($loan->isOpen())
-        <div>
-            {{ BootstrapForm::open(array('route' => ['loan:place-bid', $loan->getId()], 'translationDomain' => 'bid', 'id' => 'funds-upload')) }}
-            {{ BootstrapForm::populate($placeBidForm) }}
+        <div class="panel panel-default">
+            <div class="panel-body">
+                @include('partials/loan-progress', [ 'loan' => $loan ])
+                
+                <br/>
 
-            {{ BootstrapForm::text('amount', null, ['id' => 'amount']) }}
-            {{ BootstrapForm::hidden('creditAmount', null, ['id' => 'credit-amount']) }}
-            {{ BootstrapForm::text('donationAmount', null, ['id' => 'donation-amount']) }}
-            {{ BootstrapForm::hidden('donationCreditAmount', null, ['id' => 'donation-credit-amount']) }}
+                {{ BootstrapForm::open(array('route' => ['loan:place-bid', $loan->getId()], 'translationDomain' => 'bid', 'id' => 'funds-upload')) }}
+                {{ BootstrapForm::populate($placeBidForm) }}
 
-            {{ BootstrapForm::select('interestRate', $placeBidForm->getRates()) }}
-            {{ BootstrapForm::hidden('loanId', $loan->getId()) }}
-
-            {{ BootstrapForm::hidden('transactionFee', null, ['id' => 'transaction-fee-amount']) }}
-            {{ BootstrapForm::hidden('transactionFeeRate', null, ['id' => 'transaction-fee-rate']) }}
-            {{ BootstrapForm::hidden('currentBalance', null, ['id' => 'current-balance']) }}
-            {{ BootstrapForm::hidden('totalAmount', null, ['id' => 'total-amount']) }}
-
-            {{ BootstrapForm::hidden('stripeToken', null, ['id' => 'stripe-token']) }}
-            {{ BootstrapForm::hidden('paymentMethod', null, ['id' => 'payment-method']) }}
-
-            @if($placeBidForm->getCurrentBalance()->isPositive())
-            {{ BootstrapForm::label("Current Balance") }}: {{ $placeBidForm->getCurrentBalance() }}
-            <br/>
-            @endif
-
-            {{ BootstrapForm::label("Payment Transfer Cost") }}:
-            USD <span id="fee-amount-display"></span>
-
-            <br/>
-
-            {{ BootstrapForm::label("Total amount to be charged to your account") }}
-            USD <span id="total-amount-display"></span>
-
-            <br/>
-
-            <button id="stripe-payment" class="btn btn-primary">Pay With Card</button>
-            <input type="submit" id="paypal-payment" class="btn btn-primary" value="Pay With Paypal" name="submit_paypal">
-            <input type="submit" id="balance-payment" class="btn btn-primary" value="Pay" name="submit_credit">
-
-            {{ BootstrapForm::close() }}
-
+                <div class="row">
+                    <div class="col-xs-6">
+                        {{ BootstrapForm::text('amount', null, ['id' => 'amount', 'label' => false, 'prepend' => '$']) }}
+                    </div>
+                    <div class="col-xs-6">
+                        {{ BootstrapForm::select('interestRate', $placeBidForm->getRates(), 3, ['label' => false]) }}
+                    </div>
+                </div>
+                
+                {{ BootstrapForm::hidden('creditAmount', null, ['id' => 'credit-amount']) }}
+                {{ BootstrapForm::text('donationAmount', null, ['id' => 'donation-amount']) }}
+                {{ BootstrapForm::hidden('donationCreditAmount', null, ['id' => 'donation-credit-amount']) }}
+                {{ BootstrapForm::hidden('loanId', $loan->getId()) }}
+    
+                {{ BootstrapForm::hidden('transactionFee', null, ['id' => 'transaction-fee-amount']) }}
+                {{ BootstrapForm::hidden('transactionFeeRate', null, ['id' => 'transaction-fee-rate']) }}
+                {{ BootstrapForm::hidden('currentBalance', null, ['id' => 'current-balance']) }}
+                {{ BootstrapForm::hidden('totalAmount', null, ['id' => 'total-amount']) }}
+    
+                {{ BootstrapForm::hidden('stripeToken', null, ['id' => 'stripe-token']) }}
+                {{ BootstrapForm::hidden('paymentMethod', null, ['id' => 'payment-method']) }}
+    
+                @if($placeBidForm->getCurrentBalance()->isPositive())
+                {{ BootstrapForm::label("Current Balance") }}: {{ $placeBidForm->getCurrentBalance() }}
+                <br/>
+                @endif
+    
+                {{ BootstrapForm::label("Payment Transfer Cost") }}:
+                USD <span id="fee-amount-display"></span>
+    
+                <br/>
+    
+                {{ BootstrapForm::label("Total amount to be charged to your account") }}
+                USD <span id="total-amount-display"></span>
+    
+                <br/>
+    
+                <button id="stripe-payment" class="btn btn-primary">Pay With Card</button>
+                <input type="submit" id="paypal-payment" class="btn btn-primary" value="Pay With Paypal" name="submit_paypal">
+                <input type="submit" id="balance-payment" class="btn btn-primary" value="Pay" name="submit_credit">
+    
+                {{ BootstrapForm::close() }}
+            </div>
         </div>
         @endif
 
