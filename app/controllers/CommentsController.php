@@ -1,40 +1,26 @@
 <?php
 
 use Illuminate\Support\Facades\Input;
-use Zidisha\Borrower\BorrowerQuery;
-use Zidisha\Comment\BorrowerCommentQuery;
 use Zidisha\Comment\CommentService;
-use Zidisha\Comment\LendingGroupCommentQuery;
 use Zidisha\Flash\Flash;
-use Zidisha\Lender\LendingGroupQuery;
 
-class CommentsController extends BaseController
+abstract class CommentsController extends BaseController
 {
-    protected $commentType;
-
     protected $service;
+
+    protected $allowUploads = true;
 
     public function __construct()
     {
-        if ( !Input::has('commentType') ) {
-            App::abort(404, 'Bad Request');
-        }
-
-        $this->commentType = Input::get('commentType');
-        $this->service = $this->getService($this->commentType);
+        $this->service = $this->getService();
     }
 
-    public function postComment()
+    public function postComment($id)
     {
-        if (!Input::has('receiver_id')) {
-            App::abort(404, 'Bad Request');
-        }
-
         $message = trim(Input::get('message'));
-        $receiverId = Input::get('receiver_id');
 
         $receiver = $this->getReceiverQuery()
-            ->filterById($receiverId)
+            ->filterById($id)
             ->findOne();
 
         $user = \Auth::user();
@@ -54,7 +40,7 @@ class CommentsController extends BaseController
     protected function getInputFiles()
     {
         $files = [];
-        if (\Input::hasFile('file')) {
+        if (\Input::hasFile('file') && $this->allowUploads) {
             foreach (\Input::file('file') as $file) {
                 if (!empty($file)) {
                     if ($file->isValid() && $file->getSize() < Config::get('image.allowed-file-size')) {
@@ -182,33 +168,12 @@ class CommentsController extends BaseController
         return Redirect::back();
     }
 
-    private function getReceiverQuery()
-    {
-        if ($this->commentType == 'lendingGroupComment') {
-            return new LendingGroupQuery();
-        } elseif ($this->commentType == 'borrowerComment') {
-            return new BorrowerQuery();
-        }
-    }
+    protected abstract function getReceiverQuery();
 
     /**
      * @return CommentService
      */
-    private function getService()
-    {
-        if ($this->commentType == 'lendingGroupComment') {
-            return App::make('Zidisha\Comment\LendingGroupCommentService');
-        } elseif ($this->commentType == 'borrowerComment') {
-            return App::make('Zidisha\Comment\BorrowerCommentService');
-        }
-    }
+    protected abstract function getService();
 
-    private function getCommentQuery()
-    {
-        if ($this->commentType == 'lendingGroupComment') {
-            return new LendingGroupCommentQuery();
-        } elseif ($this->commentType == 'borrowerComment') {
-            return new BorrowerCommentQuery();
-        }
-    }
+    protected abstract function getCommentQuery();
 }
