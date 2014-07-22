@@ -1,6 +1,6 @@
 <?php
 
 return [
-      'repayment_threshold'        => 10,
-      'repayment_amount_threshold' => 5,
+      'repaymentThreshold'       => 10, // in days
+      'repaymentAmountThreshold' => 5, // USD
 ];
