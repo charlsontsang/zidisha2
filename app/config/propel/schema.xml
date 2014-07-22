@@ -343,6 +343,23 @@
         </foreign-key>
     </table>
 
+    <table name="loan_feedback_comments" phpName="LoanFeedbackComment" namespace="Comment">
+        <behavior name="concrete_inheritance">
+            <parameter name="extends" value="comments" />
+            <parameter name="copy_data_to_parent" value="false" />
+        </behavior>
+
+        <column name="loan_id" type="INTEGER" required="true"/>
+        <column name="rating_type" type="ENUM" valueSet="positive,negative,neutral" required="false"/>
+
+        <foreign-key foreignTable="loans">
+            <reference local="loan_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="loan_feedback_comments" phpName="Parent">
+            <reference local="parent_id" foreign="id"/>
+        </foreign-key>
+    </table>
+
     <table name="uploads" phpName="Upload" namespace="Upload">
         <column name="id" type="INTEGER" autoIncrement="true" primaryKey="true"/>
         <column name="extension" type="VARCHAR" required="true"/>
