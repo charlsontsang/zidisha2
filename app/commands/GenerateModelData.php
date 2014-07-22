@@ -269,11 +269,12 @@ class GenerateModelData extends Command
                     ->filterByLoan($loan)
                     ->orderById()// TODO order due date?
                     ->find();
+                $repaid = rand(1,10) <= 1;
                 foreach ($installments as $installment) {
                     if (!$installment->getAmount()->isPositive()){
                         continue;
                     }
-                    if (rand(1,4) <= 1) {
+                    if (!$repaid && rand(1,4) <= 1) {
                         break;
                     }
                     if (rand(1,4) <= 1) {
