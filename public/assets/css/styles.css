@@ -7432,6 +7432,12 @@ h5.alpha {
 .omega {
   margin-bottom: 0;
 }
+a.inverted {
+  color: #333333;
+}
+a.inverted:hover {
+  color: #2e9df7;
+}
 .navbar-brand {
   padding-top: 11px;
   padding-bottom: 17px;
@@ -7590,4 +7596,10 @@ h5.alpha {
 }
 .wizard > .wizard-step.disabled a.wizard-dot {
   pointer-events: none;
+}
+.filter-bar span {
+  padding: 0 12px;
+}
+.page-section-filter {
+  padding: 33px 0;
 }

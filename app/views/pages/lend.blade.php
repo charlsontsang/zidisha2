@@ -4,68 +4,57 @@
 @lang('lend.page-title')
 @stop
 
-@section('content')
-<div class="page-header">
-    <h1>@lang('lend.page-header')</h1>
-</div>
-
-<div class="row">
-    <div class="col-xs-3">
-        <form class="form-inline" role="form" action="{{ route('lend:index', $searchRouteParams) }}" method="get">
-            <div class="form-group">
-                <label class="sr-only" for="search">Email address</label>
-                <input type="text" class="form-control" id="search" placeholder="Search" name="search"
-                       value="{{{ $searchQuery }}}">
+@section('content-top')
+<div class="page-section page-section-filter">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10">
+                <div class="filter-bar">
+                    <span style="padding-left: 0;">Show</span>
+                    <div class="btn btn-default btn-filter" target="#filter-categories">
+                        {{ $selectedLoanCategory ? $selectedLoanCategory->getName() : 'All' }}
+                        @if($selectedLoanCategory)
+                            <a href="{{ route('lend:index', ['category' => 'all'] + $routeParams) }}" class="inverted">
+                                <i class="fa fa-fw fa-times"></i>
+                            </a>
+                        @else
+                            <i class="fa fa-fw fa-caret-down"></i>
+                        @endif
+                    </div>
+                    <span>projects from</span>
+                    <div class="btn btn-default btn-filter" target="#filter-countries">
+                        {{ $selectedCountry ? $selectedCountry->getName() : 'Everywhere' }}
+                        @if($selectedCountry)
+                        <a href="{{ route('lend:index', ['country' => 'everywhere'] + $routeParams) }}" class="inverted">
+                            <i class="fa fa-fw fa-times"></i>
+                        </a>
+                        @else
+                        <i class="fa fa-fw fa-caret-down"></i>
+                        @endif
+                    </div>
+                    <span>sorted by</span>
+                    <div class="btn btn-default btn-filter" target="#filter-sortings">
+                        Repayment Rate
+                        <i class="fa fa-fw fa-times"></i>
+                    </div>
+                </div>
             </div>
-            <button type="submit" class="btn btn-default">Go</button>
-        </form>
-
-        <h2>@lang('lend.sidebar.category-heading')</h2>
-
-        <ul class="list-unstyled">
-            @if($selectedLoanCategory == null)
-            <strong> All </strong>
-            @else
-            <li>
-                <a href="{{ route('lend:index', ['category' => 'all'] + $routeParams) }}"> All </a>
-            </li>
-            @endif
-            @foreach($loanCategories as $loanCategory)
-            <li>
-                @if($selectedLoanCategory == $loanCategory)
-                <strong>{{ $loanCategory->getName()}}</strong>
-                @else
-                <a href="{{ route('lend:index', ['category' => $loanCategory->getSlug()] + $routeParams) }}"> {{
-                    $loanCategory->getName()}} </a>
-                @endif
-            </li>
-            @endforeach
-        </ul>
-
-        <h2>@lang('lend.sidebar.country-heading')</h2>
-
-        <ul class="list-unstyled">
-            @if($selectedCountry == null)
-            <strong>Everywhere</strong>
-            @else
-            <li>
-                <a href="{{ route('lend:index', ['country' => 'everywhere'] + $routeParams) }}"> Everywhere </a>
-            </li>
-            @endif
-            @foreach($countries as $country)
-            <li>
-                @if($selectedCountry == $country)
-                <strong>{{ $country->getName()}}</strong>
-                @else
-                <a href="{{ route('lend:index', ['country' => $country->getSlug()] + $routeParams) }}"> {{
-                    $country->getName()}} </a>
-                @endif
-            </li>
-            @endforeach
-        </ul>
+            <div class="col-md-2">
+                <form class="form-inline" role="form" action="{{ route('lend:index', $searchRouteParams) }}" method="get">
+                    <div class="form-group">
+                        <label class="sr-only" for="search">Search</label>
+                        <input type="text" class="form-control" placeholder="Search" name="search" value="{{{ $searchQuery }}}" style="width: 100%">
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
+</div>
+@stop
 
-    <div class="col-xs-9">
+@section('content')
+<div class="row">
+    <div class="col-xs-12">
         <ul class="nav nav-tabs">
             @foreach(['fund-raising' => 'Fund Raising', 'active' => 'Active', 'completed' => 'Completed'] as $stage =>
             $loanTitle)
@@ -126,6 +115,50 @@
         @endforeach
         {{ $paginator->appends(['search' => $searchQuery])->links() }}
     </div>
+</div>
+
+<div id="filter-categories" class="hide">
+    <ul class="list-unstyled">
+        @if($selectedLoanCategory == null)
+        <strong> All </strong>
+        @else
+        <li>
+            <a href="{{ route('lend:index', ['category' => 'all'] + $routeParams) }}"> All </a>
+        </li>
+        @endif
+        @foreach($loanCategories as $loanCategory)
+        <li>
+            @if($selectedLoanCategory == $loanCategory)
+            <strong>{{ $loanCategory->getName()}}</strong>
+            @else
+            <a href="{{ route('lend:index', ['category' => $loanCategory->getSlug()] + $routeParams) }}"> {{
+                $loanCategory->getName()}} </a>
+            @endif
+        </li>
+        @endforeach
+    </ul>
+</div>
+
+<div id="filter-countries" class="hide">
+    <ul class="list-unstyled">
+        @if($selectedCountry == null)
+        <strong>Everywhere</strong>
+        @else
+        <li>
+            <a href="{{ route('lend:index', ['country' => 'everywhere'] + $routeParams) }}"> Everywhere </a>
+        </li>
+        @endif
+        @foreach($countries as $country)
+        <li>
+            @if($selectedCountry == $country)
+            <strong>{{ $country->getName()}}</strong>
+            @else
+            <a href="{{ route('lend:index', ['country' => $country->getSlug()] + $routeParams) }}"> {{
+                $country->getName()}} </a>
+            @endif
+        </li>
+        @endforeach
+    </ul>
 </div>
 @stop
 

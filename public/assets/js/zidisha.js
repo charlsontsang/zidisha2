@@ -68,6 +68,41 @@ $(function () {
         
         return false;
     });
+    
+    $btnFilters = $('.btn-filter');
+    if ($btnFilters.length > 0) {
+        $('.btn-filter').each(function() {
+            $(this).popover({
+                content: $($(this).attr('target')).html(),
+                html: true,
+                placement: 'bottom'
+            });
+        });
+
+        $('body').on('click', function (e) {
+            $('.btn-filter').each(function () {
+                //the 'is' for buttons that trigger popups
+                //the 'has' for icons within a button that triggers a popup
+                if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {
+                    $(this).popover('hide');
+                }
+            });
+        });
+
+
+        $btnFilters.on('hide.bs.popover', function () {
+            $(this).find('.fa-caret-down').removeClass('fa-caret-up');
+        });
+
+        $btnFilters.on('show.bs.popover', function () {
+            $(this).find('.fa-caret-down').addClass('fa-caret-up');
+        });
+        
+        $btnFilters.on('click', '.fa-times', function(e) {
+            window.navigate($(this).attr('href'));
+            return false;
+        });
+    }
 });
 
 function parseMoney(value) {
