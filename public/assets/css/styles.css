@@ -1703,6 +1703,10 @@ output {
   -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, 0.6);
   box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, 0.6);
 }
+.form-control:focus {
+  border-color: #66afe9;
+  outline: 0;
+}
 .form-control::-moz-placeholder {
   color: #999999;
   opacity: 1;
@@ -7469,8 +7473,7 @@ a.inverted:hover {
 }
 .hr-text {
   position: relative;
-  font-size: 18px;
-  color: #aaa;
+  color: #555555;
   margin-top: 10px;
   margin-bottom: 10px;
   padding-top: 10px;
@@ -7497,27 +7500,38 @@ a.inverted:hover {
   margin: 30px auto;
 }
 .btn-icon {
-  background-color: #3B5999;
   padding: 0;
   text-align: left;
 }
 .btn-icon .icon-container {
   text-align: center;
   padding: 10px 16px;
-  border-right: 1px solid #344e87;
   display: inline-block;
-}
-.btn-icon:hover {
-  background-color: #344e87;
-}
-.btn-icon:hover .icon-container {
-  border-right: 1px solid #2d4474;
+  width: 40px;
 }
 .btn-icon .text-container {
   text-align: center;
   padding: 10px;
   display: inline-block;
   width: 78%;
+}
+.btn-facebook {
+  background-color: #3B5999;
+  color: white;
+}
+.btn-facebook:hover {
+  background-color: #4264ab;
+  color: white;
+}
+.btn-google .icon-container {
+  color: #dd4b39;
+}
+.btn-google:hover {
+  background-color: inherit;
+}
+.form-control {
+  -webkit-box-shadow: none;
+  box-shadow: none;
 }
 .wizard {
   padding: 0 0 10px 0;

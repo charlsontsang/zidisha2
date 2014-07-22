@@ -117,8 +117,7 @@
                         Log out
                     </a>
                     @else
-                    <!--a href="{{ route('logout') }}" class="btn btn-primary" data-toggle="modal" data-target="#LoginModal"-->
-                    <a href="{{ route('login') }}">
+                    <a href="{{ route('login') }}" data-toggle="modal" data-target="#login-modal">
                         Log in
                     </a>
                     @endif

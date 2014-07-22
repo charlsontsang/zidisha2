@@ -38,7 +38,7 @@ class AuthController extends BaseController
     public function getLogin()
     {
         return View::make(
-            'auth.login',
+            Request::ajax() ? 'auth.login-modal' : 'auth.login',
             [
                 'facebookLoginUrl' => $this->facebookService->getLoginUrl('facebook:login'),
                 'googleLoginUrl'   => $this->googleService->getLoginUrl('google:login'),

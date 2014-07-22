@@ -78,8 +78,7 @@ a.inverted:hover {
 
 .hr-text {
   position: relative;
-  font-size: 18px;
-  color: #aaa;
+  color: @gray;
   margin-top: 10px;
   margin-bottom: 10px;
   padding-top: 10px;
@@ -112,24 +111,16 @@ a.inverted:hover {
 }
 
 .btn-icon {
-  background-color: #3B5999;
   padding: 0;
   text-align: left;
 }
 
+
 .btn-icon .icon-container {
   text-align: center;
   padding: 10px 16px;
-  border-right: 1px solid darken(#3B5999, 5%);;
   display: inline-block;
-}
-
-.btn-icon:hover {
-  background-color: darken(#3B5999, 5%);;
-}
-
-.btn-icon:hover .icon-container {
-  border-right: 1px solid darken(#3B5999, 10%);;
+  width: 40px;
 }
 
 .btn-icon .text-container {
@@ -137,6 +128,28 @@ a.inverted:hover {
   padding: 10px;
   display: inline-block;
   width: 78%;
+}
+
+.btn-facebook {
+  background-color: #3B5999;
+  color: white;
+}
+
+.btn-facebook:hover {
+  background-color: lighten(#3B5999, 5%);
+  color: white;
+}
+
+.btn-google .icon-container {
+  color: #dd4b39;
+}
+
+.btn-google:hover {
+  background-color: inherit;
+}
+
+.form-control {
+  .box-shadow(none);
 }
 
 @import "wizard.less";
