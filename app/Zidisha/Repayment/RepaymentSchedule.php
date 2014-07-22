@@ -49,7 +49,6 @@ class RepaymentSchedule implements \IteratorAggregate
         $maximumDueDate = $endedAt ? $endedAt : $today->subDays($dueDateThreshold);
         $zero = Money::create(0, $this->loan->getCurrency());
 
-        if (!empty($this)) {
             /** @var RepaymentScheduleInstallment $repaymentScheduleInstallment */
             foreach ($this as $repaymentScheduleInstallment) {
                 $thresholdAmount = $zero;
@@ -98,7 +97,6 @@ class RepaymentSchedule implements \IteratorAggregate
                     }
                 }
             }
-        }
 
         $this->todayInstallmentCount = $todayInstallmentCount;
         $this->paidInstallmentCount = $paidInstallmentCount;
