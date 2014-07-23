@@ -63,6 +63,14 @@ class MailTesterController extends BaseController
             }
         }
 
+        if ($mailer == 'admin') {
+            if (method_exists($this->adminMailerTester, $method)){
+                $this->adminMailerTester->$method();
+
+                \Flash::success('Admin test mail for '.$method.' sent successfully.');
+            }
+        }
+
         return Redirect::route('admin:mail:test-mails');
     }
 }
