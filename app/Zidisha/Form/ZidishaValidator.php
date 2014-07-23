@@ -5,6 +5,7 @@ namespace Zidisha\Form;
 
 use Illuminate\Validation\Validator;
 use Propel\Runtime\ActiveQuery\Criteria;
+use Zidisha\Comment\LoanFeedbackComment;
 use Zidisha\User\UserQuery;
 
 class ZidishaValidator extends Validator {
@@ -73,5 +74,19 @@ class ZidishaValidator extends Validator {
     protected function replaceUniqueUserEmail($message, $attribute, $rule, $parameters)
     {
         return $attribute . ' already exits in the database.';
+    }
+
+    public function validateCheckCommentRating($attribute, $value, $parameters)
+    {
+        if ($value != LoanFeedbackComment::POSITIVE || $value != LoanFeedbackComment::NEUTRAL || $value != LoanFeedbackComment::NEGATIVE) {
+            return false;
+        }
+
+        return true;
+    }
+
+    protected function replaceCheckCommentRating($message, $attribute, $rule, $parameters)
+    {
+        return $attribute . ' type is not correct';
     }
 }
