@@ -7,7 +7,7 @@ class LoanFeedbackPostCommentForm extends PostCommentForm
     {
         return [
             'message' => 'required',
-            'rating'  => 'required',
+            'rating'  => 'required|checkCommentRating',
         ];
     }
 } 
