@@ -7,40 +7,23 @@ class LoanFeedbackCommentService extends CommentService
 {
     public function postComment($data, User $user,CommentReceiverInterface $receiver, $files = [])
     {
-        $comment = $this->createComment();
-        $comment->setUserId($user->getId());
-        $comment->setMessage($data['message']);
+        $comment = parent::postComment($data, $user, $receiver, $files);
         $comment->setRatingType($data['rating']);
-        $comment->setCommentReceiverId($comment, $receiver->getCommentReceiverId());
-        $comment->setParentId(null);
-        $comment->setLevel(0);
         $comment->save();
-
-        $comment->setRootId($comment->getId());
-        $comment->save();
-
-        $this->notify($comment);
 
         return $comment;
     }
 
     public function editComment($data, User $user, Comment $comment, $files = [])
     {
-        $comment->setMessage($data['message']);
         $comment->setRatingType($data['rating']);
-        $comment->save();
+        parent::editComment($data, $user, $comment, $files);
     }
 
     public function deleteComment(Comment $comment)
     {
-        $comment->setUserId(null);
-        $comment->setMessage('This comment was deleted');
-
-        $comment->setMessageTranslation(null);
-        $comment->setTranslatorId(null);
         $comment->setRatingType(null);
-
-        $comment->save();
+        parent::deleteComment($comment);
     }
 
     /**
@@ -62,5 +45,10 @@ class LoanFeedbackCommentService extends CommentService
     protected function notify(Comment $comment)
     {
         return;
+    }
+
+    public function allowUploads()
+    {
+        return false;
     }
 }
