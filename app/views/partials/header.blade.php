@@ -106,6 +106,7 @@
                     </a>
 
                     <ul class="dropdown-menu">
+                        <li><a href="{{ route('admin:translation:index') }}">Translations</a></li>
                         <li><a href="{{ route('admin:countries') }}">Countries</a></li>
                         <li><a href="{{ route('admin:settings') }}">Other Settings</a></li>
                     </ul>
