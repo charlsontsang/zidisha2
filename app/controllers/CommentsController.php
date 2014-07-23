@@ -32,7 +32,9 @@ abstract class CommentsController extends BaseController
             App::abort(404, 'Bad Request');
         }
 
-        $postCommentForm = new PostCommentForm();
+        $this->validateReceiver($receiver);
+
+        $postCommentForm = $this->getPostCommentForm();
         $postCommentForm->handleRequest(Request::instance());
 
         if (!$postCommentForm->isValid()) {
@@ -50,7 +52,7 @@ abstract class CommentsController extends BaseController
     protected function getInputFiles()
     {
         $files = [];
-        if (\Input::hasFile('file') && $this->allowUploads) {
+        if (\Input::hasFile('file') && $this->service->allowUploads()) {
             foreach (\Input::file('file') as $file) {
                 if (!empty($file)) {
                     if ($file->isValid() && $file->getSize() < Config::get('image.allowed-file-size')) {
@@ -79,7 +81,7 @@ abstract class CommentsController extends BaseController
             App::abort(404, 'Bad Request');
         }
 
-        $editCommentForm = new EditCommentForm();
+        $editCommentForm = $this->getEditCommentForm();
         $editCommentForm->handleRequest(Request::instance());
 
         if (!$editCommentForm->isValid()) {
@@ -114,7 +116,9 @@ abstract class CommentsController extends BaseController
             App::abort(404, 'Bad Request');
         }
 
-        $replyCommentForm = new ReplyCommentForm();
+        $this->validateReceiver($receiver);
+
+        $replyCommentForm = $this->getReplyCommentForm();
         $replyCommentForm->handleRequest(Request::instance());
 
         if (!$replyCommentForm->isValid()) {
@@ -164,7 +168,7 @@ abstract class CommentsController extends BaseController
             App::abort(404, 'Bad Request');
         }
 
-        $translateCommentForm = new TranslateCommentForm();
+        $translateCommentForm = $this->getTranslateCommentForm();
         $translateCommentForm->handleRequest(Request::instance());
 
         if (!$translateCommentForm->isValid()) {
@@ -210,5 +214,29 @@ abstract class CommentsController extends BaseController
     protected function redirect($comment)
     {
         return Redirect::backAppend("#comment-" . $comment->getId());
+    }
+
+    protected function validateReceiver($receiver)
+    {
+    }
+
+    protected function getPostCommentForm()
+    {
+        return new PostCommentForm();
+    }
+
+    protected function getEditCommentForm()
+    {
+        return new EditCommentForm();
+    }
+
+    protected function getReplyCommentForm()
+    {
+        return new ReplyCommentForm();
+    }
+
+    protected function getTranslateCommentForm()
+    {
+        return new TranslateCommentForm();
     }
 }
