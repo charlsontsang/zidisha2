@@ -51,6 +51,7 @@
 
                     <ul class="dropdown-menu">
                         @if(Auth::getUser()->isLender())
+                        <li><a href="{{ route('lender:my-stats') }}">My Stats</a></li>
                         <li><a href="{{ route('lender:dashboard') }}">Dashboard</a></li>
                         <li><a href="{{ route('lender:public-profile', Auth::getUser()->getUsername()) }}">View My
                                 Public Profile</a></li>
