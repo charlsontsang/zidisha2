@@ -92,10 +92,12 @@ abstract class CommentService
 
         $comment->save();
 
-        foreach ($comment->getUploads() as $upload) {
-            $comment->removeUpload($upload);
-            $comment->save();
-            $upload->delete();
+        if ($this->allowUploads()) {
+            foreach ($comment->getUploads() as $upload) {
+                $comment->removeUpload($upload);
+                $comment->save();
+                $upload->delete();
+            }
         }
     }
 
@@ -147,4 +149,8 @@ abstract class CommentService
         $upload->delete();
     }
 
-} 
+    public function allowUploads()
+    {
+        return true;
+    }
+}
