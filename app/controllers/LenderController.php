@@ -239,6 +239,11 @@ class LenderController extends BaseController
         \Flash::error("Entered Values are invalid!");
         return Redirect::route('lender:funds')->withForm($form);
     }
+
+    public function getMyStats()
+    {
+        return View::make('lender.my-stats', compact('paginator', 'currentBalance', 'currentBalancePage'));
+    }
 }
 
 

@@ -292,6 +292,12 @@ Route::group(
                         'as'   => 'lender:update-follower'
                     )
                 );
+
+
+                Route::get(
+                    '/my-stats',
+                    array('uses' => 'LenderController@getMyStats', 'as' => 'lender:my-stats')
+                );
             }
         );
 
