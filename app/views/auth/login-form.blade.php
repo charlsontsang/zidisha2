@@ -1,7 +1,7 @@
 {{ Form::open(array('action' => 'AuthController@postLogin')) }}
 <a href="{{ $facebookLoginUrl }}" class="btn btn-facebook btn-block btn-icon">
     <span class="icon-container">
-        <span class="fa fa-facebook fa-lg"></span>
+        <span class="fa fa-facebook fa-lg fa-fw"></span>
     </span>
     <span class="text-container">
          @lang('borrower.login.facebook-login')
@@ -10,7 +10,7 @@
 
 <a href="{{$googleLoginUrl}}" class="btn btn-default btn-google btn-block btn-icon">
     <span class="icon-container">
-        <span class="fa fa-google-plus fa-lg"></span>
+        <span class="fa fa-google-plus fa-lg fa-fw"></span>
     </span>
     <span class="text-container">
          @lang('borrower.login.google-login')
