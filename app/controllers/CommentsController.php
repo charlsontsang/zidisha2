@@ -176,4 +176,9 @@ abstract class CommentsController extends BaseController
     protected abstract function getService();
 
     protected abstract function getCommentQuery();
+
+    protected function redirect($comment)
+    {
+        return Redirect::backAppend("#comment-" . $comment->getId());
+    }
 }
