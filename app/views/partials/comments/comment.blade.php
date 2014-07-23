@@ -55,8 +55,8 @@
 
 
                     @if($controller != 'LoanFeedbackController')
-                        @include("partials.comments.partial.display-uploads", ['comment' => $comment, 'controller' => $controller, 'receiver' => $receiver ])
-                        @include('partials.comments.partial.post', ['controller' => $controller, 'receiver' => $receiver ])
+                        @include("partials.comments.partial.display-uploads", ['comment' => $comment, 'canPostComment' => $canPostComment, 'canReplyComment' => $canReplyComment, 'controller' => $controller, 'receiver' => $receiver ])
+                        @include('partials.comments.partial.post', ['controller' => $controller, 'receiver' => $receiver, 'canPostComment' => $canPostComment, 'canReplyComment' => $canReplyComment ])
                     @endif
 
 
@@ -74,7 +74,7 @@
         </div>
     <ul>
         @foreach($comment->getChildren() as $child)
-            @include("partials.comments.comment", ['comment' => $child, 'controller' => $controller])
+            @include("partials.comments.comment", ['comment' => $child, 'controller' => $controller, 'canPostComment' => $canPostComment, 'canReplyComment' => $canReplyComment])
         @endforeach
     </ul>
 </li>
