@@ -98,7 +98,7 @@ Join the global P2P microlending movement
     </tr>
     </tbody>
 </table>
-{{ BootstrapHtml::paginator($activeLoansBids)->links() }}
+{{ BootstrapHtml::paginator($activeLoansBids, 'page2')->links() }}
 
 
 <div class="page-header">
@@ -137,7 +137,7 @@ Join the global P2P microlending movement
     </tr>
     </tbody>
 </table>
-{{ BootstrapHtml::paginator($completedLoansBids)->links() }}
+{{ BootstrapHtml::paginator($completedLoansBids, 'page3')->links() }}
 @stop
 
 @section('script-footer')

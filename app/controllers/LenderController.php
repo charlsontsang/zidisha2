@@ -60,6 +60,8 @@ class LenderController extends BaseController
 
         $karma = $this->lenderService->getKarma($lender);
         $page = Request::query('page') ? : 1;
+        $page2 = Request::query('page2') ? : 1;
+        $page3 = Request::query('page3') ? : 1;
 
         $activeBids = BidQuery::create()
             ->filterByLender($lender)
@@ -74,7 +76,8 @@ class LenderController extends BaseController
             ->useLoanQuery()
                 ->filterByStatus(Loan::ACTIVE)
             ->endUse()
-            ->paginate($page, 10);
+            ->paginate($page2, 10);
+
         $total = BidQuery::create()
             ->filterByLender($lender)
             ->filterByAcceptedAmount('0', Criteria::NOT_EQUAL)
@@ -93,7 +96,7 @@ class LenderController extends BaseController
             ->useLoanQuery()
                 ->filterEnded()
             ->endUse()
-            ->paginate($page, 10);
+            ->paginate($page3, 10);
         $total = BidQuery::create()
             ->filterByLender($lender)
             ->filterByAcceptedAmount('0', Criteria::NOT_EQUAL)
