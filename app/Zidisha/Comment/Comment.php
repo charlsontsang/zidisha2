@@ -6,6 +6,8 @@ use Zidisha\Comment\Base\Comment as BaseComment;
 
 abstract class Comment extends BaseComment
 {
+    const REDIRECT_HASH = 'comment';
+
     private $children = array();
 
     /**
@@ -29,14 +31,14 @@ abstract class Comment extends BaseComment
 
     public function getFacebookUrl()
     {
-        $url = \Request::url() . "#comment-" . $this->getId();
+        $url = \Request::url() . "#" . $this::REDIRECT_HASH . "-" . $this->getId();
         $relative_share_url = str_replace("https://www.", "", $url);
         return "http://www.facebook.com/sharer.php?s=100&p[url]=" . urlencode($relative_share_url);
     }
 
     public function getTwitterUrl()
     {
-        $url = \Request::url() . "#comment-" . $this->getId();
+        $url = \Request::url() . "#" . $this::REDIRECT_HASH . "-" . $this->getId();
 
         $message = $this->isTranslated() ? $this->getMessageTranslation() : $this->getMessage();
 
