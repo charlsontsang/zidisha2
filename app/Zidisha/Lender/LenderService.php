@@ -2,6 +2,7 @@
 namespace Zidisha\Lender;
 
 use Carbon\Carbon;
+use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\Propel;
 use Zidisha\Analytics\MixpanelService;
 use Zidisha\Balance\Map\TransactionTableMap;
@@ -349,11 +350,7 @@ class LenderService
     {
         $totalImpact = $this->getMyImpact($lender);
         $totalComments = $this->getUserCommentCount($lender);
-    }
-    function getKarmaScore($userid){
-        $total_impact = $this->getMyImpact($userid);
-        $total_comments = $this->getUserCommentCount($userid);
-        $karma = ($total_impact / 10) + $total_comments;
+        $karma = ($totalImpact / 10) + $totalComments;
         return $karma;
     }
 
@@ -363,17 +360,20 @@ class LenderService
             ->filterByInvitee($lender)
             ->find();
         $invitesCount = $invites->count();
+        // only select distinct lender_ids
         $giftCards = GiftCardQuery::create()
             ->filterByLender($lender)
             ->filterByClaimed(true)
-            ->where('GiftCard.recipient_id IS NOT IN ?' , $lender->getId())
+            ->filterByRecipientId( $lender->getId(), Criteria::NOT_EQUAL)
             ->filterByStatus(1)
             ->find();
+        // merge the lender_ids from gift_cards and invitees and add the lender itself
         $giftCardsCount = $giftCards->count();
         $inviteImpact = 0;
         $giftCardImpact = 0;
         $bidQuery = BidQuery::create();
 
+        // don't loop but use IN
         if ($invitesCount > 0) {
             foreach ($invites as $invite) {
                 $totalBidAmount = $bidQuery
@@ -382,7 +382,7 @@ class LenderService
                 $totalOpenLoanBidAmount = $bidQuery
                     ->getTotalOpenLoanBidAmount($invite->getInvitee());
 
-                $inviteImpact += $totalBidAmount + $totalOpenLoanBidAmount;
+                $inviteImpact += intval($totalBidAmount->getAmount()) + $totalOpenLoanBidAmount;
             }
         }
 
@@ -394,13 +394,13 @@ class LenderService
                 $totalOpenLoanBidAmount = $bidQuery
                     ->getTotalOpenLoanBidAmount($giftCard->getRecipient());
 
-                $giftCardImpact += $totalBidAmount + $totalOpenLoanBidAmount;
+                $giftCardImpact += intval($totalBidAmount) + $totalOpenLoanBidAmount;
             }
         }
         //total amount this lender has lent for loans already funded
         $totalInvested = $bidQuery->getTotalActiveBidAmount($lender);
         $totalActiveLoanBidAmount = $bidQuery->getTotalOpenLoanBidAmount($lender); //total amount in not yet funded bids
-        $totalImpact = $totalInvested + $totalActiveLoanBidAmount + $inviteImpact + $giftCardImpact;
+        $totalImpact = intval($totalInvested->getAmount()) + $totalActiveLoanBidAmount + $inviteImpact + $giftCardImpact;
         return $totalImpact;
     }
 

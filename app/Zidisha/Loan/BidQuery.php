@@ -63,9 +63,9 @@ class BidQuery extends BaseBidQuery
     public function getTotalOpenLoanBidAmount(Lender $lender)
     {
         $sql = 'SELECT SUM(t.amount)
-                FROM transactions AS t JOIN loans AS l ON t.loanid = l.loanid
+                FROM transactions AS t JOIN loans AS l ON t.loan_id = l.id
                 WHERE t.user_id = :userId
-                  AND t.transaction_type IN (:loanBid, :loanOutbid)
+                  AND t.type IN (:loanBid, :loanOutbid)
                   AND l.status = :status';
 
         return PropelDB::fetchNumber($sql, [
