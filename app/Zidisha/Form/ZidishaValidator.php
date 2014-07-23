@@ -75,23 +75,4 @@ class ZidishaValidator extends Validator
     {
         return $attribute . ' already exits in the database.';
     }
-
-    public function validateCheckCommentRating($attribute, $value, $parameters)
-    {
-        switch ($value) {
-            case LoanFeedbackComment::NEUTRAL :
-                return true;
-            case LoanFeedbackComment::NEGATIVE :
-                return true;
-            case LoanFeedbackComment::POSITIVE :
-                return true;
-        }
-
-        return false;
-    }
-
-    protected function replaceCheckCommentRating($message, $attribute, $rule, $parameters)
-    {
-        return $attribute . ' type is not correct';
-    }
 }
