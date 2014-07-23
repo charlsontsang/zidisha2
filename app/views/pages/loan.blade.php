@@ -312,46 +312,92 @@
                 {{ BootstrapForm::populate($placeBidForm) }}
 
                 <div class="row">
-                    <div class="col-xs-6">
+                    <div class="col-xs-6" style="padding-right: 5px">
                         {{ BootstrapForm::text('amount', null, ['id' => 'amount', 'label' => false, 'prepend' => '$']) }}
+                        <div class="text-center text-light">
+                            Loan Amount
+                        </div>
                     </div>
-                    <div class="col-xs-6">
+                    <div class="col-xs-6" style="padding-left: 5px">
                         {{ BootstrapForm::select('interestRate', $placeBidForm->getRates(), 3, ['label' => false]) }}
+                        <div class="text-center text-light">
+                            Interest
+                        </div>
                     </div>
                 </div>
                 
-                {{ BootstrapForm::hidden('creditAmount', null, ['id' => 'credit-amount']) }}
-                {{ BootstrapForm::text('donationAmount', null, ['id' => 'donation-amount']) }}
-                {{ BootstrapForm::hidden('donationCreditAmount', null, ['id' => 'donation-credit-amount']) }}
-                {{ BootstrapForm::hidden('loanId', $loan->getId()) }}
-    
-                {{ BootstrapForm::hidden('transactionFee', null, ['id' => 'transaction-fee-amount']) }}
-                {{ BootstrapForm::hidden('transactionFeeRate', null, ['id' => 'transaction-fee-rate']) }}
-                {{ BootstrapForm::hidden('currentBalance', null, ['id' => 'current-balance']) }}
-                {{ BootstrapForm::hidden('totalAmount', null, ['id' => 'total-amount']) }}
-    
-                {{ BootstrapForm::hidden('stripeToken', null, ['id' => 'stripe-token']) }}
-                {{ BootstrapForm::hidden('paymentMethod', null, ['id' => 'payment-method']) }}
-    
-                @if($placeBidForm->getCurrentBalance()->isPositive())
-                {{ BootstrapForm::label("Current Balance") }}: {{ $placeBidForm->getCurrentBalance() }}
                 <br/>
-                @endif
-    
-                {{ BootstrapForm::label("Payment Transfer Cost") }}:
-                USD <span id="fee-amount-display"></span>
-    
-                <br/>
-    
-                {{ BootstrapForm::label("Total amount to be charged to your account") }}
-                USD <span id="total-amount-display"></span>
-    
-                <br/>
-    
-                <button id="stripe-payment" class="btn btn-primary">Pay With Card</button>
-                <input type="submit" id="paypal-payment" class="btn btn-primary" value="Pay With Paypal" name="submit_paypal">
-                <input type="submit" id="balance-payment" class="btn btn-primary" value="Pay" name="submit_credit">
-    
+                
+                <button id="lend-action" type="button" class="btn btn-primary btn-block">Lend</button>
+                
+                <div id="lend-details" class="lend-details" style="display:none;">
+                    {{ BootstrapForm::hidden('creditAmount', null, ['id' => 'credit-amount']) }}
+                    
+                    {{ BootstrapForm::hidden('donationCreditAmount', null, ['id' => 'donation-credit-amount']) }}
+                    {{ BootstrapForm::hidden('loanId', $loan->getId()) }}
+
+                    {{ BootstrapForm::hidden('transactionFee', null, ['id' => 'transaction-fee-amount']) }}
+                    {{ BootstrapForm::hidden('transactionFeeRate', null, ['id' => 'transaction-fee-rate']) }}
+                    {{ BootstrapForm::hidden('currentBalance', null, ['id' => 'current-balance']) }}
+                    {{ BootstrapForm::hidden('totalAmount', null, ['id' => 'total-amount']) }}
+
+                    {{ BootstrapForm::hidden('stripeToken', null, ['id' => 'stripe-token']) }}
+                    {{ BootstrapForm::hidden('paymentMethod', null, ['id' => 'payment-method']) }}
+
+                    <table class="table">
+                        <tbody>
+                            @if($placeBidForm->getCurrentBalance()->isPositive())
+                            <tr>
+                                <td>Current Balance</td>
+                                <td>$ {{ $placeBidForm->getCurrentBalance()->getAmount() }}</td>
+                            </tr>
+                            @endif
+                            <tr>
+                                <td>
+                                    Credit card fee
+                                    <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="bottom" title="Covers credit card charges"></i>
+                                </td>
+                                <td>$<span id="fee-amount-display"></span></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Donation to Zidisha
+                                    <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="bottom" title="Helps with our operating costs"></i>
+                                </td>
+                                <td style="width: 100px;">
+                                    {{ BootstrapForm::text('donationAmount', null, [
+                                        'id'      => 'donation-amount',
+                                        'label'   => false,
+                                        'prepend' => '$',
+                                    ]) }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Total</strong></td>
+                                <td>$<strong><span id="total-amount-display"></span></strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+        
+<!--                    <button id="stripe-payment" class="btn btn-primary">Pay With Card</button>-->
+<!--                    <input type="submit" id="paypal-payment" class="btn btn-default btn-block" value="Pay with Paypal" name="submit_paypal">-->
+
+                    <input type="submit" id="balance-payment" class="btn btn-primary btn-block" value="Confirm" name="submit_credit">
+
+                    <button type="button" id="stripe-payment" class="btn btn-primary btn-block btn-icon">
+                        <span class="icon-container">
+                            <span class="fa fa-credit-card fa-lg fa-fw"></span>
+                        </span>
+                        <span class="text-container">
+                             Pay with credit card
+                        </span>
+                    </button>
+
+                    <button type="submit" id="paypal-payment" class="btn btn-default btn-block">
+                        Continue with
+                        <img src="http://logocurio.us/wp-content/uploads/2014/04/paypal-logo.png" alt="Paypal" style="height: 28px"/>
+                    </button>
+                </div>
                 {{ BootstrapForm::close() }}
             </div>
         </div>
@@ -508,6 +554,15 @@
     $(document).ready(function () {
         $('.original-proposal').click(function () {
             $("#toggle-proposal").collapse('toggle');
+        });
+    });
+    
+    $(function() {
+        $('.fa-question-circle').tooltip();
+        $('#lend-action').on('click', function() {
+            $('#lend-details').show();
+            $(this).hide();
+            return false;
         });
     });
 </script>
