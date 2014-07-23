@@ -228,6 +228,7 @@
 
     <table name="lender_profiles" phpName="Profile" namespace="Lender">
         <column name="lender_id" type="INTEGER" primaryKey="true"/>
+        <column name="city" type="VARCHAR" size="100"/>
         <column name="about_me" type="LONGVARCHAR"/>
         <behavior name="timestampable"/>
         <foreign-key foreignTable="lenders">
