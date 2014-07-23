@@ -234,6 +234,7 @@
             'comments' => $comments,
             'receiver' => $borrower,
             'controller' => 'BorrowerCommentController',
+            //TODO:
             'canPostComment' => \Auth::check(),
             'canReplyComment' => true
         ])
@@ -244,6 +245,7 @@
                 'comments' => $loanFeedbackComments,
                 'receiver' => $loan,
                 'controller' => 'LoanFeedbackController',
+                //TODO:
                 'canPostComment' => \Auth::check(),
                 'canReplyComment' => true
             ])
