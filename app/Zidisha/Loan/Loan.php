@@ -207,6 +207,10 @@ class Loan extends BaseLoan implements CommentReceiverInterface
             ->withColumn('SUM(amount)', 'totalAmount')
             ->withColumn('SUM(paid_amount)', 'totalPaidAmount')
             ->findOne();
-        return intval(($totals['totalPaidAmount']/$totals['totalAmount'])*100);
+        if ($totals['totalAmount'] > 0) {
+            return intval(($totals['totalPaidAmount']/$totals['totalAmount'])*100);
+        } else {
+            return 0;
+        }
     }
 }

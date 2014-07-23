@@ -22,4 +22,9 @@ class LoanQuery extends BaseLoanQuery
         return $this->filterByStatus([Loan::REPAID, Loan::DEFAULTED]);
     }
 
+    public function filterActive()
+    {
+        return $this->filterByStatus([Loan::ACTIVE, Loan::FUNDED]);
+    }
+
 } // LoanQuery

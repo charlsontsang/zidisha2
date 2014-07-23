@@ -74,7 +74,7 @@ class LenderController extends BaseController
             ->filterByLender($lender)
             ->filterByAcceptedAmount('0', Criteria::NOT_EQUAL)
             ->useLoanQuery()
-                ->filterByStatus(Loan::ACTIVE)
+                ->filterActive()
             ->endUse()
             ->paginate($page2, 10);
 
@@ -82,7 +82,7 @@ class LenderController extends BaseController
             ->filterByLender($lender)
             ->filterByAcceptedAmount('0', Criteria::NOT_EQUAL)
             ->useLoanQuery()
-                ->filterByStatus(Loan::ACTIVE)
+                ->filterActive()
             ->endUse()
             ->select(array('total'))
             ->withColumn('SUM(accepted_amount)', 'total')
