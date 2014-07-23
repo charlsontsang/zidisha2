@@ -39,7 +39,7 @@ class BidQuery extends BaseBidQuery
         return $this
             ->filterByLoan($loan)
             ->orderByInterestRate()
-            ->orderByBidDate();
+            ->orderByBidAt();
     }
 
     public function filterBidsToRepay(Loan $loan)

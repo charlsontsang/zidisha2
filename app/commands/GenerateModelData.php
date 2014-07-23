@@ -673,7 +673,7 @@ class GenerateModelData extends Command
                 $oneLender = $allLenders[array_rand($allLenders->getData())];
 
                 $oneBid = new Bid();
-                $oneBid->setBidDate(new \DateTime());
+                $oneBid->setBidAt(new \DateTime());
                 $oneBid->setBidAmount(Money::create(rand(0, 30), 'USD'));
                 $oneBid->setInterestRate(rand(0, 15));
                 $oneBid->setLoan($oneLoan);

@@ -82,7 +82,7 @@ class LoanController extends BaseController
 
         $bids = $this->bidQuery->create()
             ->filterByLoan($loan)
-            ->orderByBidDate()
+            ->orderByBidAt()
             ->find();
 
         $calculator = new \Zidisha\Loan\Calculator\InstallmentCalculator($loan);
