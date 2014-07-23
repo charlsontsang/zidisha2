@@ -228,7 +228,6 @@
             Ask {{ $loan->getBorrower()->getFirstName() }} a question about this loan, inquire about the business, or send a simple note of thanks or inspiration.
         </p>
 
-        @include('partials.comments.comments', ['comments' => $comments, 'receiver' => $borrower, 'commentType' => 'borrowerComment'])
 
         <h4>Comments</h4>
         @include('partials.comments.comments', [
