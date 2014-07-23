@@ -1,6 +1,11 @@
 <div class="comments">
     @if($canPostComment)
-        @include('partials.comments.partial.post', ['controller' => $controller, 'receiver' => $receiver,  'canPostComment' => $canPostComment, 'canReplyComment' => $canReplyComment])
+        @include('partials.comments.partial.post', [
+            'controller' => $controller,
+            'receiver' => $receiver,
+            'canPostComment' => $canPostComment,
+            'canReplyComment' => $canReplyComment
+        ])
     @else
         <b>Please Login to comment</b>
     @endif
