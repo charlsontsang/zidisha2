@@ -2,37 +2,18 @@
     <br/>
     <div class="container">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <div>
-                    <ul class="list-unstyled list-inline pull-right">
-                        <li>
-                            <a href="http://p2p-microlending-blog.zidisha.org/" target="_blank">
-                                <span class="fa fa-rss-square fa-2x"></span>
-                                <span class="sr-only">RSS</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="http://www.facebook.com/ZidishaInc?sk=wall" target="_blank">
-                                <span class="fa fa-facebook-square fa-2x"></span>
-                                <span class="sr-only">Facebook</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="https://twitter.com/ZidishaInc" target="_blank">
-                                <span class="fa fa-twitter-square fa-2x"></span>
-                                <span class="sr-only">Twitter</span>
-                            </a>
-                        </li>
-                    </ul>
-                    <div class="h2">Zidisha</div>
+                    <div>
+                        <a href="{{ route('home') }}">
+                            <span class="sr-only">Zidisha</span>
+                            <img src="{{ '/assets/images/logo-small-footer.png' }}" alt="Zidisha Logo"/>
+                        </a>
+                    </div>
                 </div>
                 <div class="clearfix"></div>
-                
-                <p>
-                    Zidisha is an online community that enables direct person-to-person lending
-                    to entrepreneurs in developing countries.
-                </p>
                 <div class="dropdown">
+                    <br/>
                     <a data-toggle="dropdown" href="#">
                         English
                         <b class="caret"></b>
@@ -44,18 +25,44 @@
                         </li>
                     </ul>
                 </div>
+                    <div>
+                        <p>
+                            <br/>
+                            Join us at 
+                        </p>
+                        <ul class="list-unstyled list-inline">
+                            <li>
+                                <a href="http://p2p-microlending-blog.zidisha.org/" target="_blank">
+                                    <span class="fa fa-rss-square fa-2x"></span>
+                                    <span class="sr-only">Blog</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="http://www.facebook.com/ZidishaInc?sk=wall" target="_blank">
+                                    <span class="fa fa-facebook-square fa-2x"></span>
+                                    <span class="sr-only">Facebook</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://twitter.com/ZidishaInc" target="_blank">
+                                    <span class="fa fa-twitter-square fa-2x"></span>
+                                    <span class="sr-only">Twitter</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-8">
                 <div class="row">
                     <div class="col-xs-4">
                         <div class="h3">Explore</div>
                         <ul class="list-unstyled">
                             <li><a href="#">Our Story</a></li>
-                            <li><a href="#">Why Zidisha?</a></li>
                             <li><a href="#">How It Works</a></li>
                             <li><a href="#">Trust & Security</a></li>
                             <li><a href="#">FAQ</a></li>
                             <li><a href="#">Team</a></li>
+                            <li><a href="#">Statistics</a></li>
                             <li><a href="#">Press</a></li>
                         </ul>
                     </div>
@@ -73,11 +80,11 @@
                     <div class="col-xs-4">
                         <div class="h3">Connect</div>
                         <ul class="list-unstyled">
-                            <li><a href="#">Featured Comments</a></li>
+                            <li><a href="#">Project Updates</a></li>
                             <li><a href="#">Blog</a></li>
                             <li><a href="#">Facebook</a></li>
                             <li><a href="#">Twitter</a></li>
-                            <li><a href="{{ route('lender:groups') }}">Groups</a></li>
+                            <li><a href="{{ route('lender:groups') }}">Lending Groups</a></li>
                             <li><a href="#">Forum</a></li>
                         </ul>
                     </div>
@@ -86,13 +93,11 @@
         </div>
         <hr/>
         <div class="row">
-            <div class="col-md-8">
-                <p style="padding: 8px">Copyright &copy; 2009 - {{ date('Y') }} Zidisha Inc. Zidisha is a 501(c)(3) nonprofit organization.</p>
+            <div class="col-md-9">
+                <p>&copy; {{ date('Y') }} Zidisha, Inc.&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;Zidisha is a 501(c)(3) nonprofit&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;<a href="#">Terms of Use</a>&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;<a href="#">Contact Us</a></p>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <ul class="list-unstyled list-inline pull-right">
-                    <li><a href="#">Terms of Use</a></li>
-                    <li><a href="#">Contact</a></li>
                     <li>
                         <a href="https://mixpanel.com/f/partner"><img src="//cdn.mxpnl.com/site_media/images/partner/badge_light.png" alt="Mobile Analytics" /></a>
                     </li>

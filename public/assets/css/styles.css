@@ -4775,7 +4775,7 @@ a.list-group-item-danger.active:focus {
 }
 .panel-footer {
   padding: 10px 15px;
-  background-color: #f5f5f5;
+  background-color: ##303030;
   border-top: 1px solid #dddddd;
   border-bottom-right-radius: -1;
   border-bottom-left-radius: -1;
@@ -7456,18 +7456,25 @@ a.inverted:hover {
 }
 .page-section-inverted {
   background-color: #333232;
-  color: #b3b3b3;
+  color: #e6e6e6;
+  font-weight: lighter;
 }
 .page-section-inverted .h2,
 .h3 {
-  color: white;
+  color: #6e6e6e;
 }
 .footer {
   margin-bottom: 0;
   padding-bottom: 0;
 }
+.footer .col-md-4 {
+  margin-top: 22px;
+}
+.footer .col-md-3 {
+  margin-top: -7px;
+}
 .page-section-inverted a {
-  color: #b3b3b3;
+  color: #e6e6e6;
 }
 .hr-text {
   position: relative;
