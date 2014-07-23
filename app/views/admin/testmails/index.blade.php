@@ -109,6 +109,39 @@
             </tbody>
         </table>
     </div>
+    <div class="col-xs-6">
+        <h1>User Mails</h1>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>
+                    Mail
+                </th>
+                <th>
+
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach($userMailerMethods as $method)
+            @if($method != '__construct' )
+            <tr>
+                <td>
+                    {{ $method }}
+                </td>
+                <td>
+                    {{ BootstrapForm::open(array('route' => 'admin:mail:post:mail')) }}
+                    {{ BootstrapForm::hidden('mailer', 'user') }}
+                    {{ BootstrapForm::hidden('method', $method) }}
+                    {{ BootstrapForm::submit('Send') }}
+                    {{ BootstrapForm::close() }}
+                </td>
+            </tr>
+            @endif
+            @endforeach
+            </tbody>
+        </table>
+    </div>
 </div>
 
 @stop
