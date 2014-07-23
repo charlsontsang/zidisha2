@@ -1,17 +1,10 @@
 <?php
 
-use SupremeNewMedia\Finance\Core\Currency;
-use SupremeNewMedia\Finance\Core\Money;
-use Zidisha\Balance\TransactionQuery;
-use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Borrower\BorrowerService;
 use Zidisha\Comment\BorrowerCommentService;
-use Zidisha\Comment\CommentService;
 use Zidisha\Comment\LoanFeedbackCommentService;
 use Zidisha\Flash\Flash;
-use Zidisha\Lender\Exceptions\InsufficientLenderBalanceException;
 use Zidisha\Lender\FollowService;
-use Zidisha\Loan\Bid;
 use Zidisha\Loan\Form\AdminCategoryForm;
 use Zidisha\Loan\Loan;
 use Zidisha\Loan\LoanQuery;
@@ -36,7 +29,7 @@ class LoanController extends BaseController
     /**
      * @var Zidisha\Lender\FollowService
      */
-    private $followerService;
+    private $followService;
     private $repaymentService;
     /**
      * @var Zidisha\Comment\LoanFeedbackCommentService
@@ -50,9 +43,8 @@ class LoanController extends BaseController
         BorrowerService $borrowerService,
         AdminCategoryForm $adminCategoryForm,
         BorrowerCommentService $borrowerCommentService,
-        FollowService $followerService,
+        FollowService $followService,
         RepaymentService $repaymentService,
-        FollowerService $followerService,
         LoanFeedbackCommentService $loanFeedbackCommentService
     ) {
         $this->loanQuery = $loanQuery;
@@ -61,7 +53,7 @@ class LoanController extends BaseController
         $this->borrowerService = $borrowerService;
         $this->adminCategoryForm = $adminCategoryForm;
         $this->borrowerCommentService = $borrowerCommentService;
-        $this->followerService = $followerService;
+        $this->followService = $followService;
         $this->repaymentService = $repaymentService;
         $this->loanFeedbackCommentService = $loanFeedbackCommentService;
     }
@@ -100,7 +92,7 @@ class LoanController extends BaseController
 
         $placeBidForm = new PlaceBidForm($loan);
 
-        $followersCount = $this->followerService->getFollowerCount($borrower);
+        $followersCount = $this->followService->getFollowerCount($borrower);
         $hasFundedBorrower = false;
         $follower = false;
         if (\Auth::check() && \Auth::user()->isLender()) {
