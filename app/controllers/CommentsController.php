@@ -34,7 +34,7 @@ abstract class CommentsController extends BaseController
         $comment = $this->service->postComment(compact('message'), $user, $receiver, $files);
 
         Flash::success(\Lang::get('comments.flash.post'));
-        return Redirect::backAppend("#comment-" . $comment->getId());
+        return $this->redirect($comment);
     }
 
     protected function getInputFiles()
@@ -74,7 +74,7 @@ abstract class CommentsController extends BaseController
         $this->service->editComment(compact('message'), $user, $comment, $files);
 
         Flash::success(\Lang::get('comments.flash.edit'));
-        return Redirect::backAppend("#comment-" . $comment->getId());
+        return $this->redirect($comment);
     }
 
     public function postReply()
@@ -103,7 +103,7 @@ abstract class CommentsController extends BaseController
         $comment = $this->service->postReply(compact('message'), $user, $receiver, $parentComment);
 
         Flash::success(\Lang::get('comments.flash.reply'));
-        return Redirect::backAppend("#comment-" . $comment->getId());
+        return $this->redirect($comment);
     }
 
     public function postDelete()
@@ -145,7 +145,7 @@ abstract class CommentsController extends BaseController
         $this->service->translateComment(compact('message'), $comment);
 
         Flash::success(\Lang::get('comments.flash.translate'));
-        return Redirect::backAppend("#comment-" . $comment->getId());
+        return $this->redirect($comment);
     }
 
     public function postDeleteUpload()
