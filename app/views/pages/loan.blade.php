@@ -235,17 +235,17 @@
             'receiver' => $borrower,
             'controller' => 'BorrowerCommentController',
             'canPostComment' => \Auth::check(),
-            'canReplyComment' => true
+            'canReplyComment' => \Auth::check()
         ])
 
         <h4>Loan Feedback</h4>
         @if($displayFeedbackComments)
-                @include('partials.comments.comments', [
+            @include('partials.comments.comments', [
                 'comments' => $loanFeedbackComments,
                 'receiver' => $loan,
                 'controller' => 'LoanFeedbackController',
-                'canPostComment' => \Auth::check(),
-                'canReplyComment' => true
+                'canPostComment' => $canPostFeedback,
+                'canReplyComment' => $canReplyFeedback
             ])
         @endif
 

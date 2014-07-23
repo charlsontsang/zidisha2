@@ -72,6 +72,26 @@ class LoanController extends BaseController
         //TODO:
         $displayFeedbackComments = ($loan->getStatus() == Loan::DEFAULTED || $loan->getStatus() == Loan::REPAID);
 
+        $canPostFeedback = false;
+        $canReplyFeedback = false;
+        if ($displayFeedbackComments && Auth::check()) {
+            $user = Auth::user();
+
+            if ($user == $loan->getBorrower()->getUser()) {
+                $canReplyFeedback = true;
+            }
+
+            $bidCount = BidQuery::create()
+                ->filterByLoan($loan)
+                ->filterByLenderId($user->getId())
+                ->count();
+
+            if ($bidCount) {
+                $canPostFeedback = true;
+                $canReplyFeedback = true;
+            }
+        }
+
         $page = Input::get('page', 1);
 
         $feedbackCommentPage = Input::get('feedbackPage', 1);
@@ -117,8 +137,10 @@ class LoanController extends BaseController
                 'previousLoans',
                 'totalInterest',
                 'followersCount',
-                'repaymentSchedule',
+                'canPostFeedback',
+                'canReplyFeedback',
                 'hasFundedBorrower',
+                'repaymentSchedule',
                 'loanFeedbackComments',
                 'displayFeedbackComments'
             ),

@@ -49,14 +49,13 @@
                             Rating Type:
 
                                 <b>
-                                    {{ $comment->getRatingType()}}
+                                    {{ $comment->getRating()}}
                                 </b>
                     @endif
 
 
                     @if($controller != 'LoanFeedbackController')
                         @include("partials.comments.partial.display-uploads", ['comment' => $comment, 'canPostComment' => $canPostComment, 'canReplyComment' => $canReplyComment, 'controller' => $controller, 'receiver' => $receiver ])
-                        @include('partials.comments.partial.post', ['controller' => $controller, 'receiver' => $receiver, 'canPostComment' => $canPostComment, 'canReplyComment' => $canReplyComment ])
                     @endif
 
 
