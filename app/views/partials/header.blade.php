@@ -10,10 +10,12 @@
             <span class="sr-only">Zidisha</span>
             <img src="{{ '/assets/images/logo-small-black.png' }}" alt="Zidisha Logo"/>
         </a>
+        <ul class="nav navbar-nav">
+            <li><a href="{{ route('lend:index') }}">Browse Projects</a></li>
+        </ul>
     </div>
     <div class="collapse navbar-collapse navbar-right">
         <ul class="nav navbar-nav">
-            <li><a href="{{ route('lend:index') }}">Lend</a></li>
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                     About <b class="caret"></b>
@@ -116,11 +118,11 @@
             <li>
                 @if(Auth::check())
                 <a href="{{ route('logout') }}">
-                    Log out
+                    Log Out
                 </a>
                 @else
                 <a href="{{ route('login') }}" data-toggle="modal" data-target="#login-modal">
-                    Log in
+                    Log In
                 </a>
                 @endif
             </li>

@@ -10,23 +10,23 @@
     
         <!-- Wrapper for slides -->
         <div class="carousel-inner">
-            <div class="item active" style="height: 600px">
+            <div class="item active">
                 <img src="assets/images/flickr/bineta.jpg" alt="...">
                 <div class="carousel-caption">
                     <h3>Lend <span class="text-primary">Bineta</span> $60 for a sewing machine</h3>
-                    <p>and join the global <strong>person-to-person</strong> microlending movement.</p>
+                    <p>and join the global person-to-person microlending movement.</p>
                     <p>
-                        <a href="#" class="btn btn-primary btn-lg">View Our Entrepreneurs</a>
+                        <a href="#" class="btn btn-primary btn-lg">Browse Projects</a>
                     </p>
                 </div>
             </div>
-            <div class="item" style="height: 600px">
+            <div class="item">
                 <img src="assets/images/flickr/mary.jpg" alt="...">
                 <div class="carousel-caption">
                     <h3>Lend <span class="text-primary">Mary</span> $50 for a delivery wagon</h3>
                     <p>and join the global <strong>person-to-person</strong> microlending movement.</p>
                     <p>
-                        <a href="#" class="btn btn-primary btn-lg">View Our Entrepreneurs</a>
+                        <a href="#" class="btn btn-primary btn-lg">Browse Projects</a>
                     </p>
                 </div>
             </div>
