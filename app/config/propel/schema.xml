@@ -351,7 +351,7 @@
         </behavior>
 
         <column name="loan_id" type="INTEGER" required="true"/>
-        <column name="rating_type" type="ENUM" valueSet="positive,negative,neutral" required="false"/>
+        <column name="rating" type="ENUM" valueSet="positive,negative,neutral" required="false"/>
 
         <foreign-key foreignTable="loans">
             <reference local="loan_id" foreign="id"/>
