@@ -1,5 +1,6 @@
 <?php
 
+use Zidisha\Mail\Tester\AdminMailerTester;
 use Zidisha\Mail\Tester\BorrowerMailerTester;
 use Zidisha\Mail\Tester\LenderMailerTester;
 
@@ -13,19 +14,25 @@ class MailTesterController extends BaseController
      * @var Zidisha\Mail\Tester\BorrowerMailerTester
      */
     private $borrowerMailerTester;
+    /**
+     * @var Zidisha\Mail\Tester\AdminMailerTester
+     */
+    private $adminMailerTester;
 
-    public function __construct(LenderMailerTester $lenderMailerTester, BorrowerMailerTester $borrowerMailerTester)
+    public function __construct(LenderMailerTester $lenderMailerTester, BorrowerMailerTester $borrowerMailerTester, AdminMailerTester $adminMailerTester)
     {
         $this->lenderMailerTester = $lenderMailerTester;
         $this->borrowerMailerTester = $borrowerMailerTester;
+        $this->adminMailerTester = $adminMailerTester;
     }
 
     public function getAllMails()
     {
         $lenderMailerMethods = get_class_methods($this->lenderMailerTester);
         $borrowerMailerMethods = get_class_methods($this->borrowerMailerTester);
+        $adminMailerMethods = get_class_methods($this->adminMailerTester);
 
-        return View::make('admin.testmails.index', compact('lenderMailerMethods', 'borrowerMailerMethods'));
+        return View::make('admin.testmails.index', compact('lenderMailerMethods', 'borrowerMailerMethods', 'adminMailerMethods'));
     }
 
     public function postMail()
