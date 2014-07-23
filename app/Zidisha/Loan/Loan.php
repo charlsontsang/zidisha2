@@ -192,7 +192,7 @@ class Loan extends BaseLoan implements CommentReceiverInterface
             return $this->getExpiredDate();
         }
     }
-    
+
     public function getCommentReceiverId()
     {
         return $this->getId();
