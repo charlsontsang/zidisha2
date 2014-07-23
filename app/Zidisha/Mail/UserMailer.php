@@ -2,6 +2,7 @@
 
 namespace Zidisha\Mail;
 
+use Zidisha\Comment\Comment;
 use Zidisha\User\User;
 
 class UserMailer
@@ -17,7 +18,7 @@ class UserMailer
         $this->mailer = $mailer;
     }
 
-    public function sentLendingGroupCommentNotification(User $user)
+    public function sentLendingGroupCommentNotification(Comment $comment, User $user)
     {
 
     }
