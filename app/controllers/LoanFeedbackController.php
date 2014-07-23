@@ -32,7 +32,7 @@ class LoanFeedbackController extends CommentsController
 
     protected function redirect($comment)
     {
-        return Redirect::backAppend("#feedback-" . $comment->getId());
+        return Redirect::backAppend("#" . $comment::REDIRECT_HASH . "-" . $comment->getId());
     }
 
     /**
