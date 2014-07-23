@@ -25,10 +25,9 @@ class LoanFeedbackController extends CommentsController
         $rating = Input::get('rating');
 
         $message = trim(Input::get('message'));
-        $receiverId = Input::get('receiver_id');
 
         $receiver = $this->getReceiverQuery()
-            ->filterById($receiverId)
+            ->filterById($id)
             ->findOne();
 
         $user = \Auth::user();
@@ -46,7 +45,7 @@ class LoanFeedbackController extends CommentsController
         $comment = $this->service->postComment(compact('message', 'rating'), $user, $receiver, $files);
 
         Flash::success(\Lang::get('comments.flash.post'));
-        return Redirect::backAppend("#feedback-" . $comment->getId());
+        return $this->redirect($comment);
     }
 
     public function postEdit()
@@ -69,15 +68,11 @@ class LoanFeedbackController extends CommentsController
         $this->service->editComment(compact('message', 'rating'), $user, $comment, $files);
 
         Flash::success(\Lang::get('comments.flash.edit'));
-        return Redirect::backAppend("#feedback-" . $comment->getId());
+        return $this->redirect($comment);
     }
 
-    public function postReply()
+    public function postReply($id)
     {
-        if (!Input::has('receiver_id')) {
-            App::abort(404, 'Bad Request');
-        }
-
         $message = trim(Input::get('message'));
         $parentId = Input::get('parent_id');
 
@@ -102,7 +97,7 @@ class LoanFeedbackController extends CommentsController
         $comment = $this->service->postReply(compact('message'), $user, $receiver, $parentComment);
 
         Flash::success(\Lang::get('comments.flash.reply'));
-        return Redirect::backAppend("#feedback-" . $comment->getId());
+        return $this->redirect($comment);
     }
 
     public function postDelete()
