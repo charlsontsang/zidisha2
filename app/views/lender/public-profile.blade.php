@@ -6,7 +6,7 @@ Join the global P2P microlending movement
 
 @section('content')
 <div class="page-header">
-    <h1>Lender Details</h1>
+    <h3><strong>Lender Details</strong></h3>
 </div>
 
 <img src="{{ $lender->getUser()->getProfilePictureUrl() }}">
@@ -18,6 +18,50 @@ Join the global P2P microlending movement
 <p><strong>City: </strong> {{ $lender->getProfile()->getCity() }} </p> <br>
 <p><strong>Country: </strong> {{ $lender->getCountry()->getName() }} </p> <br>
 <p><strong>Karma: </strong><a href="#" class="karma" data-toggle="tooltip">(?)</a> {{ $karma }} </p> <br>
+
+<div class="page-header">
+    <h3><strong>Active Bids</strong></h3>
+</div>
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>
+            Date
+        </th>
+        <th>
+            Borrower Details
+        </th>
+        <th>
+            Amount Bid (USD)
+        </th>
+        <th>
+            Bid Status
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach($activeBids as $activeBid)
+    <tr>
+        <td>{{ $activeBid->getBidAt()->format('d-m-Y') }}</td>
+        <td>
+            <a href="{{ route('loan:index', $activeBid->getLoanId()) }}">{{ $activeBid->getBorrower()->getName() }}</a>
+            {{ $activeBid->getBorrower()->getProfile()->getCity() }},
+            {{ $activeBid->getBorrower()->getCountry()->getName() }}
+        </td>
+        <td>{{ $activeBid->getBidAmount()->getAmount() }}</td>
+        <td> Active </td>
+    </tr>
+    @endforeach
+    <tr>
+        <td><strong>Total Current Value</strong></td>
+        <td></td>
+        <td>{{ $totalBidAmount->getAmount() }}</td>
+        <td></td>
+    </tr>
+    </tbody>
+</table>
+{{ BootstrapHtml::paginator($activeBids)->links() }}
+
 @stop
 
 @section('script-footer')

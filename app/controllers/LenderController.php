@@ -10,6 +10,7 @@ use Zidisha\Lender\Form\GiftCard;
 use Zidisha\Lender\Form\WithdrawFundsForm;
 use Zidisha\Lender\LenderQuery;
 use Zidisha\Lender\LenderService;
+use Zidisha\Loan\BidQuery;
 use Zidisha\Payment\Form\UploadFundForm;
 use Zidisha\Payment\Stripe\StripeService;
 use Zidisha\Utility\Utility;
@@ -49,14 +50,23 @@ class LenderController extends BaseController
             ->filterByUsername($username)
             ->endUse()
             ->findOne();
-        $karma = $this->lenderService->getKarma($lender);
-
         if (!$lender) {
             \Illuminate\Support\Facades\App::abort(404);
         }
+
+        $karma = $this->lenderService->getKarma($lender);
+        $page = Request::query('page') ? : 1;
+
+        $activeBids = BidQuery::create()
+            ->filterByLender($lender)
+            ->filterByActive(true)
+            ->paginate($page , 10);
+        $totalBidAmount = BidQuery::create()
+            ->getTotalActiveBidAmount($lender);
+
         return View::make(
             'lender.public-profile',
-            compact('lender', 'karma')
+            compact('lender', 'karma', 'activeBids', 'totalBidAmount')
         );
     }
 
