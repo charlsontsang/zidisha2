@@ -128,6 +128,8 @@ class GenerateModelData extends Command
             $this->call('fake', array('model' => 'LenderGroupMember', 'size' => 200));
             $this->call('fake', array('model' => 'WithdrawalRequest', 'size' => 200));
 
+            $this->call('import-translations');
+
             $this->line('Done!');
             return;
         }
