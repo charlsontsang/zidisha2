@@ -22,7 +22,7 @@ class PaymentValidator extends ZidishaValidator
     public function validateTotalFee($attribute, $value, $parameters)
     {
         return Money::create($this->data['creditAmount'])
-            ->multiply($this->data['transactionFeeRate'])
+            ->multiply($this->data['transactionFeeRate'] / 100)
             ->equals(Money::create($this->data['transactionFee']));
     }
 

@@ -155,7 +155,7 @@ function paymentForm(config) {
             donationAmount = parseMoney($donationAmount.val()),
             creditAmount = (amount >= currentBalance) ? amount - currentBalance : 0,
             newBalance = (amount >= currentBalance) ? 0 : currentBalance - amount,
-            transactionFeeAmount = creditAmount * feePercentage,
+            transactionFeeAmount = creditAmount * feePercentage / 100,
             donationCreditAmount = (donationAmount >= newBalance) ? donationAmount - newBalance : 0,
             totalAmount = creditAmount + transactionFeeAmount + donationCreditAmount;
 
