@@ -285,8 +285,8 @@ class GenerateModelData extends Command
                                 ->getAmount(),
                             $installment->getAmount()->add($installment->getAmount()->divide(2))->getAmount()), $loan->getCurrency()) ;
                     }
-                    if(rand(1,10) <= 1) {
-                        if(rand(1,2) <=1) {
+                    if(rand(1,10) <= 5) {
+                        if(rand(1,2) <= 1) {
                             $installmentDate = $installment->getDueDate()->modify('+1 week');
                         } else {
                             $installmentDate = $installment->getDueDate()->modify('+2 week');
