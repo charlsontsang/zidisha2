@@ -143,7 +143,7 @@ class LoanServiceCest
             $newBid = new Bid();
             $newBid->setInterestRate($bid[0]);
             $newBid->setBidAmount(Money::create($bid[1]));
-            $newBid->setBidDate(new \DateTime());
+            $newBid->setBidAt(new \DateTime());
             $newBid->setId($id);
             $bids[$id] = $newBid;
         }

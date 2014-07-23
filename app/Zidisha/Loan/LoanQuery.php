@@ -17,5 +17,14 @@ use Zidisha\Loan\Base\LoanQuery as BaseLoanQuery;
  */
 class LoanQuery extends BaseLoanQuery
 {
+    public function filterEnded()
+    {
+        return $this->filterByStatus([Loan::REPAID, Loan::DEFAULTED]);
+    }
+
+    public function filterActive()
+    {
+        return $this->filterByStatus([Loan::ACTIVE, Loan::FUNDED]);
+    }
 
 } // LoanQuery

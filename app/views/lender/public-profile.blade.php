@@ -6,7 +6,7 @@ Join the global P2P microlending movement
 
 @section('content')
 <div class="page-header">
-    <h1>Lender Details</h1>
+    <h3><strong>Lender Details</strong></h3>
 </div>
 
 <img src="{{ $lender->getUser()->getProfilePictureUrl() }}">
@@ -15,7 +15,137 @@ Join the global P2P microlending movement
 
 <p><strong>About me: </strong> {{ $lender->getProfile()->getAboutMe() }} </p> <br>
 
+<p><strong>City: </strong> {{ $lender->getProfile()->getCity() }} </p> <br>
+<p><strong>Country: </strong> {{ $lender->getCountry()->getName() }} </p> <br>
 <p><strong>Karma: </strong><a href="#" class="karma" data-toggle="tooltip">(?)</a> {{ $karma }} </p> <br>
+
+<div class="page-header">
+    <h3><strong>Active Bids</strong></h3>
+</div>
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>
+            Date
+        </th>
+        <th>
+            Borrower Details
+        </th>
+        <th>
+            Amount Bid (USD)
+        </th>
+        <th>
+            Bid Status
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach($activeBids as $activeBid)
+    <tr>
+        <td>{{ $activeBid->getBidAt()->format('d-m-Y') }}</td>
+        <td>
+            <a href="{{ route('loan:index', $activeBid->getLoanId()) }}">{{ $activeBid->getBorrower()->getName() }}</a>
+            {{ $activeBid->getBorrower()->getProfile()->getCity() }},
+            {{ $activeBid->getBorrower()->getCountry()->getName() }}
+        </td>
+        <td>{{ $activeBid->getBidAmount()->getAmount() }}</td>
+        <td> Active </td>
+    </tr>
+    @endforeach
+    <tr>
+        <td><strong>Total Current Value</strong></td>
+        <td></td>
+        <td>{{ $totalBidAmount->getAmount() }}</td>
+        <td></td>
+    </tr>
+    </tbody>
+</table>
+{{ BootstrapHtml::paginator($activeBids)->links() }}
+
+<div class="page-header">
+    <h3><strong>Active Loans</strong></h3>
+</div>
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>
+            Borrower Details
+        </th>
+        <th>
+            Amount Lent (USD)
+        </th>
+        <th>
+            Loan Status
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach($activeLoansBids as $activeLoansBid)
+    <tr>
+        <td>
+            <a href="{{ route('loan:index', $activeBid->getLoanId()) }}">{{ $activeLoansBid->getBorrower()->getName() }}</a>
+            {{ $activeLoansBid->getBorrower()->getProfile()->getCity() }},
+            {{ $activeLoansBid->getBorrower()->getCountry()->getName() }}
+        </td>
+        <td>{{ $activeLoansBid->getAcceptedAmount()->getAmount() }}</td>
+        <td>
+            <a href="{{ route('loan:index', $activeBid->getLoanId()) }}">
+            {{ $activeLoansBid->getLoan()->getRepaidPercent() }} % Repaid
+            </a>
+        </td>
+    </tr>
+    @endforeach
+    <tr>
+        <td><strong>Total Amount Lent</strong></td>
+        <td>{{ $totalActiveLoansBidsAmount->getAmount() }}</td>
+        <td></td>
+    </tr>
+    </tbody>
+</table>
+{{ BootstrapHtml::paginator($activeLoansBids, 'page2')->links() }}
+
+
+<div class="page-header">
+    <h3><strong>Completed Loans</strong></h3>
+</div>
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>
+            Borrower Details
+        </th>
+        <th>
+            Amount Lent (USD)
+        </th>
+        <th>
+            Loan Status
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach($completedLoansBids as $completedLoansBid)
+    <tr>
+        <td>
+            <a href="{{ route('loan:index', $activeBid->getLoanId()) }}">{{ $completedLoansBid->getBorrower()->getName() }}</a>
+            {{ $completedLoansBid->getBorrower()->getProfile()->getCity() }},
+            {{ $completedLoansBid->getBorrower()->getCountry()->getName() }}
+        </td>
+        <td>{{ $completedLoansBid->getAcceptedAmount()->getAmount() }}</td>
+        <td>
+            <a href="{{ route('loan:index', $activeBid->getLoanId()) }}">
+            {{ $completedLoansBid->getLoan()->getRepaidPercent() }} % Repaid
+            </a>
+        </td>
+    </tr>
+    @endforeach
+    <tr>
+        <td><strong>Total Amount Lent</strong></td>
+        <td>{{ $totalCompletedLoansBidsAmount->getAmount() }}</td>
+        <td></td>
+    </tr>
+    </tbody>
+</table>
+{{ BootstrapHtml::paginator($completedLoansBids, 'page3')->links() }}
 @stop
 
 @section('script-footer')

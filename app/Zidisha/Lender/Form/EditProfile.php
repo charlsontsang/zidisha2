@@ -29,6 +29,7 @@ class EditProfile extends AbstractForm
             'lastName'  => 'required|alpha_num',
             'email'     => 'required|email|uniqueUserEmail:' . $this->lender->getId(),
             'password'  => 'confirmed',
+            'city'      => 'required|alpha_num',
             'aboutMe'   => '',
             'picture'   => 'image|max:2048',
         ];
@@ -43,6 +44,7 @@ class EditProfile extends AbstractForm
 
     public function getDefaultData()
     {
+        /** @var $lender Lender */
         $lender = \Auth::user()->getLender();
         
         return [
@@ -50,6 +52,7 @@ class EditProfile extends AbstractForm
             'firstName' => $lender->getFirstName(),
             'lastName'  => $lender->getLastName(),
             'email'     => $lender->getUser()->getEmail(),
+            'city'      => $lender->getProfile()->getCity(),
             'aboutMe'   => $lender->getProfile()->getAboutMe(),
         ];
     }

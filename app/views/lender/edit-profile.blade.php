@@ -27,6 +27,8 @@ Join the global P2P microlending movement
 
 {{ BootstrapForm::text('email') }}
 
+{{ BootstrapForm::text('city') }}
+
 {{ BootstrapForm::textarea('aboutMe') }}
 
 {{ BootstrapForm::submit('save') }}

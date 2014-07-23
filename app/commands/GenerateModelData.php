@@ -112,9 +112,9 @@ class GenerateModelData extends Command
             $this->call('fake', array('model' => 'Lender', 'size' => 50));
             $this->call('fake', array('model' => 'ExchangeRate', 'size' => 30));
             //$this->call('fake', array('model' => 'LoanOld', 'size' => 150));
-            $this->call('fake', array('model' => 'Loan', 'size' => 50));
+            $this->call('fake', array('model' => 'Loan', 'size' => 80));
             //$this->call('fake', array('model' => 'BidOld', 'size' => 50));
-            $this->call('fake', array('model' => 'Bid', 'size' => 50));
+            $this->call('fake', array('model' => 'Bid', 'size' => 200));
             $this->call('fake', array('model' => 'AcceptBid', 'size' => 1));
             $this->call('fake', array('model' => 'DisburseLoan', 'size' => 1));
             $this->call('fake', array('model' => 'Repayment', 'size' => 1));
@@ -285,8 +285,8 @@ class GenerateModelData extends Command
                                 ->getAmount(),
                             $installment->getAmount()->add($installment->getAmount()->divide(2))->getAmount()), $loan->getCurrency()) ;
                     }
-                    if(rand(1,10) <= 1) {
-                        if(rand(1,2) <=1) {
+                    if(rand(1,10) <= 5) {
+                        if(rand(1,2) <= 1) {
                             $installmentDate = $installment->getDueDate()->modify('+1 week');
                         } else {
                             $installmentDate = $installment->getDueDate()->modify('+2 week');
@@ -673,7 +673,7 @@ class GenerateModelData extends Command
                 $oneLender = $allLenders[array_rand($allLenders->getData())];
 
                 $oneBid = new Bid();
-                $oneBid->setBidDate(new \DateTime());
+                $oneBid->setBidAt(new \DateTime());
                 $oneBid->setBidAmount(Money::create(rand(0, 30), 'USD'));
                 $oneBid->setInterestRate(rand(0, 15));
                 $oneBid->setLoan($oneLoan);

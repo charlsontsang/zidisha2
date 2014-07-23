@@ -1,8 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\View;
+use Propel\Runtime\ActiveQuery\Criteria;
 use Zidisha\Admin\Setting;
 use Zidisha\Balance\TransactionQuery;
+use Zidisha\Currency\Currency;
 use Zidisha\Currency\Money;
 use Zidisha\Lender\Form\EditProfile;
 use Zidisha\Lender\Form\Funds;
@@ -10,6 +12,9 @@ use Zidisha\Lender\Form\GiftCard;
 use Zidisha\Lender\Form\WithdrawFundsForm;
 use Zidisha\Lender\LenderQuery;
 use Zidisha\Lender\LenderService;
+use Zidisha\Loan\BidQuery;
+use Zidisha\Loan\Loan;
+use Zidisha\Loan\LoanQuery;
 use Zidisha\Payment\Form\UploadFundForm;
 use Zidisha\Payment\Stripe\StripeService;
 use Zidisha\Utility\Utility;
@@ -49,14 +54,65 @@ class LenderController extends BaseController
             ->filterByUsername($username)
             ->endUse()
             ->findOne();
-        $karma = $this->lenderService->getKarma($lender);
-
         if (!$lender) {
             \Illuminate\Support\Facades\App::abort(404);
         }
+
+        $karma = $this->lenderService->getKarma($lender);
+        $page = Request::query('page') ? : 1;
+        $page2 = Request::query('page2') ? : 1;
+        $page3 = Request::query('page3') ? : 1;
+
+        $activeBids = BidQuery::create()
+            ->filterByLender($lender)
+            ->filterByActive(true)
+            ->paginate($page , 10);
+        $totalBidAmount = BidQuery::create()
+            ->getTotalActiveBidAmount($lender);
+
+        $activeLoansBids = BidQuery::create()
+            ->filterByLender($lender)
+            ->filterByAcceptedAmount('0', Criteria::NOT_EQUAL)
+            ->useLoanQuery()
+                ->filterActive()
+            ->endUse()
+            ->paginate($page2, 10);
+
+        $total = BidQuery::create()
+            ->filterByLender($lender)
+            ->filterByAcceptedAmount('0', Criteria::NOT_EQUAL)
+            ->useLoanQuery()
+                ->filterActive()
+            ->endUse()
+            ->select(array('total'))
+            ->withColumn('SUM(accepted_amount)', 'total')
+            ->findOne();
+        $totalActiveLoansBidsAmount =  Money::valueOf($total, Currency::valueOf('USD'));
+
+
+        $completedLoansBids = BidQuery::create()
+            ->filterByLender($lender)
+            ->filterByAcceptedAmount('0', Criteria::NOT_EQUAL)
+            ->useLoanQuery()
+                ->filterEnded()
+            ->endUse()
+            ->paginate($page3, 10);
+        $total = BidQuery::create()
+            ->filterByLender($lender)
+            ->filterByAcceptedAmount('0', Criteria::NOT_EQUAL)
+            ->useLoanQuery()
+                ->filterEnded()
+            ->endUse()
+            ->select(array('total'))
+            ->withColumn('SUM(accepted_amount)', 'total')
+            ->findOne();
+        $totalCompletedLoansBidsAmount =  Money::valueOf($total, Currency::valueOf('USD'));
+
         return View::make(
             'lender.public-profile',
-            compact('lender', 'karma')
+            compact('lender', 'karma', 'activeBids', 'totalBidAmount', 'activeLoansBids', 'totalActiveLoansBidsAmount',
+                    'completedLoansBids', 'totalCompletedLoansBidsAmount'
+            )
         );
     }
 

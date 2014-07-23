@@ -264,7 +264,7 @@
             <tbody>
             @foreach($bids as $bid)
             <tr>
-                <td>{{ $bid->getBidDate()->format('d-m-Y') }}</td>
+                <td>{{ $bid->getBidAt()->format('d-m-Y') }}</td>
                 <td><a href="{{ route('lender:public-profile', $bid->getLender()->getUser()->getUserName()) }}">{{
                         $bid->getLender()->getUser()->getUserName() }}</a></td>
                 <td>{{ $bid->getBidAmount()->getAmount() }}</td>

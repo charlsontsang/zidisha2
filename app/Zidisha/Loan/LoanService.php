@@ -336,7 +336,7 @@ class LoanService
             ->setBidAmount($bidAmount)
             ->setInterestRate($data['interestRate'])
             ->setActive(true)
-            ->setBidDate(new \DateTime());
+            ->setBidAt(new \DateTime());
 
         $bid->save($con);
 
@@ -363,7 +363,7 @@ class LoanService
         uasort(
             $acceptedBids,
             function ($b1, $b2) {
-                return $b1['bid']->getBidDate() <= $b2['bid']->getBidDate();
+                return $b1['bid']->getBidAt() <= $b2['bid']->getBidAt();
             }
         );
 

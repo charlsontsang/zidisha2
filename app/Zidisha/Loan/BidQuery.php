@@ -39,7 +39,7 @@ class BidQuery extends BaseBidQuery
         return $this
             ->filterByLoan($loan)
             ->orderByInterestRate()
-            ->orderByBidDate();
+            ->orderByBidAt();
     }
 
     public function filterBidsToRepay(Loan $loan)
@@ -54,10 +54,14 @@ class BidQuery extends BaseBidQuery
 
     public function getTotalActiveBidAmount(Lender $lender)
     {
-        return $this
+        $total =  $this
             ->filterByLender($lender)
             ->filterByActive(true)
-            ->getTotalBidAmount();
+            ->select(array('total'))
+            ->withColumn('SUM(bid_amount)', 'total')
+            ->findOne();
+
+        return Money::valueOf($total, Currency::valueOf('USD'));
     }
 
     public function getTotalOpenLoanBidAmount(Lender $lender)
