@@ -357,6 +357,26 @@ class LenderService
 
     public function getMyImpact(Lender $lender)
     {
+        $sql = 'SELECT SUM(Amount)
+                        FROM transactions
+                        WHERE type IN (:loanBid, :loanOutbid)
+                        AND user_id IN ( SELECT invitee_id FROM lender_invites
+                                          WHERE invitee_id != :lenderId
+                                          AND lender_id = :lenderId
+                                          UNION
+                                          SELECT recipient_id FROM gift_cards
+                                          WHERE recipient_id != :lenderId
+                                          AND lender_id = :lenderId)';
+
+        return (-1)*( PropelDB::fetchNumber($sql, [
+                'loanBid' => Transaction::LOAN_BID,
+                'loanOutbid' => Transaction::LOAN_OUTBID,
+                'lenderId' => $lender->getId(),
+            ]));
+    }
+
+    public function getMyImpactOld(Lender $lender)
+    {
         $invites = InviteQuery::create()
             ->filterByInvitee($lender)
             ->find();

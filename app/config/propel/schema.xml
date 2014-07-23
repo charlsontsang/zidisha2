@@ -617,7 +617,7 @@
 
     <table name="gift_cards" phpName="GiftCard" namespace="Lender">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
-        <column name="Lender_id" type="INTEGER" size="10"/>
+        <column name="lender_id" type="INTEGER" size="10"/>
         <column name="template" type="INTEGER"/>
         <column name="order_type" type="VARCHAR" size="10" required="true"/>
         <column name="card_amount" type="DECIMAL" size="10" scale="2" required="true"/>
@@ -635,7 +635,7 @@
         <column name="donated" type="TINYINT" size="1" defaultValue="0"/>
         <column name="gift_card_transaction_id" type="INTEGER" size="10"/>
         <foreign-key foreignTable="lenders" phpName="Lender">
-            <reference local="Lender_id" foreign="id"/>
+            <reference local="lender_id" foreign="id"/>
         </foreign-key>
         <foreign-key foreignTable="lenders" phpName="Recipient">
             <reference local="recipient_id" foreign="id"/>
