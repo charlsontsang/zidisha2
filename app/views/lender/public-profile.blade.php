@@ -11,13 +11,13 @@ Join the global P2P microlending movement
 
 <img src="{{ $lender->getUser()->getProfilePictureUrl() }}">
 
-<p><strong>Username: </strong> {{ $lender->getUser()->getUsername() }} </p> <br>
+<p><strong>Username: </strong> {{ $lender->getUser()->getUsername() }} </p>
 
-<p><strong>About me: </strong> {{ $lender->getProfile()->getAboutMe() }} </p> <br>
+<p><strong>About me: </strong> {{ $lender->getProfile()->getAboutMe() }} </p>
 
-<p><strong>City: </strong> {{ $lender->getProfile()->getCity() }} </p> <br>
-<p><strong>Country: </strong> {{ $lender->getCountry()->getName() }} </p> <br>
-<p><strong>Karma: </strong><a href="#" class="karma" data-toggle="tooltip">(?)</a> {{ $karma }} </p> <br>
+<p><strong>City: </strong> {{ $lender->getProfile()->getCity() }} </p>
+<p><strong>Country: </strong> {{ $lender->getCountry()->getName() }} </p>
+<p><strong>Karma: </strong><a href="#" class="karma" data-toggle="tooltip">(?)</a> {{ $karma }} </p>
 
 <div class="page-header">
     <h3><strong>Active Bids</strong></h3>
