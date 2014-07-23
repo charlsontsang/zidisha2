@@ -134,4 +134,9 @@ class LoanFeedbackController extends CommentsController
     {
         return new LoanFeedbackCommentQuery();
     }
+
+    protected function redirect($comment)
+    {
+        return Redirect::backAppend("#feedback-" . $comment->getId());
+    }
 }
