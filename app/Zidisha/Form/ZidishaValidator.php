@@ -8,7 +8,8 @@ use Propel\Runtime\ActiveQuery\Criteria;
 use Zidisha\Comment\LoanFeedbackComment;
 use Zidisha\User\UserQuery;
 
-class ZidishaValidator extends Validator {
+class ZidishaValidator extends Validator
+{
 
     /**
      * @var AbstractForm
@@ -29,18 +30,17 @@ class ZidishaValidator extends Validator {
     public function setForm(AbstractForm $form)
     {
         $this->form = $form;
-        
+
         return $this;
     }
 
     public function validateEmails($attribute, $value, $parameters)
     {
         $emails = explode(",", $value);
-        
-        foreach($emails as $email)
-        {
+
+        foreach ($emails as $email) {
             $email = trim($email);
-            
+
             if (!$this->validateEmail(null, $email)) {
                 return false;
             }
@@ -56,7 +56,7 @@ class ZidishaValidator extends Validator {
 
     protected function replaceGreaterThan($message, $attribute, $rule, $parameters)
     {
-        return $attribute . ' should be greater than ' .  $parameters[0] . '.';
+        return $attribute . ' should be greater than ' . $parameters[0] . '.';
     }
 
     public function validateUniqueUserEmail($attribute, $value, $parameters)
@@ -68,7 +68,7 @@ class ZidishaValidator extends Validator {
             ->filterByEmail($value)
             ->count();
 
-        return $userEmailCount == 0 ?  true : false;
+        return $userEmailCount == 0 ? true : false;
     }
 
     protected function replaceUniqueUserEmail($message, $attribute, $rule, $parameters)
@@ -78,11 +78,16 @@ class ZidishaValidator extends Validator {
 
     public function validateCheckCommentRating($attribute, $value, $parameters)
     {
-        if ($value != LoanFeedbackComment::POSITIVE || $value != LoanFeedbackComment::NEUTRAL || $value != LoanFeedbackComment::NEGATIVE) {
-            return false;
+        switch ($value) {
+            case LoanFeedbackComment::NEUTRAL :
+                return true;
+            case LoanFeedbackComment::NEGATIVE :
+                return true;
+            case LoanFeedbackComment::POSITIVE :
+                return true;
         }
 
-        return true;
+        return false;
     }
 
     protected function replaceCheckCommentRating($message, $attribute, $rule, $parameters)
