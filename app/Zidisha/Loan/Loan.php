@@ -3,11 +3,12 @@
 namespace Zidisha\Loan;
 
 use Carbon\Carbon;
+use Zidisha\Comment\CommentReceiverInterface;
 use Zidisha\Currency\Currency;
 use Zidisha\Currency\Money;
 use Zidisha\Loan\Base\Loan as BaseLoan;
 
-class Loan extends BaseLoan
+class Loan extends BaseLoan implements CommentReceiverInterface
 {
 
     const OPEN = 0;
@@ -186,9 +187,14 @@ class Loan extends BaseLoan
     public function getEndedAt()
     {
         if ($this->getStatus() == Loan::REPAID) {
-            return $this->getRepaidDate();
+            return $this->getRepaidAt();
         } elseif ($this->getStatus() == Loan::DEFAULTED) {
-            return $this->getExpiredDate();
+            return $this->getExpiredAt();
         }
+    }
+
+    public function getCommentReceiverId()
+    {
+        return $this->getId();
     }
 }

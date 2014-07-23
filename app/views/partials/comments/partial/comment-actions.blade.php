@@ -7,7 +7,9 @@
             <a href="#" target="edit" class="comment-action">@lang('comments.actions.edit')</a> &bull;
             <a href="#" target="delete" class="comment-action">@lang('comments.actions.delete')</a> &bull;
         @endif
-        <a href="#" target="reply" class="comment-action">@lang('comments.actions.reply')</a> &bull;
+        @if($canReplyComment)
+            <a href="#" target="reply" class="comment-action">@lang('comments.actions.reply')</a> &bull;
+        @endif
     @endif
     <a href="#" class="comment-share">@lang('comments.actions.share')</a>
     <span style="display: none">

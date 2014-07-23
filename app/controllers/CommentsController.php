@@ -1,60 +1,56 @@
 <?php
 
 use Illuminate\Support\Facades\Input;
-use Zidisha\Borrower\BorrowerQuery;
-use Zidisha\Comment\BorrowerCommentQuery;
 use Zidisha\Comment\CommentService;
-use Zidisha\Comment\LendingGroupCommentQuery;
+use Zidisha\Comment\Form\EditCommentForm;
+use Zidisha\Comment\Form\PostCommentForm;
+use Zidisha\Comment\Form\ReplyCommentForm;
+use Zidisha\Comment\Form\TranslateCommentForm;
 use Zidisha\Flash\Flash;
-use Zidisha\Lender\LendingGroupQuery;
+use Zidisha\Upload\UploadQuery;
 
-class CommentsController extends BaseController
+abstract class CommentsController extends BaseController
 {
-    protected $commentType;
-
     protected $service;
+
+    protected $allowUploads = true;
 
     public function __construct()
     {
-        if ( !Input::has('commentType') ) {
-            App::abort(404, 'Bad Request');
-        }
-
-        $this->commentType = Input::get('commentType');
-        $this->service = $this->getService($this->commentType);
+        $this->service = $this->getService();
     }
 
-    public function postComment()
+    public function postComment($id)
     {
-        if (!Input::has('receiver_id')) {
-            App::abort(404, 'Bad Request');
-        }
-
-        $message = trim(Input::get('message'));
-        $receiverId = Input::get('receiver_id');
-
         $receiver = $this->getReceiverQuery()
-            ->filterById($receiverId)
+            ->filterById($id)
             ->findOne();
 
         $user = \Auth::user();
 
-        if (!$receiver || $message == '' || !$user) {
+        if (!$receiver || !$user) {
             App::abort(404, 'Bad Request');
+        }
+
+        $postCommentForm = new PostCommentForm();
+        $postCommentForm->handleRequest(Request::instance());
+
+        if (!$postCommentForm->isValid()) {
+            Flash::success('Input not valid');
         }
 
         $files = $this->getInputFiles();
 
-        $comment = $this->service->postComment(compact('message'), $user, $receiver, $files);
+        $comment = $this->service->postComment($postCommentForm->getData(), $user, $receiver, $files);
 
         Flash::success(\Lang::get('comments.flash.post'));
-        return Redirect::backAppend("#comment-" . $comment->getId());
+        return $this->redirect($comment);
     }
 
     protected function getInputFiles()
     {
         $files = [];
-        if (\Input::hasFile('file')) {
+        if (\Input::hasFile('file') && $this->allowUploads) {
             foreach (\Input::file('file') as $file) {
                 if (!empty($file)) {
                     if ($file->isValid() && $file->getSize() < Config::get('image.allowed-file-size')) {
@@ -83,25 +79,29 @@ class CommentsController extends BaseController
             App::abort(404, 'Bad Request');
         }
 
-        $files = $this->getInputFiles();
+        $editCommentForm = new EditCommentForm();
+        $editCommentForm->handleRequest(Request::instance());
 
-        $this->service->editComment(compact('message'), $user, $comment, $files);
-
-        Flash::success(\Lang::get('comments.flash.edit'));
-        return Redirect::backAppend("#comment-" . $comment->getId());
-    }
-
-    public function postReply()
-    {
-        if (!Input::has('receiver_id')) {
-            App::abort(404, 'Bad Request');
+        if (!$editCommentForm->isValid()) {
+            Flash::error('Please enter proper inputs');
+            return Redirect::back();
         }
 
+        $files = $this->getInputFiles();
+
+        $this->service->editComment($editCommentForm->getData(), $user, $comment, $files);
+
+        Flash::success(\Lang::get('comments.flash.edit'));
+        return $this->redirect($comment);
+    }
+
+    public function postReply($id)
+    {
         $message = trim(Input::get('message'));
         $parentId = Input::get('parent_id');
 
         $receiver = $this->getReceiverQuery()
-            ->filterById(Input::get('receiver_id'))
+            ->filterById($id)
             ->findOne();
 
         $user = \Auth::user();
@@ -114,10 +114,18 @@ class CommentsController extends BaseController
             App::abort(404, 'Bad Request');
         }
 
-        $comment = $this->service->postReply(compact('message'), $user, $receiver, $parentComment);
+        $replyCommentForm = new ReplyCommentForm();
+        $replyCommentForm->handleRequest(Request::instance());
+
+        if (!$replyCommentForm->isValid()) {
+            Flash::success('Input not valid');
+            return Redirect::back();
+        }
+
+        $comment = $this->service->postReply($replyCommentForm->getData(), $user, $receiver, $parentComment);
 
         Flash::success(\Lang::get('comments.flash.reply'));
-        return Redirect::backAppend("#comment-" . $comment->getId());
+        return $this->redirect($comment);
     }
 
     public function postDelete()
@@ -156,10 +164,18 @@ class CommentsController extends BaseController
             App::abort(404, 'Bad Request');
         }
 
-        $this->service->translateComment(compact('message'), $comment);
+        $translateCommentForm = new TranslateCommentForm();
+        $translateCommentForm->handleRequest(Request::instance());
+
+        if (!$translateCommentForm->isValid()) {
+            Flash::success('Input not proper.');
+            return Redirect::back();
+        }
+
+        $this->service->translateComment($translateCommentForm->getData(), $comment);
 
         Flash::success(\Lang::get('comments.flash.translate'));
-        return Redirect::backAppend("#comment-" . $comment->getId());
+        return $this->redirect($comment);
     }
 
     public function postDeleteUpload()
@@ -168,7 +184,7 @@ class CommentsController extends BaseController
             ->filterById(\Input::get('receiver_id'))
             ->findOne();
 
-        $upload = \Zidisha\Upload\UploadQuery::create()->filterById(\Input::get('upload_id'))->findOne();
+        $upload = UploadQuery::create()->filterById(\Input::get('upload_id'))->findOne();
 
         $user = \Auth::user();
 
@@ -182,33 +198,17 @@ class CommentsController extends BaseController
         return Redirect::back();
     }
 
-    private function getReceiverQuery()
-    {
-        if ($this->commentType == 'lendingGroupComment') {
-            return new LendingGroupQuery();
-        } elseif ($this->commentType == 'borrowerComment') {
-            return new BorrowerQuery();
-        }
-    }
+    protected abstract function getReceiverQuery();
 
     /**
      * @return CommentService
      */
-    private function getService()
-    {
-        if ($this->commentType == 'lendingGroupComment') {
-            return App::make('Zidisha\Comment\LendingGroupCommentService');
-        } elseif ($this->commentType == 'borrowerComment') {
-            return App::make('Zidisha\Comment\BorrowerCommentService');
-        }
-    }
+    protected abstract function getService();
 
-    private function getCommentQuery()
+    protected abstract function getCommentQuery();
+
+    protected function redirect($comment)
     {
-        if ($this->commentType == 'lendingGroupComment') {
-            return new LendingGroupCommentQuery();
-        } elseif ($this->commentType == 'borrowerComment') {
-            return new BorrowerCommentQuery();
-        }
+        return Redirect::backAppend("#comment-" . $comment->getId());
     }
 }

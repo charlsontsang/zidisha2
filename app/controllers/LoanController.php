@@ -1,16 +1,10 @@
 <?php
 
-use SupremeNewMedia\Finance\Core\Currency;
-use SupremeNewMedia\Finance\Core\Money;
-use Zidisha\Balance\TransactionQuery;
-use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Borrower\BorrowerService;
 use Zidisha\Comment\BorrowerCommentService;
-use Zidisha\Comment\CommentService;
+use Zidisha\Comment\LoanFeedbackCommentService;
 use Zidisha\Flash\Flash;
-use Zidisha\Lender\Exceptions\InsufficientLenderBalanceException;
 use Zidisha\Lender\FollowService;
-use Zidisha\Loan\Bid;
 use Zidisha\Loan\Form\AdminCategoryForm;
 use Zidisha\Loan\Loan;
 use Zidisha\Loan\LoanQuery;
@@ -35,8 +29,12 @@ class LoanController extends BaseController
     /**
      * @var Zidisha\Lender\FollowService
      */
-    private $followerService;
+    private $followService;
     private $repaymentService;
+    /**
+     * @var Zidisha\Comment\LoanFeedbackCommentService
+     */
+    private $loanFeedbackCommentService;
 
     public function  __construct(
         LoanQuery $loanQuery,
@@ -45,8 +43,9 @@ class LoanController extends BaseController
         BorrowerService $borrowerService,
         AdminCategoryForm $adminCategoryForm,
         BorrowerCommentService $borrowerCommentService,
-        FollowService $followerService,
-        RepaymentService $repaymentService
+        FollowService $followService,
+        RepaymentService $repaymentService,
+        LoanFeedbackCommentService $loanFeedbackCommentService
     ) {
         $this->loanQuery = $loanQuery;
         $this->bidQuery = $bidQuery;
@@ -54,8 +53,9 @@ class LoanController extends BaseController
         $this->borrowerService = $borrowerService;
         $this->adminCategoryForm = $adminCategoryForm;
         $this->borrowerCommentService = $borrowerCommentService;
-        $this->followerService = $followerService;
+        $this->followService = $followService;
         $this->repaymentService = $repaymentService;
+        $this->loanFeedbackCommentService = $loanFeedbackCommentService;
     }
 
     public function getIndex($loanId)
@@ -64,18 +64,21 @@ class LoanController extends BaseController
         $loan = $this->loanQuery
             ->filterById($loanId)
             ->findOne();
-        
+
         if (!$loan) {
             App::abort(404);
         }
 
-        $page = 1;
-        if (Input::has('page')) {
-            $page = Input::get('page');
-        }
+        //TODO:
+        $displayFeedbackComments = ($loan->getStatus() == Loan::DEFAULTED || $loan->getStatus() == Loan::REPAID);
+
+        $page = Input::get('page', 1);
+
+        $feedbackCommentPage = Input::get('feedbackPage', 1);
 
         $borrower = $receiver = $loan->getBorrower();
         $comments = $this->borrowerCommentService->getPaginatedComments($borrower, $page, 10);
+        $loanFeedbackComments = $this->loanFeedbackCommentService->getPaginatedComments($loan, $feedbackCommentPage, 10);
 
         $bids = $this->bidQuery->create()
             ->filterByLoan($loan)
@@ -88,8 +91,8 @@ class LoanController extends BaseController
         $previousLoans = $this->borrowerService->getPreviousLoans($borrower, $loan);
 
         $placeBidForm = new PlaceBidForm($loan);
-        
-        $followersCount = $this->followerService->getFollowerCount($borrower);
+
+        $followersCount = $this->followService->getFollowerCount($borrower);
         $hasFundedBorrower = false;
         $follower = false;
         if (\Auth::check() && \Auth::user()->isLender()) {
@@ -105,11 +108,21 @@ class LoanController extends BaseController
         return View::make(
             'pages.loan',
             compact(
-                'loan', 'borrower', 'bids', 'comments',
-                'totalInterest', 'serviceFee', 'previousLoans',
-                'followersCount', 'hasFundedBorrower', 'follower' , 'repaymentSchedule'
+                'bids',
+                'loan',
+                'follower',
+                'borrower',
+                'comments',
+                'serviceFee',
+                'previousLoans',
+                'totalInterest',
+                'followersCount',
+                'repaymentSchedule',
+                'hasFundedBorrower',
+                'loanFeedbackComments',
+                'displayFeedbackComments'
             ),
-            ['placeBidForm' => $placeBidForm, 'categoryForm' =>$this->adminCategoryForm]
+            ['placeBidForm' => $placeBidForm, 'categoryForm' => $this->adminCategoryForm]
         );
     }
 
@@ -122,16 +135,16 @@ class LoanController extends BaseController
         if (!$loan) {
             App::abort(404);
         }
-        
+
         $form = new PlaceBidForm($loan);
         $form->handleRequest(Request::instance());
 
         if ($form->isValid()) {
-           return $form->makePayment();
+            return $form->makePayment();
         }
 
         Flash::error("Entered Amounts are invalid!");
-        return Redirect::route('loan:index',$loanId)->withForm($form);
+        return Redirect::route('loan:index', $loanId)->withForm($form);
     }
 
     public function postEditBid($loanId, $bidId)
@@ -149,10 +162,10 @@ class LoanController extends BaseController
         if (!$bid) {
             App::abort(404);
         }
-        
+
         $editBidForm = new EditBidForm($bid);
         $editBidForm->handleRequest(Request::instance());
-            
+
         if (!$editBidForm->isValid()) {
             Flash::success(\Lang::get('Loan.edit-bid.failed') . $data['amount']);
             return Redirect::route('loan:index', $bid->getLoanId());

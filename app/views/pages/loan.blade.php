@@ -221,14 +221,33 @@
         @endif
         
         <hr/>
-        
+
         <h4>3 Comments</h4>
 
         <p class="well">
             Ask {{ $loan->getBorrower()->getFirstName() }} a question about this loan, inquire about the business, or send a simple note of thanks or inspiration.
         </p>
 
-        @include('partials.comments.comments', ['comments' => $comments, 'receiver' => $borrower, 'commentType' => 'borrowerComment'])
+
+        <h4>Comments</h4>
+        @include('partials.comments.comments', [
+            'comments' => $comments,
+            'receiver' => $borrower,
+            'controller' => 'BorrowerCommentController',
+            'canPostComment' => \Auth::check(),
+            'canReplyComment' => true
+        ])
+
+        <h4>Loan Feedback</h4>
+        @if($displayFeedbackComments)
+                @include('partials.comments.comments', [
+                'comments' => $loanFeedbackComments,
+                'receiver' => $loan,
+                'controller' => 'LoanFeedbackController',
+                'canPostComment' => \Auth::check(),
+                'canReplyComment' => true
+            ])
+        @endif
     </div>
 
     <div class="col-xs-4">
