@@ -49,13 +49,14 @@ class LenderController extends BaseController
             ->filterByUsername($username)
             ->endUse()
             ->findOne();
+        $karma = $this->lenderService->getKarma($lender);
 
         if (!$lender) {
             \Illuminate\Support\Facades\App::abort(404);
         }
         return View::make(
             'lender.public-profile',
-            compact('lender')
+            compact('lender', 'karma')
         );
     }
 
