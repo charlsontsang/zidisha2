@@ -50,7 +50,7 @@ class LendingGroupCommentService extends CommentService
 
         foreach ($users as $user) {
             if ($comment->getUser() != $user) {
-                $this->userMailer->sentLendingGroupCommentNotification($user);
+                $this->userMailer->sentLendingGroupCommentNotification($comment, $user);
             }
         }
 
