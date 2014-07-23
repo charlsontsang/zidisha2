@@ -6,6 +6,10 @@ use Zidisha\Comment\Base\LoanFeedbackComment as BaseLoanFeedbackComment;
 
 class LoanFeedbackComment extends BaseLoanFeedbackComment
 {
+    const POSITIVE = 'positive';
+    const NEUTRAL  = 'neutral';
+    const NEGATIVE = 'negative';
+
     public function setCommentReceiverId($comment, $id)
     {
         return $comment->setLoanId($id);
