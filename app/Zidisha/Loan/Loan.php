@@ -7,6 +7,7 @@ use Zidisha\Comment\CommentReceiverInterface;
 use Zidisha\Currency\Currency;
 use Zidisha\Currency\Money;
 use Zidisha\Loan\Base\Loan as BaseLoan;
+use Zidisha\Repayment\InstallmentQuery;
 
 class Loan extends BaseLoan implements CommentReceiverInterface
 {
@@ -196,5 +197,16 @@ class Loan extends BaseLoan implements CommentReceiverInterface
     public function getCommentReceiverId()
     {
         return $this->getId();
+    }
+
+    public function getRepaidPercent()
+    {
+        $totals = InstallmentQuery::create()
+            ->filterByLoanId($this->getId())
+            ->select(array('totalAmount', 'totalPaidAmount'))
+            ->withColumn('SUM(amount)', 'totalAmount')
+            ->withColumn('SUM(paid_amount)', 'totalPaidAmount')
+            ->findOne();
+        return intval(($totals['totalPaidAmount']/$totals['totalAmount'])*100);
     }
 }

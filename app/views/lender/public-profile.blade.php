@@ -88,7 +88,11 @@ Join the global P2P microlending movement
             {{ $activeLoansBid->getBorrower()->getCountry()->getName() }}
         </td>
         <td>{{ $activeLoansBid->getAcceptedAmount()->getAmount() }}</td>
-        <td> //TODO </td>
+        <td>
+            <a href="{{ route('loan:index', $activeBid->getLoanId()) }}">
+            {{ $activeLoansBid->getLoan()->getRepaidPercent() }} % Repaid
+            </a>
+        </td>
     </tr>
     @endforeach
     <tr>
@@ -127,7 +131,11 @@ Join the global P2P microlending movement
             {{ $completedLoansBid->getBorrower()->getCountry()->getName() }}
         </td>
         <td>{{ $completedLoansBid->getAcceptedAmount()->getAmount() }}</td>
-        <td> //TODO </td>
+        <td>
+            <a href="{{ route('loan:index', $activeBid->getLoanId()) }}">
+            {{ $completedLoansBid->getLoan()->getRepaidPercent() }} % Repaid
+            </a>
+        </td>
     </tr>
     @endforeach
     <tr>
