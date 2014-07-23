@@ -368,11 +368,13 @@ class LenderService
                                           WHERE recipient_id != :lenderId
                                           AND lender_id = :lenderId)';
 
-        return (-1)*( PropelDB::fetchNumber($sql, [
+        $totalAmount = ( PropelDB::fetchNumber($sql, [
                 'loanBid' => Transaction::LOAN_BID,
                 'loanOutbid' => Transaction::LOAN_OUTBID,
                 'lenderId' => $lender->getId(),
             ]));
+        
+        return (-1)*$totalAmount;
     }
 
     public function getMyImpactOld(Lender $lender)
