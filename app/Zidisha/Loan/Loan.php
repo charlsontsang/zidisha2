@@ -187,9 +187,9 @@ class Loan extends BaseLoan implements CommentReceiverInterface
     public function getEndedAt()
     {
         if ($this->getStatus() == Loan::REPAID) {
-            return $this->getRepaidDate();
+            return $this->getRepaidAt();
         } elseif ($this->getStatus() == Loan::DEFAULTED) {
-            return $this->getExpiredDate();
+            return $this->getExpiredAt();
         }
     }
 
