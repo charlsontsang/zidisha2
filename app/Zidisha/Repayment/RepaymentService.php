@@ -172,14 +172,18 @@ class RepaymentService
             $refundAmount = $calculator->refundAmount($refundThreshold);
 
             if ($refundAmount->isPositive()) {
-                $this->addBorrowerRefund($con, $loan, $refundAmount);
+                // TODO
+                //$this->addBorrowerRefund($con, $loan, $refundAmount);
                 $amount = $amount->subtract($refundAmount);
                 $calculator->setRepaymentAmount($amount);
             }
 
             $feeAmount = $calculator->repaymentServiceFee();
             $feeAmountUsd = Converter::toUSD($feeAmount, $exchangeRate);
-            $this->transactionService->addInstallmentFeeTransaction($con, $exchangeRate, $feeAmountUsd, $loan, $date);
+            // TODO
+            if ($feeAmountUsd->isZero()) {
+                $this->transactionService->addInstallmentFeeTransaction($con, $exchangeRate, $feeAmountUsd, $loan, $date);
+            }
 
             $bids = BidQuery::create()
             ->filterBidsToRepay($loan)

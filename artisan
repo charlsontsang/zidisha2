@@ -68,6 +68,7 @@ $artisan = Illuminate\Console\Application::start($app);
 |
 */
 
+//$artisan->setCatchExceptions(false);
 $status = $artisan->run();
 
 /*
