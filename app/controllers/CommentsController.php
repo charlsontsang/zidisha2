@@ -2,7 +2,12 @@
 
 use Illuminate\Support\Facades\Input;
 use Zidisha\Comment\CommentService;
+use Zidisha\Comment\Form\EditCommentForm;
+use Zidisha\Comment\Form\PostCommentForm;
+use Zidisha\Comment\Form\ReplyCommentForm;
+use Zidisha\Comment\Form\TranslateCommentForm;
 use Zidisha\Flash\Flash;
+use Zidisha\Upload\UploadQuery;
 
 abstract class CommentsController extends BaseController
 {
@@ -17,21 +22,26 @@ abstract class CommentsController extends BaseController
 
     public function postComment($id)
     {
-        $message = trim(Input::get('message'));
-
         $receiver = $this->getReceiverQuery()
             ->filterById($id)
             ->findOne();
 
         $user = \Auth::user();
 
-        if (!$receiver || $message == '' || !$user) {
+        if (!$receiver || !$user) {
             App::abort(404, 'Bad Request');
+        }
+
+        $postCommentForm = new PostCommentForm();
+        $postCommentForm->handleRequest(Request::instance());
+
+        if (!$postCommentForm->isValid()) {
+            Flash::success('Input not valid');
         }
 
         $files = $this->getInputFiles();
 
-        $comment = $this->service->postComment(compact('message'), $user, $receiver, $files);
+        $comment = $this->service->postComment($postCommentForm->getData(), $user, $receiver, $files);
 
         Flash::success(\Lang::get('comments.flash.post'));
         return $this->redirect($comment);
@@ -69,25 +79,29 @@ abstract class CommentsController extends BaseController
             App::abort(404, 'Bad Request');
         }
 
+        $editCommentForm = new EditCommentForm();
+        $editCommentForm->handleRequest(Request::instance());
+
+        if (!$editCommentForm->isValid()) {
+            Flash::error('Please enter proper inputs');
+            return Redirect::back();
+        }
+
         $files = $this->getInputFiles();
 
-        $this->service->editComment(compact('message'), $user, $comment, $files);
+        $this->service->editComment($editCommentForm->getData(), $user, $comment, $files);
 
         Flash::success(\Lang::get('comments.flash.edit'));
         return $this->redirect($comment);
     }
 
-    public function postReply()
+    public function postReply($id)
     {
-        if (!Input::has('receiver_id')) {
-            App::abort(404, 'Bad Request');
-        }
-
         $message = trim(Input::get('message'));
         $parentId = Input::get('parent_id');
 
         $receiver = $this->getReceiverQuery()
-            ->filterById(Input::get('receiver_id'))
+            ->filterById($id)
             ->findOne();
 
         $user = \Auth::user();
@@ -100,7 +114,15 @@ abstract class CommentsController extends BaseController
             App::abort(404, 'Bad Request');
         }
 
-        $comment = $this->service->postReply(compact('message'), $user, $receiver, $parentComment);
+        $replyCommentForm = new ReplyCommentForm();
+        $replyCommentForm->handleRequest(Request::instance());
+
+        if (!$replyCommentForm->isValid()) {
+            Flash::success('Input not valid');
+            return Redirect::back();
+        }
+
+        $comment = $this->service->postReply($replyCommentForm->getData(), $user, $receiver, $parentComment);
 
         Flash::success(\Lang::get('comments.flash.reply'));
         return $this->redirect($comment);
@@ -142,7 +164,15 @@ abstract class CommentsController extends BaseController
             App::abort(404, 'Bad Request');
         }
 
-        $this->service->translateComment(compact('message'), $comment);
+        $translateCommentForm = new TranslateCommentForm();
+        $translateCommentForm->handleRequest(Request::instance());
+
+        if (!$translateCommentForm->isValid()) {
+            Flash::success('Input not proper.');
+            return Redirect::back();
+        }
+
+        $this->service->translateComment($translateCommentForm->getData(), $comment);
 
         Flash::success(\Lang::get('comments.flash.translate'));
         return $this->redirect($comment);
@@ -154,7 +184,7 @@ abstract class CommentsController extends BaseController
             ->filterById(\Input::get('receiver_id'))
             ->findOne();
 
-        $upload = \Zidisha\Upload\UploadQuery::create()->filterById(\Input::get('upload_id'))->findOne();
+        $upload = UploadQuery::create()->filterById(\Input::get('upload_id'))->findOne();
 
         $user = \Auth::user();
 
