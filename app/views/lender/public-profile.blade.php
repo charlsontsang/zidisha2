@@ -15,6 +15,8 @@ Join the global P2P microlending movement
 
 <p><strong>About me: </strong> {{ $lender->getProfile()->getAboutMe() }} </p> <br>
 
+<p><strong>City: </strong> {{ $lender->getProfile()->getCity() }} </p> <br>
+<p><strong>Country: </strong> {{ $lender->getCountry()->getName() }} </p> <br>
 <p><strong>Karma: </strong><a href="#" class="karma" data-toggle="tooltip">(?)</a> {{ $karma }} </p> <br>
 @stop
 
