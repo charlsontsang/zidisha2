@@ -5608,7 +5608,9 @@ button.close {
 .panel-body:before,
 .panel-body:after,
 .modal-footer:before,
-.modal-footer:after {
+.modal-footer:after,
+.loan-section:before,
+.loan-section:after {
   content: " ";
   display: table;
 }
@@ -5625,7 +5627,8 @@ button.close {
 .navbar-collapse:after,
 .pager:after,
 .panel-body:after,
-.modal-footer:after {
+.modal-footer:after,
+.loan-section:after {
   clear: both;
 }
 .center-block {
@@ -7538,6 +7541,41 @@ a.inverted:hover {
 }
 .lend-details .table tbody > tr > td {
   vertical-align: middle;
+}
+.loan-section {
+  margin-left: -15px;
+  margin-right: -15px;
+}
+.loan-section-title {
+  position: relative;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+@media (min-width: 768px) {
+  .loan-section-title {
+    float: left;
+    width: 16.66666667%;
+  }
+}
+.loan-section-content {
+  position: relative;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+@media (min-width: 768px) {
+  .loan-section-content {
+    float: left;
+    width: 83.33333333%;
+  }
+}
+@media (max-width: 767px) {
+  .loan-section-title {
+    font-size: 18px;
+    padding-bottom: 12px;
+    text-align: center;
+  }
 }
 .wizard {
   padding: 0 0 10px 0;

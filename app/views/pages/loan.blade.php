@@ -20,17 +20,17 @@
 
 @section('content')
 <div class="row">
-    <div class="col-xs-8">
-        <img src="{{ $loan->getBorrower()->getUser()->getProfilePictureUrl('large-profile-picture') }}" width="636px">
+    <div class="col-md-8">
+        <img src="{{ $loan->getBorrower()->getUser()->getProfilePictureUrl('large-profile-picture') }}" width="100%">
 
         <br/>
         <br/>
         
-        <div class="row">
-            <div class="col-xs-2">
+        <div class="loan-section">
+            <div class="loan-section-title">
                 <span class="text-light">Summary</span>
             </div>
-            <div class="col-xs-10">
+            <div class="loan-section-content">
                 <p class="omega">
                     {{{ $loan->getSummary() }}}
                 </p>
@@ -39,11 +39,11 @@
 
         <hr/>
         
-        <div class="row">
-            <div class="col-xs-2">
+        <div class="loan-section">
+            <div class="loan-section-title">
                 <span class="text-light">Borrower</span>
             </div>
-            <div class="col-xs-10">
+            <div class="loan-section-content">
                 <div class="row">
                     <div class="col-sm-6">
                         Name: 
@@ -96,11 +96,11 @@
 
         <hr/>
 
-        <div class="row">
-            <div class="col-xs-2">
+        <div class="loan-section">
+            <div class="loan-section-title">
                 <span class="text-light">This Loan</span>
             </div>
-            <div class="col-xs-10">
+            <div class="loan-section-content">
                 <div class="row">
                     <div class="col-sm-6">
                         Amount:
@@ -116,11 +116,11 @@
 
         <hr/>
         
-        <div class="row">
-            <div class="col-xs-2">
+        <div class="loan-section">
+            <div class="loan-section-title">
                 <span class="text-light">Story</span>
             </div>
-            <div class="col-xs-10">
+            <div class="loan-section-content">
                 <h5 class="alpha">About Me</h5>
 
                 <p>{{ $loan->getBorrower()->getProfile()->getAboutMe() }}</p>
@@ -248,9 +248,90 @@
                 'canReplyComment' => true
             ])
         @endif
+
+        <br>
+        <strong>FUNDING RAISED </strong>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Date</th>
+                <th>Lender</th>
+                <th>Amount (USD)</th>
+                <th></th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach($bids as $bid)
+            <tr>
+                <td>{{ $bid->getBidDate()->format('d-m-Y') }}</td>
+                <td><a href="{{ route('lender:public-profile', $bid->getLender()->getUser()->getUserName()) }}">{{
+                        $bid->getLender()->getUser()->getUserName() }}</a></td>
+                <td>{{ $bid->getBidAmount()->getAmount() }}</td>
+                <td>
+                    @if($bid->getLenderId() == Auth::id())
+                    {{ $bid->getInterestRate() }}%
+                    @endif
+                </td>
+                <td>
+                    @if($bid->getLenderId() == Auth::id())
+                    <a href="{{ route('loan:edit-bid', $bid->getId()) }}"><i class="fa fa-pencil fa-fw"></i></a>
+                    @endif
+                </td>
+            </tr>
+            @endforeach
+            </tbody>
+        </table>
+        <strong>Raised: </strong> USD {{ $loan->getRaisedUsdAmount()->getAmount() }}
+        <strong>Still Needed: </strong> USD {{ $loan->getStillNeededUsdAmount() }}
+
+        @if($loan->getStatus() >= Zidisha\Loan\Loan::ACTIVE)
+        <br>
+        <div>
+            <strong>REPAYMENT SCHEDULE</strong>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Date Due</th>
+                    <th>Amount Due</th>
+                    <th>Date Paid</th>
+                    <th>Paid Amount</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach($repaymentSchedule as $repaymentScheduleInstallment)
+                <tr>
+                    <td>{{ $repaymentScheduleInstallment->getInstallment()->getDueDate()->format('d-m-Y') }}</td>
+                    <td>{{ $repaymentScheduleInstallment->getInstallment()->getAmount() }}</td>
+                    <?php $i = 0; ?>
+                    @foreach($repaymentScheduleInstallment->getPayments() as $repaymentScheduleInstallmentPayment)
+                    @if($i > 0)
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td>{{ $repaymentScheduleInstallmentPayment->getPayment()->getPaidDate()->format('d-m-Y') }}</td>
+                    <td>{{ $repaymentScheduleInstallmentPayment->getAmount() }}</td>
+                </tr>
+                @else
+                <td>{{ $repaymentScheduleInstallmentPayment->getPayment()->getPaidDate()->format('d-m-Y') }}</td>
+                <td>{{ $repaymentScheduleInstallmentPayment->getAmount() }}</td>
+                @endif
+                <?php $i++; ?>
+                @endforeach
+                </tr>
+                @endforeach
+                </tbody>
+            </table>
+        </div>
+        @endif
+
+        @if(Auth::check() && Auth::getUser()->isAdmin())
+        <br><br>
+        <a href="{{ route('admin:loan-feedback', $loan->getId()) }}">Give Feedback</a>
+        @endif
     </div>
 
-    <div class="col-xs-4">
+    <div class="col-md-4">
         @if(Auth::check() && Auth::getUser()->isAdmin())
         <div class="panel panel-default">
             <div class="panel-body">
@@ -401,87 +482,6 @@
                 {{ BootstrapForm::close() }}
             </div>
         </div>
-        @endif
-
-        <br>
-        <strong>FUNDING RAISED </strong>
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>Date</th>
-                <th>Lender</th>
-                <th>Amount (USD)</th>
-                <th></th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            @foreach($bids as $bid)
-            <tr>
-                <td>{{ $bid->getBidDate()->format('d-m-Y') }}</td>
-                <td><a href="{{ route('lender:public-profile', $bid->getLender()->getUser()->getUserName()) }}">{{
-                        $bid->getLender()->getUser()->getUserName() }}</a></td>
-                <td>{{ $bid->getBidAmount()->getAmount() }}</td>
-                <td>
-                    @if($bid->getLenderId() == Auth::id())
-                        {{ $bid->getInterestRate() }}% 
-                    @endif
-                </td>
-                <td>
-                    @if($bid->getLenderId() == Auth::id())
-                        <a href="{{ route('loan:edit-bid', $bid->getId()) }}"><i class="fa fa-pencil fa-fw"></i></a>
-                    @endif
-                </td>
-            </tr>
-            @endforeach
-            </tbody>
-        </table>
-        <strong>Raised: </strong> USD {{ $loan->getRaisedUsdAmount()->getAmount() }}
-        <strong>Still Needed: </strong> USD {{ $loan->getStillNeededUsdAmount() }}
-
-        @if($loan->getStatus() >= Zidisha\Loan\Loan::ACTIVE)
-        <br>
-        <div>
-            <strong>REPAYMENT SCHEDULE</strong>
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>Date Due</th>
-                    <th>Amount Due</th>
-                    <th>Date Paid</th>
-                    <th>Paid Amount</th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach($repaymentSchedule as $repaymentScheduleInstallment)
-                <tr>
-                    <td>{{ $repaymentScheduleInstallment->getInstallment()->getDueDate()->format('d-m-Y') }}</td>
-                    <td>{{ $repaymentScheduleInstallment->getInstallment()->getAmount() }}</td>
-                    <?php $i = 0; ?>
-                    @foreach($repaymentScheduleInstallment->getPayments() as $repaymentScheduleInstallmentPayment)
-                        @if($i > 0)
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td>{{ $repaymentScheduleInstallmentPayment->getPayment()->getPaidDate()->format('d-m-Y') }}</td>
-                                <td>{{ $repaymentScheduleInstallmentPayment->getAmount() }}</td>
-                            </tr>
-                        @else
-                                <td>{{ $repaymentScheduleInstallmentPayment->getPayment()->getPaidDate()->format('d-m-Y') }}</td>
-                                <td>{{ $repaymentScheduleInstallmentPayment->getAmount() }}</td>
-                        @endif
-                        <?php $i++; ?>
-                    @endforeach
-                </tr>
-                @endforeach
-                </tbody>
-            </table>
-        </div>
-        @endif
-
-        @if(Auth::check() && Auth::getUser()->isAdmin())
-        <br><br>
-        <a href="{{ route('admin:loan-feedback', $loan->getId()) }}">Give Feedback</a>
         @endif
     </div>
 </div>

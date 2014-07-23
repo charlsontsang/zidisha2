@@ -166,5 +166,23 @@ a.inverted:hover {
   }
 }
 
+.loan-section {
+  .make-row();
+}
+.loan-section-title {
+  .make-sm-column(2);
+}
+.loan-section-content {
+  .make-sm-column(10);
+}
+@media (max-width: @screen-xs-max) {
+  .loan-section-title {
+    font-size: 18px;
+    padding-bottom: 12px;
+    text-align: center;
+  }
+}
+
+
 @import "wizard.less";
 @import "filterbar.less";
