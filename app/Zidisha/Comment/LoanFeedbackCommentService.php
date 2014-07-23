@@ -47,7 +47,7 @@ class LoanFeedbackCommentService extends CommentService
         return;
     }
 
-    public function allowUploads()
+    public function isUploadsAllowed()
     {
         return false;
     }

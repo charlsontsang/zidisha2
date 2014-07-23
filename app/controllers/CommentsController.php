@@ -52,7 +52,7 @@ abstract class CommentsController extends BaseController
     protected function getInputFiles()
     {
         $files = [];
-        if (\Input::hasFile('file') && $this->service->allowUploads()) {
+        if (\Input::hasFile('file') && $this->service->isUploadsAllowed()) {
             foreach (\Input::file('file') as $file) {
                 if (!empty($file)) {
                     if ($file->isValid() && $file->getSize() < Config::get('image.allowed-file-size')) {
