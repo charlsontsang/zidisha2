@@ -62,6 +62,44 @@ Join the global P2P microlending movement
 </table>
 {{ BootstrapHtml::paginator($activeBids)->links() }}
 
+<div class="page-header">
+    <h3><strong>Active Loans</strong></h3>
+</div>
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>
+            Borrower Details
+        </th>
+        <th>
+            Amount Lent (USD)
+        </th>
+        <th>
+            Loan Status
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach($activeLoansBids as $activeLoansBid)
+    <tr>
+        <td>
+            <a href="{{ route('loan:index', $activeBid->getLoanId()) }}">{{ $activeLoansBid->getBorrower()->getName() }}</a>
+            {{ $activeLoansBid->getBorrower()->getProfile()->getCity() }},
+            {{ $activeLoansBid->getBorrower()->getCountry()->getName() }}
+        </td>
+        <td>{{ $activeLoansBid->getAcceptedAmount()->getAmount() }}</td>
+        <td> //TODO </td>
+    </tr>
+    @endforeach
+    <tr>
+        <td><strong>Total Amount Lent</strong></td>
+        <td>{{ $totalActiveLoansBidsAmount->getAmount() }}</td>
+        <td></td>
+    </tr>
+    </tbody>
+</table>
+{{ BootstrapHtml::paginator($activeLoansBids)->links() }}
+
 @stop
 
 @section('script-footer')
