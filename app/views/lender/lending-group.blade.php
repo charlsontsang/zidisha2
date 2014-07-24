@@ -60,7 +60,7 @@ Lending Groups
                 <br/>
                 <br/>
                 <h4>Comments</h4>
-                @include('partials.comments.comments', ['comments' => $comments])
+                @include('partials.comments.comments', ['comments' => $comments, 'controller' => 'LendingGroupCommentController', 'canPostComment' => $canPostComment, 'canReplyComment' => $canReplyComment])
             </div>
         </div>
 

@@ -77,6 +77,15 @@ class LendingGroupController extends BaseController
             $page = Input::get('page');
         }
 
+        $canPostComment  = false;
+        $canReplyComment = false;
+
+        if(Auth::check()) {
+            $user = Auth::user();
+            $canPostComment  = $user->isLender();
+            $canReplyComment = $user->isLender();
+        }
+
         $members = LendingGroupMemberQuery::create()
             ->filterByLendingGroup($group)
             ->filterByLeaved(false)
@@ -88,7 +97,7 @@ class LendingGroupController extends BaseController
 
         $commentType = 'lendingGroupComment';
 
-        return View::make('lender.lending-group', compact('group', 'receiver', 'membersCount', 'members', 'leaderId', 'comments', 'commentType'));
+        return View::make('lender.lending-group', compact('group', 'receiver', 'membersCount', 'members', 'leaderId', 'comments', 'commentType', 'canPostComment', 'canReplyComment'));
     }
 
     public function joinGroup($id)
