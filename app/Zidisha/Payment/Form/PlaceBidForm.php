@@ -67,6 +67,11 @@ class PlaceBidForm extends AbstractPaymentForm
 
     public function getDefaultData()
     {
-        return parent::getDefaultData() + ['interestRate' => 3];
+        $defaults = [
+            'interestRate' => 3,
+            'amount' => min(30, max(10, $this->loan->getStillNeededUsdAmount()->getAmount()))
+        ];
+        
+        return  $defaults + parent::getDefaultData();
     }
 }
