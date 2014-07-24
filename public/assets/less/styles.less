@@ -58,22 +58,31 @@ a.inverted:hover {
 }
 
 .page-section-inverted {
-  background-color: @gray-dark;
-  color: #b3b3b3;
+  background-color: @text-color;
+  color: #e6e6e6;
 }
 
 .page-section-inverted .h2, .h3 {
-  color: white;
+  color: #e6e6e6;
 }
 
 .footer {
   margin-bottom: 0;
   padding-bottom: 0;
-} 
+  font-weight: lighter;
+}
+
+.footer .col-md-4 {
+  margin-top: 22px;
+}
+
+.footer .col-md-3 {
+  margin-top: -7px;
+}
 
 
 .page-section-inverted a {
-  color: #b3b3b3;
+  color: #e6e6e6;
 }
 
 .hr-text {
@@ -183,6 +192,21 @@ a.inverted:hover {
   }
 }
 
+/* Static info pages */
+.info-page {
+  max-width: 680px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.info-page h3 {
+  font-size: 24px;
+  line-height: 24px;
+  text-transform: none;
+}
+.info-page p, .info-page ul li {
+  font-size: 20px;
+  line-height: 27px;
+}
 
 @import "wizard.less";
 @import "filterbar.less";

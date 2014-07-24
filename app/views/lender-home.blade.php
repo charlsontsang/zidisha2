@@ -10,7 +10,7 @@
     
         <!-- Wrapper for slides -->
         <div class="carousel-inner">
-            <div class="item active">
+            <div class="item active" style="height: 600px">
                 <img src="assets/images/flickr/bineta.jpg" alt="...">
                 <div class="carousel-caption">
                     <h3>Lend <span class="text-primary">Bineta</span> $60 for a sewing machine</h3>
@@ -20,7 +20,7 @@
                     </p>
                 </div>
             </div>
-            <div class="item">
+            <div class="item" style="height: 600px">
                 <img src="assets/images/flickr/mary.jpg" alt="...">
                 <div class="carousel-caption">
                     <h3>Lend <span class="text-primary">Mary</span> $50 for a delivery wagon</h3>
