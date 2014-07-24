@@ -3,6 +3,7 @@
 use Carbon\Carbon;
 use Faker\Factory as Faker;
 use Illuminate\Console\Command;
+use Propel\Runtime\ActiveQuery\Criteria;
 use Symfony\Component\Console\Input\InputArgument;
 use Zidisha\Admin\Setting;
 use Zidisha\Balance\Transaction;
@@ -243,7 +244,7 @@ class GenerateModelData extends Command
                 ->find();
 
             foreach ($raisedLoans as $loan) {
-                if (rand(1,3) <= 2) {
+                if (true || rand(1,3) <= 2) {
                     $loanService->acceptBids($loan);
                 }
             }
@@ -255,8 +256,11 @@ class GenerateModelData extends Command
                 ->find();
 
             foreach ($fundedLoans as $loan) {
-                if (rand(1,5) <= 4) {
-                    $loanService->disburseLoan($loan , new \DateTime(), $loan->getAmount());
+                if (true || rand(1,5) <= 4) {
+                    // todo take application date + (15-30) days
+                    $Date = $loan->getAppliedAt();
+                    $newDate = Carbon::createFromDate($Date->format('Y'), $Date->format('m'), $Date->format('d'))->addDays(25);
+                    $loanService->disburseLoan($loan , $newDate, $loan->getAmount());
                 }
             }
         }
@@ -275,6 +279,9 @@ class GenerateModelData extends Command
                 foreach ($installments as $installment) {
                     if (!$installment->getAmount()->isPositive()){
                         continue;
+                    }
+                    if ($loan->getDisbursedAt() < Carbon::create()->subMonths(6)) {
+                        break;
                     }
                     if (!$repaid && rand(1,4) <= 1) {
                         break;
@@ -812,6 +819,7 @@ class GenerateModelData extends Command
                 $data['currencyCode'] = $borrower->getCountry()->getCurrencyCode();
                 $data['usdAmount'] = $amount / 2;
                 $data['installmentDay'] = $installmentDay;
+                // TODO between now and a year ago
                 $data['applicationDate'] = new \DateTime();
                 $data['categoryId'] = $loanCategory->getId();
 
@@ -819,10 +827,22 @@ class GenerateModelData extends Command
             }
 
             if ($model == "Bid") {
-                $openLoans = LoanQuery::create()
+
+                $oneLoan = LoanQuery::create()
                     ->filterByStatus(0)
-                    ->find();
-                $oneLoan = $openLoans[array_rand($openLoans->getData())];
+                    ->orderByRand()
+                    ->findOne();
+
+                if ($oneLoan->getAppliedAt() < Carbon::create()->subMonths(8)) {
+                    while ($oneLoan->getRaisedPercentage() < 100) {
+                        $oneLender = $allLenders[array_rand($allLenders->getData())];
+                        $data['amount'] = rand(5, $oneLoan->getUsdAmount()->divide(2)->getAmount());
+                        $data['interestRate'] = rand(0, 15);
+                        $loanService->placeBid($oneLoan, $oneLender, $data);
+                    }
+                    continue;
+                }
+
                 $numberOfBids = rand(2,5);
                 $data = array();
 
