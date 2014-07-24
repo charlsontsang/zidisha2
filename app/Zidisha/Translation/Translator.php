@@ -73,6 +73,16 @@ class Translator extends NamespacedItemResolver implements TranslatorInterface {
     {
         list($namespace, $folder, $group, $item) = $this->parseKey($key);
 
+        if ($folder == 'validation') {
+            $folder = 'common';
+            if ($item) {
+                $item = "$group.$item";
+            } else {
+                $item = $group;
+            }
+            $group = 'validation';
+        }
+
         // Here we will get the locale that should be used for the language line. If one
         // was not passed, we will use the default locales which was given to us when
         // the translator was instantiated. Then, we can load the lines and return.
