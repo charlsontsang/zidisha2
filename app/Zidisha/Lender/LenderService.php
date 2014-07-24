@@ -349,7 +349,7 @@ class LenderService
 
     public function getKarma(Lender $lender)
     {
-        $totalImpact = $this->getMyImpact($lender);
+        $totalImpact = $this->getMyImpact($lender)->getAmount();
         $totalComments = $this->getUserCommentCount($lender);
         $karma = ($totalImpact / 10) + $totalComments;
         return $karma;
@@ -374,7 +374,7 @@ class LenderService
                 'lenderId' => $lender->getId(),
             ]));
         
-        return (-1)*$totalAmount;
+        return Money::create($totalAmount, 'USD')->multiply(-1);
     }
 
     public function getMyImpactOld(Lender $lender)

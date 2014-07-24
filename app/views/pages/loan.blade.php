@@ -238,7 +238,7 @@
             'canReplyComment' => \Auth::check()
         ])
 
-        <h4>Loan Feedback</h4>
+        <h4 id="feedback">Loan Feedback</h4>
         @if($displayFeedbackComments)
             @include('partials.comments.comments', [
                 'comments' => $loanFeedbackComments,

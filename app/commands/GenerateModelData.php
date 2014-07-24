@@ -367,7 +367,7 @@ class GenerateModelData extends Command
 
                 $lenderInvite = new Invite();
                 $lenderInvite->setLender($lender);
-                if (is_int($i / 4)) {
+                if (rand( 1, 10) < 4) {
                     $lenderInvite->setEmail($faker->email);
                 } else {
                     $lenderInvite->setInvitee($invitee);
@@ -721,8 +721,6 @@ class GenerateModelData extends Command
                 $lender = $allLenders[array_rand($allLenders->getData())];
                 $amount = Money::create(rand(15, 1000), 'USD');
                 $faker = Faker::create();
-                $isClaimed = $randArray[array_rand($randArray)];
-
 
                 $giftCard = new GiftCard();
                 $giftCard->setLender($lender)
@@ -735,7 +733,7 @@ class GenerateModelData extends Command
                     ->setExpireDate(strtotime('+1 year'))
                     ->setCardCode($faker->creditCardNumber);
 
-                if($isClaimed){
+                if(rand(1 ,5) <= 3){
                     $recipient = $allLenders[array_rand($allLenders->getData())];
                     $giftCard->setClaimed(1)
                         ->setRecipientName($recipient->getName())
@@ -817,7 +815,8 @@ class GenerateModelData extends Command
                 $installmentAmount = (int)$data['amount'] / 12;
                 $data['installmentAmount'] = $installmentAmount;
                 $data['currencyCode'] = $borrower->getCountry()->getCurrencyCode();
-                $data['usdAmount'] = $amount / 2;
+                $data['
+                usdAmount'] = $amount / 2;
                 $data['installmentDay'] = $installmentDay;
                 // TODO between now and a year ago
                 $data['applicationDate'] = new \DateTime();
@@ -848,7 +847,7 @@ class GenerateModelData extends Command
 
                 for ( $j=0; $j<=$numberOfBids; $j++) {
                     $oneLender = $allLenders[array_rand($allLenders->getData())];
-                    $data['amount'] = rand(5, $oneLoan->getUsdAmount()->divide(2)->getAmount());
+                    $data['amount'] = rand(5, intval($oneLoan->getUsdAmount()->divide(20)->getAmount()) + 5);
                     $data['interestRate'] = rand(0, 15);
                     $loanService->placeBid($oneLoan, $oneLender, $data);
                 }

@@ -23,7 +23,16 @@ My Stats
     </div>
 
     <div class="col-xs-8">
-
+        <p>{{ $totalFundsUpload }}</p>
+        <p>{{ $numberOfLoans }}</p>
+        <p>
+            {{ $currentBalance }}
+            <a href="{{ route('lend:index') }}" class="btn btn-primary">
+                Make A Loan
+            </a>
+        </p>
+        <p>  TODO</p>
+        <p>  TODO</p>
     </div>
 </div>
 
@@ -33,8 +42,8 @@ My Stats
 
 <div class="row">
     <div class="col-xs-4">
-        <p>My Lending Groups:  </p>
-        <p>Number of Invites Sent: </p>
+        <p>My Lending Groups:  </p><br>
+        <p>Number of Invites Sent: </p><br>
         <p>Number of Invites Accepted: </p>
         <p>Number of Loans Made By My Invitees: </p>
         <p>Number of Gift Cards Gifted: </p>
@@ -43,11 +52,184 @@ My Stats
     </div>
 
     <div class="col-xs-8">
-
+        <p>
+            @foreach($lendingGroups as $lendingGroup)
+                <a href="{{ route('lender:group', $lendingGroup->getId()) }}">{{ $lendingGroup->getName() }}</a>
+            @endforeach
+            <a href="{{ route('lender:groups') }}" class="btn btn-primary">
+                Join A Group
+            </a>
+        </p>
+        <p>
+            {{ $numberOfInvitesSent }}
+            <a href="{{ route('lender:invite') }}" class="btn btn-primary">
+                Send An Invite
+            </a>
+        </p>
+        <p>{{ $numberOfInvitesAccepted }}</p>
+        <p>{{ $numberOfLoansByInvitees }}</p>
+        <p>
+            {{ $numberOfGiftedGiftCards }}
+            <a href="{{ route('lender:gift-cards') }}" class="btn btn-primary">
+                Give A Gift Card
+            </a>
+        </p>
+        <p>{{ $numberOfRedeemedGiftCards }}</p>
+        <p>{{ $numberOfLoansByRecipients }}</p>
     </div>
 </div>
 
+<div class="div-header">
+    <h2>My Impact</h2>
+</div><br>
 
+<div class="row">
+    <div class="col-xs-4">
+        <p>Amount Lent By Me:  </p>
+        <p>Amount Lent By My Invitees: </p>
+        <p>Amount Lent By My Gift Card Recipients: </p>
+        <p>Total Impact: <a href="#" class="total-impact" data-toggle="tooltip">(?)</a> </p>
+    </div>
+
+    <div class="col-xs-8">
+        <p>{{ $totalLentAmount }}</p>
+        <p> //TODO </p>
+        <p>{{ $myImpact }}</p>
+        <p>{{ $totalImpact }}</p>
+    </div>
+</div>
+
+<div class="page-header">
+    <h3><strong>FundRaising Loans</strong></h3>
+</div>
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>Project</th>
+        <th>Bid Date</th>
+        <th>Amount Bid (USD)</th>
+        <th>FundRaising Progress</th>
+        <th>Time Left</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach($loans['activeBids'] as $fundRaisingLoansBid)
+    <tr>
+        <td>
+<!--            <a class="pull-left" href="{{ route('loan:index', $fundRaisingLoansBid->getLoanId()) }}">-->
+<!--                <img src="{{ $fundRaisingLoansBid->getBorrower()->getUser()->getProfilePictureUrl('small-profile-picture') }}" width="100%">-->
+<!--            </a>-->
+            <a href="{{ route('loan:index', $fundRaisingLoansBid->getLoanId()) }}">{{ $fundRaisingLoansBid->getLoan()->getSummary() }}</a><br>
+            {{ $fundRaisingLoansBid->getBorrower()->getName() }}<br>
+            {{ $fundRaisingLoansBid->getBorrower()->getProfile()->getCity() }},
+            {{ $fundRaisingLoansBid->getBorrower()->getCountry()->getName() }}
+        </td>
+        <td>{{ $fundRaisingLoansBid->getBidAt()->format('d-m-Y') }}</td>
+        <td>{{ $fundRaisingLoansBid->getBidAmount()->getAmount() }}</td>
+        <td> @include('partials/loan-progress', [ 'loan' => $fundRaisingLoansBid->getLoan() ]) </td>
+        <td> //TODO </td>
+    </tr>
+    @endforeach
+    <tr>
+        <td><strong> Total </strong></td>
+        <td>{{ $numberOfFundRaisingProjects }}</td>
+        <td>{{ $loans['totalBidAmount']->getAmount() }}</td>
+        <td></td>
+    </tr>
+    </tbody>
+</table>
+{{ BootstrapHtml::paginator($loans['activeBids'])->links() }}
+
+
+<div class="page-header">
+    <h3><strong>Active Loans</strong></h3>
+</div>
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>Project</th>
+        <th>Date Funded</th>
+        <th>Amount Lent (USD)</th>
+        <th>Amount Repaid (USD)</th>
+        <th>Principal Outstanding (USD)</th>
+        <th>Loan Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach($loans['activeLoansBids'] as $activeLoansBid)
+    <tr>
+        <td>
+            <!--            <a class="pull-left" href="{{ route('loan:index', $fundRaisingLoansBid->getLoanId()) }}">-->
+            <!--                <img src="{{ $fundRaisingLoansBid->getBorrower()->getUser()->getProfilePictureUrl('small-profile-picture') }}" width="100%">-->
+            <!--            </a>-->
+            <a href="{{ route('loan:index', $activeLoansBid->getLoanId()) }}">{{ $activeLoansBid->getLoan()->getSummary() }}</a><br>
+            {{ $activeLoansBid->getBorrower()->getName() }}<br>
+            {{ $activeLoansBid->getBorrower()->getProfile()->getCity() }},
+            {{ $activeLoansBid->getBorrower()->getCountry()->getName() }}
+        </td>
+        <td>{{ $activeLoansBid->getLoan()->getDisbursedAt()->format('d-m-Y') }}</td>
+        <td>{{ $activeLoansBid->getAcceptedAmount()->getAmount() }}</td>
+        <td>// TODO</td>
+        <td>// TODO</td>
+        <td>// TODO</td>
+    </tr>
+    @endforeach
+    <tr>
+        <td><strong> Total </strong></td>
+        <td>{{ $numberOfActiveProjects }}</td>
+        <td>{{ $loans['totalActiveLoansBidsAmount']->getAmount() }}</td>
+        <td></td>
+    </tr>
+    </tbody>
+</table>
+{{ BootstrapHtml::paginator($loans['activeLoansBids'], 'page2')->links() }}
+
+
+<div class="page-header">
+    <h3><strong>Completed Loans</strong></h3>
+</div>
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>Project</th>
+        <th>Date Funded</th>
+        <th>Amount Lent (USD)</th>
+        <th>Amount Repaid (USD)</th>
+        <th>Net Change in Loan Fund Value (USD)</th>
+        <th>Loan Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach($loans['completedLoansBids'] as $completedLoansBid)
+    <tr>
+        <td>
+            <!--            <a class="pull-left" href="{{ route('loan:index', $completedLoansBid->getLoanId()) }}">-->
+            <!--                <img src="{{ $completedLoansBid->getBorrower()->getUser()->getProfilePictureUrl('small-profile-picture') }}" width="100%">-->
+            <!--            </a>-->
+            <a href="{{ route('loan:index', $completedLoansBid->getLoanId()) }}">{{ $completedLoansBid->getLoan()->getSummary() }}</a><br>
+            {{ $completedLoansBid->getBorrower()->getName() }}<br>
+            {{ $completedLoansBid->getBorrower()->getProfile()->getCity() }},
+            {{ $completedLoansBid->getBorrower()->getCountry()->getName() }}
+        </td>
+        <td>{{ $completedLoansBid->getLoan()->getDisbursedAt()->format('d-m-Y') }}</td>
+        <td>{{ $completedLoansBid->getAcceptedAmount()->getAmount() }}</td>
+        <td>// TODO</td>
+        <td>// TODO</td>
+        <td>
+            100% Repaid<br>
+            <a href="{{ route('loan:index', $completedLoansBid->getLoanId()) }}#feedback">Leave Feedback</a>
+        </td>
+    </tr>
+    @endforeach
+    <tr>
+        <td><strong> Total </strong></td>
+        <td>{{ $numberOfCompletedProjects }}</td>
+        <td>{{ $loans['totalCompletedLoansBidsAmount']->getAmount() }}</td>
+        <td></td>
+    </tr>
+    </tbody>
+</table>
+{{ BootstrapHtml::paginator($loans['completedLoansBids'], 'page3')->links() }}
 @stop
 
 @section('script-footer')
@@ -59,5 +241,8 @@ My Stats
 </script>
 <script type="text/javascript">
     $('.principal-outstanding').tooltip({placement: 'bottom', title: 'The portion of US dollar amounts you have lent which is still outstanding with the borrowers (not yet repaid). This amount does not include any interest which is due for the loans, and its value is not adjusted for credit risk or exchange rate fluctuations.'})
+</script>
+<script type="text/javascript">
+    $('.total-impact').tooltip({placement: 'bottom', title: 'The total amount lent by you, your invitees and your gift card recipients.'})
 </script>
 @stop

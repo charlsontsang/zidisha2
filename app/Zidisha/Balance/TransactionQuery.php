@@ -2,6 +2,7 @@
 
 namespace Zidisha\Balance;
 
+use Propel\Runtime\ActiveQuery\Criteria;
 use Zidisha\Balance\Base\TransactionQuery as BaseTransactionQuery;
 use Zidisha\Currency\Currency;
 use Zidisha\Currency\Money;
@@ -86,5 +87,29 @@ class TransactionQuery extends BaseTransactionQuery
             ->findOne();
 
         return Money::create($total ?: 0, $currency);
+    }
+
+    public function getTotalLentAmount($userId)
+    {
+        $total = $this
+            ->filterByType([Transaction::LOAN_BID, Transaction::LOAN_OUTBID], Criteria::IN)
+            ->filterByUserId($userId)
+            ->select(array('total'))
+            ->withColumn('SUM(amount)', 'total')
+            ->findOne();
+
+        return Money::create($total, 'USD')->multiply(-1);
+    }
+
+    public function getPrincipalOutstanding($userId)
+    {
+        $total = $this
+            ->filterByType([Transaction::LOAN_BID, Transaction::LOAN_OUTBID, Transaction::LOAN_BACK_LENDER], Criteria::IN)
+            ->filterByUserId($userId)
+            ->select(array('total'))
+            ->withColumn('SUM(amount)', 'total')
+            ->findOne();
+
+        return Money::create($total, 'USD')->multiply(-1);
     }
 } // TransactionQuery

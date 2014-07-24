@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\View;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Zidisha\Admin\Setting;
+use Zidisha\Balance\Transaction;
 use Zidisha\Balance\TransactionQuery;
 use Zidisha\Currency\Currency;
 use Zidisha\Currency\Money;
@@ -10,8 +11,11 @@ use Zidisha\Lender\Form\EditProfile;
 use Zidisha\Lender\Form\Funds;
 use Zidisha\Lender\Form\GiftCard;
 use Zidisha\Lender\Form\WithdrawFundsForm;
+use Zidisha\Lender\GiftCardQuery;
+use Zidisha\Lender\InviteQuery;
 use Zidisha\Lender\LenderQuery;
 use Zidisha\Lender\LenderService;
+use Zidisha\Lender\LendingGroupQuery;
 use Zidisha\Loan\BidQuery;
 use Zidisha\Loan\Loan;
 use Zidisha\Loan\LoanQuery;
@@ -63,62 +67,21 @@ class LenderController extends BaseController
         $page2 = Request::query('page2') ? : 1;
         $page3 = Request::query('page3') ? : 1;
 
-        $activeBids = BidQuery::create()
-            ->filterByLender($lender)
-            ->filterByActive(true)
-            ->paginate($page , 10);
-        $totalBidAmount = BidQuery::create()
-            ->getTotalActiveBidAmount($lender);
-
-        $activeLoansBids = BidQuery::create()
-            ->filterByLender($lender)
-            ->filterByAcceptedAmount('0', Criteria::NOT_EQUAL)
-            ->useLoanQuery()
-                ->filterActive()
-            ->endUse()
-            ->paginate($page2, 10);
-
-        $total = BidQuery::create()
-            ->filterByLender($lender)
-            ->filterByAcceptedAmount('0', Criteria::NOT_EQUAL)
-            ->useLoanQuery()
-                ->filterActive()
-            ->endUse()
-            ->select(array('total'))
-            ->withColumn('SUM(accepted_amount)', 'total')
-            ->findOne();
-        $totalActiveLoansBidsAmount =  Money::valueOf($total, Currency::valueOf('USD'));
-
-
-        $completedLoansBids = BidQuery::create()
-            ->filterByLender($lender)
-            ->filterByAcceptedAmount('0', Criteria::NOT_EQUAL)
-            ->useLoanQuery()
-                ->filterEnded()
-            ->endUse()
-            ->paginate($page3, 10);
-        $total = BidQuery::create()
-            ->filterByLender($lender)
-            ->filterByAcceptedAmount('0', Criteria::NOT_EQUAL)
-            ->useLoanQuery()
-                ->filterEnded()
-            ->endUse()
-            ->select(array('total'))
-            ->withColumn('SUM(accepted_amount)', 'total')
-            ->findOne();
-        $totalCompletedLoansBidsAmount =  Money::valueOf($total, Currency::valueOf('USD'));
+        $loans = BidQuery::create()
+            ->getTotalLoans($lender, $page, $page2, $page3);
 
         return View::make(
             'lender.public-profile',
-            compact('lender', 'karma', 'activeBids', 'totalBidAmount', 'activeLoansBids', 'totalActiveLoansBidsAmount',
-                    'completedLoansBids', 'totalCompletedLoansBidsAmount'
-            )
+            compact('lender', 'karma', 'loans')
         );
     }
 
     public function getEditProfile()
     {
         $lender = \Auth::user()->getLender();
+        if (!$lender) {
+            \Illuminate\Support\Facades\App::abort(404);
+        }
 
         $form = new EditProfile($lender);
 
@@ -131,6 +94,9 @@ class LenderController extends BaseController
     public function postEditProfile()
     {
         $lender = \Auth::user()->getLender();
+        if (!$lender) {
+            \Illuminate\Support\Facades\App::abort(404);
+        }
 
         $form = new EditProfile($lender);
         $form->handleRequest(Request::instance());
@@ -191,10 +157,8 @@ class LenderController extends BaseController
     public function getFunds()
     {
         $currentBalance = $this->transactionQuery
-            ->select(array('total'))
-            ->withColumn('SUM(amount)', 'total')
             ->filterByUserId(Auth::getUser()->getId())
-            ->findOne();
+            ->getTotalAmount();
 
         return View::make('lender.funds', compact('currentBalance'), ['form' => $this->uploadFundForm,]);
     }
@@ -242,7 +206,100 @@ class LenderController extends BaseController
 
     public function getMyStats()
     {
-        return View::make('lender.my-stats', compact('paginator', 'currentBalance', 'currentBalancePage'));
+        $lender = \Auth::user()->getLender();
+        $userId = \Auth::user()->getId();
+        if (!$lender) {
+            \Illuminate\Support\Facades\App::abort(404);
+        }
+
+        $totalFundsUpload = TransactionQuery::create()
+            ->filterByUserId($userId)
+            ->filterByType(Transaction::FUND_UPLOAD)
+            ->getTotalAmount();
+        $numberOfLoans = LoanQuery::create()
+            ->useBidQuery()
+                ->filterByLender($lender)
+                ->filterByAcceptedAmount(null, Criteria::NOT_EQUAL)
+            ->endUse()
+            ->count();
+
+        $currentBalance = $this->transactionQuery
+            ->filterByUserId($userId)
+            ->getTotalAmount();
+
+        $lendingGroups = LendingGroupQuery::create()
+            ->useLendingGroupMemberQuery()
+                ->filterByMember($lender)
+                ->filterByLeaved(false)
+            ->endUse()
+            ->find();
+
+        $numberOfInvitesSent = InviteQuery::create()
+            ->filterByLender($lender)
+            ->count();
+        $AcceptedInviteesIds = InviteQuery::create()
+            ->select('invitee_id')
+            ->filterByLender($lender)
+            ->filterByInviteeId(null, Criteria::NOT_EQUAL)
+            ->find();
+        $numberOfInvitesAccepted = $AcceptedInviteesIds->count();
+        $numberOfLoansByInvitees = LoanQuery::create()
+            ->useBidQuery()
+                ->filterByLenderId($AcceptedInviteesIds, Criteria::IN)
+                ->filterByAcceptedAmount(null, Criteria::NOT_EQUAL)
+            ->endUse()
+            ->count();
+
+        $numberOfGiftedGiftCards = GiftCardQuery::create()
+            ->filterByLender($lender)
+            ->count();
+        $RedeemedGiftCardsRecipientsIds = GiftCardQuery::create()
+            ->select('recipient_id')
+            ->filterByLender($lender)
+            ->filterByRecipientId(null, Criteria::NOT_EQUAL)
+            ->find();
+        $numberOfRedeemedGiftCards = $RedeemedGiftCardsRecipientsIds->count();
+        $numberOfLoansByRecipients = LoanQuery::create()
+            ->useBidQuery()
+            ->filterByLenderId($RedeemedGiftCardsRecipientsIds, Criteria::IN)
+            ->filterByAcceptedAmount(null, Criteria::NOT_EQUAL)
+            ->endUse()
+            ->count();
+
+        $totalLentAmount = TransactionQuery::create()
+            ->getTotalLentAmount($userId);
+
+//        $totalLentAmountByInvitees = BidQuery::create()
+//            ->filterByLenderId($AcceptedInviteesIds, Criteria::IN)
+//            ->getTotalBidAmount();
+//        $totalLentAmountByRecipients = BidQuery::create()
+//            ->filterByLenderId($RedeemedGiftCardsRecipientsIds, Criteria::IN)
+//            ->getTotalBidAmount();
+        //TODO
+        $myImpact = $this->lenderService->getMyImpact($lender);
+        $totalImpact = $myImpact->add($totalLentAmount);
+        $page = Request::query('page') ? : 1;
+        $page2 = Request::query('page2') ? : 1;
+        $page3 = Request::query('page3') ? : 1;
+
+        $loans = BidQuery::create()
+            ->getTotalLoans($lender, $page, $page2, $page3);
+
+        $numberOfFundRaisingBids = $loans['activeBids']->count();
+        $numberOfFundRaisingProjects = \Lang::choice('lender.flash.preferences.stats-projects', $numberOfFundRaisingBids, array('count' => $numberOfFundRaisingBids));
+
+        $numberOfActiveBids = $loans['activeLoansBids']->count();
+        $numberOfActiveProjects = \Lang::choice('lender.flash.preferences.stats-projects', $numberOfActiveBids, array('count' => $numberOfActiveBids));
+
+        $numberOfCompletedBids = $loans['completedLoansBids']->count();
+        $numberOfCompletedProjects = \Lang::choice('lender.flash.preferences.stats-projects', $numberOfCompletedBids, array('count' => $numberOfCompletedBids));
+
+        return View::make('lender.my-stats', compact('currentBalance', 'totalFundsUpload', 'lendingGroups',
+                'numberOfInvitesSent', 'numberOfInvitesAccepted', 'numberOfLoans', 'numberOfLoansByInvitees',
+                'numberOfGiftedGiftCards', 'numberOfRedeemedGiftCards', 'numberOfLoansByRecipients',
+                'totalLentAmount', 'myImpact', 'totalImpact' , 'loans', 'numberOfFundRaisingProjects',
+                'numberOfActiveProjects', 'numberOfCompletedProjects'
+            ));
     }
 }
 
