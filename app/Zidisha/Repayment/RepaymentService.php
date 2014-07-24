@@ -181,7 +181,7 @@ class RepaymentService
             $feeAmount = $calculator->repaymentServiceFee();
             $feeAmountUsd = Converter::toUSD($feeAmount, $exchangeRate);
             // TODO
-            if ($feeAmountUsd->isZero()) {
+            if ($feeAmountUsd->isPositive()) {
                 $this->transactionService->addInstallmentFeeTransaction($con, $exchangeRate, $feeAmountUsd, $loan, $date);
             }
 
