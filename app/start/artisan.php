@@ -15,3 +15,4 @@ Artisan::add(new ApplicationSetup);
 Artisan::add(new GenerateModelData);
 Artisan::add(new Settings);
 Artisan::add(new ImportTranslationsCommand);
+Artisan::add(new LoanWriteOff(App::make('Zidisha\Loan\LoanService')));
