@@ -290,28 +290,55 @@ class BootstrapFormBuilder
             $description = '<span class="help-block">' . $options['description'] . '</span>';
             unset($options['description']);
         }
+
+        $before = '';
+        if (isset($options['before'])) {
+            $before = $options['before'];
+            unset($options['before']);
+        }
+
+        $after = '';
+        if (isset($options['after'])) {
+            $after = $options['after'];
+            unset($options['after']);
+        }
         
-        $prepend = '';
         if (isset($options['prepend'])) {
-            $prepend = '<span class="input-group-addon">' . $options['prepend'] . '</span>';
+            $before .= '<span class="input-group-addon">' . $options['prepend'] . '</span>';
             unset($options['prepend']);
             $wrapperOptions['class'] = $wrapperOptions['class'] . ' input-group';
         }
 
-        $append = '';
         if (isset($options['append'])) {
-            $append = '<span class="input-group-addon">' . $options['append'] . '</span>';
+            $after = '<span class="input-group-addon">' . $options['append'] . '</span>' . $after;
             unset($options['append']);
             $wrapperOptions['class'] = $wrapperOptions['class'] . ' input-group';
         }
         
+        if (isset($options['sr-only'])) {
+            $before = '<div class="sr-only">' . $options['sr-only'] . '</div>' . $before;
+            unset($options['sr-only']);
+        }
+
+        if (isset($options['feedback-icon'])) {
+            $after = '<span class="fa fa-lg ' . $options['feedback-icon'] . ' form-control-feedback text-muted" style="top: 0;"></span>' . $after;
+            $wrapperOptions['class'] = $wrapperOptions['class'] . ' has-feedback';
+            unset($options['feedback-icon']);
+        }
+
+        if (isset($options['feedback-text'])) {
+            $after = '<span class="fa fa-lg form-control-feedback text-muted" style="top: 0;">' . $options['feedback-text'] . ' </span>' . $after;
+            $wrapperOptions['class'] = $wrapperOptions['class'] . ' has-feedback';
+            unset($options['feedback-text']);
+        }
+
         $inputElement = $type == 'password' ? $this->form->password($name, $options) : $this->form->{$type}(
             $name,
             $value,
             $options
         );
 
-        $groupElement = '<div ' . $this->html->attributes($wrapperOptions) . '>' . $prepend . $inputElement . $append . '</div>';
+        $groupElement = '<div ' . $this->html->attributes($wrapperOptions) . '>' . $before . $inputElement . $after . '</div>';
         $groupElement .= $this->getFieldError($name);
 
         return $this->getFormGroup($name, $label, $description . $groupElement);
