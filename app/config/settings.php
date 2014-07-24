@@ -15,10 +15,12 @@ return [
             'rule'    => 'email',
         ],
         'site.adminId' => [
+            'default' => 1,
             'label' => 'Admin id',
             'rule'  => 'numeric',
         ],
         'site.YCAccountId' => [
+            'default' => 2,
             'label' => 'YCAccount id',
             'rule'  => 'numeric',
         ],
