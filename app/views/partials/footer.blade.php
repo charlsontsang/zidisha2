@@ -57,22 +57,22 @@
                     <div class="col-xs-4">
                         <div class="h3">Explore</div>
                         <ul class="list-unstyled">
-                            <li><a href="#">Our Story</a></li>
-                            <li><a href="#">How It Works</a></li>
-                            <li><a href="#">Trust & Security</a></li>
+                            <li><a href="{{ route('page:our-story') }}">Our Story</a></li>
+                            <li><a href="{{ route('page:how-it-works') }}">How It Works</a></li>
+                            <li><a href="{{ route('page:trust-and-security') }}">Trust & Security</a></li>
                             <li><a href="#">FAQ</a></li>
                             <li><a href="#">Team</a></li>
                             <li><a href="#">Statistics</a></li>
-                            <li><a href="#">Press</a></li>
+                            <li><a href="{{ route('page:press') }}">Press</a></li>
                         </ul>
                     </div>
                     <div class="col-xs-4">
                         <div class="h3">Act</div>
                         <ul class="list-unstyled">
-                            <li><a href="#">Lend</a></li>
+                            <li><a href="{{ route('lend:index') }}">Lend</a></li>
                             <li><a href="#">Borrow</a></li>
                             <li><a href="#">Volunteer</a></li>
-                            <li><a href="#">Gift Cards</a></li>
+                            <li><a href="{{ route('lender:gift-cards') }}">Gift Cards</a></li>
                             <li><a href="#">Donate</a></li>
                             <li><a href="#">Book</a></li>
                         </ul>
@@ -81,11 +81,11 @@
                         <div class="h3">Connect</div>
                         <ul class="list-unstyled">
                             <li><a href="#">Project Updates</a></li>
-                            <li><a href="#">Blog</a></li>
-                            <li><a href="#">Facebook</a></li>
-                            <li><a href="#">Twitter</a></li>
+                            <li><a href="http://p2p-microlending-blog.zidisha.org/">Blog</a></li>
+                            <li><a href="http://www.facebook.com/ZidishaInc?sk=wall">Facebook</a></li>
+                            <li><a href="https://twitter.com/ZidishaInc">Twitter</a></li>
                             <li><a href="{{ route('lender:groups') }}">Lending Groups</a></li>
-                            <li><a href="#">Forum</a></li>
+                            <li><a href="https://www.zidisha.org/forum/">Forum</a></li>
                         </ul>
                     </div>
                 </div>  
