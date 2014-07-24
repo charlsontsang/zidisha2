@@ -103,6 +103,12 @@ $(function () {
             return false;
         });
     }
+
+    $('body').on('click', '[data-display=display]', function() {
+        $($(this).attr('target')).show();
+        $(this).hide();
+        return false;
+    });
 });
 
 function parseMoney(value) {
@@ -115,26 +121,28 @@ function formatMoney(value, scale) {
 }
 
 function paymentForm(config) {
-
-    var handler = StripeCheckout.configure({
-        key: config.stripeToken,
-        token: function (token, args) {
-            $("#stripe-token").val(token.id);
-            $("#payment-method").val("stripe");
-            $('#funds-upload').submit();
-        }
-    });
-    $(function () {
-        $('#stripe-payment').click(function (e) {
-            handler.open({
-                name: 'Zidisha',
-                description: 'Payment to Zidisha',
-                amount: (parseMoney($("#total-amount").val()) * 100).toFixed(0),
-                email: config.email,
-                panelLabel: "Pay {{amount}}"
-            });
-            e.preventDefault();
+var handler;
+    
+    $.getScript("https://checkout.stripe.com/checkout.js", function(data, textStatus, jqxhr) {
+        handler = StripeCheckout.configure({
+            key: config.stripeToken,
+            token: function (token, args) {
+                $("#stripe-token").val(token.id);
+                $("#payment-method").val("stripe");
+                $('#funds-upload').submit();
+            }
         });
+    });
+
+    $('#stripe-payment').click(function (e) {
+        handler.open({
+            name: 'Zidisha',
+            description: 'Payment to Zidisha',
+            amount: (parseMoney($("#total-amount").val()) * 100).toFixed(0),
+            email: config.email,
+            panelLabel: "Pay {{amount}}"
+        });
+        e.preventDefault();
     });
 
     var $donationAmount = $('#donation-amount'),

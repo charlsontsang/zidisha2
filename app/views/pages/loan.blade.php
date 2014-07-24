@@ -387,20 +387,27 @@
             <div class="panel-body">
                 @include('partials/loan-progress', [ 'loan' => $loan ])
                 
-                <br/>
-
                 {{ BootstrapForm::open(array('route' => ['loan:place-bid', $loan->getId()], 'translationDomain' => 'bid', 'id' => 'funds-upload')) }}
                 {{ BootstrapForm::populate($placeBidForm) }}
 
+                @if (!\Auth::check() || \Auth::user()->isLender())
+                <br/>
+
                 <div class="row">
                     <div class="col-xs-6" style="padding-right: 5px">
-                        {{ BootstrapForm::text('amount', null, ['id' => 'amount', 'label' => false, 'prepend' => '$']) }}
+                        {{ BootstrapForm::text('amount', Request::query('amount'), [
+                            'id' => 'amount',
+                            'label' => false,
+                            'prepend' => '$'
+                        ]) }}
                         <div class="text-center text-light">
                             Loan Amount
                         </div>
                     </div>
                     <div class="col-xs-6" style="padding-left: 5px">
-                        {{ BootstrapForm::select('interestRate', $placeBidForm->getRates(), 3, ['label' => false]) }}
+                        {{ BootstrapForm::select('interestRate', $placeBidForm->getRates(), Request::query('interestRate'), [
+                            'label' => false
+                        ]) }}
                         <div class="text-center text-light">
                             Interest
                         </div>
@@ -408,10 +415,19 @@
                 </div>
                 
                 <br/>
+                @endif
                 
-                <button id="lend-action" type="button" class="btn btn-primary btn-block">Lend</button>
+                @if (!Request::query('amount'))
+                    @if (\Auth::check())
+                        @if (\Auth::user()->isLender())
+                            <button id="lend-action" type="button" class="btn btn-primary btn-block">Lend</button>
+                        @endif
+                    @else
+                        <a href="{{ route('lender:join') }}" id="join-lend" class="btn btn-primary btn-block" data-toggle="modal" data-target="#join-modal">Join Zidisha & Lend</a>
+                    @endif
+                @endif
                 
-                <div id="lend-details" class="lend-details" style="display:none;">
+                <div id="lend-details" class="lend-details" {{ Request::query('amount') ? '' : 'style="display:none;"' }}>
                     {{ BootstrapForm::hidden('creditAmount', null, ['id' => 'credit-amount']) }}
                     
                     {{ BootstrapForm::hidden('donationCreditAmount', null, ['id' => 'donation-credit-amount']) }}
@@ -485,10 +501,17 @@
         @endif
     </div>
 </div>
+
+<div class="modal fade" id="join-modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+
+        </div>
+    </div>
+</div>
 @stop
 
 @section('script-footer')
-<script src="https://checkout.stripe.com/checkout.js"></script>
 <script type="text/javascript">
     $(function () {
         paymentForm({
@@ -563,6 +586,10 @@
             $('#lend-details').show();
             $(this).hide();
             return false;
+        });
+        $('#join-lend').on('click', function() {
+            var data = $(this).closest('form').serialize();
+            $.post("{{ route('lender:join-lend') }}", data);
         });
     });
 </script>

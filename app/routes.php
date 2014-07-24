@@ -63,8 +63,8 @@ Route::group(
          */
         Route::get('/join', array('uses' => 'AuthController@getJoin', 'as' => 'join'));
         Route::get('lender/join', array('uses' => 'LenderJoinController@getJoin', 'as' => 'lender:join', 'before' => 'loggedIn'));
-        Route::post('lender/join', array('uses' => 'LenderJoinController@postJoin','as' => 'lender:post-join',
-                                         'before' => 'csrf'));
+        Route::post('lender/join', array('uses' => 'LenderJoinController@postJoin','as' => 'lender:post-join', 'before' => 'csrf'));
+        Route::post('lender/join-lend', array('uses' => 'LenderJoinController@postJoinLend','as' => 'lender:join-lend', 'before' => 'csrf'));
 
         Route::get(
             'lender/facebook/join',

@@ -32,12 +32,12 @@ class LenderJoinController extends BaseController
         $country = Utility::getCountryCodeByIP();
 
         return View::make(
-            'lender.join',
+            Request::ajax() ? 'lender.join-modal' : 'lender.join',
             compact('country'),
             [
                 'form'            => $this->joinForm,
                 'facebookJoinUrl' => $this->facebookService->getLoginUrl('lender:facebook-join'),
-                'googleLoginUrl'  => $this->googleService->getLoginUrl('lender:google-join') . '&max_auth_age=0',
+                'googleJoinUrl'   => $this->googleService->getLoginUrl('lender:google-join') . '&max_auth_age=0',
             ]
         );
     }
@@ -51,12 +51,25 @@ class LenderJoinController extends BaseController
             Flash::error('lender.join.flash.oops');
             return Redirect::route('lender:join')->withForm($form);
         }
-
+        
         $user = $this->lenderService->joinLender($form->getData());
 
         return $this->join($user);
     }
 
+    public function postJoinLend()
+    {
+        if (Auth::check()) {
+            App::abort(404);
+        }
+
+        Session::put('lenderJoin.loanId', Input::get('loanId'));
+        Session::put('lenderJoin.amount', Input::get('amount'));
+        Session::put('lenderJoin.interestRate', Input::get('interestRate'));
+        
+        // http://stackoverflow.com/questions/22862305/laravel-session-data-not-written-update-availabe-in-view-when-using-ajax
+        return Response::json(['success' => true]);
+    }
 
     public function getFacebookJoin()
     {
@@ -122,6 +135,8 @@ class LenderJoinController extends BaseController
 
     protected function join(Lender $user)
     {
+        Auth::login($user->getUser());
+
         if (Session::get('lenderInviteVisitId')) {
             $lenderInviteVisit = InviteVisitQuery::create()
                 ->findOneById(Session::get('lenderInviteVisitId'));
@@ -130,11 +145,15 @@ class LenderJoinController extends BaseController
             $this->lenderService->processLenderInvite($user, $lenderInviteVisit);
             Session::forget('lenderInviteVisitId');
             Flash::modal(View::make('lender.invite-new-account', compact('inviter'))->render());
+        } elseif (Session::get('lenderJoin')) {
+            Flash::success('comments.flash.welcome');
+            $params = Session::get('lenderJoin');
+            Session::forget('lenderJoin');
+            return Redirect::route('loan:index', $params);
         } else {
             Flash::success('comments.flash.welcome');
         }
 
-        Auth::login($user->getUser());
         return Redirect::route('lender:dashboard');
     }
 

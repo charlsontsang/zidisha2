@@ -64,4 +64,9 @@ class PlaceBidForm extends AbstractPaymentForm
 
         return array_combine($keys, $values);
     }
+
+    public function getDefaultData()
+    {
+        return parent::getDefaultData() + ['interestRate' => 3];
+    }
 }
