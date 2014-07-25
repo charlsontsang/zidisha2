@@ -2,6 +2,7 @@
 
 namespace Zidisha\Loan;
 
+use Carbon\Carbon;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Zidisha\Admin\Setting;
 use Zidisha\Analytics\MixpanelService;
@@ -13,6 +14,7 @@ use Zidisha\Currency\ExchangeRateQuery;
 use Zidisha\Currency\Money;
 use Zidisha\Lender\Lender;
 use Zidisha\Loan\Calculator\InstallmentCalculator;
+use Zidisha\Loan\Calculator\RepaymentCalculator;
 use Zidisha\Mail\BorrowerMailer;
 use Zidisha\Mail\LenderMailer;
 use Zidisha\Repayment\Installment;
@@ -796,6 +798,41 @@ class LoanService
             $repaymentScore = number_format($repaymentRate,2, '.', ',');
         }
         return $repaymentScore;
+    }
+
+    public function writeOffLoans()
+    {
+        $sixMonthsAgo = Carbon::now()->subMonths(6);
+
+        $query = "SELECT l.id, l.borrower_id, l.status, rc.max_paid_date, rc.max_due_date, rc.min_due_date, l.disbursed_amount
+                FROM loans l JOIN (
+                    SELECT r.loan_id, MAX (r.paid_date) AS max_paid_date, MAX (r.due_date) AS max_due_date, MIN (r.due_date) AS min_due_date
+                    FROM installments r
+                    WHERE r.amount > 0
+                    GROUP BY r.loan_id
+                ) rc ON l.id = rc.loan_id
+                WHERE
+                    l.status = :status
+                AND (
+                    rc.max_due_date < :sixMonthsAgo
+                    OR rc.max_paid_date < :sixMonthsAgo
+                    OR (
+                        rc.min_due_date < :sixMonthsAgo
+                        AND rc.max_paid_date IS NULL
+                    )
+                )";
+
+        $loans = PropelDB::fetchAll(
+            $query,
+            [
+                'status' => Loan::ACTIVE,
+                'sixMonthsAgo' => $sixMonthsAgo,
+            ]
+        );
+
+        foreach ($loans as $loan) {
+            $this->defaultLoan($loan);
+        }
     }
 }
 
