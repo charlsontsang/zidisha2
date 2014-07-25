@@ -40,7 +40,7 @@ Join the global P2P microlending movement
     </tr>
     </thead>
     <tbody>
-    @foreach($loans['activeBids'] as $activeBid)
+    @foreach($activeBids as $activeBid)
     <tr>
         <td>{{ $activeBid->getBidAt()->format('d-m-Y') }}</td>
         <td>
@@ -55,12 +55,12 @@ Join the global P2P microlending movement
     <tr>
         <td><strong>Total Current Value</strong></td>
         <td></td>
-        <td>{{ $loans['totalBidAmount']->getAmount() }}</td>
+        <td>{{ $totalBidAmount->getAmount() }}</td>
         <td></td>
     </tr>
     </tbody>
 </table>
-{{ BootstrapHtml::paginator($loans['activeBids'])->links() }}
+{{ BootstrapHtml::paginator($activeBids)->links() }}
 
 <div class="page-header">
     <h3><strong>Active Loans</strong></h3>
@@ -80,7 +80,7 @@ Join the global P2P microlending movement
     </tr>
     </thead>
     <tbody>
-    @foreach($loans['activeLoansBids'] as $activeLoansBid)
+    @foreach($activeLoansBids as $activeLoansBid)
     <tr>
         <td>
             <a href="{{ route('loan:index', $activeLoansBid->getLoanId()) }}">{{ $activeLoansBid->getBorrower()->getName() }}</a>
@@ -97,12 +97,12 @@ Join the global P2P microlending movement
     @endforeach
     <tr>
         <td><strong>Total Amount Lent</strong></td>
-        <td>{{ $loans['totalActiveLoansBidsAmount']->getAmount() }}</td>
+        <td>{{ $totalActiveLoansBidsAmount->getAmount() }}</td>
         <td></td>
     </tr>
     </tbody>
 </table>
-{{ BootstrapHtml::paginator($loans['activeLoansBids'], 'page2')->links() }}
+{{ BootstrapHtml::paginator($activeLoansBids, 'page2')->links() }}
 
 
 <div class="page-header">
@@ -123,7 +123,7 @@ Join the global P2P microlending movement
     </tr>
     </thead>
     <tbody>
-    @foreach($loans['completedLoansBids'] as $completedLoansBid)
+    @foreach($completedLoansBids as $completedLoansBid)
     <tr>
         <td>
             <a href="{{ route('loan:index', $completedLoansBid->getLoanId()) }}">{{ $completedLoansBid->getBorrower()->getName() }}</a>
@@ -140,12 +140,12 @@ Join the global P2P microlending movement
     @endforeach
     <tr>
         <td><strong>Total Amount Lent</strong></td>
-        <td>{{ $loans['totalCompletedLoansBidsAmount']->getAmount() }}</td>
+        <td>{{ $totalCompletedLoansBidsAmount->getAmount() }}</td>
         <td></td>
     </tr>
     </tbody>
 </table>
-{{ BootstrapHtml::paginator($loans['completedLoansBids'], 'page3')->links() }}
+{{ BootstrapHtml::paginator($completedLoansBids, 'page3')->links() }}
 @stop
 
 @section('script-footer')

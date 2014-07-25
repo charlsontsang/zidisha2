@@ -156,7 +156,7 @@ class RepaymentService
     }
     
     public function addRepayment(Loan $loan, \Datetime $date, Money $amount, BorrowerPayment $borrowerPayment = null)
-    {        
+    {
         $calculator = $this->getRepaymentCalculator($loan, $amount);
 
         if ($calculator->unpaidAmount()->isNegative()) {

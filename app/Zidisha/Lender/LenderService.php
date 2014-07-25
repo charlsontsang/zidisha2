@@ -377,6 +377,24 @@ class LenderService
         return Money::create($totalAmount, 'USD')->multiply(-1);
     }
 
+    public function getTotalAmountLentByInvitee(Lender $lender)
+    {
+        $sql = 'SELECT SUM(Amount)
+                        FROM transactions
+                        WHERE type IN (:loanBid, :loanOutbid)
+                        AND user_id IN ( SELECT invitee_id FROM lender_invites
+                                          WHERE invitee_id != :lenderId
+                                          AND lender_id = :lenderId)';
+
+        $totalAmount = ( PropelDB::fetchNumber($sql, [
+                'loanBid' => Transaction::LOAN_BID,
+                'loanOutbid' => Transaction::LOAN_OUTBID,
+                'lenderId' => $lender->getId(),
+            ]));
+
+        return Money::create($totalAmount, 'USD')->multiply(-1);
+    }
+
     public function getMyImpactOld(Lender $lender)
     {
         $invites = InviteQuery::create()

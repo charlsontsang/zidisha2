@@ -2,6 +2,7 @@
 
 namespace Zidisha\Loan;
 
+use Zidisha\Lender\Lender;
 use Zidisha\Loan\Base\LoanQuery as BaseLoanQuery;
 
 
@@ -34,6 +35,16 @@ class LoanQuery extends BaseLoanQuery
     public function filterFundRaising()
     {
         return $this->filterByStatus(Loan::OPEN);
+    }
+
+    public function filterNotForgivenByLender(Lender $lender)
+    {
+        return $this->where('NOT EXISTS (SELECT NULL FROM forgiven_loans fl WHERE loans.id = fl.loan_id AND fl.lender_id = ?)', $lender->getId());
+    }
+
+    public function getRepaidAmounts(Lender $lender)
+    {
+
     }
 
 } // LoanQuery

@@ -337,7 +337,6 @@ class LoanService
             ->setBorrower($loan->getBorrower())
             ->setBidAmount($bidAmount)
             ->setInterestRate($data['interestRate'])
-            ->setActive(true)
             ->setBidAt(new \DateTime());
 
         $bid->save($con);

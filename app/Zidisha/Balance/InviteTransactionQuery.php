@@ -3,6 +3,9 @@
 namespace Zidisha\Balance;
 
 use Zidisha\Balance\Base\InviteTransactionQuery as BaseInviteTransactionQuery;
+use Zidisha\Currency\Currency;
+use Zidisha\Currency\Money;
+use Zidisha\Lender\Lender;
 
 
 /**
@@ -18,4 +21,14 @@ use Zidisha\Balance\Base\InviteTransactionQuery as BaseInviteTransactionQuery;
 class InviteTransactionQuery extends BaseInviteTransactionQuery
 {
 
+    public function getTotalInviteCreditAmount(Lender $lender)
+    {
+        $total = $this->filterByLender($lender)
+                  ->select(array('total'))
+                  ->withColumn('SUM(amount)', 'total')
+                  ->findOne();
+
+        return Money::valueOf($total, Currency::valueOf('USD'));
+
+    }
 } // InviteTransactionQuery

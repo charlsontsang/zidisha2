@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\View;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Zidisha\Admin\Setting;
+use Zidisha\Balance\InviteTransactionQuery;
 use Zidisha\Balance\Transaction;
 use Zidisha\Balance\TransactionQuery;
 use Zidisha\Currency\Currency;
@@ -16,6 +17,7 @@ use Zidisha\Lender\InviteQuery;
 use Zidisha\Lender\LenderQuery;
 use Zidisha\Lender\LenderService;
 use Zidisha\Lender\LendingGroupQuery;
+use Zidisha\Loan\Bid;
 use Zidisha\Loan\BidQuery;
 use Zidisha\Loan\Loan;
 use Zidisha\Loan\LoanQuery;
@@ -67,12 +69,25 @@ class LenderController extends BaseController
         $page2 = Request::query('page2') ? : 1;
         $page3 = Request::query('page3') ? : 1;
 
-        $loans = BidQuery::create()
-            ->getTotalLoans($lender, $page, $page2, $page3);
+        $activeBids = BidQuery::create()
+            ->getActiveBids($lender, $page);
+        $totalBidAmount = BidQuery::create()
+            ->getTotalActiveBidAmount($lender);
+
+        $activeLoansBids = BidQuery::create()
+            ->getActiveLoansBids($lender, $page2);
+        $totalActiveLoansBidsAmount = BidQuery::create()
+            ->getTotalActiveLoansBidsAmount($lender);
+
+        $completedLoansBids = BidQuery::create()
+            ->getCompletedLoansBids($lender, $page3);
+        $totalCompletedLoansBidsAmount = BidQuery::create()
+            ->getTotalCompletedLoansBidsAmount($lender);
 
         return View::make(
             'lender.public-profile',
-            compact('lender', 'karma', 'loans')
+            compact('lender', 'karma', 'activeBids', 'totalBidAmount',
+                'activeLoansBids', 'totalActiveLoansBidsAmount', 'completedLoansBids', 'totalCompletedLoansBidsAmount')
         );
     }
 
@@ -227,6 +242,21 @@ class LenderController extends BaseController
             ->filterByUserId($userId)
             ->getTotalAmount();
 
+        $newMemberInviteCredit = InviteTransactionQuery::create()
+            ->getTotalInviteCreditAmount($lender);
+
+        $totalOutstandingAmount = BidQuery::create()
+            ->filterByActive(true)
+            ->filterByLender($lender)
+            ->useLoanQuery()
+                ->filterByStatus([Loan::FUNDED, Loan::ACTIVE])
+                ->filterNotForgivenByLender($lender)
+            ->endUse()
+            ->withColumn('SUM(accepted_amount)', 'total')
+            ->select('total')
+            ->findOne();
+        $principleOutstanding = Money::create($totalOutstandingAmount, 'USD');
+
         $lendingGroups = LendingGroupQuery::create()
             ->useLendingGroupMemberQuery()
                 ->filterByMember($lender)
@@ -269,36 +299,63 @@ class LenderController extends BaseController
         $totalLentAmount = TransactionQuery::create()
             ->getTotalLentAmount($userId);
 
-//        $totalLentAmountByInvitees = BidQuery::create()
-//            ->filterByLenderId($AcceptedInviteesIds, Criteria::IN)
-//            ->getTotalBidAmount();
-//        $totalLentAmountByRecipients = BidQuery::create()
-//            ->filterByLenderId($RedeemedGiftCardsRecipientsIds, Criteria::IN)
-//            ->getTotalBidAmount();
-        //TODO
         $myImpact = $this->lenderService->getMyImpact($lender);
+        $totalLentAmountByInvitees = $this->lenderService->getTotalAmountLentByInvitee($lender);
+        $totalLentAmountByRecipients = $myImpact->subtract($totalLentAmountByInvitees);
         $totalImpact = $myImpact->add($totalLentAmount);
         $page = Request::query('page') ? : 1;
         $page2 = Request::query('page2') ? : 1;
         $page3 = Request::query('page3') ? : 1;
 
-        $loans = BidQuery::create()
-            ->getTotalLoans($lender, $page, $page2, $page3);
-
-        $numberOfFundRaisingBids = $loans['activeBids']->getNbResults();
+        $activeBids = BidQuery::create()
+            ->getActiveBids($lender, $page);
+        $totalBidAmount = BidQuery::create()
+            ->getTotalActiveBidAmount($lender);
+        $numberOfFundRaisingBids = $activeBids->getNbResults();
         $numberOfFundRaisingProjects = \Lang::choice('lender.flash.preferences.stats-projects', $numberOfFundRaisingBids, array('count' => $numberOfFundRaisingBids));
 
-        $numberOfActiveBids = $loans['activeLoansBids']->getNbResults();
+        $activeLoansBids = BidQuery::create()
+            ->getActiveLoansBids($lender, $page2);
+        $totalActiveLoansBidsAmount = BidQuery::create()
+            ->getTotalActiveLoansBidsAmount($lender);
+        $numberOfActiveBids = $activeLoansBids->getNbResults();
         $numberOfActiveProjects = \Lang::choice('lender.flash.preferences.stats-projects', $numberOfActiveBids, array('count' => $numberOfActiveBids));
 
-        $numberOfCompletedBids = $loans['completedLoansBids']->getNbResults();
+        $completedLoansBids = BidQuery::create()
+            ->getCompletedLoansBids($lender, $page3);
+        $totalCompletedLoansBidsAmount = BidQuery::create()
+            ->getTotalCompletedLoansBidsAmount($lender);
+        $numberOfCompletedBids = $completedLoansBids->getNbResults();
         $numberOfCompletedProjects = \Lang::choice('lender.flash.preferences.stats-projects', $numberOfCompletedBids, array('count' => $numberOfCompletedBids));
+
+        $completedLoansIds = [];
+        /** @var $completedLoansBid Bid */
+        foreach ($completedLoansBids as $completedLoansBid) {
+            $completedLoansIds[] = $completedLoansBid->getLoanId();
+        }
+
+        $completedLoansRepaidAmounts = TransactionQuery::create()
+            ->filterByUserId($userId)
+            ->filterRepaidToLender()
+            ->select('totals', 'loan_id')
+            ->withColumn('SUM(amount)', 'totals')
+            ->filterByLoanId($completedLoansIds, Criteria::IN)
+            ->groupByLoanId()
+            ->find();
+
+        /** @var $completedLoansBid Bid */
+        foreach ($completedLoansBids as $completedLoansBid) {
+            $completedLoansBid['amountRepaid'] = $completedLoansRepaidAmounts[$completedLoansBid->getLoanId()];
+        }
 
         return View::make('lender.my-stats', compact('currentBalance', 'totalFundsUpload', 'lendingGroups',
                 'numberOfInvitesSent', 'numberOfInvitesAccepted', 'numberOfLoans', 'numberOfLoansByInvitees',
                 'numberOfGiftedGiftCards', 'numberOfRedeemedGiftCards', 'numberOfLoansByRecipients',
-                'totalLentAmount', 'myImpact', 'totalImpact' , 'loans', 'numberOfFundRaisingProjects',
-                'numberOfActiveProjects', 'numberOfCompletedProjects'
+                'totalLentAmount', 'myImpact', 'totalImpact' , 'loans', 'activeBids', 'totalBidAmount',
+                'activeLoansBids', 'totalActiveLoansBidsAmount', 'completedLoansBids', 'totalCompletedLoansBidsAmount',
+                'numberOfFundRaisingProjects', 'newMemberInviteCredit',
+                'numberOfActiveProjects', 'numberOfCompletedProjects', 'principleOutstanding',
+                'totalLentAmountByInvitees', 'totalLentAmountByRecipients'
             ));
     }
 }

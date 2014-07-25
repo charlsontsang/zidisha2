@@ -91,62 +91,61 @@ class BidQuery extends BaseBidQuery
 
     }
 
-    public function getTotalLoans(Lender $lender, $page, $page2, $page3)
+    public function getActiveBids(Lender $lender, $page)
     {
-        $activeBids = BidQuery::create()
+        return BidQuery::create()
             ->filterByLender($lender)
             ->filterByActive(true)
             ->paginate($page , 10);
-        $totalBidAmount = BidQuery::create()
-            ->getTotalActiveBidAmount($lender);
-
-        $activeLoansBids = BidQuery::create()
-            ->filterByLender($lender)
-            ->filterByAcceptedAmount('0', Criteria::NOT_EQUAL)
-            ->useLoanQuery()
-            ->filterActive()
-            ->endUse()
-            ->paginate($page2, 10);
-
-        $total = BidQuery::create()
-            ->filterByLender($lender)
-            ->filterByAcceptedAmount('0', Criteria::NOT_EQUAL)
-            ->useLoanQuery()
-            ->filterActive()
-            ->endUse()
-            ->select(array('total'))
-            ->withColumn('SUM(accepted_amount)', 'total')
-            ->findOne();
-        $totalActiveLoansBidsAmount =  Money::valueOf($total, Currency::valueOf('USD'));
-
-
-        $completedLoansBids = BidQuery::create()
-            ->filterByLender($lender)
-            ->filterByAcceptedAmount('0', Criteria::NOT_EQUAL)
-            ->useLoanQuery()
-                ->filterEnded()
-            ->endUse()
-            ->paginate($page3, 1);
-
-        $total = BidQuery::create()
-            ->filterByLender($lender)
-            ->filterByAcceptedAmount('0', Criteria::NOT_EQUAL)
-            ->useLoanQuery()
-                ->filterEnded()
-            ->endUse()
-            ->select(array('total'))
-            ->withColumn('SUM(accepted_amount)', 'total')
-            ->findOne();
-        $totalCompletedLoansBidsAmount =  Money::valueOf($total, Currency::valueOf('USD'));
-
-        return [
-            'activeBids' => $activeBids,
-            'totalBidAmount' => $totalBidAmount,
-            'activeLoansBids' => $activeLoansBids,
-            'totalActiveLoansBidsAmount' => $totalActiveLoansBidsAmount,
-            'completedLoansBids' => $completedLoansBids,
-            'totalCompletedLoansBidsAmount' => $totalCompletedLoansBidsAmount,
-        ];
     }
 
+    public function getActiveLoansBids(Lender $lender, $page2)
+    {
+        return BidQuery::create()
+            ->filterByLender($lender)
+            ->filterByAcceptedAmount('0', Criteria::NOT_EQUAL)
+            ->useLoanQuery()
+            ->filterActive()
+            ->endUse()
+            ->paginate($page2, 2);
+    }
+
+    public function getTotalActiveLoansBidsAmount(Lender $lender)
+    {
+        $total = BidQuery::create()
+            ->filterByLender($lender)
+            ->filterByAcceptedAmount('0', Criteria::NOT_EQUAL)
+            ->useLoanQuery()
+            ->filterActive()
+            ->endUse()
+            ->select(array('total'))
+            ->withColumn('SUM(accepted_amount)', 'total')
+            ->findOne();
+        return Money::valueOf($total, Currency::valueOf('USD'));
+    }
+
+    public function getCompletedLoansBids(Lender $lender, $page3)
+    {
+        return BidQuery::create()
+            ->filterByLender($lender)
+            ->filterByAcceptedAmount('0', Criteria::NOT_EQUAL)
+            ->useLoanQuery()
+            ->filterEnded()
+            ->endUse()
+            ->paginate($page3, 2);
+    }
+
+    public function getTotalCompletedLoansBidsAmount(Lender $lender)
+    {
+        $total = BidQuery::create()
+            ->filterByLender($lender)
+            ->filterByAcceptedAmount('0', Criteria::NOT_EQUAL)
+            ->useLoanQuery()
+            ->filterEnded()
+            ->endUse()
+            ->select(array('total'))
+            ->withColumn('SUM(accepted_amount)', 'total')
+            ->findOne();
+        return Money::valueOf($total, Currency::valueOf('USD'));
+    }
 } // BidQuery

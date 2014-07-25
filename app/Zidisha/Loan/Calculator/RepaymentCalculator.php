@@ -131,7 +131,6 @@ class RepaymentCalculator extends InstallmentCalculator
     {
         $loanRepayments = [];
         $totalAmount = Money::create(0);
-        
         $repaymentAmountForLenders = Converter::toUsd($this->repaymentAmountForLenders(), $exchangeRate);
 
         /* @var $bid Bid */
@@ -146,6 +145,7 @@ class RepaymentCalculator extends InstallmentCalculator
                 $loanRepayment = $loanRepayments[$lender->getId()];
             } else {
                 $loanRepayment = new LoanRepayment($lender);
+                $loanRepayments[] = $loanRepayment;
             }
 
             $share = $bid->getAcceptedAmount()->ratio($totalAmount);
@@ -153,7 +153,7 @@ class RepaymentCalculator extends InstallmentCalculator
 
             $loanRepayment->addRepaidAmount($repaidAmount, $bid->getLenderInviteCredit());
         }
-        
+
         return $loanRepayments;
     }
 

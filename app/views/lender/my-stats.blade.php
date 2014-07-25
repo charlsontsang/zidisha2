@@ -31,8 +31,8 @@ My Stats
                 Make A Loan
             </a>
         </p>
-        <p>  TODO</p>
-        <p>  TODO</p>
+        <p>{{ $newMemberInviteCredit }}</p>
+        <p>{{ $principleOutstanding }}</p>
     </div>
 </div>
 
@@ -93,8 +93,8 @@ My Stats
 
     <div class="col-xs-8">
         <p>{{ $totalLentAmount }}</p>
-        <p> //TODO </p>
-        <p>{{ $myImpact }}</p>
+        <p> {{ $totalLentAmountByInvitees }} </p>
+        <p>{{ $totalLentAmountByRecipients }}</p>
         <p>{{ $totalImpact }}</p>
     </div>
 </div>
@@ -113,7 +113,7 @@ My Stats
     </tr>
     </thead>
     <tbody>
-    @foreach($loans['activeBids'] as $fundRaisingLoansBid)
+    @foreach($activeBids as $fundRaisingLoansBid)
     <tr>
         <td>
 <!--            <a class="pull-left" href="{{ route('loan:index', $fundRaisingLoansBid->getLoanId()) }}">-->
@@ -133,12 +133,12 @@ My Stats
     <tr>
         <td><strong> Total </strong></td>
         <td>{{ $numberOfFundRaisingProjects }}</td>
-        <td>{{ $loans['totalBidAmount']->getAmount() }}</td>
+        <td>{{ $totalBidAmount->getAmount() }}</td>
         <td></td>
     </tr>
     </tbody>
 </table>
-{{ BootstrapHtml::paginator($loans['activeBids'])->links() }}
+{{ BootstrapHtml::paginator($activeBids)->links() }}
 
 
 <div class="page-header">
@@ -156,7 +156,7 @@ My Stats
     </tr>
     </thead>
     <tbody>
-    @foreach($loans['activeLoansBids'] as $activeLoansBid)
+    @foreach($activeLoansBids as $activeLoansBid)
     <tr>
         <td>
             <!--            <a class="pull-left" href="{{ route('loan:index', $fundRaisingLoansBid->getLoanId()) }}">-->
@@ -167,7 +167,11 @@ My Stats
             {{ $activeLoansBid->getBorrower()->getProfile()->getCity() }},
             {{ $activeLoansBid->getBorrower()->getCountry()->getName() }}
         </td>
-        <td>{{ $activeLoansBid->getLoan()->getDisbursedAt()->format('d-m-Y') }}</td>
+        @if($activeLoansBid->getLoan()->getStatus() == Zidisha\Loan\Loan::ACTIVE)
+            <td>{{ $activeLoansBid->getLoan()->getDisbursedAt()->format('d-m-Y') }}</td>
+        @else
+            <td>{{ $activeLoansBid->getLoan()->getAcceptedAt()->format('d-m-Y') }}</td>
+        @endif
         <td>{{ $activeLoansBid->getAcceptedAmount()->getAmount() }}</td>
         <td>// TODO</td>
         <td>// TODO</td>
@@ -177,12 +181,12 @@ My Stats
     <tr>
         <td><strong> Total </strong></td>
         <td>{{ $numberOfActiveProjects }}</td>
-        <td>{{ $loans['totalActiveLoansBidsAmount']->getAmount() }}</td>
+        <td>{{ $totalActiveLoansBidsAmount->getAmount() }}</td>
         <td></td>
     </tr>
     </tbody>
 </table>
-{{ BootstrapHtml::paginator($loans['activeLoansBids'], 'page2')->links() }}
+{{ BootstrapHtml::paginator($activeLoansBids, 'page2')->links() }}
 
 
 <div class="page-header">
@@ -200,7 +204,7 @@ My Stats
     </tr>
     </thead>
     <tbody>
-    @foreach($loans['completedLoansBids'] as $completedLoansBid)
+    @foreach($completedLoansBids as $completedLoansBid)
     <tr>
         <td>
             <!--            <a class="pull-left" href="{{ route('loan:index', $completedLoansBid->getLoanId()) }}">-->
@@ -224,12 +228,12 @@ My Stats
     <tr>
         <td><strong> Total </strong></td>
         <td>{{ $numberOfCompletedProjects }}</td>
-        <td>{{ $loans['totalCompletedLoansBidsAmount']->getAmount() }}</td>
+        <td>{{ $totalCompletedLoansBidsAmount->getAmount() }}</td>
         <td></td>
     </tr>
     </tbody>
 </table>
-{{ BootstrapHtml::paginator($loans['completedLoansBids'], 'page3')->links() }}
+{{ BootstrapHtml::paginator($completedLoansBids, 'page3')->links() }}
 @stop
 
 @section('script-footer')

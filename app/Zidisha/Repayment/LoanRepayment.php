@@ -41,9 +41,9 @@ class LoanRepayment {
     public function addRepaidAmount(Money $repaidAmount, $lenderInviteCredit)
     {
         if ($lenderInviteCredit) {
-            $this->lenderInviteCredit->add($repaidAmount);
+            $this->lenderInviteCredit = $this->lenderInviteCredit->add($repaidAmount);
         } else {
-            $this->amount->add($repaidAmount);
+            $this->amount = $this->amount->add($repaidAmount);
         }
         
         return $this;

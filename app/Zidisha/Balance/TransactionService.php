@@ -309,6 +309,7 @@ class TransactionService
     public function addRepaymentTransaction(ConnectionInterface $con, Money $amount, Loan $loan, Lender $lender, \DateTime $date)
     {
         $this->assertAmount($amount);
+        var_dump("repayment Transaction amount", $amount->getAmount());
 
         $transaction = new Transaction();
         $transaction
