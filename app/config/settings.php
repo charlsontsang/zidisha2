@@ -52,6 +52,11 @@ return [
             'default' => '5',
             'rule'    => 'numeric',
         ],
+        'loan.expireThreshold' => [
+            'label' => 'Number of days after which an unfunded loan application will expire automatically.',
+            'default' => '14',
+            'rule' => 'numeric'
+        ],
     ],
     'API' => [
         'facebook.appId' => [
