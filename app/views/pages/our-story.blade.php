@@ -7,9 +7,9 @@ Our Story
 
 @section('content')
 <div class="info-page">
-    <h1>Our Story</h1>
-
-	<br/>
+    <div class="page-header">
+        <h1>Our Story</h1>
+    </div>
 
 	<p>It was Thanksgiving Day, 2008 and I was in Niger, a vast famine-stricken wasteland in the middle of the African continent.</p>
 

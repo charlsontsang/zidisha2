@@ -6,8 +6,9 @@ Press
 
 @section('content')
 <div class="info-page">
-
-    <h1>Press</h1>
+    <div class="page-header">
+        <h1>Press</h1>
+    </div>
         
     <p>We’re super honored to have received great press from publications big and small, far and wide. Here are a few of our favorite shout outs.</p>
     

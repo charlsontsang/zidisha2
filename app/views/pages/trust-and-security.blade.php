@@ -6,7 +6,9 @@ Trust and Security
 
 @section('content')
 <div class="info-page">
-    <h1>Trust and Security</h1>
+    <div class="page-header">
+        <h1>Trust and Security</h1>
+    </div>
 
     <p>First, an important warning: Zidisha is not a financial institution or an investment service. This means that this is not a safe place to store your savings or financial assets. So we suggest that you treat lending through Zidisha as a philanthropic activity — and as always, don’t lend out any funds that you cannot afford to lose.</p>
 
