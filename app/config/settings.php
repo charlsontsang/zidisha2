@@ -112,5 +112,8 @@ return [
         'sendwithus.lender-expired-loan-template-id' => [
             'label' => 'Loan expired notification'
         ],
+        'sendwithus.borrower-notifications-template-id' => [
+            'label' => 'Borrower account notifications'
+        ]
     ]
 ];
