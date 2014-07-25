@@ -127,14 +127,14 @@ class BidQuery extends BaseBidQuery
                 ->filterEnded()
             ->endUse()
             ->paginate($page3, 1);
+
         $total = BidQuery::create()
             ->filterByLender($lender)
             ->filterByAcceptedAmount('0', Criteria::NOT_EQUAL)
             ->useLoanQuery()
                 ->filterEnded()
             ->endUse()
-            ->select(array('total', 'id'))
-            ->withColumn('SUM(accepted_amount)', 'total')
+            ->select(array('total'))
             ->withColumn('SUM(accepted_amount)', 'total')
             ->findOne();
         $totalCompletedLoansBidsAmount =  Money::valueOf($total, Currency::valueOf('USD'));

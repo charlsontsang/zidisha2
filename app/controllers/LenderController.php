@@ -285,13 +285,13 @@ class LenderController extends BaseController
         $loans = BidQuery::create()
             ->getTotalLoans($lender, $page, $page2, $page3);
 
-        $numberOfFundRaisingBids = $loans['activeBids']->count();
+        $numberOfFundRaisingBids = $loans['activeBids']->getNbResults();
         $numberOfFundRaisingProjects = \Lang::choice('lender.flash.preferences.stats-projects', $numberOfFundRaisingBids, array('count' => $numberOfFundRaisingBids));
 
-        $numberOfActiveBids = $loans['activeLoansBids']->count();
+        $numberOfActiveBids = $loans['activeLoansBids']->getNbResults();
         $numberOfActiveProjects = \Lang::choice('lender.flash.preferences.stats-projects', $numberOfActiveBids, array('count' => $numberOfActiveBids));
 
-        $numberOfCompletedBids = $loans['completedLoansBids']->count();
+        $numberOfCompletedBids = $loans['completedLoansBids']->getNbResults();
         $numberOfCompletedProjects = \Lang::choice('lender.flash.preferences.stats-projects', $numberOfCompletedBids, array('count' => $numberOfCompletedBids));
 
         return View::make('lender.my-stats', compact('currentBalance', 'totalFundsUpload', 'lendingGroups',
@@ -302,5 +302,3 @@ class LenderController extends BaseController
             ));
     }
 }
-
-
