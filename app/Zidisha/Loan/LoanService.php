@@ -867,12 +867,12 @@ class LoanService
     public function expireLoans()
     {
         //TODO: 
-        //$allowedTimeToRaiseLoan = Setting::get('');
-        $allowedTimeToRaiseLoan = Carbon::create()->subDays(14);
+        $thresholdDays = Setting::get('loan.expireThreshold');
+        $expireThreshold = Carbon::create()->subDays($thresholdDays);
                 
         $loans = LoanQuery::create()
             ->filterByStatus(Loan::OPEN)
-            ->where('loans.applied_at < ?', $allowedTimeToRaiseLoan)
+            ->where('loans.applied_at < ?', $expireThreshold)
             ->find();
         
         foreach($loans as $loan) {
