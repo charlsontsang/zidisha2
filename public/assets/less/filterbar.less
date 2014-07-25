@@ -1,3 +1,12 @@
+.filter-bar {
+	margin-bottom: 0;
+  	@media (min-width: @screen-sm-min) {
+  		margin-bottom: @padding-large-horizontal;
+  	}
+  	@media (min-width: @screen-md-min) {
+  		margin-bottom: 0;
+  	}
+}
 .filter-bar span {
 	padding: 0 12px;
 }
@@ -17,7 +26,7 @@
 	margin-bottom: 12px;
 	width: 100%;
 	text-align: left;
-  	@media (min-width: @screen-sm-min) {
+	@media (min-width: @screen-sm-min) {
 		margin-bottom: 0;
 		width: auto;
 		text-align: center;
@@ -25,8 +34,4 @@
 }
 .filter-bar .input-group {
 	width: 100%;
-  	@media (min-width: @screen-sm-min) {
-		float: right;
-		width: 67%;
-	}
 }

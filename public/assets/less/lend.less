@@ -4,12 +4,23 @@
     font-weight: bolder;
     text-transform: uppercase;
 }
+.profile-photo img {
+	width: 100%;
+	height: auto;
+}
 .loan h2 {
-    font-size: 32px;
+    font-size: 24px;
     color: #333;
+    @media (min-width: @screen-md-min) {
+      	font-size: 32px;
+    }
 }
 .loan h2 a {
     color: #333;
+}
+.loan h2 a:hover, .loan h2 a:active {
+    color: @brand-primary;
+    text-decoration: none;
 }
 .loan-summary {
     padding: 12px 0;

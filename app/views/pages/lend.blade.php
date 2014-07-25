@@ -8,7 +8,7 @@
 <div class="page-section page-section-filter">
     <div class="container">
         <div class="row">
-            <div class="col-md-9">
+            <div class="col-md-10">
                 <div class="filter-bar">
                     <span class="text" style="padding-left: 0;">Show</span>
                     <div class="btn btn-default btn-filter" target="#filter-categories">
@@ -34,12 +34,12 @@
                     </div>
                     <span class="text">sorted by</span>
                     <div class="btn btn-default btn-filter" target="#filter-sortings">
-                        Repayment Rate
+                        On-Time Repayments
                         <i class="fa fa-fw fa-caret-down"></i>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <form class="form-inline" role="form" action="{{ route('lend:index', $searchRouteParams) }}" method="get">
                     <div class="input-group">
                         <label class="sr-only" for="search">Search</label>
@@ -55,7 +55,7 @@
 
 @section('content')
 <div class="row">
-    <div class="col-xs-12">
+    <div class="col-sm-12 col-md-10 col-md-offset-1">
         <p>
             We found <strong>12 projects</strong> for this search.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">View all 198 projects</a>
         </p>
@@ -75,7 +75,6 @@
         <hr/>
         @endif
 
-
         @if($selectedCountry)
         <h2>{{ $selectedCountry->getName(); }}</h2>
         <br>
@@ -86,13 +85,13 @@
 @foreach($paginator as $loan)
 <div class="row">
 
-    <div class="col-md-5">
+    <div class="col-sm-6 col-md-5 col-md-offset-1">
         <a class="pull-left" href="{{ route('borrower:public-profile', $loan->getBorrower()->getUser()->getUsername()) }}">
             <img src="{{ $loan->getBorrower()->getUser()->getProfilePictureUrl() }}" width="100%">
         </a>
     </div>
     
-    <div class="col-md-7 loan">
+    <div class="col-sm-6 col-md-5 loan">
         @if($loan->getCategory())
             <div class="loan-category">
                 {{ $loan->getCategory()->getName() }}
@@ -108,27 +107,40 @@
             </a>
         </h2>
         
-        <p>
-            {{ $loan->getBorrower()->getName() }}
-            <img class="leaf" src="{{ '/assets/images/leaf.png' }}"/>
-            {{ $loan->getBorrower()->getProfile()->getCity() }},
-            {{ $loan->getBorrower()->getCountry()->getName() }}
-        </p>
+        <div class="row">
+            <div class="col-sm-5">
+                <p>
+                    {{ $loan->getBorrower()->getName() }}
+                </p>
+            </div>
+            <div class="col-sm-7">
+                <p>
+                    <img class="leaf" src="{{ '/assets/images/leaf.png' }}"/>
+                    {{ $loan->getBorrower()->getProfile()->getCity() }},
+                    {{ $loan->getBorrower()->getCountry()->getName() }}
+                </p>
+            </div>
+        </div>
 
         <p class="loan-summary">
-            <a href="{{ route('loan:index', $loan->getId()) }}" class="link-dark">
-                {{ Zidisha\Utility\Utility::truncate($loan->getProposal(), 200, array('exact' => false)) }}
-            </a>
-            <a href="{{ route('loan:index', $loan->getId()) }}">Read More</a>
+            {{ Zidisha\Utility\Utility::truncate($loan->getProposal(), 100, array('exact' => false)) }}
         </p>
         
         @include('partials/loan-progress', [ 'loan' => $loan ])
     </div>
 </div>
-<hr/>
+<div class="row">
+    <div class="col-sm-12 col-md-10 col-md-offset-1">
+        <hr/>
+    </div>
+</div>
 @endforeach
 
-{{ $paginator->appends(['search' => $searchQuery])->links() }}
+<div class="row">
+    <div class="col-sm-12 col-md-10 col-md-offset-1">
+        {{ $paginator->appends(['search' => $searchQuery])->links() }}
+    </div>
+</div>
 
 <div id="filter-categories" class="hide">
     <ul class="list-unstyled">

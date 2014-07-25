@@ -7910,9 +7910,12 @@ a.inverted {
 a.inverted:hover {
   color: #2e9df7;
 }
+hr {
+  border-top: 1px solid #f2f2f2;
+}
 .leaf {
   margin-top: -12px;
-  padding: 0 2px 0 12px;
+  padding-right: 2px;
 }
 .page-section {
   background-color: #f9f9f9;
@@ -8134,6 +8137,19 @@ a.inverted:hover {
   color: #fff;
   text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5), -1px -1px 5px rgba(0, 0, 0, 0.5);
 }
+.filter-bar {
+  margin-bottom: 0;
+}
+@media (min-width: 768px) {
+  .filter-bar {
+    margin-bottom: 16px;
+  }
+}
+@media (min-width: 992px) {
+  .filter-bar {
+    margin-bottom: 0;
+  }
+}
 .filter-bar span {
   padding: 0 12px;
 }
@@ -8168,24 +8184,32 @@ a.inverted:hover {
 .filter-bar .input-group {
   width: 100%;
 }
-@media (min-width: 768px) {
-  .filter-bar .input-group {
-    float: right;
-    width: 67%;
-  }
-}
 .loan-category {
   margin-bottom: 12px;
   font-size: 12px;
   font-weight: bolder;
   text-transform: uppercase;
 }
+.profile-photo img {
+  width: 100%;
+  height: auto;
+}
 .loan h2 {
-  font-size: 32px;
+  font-size: 24px;
   color: #333;
+}
+@media (min-width: 992px) {
+  .loan h2 {
+    font-size: 32px;
+  }
 }
 .loan h2 a {
   color: #333;
+}
+.loan h2 a:hover,
+.loan h2 a:active {
+  color: #2e9df7;
+  text-decoration: none;
 }
 .loan-summary {
   padding: 12px 0;
