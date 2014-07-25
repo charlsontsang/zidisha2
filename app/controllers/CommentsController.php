@@ -45,7 +45,7 @@ abstract class CommentsController extends BaseController
 
         $comment = $this->service->postComment($postCommentForm->getData(), $user, $receiver, $files);
 
-        Flash::success(\Lang::get('comments.flash.post'));
+        Flash::success(\Lang::get('borrower.comments.flash.post-success'));
         return $this->redirect($comment);
     }
 
@@ -58,7 +58,7 @@ abstract class CommentsController extends BaseController
                     if ($file->isValid() && $file->getSize() < Config::get('image.allowed-file-size')) {
                         $files[] = $file;
                     } else {
-                        Flash::error(\Lang::get('comments.flash.file-not-valid'));
+                        Flash::error(\Lang::get('borrower.comments.flash.file-not-valid'));
                     }
                 }
             }
@@ -93,7 +93,7 @@ abstract class CommentsController extends BaseController
 
         $this->service->editComment($editCommentForm->getData(), $user, $comment, $files);
 
-        Flash::success(\Lang::get('comments.flash.edit'));
+        Flash::success(\Lang::get('borrower.comments.flash.edit-success'));
         return $this->redirect($comment);
     }
 
@@ -128,7 +128,7 @@ abstract class CommentsController extends BaseController
 
         $comment = $this->service->postReply($replyCommentForm->getData(), $user, $receiver, $parentComment);
 
-        Flash::success(\Lang::get('comments.flash.reply'));
+        Flash::success(\Lang::get('borrower.comments.flash.reply-success'));
         return $this->redirect($comment);
     }
 
@@ -149,7 +149,7 @@ abstract class CommentsController extends BaseController
 
         $this->service->deleteComment($comment);
 
-        Flash::success(\Lang::get('comments.flash.delete'));
+        Flash::success(\Lang::get('borrower.comments.flash.delete-success'));
         return Redirect::back();
     }
 
@@ -178,7 +178,7 @@ abstract class CommentsController extends BaseController
 
         $this->service->translateComment($translateCommentForm->getData(), $comment);
 
-        Flash::success(\Lang::get('comments.flash.translate'));
+        Flash::success(\Lang::get('borrower.comments.flash.translate-success'));
         return $this->redirect($comment);
     }
 
@@ -198,7 +198,7 @@ abstract class CommentsController extends BaseController
 
         $this->service->deleteUpload($comment, $upload);
 
-        Flash::success(\Lang::get('comments.flash.file-deleted'));
+        Flash::success(\Lang::get('borrower.comments.flash.file-deleted'));
         return Redirect::back();
     }
 
