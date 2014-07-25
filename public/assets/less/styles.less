@@ -206,7 +206,7 @@ a.inverted:hover {
 /* Homepage carousel */
 .carousel-inner {
   height: 200px;
-  @media (min-width: 768px) {
+  @media (min-width: @screen-sm-min) {
     height: 575px;
     margin-bottom: 30px;
   }
@@ -216,7 +216,7 @@ a.inverted:hover {
 }
 .carousel-caption {
   display:none;
-  @media (min-width: 768px) {
+  @media (min-width: @screen-sm-min) {
     top: 20%;
     z-index: 5;
     display: inline-block;
@@ -224,7 +224,7 @@ a.inverted:hover {
 }
 .carousel-control {
   display:none;
-  @media (min-width: 768px) {
+  @media (min-width: @screen-sm-min) {
     display: inline-block;
   }
 }
