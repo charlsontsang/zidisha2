@@ -76,6 +76,7 @@
         <column name="proposal_translation" type="LONGVARCHAR"/>
         <column name="amount" type="DECIMAL" size="10" scale="2" phpType="string"/>
         <column name="total_amount" type="DECIMAL" size="10" scale="2" required="false" phpType="string"/>
+        <column name="paid_amount" type="DECIMAL" size="10" scale="2" required="false" phpType="string"/>
         <column name="usd_amount" type="DECIMAL" size="10" scale="2" required="true" phpType="string"/>
         <column name="installment_day" type="INTEGER"/>
         <column name="interest_rate" type="DECIMAL" size="5" scale="2" phpType="string"/>
