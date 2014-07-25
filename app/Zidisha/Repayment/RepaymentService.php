@@ -190,7 +190,7 @@ class RepaymentService
             ->find();
             $loanRepayments = $calculator->loanRepayments($exchangeRate, $bids);
 
-                /** @var $loanRepayment LoanRepayment */
+            /** @var $loanRepayment LoanRepayment */
             foreach ($loanRepayments as $loanRepayment) {
                 $lender = $loanRepayment->getLender();
                 $lenderAmount = $loanRepayment->getAmount();
@@ -208,8 +208,21 @@ class RepaymentService
             $amountUsd = Converter::toUSD($amount, $exchangeRate);
             $this->transactionService->addInstallmentTransaction($con, $exchangeRate, $amountUsd, $loan, $date);
 
-            $this->updateInstallmentSchedule($con, $loan, $amount, $date);
-            
+            $installments = InstallmentQuery::create()
+                ->filterByLoan($loan)
+                ->orderById()// TODO order due date?
+                ->find();
+
+            $this->updateInstallmentSchedule($con, $installments, $loan, $amount, $date);
+
+            $paidAmount = Money::create(0, $loan->getCurrency());
+            foreach ($installments as $installment) {
+                $paidAmount = $paidAmount->add($installment->getAmount());
+            }
+
+            $loan->setPaidAmount($paidAmount);
+            $loan->save();
+
             if ($calculator->isRepaid()) {
                 $loan->setStatus(Loan::REPAID);
                 $loan->save($con);
@@ -238,17 +251,13 @@ class RepaymentService
         // TODO emails/sms/sift science
     }
 
-    protected function updateInstallmentSchedule($con, Loan $loan, Money $amount, \Datetime $date)
+    protected function updateInstallmentSchedule($con, $installments, Loan $loan, Money $amount, \Datetime $date)
     {
-        $installments = InstallmentQuery::create()
-            ->filterByLoan($loan)
-            ->orderById()// TODO order due date?
-            ->find();
-        
         $updatedInstallments = [];
         $installmentId = null;
         $paidAmount = $amount;
-        
+
+        /** @var Installment $installment */
         foreach ($installments as $installment) {
             if ($paidAmount->isZero()) {
                 break;
@@ -268,7 +277,7 @@ class RepaymentService
             
             $paidAmount = $paidAmount->subtract($installmentAmount);
         }
-        
+
         if ($updatedInstallments) {
             /** @var Installment $installment */
             $installment = $updatedInstallments[count($updatedInstallments) - 1];
