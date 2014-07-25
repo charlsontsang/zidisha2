@@ -127,8 +127,8 @@ class LoanService
         $installmentAmount = Money::create($data['installmentAmount'], $currencyCode);
         $installmentCount = $calculator->calculateInstallmentCount($installmentAmount);
         
-        $loan->setInstallmentCount($installmentCount);            
-
+        $loan->setInstallmentCount($installmentCount);
+        
         return $loan;
     }
 
@@ -465,7 +465,7 @@ class LoanService
         PropelDB::transaction(function($con) use ($bid, $loan) {
             $bid->save($con);
 
-            $loan->save();            
+            $loan->save();
         });
 
         //Todo: refresh elastic search.
@@ -517,7 +517,7 @@ class LoanService
     }
 
     public function expireLoan(Loan $loan)
-    {        
+    {
         PropelDB::transaction(function($con) use ($loan) {
             $loan->setStatus(Loan::EXPIRED)
                 ->setExpiredAt(new \DateTime());
@@ -832,6 +832,27 @@ class LoanService
 
         foreach ($loans as $loan) {
             $this->defaultLoan($loan);
+        }
+    }
+
+    public function defaultLoan(Loan $loan)
+    {
+        PropelDB::transaction(function($con) use ($loan) {
+            $loan->setStatus(Loan::DEFAULTED);
+            $loan->save($con);
+            $this->changeLoanStage($con, $loan, Loan::ACTIVE, Loan::DEFAULTED);
+        });
+
+        $lenders = [];
+        // TODO
+        $calculator = new RepaymentCalculator($loan);
+        $bids = BidQuery::create()
+            ->filterBidsToRepay($loan)
+            ->find();
+        //$loanRepayments = $calculator->loanRepayments($exchangeRate, $bids);
+
+        foreach ($lenders as $lender) {
+            $this->lenderMailer->sendLoanDefaultedMail($loan, $lender);
         }
     }
 }
