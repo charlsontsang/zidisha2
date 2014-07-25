@@ -30,7 +30,7 @@ class LoanQuery extends BaseLoanQuery
     public function orderByRand() {
         return $this->addAscendingOrderByColumn('random( )');
     }
-    
+
     public function filterFundRaising()
     {
         return $this->filterByStatus(Loan::OPEN);

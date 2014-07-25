@@ -244,7 +244,7 @@ class GenerateModelData extends Command
                 ->find();
 
             foreach ($raisedLoans as $loan) {
-                if (true || rand(1,3) <= 2) {
+                if (rand(1,6) <= 5) {
                     $loanService->acceptBids($loan);
                 }
             }
@@ -261,6 +261,9 @@ class GenerateModelData extends Command
                     $Date = $loan->getAppliedAt();
                     $newDate = Carbon::createFromDate($Date->format('Y'), $Date->format('m'), $Date->format('d'))->addDays(25);
                     $loanService->disburseLoan($loan , $newDate, $loan->getAmount());
+                if (rand(1,6) <= 5) {
+                    $loanService->disburseLoan($loan , new \DateTime(), $loan->getAmount());
+                }
                 }
             }
         }
@@ -280,6 +283,7 @@ class GenerateModelData extends Command
                     if (!$installment->getAmount()->isPositive()){
                         continue;
                     }
+
                     if ($loan->getDisbursedAt() < Carbon::create()->subMonths(6)) {
                         break;
                     }
@@ -287,6 +291,11 @@ class GenerateModelData extends Command
                         break;
                     }
                     if (rand(1,4) <= 1) {
+//                    if (!$repaid && rand(1,6) <= 1) {
+//                        break;
+//                    }
+                    }
+                    if (rand(1,5) <= 4) {
                         $installmentAmount = $installment->getAmount();
                     } else {
                         $installmentAmount = Money::create(rand($installment->getAmount()->subtract($installment->getAmount()->divide
@@ -294,7 +303,7 @@ class GenerateModelData extends Command
                                 ->getAmount(),
                             $installment->getAmount()->add($installment->getAmount()->divide(2))->getAmount()), $loan->getCurrency()) ;
                     }
-                    if(rand(1,10) <= 5) {
+                    if(rand(1,10) <= 3) {
                         if(rand(1,2) <= 1) {
                             $installmentDate = $installment->getDueDate()->modify('+1 week');
                         } else {
@@ -641,14 +650,14 @@ class GenerateModelData extends Command
                 $transaction->save();
 
                 if ($isTrue || $i < 20) {
-                    $transaction = new Transaction();
-                    $transaction->setUser($oneLender->getUser());
-                    $transaction->setAmount(Money::create(rand(0, 20), 'USD'));
-                    $transaction->setLoan($oneLoan);
-                    $transaction->setDescription('description');
-                    $transaction->setTransactionDate(new \DateTime());
-                    $transaction->setType(Transaction::LOAN_BACK_LENDER);
-                    $transaction->save();
+//                    $transaction = new Transaction();
+//                    $transaction->setUser($oneLender->getUser());
+//                    $transaction->setAmount(Money::create(rand(0, 20), 'USD'));
+//                    $transaction->setLoan($oneLoan);
+//                    $transaction->setDescription('description');
+//                    $transaction->setTransactionDate(new \DateTime());
+//                    $transaction->setType(Transaction::LOAN_BACK_LENDER);
+//                    $transaction->save();
 
                     $transaction = new Transaction();
                     $transaction->setUser($oneLender->getUser());
@@ -847,7 +856,7 @@ class GenerateModelData extends Command
 
                 for ( $j=0; $j<=$numberOfBids; $j++) {
                     $oneLender = $allLenders[array_rand($allLenders->getData())];
-                    $data['amount'] = rand(5, intval($oneLoan->getUsdAmount()->divide(20)->getAmount()) + 5);
+                    $data['amount'] = rand(5, intval($oneLoan->getUsdAmount()->divide(8)->getAmount()) + 5);
                     $data['interestRate'] = rand(0, 15);
                     $loanService->placeBid($oneLoan, $oneLender, $data);
                 }
