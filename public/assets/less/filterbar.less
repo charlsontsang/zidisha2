@@ -1,7 +1,32 @@
 .filter-bar span {
-  padding: 0 12px;
+	padding: 0 12px;
 }
-
 .page-section-filter {
-  padding: 33px 0;
+	padding: 12px 0;
+	@media (min-width: @screen-sm-min) {
+		padding: 33px 0;
+	}
+}
+.filter-bar .text {
+	display: none;
+  	@media (min-width: @screen-sm-min) {
+		display: inline-block;
+	}
+}
+.filter-bar .btn {
+	margin-bottom: 12px;
+	width: 100%;
+	text-align: left;
+  	@media (min-width: @screen-sm-min) {
+		margin-bottom: 0;
+		width: auto;
+		text-align: center;
+	}
+}
+.filter-bar .input-group {
+	width: 100%;
+  	@media (min-width: @screen-sm-min) {
+		float: right;
+		width: 67%;
+	}
 }

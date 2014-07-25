@@ -11,22 +11,22 @@
         <!-- Wrapper for slides -->
         <div class="carousel-inner">
             <div class="item active">
-                <img src="assets/images/flickr/bineta.jpg" alt="...">
+                <img src="assets/images/carousel/bineta.jpg" alt="...">
                 <div class="carousel-caption">
                     <h3>Lend <span class="text-primary">Bineta</span> $60 for a sewing machine</h3>
                     <p>and join the global person-to-person microlending movement.</p>
                     <p>
-                        <a href="#" class="btn btn-primary btn-lg">Browse Projects</a>
+                        <a href="{{ route('lend:index') }}" class="btn btn-primary btn-lg">Browse Projects</a>
                     </p>
                 </div>
             </div>
             <div class="item">
-                <img src="assets/images/flickr/mary.jpg" alt="...">
+                <img src="assets/images/carousel/mary.jpg" alt="...">
                 <div class="carousel-caption">
                     <h3>Lend <span class="text-primary">Mary</span> $50 for a delivery wagon</h3>
                     <p>and join the global <strong>person-to-person</strong> microlending movement.</p>
                     <p>
-                        <a href="#" class="btn btn-primary btn-lg">Browse Projects</a>
+                        <a href="{{ route('lend:index') }}" class="btn btn-primary btn-lg">Browse Projects</a>
                     </p>
                 </div>
             </div>
@@ -51,7 +51,12 @@
         <h3>No middleman.</h3>
         <p>We eliminate the middleman so that you can more fully unleash someone’s business potential. Unlike more mainstream microloan websites that use local intermediary organizations, Zidisha offers a direct person-to-person lending platform that eliminates intermediaries completely. Check out <a href="http://p2p-microlending-blog.zidisha.org/2014/03/15/spotlight-on-siaka-traore-burkina-faso/" class="homepage_click_tracking">how a farmer in a remote village in Burkina Faso used Zidisha to bypass restrictive local institutions</a> and access business growth loans for the first time in his life.</p>
         <br/>
-        <p><i>"Because there is no intermediary in charge of the loan, the cost of borrowing is much less than with other microfinance sites." <br/>- <a href="http://www.entrepreneur.com/article/223391" target="_blank">Entrepreneur Magazine</a></i></p>
+        <blockquote>
+            <p>"Because there is no intermediary in charge of the loan, the cost of borrowing is much less than with other microfinance sites.</p>
+            <footer>
+                <cite><a href="http://www.entrepreneur.com/article/223391" target="_blank">Entrepreneur Magazine</a></cite>
+            </footer>
+        </blockquote>
         <br/>
         <h3>Lower cost for borrowers.</h3>
         <p>Why is direct better? Because loans managed by local intermediary organizations charge exorbitant interest rates to the borrowers to cover their own administrative costs.  Lower cost means borrowers keep more of their earnings.  Learn <a href="http://p2p-microlending-blog.zidisha.org/2014/03/22/spotlight-on-ndeye-bineta-sarr-senegal/">how Zidisha loans helped a seamstress in Senegal quadruple her dress production</a> - and how she used the profits to send her son to college.</p>
@@ -59,12 +64,22 @@
         <h3>Lenders choose the interest.</h3>
         <p>Not only do we eliminate the middleman to dramatically reduce the cost of microlending for borrowers, we also give lenders the opportunity to make interest on the loans they fund. It’s a win-win: Zidisha borrowers pay far less and lenders have the right to set the interest rate, if any, at which to lend their funds.  <a href="/microfinance/how-it-works.html" class="homepage_click_tracking">Learn how it works.</a></p>
         <br/>
-        <p><i>"Just as Airbnb connects travelers directly to hosts, Zidisha connects lenders directly to borrowers, providing not only an affordable loan, but also a personal connection." - <a href="http://paulbuchheit.blogspot.com/2014/03/help-me-distribute-100000-to-new.html" target="_blank">Gmail Creator Paul Buchheit</a></i></p>   
+        <blockquote>
+            <p>Just as Airbnb connects travelers directly to hosts, Zidisha connects lenders directly to borrowers, providing not only an affordable loan, but also a personal connection.</p>
+            <footer>
+                <cite><a href="http://paulbuchheit.blogspot.com/2014/03/help-me-distribute-100000-to-new.html" target="_blank">Gmail Creator Paul Buchheit</a></cite>
+            <footer>
+        </blockquote>  
         <br/>
         <h3>Direct dialogue with borrowers.</h3>
         <p>Did we mention that lenders and borrowers can communicate with each other directly? That’s right — you can see everyone’s success stories unfold right before your eyes and experience it with them from the other side of the world.  <a href="/microfinance/testimonials.html" class="homepage_click_tracking">Check out some of the dialogues going on right now.</a></p>
         <br/>
-        <p><i>"By enabling the efficient flow of capital across international boundaries and wealth divisions, and by allowing lenders to connect with and send money directly to borrowers, peer-to-peer micro-lending has the ability to have an enormous impact — on a global scale." <br/>- <a href="http://techcrunch.com/2014/01/23/zidisha-launches-a-kickstarter-style-micro-lending-platform-for-low-income-entrepreneurs-in-developing-countries/" target="_blank">TechCrunch</a></i></p>  
+        <blockquote>
+            <p>By enabling the efficient flow of capital across international boundaries and wealth divisions, and by allowing lenders to connect with and send money directly to borrowers, peer-to-peer micro-lending has the ability to have an enormous impact — on a global scale.</p>
+            <footer>
+                <cite><a href="http://techcrunch.com/2014/01/23/zidisha-launches-a-kickstarter-style-micro-lending-platform-for-low-income-entrepreneurs-in-developing-countries/" target="_blank">TechCrunch</a></cite>
+            </footer>
+        </blockquote>
         <br/>
         <h3>Immense potential.</h3>
         <p>Developing countries are home to unbelievable amounts of energy, ingenuity, and ambition. And because millions of young adults in developing countries are now online, they no longer need charities or aid organizations to tell their remarkable stories.</p>
@@ -88,7 +103,7 @@
         </p>
         <br/>
         <p class="text-center">
-            <a class="btn btn-primary btn-lg" href="#">Browse Projects</a>
+            <a class="btn btn-primary btn-lg" href="{{ route('lend:index') }}">Browse Projects</a>
         </p>
     </div>
 </div>

@@ -8,22 +8,22 @@
 <div class="page-section page-section-filter">
     <div class="container">
         <div class="row">
-            <div class="col-md-10">
+            <div class="col-md-9">
                 <div class="filter-bar">
-                    <span style="padding-left: 0;">Show</span>
+                    <span class="text" style="padding-left: 0;">Show</span>
                     <div class="btn btn-default btn-filter" target="#filter-categories">
-                        {{ $selectedLoanCategory ? $selectedLoanCategory->getName() : 'All' }}
+                        {{ $selectedLoanCategory ? $selectedLoanCategory->getName() : 'Featured' }}
                         @if($selectedLoanCategory)
-                            <a href="{{ route('lend:index', ['category' => 'all'] + $routeParams) }}" class="inverted">
+                            <a href="{{ route('lend:index', ['category' => 'featured'] + $routeParams) }}" class="inverted">
                                 <i class="fa fa-fw fa-times"></i>
                             </a>
                         @else
                             <i class="fa fa-fw fa-caret-down"></i>
                         @endif
                     </div>
-                    <span>projects from</span>
+                    <span class="text">projects in</span>
                     <div class="btn btn-default btn-filter" target="#filter-countries">
-                        {{ $selectedCountry ? $selectedCountry->getName() : 'Everywhere' }}
+                        {{ $selectedCountry ? $selectedCountry->getName() : 'All Countries' }}
                         @if($selectedCountry)
                         <a href="{{ route('lend:index', ['country' => 'everywhere'] + $routeParams) }}" class="inverted">
                             <i class="fa fa-fw fa-times"></i>
@@ -32,18 +32,19 @@
                         <i class="fa fa-fw fa-caret-down"></i>
                         @endif
                     </div>
-                    <span>sorted by</span>
+                    <span class="text">sorted by</span>
                     <div class="btn btn-default btn-filter" target="#filter-sortings">
                         Repayment Rate
-                        <i class="fa fa-fw fa-times"></i>
+                        <i class="fa fa-fw fa-caret-down"></i>
                     </div>
                 </div>
             </div>
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <form class="form-inline" role="form" action="{{ route('lend:index', $searchRouteParams) }}" method="get">
-                    <div class="form-group">
+                    <div class="input-group">
                         <label class="sr-only" for="search">Search</label>
-                        <input type="text" class="form-control" placeholder="Search" name="search" value="{{{ $searchQuery }}}" style="width: 100%">
+                        <span class="input-group-addon"><i class="fa fa-fw fa-search"></i></span>
+                        <input type="text" class="form-control" placeholder="Search" name="search" value="{{{ $searchQuery }}}">
                     </div>
                 </form>
             </div>
@@ -55,18 +56,10 @@
 @section('content')
 <div class="row">
     <div class="col-xs-12">
-        <ul class="nav nav-tabs">
-            @foreach(['fund-raising' => 'Fund Raising', 'active' => 'Active', 'completed' => 'Completed'] as $stage =>
-            $loanTitle)
-            @if($stage == $routeParams['stage'])
-            <li class="active"><a href="{{ route('lend:index', ['stage' => $stage] + $routeParams) }}">{{ $loanTitle
-                    }}</a></li>
-            @else
-            <li><a href="{{ route('lend:index', ['stage' => $stage] + $routeParams) }}">{{ $loanTitle }}</a></li>
-            @endif
-            @endforeach
-        </ul>
-
+        <p>
+            We found <strong>12 projects</strong> for this search.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">View all 198 projects</a>
+        </p>
+        <hr/>
         @if($selectedLoanCategory)
         <h2>{{ $selectedLoanCategory->getName(); }}</h2>
         <br>
@@ -79,6 +72,7 @@
 
         <p><strong>@lang('lend.category.what-your-loan-do'): </strong> {{ $selectedLoanCategory->getWhatDescription() }}
         </p>
+        <hr/>
         @endif
 
 
@@ -88,28 +82,6 @@
         @endif
     </div>
 </div>
-
-<style>
-    .loan-category {
-        margin-bottom: 12px;
-        font-size: 12px;
-        font-weight: bolder;
-        text-transform: uppercase;
-    }
-    .loan h2 {
-        font-size: 32px;
-        color: #333;
-    }
-    .loan h2 a {
-        color: #333;
-    }
-    .loan-summary {
-        padding: 12px 0;
-    }
-    a.link-dark {
-        color: #333;
-    }
-</style>
 
 @foreach($paginator as $loan)
 <div class="row">

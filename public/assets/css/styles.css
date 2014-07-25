@@ -8138,5 +8138,58 @@ a.inverted:hover {
   padding: 0 12px;
 }
 .page-section-filter {
-  padding: 33px 0;
+  padding: 12px 0;
+}
+@media (min-width: 768px) {
+  .page-section-filter {
+    padding: 33px 0;
+  }
+}
+.filter-bar .text {
+  display: none;
+}
+@media (min-width: 768px) {
+  .filter-bar .text {
+    display: inline-block;
+  }
+}
+.filter-bar .btn {
+  margin-bottom: 12px;
+  width: 100%;
+  text-align: left;
+}
+@media (min-width: 768px) {
+  .filter-bar .btn {
+    margin-bottom: 0;
+    width: auto;
+    text-align: center;
+  }
+}
+.filter-bar .input-group {
+  width: 100%;
+}
+@media (min-width: 768px) {
+  .filter-bar .input-group {
+    float: right;
+    width: 67%;
+  }
+}
+.loan-category {
+  margin-bottom: 12px;
+  font-size: 12px;
+  font-weight: bolder;
+  text-transform: uppercase;
+}
+.loan h2 {
+  font-size: 32px;
+  color: #333;
+}
+.loan h2 a {
+  color: #333;
+}
+.loan-summary {
+  padding: 12px 0;
+}
+a.link-dark {
+  color: #333;
 }
