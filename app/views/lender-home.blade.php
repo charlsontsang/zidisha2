@@ -90,7 +90,6 @@
         <p class="text-center">
             <a class="btn btn-primary btn-lg" href="#">Browse Projects</a>
         </p>
-        <br/><br/>
     </div>
 </div>
 @stop
