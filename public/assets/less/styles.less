@@ -193,11 +193,6 @@ a.inverted:hover {
 }
 
 /* Static info pages */
-.info-page {
-  max-width: 680px;
-  margin-left: auto;
-  margin-right: auto;
-}
 .info-page h3 {
   font-size: 24px;
   line-height: 24px;
@@ -206,6 +201,49 @@ a.inverted:hover {
 .info-page p, .info-page ul li {
   font-size: 20px;
   line-height: 27px;
+}
+
+/* Homepage carousel */
+.carousel-inner {
+  height: 200px;
+  @media (min-width: 768px) {
+    height: 575px;
+    margin-bottom: 30px;
+  }
+}
+.carousel-inner > .item > a > img {
+  width: 100%;
+}
+.carousel-caption {
+  display:none;
+  @media (min-width: 768px) {
+    top: 20%;
+    z-index: 5;
+    display: inline-block;
+  }
+}
+.carousel-control {
+  display:none;
+  @media (min-width: 768px) {
+    display: inline-block;
+  }
+}
+.carousel-inner h3 {
+  margin: 0;
+  padding: 0 0 20px 0;
+  color: #fff;
+  font-size: 45px;
+  font-weight: 900;
+  line-height: 50px;
+  text-transform: uppercase;
+  text-shadow: 1px 1px 5px rgba(0, 0, 0, .5), -1px -1px 5px rgba(0, 0, 0, .5);
+}
+.carousel-inner p {
+  margin: 0;
+  padding: 0 0 30px;
+  font-size: 22px;
+  color: #fff;
+  text-shadow: 1px 1px 5px rgba(0, 0, 0, .5), -1px -1px 5px rgba(0, 0, 0, .5);
 }
 
 @import "wizard.less";

@@ -10,7 +10,7 @@
     
         <!-- Wrapper for slides -->
         <div class="carousel-inner">
-            <div class="item active" style="height: 600px">
+            <div class="item active">
                 <img src="assets/images/flickr/bineta.jpg" alt="...">
                 <div class="carousel-caption">
                     <h3>Lend <span class="text-primary">Bineta</span> $60 for a sewing machine</h3>
@@ -20,7 +20,7 @@
                     </p>
                 </div>
             </div>
-            <div class="item" style="height: 600px">
+            <div class="item">
                 <img src="assets/images/flickr/mary.jpg" alt="...">
                 <div class="carousel-caption">
                     <h3>Lend <span class="text-primary">Mary</span> $50 for a delivery wagon</h3>
@@ -42,11 +42,9 @@
     </div>
 @stop
 
-
 @section('content')
 <div class="row">
-    <div class="info-page">
-        <br/><br/>
+    <div class="col-md-8 col-md-offset-2 info-page">
         <h3>Direct loans that make dramatic impact.</h3>
          <p>Zidisha is the first online microlending community that directly  connects lenders and borrowers — no matter the distance or disparity between them. We bypass expensive local banks and intermediaries that charge sky-high interest rates and offer a person-to-person platform that lets lenders and borrowers communicate openly and instantly.  <a href="/index.php?p=43" class="homepage_click_tracking">More than 14,000 people worldwide</a> have started using Zidisha.</p>
         <br/>
@@ -71,13 +69,13 @@
         <h3>Immense potential.</h3>
         <p>Developing countries are home to unbelievable amounts of energy, ingenuity, and ambition. And because millions of young adults in developing countries are now online, they no longer need charities or aid organizations to tell their remarkable stories.</p>
         <p>But while they <i>may</i> have access to online social connectivity, they <i>don’t</i> have access to the resources needed to live up to all that ambition. Formal jobs are scarce. Self-employed workers make meager earnings and lack the capital needed to grow their businesses. Local banks rarely help them out.</p>
-        <p>Learn about a young Kenyan lady\'s fruitless search for local sources of capital - and <a href="http://p2p-microlending-blog.zidisha.org/2014/03/29/spotlight-on-rose-karanja-kenya/" class="homepage_click_tracking">how Zidisha loans ultimately helped her rise to the top of her town\'s housing construction industry</a>.</p>
+        <p>Learn about a young Kenyan lady's fruitless search for local sources of capital - and <a href="http://p2p-microlending-blog.zidisha.org/2014/03/29/spotlight-on-rose-karanja-kenya/" class="homepage_click_tracking">how Zidisha loans ultimately helped her rise to the top of her town's housing construction industry</a>.</p>
         <br/>
         <h3>Some helpful reads.</h3>
         <p>Many microlending sites look similar to Zidisha, and it can be hard to choose.  Here are some pages we put together to help you learn more.</p>
         <p>
           <ul>
-              <li><a href="/index.php?p=122" class="homepage_click_tracking">Read about Zidisha\'s founding.</a></li>
+              <li><a href="/index.php?p=122" class="homepage_click_tracking">Read about Zidisha's founding.</a></li>
               <li><a href="/microfinance/team.html" class="homepage_click_tracking">Meet our amazing volunteer team.</a></li>
               <li><a href="http://p2p-microlending-blog.zidisha.org/" class="homepage_click_tracking">Explore the remarkable loan stories in our blog.</a></li>
               <li><a href="/microfinance/press.html" class="homepage_click_tracking">See what the press has to say about Zidisha.</a></li>

@@ -22,9 +22,7 @@
                         About <b class="caret"></b>
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a href="#">Member Updates &amp; Photos</a></li>
                         <li><a href="{{ route('page:our-story') }}">Our Story</a></li>
-                        <li><a href="{{ route('page:why-zidisha') }}">Why Zidisha?</a></li>
                         <li><a href="{{ route('page:how-it-works') }}">How It Works</a></li>
                         <li><a href="{{ route('page:trust-and-security') }}">Trust &amp; Security</a></li>
                         <li><a href="#">FAQ</a></li>
@@ -40,7 +38,7 @@
                     <ul class="dropdown-menu">
                         <li><a href="#">Project Updates</a></li>
                         <li><a href="{{ route('lender:groups') }}">Lending Groups</a></li>
-                        <li><a href="#">Forum</a></li>
+                        <li><a href="https://www.zidisha.org/forum/">Forum</a></li>
                         <li><a href="#">Volunteer</a></li>
                         <li><a href="http://p2p-microlending-blog.zidisha.org/">Blog</a></li>
                     </ul>
