@@ -161,6 +161,20 @@ class Loan extends BaseLoan implements CommentReceiverInterface
      */
     public function setPaidAmount($money)
     {
+        $totalAmount = $this->getTotalAmount();
+
+        if ($money->lessThan($totalAmount)) {
+            $paidPercentage = $money
+                ->divide($totalAmount->getAmount())
+                ->multiply(100)->round(2)
+                ->getAmount();
+        } else {
+            $paidPercentage = 100;
+        }
+
+        $this->setPaidPercentage($paidPercentage);
+        $this->save();
+
         return parent::setPaidAmount($money->getAmount());
     }
 
