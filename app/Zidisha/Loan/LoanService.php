@@ -656,21 +656,25 @@ class LoanService
                 $this->transactionService->addFeeTransaction($con, $nativeAmount, $loan);
             }
 
+            $installments = $this->generateLoanInstallments($loan);
+
+            $totalAmount = Money::create(0, $loan->getCurrency());
+            /** @var Installment $installment */
+            foreach ($installments as $installment) {
+                $totalAmount = $totalAmount->add($installment->getAmount());
+                $installment->save($con);
+            }
+
             $loan
                 ->setStatus(Loan::ACTIVE)
                 ->setDisbursedAmount($nativeAmount)
+                ->setTotalAmount($totalAmount)
                 ->setDisbursedAt($disbursedAt)
                 ->calculateExtraDays($disbursedAt)
                 ->setServiceFeeRate(Setting::get('loan.serviceFeeRate'));
             $loan->save($con);
 
             $this->changeLoanStage($con, $loan, Loan::FUNDED, Loan::ACTIVE);
-            
-            $installments = $this->generateLoanInstallments($loan);
-            
-            foreach ($installments as $installment) {
-                $installment->save($con);
-            }
         });
 
         //TODO Send email / sift sience event
