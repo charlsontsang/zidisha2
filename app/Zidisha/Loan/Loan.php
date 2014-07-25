@@ -130,6 +130,23 @@ class Loan extends BaseLoan implements CommentReceiverInterface
         return parent::setDisbursedAmount($money->getAmount());
     }
 
+    /**
+     * @return Money
+     */
+    public function getTotalAmount()
+    {
+        return Money::create(parent::getTotalAmount(), $this->getCurrencyCode());
+    }
+
+    /**
+     * @param Money $money
+     * @return $this|Loan
+     */
+    public function setTotalAmount($money)
+    {
+        return parent::setTotalAmount($money->getAmount());
+    }
+
     public function isWeeklyInstallment()
     {
         return $this->getInstallmentPeriod() == self::WEEKLY_INSTALLMENT;
