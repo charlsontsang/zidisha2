@@ -26,5 +26,5 @@
 {{ BootstrapHtml::paginator($comments)->links() }}
 
 <script type="text/html" id="comment-upload-input-template">
-    {{ BootstrapForm::file('file[]', ['label' => 'comments.upload-file']) }}
+    {{ BootstrapForm::file('file[]', ['label' => 'comments.upload-file', 'class' => 'upload-file']) }}
 </script>

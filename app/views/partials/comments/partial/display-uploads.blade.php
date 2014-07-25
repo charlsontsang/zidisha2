@@ -25,7 +25,7 @@
 
                         {{ BootstrapForm::hidden('comment_id', $comment->getId()) }}
                         {{ BootstrapForm::hidden('upload_id', $upload->getId()) }}
-                        {{ BootstrapForm::submit('delete', ['data-submit' => '', 'data-loading-text' => \Lang::get('comments.delete.loading-text')]) }}
+                        {{ BootstrapForm::submit('delete', ['data-submit' => '', 'data-loading-text' => \Lang::get('borrower.comments.delete.loading-text')]) }}
                         {{ BootstrapForm::close() }}
                     </div>
                 @endif
