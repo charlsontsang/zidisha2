@@ -518,7 +518,7 @@ class LoanService
 
     public function expireLoan(Loan $loan)
     {
-        PropelDB::transaction(function($con) use ($loan) {
+        $refundsLenders = PropelDB::transaction(function($con) use ($loan) {
             $loan->setStatus(Loan::EXPIRED)
                 ->setExpiredAt(new \DateTime());
             $loan->save($con);
@@ -530,16 +530,20 @@ class LoanService
 
             $this->changeLoanStage($con, $loan, Loan::OPEN, Loan::EXPIRED);
 
-            $refunds = $this->refundLenders($con, $loan, Loan::EXPIRED);
+            $refundsLenders = $this->refundLenders($con, $loan, Loan::EXPIRED);
 
             if ($loan->getStatus() == Loan::FUNDED) {
                 BidQuery::create()
                     ->filterByLoan($loan)
                     ->update(['active' => 0, 'accepted_amount' => null], $con);
             }
+            
+            return $refundsLenders;
         });
 
-        // Todo: send emails to notify lenders use $refunds
+        foreach ($refundsLenders as $refundLender) {
+            $this->lenderMailer->sendExpiredLoanMail($loan, $refundLender);
+        }
         
         return true;
     }
@@ -574,32 +578,33 @@ class LoanService
             ->filterLoanBids()
             ->find();
 
-        $refunds = $this->getLenderRefunds($transactions);
+        $refundsLenders = $this->getLenderRefunds($transactions);
 
-        foreach ($refunds as $refund) {
-            if (!$refund['refundAmount']->greaterThan(Money::create(0))) {
+        /** @var RefundLender $refundsLender */
+        foreach ($refundsLenders as $refundsLender) {
+            if (!$refundsLender->getAmount()->greaterThan(Money::create(0))) {
                 continue;
             }
 
             if ($status == Loan::CANCELED) {
                 $this->transactionService->addLoanBidCanceledTransaction(
                     $con,
-                    $refund['refundAmount'],
+                    $refundsLender->getAmount(),
                     $loan,
-                    $refund['lender']
+                    $refundsLender->getLender()
                 );
             } else {
                 $this->transactionService->addLoanBidExpiredTransaction(
                     $con,
-                    $refund['refundAmount'],
+                    $refundsLender->getAmount(),
                     $loan,
-                    $refund['lender']
+                    $refundsLender->getLender()
                 );
             }
         }
         // TODO: lender invite
 
-        return $refunds;
+        return $refundsLenders;
     }
 
     private function changeLoanStage(
@@ -690,19 +695,22 @@ class LoanService
             $userId = $transaction->getUserId();
             $refunds[$userId] = [
                 'lender' => $transaction->getUser()->getLender(),
-                'refundAmount' => array_get($refunds, "$userId.refundAmount", $zero)->subtract(
+                'amount' => array_get($refunds, "$userId.amount", $zero)->subtract(
                         $transaction->getAmount()
                     ),
             ];
         }
 
+        $refundsLenders = [];
         foreach ($refunds as $id => $refund) {
-            if ($refunds[$id]['refundAmount']->lessThan(Money::create(0))) {
-                $refunds[$id]['refundAmount'] = $zero;
+            if ($refunds[$id]['amount']->lessThan(Money::create(0))) {
+                $refunds[$id]['amount'] = $zero;
             }
+            
+            $refundsLenders[] = new RefundLender($refund);
         }
 
-        return $refunds;
+        return $refundsLenders;
     }
 
     public function generateLoanInstallments(Loan $loan)
