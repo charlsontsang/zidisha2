@@ -10,6 +10,7 @@ use Zidisha\Lender\Invite;
 use Zidisha\Lender\Lender;
 use Zidisha\Loan\Bid;
 use Zidisha\Loan\Loan;
+use Zidisha\Loan\RefundLender;
 
 /**
  * Class LenderMailer
@@ -184,5 +185,16 @@ class LenderMailer
                 'subject'    => 'Loan defaulted',
             ]
         );
+    }
+    
+    public function sendExpiredLoanMail(Loan $loan, RefundLender $refundLender)
+    {
+        $this->mailer->send(
+            'emails.lender.loan.loan-expired',
+            [
+                'to'         => $refundLender->getLender()->getUser()->getEmail(),
+                'subject'    => 'Loan Expired',
+            ]
+        );        
     }
 }
