@@ -863,6 +863,23 @@ class LoanService
             $this->lenderMailer->sendLoanDefaultedMail($loan, $lender);
         }
     }
+    
+    public function expireLoans()
+    {
+        //TODO: 
+        //$allowedTimeToRaiseLoan = Setting::get('');
+        $allowedTimeToRaiseLoan = Carbon::create()->subDays(14);
+                
+        $loans = LoanQuery::create()
+            ->filterByStatus(Loan::OPEN)
+            ->where('loans.applied_at < ?', $allowedTimeToRaiseLoan)
+            ->find();
+        
+        foreach($loans as $loan) {
+            $percentageRaised = $loan->getRaisedPercentage();
+            if($percentageRaised < 100) {
+                $this->expireLoan($loan);
+            }
+        }
+    }
 }
-
-
