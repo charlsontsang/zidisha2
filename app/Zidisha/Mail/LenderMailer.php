@@ -190,10 +190,11 @@ class LenderMailer
     public function sendExpiredLoanMail(Loan $loan, RefundLender $refundLender)
     {
         $this->mailer->send(
-            'emails.lender.loan.loan-expired',
+            'emails.hero',
             [
                 'to'         => $refundLender->getLender()->getUser()->getEmail(),
-                'subject'    => 'Loan Expired',
+                'subject'    => 'Loan expired notification',
+                'templateId' => \Setting::get('sendwithus.lender-expired-loan-template-id'),
             ]
         );        
     }
