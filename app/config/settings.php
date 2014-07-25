@@ -52,6 +52,11 @@ return [
             'default' => '5',
             'rule'    => 'numeric',
         ],
+        'loan.expireThreshold' => [
+            'label' => 'Number of days after which an unfunded loan application will expire automatically.',
+            'default' => '14',
+            'rule' => 'numeric'
+        ],
     ],
     'API' => [
         'facebook.appId' => [
@@ -104,5 +109,11 @@ return [
         'sendwithus.introduction-template-id' => [
             'label' => 'Introduction template id'
         ],
+        'sendwithus.lender-expired-loan-template-id' => [
+            'label' => 'Loan expired notification'
+        ],
+        'sendwithus.borrower-notifications-template-id' => [
+            'label' => 'Borrower account notifications'
+        ]
     ]
 ];

@@ -6,6 +6,7 @@ use Zidisha\Borrower\Borrower;
 use Zidisha\Borrower\FeedbackMessage;
 use Zidisha\Comment\Comment;
 use Zidisha\Loan\Loan;
+use Zidisha\Loan\RefundLender;
 
 class BorrowerMailer{
 
@@ -135,5 +136,17 @@ class BorrowerMailer{
     public function sendBorrowerCommentNotification(Borrower $borrower, Comment $comment)
     {
 
+    }
+    
+    public function sendExpiredLoanMail(Loan $loan)
+    {
+        $this->mailer->send(
+            'emails.hero',
+            [
+                'to'         => $loan->getBorrower()->getUser()->getEmail(),
+                'subject'    => 'Borrower account notifications',
+                'templateId' => \Setting::get('sendwithus.borrower-expired-loan-template-id'),
+            ]
+        );
     }
 }

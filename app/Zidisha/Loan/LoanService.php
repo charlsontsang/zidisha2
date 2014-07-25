@@ -518,7 +518,7 @@ class LoanService
 
     public function expireLoan(Loan $loan)
     {
-        PropelDB::transaction(function($con) use ($loan) {
+        $refundsLenders = PropelDB::transaction(function($con) use ($loan) {
             $loan->setStatus(Loan::EXPIRED)
                 ->setExpiredAt(new \DateTime());
             $loan->save($con);
@@ -530,16 +530,22 @@ class LoanService
 
             $this->changeLoanStage($con, $loan, Loan::OPEN, Loan::EXPIRED);
 
-            $refunds = $this->refundLenders($con, $loan, Loan::EXPIRED);
+            $refundsLenders = $this->refundLenders($con, $loan, Loan::EXPIRED);
 
             if ($loan->getStatus() == Loan::FUNDED) {
                 BidQuery::create()
                     ->filterByLoan($loan)
                     ->update(['active' => 0, 'accepted_amount' => null], $con);
             }
+            
+            return $refundsLenders;
         });
 
-        // Todo: send emails to notify lenders use $refunds
+        foreach ($refundsLenders as $refundLender) {
+            $this->lenderMailer->sendExpiredLoanMail($loan, $refundLender);
+        }
+        
+        $this->borrowerMailer->sendExpiredLoanMail($loan);
         
         return true;
     }
@@ -574,32 +580,33 @@ class LoanService
             ->filterLoanBids()
             ->find();
 
-        $refunds = $this->getLenderRefunds($transactions);
+        $refundsLenders = $this->getLenderRefunds($transactions);
 
-        foreach ($refunds as $refund) {
-            if (!$refund['refundAmount']->greaterThan(Money::create(0))) {
+        /** @var RefundLender $refundsLender */
+        foreach ($refundsLenders as $refundsLender) {
+            if (!$refundsLender->getAmount()->greaterThan(Money::create(0))) {
                 continue;
             }
 
             if ($status == Loan::CANCELED) {
                 $this->transactionService->addLoanBidCanceledTransaction(
                     $con,
-                    $refund['refundAmount'],
+                    $refundsLender->getAmount(),
                     $loan,
-                    $refund['lender']
+                    $refundsLender->getLender()
                 );
             } else {
                 $this->transactionService->addLoanBidExpiredTransaction(
                     $con,
-                    $refund['refundAmount'],
+                    $refundsLender->getAmount(),
                     $loan,
-                    $refund['lender']
+                    $refundsLender->getLender()
                 );
             }
         }
         // TODO: lender invite
 
-        return $refunds;
+        return $refundsLenders;
     }
 
     private function changeLoanStage(
@@ -636,7 +643,7 @@ class LoanService
         }
     }
 
-    public function disburseLoan(Loan $loan, \DateTime $disbursedAt, Money $nativeAmount)
+    public function disburseLoan(Loan $loan, \DateTime $disbursedAt, Money $amount)
     {
         $isDisbursed = TransactionQuery::create()
             ->filterByLoan($loan)
@@ -648,15 +655,22 @@ class LoanService
             return;
         }
 
-        PropelDB::transaction(function($con) use ($loan, $disbursedAt, $nativeAmount) {
-            $this->transactionService->addDisbursementTransaction($con, $nativeAmount, $loan);
+        PropelDB::transaction(function($con) use ($loan, $disbursedAt, $amount) {
+            $this->transactionService->addDisbursementTransaction($con, $amount, $loan);
 
             $loans = LoanQuery::create()
                 ->filterByBorrower($loan->getBorrower())
                 ->count();
             if ($loans == 1) {
-                $this->transactionService->addFeeTransaction($con, $nativeAmount, $loan);
+                $this->transactionService->addFeeTransaction($con, $amount, $loan);
             }
+
+            $loan
+                ->setStatus(Loan::ACTIVE)
+                ->setDisbursedAmount($amount)
+                ->setDisbursedAt($disbursedAt)
+                ->calculateExtraDays($disbursedAt)
+                ->setServiceFeeRate(Setting::get('loan.serviceFeeRate'));
 
             $installments = $this->generateLoanInstallments($loan);
 
@@ -667,13 +681,7 @@ class LoanService
                 $installment->save($con);
             }
 
-            $loan
-                ->setStatus(Loan::ACTIVE)
-                ->setDisbursedAmount($nativeAmount)
-                ->setTotalAmount($totalAmount)
-                ->setDisbursedAt($disbursedAt)
-                ->calculateExtraDays($disbursedAt)
-                ->setServiceFeeRate(Setting::get('loan.serviceFeeRate'));
+            $loan->setTotalAmount($totalAmount);
             $loan->save($con);
 
             $this->changeLoanStage($con, $loan, Loan::FUNDED, Loan::ACTIVE);
@@ -690,19 +698,22 @@ class LoanService
             $userId = $transaction->getUserId();
             $refunds[$userId] = [
                 'lender' => $transaction->getUser()->getLender(),
-                'refundAmount' => array_get($refunds, "$userId.refundAmount", $zero)->subtract(
+                'amount' => array_get($refunds, "$userId.amount", $zero)->subtract(
                         $transaction->getAmount()
                     ),
             ];
         }
 
+        $refundsLenders = [];
         foreach ($refunds as $id => $refund) {
-            if ($refunds[$id]['refundAmount']->lessThan(Money::create(0))) {
-                $refunds[$id]['refundAmount'] = $zero;
+            if ($refunds[$id]['amount']->lessThan(Money::create(0))) {
+                $refunds[$id]['amount'] = $zero;
             }
+            
+            $refundsLenders[] = new RefundLender($refund);
         }
 
-        return $refunds;
+        return $refundsLenders;
     }
 
     public function generateLoanInstallments(Loan $loan)
@@ -855,6 +866,23 @@ class LoanService
             $this->lenderMailer->sendLoanDefaultedMail($loan, $lender);
         }
     }
+    
+    public function expireLoans()
+    {
+        //TODO: 
+        $thresholdDays = Setting::get('loan.expireThreshold');
+        $expireThreshold = Carbon::create()->subDays($thresholdDays);
+                
+        $loans = LoanQuery::create()
+            ->filterByStatus(Loan::OPEN)
+            ->where('loans.applied_at < ?', $expireThreshold)
+            ->find();
+        
+        foreach($loans as $loan) {
+            $percentageRaised = $loan->getRaisedPercentage();
+            if($percentageRaised < 100) {
+                $this->expireLoan($loan);
+            }
+        }
+    }
 }
-
-
