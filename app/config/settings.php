@@ -109,5 +109,8 @@ return [
         'sendwithus.introduction-template-id' => [
             'label' => 'Introduction template id'
         ],
+        'sendwithus.lender-expired-loan-template-id' => [
+            'label' => 'Loan expired notification'
+        ],
     ]
 ];
