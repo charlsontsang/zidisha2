@@ -93,6 +93,7 @@
         <column name="registration_fee" type="DECIMAL" size="10" scale="2" defaultValue="0.00" phpType="string"/>
         <column name="raised_usd_amount" type="DECIMAL" size="10" scale="2" phpType="string" default="0"/>
         <column name="raised_percentage" type="INTEGER" size="3" required="false" default="0"/>
+        <column name="paid_percentage" type="INTEGER" size="3" required="false" default="0"/>
         <column name="service_fee_rate" type="DECIMAL" size="5" scale="2" phpType="string"/>
         <column name="extra_days" type="INTEGER"/>
         <column name="currency_code" type="VARCHAR" size="3" required="true"/>
