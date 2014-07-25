@@ -8089,7 +8089,7 @@ a.inverted:hover {
     margin-bottom: 30px;
   }
 }
-.carousel-inner > .item > a > img {
+.carousel-inner > .item > img {
   width: 100%;
 }
 .carousel-caption {
@@ -8102,11 +8102,13 @@ a.inverted:hover {
     display: inline-block;
   }
 }
-.carousel-control {
+.carousel-control,
+.carousel-indicators {
   display: none;
 }
 @media (min-width: 768px) {
-  .carousel-control {
+  .carousel-control,
+  .carousel-indicators {
     display: inline-block;
   }
 }
