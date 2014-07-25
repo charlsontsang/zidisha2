@@ -8040,14 +8040,26 @@ a.inverted:hover {
 }
 /* Static info pages */
 .info-page h3 {
-  font-size: 24px;
-  line-height: 24px;
-  text-transform: none;
+  font-size: 1.5em;
+  line-height: 1em;
+}
+@media (min-width: 768px) {
+  .info-page h3 {
+    font-size: 24px;
+    line-height: 24px;
+    font-weight: bold;
+  }
 }
 .info-page p,
 .info-page ul li {
-  font-size: 20px;
-  line-height: 27px;
+  font-size: 1em;
+}
+@media (min-width: 768px) {
+  .info-page p,
+  .info-page ul li {
+    font-size: 20px;
+    line-height: 27px;
+  }
 }
 .info-page {
   padding-bottom: 22px;
