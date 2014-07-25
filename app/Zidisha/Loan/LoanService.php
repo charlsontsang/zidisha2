@@ -641,7 +641,7 @@ class LoanService
         }
     }
 
-    public function disburseLoan(Loan $loan, \DateTime $disbursedAt, Money $nativeAmount)
+    public function disburseLoan(Loan $loan, \DateTime $disbursedAt, Money $amount)
     {
         $isDisbursed = TransactionQuery::create()
             ->filterByLoan($loan)
@@ -653,15 +653,22 @@ class LoanService
             return;
         }
 
-        PropelDB::transaction(function($con) use ($loan, $disbursedAt, $nativeAmount) {
-            $this->transactionService->addDisbursementTransaction($con, $nativeAmount, $loan);
+        PropelDB::transaction(function($con) use ($loan, $disbursedAt, $amount) {
+            $this->transactionService->addDisbursementTransaction($con, $amount, $loan);
 
             $loans = LoanQuery::create()
                 ->filterByBorrower($loan->getBorrower())
                 ->count();
             if ($loans == 1) {
-                $this->transactionService->addFeeTransaction($con, $nativeAmount, $loan);
+                $this->transactionService->addFeeTransaction($con, $amount, $loan);
             }
+
+            $loan
+                ->setStatus(Loan::ACTIVE)
+                ->setDisbursedAmount($amount)
+                ->setDisbursedAt($disbursedAt)
+                ->calculateExtraDays($disbursedAt)
+                ->setServiceFeeRate(Setting::get('loan.serviceFeeRate'));
 
             $installments = $this->generateLoanInstallments($loan);
 
@@ -672,13 +679,7 @@ class LoanService
                 $installment->save($con);
             }
 
-            $loan
-                ->setStatus(Loan::ACTIVE)
-                ->setDisbursedAmount($nativeAmount)
-                ->setTotalAmount($totalAmount)
-                ->setDisbursedAt($disbursedAt)
-                ->calculateExtraDays($disbursedAt)
-                ->setServiceFeeRate(Setting::get('loan.serviceFeeRate'));
+            $loan->setTotalAmount($totalAmount);
             $loan->save($con);
 
             $this->changeLoanStage($con, $loan, Loan::FUNDED, Loan::ACTIVE);
