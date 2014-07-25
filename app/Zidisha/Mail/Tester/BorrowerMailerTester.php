@@ -3,6 +3,7 @@ namespace Zidisha\Mail\Tester;
 
 use Zidisha\Borrower\Borrower;
 use Zidisha\Borrower\JoinLog;
+use Zidisha\Loan\LoanQuery;
 use Zidisha\Mail\BorrowerMailer;
 use Zidisha\User\User;
 
@@ -42,5 +43,14 @@ class BorrowerMailerTester
         $borrower->setUser($user);
 
         $this->borrowerMailer->sendBorrowerJoinedConfirmationMail($borrower);
+    }
+
+
+    public function sendExpiredLoanMail()
+    {
+        $loan = LoanQuery::create()
+            ->findOne();
+        
+        $this->borrowerMailer->sendExpiredLoanMail($loan);
     }
 } 
