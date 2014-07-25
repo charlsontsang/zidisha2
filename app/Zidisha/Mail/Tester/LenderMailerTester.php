@@ -5,8 +5,11 @@ namespace Zidisha\Mail\Tester;
 use Zidisha\Borrower\Borrower;
 use Zidisha\Currency\Money;
 use Zidisha\Lender\Lender;
+use Zidisha\Lender\LenderQuery;
 use Zidisha\Loan\Bid;
 use Zidisha\Loan\Loan;
+use Zidisha\Loan\LoanQuery;
+use Zidisha\Loan\RefundLender;
 use Zidisha\Mail\LenderMailer;
 use Zidisha\User\User;
 
@@ -93,5 +96,18 @@ class LenderMailerTester
         $lender->setUser($user);
 
         $this->lenderMailer->sendIntroductionMail($lender);
+    }
+
+    public function sendExpiredLoanMail()
+    {
+        $loan = LoanQuery::create()
+            ->findOne();
+        
+        $lender = LenderQuery::create()
+            ->findOne();
+        
+        $refundLender = new RefundLender(['amount' => Money::create(55, 'KES'), 'lender' => $lender]);
+        
+        $this->lenderMailer->sendExpiredLoanMail($loan, $refundLender);
     }
 }
