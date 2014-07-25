@@ -9,6 +9,7 @@ use Zidisha\Lender\GiftCard;
 use Zidisha\Lender\Invite;
 use Zidisha\Lender\Lender;
 use Zidisha\Loan\Bid;
+use Zidisha\Loan\Loan;
 
 /**
  * Class LenderMailer
@@ -172,5 +173,16 @@ class LenderMailer
     public function sendBorrowerCommentNotification(Lender $lender, Comment $comment)
     {
 
+    }
+
+    public function sendLoanDefaultedMail(Loan $loan, Lender $lender)
+    {
+        $this->mailer->send(
+            'emails.lender.loan.loan-defaulted',
+            [
+                'to'         => $lender->getUser()->getEmail(),
+                'subject'    => 'Loan defaulted',
+            ]
+        );
     }
 }

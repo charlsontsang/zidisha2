@@ -27,4 +27,8 @@ class LoanQuery extends BaseLoanQuery
         return $this->filterByStatus([Loan::ACTIVE, Loan::FUNDED]);
     }
 
+    public function orderByRand() {
+        return $this->addAscendingOrderByColumn('random( )');
+    }
+
 } // LoanQuery

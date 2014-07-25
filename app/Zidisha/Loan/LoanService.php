@@ -2,6 +2,7 @@
 
 namespace Zidisha\Loan;
 
+use Carbon\Carbon;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Zidisha\Admin\Setting;
 use Zidisha\Analytics\MixpanelService;
@@ -13,6 +14,7 @@ use Zidisha\Currency\ExchangeRateQuery;
 use Zidisha\Currency\Money;
 use Zidisha\Lender\Lender;
 use Zidisha\Loan\Calculator\InstallmentCalculator;
+use Zidisha\Loan\Calculator\RepaymentCalculator;
 use Zidisha\Mail\BorrowerMailer;
 use Zidisha\Mail\LenderMailer;
 use Zidisha\Repayment\Installment;
@@ -125,8 +127,8 @@ class LoanService
         $installmentAmount = Money::create($data['installmentAmount'], $currencyCode);
         $installmentCount = $calculator->calculateInstallmentCount($installmentAmount);
         
-        $loan->setInstallmentCount($installmentCount);            
-
+        $loan->setInstallmentCount($installmentCount);
+        
         return $loan;
     }
 
@@ -463,7 +465,7 @@ class LoanService
         PropelDB::transaction(function($con) use ($bid, $loan) {
             $bid->save($con);
 
-            $loan->save();            
+            $loan->save();
         });
 
         //Todo: refresh elastic search.
@@ -515,7 +517,7 @@ class LoanService
     }
 
     public function expireLoan(Loan $loan)
-    {        
+    {
         PropelDB::transaction(function($con) use ($loan) {
             $loan->setStatus(Loan::EXPIRED)
                 ->setExpiredAt(new \DateTime());
@@ -656,21 +658,25 @@ class LoanService
                 $this->transactionService->addFeeTransaction($con, $nativeAmount, $loan);
             }
 
+            $installments = $this->generateLoanInstallments($loan);
+
+            $totalAmount = Money::create(0, $loan->getCurrency());
+            /** @var Installment $installment */
+            foreach ($installments as $installment) {
+                $totalAmount = $totalAmount->add($installment->getAmount());
+                $installment->save($con);
+            }
+
             $loan
                 ->setStatus(Loan::ACTIVE)
                 ->setDisbursedAmount($nativeAmount)
+                ->setTotalAmount($totalAmount)
                 ->setDisbursedAt($disbursedAt)
                 ->calculateExtraDays($disbursedAt)
                 ->setServiceFeeRate(Setting::get('loan.serviceFeeRate'));
             $loan->save($con);
 
             $this->changeLoanStage($con, $loan, Loan::FUNDED, Loan::ACTIVE);
-            
-            $installments = $this->generateLoanInstallments($loan);
-            
-            foreach ($installments as $installment) {
-                $installment->save($con);
-            }
         });
 
         //TODO Send email / sift sience event
@@ -792,6 +798,62 @@ class LoanService
             $repaymentScore = number_format($repaymentRate,2, '.', ',');
         }
         return $repaymentScore;
+    }
+
+    public function writeOffLoans()
+    {
+        $sixMonthsAgo = Carbon::now()->subMonths(6);
+
+        $query = "SELECT l.id, l.borrower_id, l.status, rc.max_paid_date, rc.max_due_date, rc.min_due_date, l.disbursed_amount
+                FROM loans l JOIN (
+                    SELECT r.loan_id, MAX (r.paid_date) AS max_paid_date, MAX (r.due_date) AS max_due_date, MIN (r.due_date) AS min_due_date
+                    FROM installments r
+                    WHERE r.amount > 0
+                    GROUP BY r.loan_id
+                ) rc ON l.id = rc.loan_id
+                WHERE
+                    l.status = :status
+                AND (
+                    rc.max_due_date < :sixMonthsAgo
+                    OR rc.max_paid_date < :sixMonthsAgo
+                    OR (
+                        rc.min_due_date < :sixMonthsAgo
+                        AND rc.max_paid_date IS NULL
+                    )
+                )";
+
+        $loans = PropelDB::fetchAll(
+            $query,
+            [
+                'status' => Loan::ACTIVE,
+                'sixMonthsAgo' => $sixMonthsAgo,
+            ]
+        );
+
+        foreach ($loans as $loan) {
+            $this->defaultLoan($loan);
+        }
+    }
+
+    public function defaultLoan(Loan $loan)
+    {
+        PropelDB::transaction(function($con) use ($loan) {
+            $loan->setStatus(Loan::DEFAULTED);
+            $loan->save($con);
+            $this->changeLoanStage($con, $loan, Loan::ACTIVE, Loan::DEFAULTED);
+        });
+
+        $lenders = [];
+        // TODO
+        $calculator = new RepaymentCalculator($loan);
+        $bids = BidQuery::create()
+            ->filterBidsToRepay($loan)
+            ->find();
+        //$loanRepayments = $calculator->loanRepayments($exchangeRate, $bids);
+
+        foreach ($lenders as $lender) {
+            $this->lenderMailer->sendLoanDefaultedMail($loan, $lender);
+        }
     }
 }
 
