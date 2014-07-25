@@ -4,7 +4,7 @@
     {{ BootstrapForm::textarea('message') }}
     {{ BootstrapForm::hidden('receiver_id', $receiver->getId()) }}
     {{ BootstrapForm::hidden('parent_id', $comment->getId()) }}
-    {{ BootstrapForm::submit('reply') }}
+    {{ BootstrapForm::submit('reply', ['data-submit' => '', 'data-loading-text' => \Lang::get('comments.reply.loading-text')]) }}
 
     {{ BootstrapForm::close() }}
 </div>

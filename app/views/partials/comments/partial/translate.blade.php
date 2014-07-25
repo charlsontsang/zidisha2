@@ -3,7 +3,7 @@
 
     {{ BootstrapForm::textarea('message') }}
     {{ BootstrapForm::hidden('comment_id', $comment->getId()) }}
-    {{ BootstrapForm::submit('translate') }}
+    {{ BootstrapForm::submit('translate', ['data-submit' => '', 'data-loading-text' => \Lang::get('comments.translate.loading-text')]) }}
 
     {{ BootstrapForm::close() }}
 </div>

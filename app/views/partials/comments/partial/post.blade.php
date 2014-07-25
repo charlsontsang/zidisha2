@@ -15,6 +15,6 @@
         <button class="btn btn-primary btn-success comment-upload-add-more">@lang('comments.add-more')</button>
     @endif
 
-    {{ BootstrapForm::submit('submit') }}
+    {{ BootstrapForm::submit('submit', ['data-submit' => '', 'data-loading-text' => \Lang::get('comments.post.loading-text')]) }}
     {{ BootstrapForm::close() }}
 </div>
