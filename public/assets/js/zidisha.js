@@ -109,6 +109,11 @@ $(function () {
         $(this).hide();
         return false;
     });
+
+    $('body').on('click', '[data-submit]', function() {
+        var btn = $(this);
+        btn.button('loading')
+    });
 });
 
 function parseMoney(value) {
