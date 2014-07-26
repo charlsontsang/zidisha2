@@ -68,7 +68,7 @@
             <p>Just as Airbnb connects travelers directly to hosts, Zidisha connects lenders directly to borrowers, providing not only an affordable loan, but also a personal connection.</p>
             <footer>
                 <cite><a href="http://paulbuchheit.blogspot.com/2014/03/help-me-distribute-100000-to-new.html" target="_blank">Gmail Creator Paul Buchheit</a></cite>
-            <footer>
+            </footer>
         </blockquote>  
         <br/>
         <h3>Direct dialogue with borrowers.</h3>
