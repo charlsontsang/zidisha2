@@ -85,13 +85,13 @@
 @foreach($paginator as $loan)
 <div class="row">
 
-    <div class="col-sm-6 col-md-5 col-md-offset-1">
+    <div class="col-sm-6 col-md-5 col-md-offset-1 col-xs-12">
         <a class="pull-left" href="{{ route('borrower:public-profile', $loan->getBorrower()->getUser()->getUsername()) }}">
             <img src="{{ $loan->getBorrower()->getUser()->getProfilePictureUrl() }}" width="100%">
         </a>
     </div>
     
-    <div class="col-sm-6 col-md-5 loan">
+    <div class="col-sm-6 col-md-5 col-xs-12 loan">
         @if($loan->getCategory())
             <div class="loan-category">
                 {{ $loan->getCategory()->getName() }}
