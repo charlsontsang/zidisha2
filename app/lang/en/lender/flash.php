@@ -2,7 +2,7 @@
 
 return [
     'preferences' => [
-        'success'        => 'Preferences updated Successfully',
+        'success'        => 'Success! Your account settings are updated.',
         'stats-projects' => ':count Project|:count Projects',
     ],
 ];

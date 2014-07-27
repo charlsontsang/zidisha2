@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('page-title')
-Funds
+Add or Withdraw Funds
 @stop
 
 @section('content')
@@ -11,7 +11,7 @@ Funds
 
 
 <div>
-    <strong>Balance available: USD {{ $currentBalance }} </strong>
+    <strong>Balance available: ${{ $currentBalance }}</strong>
 </div>
 
 <div>
@@ -62,15 +62,14 @@ USD <span id="total-amount-display"></span>
 {{ BootstrapForm::close() }}
 <br><br>
 <div>
-    <strong>WithDraw Funds</strong>
+    <strong>Withdraw Funds</strong>
 </div>
 <br>
-<p>You may request withdrawal of your available balance here. The requested withdrawal amount will be transferred to your
-PayPal account</p>
+<p>Use this form to request a transfer of your lending balance to your PayPal account.</p>
 <br/>
 
 <div>
-    <p>Balance available: USD {{ $currentBalance }} </p>
+    <p>Balance available: ${{ $currentBalance }}</p>
 </div>
 {{ BootstrapForm::open(array('route' => 'lender:post-withdraw-funds', 'translationDomain' => 'withdrawFunds')) }}
 

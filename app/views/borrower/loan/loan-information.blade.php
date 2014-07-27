@@ -41,7 +41,7 @@
 
     <div class="row">
         <a href="{{ action('LoanController@getIndex', [ 'loanId' => $loan->getId() ]) }}">
-            Goto loan page
+            View loan profile page
         </a>
     </div>
 @stop

@@ -1,23 +1,23 @@
 <?php
 return [
     'flash' => [
-        'post' => 'Your comments was posted',
-        'edit' => 'Your comment was edited',
-        'reply' => 'Your reply was posted',
-        'delete' => 'Your comment was deleted',
-        'translate' => 'Your comment was translated',
-        'file-not-valid' => 'The uploaded file is not valid',
-        'file-deleted' => 'Your File was Deleted',
+        'post' => 'Comment posted!',
+        'edit' => 'Comment edited!',
+        'reply' => 'Reply posted!',
+        'delete' => 'The comment has been deleted.',
+        'translate' => 'Comment translated!',
+        'file-not-valid' => 'Sorry, we don\'t support this file type. Please try again with a JPG or PNG file.',
+        'file-deleted' => 'The file has been deleted.',
         'welcome' => 'Welcome to Zidisha!',
-        'already-invited' => 'Email :email is already been invited by you!',
-        'invite-success' => ':count Invite successfully sent!|:count Invites successfully sent!',
-        'facebook-no-account' => 'No Facebook account connected.',
-        'invalid-code' => 'The redemption code you entered is not valid. Please try again.',
-        'duplicate-code' => 'Sorry gift card redemption request could not be processed. Please contact to Administrator.',
-        'redeemed-code' => 'Sorry, this gift card has already been redeemed.',
-        'expired-code' => 'We are sorry, but this gift card expired on',
-        'redemption-success' => 'Your card is successfully Redeemed',
-        'borrower-join-email-sent' => 'A confirmation email is sent to your email address!'
+        'already-invited' => ':email is already in your invite list. Thanks for double checking!',
+        'invite-success' => 'You have successfully sent :count invite.|You have successfully sent :count invites.',
+        'facebook-no-account' => 'Please connect your Facebook account to continue..',
+        'invalid-code' => 'Sorry, we didn\'t recognize that redemption code. Please try again, or contact service@zidisha.org for assistance.',
+        'duplicate-code' => 'Sorry, we didn\'t recognize that redemption code. Please try again, or contact service@zidisha.org for assistance.',
+        'redeemed-code' => 'This gift card has already been redeemed.',
+        'expired-code' => 'This gift card expired on',
+        'redemption-success' => 'Your gift card has been credited to your lending account.',
+        'borrower-join-email-sent' => 'We\'ve sent a confirmation to your registered email address. Please click the link in that email to continue.'
     ],
     'actions' => [
         'edit' => 'Edit',
@@ -28,6 +28,6 @@ return [
         'show-original' => 'Display posting in original language',
         'translated-by' => 'Translated by'
     ],
-    'upload-file' => 'Select a file or image to upload.',
+    'upload-file' => 'Add a photo',
     'add-more' => 'Add more'
 ];

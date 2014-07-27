@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('page-title')
-how-it-works
+Invite Your Friends: How It Works
 @stop
 
 @section('content')

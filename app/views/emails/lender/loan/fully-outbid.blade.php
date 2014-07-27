@@ -1,3 +1,5 @@
+Hi there,
+<br/><br/>
 This is a notification that your bid to fund USD {{ $bidAmount }} of the loan for
 <a href="{{ $borrowerLink }}%" target='_blank'>{{ $borrowerName }}</a> at {{ $bidInterestRate }}% interest
 has been outbid by another lender who proposed a lower interest rate.

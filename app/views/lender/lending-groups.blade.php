@@ -7,9 +7,7 @@ Lending Groups
 @section('content')
 <h2>Lending Groups</h2>
 <p>
-    Lending Groups maximize their impact by combining forces. A Lending Group's Total Group Impact is the sum of the Total Lender
-    Impact of its members. The Total Lender Impact equals the combined sum of the dollar volume of loans made by each member, plus
-    the loans made by each lender that was recruited by that member to join Zidisha.
+    Lending Groups maximize their impact by combining forces to do more good. Whether the members of a Lending Group share a common passion, support similar causes, or simply come from the same country, they all join together to make microlending miracles happen. Check them out below — and get involved!
 </p>
 @if(Auth::check() && Auth::getUser()->isLender())
 <a href="{{ route('lender:groups:create') }}" class="btn btn-primary">

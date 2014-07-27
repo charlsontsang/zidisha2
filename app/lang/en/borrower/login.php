@@ -13,7 +13,7 @@ return [
     'not-a-member' => 'Not a member?',
     'join' => 'Join',
     'flash' => [
-        'login-error'             => 'Wrong username or password!',
+        'login-error'             => 'Sorry, we didn\'t recognize your login information. Please try again.',
         'not-registered-facebook' => 'You are not registered to use Facebook. Please sign up with Facebook first.',
         'code-not-valid'          => 'The code is not valid',
         'verified'                => 'You are verified.',

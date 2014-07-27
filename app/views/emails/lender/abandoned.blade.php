@@ -1,1 +1,1 @@
-You need to login to zidisha in a month.
+[deactivation one-month warning message here]

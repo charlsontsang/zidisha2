@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('page-title')
-Join the global p2p microlending movement
+Account Preferences
 @stop
 
 @section('content')
@@ -57,6 +57,6 @@ Join the global p2p microlending movement
 
 @section('script-footer')
 <script type="text/javascript">
-    $('.karmaScore').tooltip({placement: 'bottom', title: 'Karma is calculated on the basis of the total amount lent by the new members a member has recruited to Zidisha via email invites or gift cards, the number of comments a member has posted in the Zidisha website, and the total amount lent by a member.'})
+    $('.karmaScore').tooltip({placement: 'bottom', title: 'Karma is calculated on the basis of the total amount lent by the new members a member has recruited to Zidisha via email invites or gift cards, and the number of comments a member has posted in the Zidisha website.'})
 </script>
 @stop

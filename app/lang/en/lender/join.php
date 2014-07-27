@@ -2,7 +2,7 @@
 
 return [
     'form' => [
-        'username'              => 'Display Username',
+        'username'              => 'Create display name',
         'email'                 => 'Email',
         'password'              => 'Password',
         'password-confirmation' => 'Confirm Password',
@@ -11,18 +11,19 @@ return [
     ],
 
     'validation' => [
-        'facebook-account-exists' => 'This facebook account already linked with another
-                account on our website.',
-        'facebook-email-exists'   => 'The email address linked to the facebook
-                account is already linked with another account on our website.',
-        'google-account-exists'   => 'This google account already linked with another account on our website.',
-        'google-email-exists'     => 'The email address linked to the google account is already linked with another account on
-                our website.',
+        'facebook-account-exists' => 'This Facebook account is already linked to another
+                Zidisha account.',
+        'facebook-email-exists'   => 'This Facebook account\'s email address is already linked to another
+                Zidisha account.',
+        'google-account-exists'   => 'This Google account is already linked to another
+                Zidisha account.',
+        'google-email-exists'     => 'This Google address is already linked to another
+                Zidisha account.',
     ],
 
     'flash' => [
         'oops'                          => 'Oops, something went wrong',
-        'facebook-no-account-connected' => 'No Facebook account connected.',
-        'google-no-account-connected'   => 'No Google account connected.',
+        'facebook-no-account-connected' => 'Please connect your Facebook account to continue.',
+        'google-no-account-connected'   => 'Please connect your Google account to continue.',
     ],
 ];

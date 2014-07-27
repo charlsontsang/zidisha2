@@ -2,5 +2,5 @@
 
 @section('content')
 
-Your Loan has been submitted!!
+Your loan application has been published.
 @stop

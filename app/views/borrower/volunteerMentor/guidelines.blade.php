@@ -10,5 +10,5 @@ Volunteer Mentor Guidelines
 
 <a href="{{ route('page:volunteer-mentor-code-of-ethics') }}" >Code of Ethics</a>
 <br><br>
-<a href="{{ route('page:volunteer-mentor-faq') }}" >Frequently asked questions</a>
+<a href="{{ route('page:volunteer-mentor-faq') }}" >Frequently Asked Questions</a>
 @stop

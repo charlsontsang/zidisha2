@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('content')
-{{ link_to_route('borrower:join', 'Join as borrower') }}
+{{ link_to_route('borrower:join', 'Create a borrower account') }}
 <br/>
 <br/>
 <div class="row">
@@ -23,7 +23,7 @@
 $(function() {
     $('#joinForm').submit(function() {
         if (!$('[name=termsOfUse]').is(':checked')) {
-            alert('Please Confirm acceptance of Terms of Use. Thanks!');
+            alert('Please confirm acceptance of the Terms of Use. Thanks!');
             return false;
         }
     });
