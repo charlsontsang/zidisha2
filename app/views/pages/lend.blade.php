@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('page-title')
-@lang('lend.page-title')
+Lend
 @stop
 
 @section('content-top')

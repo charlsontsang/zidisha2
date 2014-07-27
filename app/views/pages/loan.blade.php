@@ -1,19 +1,33 @@
 @extends('layouts.master')
 
 @section('page-title')
-    @lang('loan.page-title')
+    {{ $loan->getBorrower()->getName() }}
 @stop
 
 @section('content-top')
     <div class="page-section">
         <div class="container">
-            <h1>
-                {{{ $loan->getSummary() }}}
-            </h1>
-            {{{ $loan->getBorrower()->getName() }}}
-            <img class="leaf" src="{{ '/assets/images/leaf.png' }}"/>
-            {{ $loan->getBorrower()->getProfile()->getCity() }},
-            {{ $loan->getBorrower()->getCountry()->getName() }}
+            <div class="row">
+                <div class="col-md-12">
+                    <h1>
+                        {{{ $loan->getSummary() }}}
+                    </h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-5">
+                    <p>
+                        {{ $loan->getBorrower()->getName() }}
+                    </p>
+                </div>
+                <div class="col-md-7">
+                    <p>
+                        <img class="leaf" src="{{ '/assets/images/leaf.png' }}"/>
+                        {{ $loan->getBorrower()->getProfile()->getCity() }},
+                        {{ $loan->getBorrower()->getCountry()->getName() }}
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
 @stop

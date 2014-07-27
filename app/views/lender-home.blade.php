@@ -1,5 +1,9 @@
 @extends('layouts.master')
 
+@section('page-title')
+    Person-to-person microlending
+@stop
+
 @section('content-top')
     <div id="carousel-example-generic" class="carousel slide" data-ride="carousel" data-interval="0">
         <!-- Indicators -->
