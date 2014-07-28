@@ -150,9 +150,9 @@ My Stats
         <th>Project</th>
         <th>Date Funded</th>
         <th>Amount Lent (USD)</th>
-        <th>Amount Repaid (USD)</th>
-        <th>Principal Outstanding (USD)</th>
-        <th>Loan Status</th>
+        <th>Amount Repaid (USD) <a href="#" class="amount-repaid-active-loans" data-toggle="tooltip">(?)</a></th>
+        <th>Principal Outstanding (USD) <a href="#" class="principal-outstanding-active-loans" data-toggle="tooltip">(?)</a></th>
+        <th>Loan Status <a href="#" class="loan-status-active-loans" data-toggle="tooltip">(?)</a></th>
     </tr>
     </thead>
     <tbody>
@@ -248,5 +248,14 @@ My Stats
 </script>
 <script type="text/javascript">
     $('.total-impact').tooltip({placement: 'bottom', title: 'The total amount lent by you, your invitees and your gift card recipients.'})
+</script>
+<script type="text/javascript">
+    $('.amount-repaid-active-loans').tooltip({placement: 'bottom', title: 'This is the amount that has been repaid into your lending account for this loan, including interest and adjusted for currency exchange rate fluctuations.'})
+</script>
+<script type="text/javascript">
+    $('.principal-outstanding-active-loans').tooltip({placement: 'bottom', title: 'The portion of US dollar amounts you have lent which is still outstanding with the borrowers (not yet repaid). This amount does not include any interest which is due for the loans, and its value is not adjusted for credit risk or exchange rate fluctuations.'})
+</script>
+<script type="text/javascript">
+    $('.loan-status-active-loans').tooltip({placement: 'bottom', title: 'Loans are labeled "Repaying Early" or "Repaying Late" if repayments are more than 10 days ahead or behind schedule, using a threshold of $10 or the value of one installment (whichever is greater). Otherwise, they are labeled "On Time.'})
 </script>
 @stop
