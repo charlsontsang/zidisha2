@@ -231,6 +231,7 @@ class LenderController extends BaseController
         }
         $activeLoansBidPaymentStatus = [];
         $completedLoansBidAmountRepaid = [];
+        $activeLoansBidAmountRepaid = [];
 
         $totalFundsUpload = TransactionQuery::create()
             ->filterByUserId($userId)
@@ -326,8 +327,32 @@ class LenderController extends BaseController
         $numberOfActiveBids = $activeLoansBids->getNbResults();
         $numberOfActiveProjects = \Lang::choice('lender.flash.preferences.stats-projects', $numberOfActiveBids, array('count' => $numberOfActiveBids));
 
+        $activeLoansIds = [];
         /** @var $activeLoansBid Bid */
         foreach ($activeLoansBids as $activeLoansBid) {
+            $activeLoansIds[] = $activeLoansBid->getLoanId();
+        }
+
+        $activeLoansRepaidAmounts = TransactionQuery::create()
+            ->filterByUserId($userId)
+            ->filterRepaidToLender()
+            ->select('totals', 'loan_id')
+            ->withColumn('SUM(amount)', 'totals')
+            ->withColumn('loan_id', 'loan_id')
+            ->filterByLoanId($activeLoansIds, Criteria::IN)
+            ->groupByLoanId()
+            ->find();
+
+        /** @var $activeLoansBid Bid */
+        foreach ($activeLoansBids as $activeLoansBid) {
+            foreach ($activeLoansRepaidAmounts as $activeLoansRepaidAmount) {
+                if ($activeLoansRepaidAmount['loan_id'] == $activeLoansBid->getLoanId()) {
+                    $activeLoansBidAmountRepaid[$activeLoansBid->getId()] = $activeLoansRepaidAmount['totals'];
+                    continue;
+                }
+                $activeLoansBidAmountRepaid[$activeLoansBid->getId()] = 0.00;
+            }
+
             $repaymentSchedule = $this->repaymentService->getRepaymentSchedule($activeLoansBid->getLoan());
             $activeLoansBidPaymentStatus[$activeLoansBid->getId()] = $repaymentSchedule->getLoanPaymentStatus();
         }
@@ -367,7 +392,7 @@ class LenderController extends BaseController
                 'numberOfFundRaisingProjects', 'newMemberInviteCredit',
                 'numberOfActiveProjects', 'numberOfCompletedProjects', 'principleOutstanding',
                 'totalLentAmountByInvitees', 'totalLentAmountByRecipients',
-                'activeLoansBidPaymentStatus', 'completedLoansBidAmountRepaid'
+                'activeLoansBidPaymentStatus', 'completedLoansBidAmountRepaid', 'activeLoansBidAmountRepaid'
             ));
     }
 }

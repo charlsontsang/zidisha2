@@ -175,7 +175,7 @@ My Stats
         @endif
         </td>
         <td>{{ $activeLoansBid->getAcceptedAmount()->getAmount() }}</td>
-        <td>// TODO</td>
+        <td>{{ $activeLoansBidAmountRepaid[$activeLoansBid->getId()] }}</td>
         <td>// TODO</td>
         <td>
             @if($activeLoansBidPaymentStatus[$activeLoansBid->getId()] == 'on-time')
@@ -227,7 +227,7 @@ My Stats
         </td>
         <td>{{ $completedLoansBid->getLoan()->getDisbursedAt()->format('d-m-Y') }}</td>
         <td>{{ $completedLoansBid->getAcceptedAmount()->getAmount() }}</td>
-        <td>{{ $completedLoansBid['amountRepaid'] }}</td>
+        <td>{{ $completedLoansBidAmountRepaid[$completedLoansBid->getId()] }}</td>
         <td>// TODO</td>
         <td>
             100% Repaid<br>
