@@ -63,6 +63,16 @@
                         </p>
                     </div>
                 </div>
+                    <div class="col-sm-6">
+                        On-Time Repayments: <a href="#" class="repayment" data-toggle="tooltip">(?)</a>
+                        <strong>{{ $repaymentScore }}%</strong> (TODO)
+                        <br/>
+
+                        Feedback Rating: <a href="#" class="rating" data-toggle="tooltip">(?)</a>
+                        <strong>TODO</strong>
+                        <br/>
+                    </div>
+                </div>
 
                 <hr/>
                 

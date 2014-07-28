@@ -141,6 +141,7 @@ class LoanController extends BaseController
                 'canReplyFeedback',
                 'hasFundedBorrower',
                 'repaymentSchedule',
+                'repaymentScore',
                 'loanFeedbackComments',
                 'displayFeedbackComments'
             ),
