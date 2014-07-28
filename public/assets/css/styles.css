@@ -5898,7 +5898,9 @@ button.close {
 .panel-body:before,
 .panel-body:after,
 .modal-footer:before,
-.modal-footer:after {
+.modal-footer:after,
+.loan-section:before,
+.loan-section:after {
   content: " ";
   display: table;
 }
@@ -5916,7 +5918,8 @@ button.close {
 .navbar-collapse:after,
 .pager:after,
 .panel-body:after,
-.modal-footer:after {
+.modal-footer:after,
+.loan-section:after {
   clear: both;
 }
 .center-block {
@@ -8177,4 +8180,102 @@ hr {
 }
 a.link-dark {
   color: #333;
+}
+.loan-body {
+  padding-right: 15px;
+}
+@media (min-width: 992px) {
+  .loan-body {
+    padding-right: 30px;
+  }
+}
+.lend-details .table .form-group {
+  margin-bottom: 0px;
+}
+.lend-details .table tbody > tr > td {
+  vertical-align: middle;
+}
+.loan-titlebar p {
+  margin-bottom: 0;
+}
+.loan-section {
+  margin-left: -15px;
+  margin-right: -15px;
+}
+.loan-section-title {
+  position: relative;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+@media (min-width: 768px) {
+  .loan-section-title {
+    float: left;
+    width: 16.66666667%;
+  }
+}
+@media (max-width: 767px) {
+  .loan-section-title {
+    font-size: 18px;
+    padding-bottom: 12px;
+    text-align: center;
+  }
+}
+.loan-section-content {
+  position: relative;
+  min-height: 1px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+@media (min-width: 768px) {
+  .loan-section-content {
+    float: left;
+    width: 83.33333333%;
+  }
+}
+@media (min-width: 768px) {
+  .social-icons {
+    float: right;
+  }
+}
+.lend-form .panel-body {
+  padding: 20px;
+}
+.lend-form .progress {
+  margin-bottom: 8px;
+}
+.lend-form .btn {
+  margin-top: 20px;
+  font-size: 22px;
+}
+.lend-form .form-group {
+  margin: 20px 0 8px 0;
+}
+.comments .media {
+  display: inline-block;
+  padding: 0;
+}
+.comments .media .loan-section-title {
+  padding-top: 50px;
+}
+.comments .media .clearfix,
+.comments .media .dl-horizontal dd,
+.comments .media .container,
+.comments .media .container-fluid,
+.comments .media .row,
+.comments .media .form-horizontal .form-group,
+.comments .media .btn-toolbar,
+.comments .media .btn-group-vertical > .btn-group,
+.comments .media .nav,
+.comments .media .navbar,
+.comments .media .navbar-header,
+.comments .media .navbar-collapse,
+.comments .media .pager,
+.comments .media .panel-body,
+.comments .media .modal-footer,
+.comments .media .loan-section {
+  margin: 0;
+}
+.comments ul {
+  padding: 0;
 }

@@ -5,7 +5,7 @@
 @stop
 
 @section('content-top')
-    <div class="page-section">
+    <div class="page-section loan-titlebar">
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
@@ -15,16 +15,21 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-5">
+                <div class="col-sm-3 col-md-2">
                     <p>
                         {{ $loan->getBorrower()->getName() }}
                     </p>
                 </div>
-                <div class="col-md-7">
+                <div class="col-sm-4 col-md-5">
                     <p>
                         <img class="leaf" src="{{ '/assets/images/leaf.png' }}"/>
                         {{ $loan->getBorrower()->getProfile()->getCity() }},
                         {{ $loan->getBorrower()->getCountry()->getName() }}
+                    </p>
+                </div>
+                <div class="col-sm-5 col-md-5"> <!-- TO DO: add social share scripts -->
+                    <p>
+                         <img class="social-icons" src="{{ '/assets/images/test-photos/share.png' }}"/>
                     </p>
                 </div>
             </div>
@@ -34,7 +39,7 @@
 
 @section('content')
 <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-8 loan-body">
         <img src="{{ $loan->getBorrower()->getUser()->getProfilePictureUrl('large-profile-picture') }}" width="100%">
 
         <br/>
@@ -91,7 +96,7 @@
 
                             <div id="toggle-example" class="collapse">
                                 @foreach($previousLoans as $oneLoan)
-                                <p><a href="{{ route('loan:index', $oneLoan->getId()) }}">USD {{ $oneLoan->getNativeAmount() }}
+                                <p><a href="{{ route('loan:index', $oneLoan->getId()) }}">${{ $oneLoan->getNativeAmount() }}
                                         {{ $oneLoan->getAppliedAt()->format('d-m-Y') }}
                                         {{-- TODO $oneLoan->getAcceptedAt()->format('d-m-Y')
                                         $oneLoan->getExpiredDate()->format('d-m-Y')
@@ -210,9 +215,10 @@
                 @endif
             </div>
         </div>
-        
+
         <hr/>
         
+        <!-- 
         <h3>
             @lang('lender.follow.title', ['name' => $borrower->getName()])
             @if ($followersCount)
@@ -235,15 +241,8 @@
         @endif
         
         <hr/>
-
-        <h4>3 Comments</h4>
-
-        <p class="well">
-            Ask {{ $loan->getBorrower()->getFirstName() }} a question about this loan, inquire about the business, or send a simple note of thanks or inspiration.
-        </p>
-
-
-        <h4>Comments</h4>
+        -->
+        
         @include('partials.comments.comments', [
             'comments' => $comments,
             'receiver' => $borrower,
@@ -251,6 +250,8 @@
             'canPostComment' => \Auth::check(),
             'canReplyComment' => \Auth::check()
         ])
+
+        <hr/>
 
         <h4 id="feedback">Loan Feedback</h4>
         @if($displayFeedbackComments)
@@ -262,6 +263,7 @@
                 'canReplyComment' => $canReplyFeedback
             ])
         @endif
+
 
         <br>
         <strong>FUNDING RAISED </strong>
@@ -296,8 +298,8 @@
             @endforeach
             </tbody>
         </table>
-        <strong>Raised: </strong> USD {{ $loan->getRaisedUsdAmount()->getAmount() }}
-        <strong>Still Needed: </strong> USD {{ $loan->getStillNeededUsdAmount() }}
+        <strong>Raised: </strong> ${{ $loan->getRaisedUsdAmount()->getAmount() }}
+        <strong>Still Needed: </strong> ${{ $loan->getStillNeededUsdAmount() }}
 
         @if($loan->getStatus() >= Zidisha\Loan\Loan::ACTIVE)
         <br>
@@ -368,7 +370,7 @@
         <div class="panel panel-default">
             <div class="panel-heading"><b>About this Loan</b></div>
             <div class="panel-body">
-                <p><b>Loan Principal Disbursed: </b>USD {{ $loan->getDisbursedAmount() }}</p>
+                <p><b>Loan Principal Disbursed: </b>${{ $loan->getDisbursedAmount() }}</p>
 
                 <p><b>Date Disbursed: </b> {{ $loan->getDisbursedAt()->format('d-m-Y') }}</p>
 
@@ -390,14 +392,14 @@
 
                 <p><b>Total Amount (Including Interest and Transaction Fee) to be Repaid: </b> <a href="#" class="repaidAmount"
                                                                                                   data-toggle="tooltip">(?)</a>
-                    USD {{ $totalInterest->add($serviceFee)->getAmount() }} ({{5.00 + $loan->getInterestRate() }}%)
+                    ${{ $totalInterest->add($serviceFee)->getAmount() }} ({{5.00 + $loan->getInterestRate() }}%)
                 </p>
             </div>
         </div>
         @endif
 
         @if($loan->isOpen())
-        <div class="panel panel-default">
+        <div class="panel panel-default lend-form">
             <div class="panel-body">
                 @include('partials/loan-progress', [ 'loan' => $loan ])
                 
@@ -405,7 +407,6 @@
                 {{ BootstrapForm::populate($placeBidForm) }}
 
                 @if (!\Auth::check() || \Auth::user()->isLender())
-                <br/>
 
                 <div class="row">
                     <div class="col-xs-6" style="padding-right: 5px">
@@ -427,8 +428,6 @@
                         </div>
                     </div>
                 </div>
-                
-                <br/>
                 @endif
                 
                 @if (!Request::query('amount'))
@@ -437,7 +436,7 @@
                             <button id="lend-action" type="button" class="btn btn-primary btn-block">Lend</button>
                         @endif
                     @else
-                        <a href="{{ route('lender:join') }}" id="join-lend" class="btn btn-primary btn-block" data-toggle="modal" data-target="#join-modal">Join Zidisha & Lend</a>
+                        <a href="{{ route('lender:join') }}" id="join-lend" class="btn btn-primary btn-block" data-toggle="modal" data-target="#join-modal">Lend</a>
                     @endif
                 @endif
                 
@@ -553,7 +552,7 @@
         'bids are received than the amount needed to fund the loan, the borrower will accept the bids with the lowest proposed interest rates.' +
 
         'All interest rates displayed on the Zidisha website are expressed as flat percentages of loan principal per year the ' +
-        'loan is held. For example, for a loan of USD 100, taken at 4% annual interest with a repayment period of six months, ' +
+        'loan is held. For example, for a loan of $100, taken at 4% annual interest with a repayment period of six months, ' +
         'the total interest amount will be USD 100 * 4% * (6 months / 12 months) = $2.' +
 
         'The expression of interest rates as flat percentages of loan principal amounts is intended to make calculation of ' +

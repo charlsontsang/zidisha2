@@ -1,3 +1,9 @@
+.loan-body {
+  padding-right: 15px;
+  @media (min-width: @screen-md-min) {
+    padding-right: 30px;
+  }
+}
 .lend-details {
   .table .form-group {
     margin-bottom: 0px;
@@ -5,6 +11,9 @@
   .table tbody > tr > td {
     vertical-align: middle;
   }
+}
+.loan-titlebar p, {
+  margin-bottom: 0;
 }
 .loan-section {
   .make-row();
@@ -19,4 +28,22 @@
 }
 .loan-section-content {
   .make-sm-column(10);
+}
+@media (min-width: @screen-sm-min) {
+  .social-icons {
+    float: right;
+  }
+}
+.lend-form .panel-body {
+  padding: 20px;
+}
+.lend-form .progress {
+  margin-bottom: 8px;
+}
+.lend-form .btn {
+  margin-top: 20px;
+  font-size: 22px;
+}
+.lend-form .form-group {
+  margin: 20px 0 8px 0;
 }

@@ -17,7 +17,7 @@
             <span class="text-light">Still Needed</span>
         </div>
         <div class="col-xs-4 text-center gutter-xs">
-            <span class="text-large">{{ $loan->getDaysLeft() }}%</span>
+            <span class="text-large">{{ $loan->getDaysLeft() }}</span>
             <br/>
             <span class="text-light">Days Left</span>
         </div>
