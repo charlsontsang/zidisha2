@@ -14,7 +14,7 @@ class RepaymentSchedule implements \IteratorAggregate
 {
 
     private $installments = [];
-    private $paidInstallmentCount, $missedInstallmentCount, $paidOnTimeInstallmentCount, $todayInstallmentCount;
+    private $paidInstallmentCount, $missedInstallmentCount, $paidOnTimeInstallmentCount, $todayInstallmentCount, $loanPaymentStatus;
     private $loan;
 
     public function __construct(Loan $loan, $installments)
@@ -44,6 +44,7 @@ class RepaymentSchedule implements \IteratorAggregate
         $missedInstallmentCount = 0;
         $paidOnTimeInstallmentCount = 0;
         $todayInstallmentCount = 0;
+        $paymentStatus = 'on-time';
         $dueDateThreshold = $isActiveLoan ? $repaymentThreshold : 0;
         $endedAt = $this->loan->getEndedAt();
         $maximumDueDate = $endedAt ? $endedAt : $today->subDays($dueDateThreshold);
@@ -52,6 +53,7 @@ class RepaymentSchedule implements \IteratorAggregate
         /** @var RepaymentScheduleInstallment $repaymentScheduleInstallment */
         foreach ($this as $repaymentScheduleInstallment) {
             $thresholdAmount = $zero;
+            $totalEarlyPaidAmount = $zero;
             $missedInstallmentAmount = $zero;
             $totalPaidInstallmentAmount = $zero;
             $dueInstallmentAmount = $repaymentScheduleInstallment->getInstallment()->getAmount();
@@ -67,6 +69,9 @@ class RepaymentSchedule implements \IteratorAggregate
                 if ($dueInstallmentAmount->lessThan($thresholdAmount) && $dueInstallmentAmount->isPositive()) {
                     $thresholdAmount = $dueInstallmentAmount;
                 }
+                if ($installmentPaymentPaidDate && (($dueInstallmentDate->diffInDays($installmentPaymentPaidDate) > $repaymentThreshold))) {
+                    $totalEarlyPaidAmount = $totalEarlyPaidAmount->add($installmentPaymentPaidAmount);
+                }
                 if (empty($installmentPaymentPaidDate)) {
                     $missedInstallmentAmount = $missedInstallmentAmount->add($dueInstallmentAmount);
                 } elseif ($dueInstallmentDate->diffInDays($installmentPaymentPaidDate, false) > $repaymentThreshold) {
@@ -78,6 +83,7 @@ class RepaymentSchedule implements \IteratorAggregate
                     $totalPaidInstallmentAmount
                 )->lessThanOrEqual($thresholdAmount));
             $isInstallmentPaidOnTime = $isInstallmentPaid && ($missedInstallmentAmount->lessThanOrEqual($thresholdAmount));
+            $isInstallmentPaidEarly = $thresholdAmount && ($thresholdAmount->lessThan($totalEarlyPaidAmount));
 
             if ($isInstallmentPaid) {
                 $paidInstallmentCount++;
@@ -90,14 +96,24 @@ class RepaymentSchedule implements \IteratorAggregate
 
             if ($isTodayInstallment) {
                 $todayInstallmentCount += 1;
+                if ($isInstallmentPaidEarly) {
+                    $paymentStatus = 'early';
+                } else {
+                    $paymentStatus = $isInstallmentPaidOnTime ? 'on-time' : 'late';
+                }
                 if ($isInstallmentPaidOnTime) {
                     $paidOnTimeInstallmentCount += 1;
                 } else {
                     $missedInstallmentCount += 1;
                 }
+            } elseif ($isTodayInstallment) {
+                $paymentStatus = 'late';
+            } elseif ($isInstallmentPaidEarly) {
+                $paymentStatus = 'early';
             }
         }
 
+        $this->loanPaymentStatus = $paymentStatus;
         $this->todayInstallmentCount = $todayInstallmentCount;
         $this->paidInstallmentCount = $paidInstallmentCount;
         $this->missedInstallmentCount = $missedInstallmentCount;
@@ -122,6 +138,11 @@ class RepaymentSchedule implements \IteratorAggregate
     public function getTodayInstallmentCount()
     {
         return $this->todayInstallmentCount;
+    }
+
+    public function getLoanPaymentStatus()
+    {
+        return $this->loanPaymentStatus;
     }
 
 }

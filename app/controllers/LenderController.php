@@ -23,6 +23,7 @@ use Zidisha\Loan\Loan;
 use Zidisha\Loan\LoanQuery;
 use Zidisha\Payment\Form\UploadFundForm;
 use Zidisha\Payment\Stripe\StripeService;
+use Zidisha\Repayment\RepaymentService;
 use Zidisha\Utility\Utility;
 
 class LenderController extends BaseController
@@ -34,6 +35,7 @@ class LenderController extends BaseController
     private $lenderService;
     private $uploadFundForm;
     private $withdrawFundsForm;
+    private $repaymentService;
 
 
     public function __construct(
@@ -42,8 +44,8 @@ class LenderController extends BaseController
         LenderService $lenderService,
         GiftCard $cardForm,
         UploadFundForm $uploadFundForm,
-        WithdrawFundsForm $withdrawFundsForm
-
+        WithdrawFundsForm $withdrawFundsForm,
+        RepaymentService $repaymentService
     ) {
         $this->transactionQuery = $transactionQuery;
         $this->fundsForm = $fundsForm;
@@ -51,6 +53,7 @@ class LenderController extends BaseController
         $this->cardForm = $cardForm;
         $this->uploadFundForm = $uploadFundForm;
         $this->withdrawFundsForm = $withdrawFundsForm;
+        $this->repaymentService = $repaymentService;
     }
 
     public function getPublicProfile($username)
@@ -226,6 +229,8 @@ class LenderController extends BaseController
         if (!$lender) {
             \Illuminate\Support\Facades\App::abort(404);
         }
+        $activeLoansBidPaymentStatus = [];
+        $completedLoansBidAmountRepaid = [];
 
         $totalFundsUpload = TransactionQuery::create()
             ->filterByUserId($userId)
@@ -321,6 +326,12 @@ class LenderController extends BaseController
         $numberOfActiveBids = $activeLoansBids->getNbResults();
         $numberOfActiveProjects = \Lang::choice('lender.flash.preferences.stats-projects', $numberOfActiveBids, array('count' => $numberOfActiveBids));
 
+        /** @var $activeLoansBid Bid */
+        foreach ($activeLoansBids as $activeLoansBid) {
+            $repaymentSchedule = $this->repaymentService->getRepaymentSchedule($activeLoansBid->getLoan());
+            $activeLoansBidPaymentStatus[$activeLoansBid->getId()] = $repaymentSchedule->getLoanPaymentStatus();
+        }
+
         $completedLoansBids = BidQuery::create()
             ->getCompletedLoansBids($lender, $page3);
         $totalCompletedLoansBidsAmount = BidQuery::create()
@@ -345,7 +356,7 @@ class LenderController extends BaseController
 
         /** @var $completedLoansBid Bid */
         foreach ($completedLoansBids as $completedLoansBid) {
-            $completedLoansBid['amountRepaid'] = $completedLoansRepaidAmounts[$completedLoansBid->getLoanId()];
+            $completedLoansBidAmountRepaid[$completedLoansBid->getId()] = $completedLoansRepaidAmounts[$completedLoansBid->getLoanId()];
         }
 
         return View::make('lender.my-stats', compact('currentBalance', 'totalFundsUpload', 'lendingGroups',
@@ -355,7 +366,8 @@ class LenderController extends BaseController
                 'activeLoansBids', 'totalActiveLoansBidsAmount', 'completedLoansBids', 'totalCompletedLoansBidsAmount',
                 'numberOfFundRaisingProjects', 'newMemberInviteCredit',
                 'numberOfActiveProjects', 'numberOfCompletedProjects', 'principleOutstanding',
-                'totalLentAmountByInvitees', 'totalLentAmountByRecipients'
+                'totalLentAmountByInvitees', 'totalLentAmountByRecipients',
+                'activeLoansBidPaymentStatus', 'completedLoansBidAmountRepaid'
             ));
     }
 }

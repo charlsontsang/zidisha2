@@ -167,15 +167,25 @@ My Stats
             {{ $activeLoansBid->getBorrower()->getProfile()->getCity() }},
             {{ $activeLoansBid->getBorrower()->getCountry()->getName() }}
         </td>
+        <td>
         @if($activeLoansBid->getLoan()->getStatus() == Zidisha\Loan\Loan::ACTIVE)
-            <td>{{ $activeLoansBid->getLoan()->getDisbursedAt()->format('d-m-Y') }}</td>
+            {{ $activeLoansBid->getLoan()->getDisbursedAt()->format('d-m-Y') }}
         @else
-            <td>{{ $activeLoansBid->getLoan()->getAcceptedAt()->format('d-m-Y') }}</td>
+            {{ $activeLoansBid->getLoan()->getAcceptedAt()->format('d-m-Y') }}
         @endif
+        </td>
         <td>{{ $activeLoansBid->getAcceptedAmount()->getAmount() }}</td>
         <td>// TODO</td>
         <td>// TODO</td>
-        <td>// TODO</td>
+        <td>
+            @if($activeLoansBidPaymentStatus[$activeLoansBid->getId()] == 'on-time')
+                    <span class="label label-success">Repaying on Time</span>
+            @elseif($activeLoansBidPaymentStatus[$activeLoansBid->getId()] == 'late')
+                    <span class="label label-danger">Repaying Late</span>
+            @elseif($activeLoansBidPaymentStatus[$activeLoansBid->getId()] == 'early')
+                    <span class="label label-warning">Repaying Early</span>
+            @endif
+        </td>
     </tr>
     @endforeach
     <tr>
@@ -217,7 +227,7 @@ My Stats
         </td>
         <td>{{ $completedLoansBid->getLoan()->getDisbursedAt()->format('d-m-Y') }}</td>
         <td>{{ $completedLoansBid->getAcceptedAmount()->getAmount() }}</td>
-        <td>// TODO</td>
+        <td>{{ $completedLoansBid['amountRepaid'] }}</td>
         <td>// TODO</td>
         <td>
             100% Repaid<br>
