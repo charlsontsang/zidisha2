@@ -343,6 +343,20 @@ class LenderController extends BaseController
             ->groupByLoanId()
             ->find();
 
+        $ActiveLoansTotalOutstandingAmount = BidQuery::create()
+            ->filterByActive(true)
+            ->filterByLender($lender)
+            ->filterByLoanId($activeLoansIds, Criteria::IN)
+            ->groupByLoanId()
+            ->select('total', 'loan_id')
+            ->withColumn('SUM(accepted_amount)', 'total')
+            ->withColumn('loan_id', 'loan_id')
+            ->findOne();
+
+        dd($ActiveLoansTotalOutstandingAmount);
+
+        $ActiveLoansPrincipleOutstanding = Money::create($ActiveLoansTotalOutstandingAmount, 'USD');
+
         /** @var $activeLoansBid Bid */
         foreach ($activeLoansBids as $activeLoansBid) {
             foreach ($activeLoansRepaidAmounts as $activeLoansRepaidAmount) {
