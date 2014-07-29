@@ -231,6 +231,8 @@ class LenderController extends BaseController
         }
         $activeLoansBidPaymentStatus = [];
         $completedLoansBidAmountRepaid = [];
+        $netChangeCompletedBid = [];
+        $totalNetChangeCompletedBid = Money::create(0, 'USD');
         $activeLoansBidAmountRepaid = [];
         $activeLoansBidPrincipleOutstanding = [];
 
@@ -422,6 +424,17 @@ class LenderController extends BaseController
             ->filterByLoanId($completedLoansIds, Criteria::IN)
             ->groupByLoanId()
             ->find();
+        $totalCompletedLoansRepaidAmounts = TransactionQuery::create()
+            ->filterByUserId($userId)
+            ->filterRepaidToLender()
+            ->useLoanQuery()
+                ->filterEnded()
+            ->endUse()
+            ->select('totals')
+            ->withColumn('SUM(Transaction.amount)', 'totals')
+            ->findOne();
+
+        $totalCompletedLoansRepaidAmount = Money::create( $totalCompletedLoansRepaidAmounts , 'USD');
 
         /** @var $completedLoansBid Bid */
         foreach ($completedLoansBids as $completedLoansBid) {
@@ -432,9 +445,11 @@ class LenderController extends BaseController
                 }
                 $completedLoansBidAmountRepaid[$completedLoansBid->getId()] = Money::create(0, 'USD');
             }
+            $netChangeCompletedBid[$completedLoansBid->getId()] = $completedLoansBidAmountRepaid[$completedLoansBid->getId()]->subtract($completedLoansBid->getAcceptedAmount());
+            $totalNetChangeCompletedBid= $totalNetChangeCompletedBid->add($netChangeCompletedBid[$completedLoansBid->getId()]);
         }
 
-        return View::make('lender.my-stats', compact('currentBalance', 'totalFundsUpload', 'lendingGroups',
+       return View::make('lender.my-stats', compact('currentBalance', 'totalFundsUpload', 'lendingGroups',
                 'numberOfInvitesSent', 'numberOfInvitesAccepted', 'numberOfLoans', 'numberOfLoansByInvitees',
                 'numberOfGiftedGiftCards', 'numberOfRedeemedGiftCards', 'numberOfLoansByRecipients',
                 'totalLentAmount', 'myImpact', 'totalImpact' , 'loans', 'activeBids', 'totalBidAmount',
@@ -444,7 +459,8 @@ class LenderController extends BaseController
                 'totalLentAmountByInvitees', 'totalLentAmountByRecipients',
                 'activeLoansBidPaymentStatus', 'completedLoansBidAmountRepaid', 'activeLoansBidAmountRepaid',
                 'activeLoansBidPrincipleOutstanding', 'totalActiveLoansRepaidAmount',
-                'totalActiveLoansTotalOutstandingAmount'
+                'totalActiveLoansTotalOutstandingAmount', 'totalCompletedLoansRepaidAmount',
+                'netChangeCompletedBid', 'totalNetChangeCompletedBid'
             ));
     }
 }
