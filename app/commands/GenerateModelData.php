@@ -286,9 +286,7 @@ class GenerateModelData extends Command
 //                    if ($loan->getDisbursedAt() < Carbon::create()->subMonths(6)) {
 //                        break;
 //                    }
-                    if (rand(1,4) <= 1) {
-                        break;
-                    }
+
                     if (rand(1,4) <= 1) {
 //                    if (!$repaid && rand(1,6) <= 1) {
 //                        break;
