@@ -22,7 +22,7 @@
                 </div>
                 <div class="col-sm-4 col-md-5">
                     <p>
-                        <img class="leaf" src="{{ '/assets/images/leaf.png' }}"/>
+                        <img class="leaf xs-collapse" src="{{ '/assets/images/leaf.png' }}"/>
                         {{ $loan->getBorrower()->getProfile()->getCity() }},
                         {{ $loan->getBorrower()->getCountry()->getName() }}
                     </p>
@@ -39,315 +39,329 @@
 
 @section('content')
 <div class="row">
-    <div class="col-md-8 loan-body">
+    <div class="col-sm-8 loan-body">
         <img src="{{ $loan->getBorrower()->getUser()->getProfilePictureUrl('large-profile-picture') }}" width="100%">
 
-        <br/>
-        <br/>
-        
-        <div class="loan-section">
-            <div class="loan-section-title">
-                <span class="text-light">Summary</span>
-            </div>
-            <div class="loan-section-content">
-                <p class="omega">
-                    {{{ $loan->getSummary() }}}
-                </p>
-            </div>
-        </div>
+        <ul class="nav nav-tabs nav-justified" role="tablist">
+            <li class="active"><a href="#about">About</a></li>
+            <li><a href="#discussion">Discussion</a></li>
+            <li><a href="#repayment">Repayment</a></li>
+        </ul>
 
-        <hr/>
+        <div id="tab-content" class="tab-content">
+            <div class="tab-pane fade active in" id="about">
         
-        <div class="loan-section">
-            <div class="loan-section-title">
-                <span class="text-light">Borrower</span>
-            </div>
-            <div class="loan-section-content">
-                <div class="row">
-                    <div class="col-sm-6">
-                        Name: 
-                        <strong>{{{ $loan->getBorrower()->getName() }}}</strong>
-                        <br/>
-                        Location:
-                        <strong>
-                            {{ $loan->getBorrower()->getProfile()->getCity() }},
-                            {{ $loan->getBorrower()->getCountry()->getName() }}
-                        </strong>
-                        <br/>
-                        Invited By:
-                        <strong>Someone</strong>
+                <div class="loan-section">
+                    <div class="loan-section-title">
+                        <span class="text-light">Summary</span>
                     </div>
-                    <div class="col-sm-6">
-                        On-Time Repayments: <a href="#" class="repayment" data-toggle="tooltip">(?)</a>
-                        <strong>TODO</strong>
-                        <br/>
+                    <div class="loan-section-content">
+                        <p class="omega">
+                            {{{ $loan->getSummary() }}}
+                        </p>
+                    </div>
+                </div>
 
-                        Feedback Rating: <a href="#" class="rating" data-toggle="tooltip">(?)</a>
-                        <strong>TODO</strong>
-                        <br/>
+                <hr/>
+                
+                <div class="loan-section">
+                    <div class="loan-section-title">
+                        <span class="text-light">Borrower</span>
+                    </div>
+                    <div class="loan-section-content">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <strong>{{{ $loan->getBorrower()->getName() }}}</strong>
+                                <br/>
+                                <strong>
+                                    {{ $loan->getBorrower()->getProfile()->getCity() }},
+                                    {{ $loan->getBorrower()->getCountry()->getName() }}
+                                </strong>
+                                <br/>
+                                Invited By:
+                                <strong>Someone</strong>
+                            </div>
+                            <div class="col-sm-6">
+                                On-Time Repayments: <a href="#" class="repayment" data-toggle="tooltip">(?)</a>
+                                <strong>TODO</strong>
+                                <br/>
 
-                        <p><a href="#">View Lender Feedback</a></p>
+                                Feedback Rating: <a href="#" class="rating" data-toggle="tooltip">(?)</a>
+                                <strong>TODO</strong>
+                                <br/>
+
+                                @if($displayFeedbackComments)
+                                    <p><a href="#feedback">View Lender Feedback</a></p>
+                                @endif
+                                
+                                @if($previousLoans != null)
+                                <div class="DemoBS2">
+                                    <!-- Toogle Buttons -->
+                                    <a class="previous-loans" id="toggle-btn"
+                                       data-toggle="collapse" data-target="#toggle-example">View Previous Loans</a>
+
+                                    <div id="toggle-example" class="collapse">
+                                        @foreach($previousLoans as $oneLoan)
+                                        <p><a href="{{ route('loan:index', $oneLoan->getId()) }}">${{ $oneLoan->getNativeAmount() }}
+                                                {{ $oneLoan->getAppliedAt()->format('d-m-Y') }}
+                                                {{-- TODO $oneLoan->getAcceptedAt()->format('d-m-Y')
+                                                $oneLoan->getExpiredDate()->format('d-m-Y')
+                                                TODO change nativeAmount to disbursedAmount in USD
+                                                --}}
+                                            </a>
+                                        </p>
+                                        @endforeach
+                                    </div>
+                                </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr/>
+
+                <div class="loan-section">
+                    <div class="loan-section-title">
+                        <span class="text-light">This Loan</span>
+                    </div>
+                    <div class="loan-section-content">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                Amount:
+                                <strong>{{{ $loan->getUsdAmount() }}}</strong>
+                                <br/>
+                            </div>
+                            <div class="col-sm-6">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr/>
+                
+                <div class="loan-section">
+                    <div class="loan-section-title">
+                        <span class="text-light">Story</span>
+                    </div>
+                    <div class="loan-section-content">
+                        <h5 class="alpha">About Me</h5>
+
+                        <p>{{ $loan->getBorrower()->getProfile()->getAboutMe() }}</p>
                         
-                        @if($previousLoans != null)
-                        <div class="DemoBS2">
-                            <!-- Toogle Buttons -->
-                            <a class="previous-loans" id="toggle-btn"
-                               data-toggle="collapse" data-target="#toggle-example">View Previous Loans</a>
+                        @if(Auth::check() && Auth::getUser()->isAdmin())
+                            <a href="{{ route('admin:get-translate', $loan->getId()) }}#about-me">Edit translation</a>
+                        @endif
 
-                            <div id="toggle-example" class="collapse">
-                                @foreach($previousLoans as $oneLoan)
-                                <p><a href="{{ route('loan:index', $oneLoan->getId()) }}">${{ $oneLoan->getNativeAmount() }}
-                                        {{ $oneLoan->getAppliedAt()->format('d-m-Y') }}
-                                        {{-- TODO $oneLoan->getAcceptedAt()->format('d-m-Y')
-                                        $oneLoan->getExpiredDate()->format('d-m-Y')
-                                        TODO change nativeAmount to disbursedAmount in USD
-                                        --}}
-                                    </a>
+                        @if($loan->getBorrower()->getProfile()->getAboutMeTranslation())
+                        <div>
+                            <p class="text-right">
+                                <a data-toggle="collapse" data-target="#toggle-aboutMe" data-toggle-text="Hide original language">
+                                    Display posting in original language
+                                </a>
+                            </p>
+
+                            <div id="toggle-aboutMe" class="collapse">
+                                <p>
+                                    {{ $loan->getBorrower()->getProfile()->getAboutMeTranslation() }}
                                 </p>
-                                @endforeach
+                            </div>
+                        </div>
+                        @endif
+
+                        <h5>My Business</h5>
+
+                        <p>{{ $loan->getBorrower()->getProfile()->getAboutBusiness() }}</p>
+                        
+                        @if(Auth::check() && Auth::getUser()->isAdmin())
+                            <a href="{{ route('admin:get-translate', $loan->getId()) }}#about-business">Edit translation</a>
+                        @endif
+
+                        @if($loan->getBorrower()->getProfile()->getAboutBusinessTranslation())
+                        <div>
+                            <p class="text-right">
+                                <a data-toggle="collapse" data-target="#toggle-aboutBusiness" data-toggle-text="Hide original language">
+                                    Display posting in original language
+                                </a>
+                            </p>
+
+                            <div id="toggle-aboutBusiness" class="collapse">
+                                <p>
+                                    {{ $loan->getBorrower()->getProfile()->getAboutBusinessTranslation() }}
+                                </p>
+                            </div>
+                        </div>
+                        @endif
+
+                        <h5>Loan Proposal</h5>
+
+                        <p class="{{ $loan->getProposalTranslation() ? '' : 'omega' }}">
+                            {{ $loan->getProposal() }}
+                        </p>
+                        
+                        @if(Auth::check() && Auth::getUser()->isAdmin())
+                            <a href="{{ route('admin:get-translate', $loan->getId()) }}#proposal">Edit translation</a>
+                        @endif
+
+                        @if($loan->getProposalTranslation())
+                        <div>
+                            <p class="text-right">
+                                <a data-toggle="collapse" data-target="#toggle-proposal" data-toggle-text="Hide original language">
+                                    Display posting in original language
+                                </a>
+                            </p>
+
+                            <div id="toggle-proposal" class="collapse">
+                                <p class="omega">
+                                    {{ $loan->getProposalTranslation() }}
+                                </p>
                             </div>
                         </div>
                         @endif
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <hr/>
-
-        <div class="loan-section">
-            <div class="loan-section-title">
-                <span class="text-light">This Loan</span>
-            </div>
-            <div class="loan-section-content">
-                <div class="row">
-                    <div class="col-sm-6">
-                        Amount:
-                        <strong>{{{ $loan->getUsdAmount() }}}</strong>
-                        <br/>
-                    </div>
-                    <div class="col-sm-6">
-
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <hr/>
-        
-        <div class="loan-section">
-            <div class="loan-section-title">
-                <span class="text-light">Story</span>
-            </div>
-            <div class="loan-section-content">
-                <h5 class="alpha">About Me</h5>
-
-                <p>{{ $loan->getBorrower()->getProfile()->getAboutMe() }}</p>
+                <hr/>
                 
-                @if(Auth::check() && Auth::getUser()->isAdmin())
-                    <a href="{{ route('admin:get-translate', $loan->getId()) }}#about-me">Edit translation</a>
-                @endif
-
-                @if($loan->getBorrower()->getProfile()->getAboutMeTranslation())
-                <div>
-                    <p class="text-right">
-                        <a data-toggle="collapse" data-target="#toggle-aboutMe" data-toggle-text="Hide original language">
-                            Display posting in original language
-                        </a>
-                    </p>
-
-                    <div id="toggle-aboutMe" class="collapse">
-                        <p>
-                            {{ $loan->getBorrower()->getProfile()->getAboutMeTranslation() }}
-                        </p>
-                    </div>
-                </div>
-                @endif
-
-                <h5>My Business</h5>
-
-                <p>{{ $loan->getBorrower()->getProfile()->getAboutBusiness() }}</p>
-                
-                @if(Auth::check() && Auth::getUser()->isAdmin())
-                    <a href="{{ route('admin:get-translate', $loan->getId()) }}#about-business">Edit translation</a>
-                @endif
-
-                @if($loan->getBorrower()->getProfile()->getAboutBusinessTranslation())
-                <div>
-                    <p class="text-right">
-                        <a data-toggle="collapse" data-target="#toggle-aboutBusiness" data-toggle-text="Hide original language">
-                            Display posting in original language
-                        </a>
-                    </p>
-
-                    <div id="toggle-aboutBusiness" class="collapse">
-                        <p>
-                            {{ $loan->getBorrower()->getProfile()->getAboutBusinessTranslation() }}
-                        </p>
-                    </div>
-                </div>
-                @endif
-
-                <h5>Loan Proposal</h5>
-
-                <p class="{{ $loan->getProposalTranslation() ? '' : 'omega' }}">
-                    {{ $loan->getProposal() }}
-                </p>
-                
-                @if(Auth::check() && Auth::getUser()->isAdmin())
-                    <a href="{{ route('admin:get-translate', $loan->getId()) }}#proposal">Edit translation</a>
-                @endif
-
-                @if($loan->getProposalTranslation())
-                <div>
-                    <p class="text-right">
-                        <a data-toggle="collapse" data-target="#toggle-proposal" data-toggle-text="Hide original language">
-                            Display posting in original language
-                        </a>
-                    </p>
-
-                    <div id="toggle-proposal" class="collapse">
-                        <p class="omega">
-                            {{ $loan->getProposalTranslation() }}
-                        </p>
-                    </div>
-                </div>
-                @endif
-            </div>
-        </div>
-
-        <hr/>
-        
-        <!-- 
-        <h3>
-            @lang('lender.follow.title', ['name' => $borrower->getName()])
-            @if ($followersCount)
-                <small>(@choice('lender.follow.count', $followersCount))</small>
-            @endif
-        </h3>
-
-        @lang('lender.follow.description', ['firstName' => $borrower->getFirstName()])
-        <br/><br/>
-
-        @if(\Auth::check() && \Auth::user()->isLender())
-            @include('lender.follow.follower', [
-                'borrower'        => $borrower,
-                'followByDefault' => $hasFundedBorrower,
-                'lender'          => \Auth::user()->getLender(),
-                'follower'        => $follower
-            ])
-        @else
-            @lang('lender.follow.prompt-login', ['link' => route('login'), 'name' => $borrower->getName()])
-        @endif
-        
-        <hr/>
-        -->
-        
-        @include('partials.comments.comments', [
-            'comments' => $comments,
-            'receiver' => $borrower,
-            'controller' => 'BorrowerCommentController',
-            'canPostComment' => \Auth::check(),
-            'canReplyComment' => \Auth::check()
-        ])
-
-        <hr/>
-
-        <h4 id="feedback">Loan Feedback</h4>
-        @if($displayFeedbackComments)
-            @include('partials.comments.comments', [
-                'comments' => $loanFeedbackComments,
-                'receiver' => $loan,
-                'controller' => 'LoanFeedbackController',
-                'canPostComment' => $canPostFeedback,
-                'canReplyComment' => $canReplyFeedback
-            ])
-        @endif
-
-
-        <br>
-        <strong>FUNDING RAISED </strong>
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>Date</th>
-                <th>Lender</th>
-                <th>Amount (USD)</th>
-                <th></th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            @foreach($bids as $bid)
-            <tr>
-                <td>{{ $bid->getBidAt()->format('d-m-Y') }}</td>
-                <td><a href="{{ route('lender:public-profile', $bid->getLender()->getUser()->getUserName()) }}">{{
-                        $bid->getLender()->getUser()->getUserName() }}</a></td>
-                <td>{{ $bid->getBidAmount()->getAmount() }}</td>
-                <td>
-                    @if($bid->getLenderId() == Auth::id())
-                    {{ $bid->getInterestRate() }}%
+                <!-- 
+                <h3>
+                    @lang('lender.follow.title', ['name' => $borrower->getName()])
+                    @if ($followersCount)
+                        <small>(@choice('lender.follow.count', $followersCount))</small>
                     @endif
-                </td>
-                <td>
-                    @if($bid->getLenderId() == Auth::id())
-                    <a href="{{ route('loan:edit-bid', $bid->getId()) }}"><i class="fa fa-pencil fa-fw"></i></a>
-                    @endif
-                </td>
-            </tr>
-            @endforeach
-            </tbody>
-        </table>
-        <strong>Raised: </strong> ${{ $loan->getRaisedUsdAmount()->getAmount() }}
-        <strong>Still Needed: </strong> ${{ $loan->getStillNeededUsdAmount() }}
+                </h3>
 
-        @if($loan->getStatus() >= Zidisha\Loan\Loan::ACTIVE)
-        <br>
-        <div>
-            <strong>REPAYMENT SCHEDULE</strong>
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>Date Due</th>
-                    <th>Amount Due</th>
-                    <th>Date Paid</th>
-                    <th>Paid Amount</th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach($repaymentSchedule as $repaymentScheduleInstallment)
-                <tr>
-                    <td>{{ $repaymentScheduleInstallment->getInstallment()->getDueDate()->format('d-m-Y') }}</td>
-                    <td>{{ $repaymentScheduleInstallment->getInstallment()->getAmount() }}</td>
-                    <?php $i = 0; ?>
-                    @foreach($repaymentScheduleInstallment->getPayments() as $repaymentScheduleInstallmentPayment)
-                    @if($i > 0)
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td>{{ $repaymentScheduleInstallmentPayment->getPayment()->getPaidDate()->format('d-m-Y') }}</td>
-                    <td>{{ $repaymentScheduleInstallmentPayment->getAmount() }}</td>
-                </tr>
+                @lang('lender.follow.description', ['firstName' => $borrower->getFirstName()])
+                <br/><br/>
+
+                @if(\Auth::check() && \Auth::user()->isLender())
+                    @include('lender.follow.follower', [
+                        'borrower'        => $borrower,
+                        'followByDefault' => $hasFundedBorrower,
+                        'lender'          => \Auth::user()->getLender(),
+                        'follower'        => $follower
+                    ])
                 @else
-                <td>{{ $repaymentScheduleInstallmentPayment->getPayment()->getPaidDate()->format('d-m-Y') }}</td>
-                <td>{{ $repaymentScheduleInstallmentPayment->getAmount() }}</td>
+                    @lang('lender.follow.prompt-login', ['link' => route('login'), 'name' => $borrower->getName()])
                 @endif
-                <?php $i++; ?>
-                @endforeach
-                </tr>
-                @endforeach
-                </tbody>
-            </table>
+                
+                <hr/>
+                -->
+                
+                @if($displayFeedbackComments)
+                    <div id="feedback" class="loan-section comments">
+
+                        <div class="loan-section-title">
+                            <span class="text-light">Feedback</span>
+                        </div>
+                        
+                        <div class="loan-section-content">
+                        </div>
+
+                        @include('partials.comments.comments', [
+                            'comments' => $loanFeedbackComments,
+                            'receiver' => $loan,
+                            'controller' => 'LoanFeedbackController',
+                            'canPostComment' => $canPostFeedback,
+                            'canReplyComment' => $canReplyFeedback
+                        ])
+                    </div> 
+
+                    <hr/>
+
+                @endif
+
+                <div class="loan-section">
+
+                    <div class="loan-section-title">
+                        <span class="text-light">Lenders</span>
+                    </div>
+                    
+                    <div class="loan-section-content">
+                        @foreach($bids as $bid)
+                            <p>
+                                <a href="{{ route('lender:public-profile', $bid->getLender()->getUser()->getUserName()) }}">{{
+                                            $bid->getLender()->getUser()->getUserName() }}</a>
+                            </p>
+                        @endforeach
+                    </div>
+                </div>
+
+                @if(Auth::check() && Auth::getUser()->isAdmin())
+                <br><br>
+                <a href="{{ route('admin:loan-feedback', $loan->getId()) }}">Give Feedback</a>
+                @endif
+                </div>
+            </div> <!-- /div class="tab-pane fade active in" id="about" -->
+
+            <div class="tab-pane fade" id="discussion">
+                
+                <div class="loan-section comments">
+
+                    <div class="loan-section-title">
+                        <span class="text-light">Discussion</span>
+                    </div>
+                    
+                    <div class="loan-section-content">
+                        <span class="text-light">
+                            Ask {{ $loan->getBorrower()->getFirstName() }} a question about this loan, inquire about the business, or send a simple note of thanks or inspiration.
+                        </span>
+                    </div>
+
+                    @include('partials.comments.comments', [
+                        'comments' => $comments,
+                        'receiver' => $borrower,
+                        'controller' => 'BorrowerCommentController',
+                        'canPostComment' => \Auth::check(),
+                        'canReplyComment' => \Auth::check()
+                    ])
+                </div> 
+            </div> <!-- /div class="tab-pane fade" id="discussion" -->
+
+            <div class="tab-pane fade" id="repayment">
+                @if($loan->getStatus() >= Zidisha\Loan\Loan::ACTIVE)
+                <div>
+                    <strong>REPAYMENT SCHEDULE</strong>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Date Due</th>
+                            <th>Amount Due</th>
+                            <th>Date Paid</th>
+                            <th>Paid Amount</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($repaymentSchedule as $repaymentScheduleInstallment)
+                        <tr>
+                            <td>{{ $repaymentScheduleInstallment->getInstallment()->getDueDate()->format('d-m-Y') }}</td>
+                            <td>{{ $repaymentScheduleInstallment->getInstallment()->getAmount() }}</td>
+                            <?php $i = 0; ?>
+                            @foreach($repaymentScheduleInstallment->getPayments() as $repaymentScheduleInstallmentPayment)
+                            @if($i > 0)
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td>{{ $repaymentScheduleInstallmentPayment->getPayment()->getPaidDate()->format('d-m-Y') }}</td>
+                            <td>{{ $repaymentScheduleInstallmentPayment->getAmount() }}</td>
+                        </tr>
+                        @else
+                        <td>{{ $repaymentScheduleInstallmentPayment->getPayment()->getPaidDate()->format('d-m-Y') }}</td>
+                        <td>{{ $repaymentScheduleInstallmentPayment->getAmount() }}</td>
+                        @endif
+                        <?php $i++; ?>
+                        @endforeach
+                        </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
+                @endif
+            </div> <!-- /div class="tab-pane fade" id="repayment" -->
         </div>
-        @endif
 
-        @if(Auth::check() && Auth::getUser()->isAdmin())
-        <br><br>
-        <a href="{{ route('admin:loan-feedback', $loan->getId()) }}">Give Feedback</a>
-        @endif
-    </div>
-
-    <div class="col-md-4">
+    <div class="col-sm-4 loan-side">
         @if(Auth::check() && Auth::getUser()->isAdmin())
         <div class="panel panel-default">
             <div class="panel-body">
@@ -408,7 +422,7 @@
 
                 @if (!\Auth::check() || \Auth::user()->isLender())
 
-                <div class="row">
+                <div class="row xs-collapse">
                     <div class="col-xs-6" style="padding-right: 5px">
                         {{ BootstrapForm::text('amount', Request::query('amount'), [
                             'id' => 'amount',

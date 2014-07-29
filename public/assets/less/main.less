@@ -144,6 +144,20 @@ hr {
   padding: 12px;
 }
 
+.xs-collapse {
+  display: none;
+  @media (min-width: @screen-sm-min) {
+    display: inline-block;
+  }
+}
+
+.sm-collapse {
+  display: inline-block;
+  @media (min-width: @screen-sm-min) {
+    display: none;
+  }
+}
+
 /* Static info pages */
 .info-page h3 {
   font-size: 1.5em;
