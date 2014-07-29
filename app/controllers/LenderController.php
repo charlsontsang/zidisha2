@@ -322,30 +322,11 @@ class LenderController extends BaseController
             ->getTotalActiveLoansRepaidAmounts($userId);
 
         $activeLoansTotalOutstandingAmounts = BidQuery::create()
-            ->filterByActive(true)
-            ->filterByLender($lender)
-            ->useLoanQuery()
-                ->filterByStatus([Loan::FUNDED, Loan::ACTIVE])
-                ->filterNotForgivenByLender($lender)
-                ->filterById($activeLoansIds, Criteria::IN)
-            ->endUse()
-            ->select('total', 'loan_id')
-            ->withColumn('SUM(accepted_amount * (100 - paid_percentage)/100)', 'total')
-            ->withColumn('loan_id', 'loan_id')
-            ->groupByLoanId()
-            ->find();
-        
-        $totalActiveLoansTotalOutstandingAmounts = BidQuery::create()
-            ->filterByActive(true)
-            ->filterByLender($lender)
-            ->useLoanQuery()
-                ->filterByStatus([Loan::FUNDED, Loan::ACTIVE])
-                ->filterNotForgivenByLender($lender)
-            ->endUse()
-            ->select('total')
-            ->withColumn('SUM(accepted_amount * (100 - paid_percentage)/100)', 'total')
-            ->findOne();
-        $totalActiveLoansTotalOutstandingAmount = Money::create($totalActiveLoansTotalOutstandingAmounts, 'USD');
+            ->getActiveLoansTotalOutstandingAmounts($lender, $activeLoansIds);
+
+        $totalActiveLoansTotalOutstandingAmount = BidQuery::create()
+            ->getTotalActiveLoansTotalOutstandingAmount($lender);
+
         /** @var $activeLoansBid Bid */
         foreach ($activeLoansBids as $activeLoansBid) {
             foreach ($activeLoansRepaidAmounts as $activeLoansRepaidAmount) {

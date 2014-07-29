@@ -166,4 +166,37 @@ class BidQuery extends BaseBidQuery
             ->findOne();
         return Money::valueOf($total, Currency::valueOf('USD'));
     }
+
+    public function getActiveLoansTotalOutstandingAmounts(Lender $lender, $activeLoansIds)
+    {
+        return BidQuery::create()
+            ->filterByActive(true)
+            ->filterByLender($lender)
+            ->useLoanQuery()
+                ->filterByStatus([Loan::FUNDED, Loan::ACTIVE])
+                ->filterNotForgivenByLender($lender)
+                ->filterById($activeLoansIds, Criteria::IN)
+            ->endUse()
+            ->select('total', 'loan_id')
+            ->withColumn('SUM(accepted_amount * (100 - paid_percentage)/100)', 'total')
+            ->withColumn('loan_id', 'loan_id')
+            ->groupByLoanId()
+            ->find();
+    }
+
+    public function getTotalActiveLoansTotalOutstandingAmount(Lender $lender)
+    {
+        $total = BidQuery::create()
+            ->filterByActive(true)
+            ->filterByLender($lender)
+            ->useLoanQuery()
+                ->filterByStatus([Loan::FUNDED, Loan::ACTIVE])
+                ->filterNotForgivenByLender($lender)
+            ->endUse()
+            ->select('total')
+            ->withColumn('SUM(accepted_amount * (100 - paid_percentage)/100)', 'total')
+            ->findOne();
+
+        return Money::create($total, 'USD');
+    }
 } // BidQuery
