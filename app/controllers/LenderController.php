@@ -272,27 +272,18 @@ class LenderController extends BaseController
         $numberOfInvitesAccepted = $AcceptedInviteesIds->count();
 
         $numberOfLoansByInvitees = LoanQuery::create()
-            ->useBidQuery()
-                ->filterByLenderId($AcceptedInviteesIds, Criteria::IN)
-                ->filterByAcceptedAmount(null, Criteria::NOT_EQUAL)
-            ->endUse()
-            ->count();
+            ->getNumberOfLoansByInvitees($AcceptedInviteesIds);
 
         $numberOfGiftedGiftCards = GiftCardQuery::create()
             ->filterByLender($lender)
             ->count();
+
         $RedeemedGiftCardsRecipientsIds = GiftCardQuery::create()
-            ->select('recipient_id')
-            ->filterByLender($lender)
-            ->filterByRecipientId(null, Criteria::NOT_EQUAL)
-            ->find();
+            ->getRedeemedGiftCardsRecipientsIds($lender);
         $numberOfRedeemedGiftCards = $RedeemedGiftCardsRecipientsIds->count();
+
         $numberOfLoansByRecipients = LoanQuery::create()
-            ->useBidQuery()
-            ->filterByLenderId($RedeemedGiftCardsRecipientsIds, Criteria::IN)
-            ->filterByAcceptedAmount(null, Criteria::NOT_EQUAL)
-            ->endUse()
-            ->count();
+            ->getNumberOfLoansByRecipients($RedeemedGiftCardsRecipientsIds);
 
         $totalLentAmount = TransactionQuery::create()
             ->getTotalLentAmount($userId);
@@ -326,24 +317,9 @@ class LenderController extends BaseController
         }
 
         $activeLoansRepaidAmounts = TransactionQuery::create()
-            ->filterByUserId($userId)
-            ->filterRepaidToLender()
-            ->select('totals', 'loan_id')
-            ->withColumn('SUM(amount)', 'totals')
-            ->withColumn('loan_id', 'loan_id')
-            ->filterByLoanId($activeLoansIds, Criteria::IN)
-            ->groupByLoanId()
-            ->find();
-        $totalActiveLoansRepaidAmounts = TransactionQuery::create()
-            ->filterByUserId($userId)
-            ->filterRepaidToLender()
-            ->useLoanQuery()
-                ->filterActive()
-            ->endUse()
-            ->select('totals')
-            ->withColumn('SUM(Transaction.amount)', 'totals')
-            ->findOne();
-        $totalActiveLoansRepaidAmount = Money::create( $totalActiveLoansRepaidAmounts , 'USD');
+            ->getActiveLoansRepaidAmounts($userId, $activeLoansIds);
+        $totalActiveLoansRepaidAmount = TransactionQuery::create()
+            ->getTotalActiveLoansRepaidAmounts($userId);
 
         $activeLoansTotalOutstandingAmounts = BidQuery::create()
             ->filterByActive(true)
@@ -358,6 +334,7 @@ class LenderController extends BaseController
             ->withColumn('loan_id', 'loan_id')
             ->groupByLoanId()
             ->find();
+        
         $totalActiveLoansTotalOutstandingAmounts = BidQuery::create()
             ->filterByActive(true)
             ->filterByLender($lender)

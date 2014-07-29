@@ -2,6 +2,7 @@
 
 namespace Zidisha\Lender;
 
+use Propel\Runtime\ActiveQuery\Criteria;
 use Zidisha\Lender\Base\GiftCardQuery as BaseGiftCardQuery;
 
 
@@ -17,5 +18,14 @@ use Zidisha\Lender\Base\GiftCardQuery as BaseGiftCardQuery;
  */
 class GiftCardQuery extends BaseGiftCardQuery
 {
+
+    public function getRedeemedGiftCardsRecipientsIds(Lender $lender)
+    {
+        return GiftCardQuery::create()
+            ->select('recipient_id')
+            ->filterByLender($lender)
+            ->filterByRecipientId(null, Criteria::NOT_EQUAL)
+            ->find();
+    }
 
 } // GiftCardQuery

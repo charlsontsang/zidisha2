@@ -112,4 +112,32 @@ class TransactionQuery extends BaseTransactionQuery
 
         return Money::create($total, 'USD')->multiply(-1);
     }
+
+    public function getActiveLoansRepaidAmounts($userId, $activeLoansIds)
+    {
+        return TransactionQuery::create()
+            ->filterByUserId($userId)
+            ->filterRepaidToLender()
+            ->select('totals', 'loan_id')
+            ->withColumn('SUM(amount)', 'totals')
+            ->withColumn('loan_id', 'loan_id')
+            ->filterByLoanId($activeLoansIds, Criteria::IN)
+            ->groupByLoanId()
+            ->find();
+    }
+
+    public function getTotalActiveLoansRepaidAmounts($userId)
+    {
+        $total = TransactionQuery::create()
+            ->filterByUserId($userId)
+            ->filterRepaidToLender()
+            ->useLoanQuery()
+                ->filterActive()
+            ->endUse()
+            ->select('totals')
+            ->withColumn('SUM(Transaction.amount)', 'totals')
+            ->findOne();
+
+        return Money::create($total, 'USD');
+    }
 } // TransactionQuery
