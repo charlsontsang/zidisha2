@@ -115,7 +115,7 @@ class TransactionQuery extends BaseTransactionQuery
 
     public function getActiveLoansRepaidAmounts($userId, $activeLoansIds)
     {
-        return TransactionQuery::create()
+        return $this
             ->filterByUserId($userId)
             ->filterRepaidToLender()
             ->select('totals', 'loan_id')
@@ -128,7 +128,7 @@ class TransactionQuery extends BaseTransactionQuery
 
     public function getTotalActiveLoansRepaidAmount($userId)
     {
-        $total = TransactionQuery::create()
+        $total = $this
             ->filterByUserId($userId)
             ->filterRepaidToLender()
             ->useLoanQuery()
@@ -143,7 +143,7 @@ class TransactionQuery extends BaseTransactionQuery
 
     public function getCompletedLoansRepaidAmounts($userId, $completedLoansIds)
     {
-        return TransactionQuery::create()
+        return $this
             ->filterByUserId($userId)
             ->filterRepaidToLender()
             ->select('totals', 'loan_id')
@@ -156,7 +156,7 @@ class TransactionQuery extends BaseTransactionQuery
 
     public function getTotalCompletedLoansRepaidAmount($userId)
     {
-        $total = TransactionQuery::create()
+        $total = $this
             ->filterByUserId($userId)
             ->filterRepaidToLender()
             ->useLoanQuery()
@@ -164,6 +164,29 @@ class TransactionQuery extends BaseTransactionQuery
             ->endUse()
             ->select('totals')
             ->withColumn('SUM(Transaction.amount)', 'totals')
+            ->findOne();
+
+        return Money::create($total, 'USD');
+    }
+
+    public function getTotalFundsUpload($userId)
+    {
+        $total =  $this
+            ->filterByUserId($userId)
+            ->filterByType(Transaction::FUND_UPLOAD)
+            ->select(array('total'))
+            ->withColumn('SUM(amount)', 'total')
+            ->findOne();
+
+        return Money::create($total, 'USD');
+    }
+
+    public function getCurrentBalance($userId)
+    {
+        $total = $this
+            ->filterByUserId($userId)
+            ->select(array('total'))
+            ->withColumn('SUM(amount)', 'total')
             ->findOne();
 
         return Money::create($total, 'USD');

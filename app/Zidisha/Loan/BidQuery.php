@@ -93,7 +93,7 @@ class BidQuery extends BaseBidQuery
 
     public function getActiveBids(Lender $lender, $page)
     {
-        return BidQuery::create()
+        return $this
             ->filterByLender($lender)
             ->filterByActive(false)
             ->useLoanQuery()
@@ -104,7 +104,7 @@ class BidQuery extends BaseBidQuery
 
     public function getActiveLoansBids(Lender $lender, $page2)
     {
-        return BidQuery::create()
+        return $this
             ->filterByLender($lender)
             ->filterByAcceptedAmount('0', Criteria::NOT_EQUAL)
             ->useLoanQuery()
@@ -115,7 +115,7 @@ class BidQuery extends BaseBidQuery
 
     public function getTotalActiveLoansBidsAmount(Lender $lender)
     {
-        $total = BidQuery::create()
+        $total = $this
             ->filterByLender($lender)
             ->filterByAcceptedAmount('0', Criteria::NOT_EQUAL)
             ->useLoanQuery()
@@ -129,7 +129,7 @@ class BidQuery extends BaseBidQuery
 
     public function getCompletedLoansBids(Lender $lender, $page3)
     {
-        return BidQuery::create()
+        return $this
             ->filterByLender($lender)
             ->filterByAcceptedAmount('0', Criteria::NOT_EQUAL)
             ->useLoanQuery()
@@ -140,7 +140,7 @@ class BidQuery extends BaseBidQuery
 
     public function getTotalCompletedLoansBidsAmount(Lender $lender)
     {
-        $total = BidQuery::create()
+        $total = $this
             ->filterByLender($lender)
             ->filterByAcceptedAmount('0', Criteria::NOT_EQUAL)
             ->useLoanQuery()
@@ -154,7 +154,7 @@ class BidQuery extends BaseBidQuery
 
     public function getTotalOutstandingAmount(Lender $lender)
     {
-        $total = BidQuery::create()
+        $total = $this
             ->filterByActive(true)
             ->filterByLender($lender)
             ->useLoanQuery()
@@ -169,7 +169,7 @@ class BidQuery extends BaseBidQuery
 
     public function getActiveLoansTotalOutstandingAmounts(Lender $lender, $activeLoansIds)
     {
-        return BidQuery::create()
+        return $this
             ->filterByActive(true)
             ->filterByLender($lender)
             ->useLoanQuery()
@@ -186,7 +186,7 @@ class BidQuery extends BaseBidQuery
 
     public function getTotalActiveLoansTotalOutstandingAmount(Lender $lender)
     {
-        $total = BidQuery::create()
+        $total = $this
             ->filterByActive(true)
             ->filterByLender($lender)
             ->useLoanQuery()

@@ -50,7 +50,7 @@ class LoanQuery extends BaseLoanQuery
 
     public function getNumberOfLoansByInvitees($AcceptedInviteesIds)
     {
-        return LoanQuery::create()
+        return $this
             ->useBidQuery()
                 ->filterByLenderId($AcceptedInviteesIds, Criteria::IN)
                 ->filterByAcceptedAmount(null, Criteria::NOT_EQUAL)
@@ -60,9 +60,19 @@ class LoanQuery extends BaseLoanQuery
 
     public function getNumberOfLoansByRecipients($RedeemedGiftCardsRecipientsIds)
     {
-        return LoanQuery::create()
+        return $this
             ->useBidQuery()
                 ->filterByLenderId($RedeemedGiftCardsRecipientsIds, Criteria::IN)
+                ->filterByAcceptedAmount(null, Criteria::NOT_EQUAL)
+            ->endUse()
+            ->count();
+    }
+
+    public function getNumberOfLoansForLender(Lender $lender)
+    {
+        return $this
+            ->useBidQuery()
+                ->filterByLender($lender)
                 ->filterByAcceptedAmount(null, Criteria::NOT_EQUAL)
             ->endUse()
             ->count();

@@ -21,7 +21,7 @@ class GiftCardQuery extends BaseGiftCardQuery
 
     public function getRedeemedGiftCardsRecipientsIds(Lender $lender)
     {
-        return GiftCardQuery::create()
+        return $this
             ->select('recipient_id')
             ->filterByLender($lender)
             ->filterByRecipientId(null, Criteria::NOT_EQUAL)

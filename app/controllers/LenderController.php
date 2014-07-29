@@ -145,9 +145,8 @@ class LenderController extends BaseController
     public function getTransactionHistory()
     {
 
-        $currentBalance = $this->transactionQuery
-            ->filterByUserId(Auth::getUser()->getId())
-            ->getTotalAmount();
+        $currentBalance = TransactionQuery::create()
+            ->getCurrentBalance(Auth::getUser()->getId());
 
         $page = Request::query('page') ? : 1;
 
@@ -174,9 +173,8 @@ class LenderController extends BaseController
 
     public function getFunds()
     {
-        $currentBalance = $this->transactionQuery
-            ->filterByUserId(Auth::getUser()->getId())
-            ->getTotalAmount();
+        $currentBalance = TransactionQuery::create()
+            ->getCurrentBalance(Auth::getUser()->getId());
 
         return View::make('lender.funds', compact('currentBalance'), ['form' => $this->uploadFundForm,]);
     }
@@ -237,19 +235,13 @@ class LenderController extends BaseController
         $activeLoansBidPrincipleOutstanding = [];
 
         $totalFundsUpload = TransactionQuery::create()
-            ->filterByUserId($userId)
-            ->filterByType(Transaction::FUND_UPLOAD)
-            ->getTotalAmount();
-        $numberOfLoans = LoanQuery::create()
-            ->useBidQuery()
-                ->filterByLender($lender)
-                ->filterByAcceptedAmount(null, Criteria::NOT_EQUAL)
-            ->endUse()
-            ->count();
+            ->getTotalFundsUpload($userId);
 
-        $currentBalance = $this->transactionQuery
-            ->filterByUserId($userId)
-            ->getTotalAmount();
+        $numberOfLoans = LoanQuery::create()
+            ->getNumberOfLoansForLender($lender);
+
+        $currentBalance = TransactionQuery::create()
+            ->getCurrentBalance($userId);
 
         $newMemberInviteCredit = InviteTransactionQuery::create()
             ->getTotalInviteCreditAmount($lender);
@@ -258,11 +250,7 @@ class LenderController extends BaseController
             ->getTotalOutstandingAmount($lender);
 
         $lendingGroups = LendingGroupQuery::create()
-            ->useLendingGroupMemberQuery()
-                ->filterByMember($lender)
-                ->filterByLeaved(false)
-            ->endUse()
-            ->find();
+            ->getLendingGroupsForLender($lender);
 
         $numberOfInvitesSent = InviteQuery::create()
             ->filterByLender($lender)

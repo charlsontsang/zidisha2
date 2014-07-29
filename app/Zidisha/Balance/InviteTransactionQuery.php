@@ -23,10 +23,11 @@ class InviteTransactionQuery extends BaseInviteTransactionQuery
 
     public function getTotalInviteCreditAmount(Lender $lender)
     {
-        $total = $this->filterByLender($lender)
-                  ->select(array('total'))
-                  ->withColumn('SUM(amount)', 'total')
-                  ->findOne();
+        $total = $this
+            ->filterByLender($lender)
+            ->select(array('total'))
+            ->withColumn('SUM(amount)', 'total')
+            ->findOne();
 
         return Money::valueOf($total, Currency::valueOf('USD'));
 

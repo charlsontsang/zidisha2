@@ -18,4 +18,13 @@ use Zidisha\Lender\Base\LendingGroupQuery as BaseLendingGroupQuery;
 class LendingGroupQuery extends BaseLendingGroupQuery
 {
 
+    public function getLendingGroupsForLender(Lender $lender)
+    {
+        return $this
+            ->useLendingGroupMemberQuery()
+                ->filterByMember($lender)
+                ->filterByLeaved(false)
+            ->endUse()
+            ->find();
+    }
 } // LendingGroupQuery
