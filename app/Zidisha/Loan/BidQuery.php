@@ -151,4 +151,19 @@ class BidQuery extends BaseBidQuery
             ->findOne();
         return Money::valueOf($total, Currency::valueOf('USD'));
     }
+
+    public function getTotalOutstandingAmount(Lender $lender)
+    {
+        $total = BidQuery::create()
+            ->filterByActive(true)
+            ->filterByLender($lender)
+            ->useLoanQuery()
+            ->filterByStatus([Loan::FUNDED, Loan::ACTIVE])
+            ->filterNotForgivenByLender($lender)
+            ->endUse()
+            ->withColumn('SUM(accepted_amount * (100 - paid_percentage)/100)', 'total')
+            ->select('total')
+            ->findOne();
+        return Money::valueOf($total, Currency::valueOf('USD'));
+    }
 } // BidQuery

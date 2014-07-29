@@ -254,18 +254,8 @@ class LenderController extends BaseController
         $newMemberInviteCredit = InviteTransactionQuery::create()
             ->getTotalInviteCreditAmount($lender);
 
-        $totalOutstandingAmount = BidQuery::create()
-            ->filterByActive(true)
-            ->filterByLender($lender)
-            ->useLoanQuery()
-                ->filterByStatus([Loan::FUNDED, Loan::ACTIVE])
-                ->filterNotForgivenByLender($lender)
-            ->endUse()
-            ->withColumn('SUM(accepted_amount * (100 - paid_percentage)/100)', 'total')
-            ->select('total')
-            ->findOne();
-
-        $principleOutstanding = Money::create($totalOutstandingAmount, 'USD');
+        $principleOutstanding = BidQuery::create()
+            ->getTotalOutstandingAmount($lender);
 
         $lendingGroups = LendingGroupQuery::create()
             ->useLendingGroupMemberQuery()
