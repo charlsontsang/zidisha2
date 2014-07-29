@@ -175,8 +175,8 @@ My Stats
         @endif
         </td>
         <td>{{ $activeLoansBid->getAcceptedAmount()->getAmount() }}</td>
-        <td>{{ $activeLoansBidAmountRepaid[$activeLoansBid->getId()] }}</td>
-        <td>// TODO</td>
+        <td>{{ $activeLoansBidAmountRepaid[$activeLoansBid->getId()]->getAmount() }}</td>
+        <td>{{ $activeLoansBidPrincipleOutstanding[$activeLoansBid->getId()]->getAmount() }}</td>
         <td>
             @if($activeLoansBidPaymentStatus[$activeLoansBid->getId()] == 'on-time')
                     <span class="label label-success">Repaying on Time</span>

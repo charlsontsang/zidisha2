@@ -232,6 +232,7 @@ class LenderController extends BaseController
         $activeLoansBidPaymentStatus = [];
         $completedLoansBidAmountRepaid = [];
         $activeLoansBidAmountRepaid = [];
+        $activeLoansBidPrincipleOutstanding = [];
 
         $totalFundsUpload = TransactionQuery::create()
             ->filterByUserId($userId)
@@ -258,9 +259,10 @@ class LenderController extends BaseController
                 ->filterByStatus([Loan::FUNDED, Loan::ACTIVE])
                 ->filterNotForgivenByLender($lender)
             ->endUse()
-            ->withColumn('SUM(accepted_amount)', 'total')
+            ->withColumn('SUM(accepted_amount * (100 - paid_percentage)/100)', 'total')
             ->select('total')
             ->findOne();
+
         $principleOutstanding = Money::create($totalOutstandingAmount, 'USD');
 
         $lendingGroups = LendingGroupQuery::create()
@@ -343,28 +345,35 @@ class LenderController extends BaseController
             ->groupByLoanId()
             ->find();
 
-        $ActiveLoansTotalOutstandingAmount = BidQuery::create()
+        $ActiveLoansTotalOutstandingAmounts = BidQuery::create()
             ->filterByActive(true)
             ->filterByLender($lender)
-            ->filterByLoanId($activeLoansIds, Criteria::IN)
-            ->groupByLoanId()
+            ->useLoanQuery()
+                ->filterByStatus([Loan::FUNDED, Loan::ACTIVE])
+                ->filterNotForgivenByLender($lender)
+                ->filterById($activeLoansIds, Criteria::IN)
+            ->endUse()
             ->select('total', 'loan_id')
-            ->withColumn('SUM(accepted_amount)', 'total')
+            ->withColumn('SUM(accepted_amount * (100 - paid_percentage)/100)', 'total')
             ->withColumn('loan_id', 'loan_id')
-            ->findOne();
-
-        dd($ActiveLoansTotalOutstandingAmount);
-
-        $ActiveLoansPrincipleOutstanding = Money::create($ActiveLoansTotalOutstandingAmount, 'USD');
+            ->groupByLoanId()
+            ->find();
 
         /** @var $activeLoansBid Bid */
         foreach ($activeLoansBids as $activeLoansBid) {
             foreach ($activeLoansRepaidAmounts as $activeLoansRepaidAmount) {
                 if ($activeLoansRepaidAmount['loan_id'] == $activeLoansBid->getLoanId()) {
-                    $activeLoansBidAmountRepaid[$activeLoansBid->getId()] = $activeLoansRepaidAmount['totals'];
+                    $activeLoansBidAmountRepaid[$activeLoansBid->getId()] = Money::create($activeLoansRepaidAmount['totals'], 'USD');
                     continue;
                 }
-                $activeLoansBidAmountRepaid[$activeLoansBid->getId()] = 0.00;
+                $activeLoansBidAmountRepaid[$activeLoansBid->getId()] = Money::create(0, 'USD');
+            }
+            foreach ($ActiveLoansTotalOutstandingAmounts as $ActiveLoansTotalOutstandingAmount) {
+                if ($ActiveLoansTotalOutstandingAmount['loan_id'] == $activeLoansBid->getLoanId()) {
+                    $activeLoansBidPrincipleOutstanding[$activeLoansBid->getId()] = Money::create($ActiveLoansTotalOutstandingAmount['total'], 'USD');
+                    continue;
+                }
+                $activeLoansBidPrincipleOutstanding[$activeLoansBid->getId()] = Money::create(0, 'USD');
             }
 
             $repaymentSchedule = $this->repaymentService->getRepaymentSchedule($activeLoansBid->getLoan());
@@ -406,7 +415,8 @@ class LenderController extends BaseController
                 'numberOfFundRaisingProjects', 'newMemberInviteCredit',
                 'numberOfActiveProjects', 'numberOfCompletedProjects', 'principleOutstanding',
                 'totalLentAmountByInvitees', 'totalLentAmountByRecipients',
-                'activeLoansBidPaymentStatus', 'completedLoansBidAmountRepaid', 'activeLoansBidAmountRepaid'
+                'activeLoansBidPaymentStatus', 'completedLoansBidAmountRepaid', 'activeLoansBidAmountRepaid',
+                'activeLoansBidPrincipleOutstanding'
             ));
     }
 }
