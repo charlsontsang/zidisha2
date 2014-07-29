@@ -834,7 +834,7 @@ class GenerateModelData extends Command
             if ($model == "Bid") {
 
                 $oneLoan = LoanQuery::create()
-                    ->filterByStatus(0)
+                    ->filterByStatus(Loan::OPEN)
                     ->orderByRand()
                     ->findOne();
 
