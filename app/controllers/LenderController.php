@@ -319,7 +319,7 @@ class LenderController extends BaseController
         $activeLoansRepaidAmounts = TransactionQuery::create()
             ->getActiveLoansRepaidAmounts($userId, $activeLoansIds);
         $totalActiveLoansRepaidAmount = TransactionQuery::create()
-            ->getTotalActiveLoansRepaidAmounts($userId);
+            ->getTotalActiveLoansRepaidAmount($userId);
 
         $activeLoansTotalOutstandingAmounts = BidQuery::create()
             ->getActiveLoansTotalOutstandingAmounts($lender, $activeLoansIds);
@@ -362,25 +362,10 @@ class LenderController extends BaseController
         }
 
         $completedLoansRepaidAmounts = TransactionQuery::create()
-            ->filterByUserId($userId)
-            ->filterRepaidToLender()
-            ->select('totals', 'loan_id')
-            ->withColumn('SUM(amount)', 'totals')
-            ->withColumn('loan_id', 'loan_id')
-            ->filterByLoanId($completedLoansIds, Criteria::IN)
-            ->groupByLoanId()
-            ->find();
-        $totalCompletedLoansRepaidAmounts = TransactionQuery::create()
-            ->filterByUserId($userId)
-            ->filterRepaidToLender()
-            ->useLoanQuery()
-                ->filterEnded()
-            ->endUse()
-            ->select('totals')
-            ->withColumn('SUM(Transaction.amount)', 'totals')
-            ->findOne();
+            ->getCompletedLoansRepaidAmounts($userId, $completedLoansIds);
 
-        $totalCompletedLoansRepaidAmount = Money::create( $totalCompletedLoansRepaidAmounts , 'USD');
+        $totalCompletedLoansRepaidAmount = TransactionQuery::create()
+            ->getTotalCompletedLoansRepaidAmount($userId);
 
         /** @var $completedLoansBid Bid */
         foreach ($completedLoansBids as $completedLoansBid) {
