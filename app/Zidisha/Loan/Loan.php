@@ -3,6 +3,7 @@
 namespace Zidisha\Loan;
 
 use Carbon\Carbon;
+use Zidisha\Admin\Setting;
 use Zidisha\Comment\CommentReceiverInterface;
 use Zidisha\Currency\Currency;
 use Zidisha\Currency\Money;
@@ -260,5 +261,26 @@ class Loan extends BaseLoan implements CommentReceiverInterface
         } else {
             return 0;
         }
+    }
+
+
+    public function getFundRaisingTimeLeft()
+    {
+        if ($this->getStatus() == Loan::OPEN) {
+            $deadLine = $this->getAppliedAt()->getTimestamp() + (Setting::get('loan.expireThreshold') * 24 * 60 * 60);
+            $secondsLeft = $deadLine - time();
+            if ($secondsLeft <= 0){
+                $timeLeft = 'Expired';
+            } elseif ($secondsLeft < (60*60)){
+                $timeLeft = '<strong><span class="label label-danger">'.ceil($secondsLeft/60).' minutes</span></strong>';
+            } elseif ($secondsLeft < (60*60*24)){
+                $timeLeft = '<strong><span class="label label-danger">'.ceil($secondsLeft/60/60).' hours</span></strong>';
+            } else {
+                $timeLeft = ceil($secondsLeft/60/60/24).' days';
+            }
+        } else {
+            $timeLeft = 'Expired';
+        }
+        return $timeLeft;
     }
 }

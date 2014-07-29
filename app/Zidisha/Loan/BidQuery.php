@@ -95,7 +95,10 @@ class BidQuery extends BaseBidQuery
     {
         return BidQuery::create()
             ->filterByLender($lender)
-            ->filterByActive(true)
+            ->filterByActive(false)
+            ->useLoanQuery()
+                ->filterFundRaising()
+            ->endUse()
             ->paginate($page , 10);
     }
 
