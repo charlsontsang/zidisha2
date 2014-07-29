@@ -268,11 +268,9 @@ class LenderController extends BaseController
             ->filterByLender($lender)
             ->count();
         $AcceptedInviteesIds = InviteQuery::create()
-            ->select('invitee_id')
-            ->filterByLender($lender)
-            ->filterByInviteeId(null, Criteria::NOT_EQUAL)
-            ->find();
+            ->getAcceptedInviteesIds($lender);
         $numberOfInvitesAccepted = $AcceptedInviteesIds->count();
+
         $numberOfLoansByInvitees = LoanQuery::create()
             ->useBidQuery()
                 ->filterByLenderId($AcceptedInviteesIds, Criteria::IN)

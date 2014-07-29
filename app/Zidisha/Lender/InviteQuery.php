@@ -2,6 +2,7 @@
 
 namespace Zidisha\Lender;
 
+use Propel\Runtime\ActiveQuery\Criteria;
 use Zidisha\Lender\Base\InviteQuery as BaseInviteQuery;
 
 
@@ -18,4 +19,13 @@ use Zidisha\Lender\Base\InviteQuery as BaseInviteQuery;
 class InviteQuery extends BaseInviteQuery
 {
 
+    public function getAcceptedInviteesIds(Lender $lender)
+    {
+        return InviteQuery::create()
+            ->select('invitee_id')
+            ->filterByLender($lender)
+            ->filterByInviteeId(null, Criteria::NOT_EQUAL)
+            ->find();
+    }
+    
 } // InviteQuery
