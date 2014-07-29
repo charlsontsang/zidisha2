@@ -272,9 +272,9 @@ class Loan extends BaseLoan implements CommentReceiverInterface
             if ($secondsLeft <= 0){
                 $timeLeft = 'Expired';
             } elseif ($secondsLeft < (60*60)){
-                $timeLeft = '<strong><span class="label label-danger">'.ceil($secondsLeft/60).' minutes</span></strong>';
+                $timeLeft = '<span class="label label-danger">'.ceil($secondsLeft/60).' minutes</span>';
             } elseif ($secondsLeft < (60*60*24)){
-                $timeLeft = '<strong><span class="label label-danger">'.ceil($secondsLeft/60/60).' hours</span></strong>';
+                $timeLeft = '<span class="label label-danger">'.ceil($secondsLeft/60/60).' hours</span>';
             } else {
                 $timeLeft = ceil($secondsLeft/60/60/24).' days';
             }
