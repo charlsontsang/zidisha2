@@ -192,7 +192,8 @@ My Stats
         <td><strong> Total </strong></td>
         <td>{{ $numberOfActiveProjects }}</td>
         <td>{{ $totalActiveLoansBidsAmount->getAmount() }}</td>
-        <td></td>
+        <td>{{ $totalActiveLoansRepaidAmount->getAmount() }}</td>
+        <td>{{ $totalActiveLoansTotalOutstandingAmount->getAmount() }}</td>
     </tr>
     </tbody>
 </table>
@@ -227,7 +228,7 @@ My Stats
         </td>
         <td>{{ $completedLoansBid->getLoan()->getDisbursedAt()->format('d-m-Y') }}</td>
         <td>{{ $completedLoansBid->getAcceptedAmount()->getAmount() }}</td>
-        <td>{{ $completedLoansBidAmountRepaid[$completedLoansBid->getId()] }}</td>
+        <td>{{ $completedLoansBidAmountRepaid[$completedLoansBid->getId()]->getAmount() }}</td>
         <td>// TODO</td>
         <td>
             100% Repaid<br>

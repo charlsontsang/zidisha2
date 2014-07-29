@@ -344,8 +344,18 @@ class LenderController extends BaseController
             ->filterByLoanId($activeLoansIds, Criteria::IN)
             ->groupByLoanId()
             ->find();
+        $totalActiveLoansRepaidAmounts = TransactionQuery::create()
+            ->filterByUserId($userId)
+            ->filterRepaidToLender()
+            ->useLoanQuery()
+                ->filterActive()
+            ->endUse()
+            ->select('totals')
+            ->withColumn('SUM(Transaction.amount)', 'totals')
+            ->findOne();
+        $totalActiveLoansRepaidAmount = Money::create( $totalActiveLoansRepaidAmounts , 'USD');
 
-        $ActiveLoansTotalOutstandingAmounts = BidQuery::create()
+        $activeLoansTotalOutstandingAmounts = BidQuery::create()
             ->filterByActive(true)
             ->filterByLender($lender)
             ->useLoanQuery()
@@ -358,7 +368,17 @@ class LenderController extends BaseController
             ->withColumn('loan_id', 'loan_id')
             ->groupByLoanId()
             ->find();
-
+        $totalActiveLoansTotalOutstandingAmounts = BidQuery::create()
+            ->filterByActive(true)
+            ->filterByLender($lender)
+            ->useLoanQuery()
+                ->filterByStatus([Loan::FUNDED, Loan::ACTIVE])
+                ->filterNotForgivenByLender($lender)
+            ->endUse()
+            ->select('total')
+            ->withColumn('SUM(accepted_amount * (100 - paid_percentage)/100)', 'total')
+            ->findOne();
+        $totalActiveLoansTotalOutstandingAmount = Money::create($totalActiveLoansTotalOutstandingAmounts, 'USD');
         /** @var $activeLoansBid Bid */
         foreach ($activeLoansBids as $activeLoansBid) {
             foreach ($activeLoansRepaidAmounts as $activeLoansRepaidAmount) {
@@ -368,9 +388,9 @@ class LenderController extends BaseController
                 }
                 $activeLoansBidAmountRepaid[$activeLoansBid->getId()] = Money::create(0, 'USD');
             }
-            foreach ($ActiveLoansTotalOutstandingAmounts as $ActiveLoansTotalOutstandingAmount) {
-                if ($ActiveLoansTotalOutstandingAmount['loan_id'] == $activeLoansBid->getLoanId()) {
-                    $activeLoansBidPrincipleOutstanding[$activeLoansBid->getId()] = Money::create($ActiveLoansTotalOutstandingAmount['total'], 'USD');
+            foreach ($activeLoansTotalOutstandingAmounts as $activeLoansTotalOutstandingAmount) {
+                if ($activeLoansTotalOutstandingAmount['loan_id'] == $activeLoansBid->getLoanId()) {
+                    $activeLoansBidPrincipleOutstanding[$activeLoansBid->getId()] = Money::create($activeLoansTotalOutstandingAmount['total'], 'USD');
                     continue;
                 }
                 $activeLoansBidPrincipleOutstanding[$activeLoansBid->getId()] = Money::create(0, 'USD');
@@ -398,13 +418,20 @@ class LenderController extends BaseController
             ->filterRepaidToLender()
             ->select('totals', 'loan_id')
             ->withColumn('SUM(amount)', 'totals')
+            ->withColumn('loan_id', 'loan_id')
             ->filterByLoanId($completedLoansIds, Criteria::IN)
             ->groupByLoanId()
             ->find();
 
         /** @var $completedLoansBid Bid */
         foreach ($completedLoansBids as $completedLoansBid) {
-            $completedLoansBidAmountRepaid[$completedLoansBid->getId()] = $completedLoansRepaidAmounts[$completedLoansBid->getLoanId()];
+            foreach ($completedLoansRepaidAmounts as $completedLoansRepaidAmount) {
+                if ($completedLoansRepaidAmount['loan_id'] == $completedLoansBid->getLoanId()) {
+                    $completedLoansBidAmountRepaid[$completedLoansBid->getId()] = Money::create($completedLoansRepaidAmount['totals'], 'USD');
+                    continue;
+                }
+                $completedLoansBidAmountRepaid[$completedLoansBid->getId()] = Money::create(0, 'USD');
+            }
         }
 
         return View::make('lender.my-stats', compact('currentBalance', 'totalFundsUpload', 'lendingGroups',
@@ -416,7 +443,8 @@ class LenderController extends BaseController
                 'numberOfActiveProjects', 'numberOfCompletedProjects', 'principleOutstanding',
                 'totalLentAmountByInvitees', 'totalLentAmountByRecipients',
                 'activeLoansBidPaymentStatus', 'completedLoansBidAmountRepaid', 'activeLoansBidAmountRepaid',
-                'activeLoansBidPrincipleOutstanding'
+                'activeLoansBidPrincipleOutstanding', 'totalActiveLoansRepaidAmount',
+                'totalActiveLoansTotalOutstandingAmount'
             ));
     }
 }

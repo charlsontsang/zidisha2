@@ -105,7 +105,7 @@ class BidQuery extends BaseBidQuery
             ->filterByLender($lender)
             ->filterByAcceptedAmount('0', Criteria::NOT_EQUAL)
             ->useLoanQuery()
-            ->filterActive()
+                ->filterActive()
             ->endUse()
             ->paginate($page2, 2);
     }
