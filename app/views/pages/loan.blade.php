@@ -324,7 +324,7 @@
                 </div>
             </div> <!-- /div class="tab-pane fade active in" id="about" -->
 
-            <div class="tab-pane fade" id="discussion">
+            <div class="tab-pane fade active in" id="discussion">
                 
                 <div class="loan-section comments">
 

@@ -8,11 +8,11 @@
                 <div class="loan-section-title">
                     @if($comment->getUser() && !$comment->getUser()->isAdmin())
                         <a class="pull-left" href="{{ $comment->getUser()->getProfileUrl() }}">
-                            <img class="media-object" width="90px" height="90px" src="{{ $comment->getUser()->getProfilePictureUrl() }}" alt="">
+                            <img class="media-object" src="{{ $comment->getUser()->getProfilePictureUrl() }}" alt="">
                         </a>
                     @else
                     <a class="pull-left">
-                        <img class="media-object" width="90px" height="90px" src="{{ asset('/assets/images/default.jpg') }}" alt="">
+                        <img class="media-object" src="{{ asset('/assets/images/default.jpg') }}" alt="">
                     </a>
                     @endif
                 </div>
