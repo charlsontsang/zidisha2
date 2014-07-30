@@ -44,7 +44,7 @@
 
         <ul class="nav nav-tabs nav-justified" role="tablist">
             <li class="active"><a href="#about">About</a></li>
-            <li><a href="#discussion">Discussion</a></li>
+            <li><a href="#discussion">Discussion <span class="badge">#</span></a></li>
             <li><a href="#repayment">Repayment</a></li>
         </ul>
 

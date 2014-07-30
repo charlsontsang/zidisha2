@@ -7993,6 +7993,9 @@ hr {
 .btn-default:hover {
   background-color: inherit;
 }
+.badge {
+  background-color: #f15656;
+}
 .form-control {
   -webkit-box-shadow: none;
   box-shadow: none;
