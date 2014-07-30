@@ -8293,9 +8293,6 @@ a.link-dark {
 .lend-form .progress {
   margin-bottom: 8px;
 }
-.lend-form .text-light {
-  font-size: 16px;
-}
 @media (min-width: 768px) {
   .lend-form .text-light {
     font-size: 12px;
@@ -8304,6 +8301,16 @@ a.link-dark {
 @media (min-width: 992px) {
   .lend-form .text-light {
     font-size: 16px;
+  }
+}
+@media (min-width: 768px) {
+  .lend-form .text-large {
+    font-size: 16px;
+  }
+}
+@media (min-width: 992px) {
+  .lend-form .text-large {
+    font-size: 22px;
   }
 }
 .lend-form .btn {
