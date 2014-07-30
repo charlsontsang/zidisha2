@@ -304,7 +304,13 @@
                                     $bid->getLender()->getUser()->getUserName() }}</a>
                                 </h4>
                                 <p>
-                                    lender info here
+                                    City, Country
+                                </p>
+                                <p>
+                                    <a href="#">Lending Group affiliation</a>
+                                </p>
+                                <p>
+                                    Profile "about me" text goes here
                                 </p>
                             </div>
                         </div>
