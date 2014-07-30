@@ -8001,22 +8001,6 @@ hr {
   border: solid 1px #ccc;
   padding: 12px;
 }
-.xs-collapse {
-  display: none;
-}
-@media (min-width: 768px) {
-  .xs-collapse {
-    display: inline-block;
-  }
-}
-.sm-collapse {
-  display: inline-block;
-}
-@media (min-width: 768px) {
-  .sm-collapse {
-    display: none;
-  }
-}
 .media-object {
   height: 70px;
   width: 70px;
@@ -8306,6 +8290,11 @@ a.link-dark {
 .lend-form .progress {
   margin-bottom: 8px;
 }
+@media (max-width: 480px) {
+  .lend-form .progress {
+    display: none;
+  }
+}
 @media (min-width: 768px) {
   .lend-form .text-light {
     font-size: 12px;
@@ -8324,6 +8313,12 @@ a.link-dark {
 @media (min-width: 992px) {
   .lend-form .text-large {
     font-size: 22px;
+  }
+}
+@media (max-width: 480px) {
+  .lend-form #days-left,
+  .lend-form #lend-form-fields {
+    display: none;
   }
 }
 .lend-form .btn {

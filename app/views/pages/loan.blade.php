@@ -451,7 +451,7 @@
 
                 @if (!\Auth::check() || \Auth::user()->isLender())
 
-                <div class="row xs-collapse">
+                <div id="lend-form-fields" class="row">
                     <div class="col-xs-6" style="padding-right: 5px">
                         {{ BootstrapForm::text('amount', Request::query('amount'), [
                             'id' => 'amount',
