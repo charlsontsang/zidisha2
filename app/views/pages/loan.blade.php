@@ -22,7 +22,7 @@
                 </div>
                 <div class="col-sm-4 col-md-5">
                     <p>
-                        <img class="leaf xs-collapse" src="{{ '/assets/images/leaf.png' }}"/>
+                        <img class="leaf" src="{{ '/assets/images/leaf.png' }}"/>
                         {{ $loan->getBorrower()->getProfile()->getCity() }},
                         {{ $loan->getBorrower()->getCountry()->getName() }}
                     </p>

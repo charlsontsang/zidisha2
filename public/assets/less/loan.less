@@ -17,9 +17,13 @@
 }
 .loan-titlebar p, {
   margin-bottom: 0;
-  line-height: 2em;
-  @media (min-width: @screen-sm-min) {
-    line-height: 1.42857143;
+  @media (max-width: @screen-xs-max) {
+    line-height: 2em;
+  }
+}
+.loan-titlebar .leaf, {
+  @media (max-width: @screen-xs-max) {
+    display: none;
   }
 }
 .loan-section {
@@ -55,7 +59,7 @@
   }
 }
 .lend-form .panel-body {
-  padding: 10px 20px 20px 20px;
+  padding: 10px;
   background-color: #f9f9f9;
   @media (min-width: @screen-sm-min) {
     padding: 20px;
@@ -77,11 +81,14 @@
   }
 }
 .lend-form .text-large {
-  @media (min-width: @screen-sm-min) {
-    font-size: 16px;
-  }
+  font-size: 16px;
   @media (min-width: @screen-md-min) {
     font-size: 22px;
+  }
+}
+.lend-form .text-light, .lend-form .text-large {
+  @media (max-width: @screen-xs-min) {
+    float: left;
   }
 }
 .lend-form #days-left, .lend-form #lend-form-fields {
@@ -91,7 +98,7 @@
 }
 .lend-form .btn {
   font-size: 18px;
-  margin-top: 0;
+  margin-top: 8px;
   padding: 6px 12px;
   @media (min-width: @screen-sm-min) {
     font-size: 22px;
@@ -100,6 +107,11 @@
 }
 .lend-form .form-group {
   margin: 20px 0 8px 0;
+}
+.lend-form br {
+  @media (max-width: @screen-xs-max) {
+    display: none;
+  }
 }
 .lend-form .leaf {
   padding: 12px 12px 0 12px;

@@ -6,13 +6,13 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-xs-6 col-sm-4 text-center gutter-xs">
-            <span class="text-large">{{ $loan->getRaisedPercentage() }}%</span>
+        <div class="col-xs-6 col-sm-4 text-center gutter-sm">
+            <span class="text-large">{{ $loan->getRaisedPercentage() }}%&nbsp;</span>
             <br/>
             <span class="text-light">Funded</span>
         </div>
         <div class="col-xs-6 col-sm-4 text-center gutter-xs">
-            <span class="text-large">${{ $loan->getStillNeededUsdAmount()->getAmount() }}</span>
+            <span class="text-large">${{ $loan->getStillNeededUsdAmount()->getAmount() }}&nbsp;</span>
             <br/>
             <span class="text-light">Still Needed</span>
         </div>

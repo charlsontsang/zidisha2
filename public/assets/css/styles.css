@@ -8212,11 +8212,15 @@ a.link-dark {
 }
 .loan-titlebar p {
   margin-bottom: 0;
-  line-height: 2em;
 }
-@media (min-width: 768px) {
+@media (max-width: 767px) {
   .loan-titlebar p {
-    line-height: 1.42857143;
+    line-height: 2em;
+  }
+}
+@media (max-width: 767px) {
+  .loan-titlebar .leaf {
+    display: none;
   }
 }
 .loan-section {
@@ -8278,7 +8282,7 @@ a.link-dark {
   }
 }
 .lend-form .panel-body {
-  padding: 10px 20px 20px 20px;
+  padding: 10px;
   background-color: #f9f9f9;
 }
 @media (min-width: 768px) {
@@ -8305,14 +8309,18 @@ a.link-dark {
     font-size: 16px;
   }
 }
-@media (min-width: 768px) {
-  .lend-form .text-large {
-    font-size: 16px;
-  }
+.lend-form .text-large {
+  font-size: 16px;
 }
 @media (min-width: 992px) {
   .lend-form .text-large {
     font-size: 22px;
+  }
+}
+@media (max-width: 480px) {
+  .lend-form .text-light,
+  .lend-form .text-large {
+    float: left;
   }
 }
 @media (max-width: 480px) {
@@ -8323,7 +8331,7 @@ a.link-dark {
 }
 .lend-form .btn {
   font-size: 18px;
-  margin-top: 0;
+  margin-top: 8px;
   padding: 6px 12px;
 }
 @media (min-width: 768px) {
@@ -8334,6 +8342,11 @@ a.link-dark {
 }
 .lend-form .form-group {
   margin: 20px 0 8px 0;
+}
+@media (max-width: 767px) {
+  .lend-form br {
+    display: none;
+  }
 }
 .lend-form .leaf {
   padding: 12px 12px 0 12px;
