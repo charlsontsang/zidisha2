@@ -7896,7 +7896,8 @@ button.close {
   margin-top: 0;
 }
 h5 {
-  margin-top: 22px;
+  margin-top: 1.5em;
+  margin-bottom: .5em;
 }
 h5.alpha {
   display: inline-block;
@@ -8330,12 +8331,12 @@ a.link-dark {
 .lend-form .leaf {
   padding: 12px 12px 0 12px;
 }
+.media .loan-section-title {
+  padding-top: 50px;
+}
 .comments .media {
   display: inline-block;
   padding: 0;
-}
-.comments .media .loan-section-title {
-  padding-top: 50px;
 }
 .comments .media .clearfix,
 .comments .media .dl-horizontal dd,

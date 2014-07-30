@@ -272,21 +272,44 @@
 
                 @endif
 
-                <div class="loan-section">
 
+                <div class="loan-section">
                     <div class="loan-section-title">
                         <span class="text-light">Lenders</span>
                     </div>
-                    
-                    <div class="loan-section-content">
-                        @foreach($bids as $bid)
-                            <p>
-                                <a href="{{ route('lender:public-profile', $bid->getLender()->getUser()->getUserName()) }}">{{
-                                            $bid->getLender()->getUser()->getUserName() }}</a>
-                            </p>
-                        @endforeach
-                    </div>
                 </div>
+
+                    
+                @foreach($bids as $bid)
+                    <div class="loan-section">
+                        <div class="media">
+                            <div class="loan-section-title">
+                                @if($bid->getLender()->getUser()->getProfilePictureUrl())
+                                    <a class="pull-left" href="{{ $bid->getLender()->getUser()->getProfileUrl() }}">
+                                        <img class="media-object" width="90px" height="90px" src="{{ $bid->getLender()->getUser()->getProfilePictureUrl() }}" alt="">
+                                    </a>
+                                @else
+                                <a class="pull-left">
+                                    <img class="media-object" width="90px" height="90px" src="{{ asset('/assets/images/default.jpg') }}" alt="">
+                                </a>
+                                @endif
+                            </div>
+
+                            <div class="media-body loan-section-content">
+
+                                <hr/>
+                                
+                                <h4 class="media-heading">
+                                    <a href="{{ route('lender:public-profile', $bid->getLender()->getUser()->getUserName()) }}">{{
+                                    $bid->getLender()->getUser()->getUserName() }}</a>
+                                </h4>
+                                <p>
+                                    lender info here
+                                </p>
+                            </div>
+                        </div>
+                    </div> 
+                @endforeach
 
                 @if(Auth::check() && Auth::getUser()->isAdmin())
                 <br><br>
