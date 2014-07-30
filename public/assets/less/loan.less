@@ -54,13 +54,11 @@
 }
 .lend-form {
   margin: 0;
-  @media (min-width: @screen-sm-min) {
-    margin-bottom: 22px;
-  }
 }
-.lend-form .panel-body {
+.loan-side .panel-body {
   padding: 10px;
   background-color: #f9f9f9;
+  margin-bottom: 0;
   @media (min-width: @screen-sm-min) {
     padding: 20px;
     background-color: #fff;
@@ -113,13 +111,29 @@
     display: none;
   }
 }
-.lend-form .leaf {
-  padding: 12px 12px 0 12px;
-}
 .media .loan-section-title {
   display: none;
   @media (min-width: @screen-sm-min) {
     display: inline-block;
     padding-top: 50px;
     }
+}
+.follow .btn {
+  background-color: #f9f9f9;
+  border: 1px solid #e0e0e0;
+  color: inherit;
+  font-decoration: none;
+}
+.follow .btn a, .follow .btn a:hover {
+  color: @text-color;
+  text-decoration: none;
+}
+.follow .btn:hover {
+  border: 1px solid @text-color;
+}
+#follow-link {
+  display: none;
+  @media (max-width: @screen-xs-max) {
+    display: inline-block;
+  }
 }

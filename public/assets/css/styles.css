@@ -7999,6 +7999,7 @@ hr {
 .tooltip-inner {
   border: solid 1px #ccc;
   padding: 12px;
+  text-align: left;
 }
 .media-object {
   height: 70px;
@@ -8275,17 +8276,13 @@ a.link-dark {
 .lend-form {
   margin: 0;
 }
-@media (min-width: 768px) {
-  .lend-form {
-    margin-bottom: 22px;
-  }
-}
-.lend-form .panel-body {
+.loan-side .panel-body {
   padding: 10px;
   background-color: #f9f9f9;
+  margin-bottom: 0;
 }
 @media (min-width: 768px) {
-  .lend-form .panel-body {
+  .loan-side .panel-body {
     padding: 20px;
     background-color: #fff;
   }
@@ -8347,9 +8344,6 @@ a.link-dark {
     display: none;
   }
 }
-.lend-form .leaf {
-  padding: 12px 12px 0 12px;
-}
 .media .loan-section-title {
   display: none;
 }
@@ -8357,6 +8351,28 @@ a.link-dark {
   .media .loan-section-title {
     display: inline-block;
     padding-top: 50px;
+  }
+}
+.follow .btn {
+  background-color: #f9f9f9;
+  border: 1px solid #e0e0e0;
+  color: inherit;
+  font-decoration: none;
+}
+.follow .btn a,
+.follow .btn a:hover {
+  color: #333232;
+  text-decoration: none;
+}
+.follow .btn:hover {
+  border: 1px solid #333232;
+}
+#follow-link {
+  display: none;
+}
+@media (max-width: 767px) {
+  #follow-link {
+    display: inline-block;
   }
 }
 .comments .media {

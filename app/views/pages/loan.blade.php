@@ -90,6 +90,12 @@
                                 <strong>TODO</strong>
                                 <br/>
 
+                                Followers: 
+                                <strong>@choice('lender.follow.count', $followersCount)</strong>
+                                <br/>
+
+                                <a id="follow-link" href="#">Follow {{{ $loan->getBorrower()->getFirstName() }}}</a>
+
                                 @if($displayFeedbackComments)
                                     <p><a href="#feedback">View Lender Feedback</a></p>
                                 @endif
@@ -223,31 +229,6 @@
                 </div>
 
                 <hr/>
-                
-                <!-- 
-                <h3>
-                    @lang('lender.follow.title', ['name' => $borrower->getName()])
-                    @if ($followersCount)
-                        <small>(@choice('lender.follow.count', $followersCount))</small>
-                    @endif
-                </h3>
-
-                @lang('lender.follow.description', ['firstName' => $borrower->getFirstName()])
-                <br/><br/>
-
-                @if(\Auth::check() && \Auth::user()->isLender())
-                    @include('lender.follow.follower', [
-                        'borrower'        => $borrower,
-                        'followByDefault' => $hasFundedBorrower,
-                        'lender'          => \Auth::user()->getLender(),
-                        'follower'        => $follower
-                    ])
-                @else
-                    @lang('lender.follow.prompt-login', ['link' => route('login'), 'name' => $borrower->getName()])
-                @endif
-                
-                <hr/>
-                -->
                 
                 @if($displayFeedbackComments)
                     <div id="feedback" class="loan-section comments">
@@ -433,7 +414,8 @@
                 <p><b>Borrower Transaction Fees: </b> <a href="#" class="transactionFee" data-toggle="tooltip">(?)</a>USD
                                         {{ $serviceFee->getAmount() }} (5.00%)</p>
 
-                <p><b>Total Amount (Including Interest and Transaction Fee) to be Repaid: </b> <a href="#" class="repaidAmount"
+                <p><b>Total Amount (Including Interest and Transaction Fee) to be Repaid: </b> 
+                    <a href="#" class="repaidAmount"
                                                                                                   data-toggle="tooltip">(?)</a>
                     ${{ $totalInterest->add($serviceFee)->getAmount() }} ({{5.00 + $loan->getInterestRate() }}%)
                 </p>
@@ -555,6 +537,15 @@
             </div>
         </div>
         @endif
+        
+        <div class="panel-body follow">
+            <button type="button" class="btn btn-block">
+                <a href="#" class="followBorrower" data-toggle="tooltip">
+                    <i class="fa fa-fw fa-star-o"></i>
+                    @lang('lender.follow.title', ['name' => $borrower->getFirstName()])
+                </a>
+            </button>
+        </div>
     </div>
 </div>
 
@@ -607,6 +598,9 @@
 </script>
 <script type="text/javascript">
     $('.repaidAmount').tooltip({placement: 'bottom', title: 'Interest plus transaction fees, expressed as a total amount and as a flat annualized percentage of the loan principal amount.'})
+</script>
+<script type="text/javascript">
+    $('.followBorrower').tooltip({placement: 'bottom', title: 'Receive an email when this borrower posts a new comment or loan application.'})
 </script>
 <script type="text/javascript">
     $(document).ready(function () {
