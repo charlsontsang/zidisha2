@@ -400,6 +400,31 @@ class LenderService
         return Money::create($totalAmount, 'USD')->multiply(-1);
     }
 
+    public function getGroupMembersTotalImpactThisMonth($ids)
+    {
+        $groupMembersIds = implode(',', $ids->getData());
+        $startDate = date('01-m-Y'); // day one of the current month
+
+        $sql = "SELECT SUM(Amount)
+                        FROM transactions
+                        WHERE type IN (:loanBid, :loanOutbid)
+                        AND transaction_date >= :startDate
+                        AND user_id IN ( SELECT invitee_id FROM lender_invites
+                                          WHERE invitee_id NOT IN(".$groupMembersIds.")
+                                          AND lender_id IN(".$groupMembersIds.")
+                                          UNION
+                                          SELECT recipient_id FROM gift_cards
+                                          WHERE recipient_id NOT IN (".$groupMembersIds.")
+                                          AND lender_id IN(".$groupMembersIds."))";
+
+        $totalAmount = ( PropelDB::fetchNumber($sql, [
+                'loanBid' => Transaction::LOAN_BID,
+                'loanOutbid' => Transaction::LOAN_OUTBID,
+                'startDate' => $startDate,
+            ]));
+
+        return Money::create($totalAmount, 'USD')->multiply(-1);
+    }
     public function getTotalAmountLentByInvitee(Lender $lender)
     {
         $sql = 'SELECT SUM(Amount)
