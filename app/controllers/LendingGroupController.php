@@ -72,28 +72,6 @@ class LendingGroupController extends BaseController
         if (!$group) {
             App::abort(404);
         }
-        $groupMembersIds = LendingGroupMemberQuery::create()
-            ->filterByGroupId($id)
-            ->select('member_id')
-            ->find();
-
-        $totalMembersLentAmount = TransactionQuery::create()
-            ->getTotalGroupMembersLentAmount($groupMembersIds);
-        $groupMembersImpact = $this->lenderService->getGroupMembersTotalImpact($groupMembersIds);
-
-        $totalImpact = $groupMembersImpact->add($totalMembersLentAmount);
-
-        $totalMembersLentAmountThisMonth = TransactionQuery::create()
-            ->getTotalGroupMembersLentAmountThisMonth($groupMembersIds);
-        $groupMembersImpactThisMonth = $this->lenderService->getGroupMembersTotalImpactThisMonth($groupMembersIds);
-
-        $totalImpactThisMonth = $groupMembersImpactThisMonth->add($totalMembersLentAmountThisMonth);
-
-        $totalMembersLentAmountLastMonth = TransactionQuery::create()
-            ->getTotalGroupMembersLentAmountLastMonth($groupMembersIds);
-        $groupMembersImpactLastMonth = $this->lenderService->getGroupMembersTotalImpactLastMonth($groupMembersIds);
-
-        $totalImpactLastMonth = $groupMembersImpactLastMonth->add($totalMembersLentAmountLastMonth);
 
         $page = 1;
         if (Input::has('page')) {
@@ -120,7 +98,9 @@ class LendingGroupController extends BaseController
 
         $commentType = 'lendingGroupComment';
 
-        return View::make('lender.lending-group', compact('group', 'receiver', 'membersCount', 'members', 'leaderId', 'comments', 'commentType', 'canPostComment', 'canReplyComment', 'totalImpact', 'totalImpactThisMonth', 'totalImpactLastMonth'));
+        $groupImpacts = $this->lendingGroupService->getGroupImpacts($id);
+
+        return View::make('lender.lending-group', compact('group', 'receiver', 'membersCount', 'members', 'leaderId', 'comments', 'commentType', 'canPostComment', 'canReplyComment', 'groupImpacts'));
     }
 
     public function joinGroup($id)

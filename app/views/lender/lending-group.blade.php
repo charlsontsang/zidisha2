@@ -14,15 +14,15 @@ Lending Groups
                 About Group:
                 <p>
                     Total Impact All Time:
-                    {{ $totalImpact }}
+                    {{ $groupImpacts['totalImpact'] }}
                 </p>
                 <p>
                     Total Impact This Month:
-                    {{ $totalImpactThisMonth }}
+                    {{ $groupImpacts['totalImpactThisMonth'] }}
                 </p>
                 <p>
                     Total Impact Last Month:
-                    {{ $totalImpactLastMonth }}
+                    {{ $groupImpacts['totalImpactLastMonth'] }}
                 </p>
             </div>
             <div class="col-xs-7">
