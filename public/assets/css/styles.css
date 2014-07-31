@@ -7934,17 +7934,6 @@ a.link-dark {
     display: none;
   }
 }
-.lend-form .btn {
-  font-size: 18px;
-  margin-top: 8px;
-  padding: 6px 12px;
-}
-@media (min-width: 768px) {
-  .lend-form .btn {
-    font-size: 22px;
-    margin-top: 20px;
-  }
-}
 .lend-form .form-group {
   margin: 20px 0 8px 0;
 }
