@@ -83,6 +83,12 @@ class LendingGroupController extends BaseController
 
         $totalImpact = $groupMembersImpact->add($totalMembersLentAmount);
 
+        $totalMembersLentAmountThisMonth = TransactionQuery::create()
+            ->getTotalGroupMembersLentAmountThisMonth($groupMembersIds);
+        $groupMembersImpactThisMonth = $this->lenderService->getGroupMembersTotalImpactThisMonth($groupMembersIds);
+
+        $totalImpactThisMonth = $groupMembersImpactThisMonth->add($totalMembersLentAmountThisMonth);
+
         $page = 1;
         if (Input::has('page')) {
             $page = Input::get('page');
@@ -108,7 +114,7 @@ class LendingGroupController extends BaseController
 
         $commentType = 'lendingGroupComment';
 
-        return View::make('lender.lending-group', compact('group', 'receiver', 'membersCount', 'members', 'leaderId', 'comments', 'commentType', 'canPostComment', 'canReplyComment', 'totalImpact'));
+        return View::make('lender.lending-group', compact('group', 'receiver', 'membersCount', 'members', 'leaderId', 'comments', 'commentType', 'canPostComment', 'canReplyComment', 'totalImpact', 'totalImpactThisMonth'));
     }
 
     public function joinGroup($id)
