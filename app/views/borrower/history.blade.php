@@ -9,6 +9,6 @@ Transaction History
     <h1>Transaction History</h1>
 </div>
 
-<h2>Transaction History for Borrower</h2>
+<h2>Transaction History</h2>
 
 @stop

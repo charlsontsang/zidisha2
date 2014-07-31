@@ -16,7 +16,8 @@
 }
 
 h5 {
-  margin-top: 22px;
+  margin-top: 1.5em;
+  margin-bottom: .5em;
 }
 
 h5.alpha {
@@ -37,11 +38,6 @@ a.inverted:hover {
 
 hr {
   border-top: 1px solid @gray-lighter;
-}
-
-.leaf {
-  margin-top: -12px;
-  padding-right: 2px;
 }
 
 .page-section {
@@ -102,7 +98,6 @@ hr {
   text-align: left;
 }
 
-
 .btn-icon .icon-container {
   text-align: center;
   padding: 10px 16px;
@@ -135,6 +130,10 @@ hr {
   background-color: inherit;
 }
 
+.badge {
+  background-color: @brand-danger;
+}
+
 .form-control {
   .box-shadow(none);
 }
@@ -142,31 +141,15 @@ hr {
 .tooltip-inner {
   border: solid 1px #ccc;
   padding: 12px;
+  text-align: left;
 }
 
-.lend-details {
-  .table .form-group {
-    margin-bottom: 0px;
-  }
-  .table tbody > tr > td {
-    vertical-align: middle;
-  }
-}
-
-.loan-section {
-  .make-row();
-}
-.loan-section-title {
-  .make-sm-column(2);
-}
-.loan-section-content {
-  .make-sm-column(10);
-}
-@media (max-width: @screen-xs-max) {
-  .loan-section-title {
-    font-size: 18px;
-    padding-bottom: 12px;
-    text-align: center;
+.media-object {
+  height: 70px;
+  width: 70px;
+  @media (min-width: @screen-md-min) {
+    height: 90px;
+    width: 90px;
   }
 }
 

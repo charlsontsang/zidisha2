@@ -1,11 +1,11 @@
 @extends('layouts.master')
 
 @section('page-title')
-Join the global P2P microlending movement
+Gift Card Terms of Use
 @stop
 
 @section('content')
-<h1>Gift Card Terms and Conditions:</h1>
+<h1>Gift Card Terms of Use</h1>
 
 <p>1. A recipient may redeem a gift card by placing a loan bid, then entering the card’s redemption code while completing the
     transaction in the Lending Cart page. When redeemed, the full value of the gift card will be credited to the recipient’s

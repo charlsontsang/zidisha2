@@ -5,17 +5,22 @@
 @endif
         <div>
             <div class="media">
-                @if($comment->getUser() && !$comment->getUser()->isAdmin())
-                    <a class="pull-left" href="{{ $comment->getUser()->getProfileUrl() }}">
-                        <img class="media-object" width="100px" height="100px" src="{{ $comment->getUser()->getProfilePictureUrl() }}" alt="">
+                <div class="loan-section-title">
+                    @if($comment->getUser() && !$comment->getUser()->isAdmin())
+                        <a class="pull-left" href="{{ $comment->getUser()->getProfileUrl() }}">
+                            <img class="media-object" src="{{ $comment->getUser()->getProfilePictureUrl() }}" alt="">
+                        </a>
+                    @else
+                    <a class="pull-left">
+                        <img class="media-object" src="{{ asset('/assets/images/default.jpg') }}" alt="">
                     </a>
-                @else
-                <a class="pull-left">
-                    <img class="media-object" width="100px" height="100px" src="{{ asset('/assets/images/default.jpg') }}" alt="">
-                </a>
-                @endif
+                    @endif
+                </div>
 
-                <div class="media-body">
+                <div class="media-body loan-section-content">
+
+                    <hr/>
+                    
                     <h4 class="media-heading">
                         @if($comment->getUser() && !$comment->getUser()->isAdmin())
                             <a href="{{ $comment->getUser()->getProfileUrl() }}">{{ $comment->getUser()->getUsername() }}</a>
@@ -30,10 +35,10 @@
                         </p>
                         <p class="clearfix">
                             <small class="pull-right">
-                                <em>@lang('comments.actions.translated-by')</em>
+                                <em>Translated by </em>
                                 {{ link_to($comment->getUser()->getProfileUrl(), $comment->getUser()->getUsername()) }}
                                 &nbsp;&nbsp;&nbsp;
-                                <a href="#" class="comment-original-message">@lang('comments.actions.show-original')</a>
+                                <a href="#" class="comment-original-message">Show original</a>
                             </small>
                         </p>
                         <p style="display: none">

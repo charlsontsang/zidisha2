@@ -1,8 +1,8 @@
-<h1>Please click on the link to resume the borrower application.</h1>
+<h1>Please click on this link to continue working on your application:</h1>
 <br/>
 <hr/>
-<a href="{{ route('borrower:resumeApplication', $resumeCode) }}">Resume Borrower Application</a>
+<a href="{{ route('borrower:resumeApplication', $resumeCode) }}">Resume Application</a>
 <br/>
-<h2>Your resume code is given bellow for your reference</h2>
+<h2>Your application code is given below for your reference.</h2>
 <br/>
 {{ $resumeCode }}

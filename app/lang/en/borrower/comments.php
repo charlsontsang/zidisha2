@@ -3,8 +3,8 @@ return [
     'loading-text'   => [
         'post' => 'Posting comment...',
         'edit' => 'Editing comment...',
-        'reply' => 'Replying comment...',
-        'delete' => 'Delete comment...',
+        'reply' => 'Posting reply...',
+        'delete' => 'Deleting comment...',
         'translate' => 'Translating comment...'
     ],
     'actions' => [
@@ -15,15 +15,15 @@ return [
       'share'  => 'Share',
     ],
     'flash'=>[
-        'post-success' => 'Comment posted',
-        'file-not-valid' => 'File is not valid',
-        'edit-success' => 'Comment edited',
-        'reply-success' => 'Reply posted',
-        'delete-success' => 'Comment deleted',
-        'translate-success' => 'Comment translation posted',
-        'file-deleted' => 'File deleted',
+        'post-success' => 'Comment posted!',
+        'file-not-valid' => 'Sorry, we don\'t support this file type. Please try again with a JPG or PNG file.',
+        'edit-success' => 'Comment edited!',
+        'reply-success' => 'Reply posted!',
+        'delete-success' => 'The comment has been deleted.',
+        'translate-success' => 'Your translation has been published. Thanks!',
+        'file-deleted' => 'The file has been deleted.',
     ],
-    'upload-file' => 'Upload Images or files',
+    'upload-file' => 'Add a photo',
     'add-more' => 'Add more',
     'submit' => 'Submit',
     'message' => 'Message'

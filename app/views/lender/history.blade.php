@@ -9,7 +9,7 @@ Transaction History
     <h1>Transaction History</h1>
 </div>
 
-<p>Balance available for lending or withdrawal: {{ $currentBalance }} </p>
+<p>Balance available: ${{ $currentBalance }} </p>
 
 <table class="table table-striped">
     <thead>
@@ -21,10 +21,10 @@ Transaction History
                 Transaction Description
             </th>
             <th>
-                Amount (USD)
+                Amount (US $)
             </th>
             <th>
-                Balance (USD)
+                Balance (US $)
             </th>
         </tr>
     </thead>

@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('page-title')
-Create Group
+Start a new Lending Group
 @stop
 
 @section('content')

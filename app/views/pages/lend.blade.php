@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('page-title')
-@lang('lend.page-title')
+Lend
 @stop
 
 @section('content-top')
@@ -115,7 +115,7 @@
             </div>
             <div class="col-sm-7">
                 <p>
-                    <img class="leaf" src="{{ '/assets/images/leaf.png' }}"/>
+                    <i class="fa fa-fw fa-map-marker"></i>
                     {{ $loan->getBorrower()->getProfile()->getCity() }},
                     {{ $loan->getBorrower()->getCountry()->getName() }}
                 </p>

@@ -1,20 +1,17 @@
 @extends('layouts.master')
 
 @section('page-title')
-Join the global P2P microlending movement
+{{ $lender->getUser()->getUsername() }}
 @stop
 
 @section('content')
 <div class="page-header">
-    <h3><strong>Lender Details</strong></h3>
+    <h3><strong>{{ $lender->getUser()->getUsername() }}</strong></h3>
 </div>
 
 <img src="{{ $lender->getUser()->getProfilePictureUrl() }}">
 
-<p><strong>Username: </strong> {{ $lender->getUser()->getUsername() }} </p>
-
 <p><strong>About me: </strong> {{ $lender->getProfile()->getAboutMe() }} </p>
-
 <p><strong>City: </strong> {{ $lender->getProfile()->getCity() }} </p>
 <p><strong>Country: </strong> {{ $lender->getCountry()->getName() }} </p>
 <p><strong>Karma: </strong><a href="#" class="karma" data-toggle="tooltip">(?)</a> {{ $karma }} </p>

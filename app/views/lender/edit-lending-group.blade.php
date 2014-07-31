@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('page-title')
-Edit Group
+Edit Lending Group
 @stop
 
 @section('content')
