@@ -44,7 +44,7 @@
 
         <ul class="nav nav-tabs nav-justified" role="tablist">
             <li class="active"><a href="#about" role="tab" data-toggle="tab">About</a></li>
-            <li><a href="#discussion" role="tab" data-toggle="tab">Discussion <span class="badge">#</span></a></li>
+            <li><a href="#discussion" role="tab" data-toggle="tab">Discussion <span class="badge badge-danger">#</span></a></li>
             @if($loan->isActive())
             <li><a href="#repayment" role="tab" data-toggle="tab">Repayment</a></li>
             @endif

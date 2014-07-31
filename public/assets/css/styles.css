@@ -7598,7 +7598,7 @@ hr {
 .btn-default:hover {
   background-color: inherit;
 }
-.badge {
+.badge-danger {
   background-color: #f15656;
 }
 .form-control {
