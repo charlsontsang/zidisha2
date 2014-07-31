@@ -7951,20 +7951,6 @@ a.link-dark {
     padding-top: 50px;
   }
 }
-.follow .btn {
-  background-color: #f9f9f9;
-  border: 1px solid #e0e0e0;
-  color: inherit;
-  font-decoration: none;
-}
-.follow .btn a,
-.follow .btn a:hover {
-  color: #333232;
-  text-decoration: none;
-}
-.follow .btn:hover {
-  border: 1px solid #333232;
-}
 #follow-link {
   display: none;
 }

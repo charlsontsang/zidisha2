@@ -541,11 +541,9 @@
         @endif
         
         <div class="panel-body follow">
-            <button type="button" class="btn btn-block">
-                <a href="#" class="followBorrower" data-toggle="tooltip">
-                    <i class="fa fa-fw fa-star-o"></i>
-                    @lang('lender.follow.title', ['name' => $borrower->getFirstName()])
-                </a>
+            <button type="button" class="btn btn-default btn-block followBorrower" data-toggle="tooltip">
+                <i class="fa fa-fw fa-star-o"></i>
+                @lang('lender.follow.title', ['name' => $borrower->getFirstName()])
             </button>
         </div>
     </div>
