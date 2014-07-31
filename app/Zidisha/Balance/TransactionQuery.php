@@ -113,6 +113,20 @@ class TransactionQuery extends BaseTransactionQuery
         return Money::create($total, 'USD')->multiply(-1);
     }
 
+    public function getTotalGroupMembersLentAmountThisMonth($userIds)
+    {
+        $startDate = date('01-m-Y'); // day one of the current month
+        $total = $this
+            ->filterByType([Transaction::LOAN_BID, Transaction::LOAN_OUTBID], Criteria::IN)
+            ->filterByUserId($userIds , Criteria::IN)
+            ->filterByTransactionDate($startDate, Criteria::GREATER_EQUAL)
+            ->select(array('total'))
+            ->withColumn('SUM(amount)', 'total')
+            ->findOne();
+
+        return Money::create($total, 'USD')->multiply(-1);
+    }
+
     public function getPrincipalOutstanding($userId)
     {
         $total = $this
