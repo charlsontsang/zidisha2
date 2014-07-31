@@ -60,8 +60,12 @@ class LendingGroupController extends BaseController
             ->orderByCreatedAt()
             ->paginate($page, 10);
 
+        foreach ($paginator as $group) {
+            $groupsImpacts[$group->getId()] = $this->lendingGroupService->getGroupImpacts($group->getId());
+        }
 
-        return View::make('lender.lending-groups', compact('paginator'));
+
+        return View::make('lender.lending-groups', compact('paginator', 'groupsImpacts'));
     }
 
     public function getGroup($id)
