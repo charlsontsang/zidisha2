@@ -1,8 +1,10 @@
 <?php
 
+use Zidisha\Balance\TransactionQuery;
 use Zidisha\Comment\LendingGroupCommentService;
 use Zidisha\Lender\Form\CreateGroupForm;
 use Zidisha\Lender\Form\EditGroupForm;
+use Zidisha\Lender\LenderService;
 use Zidisha\Lender\LendingGroupMemberQuery;
 use Zidisha\Lender\LendingGroupQuery;
 use Zidisha\Lender\LendingGroupService;
@@ -11,16 +13,15 @@ class LendingGroupController extends BaseController
 {
     private $createGroupForm;
     private $lendingGroupService;
-    /**
-     * @var LendingGroupCommentService
-     */
     private $lenderGroupCommentService;
+    private $lenderService;
 
-    public function __construct(CreateGroupForm $createGroupForm, LendingGroupService $lendingGroupService, LendingGroupCommentService $lenderGroupCommentService)
+    public function __construct(CreateGroupForm $createGroupForm, LendingGroupService $lendingGroupService, LendingGroupCommentService $lenderGroupCommentService, LenderService $lenderService)
     {
         $this->createGroupForm = $createGroupForm;
         $this->lendingGroupService = $lendingGroupService;
         $this->lenderGroupCommentService = $lenderGroupCommentService;
+        $this->lenderService = $lenderService;
     }
 
     public function getCreateGroup()
@@ -71,6 +72,16 @@ class LendingGroupController extends BaseController
         if (!$group) {
             App::abort(404);
         }
+        $groupMembersIds = LendingGroupMemberQuery::create()
+            ->filterByGroupId($id)
+            ->select('member_id')
+            ->find();
+
+        $totalMembersLentAmount = TransactionQuery::create()
+            ->getTotalGroupMembersLentAmount($groupMembersIds);
+        $groupMembersImpact = $this->lenderService->getGroupMembersTotalImpact($groupMembersIds);
+
+        $totalImpact = $groupMembersImpact->add($totalMembersLentAmount);
 
         $page = 1;
         if (Input::has('page')) {
@@ -97,7 +108,7 @@ class LendingGroupController extends BaseController
 
         $commentType = 'lendingGroupComment';
 
-        return View::make('lender.lending-group', compact('group', 'receiver', 'membersCount', 'members', 'leaderId', 'comments', 'commentType', 'canPostComment', 'canReplyComment'));
+        return View::make('lender.lending-group', compact('group', 'receiver', 'membersCount', 'members', 'leaderId', 'comments', 'commentType', 'canPostComment', 'canReplyComment', 'totalImpact'));
     }
 
     public function joinGroup($id)
