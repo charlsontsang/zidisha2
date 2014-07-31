@@ -43,9 +43,11 @@
         <img src="{{ $loan->getBorrower()->getUser()->getProfilePictureUrl('large-profile-picture') }}" width="100%">
 
         <ul class="nav nav-tabs nav-justified" role="tablist">
-            <li class="active"><a href="#about">About</a></li>
-            <li><a href="#discussion">Discussion <span class="badge">#</span></a></li>
-            <li><a href="#repayment">Repayment</a></li>
+            <li class="active"><a href="#about" role="tab" data-toggle="tab">About</a></li>
+            <li><a href="#discussion" role="tab" data-toggle="tab">Discussion <span class="badge">#</span></a></li>
+            @if($loan->isActive())
+            <li><a href="#repayment" role="tab" data-toggle="tab">Repayment</a></li>
+            @endif
         </ul>
 
         <div id="tab-content" class="tab-content">
@@ -302,8 +304,7 @@
                 <br><br>
                 <a href="{{ route('admin:loan-feedback', $loan->getId()) }}">Give Feedback</a>
                 @endif
-                </div>
-            </div> <!-- /div class="tab-pane fade active in" id="about" -->
+            </div>
 
             <div class="tab-pane fade" id="discussion">
                 
@@ -327,7 +328,7 @@
                         'canReplyComment' => \Auth::check()
                     ])
                 </div> 
-            </div> <!-- /div class="tab-pane fade" id="discussion" -->
+            </div>
 
             <div class="tab-pane fade" id="repayment">
                 @if($loan->getStatus() >= Zidisha\Loan\Loan::ACTIVE)
@@ -368,8 +369,9 @@
                     </table>
                 </div>
                 @endif
-            </div> <!-- /div class="tab-pane fade" id="repayment" -->
+            </div>
         </div>
+    </div>
 
     <div class="col-sm-4 loan-side">
         @if(Auth::check() && Auth::getUser()->isAdmin())
@@ -642,5 +644,9 @@
             $.post("{{ route('lender:join-lend') }}", data);
         });
     });
+    $('.nav-tabs a').click(function (e) {
+        e.preventDefault()
+        $(this).tab('show')
+    })
 </script>
 @stop
