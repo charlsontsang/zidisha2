@@ -455,6 +455,7 @@
                         </div>
                     </div>
                 </div>
+                <br/>
                 @endif
                 
                 @if (!Request::query('amount'))
