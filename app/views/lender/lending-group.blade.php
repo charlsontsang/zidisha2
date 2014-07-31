@@ -20,6 +20,10 @@ Lending Groups
                     Total Impact This Month:
                     {{ $totalImpactThisMonth }}
                 </p>
+                <p>
+                    Total Impact Last Month:
+                    {{ $totalImpactLastMonth }}
+                </p>
             </div>
             <div class="col-xs-7">
                 <p>{{ $group->getAbout() }}</p>
