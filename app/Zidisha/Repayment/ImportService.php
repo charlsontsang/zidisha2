@@ -35,9 +35,9 @@ class ImportService
 
         $payments = $this->$method($file);
 
-//        if ($payments === false) {
-//            return false;
-//        }
+        if ($payments === false) {
+            return false;
+        }
 
         $complete = $incomplete = $skipped = 0;
         foreach ($payments as $payment) {
@@ -52,9 +52,9 @@ class ImportService
                 default:
                     $skipped += 1;
             }
-//            if ($result == false) {
-//                return false;
-//            }
+            if ($result == false) {
+                return false;
+            }
         }
 
         return compact('complete', 'incomplete', 'skipped');

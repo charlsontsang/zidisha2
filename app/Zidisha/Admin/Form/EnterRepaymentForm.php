@@ -12,14 +12,9 @@ class EnterRepaymentForm extends AbstractForm
     public function getRules($data)
     {
         return [
-            'countryCode' => 'required',
+            'countryCode' => 'required|in:' . implode(',', array_keys($this->getCountrySlug())),
             'inputFile' => 'required',
         ];
-    }
-
-    public function getDefaultData()
-    {
-
     }
 
     public function getCountrySlug()
