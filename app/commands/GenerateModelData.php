@@ -274,6 +274,10 @@ class GenerateModelData extends Command
                 ->find();
 
             foreach ($activeLoans as $loan) {
+                //to test repayment upload from kenya
+                if ( $loan->getBorrower()->getCountryId() == 1) {
+                    continue;
+                }
                 $installments = InstallmentQuery::create()
                     ->filterByLoan($loan)
                     ->orderById()// TODO order due date?
@@ -410,9 +414,12 @@ class GenerateModelData extends Command
                 $password = '1234567890';
                 $email = 'borrower' . $i . '@mail.com';
 
-                $isMentor = $randArray[array_rand($randArray)];
-                if ($i <= 40 && $isMentor) {
-                    $oneCountry = $allCountries[3];
+                if ($i <= 40 && rand(1, 4) <= 3) {
+                    if (rand(1, 5) <= 4) {
+                        $oneCountry = $allCountries[1];
+                    } else{
+                        $oneCountry = $allCountries[3];
+                    }
                 } else {
                     $oneCountry = $allCountries[array_rand($allCountries->getData())];
                 }
@@ -430,9 +437,6 @@ class GenerateModelData extends Command
                 $borrower = new \Zidisha\Borrower\Borrower();
                 $borrower->setFirstName($firstName);
                 $borrower->setLastName($lastName);
-                if ($isMentor) {
-                    $oneCountry = $allCountries[2];
-                }
                 $borrower->setCountry($oneCountry);
                 $borrower->setUser($user);
                 $borrower->setVerified($faker->boolean());
@@ -453,7 +457,7 @@ class GenerateModelData extends Command
                 $borrower_profile->setAboutBusiness($faker->paragraph(7));
                 $borrower_profile->setAddress($faker->paragraph(3));
                 $borrower_profile->setAddressInstructions($faker->paragraph(6));
-                if ($isMentor) {
+                if (rand(1, 5) <= 2) {
                     $borrower_profile->setCity("Experimento");
                 } elseif ($i <= 20) {
                     $city = $faker->city;
