@@ -11,6 +11,7 @@ Dashboard
 
 <h2>Setting!</h2>
 
-<a href="{{ route('admin:exchange-rates') }}">2. Exchange Rates </a>
+<a href="{{ route('admin:exchange-rates') }}">2. Exchange Rates </a><br/>
+<a href="{{ route('admin:enter-repayment') }}"> Enter Repayments </a>
 
 @stop
