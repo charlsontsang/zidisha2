@@ -704,6 +704,7 @@
         <column name="loan_id" type="INTEGER" required="true"/>
         <column name="borrower_payment_id" type="INTEGER" required="true"/>
         <column name="refunded" type="BOOLEAN" default="0"/>
+        <behavior name="timestampable"/>
         <foreign-key foreignTable="borrowers">
             <reference local="borrower_id" foreign="id"/>
         </foreign-key>
