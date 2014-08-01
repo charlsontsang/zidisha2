@@ -81,7 +81,10 @@
                                 </strong>
                                 <br/>
                                 Invited By:
-                                <strong>Someone</strong>
+                                <a href="#">TO DO</a>
+                                <br/>
+                                Volunteer Mentor:
+                                <a href="#">TO DO</a>
                             </div>
                             <div class="col-sm-6">
                                 On-Time Repayments:<i class="fa fa-info-circle repayment" data-toggle="tooltip"></i>
@@ -134,14 +137,59 @@
                         <span class="text-light">This Loan</span>
                     </div>
                     <div class="loan-section-content">
+                        @if($loan->getStatus() >= Zidisha\Loan\Loan::ACTIVE)
+                            <div class="row">
+                                <div class="col-xs-9">
+                                    <div class="progress">
+                                        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="{{ $loan->getRaisedPercentage() }}" aria-valuemin="0"
+                                             aria-valuemax="100"
+                                             style="width: 50%;">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-3">
+                                    <strong>XX%</strong> Repaid
+                                </div>
+                            </div>
+                        @endif
                         <div class="row">
                             <div class="col-sm-6">
-                                Amount:
-                                <strong>{{{ $loan->getUsdAmount() }}}</strong>
-                                <br/>
+                                @if($loan->getStatus() >= Zidisha\Loan\Loan::ACTIVE)
+                                    Amount: 
+                                    <strong>${{ $loan->getDisbursedAmount() }}</strong>
+                                    <br/>
+                                    Date Disbursed: 
+                                    <strong>{{ $loan->getDisbursedAt()->format('M j, Y') }}</strong>
+                                    <br/>
+                                    Repayment period:<i class="fa fa-info-circle repaymentPeriod" data-toggle="tooltip"></i>
+                                    <strong>{{ $loan->getInstallmentCount() }}
+                                    @if($loan->getInstallmentPeriod() == 0)
+                                    months
+                                    @else
+                                    weeks
+                                    @endif
+                                    //TODO check installment period
+                                    </strong>
+                                @else
+                                    Amount requested:
+                                    <strong>{{{ $loan->getUsdAmount() }}}</strong>
+                                    <br/>
+                                    Still needed:
+                                    <strong>TO DO</strong>
+                                    <br/>
+                                    Application expires:
+                                    <strong>TO DO</strong>
+                                @endif
                             </div>
-                            <div class="col-sm-6">
-
+                            <div class="col-sm-6">     
+                                Lender interest:</b><i class="fa fa-info-circle totalInterest" data-toggle="tooltip"></i> 
+                                <strong>${{ $totalInterest }} TO DO</strong> 
+                                <br/>
+                                Service fee:</b><i class="fa fa-info-circle transactionFee" data-toggle="tooltip"></i> 
+                                <strong>${{ $serviceFee->getAmount() }}</strong>
+                                <br/>
+                                Total cost of loan:<i class="fa fa-info-circle repaidAmount" data-toggle="tooltip"></i>
+                                <strong>${{ $totalInterest->add($serviceFee)->getAmount() }}</strong>
                             </div>
                         </div>
                     </div>
@@ -317,20 +365,17 @@
             <div class="tab-pane fade" id="repayment">
                 @if($loan->getStatus() >= Zidisha\Loan\Loan::ACTIVE)
                 <div>
-                    <strong>REPAYMENT SCHEDULE</strong>
                     <table class="table">
                         <thead>
                         <tr>
-                            <th>Date Due</th>
-                            <th>Amount Due</th>
-                            <th>Date Paid</th>
-                            <th>Paid Amount</th>
+                            <th colspan="2">Expected Payments</th>
+                            <th colspan="2">Actual Payments</th>
                         </tr>
                         </thead>
                         <tbody>
                         @foreach($repaymentSchedule as $repaymentScheduleInstallment)
                         <tr>
-                            <td>{{ $repaymentScheduleInstallment->getInstallment()->getDueDate()->format('d-m-Y') }}</td>
+                            <td>{{ $repaymentScheduleInstallment->getInstallment()->getDueDate()->format('M j, Y') }}</td>
                             <td>{{ $repaymentScheduleInstallment->getInstallment()->getAmount() }}</td>
                             <?php $i = 0; ?>
                             @foreach($repaymentScheduleInstallment->getPayments() as $repaymentScheduleInstallmentPayment)
@@ -338,11 +383,11 @@
                         <tr>
                             <td></td>
                             <td></td>
-                            <td>{{ $repaymentScheduleInstallmentPayment->getPayment()->getPaidDate()->format('d-m-Y') }}</td>
+                            <td>{{ $repaymentScheduleInstallmentPayment->getPayment()->getPaidDate()->format('M j, Y') }}</td>
                             <td>{{ $repaymentScheduleInstallmentPayment->getAmount() }}</td>
                         </tr>
                         @else
-                        <td>{{ $repaymentScheduleInstallmentPayment->getPayment()->getPaidDate()->format('d-m-Y') }}</td>
+                        <td>{{ $repaymentScheduleInstallmentPayment->getPayment()->getPaidDate()->format('M j, Y') }}</td>
                         <td>{{ $repaymentScheduleInstallmentPayment->getAmount() }}</td>
                         @endif
                         <?php $i++; ?>
@@ -378,32 +423,17 @@
 
         @if($loan->isActive())
         <div class="panel panel-default">
-            <div class="panel-heading"><b>About this Loan</b></div>
+            <div class="panel-heading"><b>Since you last visited...</b></div>
             <div class="panel-body">
-                <p><b>Loan Principal Disbursed: </b>${{ $loan->getDisbursedAmount() }}</p>
-
-                <p><b>Date Disbursed: </b> {{ $loan->getDisbursedAt()->format('d-m-Y') }}</p>
-
-                <p><b>Repayment period:</b><i class="fa fa-info-circle repaymentPeriod" data-toggle="tooltip"></i>
-                    {{ $loan->getInstallmentCount() }}
-                    @if($loan->getInstallmentPeriod() == 0)
-                    months
-                    @else
-                    weeks
-                    @endif
-                    //TODO check installment period
-                </p>
-
-                <p><b>Total Interest Due to Lenders:</b><i class="fa fa-info-circle totalInterest" data-toggle="tooltip"></i> 
-                    ${{ $totalInterest }} ({{ $loan->getInterestRate() }}%)</p>
-
-                <p><b>Borrower Transaction Fees:</b><i class="fa fa-info-circle transactionFee" data-toggle="tooltip"></i> 
-                    ${{ $serviceFee->getAmount() }} (5.00%)</p>
-
-                <p><b>Total Amount (Including Interest and Transaction Fee) to be Repaid:</b>
-                    <i class="fa fa-info-circle repaidAmount" data-toggle="tooltip"></i>
-                    ${{ $totalInterest->add($serviceFee)->getAmount() }} ({{5.00 + $loan->getInterestRate() }}%)
-                </p>
+                July 29 &bull; Lucy posted: "And the piglets came!!!!!!! Yesterday the mother pig gave birth to 8 healthy piglets... <a href="#">>>Read more</a>"
+                <br/><br/>
+                July 26 &bull; Lucy repaid $5.00
+                <br/><br/>
+                July 25 &bull; jkurnia posted: "Thanks for the payment, Lucy!"
+                <br/><br/>
+                July 20 &bull; Lucy adjusted the repayment schedule: "School fees were due this week and... <a href="#">>>Read more</a>"
+                <br/><br/>
+                July 16 &bull; Lucy repaid $10.00
             </div>
         </div>
         @endif
@@ -563,35 +593,23 @@
     });
 </script>
 <script type="text/javascript">
-    $('.repayment').tooltip({placement: 'bottom', title: 'The On-Time Repayment Rate is the percentage of all monthly or weekly loan repayment installments that this member has paid on time (within ten days of the due date), for all loans that he or she has taken since joining Zidisha. The number displayed in parentheses is the total number of monthly or weekly installments that have been due, over which the On-Time Repayment Rate is measured.'})
+    $('.repayment').tooltip({placement: 'bottom', title: 'Percentage of all repayment installments that the borrower has paid on time (within ten days of the due date), for all loans that he or she has taken since joining Zidisha. The total number of repayment installments that have been due is displayed in parentheses.'})
 </script>
 <script type="text/javascript">
-    $('.rating').tooltip({placement: 'bottom', title: 'The Feedback Rating is based on performance ratings assigned to the ' +
-        'borrower’s previous loans by Zidisha lenders. The Feedback Rating score is the percentage of all performance ratings ' +
-        'that are positive, and the number displayed in parentheses is the total number of performance ratings the borrower has earned.'})
+    $('.rating').tooltip({placement: 'bottom', title: 'Percentage of positive feedback ratings posted by previous lenders. The total feedback ratings received are in parentheses.'})
 </script>
 <script type="text/javascript">
-    $('.repaymentPeriod').tooltip({placement: 'bottom', title: 'Number of months or weeks from disbursement until loan is fully' +
+    $('.repaymentPeriod').tooltip({placement: 'bottom', title: 'Time from disbursement until loan is fully' +
         ' repaid'})
 </script>
 <script type="text/javascript">
-    $('.totalInterest').tooltip({placement: 'bottom', title: 'This is the annual interest rate the borrower will pay for the ' +
-        'amount that has been funded by lenders. Lenders may bid to finance the loan at their preferred interest rate. If more ' +
-        'bids are received than the amount needed to fund the loan, the borrower will accept the bids with the lowest proposed interest rates.' +
-
-        'All interest rates displayed on the Zidisha website are expressed as flat percentages of loan principal per year the ' +
-        'loan is held. For example, for a loan of $100, taken at 4% annual interest with a repayment period of six months, ' +
-        'the total interest amount will be $100 * 4% * (6 months / 12 months) = $2.' +
-
-        'The expression of interest rates as flat percentages of loan principal amounts is intended to make calculation of ' +
-        'interest amounts more intuitive for borrowers and for lenders, and to facilitate comparison with other microfinance ' +
-        'loans in borrowers\' communities, the majority of which also use the flat rate methodology to express interest rates.'})
+    $('.totalInterest').tooltip({placement: 'bottom', title: 'Total interest due to lenders'})
 </script>
 <script type="text/javascript">
-    $('.transactionFee').tooltip({placement: 'bottom', title: 'A transaction fee paid to Zidisha, expressed as a total amount and as a flat annualized percentage of the loan principal amount.'})
+    $('.transactionFee').tooltip({placement: 'bottom', title: 'Covers the cost of transferring funds to the borrower'})
 </script>
 <script type="text/javascript">
-    $('.repaidAmount').tooltip({placement: 'bottom', title: 'Interest plus transaction fees, expressed as a total amount and as a flat annualized percentage of the loan principal amount.'})
+    $('.repaidAmount').tooltip({placement: 'bottom', title: 'Total cost to the borrower for this loan (interest + service fee)'})
 </script>
 <script type="text/javascript">
     $('.followBorrower').tooltip({placement: 'bottom', title: 'Receive an email when this borrower posts a new comment or loan application.'})
