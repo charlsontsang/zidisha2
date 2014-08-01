@@ -7651,6 +7651,9 @@ hr {
 .info-page {
   padding-bottom: 100px;
 }
+.table > tbody > tr {
+  border-bottom: 1px solid #dddddd !important;
+}
 .fa-info-circle {
   color: #adadad;
   margin-left: 2px;
