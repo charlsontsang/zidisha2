@@ -165,7 +165,7 @@ class LoanController extends BaseController
             return $form->makePayment();
         }
 
-        Flash::error("Entered Amounts are invalid!");
+        Flash::error("Please enter the amount as a number.");
         return Redirect::route('loan:index', $loanId)->withForm($form);
     }
 

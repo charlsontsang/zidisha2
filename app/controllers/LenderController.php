@@ -196,7 +196,7 @@ class LenderController extends BaseController
             return $form->makePayment();
         }
 
-        \Flash::error("Entered Amounts are invalid!");
+        \Flash::error("Please enter the amount as a number.");
         return Redirect::route('lender:funds')->withForm($form);
     }
 

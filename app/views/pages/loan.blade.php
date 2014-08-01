@@ -475,7 +475,7 @@
                             @if($placeBidForm->getCurrentBalance()->isPositive())
                             <tr>
                                 <td>Current Balance</td>
-                                <td>$ {{ $placeBidForm->getCurrentBalance()->getAmount() }}</td>
+                                <td>${{ number_format($placeBidForm->getCurrentBalance()->getAmount(), 2, '.', '') }}</td>
                             </tr>
                             @endif
                             <tr>
@@ -495,10 +495,11 @@
                                     <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="bottom" title="Helps with our operating costs"></i>
                                 </td>
                                 <td style="width: 100px;">
-                                        {{ BootstrapForm::text('donationAmount', 'TO DO', [
+                                        {{ BootstrapForm::text('donationAmount', null, [
                                             'id'      => 'donation-amount',
                                             'label'   => false,
                                         ]) }}
+                                <!-- TO DO: make the default 15% of the loan amount -->
                                 </td>
                             </tr>
                             <tr>

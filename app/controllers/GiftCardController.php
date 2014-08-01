@@ -63,7 +63,7 @@ class GiftCardController extends BaseController
         if ($form->isValid()) {
             return $form->makePayment();
         }
-        \Flash::error("Entered Amounts are invalid!");
+        \Flash::error("Please enter the donation amount as a number.");
         $formCard = $this->cardForm;
         return Redirect::route('lender:gift-cards')->withForm($formCard);
     }
