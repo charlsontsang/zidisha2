@@ -94,11 +94,11 @@
                                 <strong>Someone</strong>
                             </div>
                             <div class="col-sm-6">
-                                On-Time Repayments: <a href="#" class="repayment" data-toggle="tooltip">(?)</a>
+                                On-Time Repayments:<i class="fa fa-info-circle repayment" data-toggle="tooltip"></i>
                                 <strong>TODO</strong>
                                 <br/>
 
-                                Feedback Rating: <a href="#" class="rating" data-toggle="tooltip">(?)</a>
+                                Feedback Rating:<i class="fa fa-info-circle rating" data-toggle="tooltip"></i>
                                 <strong>TODO</strong>
                                 <br/>
 
@@ -265,50 +265,33 @@
 
                 @endif
 
-
                 <div class="loan-section">
                     <div class="loan-section-title">
                         <span class="text-light">Lenders</span>
                     </div>
-                </div>
-
-                    
-                @foreach($bids as $bid)
-                    <div class="loan-section">
-                        <div class="media">
-                            <div class="loan-section-title">
-                                @if($bid->getLender()->getUser()->getProfilePictureUrl())
-                                    <a class="pull-left" href="{{ $bid->getLender()->getUser()->getProfileUrl() }}">
-                                        <img class="media-object" width="90px" height="90px" src="{{ $bid->getLender()->getUser()->getProfilePictureUrl() }}" alt="">
+                    <div class="loan-section-content">
+                        <div class="row">
+                            @foreach($bids as $bid)
+                                <div class="col-xs-4 col-sm-3 lender-thumbnail"
+                                    <a href="{{ $bid->getLender()->getUser()->getProfileUrl() }}">
+                                        @if($bid->getLender()->getUser()->getProfilePictureUrl())
+                                            <img src="{{ $bid->getLender()->getUser()->getProfilePictureUrl() }}" alt="">
+                                        @else
+                                            <img src="{{ asset('/assets/images/default.jpg') }}" alt="">
+                                        @endif
                                     </a>
-                                @else
-                                <a class="pull-left">
-                                    <img class="media-object" width="90px" height="90px" src="{{ asset('/assets/images/default.jpg') }}" alt="">
-                                </a>
-                                @endif
-                            </div>
-
-                            <div class="media-body loan-section-content">
-
-                                <hr/>
-                                
-                                <h4 class="media-heading">
-                                    <a href="{{ route('lender:public-profile', $bid->getLender()->getUser()->getUserName()) }}">{{
-                                    $bid->getLender()->getUser()->getUserName() }}</a>
-                                </h4>
-                                <p>
-                                    City, Country
-                                </p>
-                                <p>
-                                    <a href="#">Lending Group affiliation</a>
-                                </p>
-                                <p>
-                                    Profile "about me" text goes here
-                                </p>
-                            </div>
+                                    <h3 class="lender-thumbnail">
+                                        <a href="{{ route('lender:public-profile', $bid->getLender()->getUser()->getUserName()) }}">{{
+                                        $bid->getLender()->getUser()->getUserName() }}</a>
+                                    </h3>
+                                    <p>
+                                        City, Country <!-- TO DO: if no city, display country only -->
+                                    </p>
+                                </div> 
+                            @endforeach
                         </div>
-                    </div> 
-                @endforeach
+                    </div>
+                </div>
 
                 @if(Auth::check() && Auth::getUser()->isAdmin())
                 <br><br>
@@ -410,7 +393,7 @@
 
                 <p><b>Date Disbursed: </b> {{ $loan->getDisbursedAt()->format('d-m-Y') }}</p>
 
-                <p><b>Repayment period: </b> <a href="#" class="repaymentPeriod" data-toggle="tooltip">(?)</a>
+                <p><b>Repayment period:</b><i class="fa fa-info-circle repaymentPeriod" data-toggle="tooltip"></i>
                     {{ $loan->getInstallmentCount() }}
                     @if($loan->getInstallmentPeriod() == 0)
                     months
@@ -420,15 +403,14 @@
                     //TODO check installment period
                 </p>
 
-                <p><b>Total Interest Due to Lenders: </b> <a href="#" class="totalInterest" data-toggle="tooltip">(?)</a>USD
-                    {{ $totalInterest }} ({{ $loan->getInterestRate() }}%)</p>
+                <p><b>Total Interest Due to Lenders:</b><i class="fa fa-info-circle totalInterest" data-toggle="tooltip"></i> 
+                    ${{ $totalInterest }} ({{ $loan->getInterestRate() }}%)</p>
 
-                <p><b>Borrower Transaction Fees: </b> <a href="#" class="transactionFee" data-toggle="tooltip">(?)</a>USD
-                                        {{ $serviceFee->getAmount() }} (5.00%)</p>
+                <p><b>Borrower Transaction Fees:</b><i class="fa fa-info-circle transactionFee" data-toggle="tooltip"></i> 
+                    ${{ $serviceFee->getAmount() }} (5.00%)</p>
 
-                <p><b>Total Amount (Including Interest and Transaction Fee) to be Repaid: </b> 
-                    <a href="#" class="repaidAmount"
-                                                                                                  data-toggle="tooltip">(?)</a>
+                <p><b>Total Amount (Including Interest and Transaction Fee) to be Repaid:</b>
+                    <i class="fa fa-info-circle repaidAmount" data-toggle="tooltip"></i>
                     ${{ $totalInterest->add($serviceFee)->getAmount() }} ({{5.00 + $loan->getInterestRate() }}%)
                 </p>
             </div>
@@ -436,47 +418,53 @@
         @endif
 
         @if($loan->isOpen())
+
+        <!-- TO DO: this button should open the lend form full screen on a mobile device -->
+        <button id="mobile-lend-button" type="button" class="btn btn-primary btn-block">Lend</button>
+
         <div class="panel panel-default lend-form">
             <div class="panel-body">
-                @include('partials/loan-progress', [ 'loan' => $loan ])
-                
-                {{ BootstrapForm::open(array('route' => ['loan:place-bid', $loan->getId()], 'translationDomain' => 'bid', 'id' => 'funds-upload')) }}
-                {{ BootstrapForm::populate($placeBidForm) }}
+                <div id="lend-form-initial">
+                    @include('partials/loan-progress', [ 'loan' => $loan ])
+                    
+                    {{ BootstrapForm::open(array('route' => ['loan:place-bid', $loan->getId()], 'translationDomain' => 'bid', 'id' => 'funds-upload')) }}
+                    {{ BootstrapForm::populate($placeBidForm) }}
 
-                @if (!\Auth::check() || \Auth::user()->isLender())
+                    @if (!\Auth::check() || \Auth::user()->isLender())
 
-                <div id="lend-form-fields" class="row">
-                    <div class="col-xs-6" style="padding-right: 5px">
-                        {{ BootstrapForm::text('amount', Request::query('amount'), [
-                            'id' => 'amount',
-                            'label' => false,
-                            'prepend' => '$'
-                        ]) }}
-                        <div class="text-center text-light">
-                            Loan Amount
+                    <div id="lend-form-fields" class="row">
+                        <div class="col-xs-6" style="padding-right: 5px">
+                            {{ BootstrapForm::text('amount', Request::query('amount'), [
+                                'id' => 'amount',
+                                'label' => false,
+                                'prepend' => '$'
+                            ]) }}
+                            <div class="text-center text-light">
+                                Loan Amount
+                            </div>
+                        </div>
+                        <div class="col-xs-6" style="padding-left: 5px">
+                            {{ BootstrapForm::select('interestRate', $placeBidForm->getRates(), Request::query('interestRate'), [
+                                'label' => false
+                            ]) }}
+                            <div class="text-center text-light">
+                                Interest
+                            </div>
                         </div>
                     </div>
-                    <div class="col-xs-6" style="padding-left: 5px">
-                        {{ BootstrapForm::select('interestRate', $placeBidForm->getRates(), Request::query('interestRate'), [
-                            'label' => false
-                        ]) }}
-                        <div class="text-center text-light">
-                            Interest
-                        </div>
-                    </div>
-                </div>
-                <br/>
-                @endif
-                
-                @if (!Request::query('amount'))
-                    @if (\Auth::check())
-                        @if (\Auth::user()->isLender())
-                            <button id="lend-action" type="button" class="btn btn-primary btn-block">Lend</button>
-                        @endif
-                    @else
-                        <a href="{{ route('lender:join') }}" id="join-lend" class="btn btn-primary btn-block" data-toggle="modal" data-target="#join-modal">Lend</a>
+                    <br/>
                     @endif
-                @endif
+                    
+                    @if (!Request::query('amount'))
+                        @if (\Auth::check())
+                            @if (\Auth::user()->isLender())
+                                <button id="lend-action" type="button" class="btn btn-primary btn-block">Lend</button>
+                            @endif
+                        @else
+                            <a href="{{ route('lender:join') }}" id="join-lend" class="btn btn-primary btn-block" data-toggle="modal" data-target="#join-modal">Lend</a>
+                        @endif
+                    @endif
+                </div> <!-- /lend-form-initial -->
                 
                 <div id="lend-details" class="lend-details" {{ Request::query('amount') ? '' : 'style="display:none;"' }}>
                     {{ BootstrapForm::hidden('creditAmount', null, ['id' => 'credit-amount']) }}
@@ -501,23 +489,26 @@
                             </tr>
                             @endif
                             <tr>
+                                <td>Loan for {{ $loan->getBorrower()->getFirstName() }}</td>
+                                <td>TO DO</td> 
+                            </tr>
+                            <tr>
                                 <td>
                                     Credit card fee
-                                    <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="bottom" title="Covers credit card charges"></i>
+                                    <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="bottom" title="Covers credit card charges"></i>
                                 </td>
                                 <td>$<span id="fee-amount-display"></span></td>
                             </tr>
                             <tr>
                                 <td>
                                     Donation to Zidisha
-                                    <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="bottom" title="Helps with our operating costs"></i>
+                                    <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="bottom" title="Helps with our operating costs"></i>
                                 </td>
                                 <td style="width: 100px;">
-                                    {{ BootstrapForm::text('donationAmount', null, [
-                                        'id'      => 'donation-amount',
-                                        'label'   => false,
-                                        'prepend' => '$',
-                                    ]) }}
+                                        {{ BootstrapForm::text('donationAmount', 'TO DO', [
+                                            'id'      => 'donation-amount',
+                                            'label'   => false,
+                                        ]) }}
                                 </td>
                             </tr>
                             <tr>
@@ -551,7 +542,7 @@
         </div>
         @endif
         
-        <div class="panel-body follow">
+        <div id="follow-button" class="panel-body">
             <button type="button" class="btn btn-default btn-block followBorrower" data-toggle="tooltip">
                 <i class="fa fa-fw fa-star-o"></i>
                 @lang('lender.follow.title', ['name' => $borrower->getFirstName()])
@@ -598,7 +589,7 @@
 
         'All interest rates displayed on the Zidisha website are expressed as flat percentages of loan principal per year the ' +
         'loan is held. For example, for a loan of $100, taken at 4% annual interest with a repayment period of six months, ' +
-        'the total interest amount will be USD 100 * 4% * (6 months / 12 months) = $2.' +
+        'the total interest amount will be $100 * 4% * (6 months / 12 months) = $2.' +
 
         'The expression of interest rates as flat percentages of loan principal amounts is intended to make calculation of ' +
         'interest amounts more intuitive for borrowers and for lenders, and to facilitate comparison with other microfinance ' +
@@ -642,10 +633,10 @@
     });
     
     $(function() {
-        $('.fa-question-circle').tooltip();
+        $('.fa-info-circle').tooltip();
         $('#lend-action').on('click', function() {
             $('#lend-details').show();
-            $(this).hide();
+            $('#lend-form-initial').hide();
             return false;
         });
         $('#join-lend').on('click', function() {
