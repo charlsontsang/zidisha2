@@ -84,11 +84,11 @@
                                 <strong>Someone</strong>
                             </div>
                             <div class="col-sm-6">
-                                On-Time Repayments: <a href="#" class="repayment" data-toggle="tooltip">(?)</a>
+                                On-Time Repayments:<i class="fa fa-info-circle repayment" data-toggle="tooltip"></i>
                                 <strong>TODO</strong>
                                 <br/>
 
-                                Feedback Rating: <a href="#" class="rating" data-toggle="tooltip">(?)</a>
+                                Feedback Rating:<i class="fa fa-info-circle rating" data-toggle="tooltip"></i>
                                 <strong>TODO</strong>
                                 <br/>
 
@@ -383,7 +383,7 @@
 
                 <p><b>Date Disbursed: </b> {{ $loan->getDisbursedAt()->format('d-m-Y') }}</p>
 
-                <p><b>Repayment period: </b> <a href="#" class="repaymentPeriod" data-toggle="tooltip">(?)</a>
+                <p><b>Repayment period:</b><i class="fa fa-info-circle repaymentPeriod" data-toggle="tooltip"></i>
                     {{ $loan->getInstallmentCount() }}
                     @if($loan->getInstallmentPeriod() == 0)
                     months
@@ -393,15 +393,14 @@
                     //TODO check installment period
                 </p>
 
-                <p><b>Total Interest Due to Lenders: </b> <a href="#" class="totalInterest" data-toggle="tooltip">(?)</a> 
+                <p><b>Total Interest Due to Lenders:</b><i class="fa fa-info-circle totalInterest" data-toggle="tooltip"></i> 
                     ${{ $totalInterest }} ({{ $loan->getInterestRate() }}%)</p>
 
-                <p><b>Borrower Transaction Fees: </b> <a href="#" class="transactionFee" data-toggle="tooltip">(?)</a> 
+                <p><b>Borrower Transaction Fees:</b><i class="fa fa-info-circle transactionFee" data-toggle="tooltip"></i> 
                     ${{ $serviceFee->getAmount() }} (5.00%)</p>
 
-                <p><b>Total Amount (Including Interest and Transaction Fee) to be Repaid: </b> 
-                    <a href="#" class="repaidAmount"
-                                                                                                  data-toggle="tooltip">(?)</a>
+                <p><b>Total Amount (Including Interest and Transaction Fee) to be Repaid:</b>
+                    <i class="fa fa-info-circle repaidAmount" data-toggle="tooltip"></i>
                     ${{ $totalInterest->add($serviceFee)->getAmount() }} ({{5.00 + $loan->getInterestRate() }}%)
                 </p>
             </div>
@@ -481,22 +480,22 @@
                             @endif
                             <tr>
                                 <td>Loan for {{ $loan->getBorrower()->getFirstName() }}</td>
-                                <td>$30.00</td> <!-- TO DO: make amount display dynamic -->
+                                <td>TO DO</td> 
                             </tr>
                             <tr>
                                 <td>
                                     Credit card fee
-                                    <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="bottom" title="Covers credit card charges"></i>
+                                    <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="bottom" title="Covers credit card charges"></i>
                                 </td>
                                 <td>$<span id="fee-amount-display"></span></td>
                             </tr>
                             <tr>
                                 <td>
                                     Donation to Zidisha
-                                    <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="bottom" title="Helps with our operating costs"></i>
+                                    <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="bottom" title="Helps with our operating costs"></i>
                                 </td>
                                 <td style="width: 100px;">
-                                        {{ BootstrapForm::text('donationAmount', null, [
+                                        {{ BootstrapForm::text('donationAmount', 'TO DO', [
                                             'id'      => 'donation-amount',
                                             'label'   => false,
                                         ]) }}
@@ -624,7 +623,7 @@
     });
     
     $(function() {
-        $('.fa-question-circle').tooltip();
+        $('.fa-info-circle').tooltip();
         $('#lend-action').on('click', function() {
             $('#lend-details').show();
             $('#lend-form-initial').hide();
