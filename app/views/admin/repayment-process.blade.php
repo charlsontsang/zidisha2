@@ -52,9 +52,18 @@ Repayment Process
         <td>{{ $payment->getDate()->format('d-m-Y') }}</td>
         <td>{{ $payment->getCountry()->getName() }}</td>
         <td>{{ $payment->getReceipt() }}</td>
-        <td>{{ $payment->getBorrower()->getName() }}</td>
+        <td>
+            {{ $payment->getBorrower()->getName() }}
+            <p>Email : {{ $payment->getBorrower()->getUser()->getEmail() }}</p>
+            <p>Phone : {{ $payment->getBorrower()->getProfile()->getPhoneNumber() }}</p>
+        </td>
         <td>{{ $payment->getAmount() }}</td>
-        <td>{{ $payment->getDetails() }}</td>
+        <td>
+            <p>{{ $payment->getDetails() }}</p>
+            <span style="color:red">
+                {{ $payment->getError() }}
+            </span>
+        </td>
     </tr>
     @endforeach
     </tbody>
