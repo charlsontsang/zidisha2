@@ -299,7 +299,8 @@
                     
                     <div class="loan-section-content">
                         <span class="text-light">
-                            Ask {{ $loan->getBorrower()->getFirstName() }} a question about this loan, inquire about the business, or send a simple note of thanks or inspiration.
+                            Ask {{ $loan->getBorrower()->getFirstName() }} a question about this loan project, share news and photos of your own, or send a simple note of thanks or inspiration.
+                            <br/><br/>
                         </span>
                     </div>
 
