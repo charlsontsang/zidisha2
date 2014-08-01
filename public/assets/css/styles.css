@@ -8424,3 +8424,12 @@ a.link-dark {
     float: none !important;
   }
 }
+.comment-submit .btn {
+  float: right;
+}
+@media (max-width: 767px) {
+  .comment-submit .btn {
+    width: 100%;
+    margin-top: 10px;
+  }
+}
