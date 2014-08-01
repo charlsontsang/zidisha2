@@ -278,18 +278,15 @@ class GenerateModelData extends Command
                     ->filterByLoan($loan)
                     ->orderById()// TODO order due date?
                     ->find();
-                $repaid = rand(1,10) <= 1;
                 foreach ($installments as $installment) {
                     if (!$installment->getAmount()->isPositive()){
                         continue;
                     }
 
-                    if ($loan->getDisbursedAt() < Carbon::create()->subMonths(6)) {
-                        break;
-                    }
-                    if (!$repaid && rand(1,4) <= 1) {
-                        break;
-                    }
+//                    if ($loan->getDisbursedAt() < Carbon::create()->subMonths(6)) {
+//                        break;
+//                    }
+
                     if (rand(1,4) <= 1) {
 //                    if (!$repaid && rand(1,6) <= 1) {
 //                        break;
@@ -303,8 +300,8 @@ class GenerateModelData extends Command
                                 ->getAmount(),
                             $installment->getAmount()->add($installment->getAmount()->divide(2))->getAmount()), $loan->getCurrency()) ;
                     }
-                    if(rand(1,10) <= 3) {
-                        if(rand(1,2) <= 1) {
+                    if(rand(1,10) <= 2) {
+                        if(rand(1,5) <= 4) {
                             $installmentDate = $installment->getDueDate()->modify('+1 week');
                         } else {
                             $installmentDate = $installment->getDueDate()->modify('+2 week');
@@ -837,7 +834,7 @@ class GenerateModelData extends Command
             if ($model == "Bid") {
 
                 $oneLoan = LoanQuery::create()
-                    ->filterByStatus(0)
+                    ->filterByStatus(Loan::OPEN)
                     ->orderByRand()
                     ->findOne();
 
@@ -851,12 +848,12 @@ class GenerateModelData extends Command
                     continue;
                 }
 
-                $numberOfBids = rand(2,5);
+                $numberOfBids = rand(5,15);
                 $data = array();
 
                 for ( $j=0; $j<=$numberOfBids; $j++) {
                     $oneLender = $allLenders[array_rand($allLenders->getData())];
-                    $data['amount'] = rand(5, intval($oneLoan->getUsdAmount()->divide(8)->getAmount()) + 5);
+                    $data['amount'] = rand(intval($oneLoan->getUsdAmount()->divide(6)->getAmount()), intval($oneLoan->getUsdAmount()->divide(4)->getAmount()) + 5);
                     $data['interestRate'] = rand(0, 15);
                     $loanService->placeBid($oneLoan, $oneLender, $data);
                 }

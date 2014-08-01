@@ -112,4 +112,83 @@ class TransactionQuery extends BaseTransactionQuery
 
         return Money::create($total, 'USD')->multiply(-1);
     }
+
+    public function getActiveLoansRepaidAmounts($userId, $activeLoansIds)
+    {
+        return $this
+            ->filterByUserId($userId)
+            ->filterRepaidToLender()
+            ->select('totals', 'loan_id')
+            ->withColumn('SUM(amount)', 'totals')
+            ->withColumn('loan_id', 'loan_id')
+            ->filterByLoanId($activeLoansIds, Criteria::IN)
+            ->groupByLoanId()
+            ->find();
+    }
+
+    public function getTotalActiveLoansRepaidAmount($userId)
+    {
+        $total = $this
+            ->filterByUserId($userId)
+            ->filterRepaidToLender()
+            ->useLoanQuery()
+                ->filterActive()
+            ->endUse()
+            ->select('totals')
+            ->withColumn('SUM(Transaction.amount)', 'totals')
+            ->findOne();
+
+        return Money::create($total, 'USD');
+    }
+
+    public function getCompletedLoansRepaidAmounts($userId, $completedLoansIds)
+    {
+        return $this
+            ->filterByUserId($userId)
+            ->filterRepaidToLender()
+            ->select('totals', 'loan_id')
+            ->withColumn('SUM(amount)', 'totals')
+            ->withColumn('loan_id', 'loan_id')
+            ->filterByLoanId($completedLoansIds, Criteria::IN)
+            ->groupByLoanId()
+            ->find();
+    }
+
+    public function getTotalCompletedLoansRepaidAmount($userId)
+    {
+        $total = $this
+            ->filterByUserId($userId)
+            ->filterRepaidToLender()
+            ->useLoanQuery()
+                ->filterEnded()
+            ->endUse()
+            ->select('totals')
+            ->withColumn('SUM(Transaction.amount)', 'totals')
+            ->findOne();
+
+        return Money::create($total, 'USD');
+    }
+
+    public function getTotalFundsUpload($userId)
+    {
+        $total =  $this
+            ->filterByUserId($userId)
+            ->filterByType(Transaction::FUND_UPLOAD)
+            ->select(array('total'))
+            ->withColumn('SUM(amount)', 'total')
+            ->findOne();
+
+        return Money::create($total, 'USD');
+    }
+
+    public function getCurrentBalance($userId)
+    {
+        $total = $this
+            ->filterByUserId($userId)
+            ->select(array('total'))
+            ->withColumn('SUM(amount)', 'total')
+            ->findOne();
+
+        return Money::create($total, 'USD');
+    }
 } // TransactionQuery

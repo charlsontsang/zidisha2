@@ -39,12 +39,10 @@ Track My Gift Cards
         <td>{{ $card->getOrderType() }}</td>
         <td>{{ $card->getRecipientEmail() }}</td>
         <td>{{ $card->getCardAmount()->getAmount() }}</td>
-        @if($card->getClaimed() == 1)
         <td>
+            @if($card->getClaimed() == 1)
             <span class="label label-success">{{ $card->getStringClaimed() }}</span>
-        </td>
         @else
-        <td>
             <span class="label label-info">{{ $card->getStringClaimed() }}</span>
         </td>
         @endif

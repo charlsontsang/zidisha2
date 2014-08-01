@@ -23,6 +23,7 @@ use Zidisha\Loan\Loan;
 use Zidisha\Loan\LoanQuery;
 use Zidisha\Payment\Form\UploadFundForm;
 use Zidisha\Payment\Stripe\StripeService;
+use Zidisha\Repayment\RepaymentService;
 use Zidisha\Utility\Utility;
 
 class LenderController extends BaseController
@@ -34,6 +35,7 @@ class LenderController extends BaseController
     private $lenderService;
     private $uploadFundForm;
     private $withdrawFundsForm;
+    private $repaymentService;
 
 
     public function __construct(
@@ -42,8 +44,8 @@ class LenderController extends BaseController
         LenderService $lenderService,
         GiftCard $cardForm,
         UploadFundForm $uploadFundForm,
-        WithdrawFundsForm $withdrawFundsForm
-
+        WithdrawFundsForm $withdrawFundsForm,
+        RepaymentService $repaymentService
     ) {
         $this->transactionQuery = $transactionQuery;
         $this->fundsForm = $fundsForm;
@@ -51,6 +53,7 @@ class LenderController extends BaseController
         $this->cardForm = $cardForm;
         $this->uploadFundForm = $uploadFundForm;
         $this->withdrawFundsForm = $withdrawFundsForm;
+        $this->repaymentService = $repaymentService;
     }
 
     public function getPublicProfile($username)
@@ -142,9 +145,8 @@ class LenderController extends BaseController
     public function getTransactionHistory()
     {
 
-        $currentBalance = $this->transactionQuery
-            ->filterByUserId(Auth::getUser()->getId())
-            ->getTotalAmount();
+        $currentBalance = TransactionQuery::create()
+            ->getCurrentBalance(Auth::getUser()->getId());
 
         $page = Request::query('page') ? : 1;
 
@@ -171,9 +173,8 @@ class LenderController extends BaseController
 
     public function getFunds()
     {
-        $currentBalance = $this->transactionQuery
-            ->filterByUserId(Auth::getUser()->getId())
-            ->getTotalAmount();
+        $currentBalance = TransactionQuery::create()
+            ->getCurrentBalance(Auth::getUser()->getId());
 
         return View::make('lender.funds', compact('currentBalance'), ['form' => $this->uploadFundForm,]);
     }
@@ -226,75 +227,51 @@ class LenderController extends BaseController
         if (!$lender) {
             \Illuminate\Support\Facades\App::abort(404);
         }
+        $activeLoansBidPaymentStatus = [];
+        $completedLoansBidAmountRepaid = [];
+        $netChangeCompletedBid = [];
+        $totalNetChangeCompletedBid = Money::create(0, 'USD');
+        $activeLoansBidAmountRepaid = [];
+        $activeLoansBidPrincipleOutstanding = [];
 
         $totalFundsUpload = TransactionQuery::create()
-            ->filterByUserId($userId)
-            ->filterByType(Transaction::FUND_UPLOAD)
-            ->getTotalAmount();
-        $numberOfLoans = LoanQuery::create()
-            ->useBidQuery()
-                ->filterByLender($lender)
-                ->filterByAcceptedAmount(null, Criteria::NOT_EQUAL)
-            ->endUse()
-            ->count();
+            ->getTotalFundsUpload($userId);
 
-        $currentBalance = $this->transactionQuery
-            ->filterByUserId($userId)
-            ->getTotalAmount();
+        $numberOfLoans = LoanQuery::create()
+            ->getNumberOfLoansForLender($lender);
+
+        $currentBalance = TransactionQuery::create()
+            ->getCurrentBalance($userId);
 
         $newMemberInviteCredit = InviteTransactionQuery::create()
             ->getTotalInviteCreditAmount($lender);
 
-        $totalOutstandingAmount = BidQuery::create()
-            ->filterByActive(true)
-            ->filterByLender($lender)
-            ->useLoanQuery()
-                ->filterByStatus([Loan::FUNDED, Loan::ACTIVE])
-                ->filterNotForgivenByLender($lender)
-            ->endUse()
-            ->withColumn('SUM(accepted_amount)', 'total')
-            ->select('total')
-            ->findOne();
-        $principleOutstanding = Money::create($totalOutstandingAmount, 'USD');
+        $principleOutstanding = BidQuery::create()
+            ->getTotalOutstandingAmount($lender);
 
         $lendingGroups = LendingGroupQuery::create()
-            ->useLendingGroupMemberQuery()
-                ->filterByMember($lender)
-                ->filterByLeaved(false)
-            ->endUse()
-            ->find();
+            ->getLendingGroupsForLender($lender);
 
         $numberOfInvitesSent = InviteQuery::create()
             ->filterByLender($lender)
             ->count();
         $AcceptedInviteesIds = InviteQuery::create()
-            ->select('invitee_id')
-            ->filterByLender($lender)
-            ->filterByInviteeId(null, Criteria::NOT_EQUAL)
-            ->find();
+            ->getAcceptedInviteesIds($lender);
         $numberOfInvitesAccepted = $AcceptedInviteesIds->count();
+
         $numberOfLoansByInvitees = LoanQuery::create()
-            ->useBidQuery()
-                ->filterByLenderId($AcceptedInviteesIds, Criteria::IN)
-                ->filterByAcceptedAmount(null, Criteria::NOT_EQUAL)
-            ->endUse()
-            ->count();
+            ->getNumberOfLoansByInvitees($AcceptedInviteesIds);
 
         $numberOfGiftedGiftCards = GiftCardQuery::create()
             ->filterByLender($lender)
             ->count();
+
         $RedeemedGiftCardsRecipientsIds = GiftCardQuery::create()
-            ->select('recipient_id')
-            ->filterByLender($lender)
-            ->filterByRecipientId(null, Criteria::NOT_EQUAL)
-            ->find();
+            ->getRedeemedGiftCardsRecipientsIds($lender);
         $numberOfRedeemedGiftCards = $RedeemedGiftCardsRecipientsIds->count();
+
         $numberOfLoansByRecipients = LoanQuery::create()
-            ->useBidQuery()
-            ->filterByLenderId($RedeemedGiftCardsRecipientsIds, Criteria::IN)
-            ->filterByAcceptedAmount(null, Criteria::NOT_EQUAL)
-            ->endUse()
-            ->count();
+            ->getNumberOfLoansByRecipients($RedeemedGiftCardsRecipientsIds);
 
         $totalLentAmount = TransactionQuery::create()
             ->getTotalLentAmount($userId);
@@ -321,6 +298,44 @@ class LenderController extends BaseController
         $numberOfActiveBids = $activeLoansBids->getNbResults();
         $numberOfActiveProjects = \Lang::choice('lender.flash.preferences.stats-projects', $numberOfActiveBids, array('count' => $numberOfActiveBids));
 
+        $activeLoansIds = [];
+        /** @var $activeLoansBid Bid */
+        foreach ($activeLoansBids as $activeLoansBid) {
+            $activeLoansIds[] = $activeLoansBid->getLoanId();
+        }
+
+        $activeLoansRepaidAmounts = TransactionQuery::create()
+            ->getActiveLoansRepaidAmounts($userId, $activeLoansIds);
+        $totalActiveLoansRepaidAmount = TransactionQuery::create()
+            ->getTotalActiveLoansRepaidAmount($userId);
+
+        $activeLoansTotalOutstandingAmounts = BidQuery::create()
+            ->getActiveLoansTotalOutstandingAmounts($lender, $activeLoansIds);
+
+        $totalActiveLoansTotalOutstandingAmount = BidQuery::create()
+            ->getTotalActiveLoansTotalOutstandingAmount($lender);
+
+        /** @var $activeLoansBid Bid */
+        foreach ($activeLoansBids as $activeLoansBid) {
+            foreach ($activeLoansRepaidAmounts as $activeLoansRepaidAmount) {
+                if ($activeLoansRepaidAmount['loan_id'] == $activeLoansBid->getLoanId()) {
+                    $activeLoansBidAmountRepaid[$activeLoansBid->getId()] = Money::create($activeLoansRepaidAmount['totals'], 'USD');
+                    continue;
+                }
+                $activeLoansBidAmountRepaid[$activeLoansBid->getId()] = Money::create(0, 'USD');
+            }
+            foreach ($activeLoansTotalOutstandingAmounts as $activeLoansTotalOutstandingAmount) {
+                if ($activeLoansTotalOutstandingAmount['loan_id'] == $activeLoansBid->getLoanId()) {
+                    $activeLoansBidPrincipleOutstanding[$activeLoansBid->getId()] = Money::create($activeLoansTotalOutstandingAmount['total'], 'USD');
+                    continue;
+                }
+                $activeLoansBidPrincipleOutstanding[$activeLoansBid->getId()] = Money::create(0, 'USD');
+            }
+
+            $repaymentSchedule = $this->repaymentService->getRepaymentSchedule($activeLoansBid->getLoan());
+            $activeLoansBidPaymentStatus[$activeLoansBid->getId()] = $repaymentSchedule->getLoanPaymentStatus();
+        }
+
         $completedLoansBids = BidQuery::create()
             ->getCompletedLoansBids($lender, $page3);
         $totalCompletedLoansBidsAmount = BidQuery::create()
@@ -335,27 +350,36 @@ class LenderController extends BaseController
         }
 
         $completedLoansRepaidAmounts = TransactionQuery::create()
-            ->filterByUserId($userId)
-            ->filterRepaidToLender()
-            ->select('totals', 'loan_id')
-            ->withColumn('SUM(amount)', 'totals')
-            ->filterByLoanId($completedLoansIds, Criteria::IN)
-            ->groupByLoanId()
-            ->find();
+            ->getCompletedLoansRepaidAmounts($userId, $completedLoansIds);
+
+        $totalCompletedLoansRepaidAmount = TransactionQuery::create()
+            ->getTotalCompletedLoansRepaidAmount($userId);
 
         /** @var $completedLoansBid Bid */
         foreach ($completedLoansBids as $completedLoansBid) {
-            $completedLoansBid['amountRepaid'] = $completedLoansRepaidAmounts[$completedLoansBid->getLoanId()];
+            foreach ($completedLoansRepaidAmounts as $completedLoansRepaidAmount) {
+                if ($completedLoansRepaidAmount['loan_id'] == $completedLoansBid->getLoanId()) {
+                    $completedLoansBidAmountRepaid[$completedLoansBid->getId()] = Money::create($completedLoansRepaidAmount['totals'], 'USD');
+                    continue;
+                }
+                $completedLoansBidAmountRepaid[$completedLoansBid->getId()] = Money::create(0, 'USD');
+            }
+            $netChangeCompletedBid[$completedLoansBid->getId()] = $completedLoansBidAmountRepaid[$completedLoansBid->getId()]->subtract($completedLoansBid->getAcceptedAmount());
+            $totalNetChangeCompletedBid= $totalNetChangeCompletedBid->add($netChangeCompletedBid[$completedLoansBid->getId()]);
         }
 
-        return View::make('lender.my-stats', compact('currentBalance', 'totalFundsUpload', 'lendingGroups',
+       return View::make('lender.my-stats', compact('currentBalance', 'totalFundsUpload', 'lendingGroups',
                 'numberOfInvitesSent', 'numberOfInvitesAccepted', 'numberOfLoans', 'numberOfLoansByInvitees',
                 'numberOfGiftedGiftCards', 'numberOfRedeemedGiftCards', 'numberOfLoansByRecipients',
                 'totalLentAmount', 'myImpact', 'totalImpact' , 'loans', 'activeBids', 'totalBidAmount',
                 'activeLoansBids', 'totalActiveLoansBidsAmount', 'completedLoansBids', 'totalCompletedLoansBidsAmount',
                 'numberOfFundRaisingProjects', 'newMemberInviteCredit',
                 'numberOfActiveProjects', 'numberOfCompletedProjects', 'principleOutstanding',
-                'totalLentAmountByInvitees', 'totalLentAmountByRecipients'
+                'totalLentAmountByInvitees', 'totalLentAmountByRecipients',
+                'activeLoansBidPaymentStatus', 'completedLoansBidAmountRepaid', 'activeLoansBidAmountRepaid',
+                'activeLoansBidPrincipleOutstanding', 'totalActiveLoansRepaidAmount',
+                'totalActiveLoansTotalOutstandingAmount', 'totalCompletedLoansRepaidAmount',
+                'netChangeCompletedBid', 'totalNetChangeCompletedBid'
             ));
     }
 }

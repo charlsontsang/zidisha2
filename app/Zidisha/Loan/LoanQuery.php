@@ -2,6 +2,7 @@
 
 namespace Zidisha\Loan;
 
+use Propel\Runtime\ActiveQuery\Criteria;
 use Zidisha\Lender\Lender;
 use Zidisha\Loan\Base\LoanQuery as BaseLoanQuery;
 
@@ -45,6 +46,36 @@ class LoanQuery extends BaseLoanQuery
     public function getRepaidAmounts(Lender $lender)
     {
 
+    }
+
+    public function getNumberOfLoansByInvitees($AcceptedInviteesIds)
+    {
+        return $this
+            ->useBidQuery()
+                ->filterByLenderId($AcceptedInviteesIds, Criteria::IN)
+                ->filterByAcceptedAmount(null, Criteria::NOT_EQUAL)
+            ->endUse()
+            ->count();
+    }
+
+    public function getNumberOfLoansByRecipients($RedeemedGiftCardsRecipientsIds)
+    {
+        return $this
+            ->useBidQuery()
+                ->filterByLenderId($RedeemedGiftCardsRecipientsIds, Criteria::IN)
+                ->filterByAcceptedAmount(null, Criteria::NOT_EQUAL)
+            ->endUse()
+            ->count();
+    }
+
+    public function getNumberOfLoansForLender(Lender $lender)
+    {
+        return $this
+            ->useBidQuery()
+                ->filterByLender($lender)
+                ->filterByAcceptedAmount(null, Criteria::NOT_EQUAL)
+            ->endUse()
+            ->count();
     }
 
 } // LoanQuery

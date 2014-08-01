@@ -127,16 +127,17 @@ My Stats
         <td>{{ $fundRaisingLoansBid->getBidAt()->format('d-m-Y') }}</td>
         <td>{{ $fundRaisingLoansBid->getBidAmount()->getAmount() }}</td>
         <td> @include('partials/loan-progress', [ 'loan' => $fundRaisingLoansBid->getLoan() ]) </td>
-        <td> //TODO </td>
+        <td>{{ $fundRaisingLoansBid->getLoan()->getFundRaisingTimeLeft() }}</td>
     </tr>
     @endforeach
-    <tr>
-        <td><strong> Total </strong></td>
-        <td>{{ $numberOfFundRaisingProjects }}</td>
-        <td>{{ $totalBidAmount->getAmount() }}</td>
-        <td></td>
-    </tr>
     </tbody>
+    <tfoot>
+        <tr>
+            <td><strong> Total </strong></td>
+            <td>{{ $numberOfFundRaisingProjects }}</td>
+            <td>{{ $totalBidAmount->getAmount() }}</td>
+        </tr>
+    </tfoot>
 </table>
 {{ BootstrapHtml::paginator($activeBids)->links() }}
 
@@ -150,9 +151,9 @@ My Stats
         <th>Project</th>
         <th>Date Funded</th>
         <th>Amount Lent (USD)</th>
-        <th>Amount Repaid (USD)</th>
-        <th>Principal Outstanding (USD)</th>
-        <th>Loan Status</th>
+        <th>Amount Repaid (USD) <a href="#" class="amount-repaid-active-loans" data-toggle="tooltip">(?)</a></th>
+        <th>Principal Outstanding (USD) <a href="#" class="principal-outstanding-active-loans" data-toggle="tooltip">(?)</a></th>
+        <th>Loan Status <a href="#" class="loan-status-active-loans" data-toggle="tooltip">(?)</a></th>
     </tr>
     </thead>
     <tbody>
@@ -167,24 +168,37 @@ My Stats
             {{ $activeLoansBid->getBorrower()->getProfile()->getCity() }},
             {{ $activeLoansBid->getBorrower()->getCountry()->getName() }}
         </td>
+        <td>
         @if($activeLoansBid->getLoan()->getStatus() == Zidisha\Loan\Loan::ACTIVE)
-            <td>{{ $activeLoansBid->getLoan()->getDisbursedAt()->format('d-m-Y') }}</td>
+            {{ $activeLoansBid->getLoan()->getDisbursedAt()->format('d-m-Y') }}
         @else
-            <td>{{ $activeLoansBid->getLoan()->getAcceptedAt()->format('d-m-Y') }}</td>
+            {{ $activeLoansBid->getLoan()->getAcceptedAt()->format('d-m-Y') }}
         @endif
+        </td>
         <td>{{ $activeLoansBid->getAcceptedAmount()->getAmount() }}</td>
-        <td>// TODO</td>
-        <td>// TODO</td>
-        <td>// TODO</td>
+        <td>{{ $activeLoansBidAmountRepaid[$activeLoansBid->getId()]->getAmount() }}</td>
+        <td>{{ $activeLoansBidPrincipleOutstanding[$activeLoansBid->getId()]->getAmount() }}</td>
+        <td>
+            @if($activeLoansBidPaymentStatus[$activeLoansBid->getId()] == 'on-time')
+                    <span class="label label-success">Repaying on Time</span>
+            @elseif($activeLoansBidPaymentStatus[$activeLoansBid->getId()] == 'late')
+                    <span class="label label-danger">Repaying Late</span>
+            @elseif($activeLoansBidPaymentStatus[$activeLoansBid->getId()] == 'early')
+                    <span class="label label-warning">Repaying Early</span>
+            @endif
+        </td>
     </tr>
     @endforeach
-    <tr>
-        <td><strong> Total </strong></td>
-        <td>{{ $numberOfActiveProjects }}</td>
-        <td>{{ $totalActiveLoansBidsAmount->getAmount() }}</td>
-        <td></td>
-    </tr>
     </tbody>
+    <tfoot>
+        <tr>
+            <td><strong> Total </strong></td>
+            <td>{{ $numberOfActiveProjects }}</td>
+            <td>{{ $totalActiveLoansBidsAmount->getAmount() }}</td>
+            <td>{{ $totalActiveLoansRepaidAmount->getAmount() }}</td>
+            <td>{{ $totalActiveLoansTotalOutstandingAmount->getAmount() }}</td>
+        </tr>
+    </tfoot>
 </table>
 {{ BootstrapHtml::paginator($activeLoansBids, 'page2')->links() }}
 
@@ -198,8 +212,8 @@ My Stats
         <th>Project</th>
         <th>Date Funded</th>
         <th>Amount Lent (USD)</th>
-        <th>Amount Repaid (USD)</th>
-        <th>Net Change in Loan Fund Value (USD)</th>
+        <th>Amount Repaid (USD)<a href="#" class="amount-repaid-completed-loans" data-toggle="tooltip">(?)</a></th>
+        <th>Net Change in Loan Fund Value (USD)<a href="#" class="net-change-completed-loans" data-toggle="tooltip">(?)</a></th>
         <th>Loan Status</th>
     </tr>
     </thead>
@@ -217,21 +231,24 @@ My Stats
         </td>
         <td>{{ $completedLoansBid->getLoan()->getDisbursedAt()->format('d-m-Y') }}</td>
         <td>{{ $completedLoansBid->getAcceptedAmount()->getAmount() }}</td>
-        <td>// TODO</td>
-        <td>// TODO</td>
+        <td>{{ $completedLoansBidAmountRepaid[$completedLoansBid->getId()]->getAmount() }}</td>
+        <td>{{ $netChangeCompletedBid[$completedLoansBid->getId()]->getAmount() }} </td>
         <td>
             100% Repaid<br>
             <a href="{{ route('loan:index', $completedLoansBid->getLoanId()) }}#feedback">Leave Feedback</a>
         </td>
     </tr>
     @endforeach
-    <tr>
-        <td><strong> Total </strong></td>
-        <td>{{ $numberOfCompletedProjects }}</td>
-        <td>{{ $totalCompletedLoansBidsAmount->getAmount() }}</td>
-        <td></td>
-    </tr>
     </tbody>
+    <tfoot>
+        <tr>
+            <td><strong> Total </strong></td>
+            <td>{{ $numberOfCompletedProjects }}</td>
+            <td>{{ $totalCompletedLoansBidsAmount->getAmount() }}</td>
+            <td>{{ $totalCompletedLoansRepaidAmount->getAmount() }}</td>
+            <td>{{ $totalNetChangeCompletedBid->getAmount() }}</td>
+        </tr>
+    </tfoot>
 </table>
 {{ BootstrapHtml::paginator($completedLoansBids, 'page3')->links() }}
 @stop
@@ -248,5 +265,20 @@ My Stats
 </script>
 <script type="text/javascript">
     $('.total-impact').tooltip({placement: 'bottom', title: 'The total amount lent by you, your invitees and your gift card recipients.'})
+</script>
+<script type="text/javascript">
+    $('.amount-repaid-active-loans').tooltip({placement: 'bottom', title: 'This is the amount that has been repaid into your lending account for this loan, including interest and adjusted for currency exchange rate fluctuations.'})
+</script>
+<script type="text/javascript">
+    $('.principal-outstanding-active-loans').tooltip({placement: 'bottom', title: 'The portion of US dollar amounts you have lent which is still outstanding with the borrowers (not yet repaid). This amount does not include any interest which is due for the loans, and its value is not adjusted for credit risk or exchange rate fluctuations.'})
+</script>
+<script type="text/javascript">
+    $('.loan-status-active-loans').tooltip({placement: 'bottom', title: 'Loans are labeled "Repaying Early" or "Repaying Late" if repayments are more than 10 days ahead or behind schedule, using a threshold of $10 or the value of one installment (whichever is greater). Otherwise, they are labeled "On Time.'})
+</script>
+<script type="text/javascript">
+    $('.amount-repaid-completed-loans').tooltip({placement: 'bottom', title: 'This is the amount that has been repaid into your lending account for this loan, including interest and adjusted for currency exchange rate fluctuations.'})
+</script>
+<script type="text/javascript">
+    $('.net-change-completed-loans').tooltip({placement: 'bottom', title: 'This is the amount by which this loan increased or decreased the total value of your loan fund. It is the difference between the amount you originally paid to fund this loan, and the total amount that was returned to your account after currency fluctuations, interest and any writeoff or forgiveness of outstanding principal.'})
 </script>
 @stop

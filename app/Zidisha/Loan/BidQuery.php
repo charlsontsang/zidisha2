@@ -93,26 +93,29 @@ class BidQuery extends BaseBidQuery
 
     public function getActiveBids(Lender $lender, $page)
     {
-        return BidQuery::create()
+        return $this
             ->filterByLender($lender)
-            ->filterByActive(true)
+            ->filterByActive(false)
+            ->useLoanQuery()
+                ->filterFundRaising()
+            ->endUse()
             ->paginate($page , 10);
     }
 
     public function getActiveLoansBids(Lender $lender, $page2)
     {
-        return BidQuery::create()
+        return $this
             ->filterByLender($lender)
             ->filterByAcceptedAmount('0', Criteria::NOT_EQUAL)
             ->useLoanQuery()
-            ->filterActive()
+                ->filterActive()
             ->endUse()
             ->paginate($page2, 2);
     }
 
     public function getTotalActiveLoansBidsAmount(Lender $lender)
     {
-        $total = BidQuery::create()
+        $total = $this
             ->filterByLender($lender)
             ->filterByAcceptedAmount('0', Criteria::NOT_EQUAL)
             ->useLoanQuery()
@@ -126,7 +129,7 @@ class BidQuery extends BaseBidQuery
 
     public function getCompletedLoansBids(Lender $lender, $page3)
     {
-        return BidQuery::create()
+        return $this
             ->filterByLender($lender)
             ->filterByAcceptedAmount('0', Criteria::NOT_EQUAL)
             ->useLoanQuery()
@@ -137,7 +140,7 @@ class BidQuery extends BaseBidQuery
 
     public function getTotalCompletedLoansBidsAmount(Lender $lender)
     {
-        $total = BidQuery::create()
+        $total = $this
             ->filterByLender($lender)
             ->filterByAcceptedAmount('0', Criteria::NOT_EQUAL)
             ->useLoanQuery()
@@ -147,5 +150,53 @@ class BidQuery extends BaseBidQuery
             ->withColumn('SUM(accepted_amount)', 'total')
             ->findOne();
         return Money::valueOf($total, Currency::valueOf('USD'));
+    }
+
+    public function getTotalOutstandingAmount(Lender $lender)
+    {
+        $total = $this
+            ->filterByActive(true)
+            ->filterByLender($lender)
+            ->useLoanQuery()
+            ->filterByStatus([Loan::FUNDED, Loan::ACTIVE])
+            ->filterNotForgivenByLender($lender)
+            ->endUse()
+            ->withColumn('SUM(accepted_amount * (100 - paid_percentage)/100)', 'total')
+            ->select('total')
+            ->findOne();
+        return Money::valueOf($total, Currency::valueOf('USD'));
+    }
+
+    public function getActiveLoansTotalOutstandingAmounts(Lender $lender, $activeLoansIds)
+    {
+        return $this
+            ->filterByActive(true)
+            ->filterByLender($lender)
+            ->useLoanQuery()
+                ->filterByStatus([Loan::FUNDED, Loan::ACTIVE])
+                ->filterNotForgivenByLender($lender)
+                ->filterById($activeLoansIds, Criteria::IN)
+            ->endUse()
+            ->select('total', 'loan_id')
+            ->withColumn('SUM(accepted_amount * (100 - paid_percentage)/100)', 'total')
+            ->withColumn('loan_id', 'loan_id')
+            ->groupByLoanId()
+            ->find();
+    }
+
+    public function getTotalActiveLoansTotalOutstandingAmount(Lender $lender)
+    {
+        $total = $this
+            ->filterByActive(true)
+            ->filterByLender($lender)
+            ->useLoanQuery()
+                ->filterByStatus([Loan::FUNDED, Loan::ACTIVE])
+                ->filterNotForgivenByLender($lender)
+            ->endUse()
+            ->select('total')
+            ->withColumn('SUM(accepted_amount * (100 - paid_percentage)/100)', 'total')
+            ->findOne();
+
+        return Money::create($total, 'USD');
     }
 } // BidQuery
