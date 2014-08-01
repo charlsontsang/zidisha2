@@ -9,6 +9,7 @@ use Zidisha\Admin\Setting;
 use Zidisha\Balance\Transaction;
 use Zidisha\Balance\TransactionQuery;
 use Zidisha\Balance\WithdrawalRequest;
+use Zidisha\Borrower\Borrower;
 use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Borrower\JoinLog;
 use Zidisha\Borrower\VolunteerMentor;
@@ -36,6 +37,8 @@ use Zidisha\Loan\Loan;
 use Zidisha\Loan\LoanQuery;
 use Zidisha\Loan\LoanService;
 use Zidisha\Lender\LenderService;
+use Zidisha\Repayment\BorrowerPayment;
+use Zidisha\Repayment\BorrowerPaymentQuery;
 use Zidisha\Repayment\InstallmentQuery;
 use Zidisha\Repayment\RepaymentService;
 use Zidisha\Currency\CurrencyService;
@@ -128,6 +131,7 @@ class GenerateModelData extends Command
             $this->call('fake', array('model' => 'LenderGroup', 'size' => 50));
             $this->call('fake', array('model' => 'LenderGroupMember', 'size' => 200));
             $this->call('fake', array('model' => 'WithdrawalRequest', 'size' => 200));
+//            $this->call('fake', array('model' => 'fakeOneBorrowerRefund', 'size' => 1));
 
             $this->call('import-translations');
 
@@ -366,6 +370,21 @@ class GenerateModelData extends Command
                     ->setRate($rate)
                     ->setStartDate($dateNow);
                 $exchangeRate->save();
+            }
+        }
+
+        if ($model == "fakeOneBorrowerRefund") {
+            $payments = BorrowerpaymentQuery::create()
+                ->findPKs(array(1,3));
+            /** @var $payment BorrowerPayment */
+            foreach ( $payments as $payment) {
+                $payment->setStatus(Borrower::PAYMENT_FAILED)->save();
+                $refund = new \Zidisha\Repayment\BorrowerRefund();
+                $refund->setAmount($payment->getAmount())
+                    ->setBorrower($payment->getBorrower())
+                    ->setLoan($payment->getBorrower()->getActiveLoan())
+                    ->setBorrowerPayment($payment);
+                $refund->save();
             }
         }
 
