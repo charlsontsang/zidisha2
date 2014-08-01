@@ -28,7 +28,7 @@
     'class'       => 'form-control',
     'placeholder' => Lang::get('borrower.login.form.username')
     ]) }}
-    <span class="fa-lg form-control form-control-feedback text-muted" style="top: 0;">@</span>
+    <span class="fa-lg form-control-feedback text-muted" style="top: 0;">@</span>
 </div>
 
 <div class="form-group has-feedback">
