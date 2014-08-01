@@ -54,6 +54,9 @@
 }
 .lend-form {
   margin: 0;
+  @media (max-width: @screen-xs-max) {
+    display: none;
+  }
 }
 .loan-side .panel-body {
   padding: 10px;
@@ -66,9 +69,6 @@
 }
 .lend-form .progress {
   margin-bottom: 8px;
-  @media (max-width: @screen-xs-min) {
-    display: none;
-  }
 }
 .lend-form .text-light {
   @media (min-width: @screen-sm-min) {
@@ -89,19 +89,8 @@
     float: left;
   }
 }
-.lend-form #days-left, .lend-form #lend-form-fields {
-  @media (max-width: @screen-xs-min) {
-    display: none;
-  }
-}
-
 .lend-form .form-group {
   margin: 20px 0 8px 0;
-}
-.lend-form br {
-  @media (max-width: @screen-xs-max) {
-    display: none;
-  }
 }
 .media .loan-section-title {
   display: none;
@@ -110,10 +99,19 @@
     padding-top: 50px;
     }
 }
-
-#follow-link {
-  display: none;
+#mobile-lend-button {
+  opacity: 0.9;
+  @media (min-width: @screen-sm-min) {
+    display: none;
+  }
+}
+#follow-button {
   @media (max-width: @screen-xs-max) {
-    display: inline-block;
+    display: none;
+  }
+}
+#follow-link {
+  @media (min-width: @screen-sm-min) {
+    display: none;
   }
 }

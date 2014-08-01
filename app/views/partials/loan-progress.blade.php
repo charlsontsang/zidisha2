@@ -6,17 +6,17 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-xs-6 col-sm-4 text-center gutter-sm">
+        <div class="col-xs-4 text-center gutter-xs">
             <span class="text-large">{{ $loan->getRaisedPercentage() }}%&nbsp;</span>
             <br/>
             <span class="text-light">Funded</span>
         </div>
-        <div class="col-xs-6 col-sm-4 text-center gutter-xs">
+        <div class="col-xs-4 text-center gutter-xs">
             <span class="text-large">${{ $loan->getStillNeededUsdAmount()->getAmount() }}&nbsp;</span>
             <br/>
             <span class="text-light">Still Needed</span>
         </div>
-        <div id="days-left" class="col-xs-5 col-sm-4 text-center gutter-xs">
+        <div class="col-xs-4 text-center gutter-xs">
             <span class="text-large">{{ $loan->getDaysLeft() }}</span>
             <br/>
             <span class="text-light">Days Left</span>

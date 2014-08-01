@@ -426,6 +426,10 @@
         @endif
 
         @if($loan->isOpen())
+
+        <!-- TO DO: this button should open the lend form full screen on a mobile device -->
+        <button id="mobile-lend-button" type="button" class="btn btn-primary btn-block">Lend</button>
+
         <div class="panel panel-default lend-form">
             <div class="panel-body">
                 @include('partials/loan-progress', [ 'loan' => $loan ])
@@ -541,7 +545,7 @@
         </div>
         @endif
         
-        <div class="panel-body follow">
+        <div id="follow-button" class="panel-body">
             <button type="button" class="btn btn-default btn-block followBorrower" data-toggle="tooltip">
                 <i class="fa fa-fw fa-star-o"></i>
                 @lang('lender.follow.title', ['name' => $borrower->getFirstName()])
