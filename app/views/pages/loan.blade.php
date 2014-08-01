@@ -410,11 +410,11 @@
                     //TODO check installment period
                 </p>
 
-                <p><b>Total Interest Due to Lenders: </b> <a href="#" class="totalInterest" data-toggle="tooltip">(?)</a>USD
-                    {{ $totalInterest }} ({{ $loan->getInterestRate() }}%)</p>
+                <p><b>Total Interest Due to Lenders: </b> <a href="#" class="totalInterest" data-toggle="tooltip">(?)</a> 
+                    ${{ $totalInterest }} ({{ $loan->getInterestRate() }}%)</p>
 
-                <p><b>Borrower Transaction Fees: </b> <a href="#" class="transactionFee" data-toggle="tooltip">(?)</a>USD
-                                        {{ $serviceFee->getAmount() }} (5.00%)</p>
+                <p><b>Borrower Transaction Fees: </b> <a href="#" class="transactionFee" data-toggle="tooltip">(?)</a> 
+                    ${{ $serviceFee->getAmount() }} (5.00%)</p>
 
                 <p><b>Total Amount (Including Interest and Transaction Fee) to be Repaid: </b> 
                     <a href="#" class="repaidAmount"
@@ -592,7 +592,7 @@
 
         'All interest rates displayed on the Zidisha website are expressed as flat percentages of loan principal per year the ' +
         'loan is held. For example, for a loan of $100, taken at 4% annual interest with a repayment period of six months, ' +
-        'the total interest amount will be USD 100 * 4% * (6 months / 12 months) = $2.' +
+        'the total interest amount will be $100 * 4% * (6 months / 12 months) = $2.' +
 
         'The expression of interest rates as flat percentages of loan principal amounts is intended to make calculation of ' +
         'interest amounts more intuitive for borrowers and for lenders, and to facilitate comparison with other microfinance ' +
