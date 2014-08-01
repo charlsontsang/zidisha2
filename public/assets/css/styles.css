@@ -8207,8 +8207,14 @@ a.link-dark {
 .loan-body .nav-tabs {
   margin-bottom: 22px;
 }
+.lend-details .table tr:first-child td {
+  border-top: 0;
+}
 .lend-details .table .form-group {
-  margin-bottom: 0px;
+  margin: 0;
+}
+.lend-details .table .form-control {
+  width: 70%;
 }
 .lend-details .table tbody > tr > td {
   vertical-align: middle;

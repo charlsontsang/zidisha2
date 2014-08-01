@@ -415,45 +415,47 @@
 
         <div class="panel panel-default lend-form">
             <div class="panel-body">
-                @include('partials/loan-progress', [ 'loan' => $loan ])
-                
-                {{ BootstrapForm::open(array('route' => ['loan:place-bid', $loan->getId()], 'translationDomain' => 'bid', 'id' => 'funds-upload')) }}
-                {{ BootstrapForm::populate($placeBidForm) }}
+                <div id="lend-form-initial">
+                    @include('partials/loan-progress', [ 'loan' => $loan ])
+                    
+                    {{ BootstrapForm::open(array('route' => ['loan:place-bid', $loan->getId()], 'translationDomain' => 'bid', 'id' => 'funds-upload')) }}
+                    {{ BootstrapForm::populate($placeBidForm) }}
 
-                @if (!\Auth::check() || \Auth::user()->isLender())
+                    @if (!\Auth::check() || \Auth::user()->isLender())
 
-                <div id="lend-form-fields" class="row">
-                    <div class="col-xs-6" style="padding-right: 5px">
-                        {{ BootstrapForm::text('amount', Request::query('amount'), [
-                            'id' => 'amount',
-                            'label' => false,
-                            'prepend' => '$'
-                        ]) }}
-                        <div class="text-center text-light">
-                            Loan Amount
+                    <div id="lend-form-fields" class="row">
+                        <div class="col-xs-6" style="padding-right: 5px">
+                            {{ BootstrapForm::text('amount', Request::query('amount'), [
+                                'id' => 'amount',
+                                'label' => false,
+                                'prepend' => '$'
+                            ]) }}
+                            <div class="text-center text-light">
+                                Loan Amount
+                            </div>
+                        </div>
+                        <div class="col-xs-6" style="padding-left: 5px">
+                            {{ BootstrapForm::select('interestRate', $placeBidForm->getRates(), Request::query('interestRate'), [
+                                'label' => false
+                            ]) }}
+                            <div class="text-center text-light">
+                                Interest
+                            </div>
                         </div>
                     </div>
-                    <div class="col-xs-6" style="padding-left: 5px">
-                        {{ BootstrapForm::select('interestRate', $placeBidForm->getRates(), Request::query('interestRate'), [
-                            'label' => false
-                        ]) }}
-                        <div class="text-center text-light">
-                            Interest
-                        </div>
-                    </div>
-                </div>
-                <br/>
-                @endif
-                
-                @if (!Request::query('amount'))
-                    @if (\Auth::check())
-                        @if (\Auth::user()->isLender())
-                            <button id="lend-action" type="button" class="btn btn-primary btn-block">Lend</button>
-                        @endif
-                    @else
-                        <a href="{{ route('lender:join') }}" id="join-lend" class="btn btn-primary btn-block" data-toggle="modal" data-target="#join-modal">Lend</a>
+                    <br/>
                     @endif
-                @endif
+                    
+                    @if (!Request::query('amount'))
+                        @if (\Auth::check())
+                            @if (\Auth::user()->isLender())
+                                <button id="lend-action" type="button" class="btn btn-primary btn-block">Lend</button>
+                            @endif
+                        @else
+                            <a href="{{ route('lender:join') }}" id="join-lend" class="btn btn-primary btn-block" data-toggle="modal" data-target="#join-modal">Lend</a>
+                        @endif
+                    @endif
+                </div> <!-- /lend-form-initial -->
                 
                 <div id="lend-details" class="lend-details" {{ Request::query('amount') ? '' : 'style="display:none;"' }}>
                     {{ BootstrapForm::hidden('creditAmount', null, ['id' => 'credit-amount']) }}
@@ -478,6 +480,10 @@
                             </tr>
                             @endif
                             <tr>
+                                <td>Loan for {{ $loan->getBorrower()->getFirstName() }}</td>
+                                <td>$30.00</td> <!-- TO DO: make amount display dynamic -->
+                            </tr>
+                            <tr>
                                 <td>
                                     Credit card fee
                                     <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="bottom" title="Covers credit card charges"></i>
@@ -490,11 +496,10 @@
                                     <i class="fa fa-question-circle" data-toggle="tooltip" data-placement="bottom" title="Helps with our operating costs"></i>
                                 </td>
                                 <td style="width: 100px;">
-                                    {{ BootstrapForm::text('donationAmount', null, [
-                                        'id'      => 'donation-amount',
-                                        'label'   => false,
-                                        'prepend' => '$',
-                                    ]) }}
+                                        {{ BootstrapForm::text('donationAmount', null, [
+                                            'id'      => 'donation-amount',
+                                            'label'   => false,
+                                        ]) }}
                                 </td>
                             </tr>
                             <tr>
@@ -622,7 +627,7 @@
         $('.fa-question-circle').tooltip();
         $('#lend-action').on('click', function() {
             $('#lend-details').show();
-            $(this).hide();
+            $('#lend-form-initial').hide();
             return false;
         });
         $('#join-lend').on('click', function() {
