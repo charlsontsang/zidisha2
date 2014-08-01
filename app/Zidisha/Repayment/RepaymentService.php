@@ -41,7 +41,7 @@ class RepaymentService
         $borrowerPayment->setCountryCode($data['country_code']);
         $borrowerPayment->setReceipt($data['receipt']);
         $borrowerPayment->setDate($data['date']);
-        $borrowerPayment->setAmount($data['amount']);
+        $borrowerPayment->setAmount(Money::create($data['amount']), 'USD');
         $borrowerPayment->setStatus($data['status']);
         $borrowerPayment->setPhone($data['phone']);
         $borrowerPayment->setDetails($data['details']);
@@ -342,5 +342,37 @@ class RepaymentService
             $repaymentSchedule[] = new RepaymentScheduleInstallment($installment, $payments);
         }
         return new RepaymentSchedule($loan, $repaymentSchedule);
+    }
+
+    public function getBorrowerRepayments($status)
+    {
+        return BorrowerPaymentQuery::create()
+            ->filterByStatus($status)
+            ->find();
+    }
+
+    public function getNumberOfPayments()
+    {
+        $payments['complete'] = BorrowerPaymentQuery::create()
+            ->filterByStatus(Borrower::PAYMENT_COMPLETE)
+            ->count();
+        $payments['incomplete'] = BorrowerPaymentQuery::create()
+            ->filterByStatus(Borrower::PAYMENT_INCOMPLETE)
+            ->count();
+        $payments['failed'] = BorrowerPaymentQuery::create()
+            ->filterByStatus(Borrower::PAYMENT_FAILED)
+            ->count();
+        $payments['refunds'] = BorrowerRefundQuery::create()
+            ->filterByRefunded(false)
+            ->count();
+
+        return $payments;
+    }
+
+    public function getBorrowerRefunds($refunded= false)
+    {
+        return BorrowerRefundQuery::create()
+            ->filterByRefunded($refunded)
+            ->find();
     }
 }
