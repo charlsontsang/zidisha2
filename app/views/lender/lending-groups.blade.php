@@ -35,9 +35,9 @@ Lending Groups
                 <img src="{{ $group->getGroupProfilePicture()->getImageUrl('small-profile-picture') }}" alt=""/>
             @endif
         </td>
-        <td></td>
-        <td></td>
-        <td></td>
+        <td>{{ $groupsImpacts[$group->getId()]['totalImpactThisMonth'] }}</td>
+        <td>{{ $groupsImpacts[$group->getId()]['totalImpactLastMonth'] }}</td>
+        <td>{{ $groupsImpacts[$group->getId()]['totalImpact'] }}</td>
         <td>{{ $group->getAbout() }}</td>
         <td><a href="{{ route('lender:group', $group->getId()) }}">View Profile</a></td>
     </tr>

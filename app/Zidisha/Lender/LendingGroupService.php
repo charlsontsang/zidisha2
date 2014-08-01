@@ -3,11 +3,18 @@
 namespace Zidisha\Lender;
 
 
+use Zidisha\Balance\TransactionQuery;
 use Zidisha\Upload\Upload;
 use Zidisha\User\UserQuery;
 
 class LendingGroupService
 {
+    private $lenderService;
+
+    public function __construct(LenderService $lenderService)
+    {
+        $this->lenderService = $lenderService;
+    }
 
     public function addLendingGroup(Lender $creator, $data, $image)
     {
@@ -87,6 +94,34 @@ class LendingGroupService
             $member->save();
             return true;
         }
+    }
+
+    public function getGroupImpacts($groupId)
+    {
+        $groupMembersIds = LendingGroupMemberQuery::create()
+            ->filterByGroupId($groupId)
+            ->select('member_id')
+            ->find();
+
+        $totalMembersLentAmount = TransactionQuery::create()
+            ->getTotalGroupMembersLentAmount($groupMembersIds);
+        $groupMembersImpact = $this->lenderService->getGroupMembersTotalImpact($groupMembersIds);
+
+        $groupImpacts['totalImpact'] = $groupMembersImpact->add($totalMembersLentAmount);
+
+        $totalMembersLentAmountThisMonth = TransactionQuery::create()
+            ->getTotalGroupMembersLentAmountThisMonth($groupMembersIds);
+        $groupMembersImpactThisMonth = $this->lenderService->getGroupMembersTotalImpactThisMonth($groupMembersIds);
+
+        $groupImpacts['totalImpactThisMonth'] = $groupMembersImpactThisMonth->add($totalMembersLentAmountThisMonth);
+
+        $totalMembersLentAmountLastMonth = TransactionQuery::create()
+            ->getTotalGroupMembersLentAmountLastMonth($groupMembersIds);
+        $groupMembersImpactLastMonth = $this->lenderService->getGroupMembersTotalImpactLastMonth($groupMembersIds);
+
+        $groupImpacts['totalImpactLastMonth'] = $groupMembersImpactLastMonth->add($totalMembersLentAmountLastMonth);
+
+        return $groupImpacts;
     }
 
 }

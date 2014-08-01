@@ -101,6 +101,47 @@ class TransactionQuery extends BaseTransactionQuery
         return Money::create($total, 'USD')->multiply(-1);
     }
 
+    public function getTotalGroupMembersLentAmount($userIds)
+    {
+        $total = $this
+            ->filterByType([Transaction::LOAN_BID, Transaction::LOAN_OUTBID], Criteria::IN)
+            ->filterByUserId($userIds , Criteria::IN)
+            ->select(array('total'))
+            ->withColumn('SUM(amount)', 'total')
+            ->findOne();
+
+        return Money::create($total, 'USD')->multiply(-1);
+    }
+
+    public function getTotalGroupMembersLentAmountThisMonth($userIds)
+    {
+        $startDate = date('01-m-Y'); // day one of the current month
+        $total = $this
+            ->filterByType([Transaction::LOAN_BID, Transaction::LOAN_OUTBID], Criteria::IN)
+            ->filterByUserId($userIds , Criteria::IN)
+            ->filterByTransactionDate($startDate, Criteria::GREATER_EQUAL)
+            ->select(array('total'))
+            ->withColumn('SUM(amount)', 'total')
+            ->findOne();
+
+        return Money::create($total, 'USD')->multiply(-1);
+    }
+
+    public function getTotalGroupMembersLentAmountLastMonth($userIds)
+    {
+        $startDate = date("Y-m-d", mktime(0, 0, 0, date("m")-1, 1, date("Y"))); // day one of the last month
+        $endDate = date('01-m-Y'); // day one of the current month
+        $total = $this
+            ->filterByType([Transaction::LOAN_BID, Transaction::LOAN_OUTBID], Criteria::IN)
+            ->filterByUserId($userIds, Criteria::IN)
+            ->where('transactions.transaction_date BETWEEN ? AND ?', array($startDate, $endDate))
+            ->select(array('total'))
+            ->withColumn('SUM(amount)', 'total')
+            ->findOne();
+
+        return Money::create($total, 'USD')->multiply(-1);
+    }
+
     public function getPrincipalOutstanding($userId)
     {
         $total = $this

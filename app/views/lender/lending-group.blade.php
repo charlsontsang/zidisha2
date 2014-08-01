@@ -12,6 +12,18 @@ Lending Groups
         <div class="row">
             <div class="col-xs-5">
                 About Group:
+                <p>
+                    Total Impact All Time:
+                    {{ $groupImpacts['totalImpact'] }}
+                </p>
+                <p>
+                    Total Impact This Month:
+                    {{ $groupImpacts['totalImpactThisMonth'] }}
+                </p>
+                <p>
+                    Total Impact Last Month:
+                    {{ $groupImpacts['totalImpactLastMonth'] }}
+                </p>
             </div>
             <div class="col-xs-7">
                 <p>{{ $group->getAbout() }}</p>
