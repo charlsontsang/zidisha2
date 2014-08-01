@@ -8265,6 +8265,37 @@ a.link-dark {
     float: right;
   }
 }
+.lender-thumbnail img {
+  width: 90px;
+  height: 90px;
+  border-radius: 45px;
+  display: block;
+  margin: 0 auto 0 auto;
+}
+@media (min-width: 992px) {
+  .lender-thumbnail img {
+    width: 102px;
+    height: 102px;
+    border-radius: 51px;
+  }
+}
+.lender-thumbnail h3,
+.lender-thumbnail p {
+  text-align: center;
+}
+.lender-thumbnail h3 {
+  margin-top: 5px;
+  margin-bottom: 0;
+}
+@media (max-width: 991px) {
+  .lender-thumbnail h3 {
+    font-size: 18px;
+  }
+}
+.lender-thumbnail p {
+  margin-top: 0;
+  margin-bottom: 2em;
+}
 .loan-side {
   padding: 0;
 }

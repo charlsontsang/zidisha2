@@ -255,50 +255,79 @@
 
                 @endif
 
-
                 <div class="loan-section">
                     <div class="loan-section-title">
                         <span class="text-light">Lenders</span>
                     </div>
-                </div>
-
-                    
-                @foreach($bids as $bid)
-                    <div class="loan-section">
-                        <div class="media">
-                            <div class="loan-section-title">
-                                @if($bid->getLender()->getUser()->getProfilePictureUrl())
-                                    <a class="pull-left" href="{{ $bid->getLender()->getUser()->getProfileUrl() }}">
-                                        <img class="media-object" width="90px" height="90px" src="{{ $bid->getLender()->getUser()->getProfilePictureUrl() }}" alt="">
+                    <div class="loan-section-content">
+                        <div class="row">
+                            @foreach($bids as $bid)
+                                <div class="col-xs-4 col-sm-3 lender-thumbnail"
+                                    <a href="{{ $bid->getLender()->getUser()->getProfileUrl() }}">
+                                        @if($bid->getLender()->getUser()->getProfilePictureUrl())
+                                            <img src="{{ $bid->getLender()->getUser()->getProfilePictureUrl() }}" alt="">
+                                        @else
+                                            <img src="{{ asset('/assets/images/default.jpg') }}" alt="">
+                                        @endif
                                     </a>
-                                @else
-                                <a class="pull-left">
-                                    <img class="media-object" width="90px" height="90px" src="{{ asset('/assets/images/default.jpg') }}" alt="">
-                                </a>
-                                @endif
-                            </div>
-
-                            <div class="media-body loan-section-content">
-
-                                <hr/>
-                                
-                                <h4 class="media-heading">
-                                    <a href="{{ route('lender:public-profile', $bid->getLender()->getUser()->getUserName()) }}">{{
-                                    $bid->getLender()->getUser()->getUserName() }}</a>
-                                </h4>
-                                <p>
-                                    City, Country
-                                </p>
-                                <p>
-                                    <a href="#">Lending Group affiliation</a>
-                                </p>
-                                <p>
-                                    Profile "about me" text goes here
-                                </p>
-                            </div>
+                                    <h3 class="lender-thumbnail">
+                                        <a href="{{ route('lender:public-profile', $bid->getLender()->getUser()->getUserName()) }}">{{
+                                        $bid->getLender()->getUser()->getUserName() }}</a>
+                                    </h3>
+                                    <p>
+                                        City, Country <!-- TO DO: if no city, display country only -->
+                                    </p>
+                                </div> 
+                                                                <div class="col-xs-4 col-sm-3 lender-thumbnail"
+                                    <a href="{{ $bid->getLender()->getUser()->getProfileUrl() }}">
+                                        @if($bid->getLender()->getUser()->getProfilePictureUrl())
+                                            <img src="{{ $bid->getLender()->getUser()->getProfilePictureUrl() }}" alt="">
+                                        @else
+                                            <img src="{{ asset('/assets/images/default.jpg') }}" alt="">
+                                        @endif
+                                    </a>
+                                    <h3 class="lender-thumbnail">
+                                        <a href="{{ route('lender:public-profile', $bid->getLender()->getUser()->getUserName()) }}">{{
+                                        $bid->getLender()->getUser()->getUserName() }}</a>
+                                    </h3>
+                                    <p>
+                                        City, Country <!-- TO DO: if no city, display country only -->
+                                    </p>
+                                </div>                                 <div class="col-xs-4 col-sm-3 lender-thumbnail"
+                                    <a href="{{ $bid->getLender()->getUser()->getProfileUrl() }}">
+                                        @if($bid->getLender()->getUser()->getProfilePictureUrl())
+                                            <img src="{{ $bid->getLender()->getUser()->getProfilePictureUrl() }}" alt="">
+                                        @else
+                                            <img src="{{ asset('/assets/images/default.jpg') }}" alt="">
+                                        @endif
+                                    </a>
+                                    <h3 class="lender-thumbnail">
+                                        <a href="{{ route('lender:public-profile', $bid->getLender()->getUser()->getUserName()) }}">{{
+                                        $bid->getLender()->getUser()->getUserName() }}</a>
+                                    </h3>
+                                    <p>
+                                        City, Country <!-- TO DO: if no city, display country only -->
+                                    </p>
+                                </div>                                 <div class="col-xs-4 col-sm-3 lender-thumbnail"
+                                    <a href="{{ $bid->getLender()->getUser()->getProfileUrl() }}">
+                                        @if($bid->getLender()->getUser()->getProfilePictureUrl())
+                                            <img src="{{ $bid->getLender()->getUser()->getProfilePictureUrl() }}" alt="">
+                                        @else
+                                            <img src="{{ asset('/assets/images/default.jpg') }}" alt="">
+                                        @endif
+                                    </a>
+                                    <h3 class="lender-thumbnail">
+                                        <a href="{{ route('lender:public-profile', $bid->getLender()->getUser()->getUserName()) }}">{{
+                                        $bid->getLender()->getUser()->getUserName() }}</a>
+                                    </h3>
+                                    <p>
+                                        City, Country <!-- TO DO: if no city, display country only -->
+                                    </p>
+                                </div> 
+                            @endforeach
                         </div>
-                    </div> 
-                @endforeach
+                    </div>
+                </div>
 
                 @if(Auth::check() && Auth::getUser()->isAdmin())
                 <br><br>
