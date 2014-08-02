@@ -60,5 +60,4 @@
 
 <input class="btn btn-primary btn-block" type="submit" value="Log in"/>
 {{ Form::close() }}
-<hr/>
-@lang('borrower.login.not-a-member') <a href="{{ route('join') }}">@lang('borrower.login.join')</a>
+@lang('borrower.login.not-a-member')  <strong><a href="{{ route('join') }}">@lang('borrower.login.join')</a></strong>
