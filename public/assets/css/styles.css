@@ -8070,6 +8070,12 @@ hr {
   padding-top: 11px;
   padding-bottom: 17px;
 }
+@media (max-width: 767px) {
+  .nav > li,
+  .nav > li > a {
+    display: inline-block;
+  }
+}
 .footer {
   margin-bottom: 0;
   padding-bottom: 0;

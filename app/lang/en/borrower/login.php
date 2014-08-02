@@ -8,7 +8,7 @@ return [
         'password'    => 'Password',
         'remember-me' => 'Remember me',
         'submit'      => 'Log in',
-        'forget-password' => 'Forgot your password?'
+        'forget-password' => 'Forgot password?'
     ],
     'not-a-member' => 'Not a member?',
     'join' => 'Join',
