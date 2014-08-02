@@ -6,16 +6,13 @@ My Stats
 
 @section('content')
 <div class="page-header">
-    <h2>My Stats</h2>
-</div><br>
-
-<div class="div-header">
-    <h2>My Lending Account</h2>
+    <h2>My Loans</h2>
 </div><br>
 
 <div class="row">
     <div class="col-xs-4">
         <p>Total Funds Uploaded: <a href="#" class="funds-upload" data-toggle="tooltip">(?)</a>  </p>
+        <p>Total Amount Lent:</p>
         <p>Number of Loans Made:  </p>
         <p>Current Credit Available: <a href="#" class="credit-available" data-toggle="tooltip">(?)</a>  </p>
         <p>New Member Invite Credit: </p>
@@ -24,83 +21,16 @@ My Stats
 
     <div class="col-xs-8">
         <p>{{ $totalFundsUpload }}</p>
+        <p>{{ $totalLentAmount }}</p>
         <p>{{ $numberOfLoans }}</p>
-        <p>
-            {{ $currentBalance }}
-            <a href="{{ route('lend:index') }}" class="btn btn-primary">
-                Make A Loan
-            </a>
-        </p>
+        <p>{{ $currentBalance }}</p>
         <p>{{ $newMemberInviteCredit }}</p>
         <p>{{ $principleOutstanding }}</p>
     </div>
 </div>
 
-<div class="div-header">
-    <h2>My Network</h2>
-</div><br>
-
-<div class="row">
-    <div class="col-xs-4">
-        <p>My Lending Groups:  </p><br>
-        <p>Number of Invites Sent: </p><br>
-        <p>Number of Invites Accepted: </p>
-        <p>Number of Loans Made By My Invitees: </p>
-        <p>Number of Gift Cards Gifted: </p>
-        <p>Number of Gift Cards Redeemed by My Recipients: </p>
-        <p>Number of Loans Made By My Gift Card Recipients: </p>
-    </div>
-
-    <div class="col-xs-8">
-        <p>
-            @foreach($lendingGroups as $lendingGroup)
-                <a href="{{ route('lender:group', $lendingGroup->getId()) }}">{{ $lendingGroup->getName() }}</a>
-            @endforeach
-            <a href="{{ route('lender:groups') }}" class="btn btn-primary">
-                Join A Group
-            </a>
-        </p>
-        <p>
-            {{ $numberOfInvitesSent }}
-            <a href="{{ route('lender:invite') }}" class="btn btn-primary">
-                Send An Invite
-            </a>
-        </p>
-        <p>{{ $numberOfInvitesAccepted }}</p>
-        <p>{{ $numberOfLoansByInvitees }}</p>
-        <p>
-            {{ $numberOfGiftedGiftCards }}
-            <a href="{{ route('lender:gift-cards') }}" class="btn btn-primary">
-                Give A Gift Card
-            </a>
-        </p>
-        <p>{{ $numberOfRedeemedGiftCards }}</p>
-        <p>{{ $numberOfLoansByRecipients }}</p>
-    </div>
-</div>
-
-<div class="div-header">
-    <h2>My Impact</h2>
-</div><br>
-
-<div class="row">
-    <div class="col-xs-4">
-        <p>Amount Lent By Me:  </p>
-        <p>Amount Lent By My Invitees: </p>
-        <p>Amount Lent By My Gift Card Recipients: </p>
-        <p>Total Impact: <a href="#" class="total-impact" data-toggle="tooltip">(?)</a> </p>
-    </div>
-
-    <div class="col-xs-8">
-        <p>{{ $totalLentAmount }}</p>
-        <p> {{ $totalLentAmountByInvitees }} </p>
-        <p>{{ $totalLentAmountByRecipients }}</p>
-        <p>{{ $totalImpact }}</p>
-    </div>
-</div>
-
 <div class="page-header">
-    <h3><strong>FundRaising Loans</strong></h3>
+    <h3><strong>Fundraising Loans</strong></h3>
 </div>
 <table class="table table-striped">
     <thead>
