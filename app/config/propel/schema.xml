@@ -970,7 +970,7 @@
             <reference local="lender_id" foreign="id"/>
         </foreign-key>
     </table>
-
+    
     <table name="borrower_invites" phpName="Invite" namespace="Borrower">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="borrower_id" type="INTEGER" required="true"/>
@@ -987,7 +987,7 @@
             <reference local="invitee_id" foreign="id"/>
         </foreign-key>
     </table>
-
+    
     <table name="credit_settings" phpName="CreditSetting" namespace="Credit">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="country_code" type="VARCHAR" size="2" required="true"/>
@@ -1014,7 +1014,34 @@
         </foreign-key>
         <foreign-key foreignTable="loans">
             <reference local="loan_id" foreign="id"/>
->>>>>>> Stashed changes
+        </foreign-key>
+    </table>
+    
+    <table name="scheduled_jobs" phpName="ScheduledJobs" namespace="ScheduledJob">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="user_id" type="INTEGER" required="true"/>
+        <column name="type" type="ENUM" valueSet="abandonedUser" required="true"/>
+        <column name="last_processed_at" type="TIMESTAMP"/>
+        <column name="process_date" type="TIMESTAMP"/>
+        <column name="start_date" type="TIMESTAMP"/>
+        <column name="count" type="INTEGER" required="true" default="0"/>
+        <behavior name="timestampable"/>
+        <column name="class_key" type="INTEGER" inheritance="single">
+            <inheritance key="1" class="AbandonedUser"/>
+        </column>
+        <foreign-key foreignTable="users">
+            <reference local="user_id" foreign="id"/>
+        </foreign-key>
+    </table>
+
+    <table name="scheduled_jobs_logs" phpName="ScheduledJobsLogs" namespace="ScheduledJob">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="scheduled_jobs_id" type="INTEGER" required="true"/>
+        <column name="processed_at" type="TIMESTAMP" required="false"/>
+        <column name="count" type="INTEGER" required="true"/>
+        <behavior name="timestampable"/>
+        <foreign-key foreignTable="scheduled_jobs">
+            <reference local="scheduled_jobs_id" foreign="id"/>
         </foreign-key>
     </table>
 </database>
