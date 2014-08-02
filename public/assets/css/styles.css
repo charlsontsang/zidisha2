@@ -8025,16 +8025,6 @@ hr {
 .info-page {
   padding-bottom: 100px;
 }
-<<<<<<< HEAD
-=======
-.table > tbody > tr {
-  border-bottom: 1px solid #dddddd !important;
-}
-.fa-info-circle {
-  color: #adadad;
-  margin-left: 2px;
-}
->>>>>>> c754c3f6043723ffe197dd0a612863998fcf466b
 .form-control-feedback {
   top: 10px !important;
 }
