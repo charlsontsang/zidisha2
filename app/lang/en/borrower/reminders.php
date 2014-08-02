@@ -14,9 +14,11 @@ return array(
 	*/
 
     "password"             => "Passwords must be at least six characters and match the confirmation.",
-    "user"                 => "We can't find a user with that e-mail address.",
+    "user"                 => "We can't find a user with that email address.",
     "token"                => "This password reset token is invalid.",
-    "sent"                 => "We have sent a new password to your registered email address.",
-    'username-or-password' => 'Please enter your email or username.',
+    "sent"                 => "We have sent password reset instructions to the email address registered with your Zidisha account.",
+    'intro' 			   => 'No worries!  We\'ll help you access your account right away.',
+    'username-or-password' => 'Enter your email or username',
+    'create-password' 	   => 'Create a new password',
 
 );
