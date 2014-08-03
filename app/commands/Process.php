@@ -29,13 +29,13 @@ class Process extends Command
         $jobs = DB::select($jobsQuery);
         
         foreach ($jobs as $job) {
-            dd($job);
+            
             $jobId = $job->job_id;
             $jobCount = $job->job_count;
-
-            \Queue::push('Zidisha\ScheduledJob\AbandonedUser', compact('jobsId'));
             
             $jobCount += 1;
+            
+            \Queue::push('Zidisha\ScheduledJob\ScheduledJobs', compact('jobId', 'jobCount'));
             
             $scheduleJob = ScheduledJobsQuery::create()
                 ->findOneById($jobId);
