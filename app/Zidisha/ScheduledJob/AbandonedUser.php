@@ -5,7 +5,6 @@ namespace Zidisha\ScheduledJob;
 use Carbon\Carbon;
 use DB;
 use Zidisha\Mail\LenderMailer;
-use Zidisha\ScheduledJob\Base\ScheduledJobsQuery;
 use Zidisha\ScheduledJob\Map\ScheduledJobsTableMap;
 
 /**
@@ -26,51 +25,37 @@ class AbandonedUser extends ScheduledJobs
      * @var \Zidisha\Mail\LenderMailer
      */
     private $lenderMailer;
+    /**
+     * @var ScheduledJobService
+     */
+    private $scheduledJobService;
 
     /**
      * Constructs a new AbandonedUser class, setting the class_key column to ScheduledJobsTableMap::CLASSKEY_1.
      */
-    public function __construct(LenderMailer $lenderMailer)
+    public function __construct()
     {
         parent::__construct();
         $this->setClassKey(ScheduledJobsTableMap::CLASSKEY_1);
-        $this->lenderMailer = $lenderMailer;
     }
 
     public function getQuery()
     {
         return DB::table('users AS u')
-            ->whereRaw('u.last_login_at < '.Carbon::now()->subYear())
+            ->whereRaw("u.last_login_at < '".Carbon::now()->subYear()."'")
             ->whereRaw('u.role = 0')
             ->whereRaw('u.active = true');
     }
-
-    public function fire($job, $data)
+    
+    public function process($job, $data)
     {
-        $jobsId = $data['jobsId'];
-
         $scheduleJobs = ScheduledJobsQuery::create()
-            ->findOneById($jobsId);
+            ->findOneById($data['jobId']);
 
         $user = $scheduleJobs->getUser();
-        
-        $this->lenderMailer->sendAbandonedUserMail($user);
-        
-        $job->delete();
 
-        if ($job->isDeleted()) {
-
-            $now = new \DateTime;
-
-            $scheduleJobs->setLastProcessedAt($now);
-            $scheduleJobs->save();
-
-            $scheduleJobsLogs = ScheduledJobsLogsQuery::create()
-                ->findOneByScheduledJobsId($jobsId);
-
-            $scheduleJobsLogs->setCount($scheduleJobsLogs->getCount() + 1);
-            $scheduleJobsLogs->setProcessedAt($now);
-            $scheduleJobsLogs->save();
-        }
+        /** @var  LenderMailer $lenderMailer */
+        $lenderMailer = \App::make('Zidisha\Mail\LenderMailer');
+        $lenderMailer->sendAbandonedUserMail($user);
     }
 } // AbandonedUser
