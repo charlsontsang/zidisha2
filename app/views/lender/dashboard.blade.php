@@ -12,9 +12,9 @@ Dashboard
 <div class="row">
 	<div class="col-sm-4 pull-right">
 		<div class="well" style="text-align: center;">
-    		<img src="/assets/images/test-photos/profile1.jpg" width="100%">
+    		<img src="{{ Auth::getUser()->getProfilePictureUrl() }}" width="100%">
     		<h2>{{ Auth::getUser()->getUsername() }}</h2>
-	    	<a href="#">View profile</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">Edit profile</a>
+	    	<a href="{{ route('lender:public-profile', Auth::getUser()->getUsername()) }}">View profile</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="{{ route('lender:edit-profile') }}">Edit profile</a>
 		</div>
 	</div>
 	<div class="col-sm-8">
@@ -25,7 +25,7 @@ Dashboard
 		<div class="row">
 			<div class="col-xs-12 col-sm-6 pull-right">
 		    	<div class="text-light">
-		    		You've leveraged $XX in funds uploaded to make <strong>$XX</strong> worth of loans!
+		    		You've leveraged {{ $totalFundsUpload }} in funds uploaded to make <strong>{{ $totalLentAmount }}</strong> worth of loans!
 		    		<br/><br/>
 		    	</div>
 		    </div>
@@ -37,9 +37,9 @@ Dashboard
 		    </div>
 
 		    <div class="col-xs-6 col-sm-2">
-		        <p>$XX</p>
-		        <p>$XX</p>
-		        <p>$XX.XX</p>
+		        <p>{{ $totalFundsUpload }}</p>
+		        <p>{{ $totalLentAmount }}</p>
+		        <p>{{ $currentBalance }}</p>
 		    </div>
 
 		    <div class="col-xs-6 col-xs-offset-6 col-sm-6 col-sm-offset-0">
@@ -62,7 +62,7 @@ Dashboard
 
 		    <div class="col-xs-6 col-sm-2">
 		        <p>
-		            TO DO
+		            {{ $numberOfInvitesSent }}
 		        </p>
 		    </div>
 		    <div class="col-xs-6 col-xs-offset-6 col-sm-6 col-sm-offset-0">
@@ -79,7 +79,7 @@ Dashboard
 
 		    <div class="col-xs-6 col-sm-2">
 		        <p>
-		            TO DO
+		            {{ $numberOfGiftedGiftCards }}
 		        </p>
 		    </div>
 		    <div class="col-xs-6 col-xs-offset-6 col-sm-6 col-sm-offset-0">
@@ -96,10 +96,19 @@ Dashboard
 		        <p>Your lending groups:</p>
 		    </div>
 
+		    @if (count($lendingGroups)>0)
+		    <div class="col-xs-12 col-sm-8">
+		        <p>
+					    @foreach($lendingGroups as $lendingGroup)
+			                <a href="{{ route('lender:group', $lendingGroup->getId()) }}">{{ $lendingGroup->getName() }}</a>
+			                <br/>
+			            @endforeach
+		        </p>
+		    </div>
+		    @else
 		    <div class="col-xs-6 col-sm-2">
 		        <p>
-		            None yet!
-		            <!-- TO DO: if the lender isn't a member of any group, display none yet! and the button, otherwise hide it and display the groups -->
+					None yet!
 		        </p>
 		    </div>
 		    <div class="col-xs-6 col-xs-offset-6 col-sm-6 col-sm-offset-0">
@@ -109,6 +118,7 @@ Dashboard
 			        </a>
 			    </p>
 		    </div>
+			@endif
 		</div>
 
 		<hr/>
@@ -124,10 +134,10 @@ Dashboard
 		        <p>Lent by your gift card recipients:</p>
 		    </div>
 
-		    <div class="col-xs-6 col-sm-2">
-		        <p>$XX</p>
-		        <p><i class="fa fa-fw fa-plus"></i>$XX</p>
-		        <p><i class="fa fa-fw fa-plus"></i>$XX</p>
+		    <div class="col-xs-6 col-sm-3">
+		        <p>{{ $totalLentAmount }}</p>
+		        <p><i class="fa fa-fw fa-plus"></i>{{ $totalLentAmountByInvitees }}</p>
+		        <p><i class="fa fa-fw fa-plus"></i>{{ $totalLentAmountByRecipients }}</p>
 		    </div>
 		</div>
 
@@ -139,7 +149,7 @@ Dashboard
 		    </div>
 
 		    <div class="col-xs-6 col-sm-7">
-		        <h2>$xx</h2>
+		        <h2>{{ $totalImpact }}</h2>
 		    </div>
 		</div>
 
