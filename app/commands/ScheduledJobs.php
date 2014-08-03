@@ -26,6 +26,13 @@ class ScheduledJobs extends Command
             ->whereRaw('s.user_id = u.id');
         $query->whereRaw("s.last_processed_at IS NULL OR (s.last_processed_at + (s.count || ' months')::interval) > NOW()");
         
-        dd($query->toSql());
+//        dd($query->toSql());
+        $users = $query->get();
+        
+        foreach ($users as $user) {
+
+            var_dump($user);
+        }
+
     }
 }
