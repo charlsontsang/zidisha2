@@ -13,7 +13,7 @@ Dashboard
 	<div class="col-sm-4 pull-right">
 		<div class="well" style="text-align: center;">
     		<img src="/assets/images/test-photos/profile1.jpg" width="100%">
-    		<h2>jkurnia</h2>
+    		<h2>{{ Auth::getUser()->getUsername() }}</h2>
 	    	<a href="#">View profile</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">Edit profile</a>
 		</div>
 	</div>

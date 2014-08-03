@@ -46,7 +46,7 @@
                 @if(Auth::check() && Auth::getUser()->getRole() != 'admin')
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        My Account <b class="caret"></b>
+                        {{ Auth::getUser()->getUsername() }} <b class="caret"></b>
                     </a>
 
                     <ul class="dropdown-menu">
@@ -123,6 +123,9 @@
                     @endif
                 </li>
             </ul>
+            @if(Auth::getUser()->isLender())
+                <p class="navbar-text">Lending Credit: $XX.XX</p>
+            @endif
         </div>
     </div>
 </div>

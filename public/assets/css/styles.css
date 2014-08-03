@@ -8082,6 +8082,9 @@ hr {
     display: inline-block;
   }
 }
+.navbar-default .navbar-text {
+  color: #777777;
+}
 .footer {
   margin-bottom: 0;
   padding-bottom: 0;
