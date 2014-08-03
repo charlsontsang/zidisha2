@@ -5,52 +5,44 @@ Account Preferences
 @stop
 
 @section('content')
-<div class="page-header">
-    <h1>Account Preferences</h1>
-</div>
 <div class="row">
-    <div class="col-xs-9">
+    <div class="col-sm-8 col-sm-offset-2">
+        <div class="page-header">
+            <h1>Account Preferences</h1>
+        </div>
+        {{ BootstrapForm::open(array('route' => 'lender:post:preference', 'translationDomain' =>
+        'lender.preferences')) }}
+        {{ BootstrapForm::populate($form) }}
         <div>
             <h3>Display Preferences</h3>
             <p>I would like my loan bids and funded loans to be displayed on my public profile.</p>
+            {{ BootstrapForm::select('hideLendingActivity', $form->getBooleanArray()) }}
             <p>
                 I would like my karma score to be displayed on my public profile.
                 <a href="#" class="karmaScore" data-toggle="tooltip">(?)</a>
-            </p>
+            </p>{{ BootstrapForm::select('hideKarma', $form->getBooleanArray()) }}
         </div>
         <div>
             <h3>Notification Preferences</h3>
             <p><b>Send me an email when:</b></p>
             <p>A loan I have bid on is fully funded</p>
+            {{ BootstrapForm::select( 'notifyLoanFullyFunded', $form->getBooleanArray()) }}
             <p>A loan I have bid on has not been fully funded and is about to expire</p>
+            {{ BootstrapForm::select( 'notifyLoanAboutToExpire', $form->getBooleanArray()) }}
             <p>A loan I have bid on has expired and the funds have been returned to my account</p>
             <p>A loan I have funded is disbursed to a borrower</p>
-            <p>A borrower I have funded posts a comment</p>
-            <p>A borrower I have funded before posts a new loan application</p>
-            <p>One of my friend invites is accepted</p>
-            <p>I would like to be notified about repayments:</p>
-        </div>
-    </div>
-
-    <div class="col-xs-3">
-        <div>
-            {{ BootstrapForm::open(array('route' => 'lender:post:preference', 'translationDomain' =>
-            'lender.preferences')) }}
-            {{ BootstrapForm::populate($form) }}
-            {{ BootstrapForm::select('hideLendingActivity', $form->getBooleanArray()) }}
-            {{ BootstrapForm::select('hideKarma', $form->getBooleanArray()) }}
-            {{ BootstrapForm::select( 'notifyLoanFullyFunded', $form->getBooleanArray()) }}
-            {{ BootstrapForm::select( 'notifyLoanAboutToExpire', $form->getBooleanArray()) }}
             {{ BootstrapForm::select( 'notifyLoanDisbursed', $form->getBooleanArray()) }}
+            <p>A borrower I have funded posts a comment</p>
             {{ BootstrapForm::select( 'notifyComment', $form->getBooleanArray()) }}
+            <p>A borrower I have funded before posts a new loan application</p>
             {{ BootstrapForm::select( 'notifyLoanApplication', $form->getBooleanArray()) }}
+            <p>One of my friend invites is accepted</p>
             {{ BootstrapForm::select( 'notifyInviteAccepted', $form->getBooleanArray()) }}
+            <p>I would like to be notified about repayments:</p>
             {{ BootstrapForm::select( 'notifyLoanRepayment', $form->getNotifyLoanRepayment()) }}
-
-            {{ BootstrapForm::submit('save') }}
-
-            {{ BootstrapForm::close() }}
         </div>
+        {{ BootstrapForm::submit('save') }}
+        {{ BootstrapForm::close() }}
     </div>
 </div>
 @stop
