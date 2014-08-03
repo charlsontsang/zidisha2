@@ -77,6 +77,7 @@ My Stats
 </div>
 
 @if (count($activeBids)>0)
+
 <div class="page-header">
     <h3><strong>Fundraising Loans</strong></h3>
 </div>
