@@ -351,7 +351,7 @@ class LenderService
     {
         $totalImpact = $this->getMyImpact($lender)->getAmount();
         $totalComments = $this->getUserCommentCount($lender);
-        $karma = ($totalImpact / 10) + $totalComments;
+        $karma = number_format(($totalImpact / 10) + $totalComments);
         return $karma;
     }
 

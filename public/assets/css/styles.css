@@ -7914,17 +7914,28 @@ a.inverted:hover {
 hr {
   border-top: 1px solid #f2f2f2;
 }
-.footer {
+.footer,
+.lender-profile {
   margin-top: 15px;
 }
 @media (min-width: 768px) {
-  .footer {
+  .footer,
+  .lender-profile {
     margin-top: 30px;
   }
 }
 @media (min-width: 992px) {
-  .footer {
+  .footer,
+  .lender-profile {
     margin-top: 50px;
+  }
+}
+.lender-profile h2 {
+  margin-top: 15px;
+}
+@media (min-width: 768px) {
+  .lender-profile h2 {
+    margin-top: 0;
   }
 }
 .page-section {
