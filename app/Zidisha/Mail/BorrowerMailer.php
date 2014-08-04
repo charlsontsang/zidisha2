@@ -8,6 +8,7 @@ use Zidisha\Borrower\Invite;
 use Zidisha\Comment\Comment;
 use Zidisha\Loan\Loan;
 use Zidisha\Loan\RefundLender;
+use Zidisha\User\User;
 
 class BorrowerMailer{
 
@@ -155,5 +156,10 @@ class BorrowerMailer{
     {
         $email = $borrowerInvite->getEmail();
         //TODO send invite email
+    }
+    
+    public function sendLoanFirstArrear(User $user)
+    {
+        
     }
 }
