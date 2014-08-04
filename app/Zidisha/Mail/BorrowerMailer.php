@@ -7,6 +7,7 @@ use Zidisha\Borrower\FeedbackMessage;
 use Zidisha\Comment\Comment;
 use Zidisha\Loan\Loan;
 use Zidisha\Loan\RefundLender;
+use Zidisha\User\User;
 
 class BorrowerMailer{
 
@@ -148,5 +149,10 @@ class BorrowerMailer{
                 'templateId' => \Setting::get('sendwithus.borrower-expired-loan-template-id'),
             ]
         );
+    }
+
+    public function sendLoanFirstArrear(User $user)
+    {
+                
     }
 }
