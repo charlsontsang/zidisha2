@@ -966,6 +966,14 @@
         <behavior name="timestampable"/>
         <column name="class_key" type="INTEGER" inheritance="single">
             <inheritance key="1" class="AbandonedUser"/>
+            <inheritance key="2" class="LoanFirstArrear"/>
+            <inheritance key="3" class="LoanFinalArrear"/>
+            <inheritance key="4" class="MonthlyLoanArrear"/>
+            <inheritance key="5" class="RepaymentReminder"/>
+            <inheritance key="6" class="UnusedFunds"/>
+            <inheritance key="7" class="AgainRepaymentReminder"/>
+            <inheritance key="8" class="LoanAboutToExpireReminder"/>
+            <inheritance key="9" class="NewLenderIntro"/>
         </column>
         <foreign-key foreignTable="users">
             <reference local="user_id" foreign="id"/>
