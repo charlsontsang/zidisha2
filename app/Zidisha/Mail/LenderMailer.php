@@ -211,4 +211,15 @@ class LenderMailer
             ]
         );
     }
+
+    public function sendUnusedFundsNotification(Lender $lender)
+    {
+        $this->mailer->send(
+            'emails.hero',
+            [
+                'to'         => $lender->getUser()->getEmail(),
+                'subject'    => 'Unused Funds Notification',
+            ]
+        );
+    }
 }
