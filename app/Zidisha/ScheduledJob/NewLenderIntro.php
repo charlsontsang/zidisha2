@@ -4,6 +4,7 @@ namespace Zidisha\ScheduledJob;
 
 use Carbon\Carbon;
 use DB;
+use Zidisha\Mail\LenderMailer;
 use Zidisha\ScheduledJob\Map\ScheduledJobsTableMap;
 
 
@@ -41,6 +42,10 @@ class NewLenderIntro extends ScheduledJobs
         $scheduleJobs = ScheduledJobsQuery::create()
             ->findOneById($data['jobId']);
 
-        $user = $scheduleJobs->getUser();
+        $lender = $scheduleJobs->getUser()->getLender();
+
+        /** @var  LenderMailer $lenderMailer */
+        $lenderMailer = \App::make('Zidisha\Mail\LenderMailer');
+        $lenderMailer->sendIntroductionMail($lender);
     }
 } // NewLenderIntro
