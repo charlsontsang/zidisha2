@@ -2,6 +2,8 @@
 
 namespace Zidisha\ScheduledJob;
 
+use Carbon\Carbon;
+use DB;
 use Zidisha\ScheduledJob\Map\ScheduledJobsTableMap;
 
 
@@ -29,7 +31,9 @@ class NewLenderIntro extends ScheduledJobs
 
     public function getQuery()
     {
-
+        return DB::table('users AS u')
+            ->whereRaw("u.created_at < '".Carbon::now()->subDay()."'")
+            ->whereRaw('u.role = 0');
     }
 
     public function process($job, $data)
