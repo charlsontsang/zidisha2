@@ -2,6 +2,8 @@
 
 namespace Zidisha\ScheduledJob;
 
+use Carbon\Carbon;
+use DB;
 use Zidisha\ScheduledJob\Map\ScheduledJobsTableMap;
 
 
@@ -29,7 +31,11 @@ class UnusedFunds extends ScheduledJobs
 
     public function getQuery()
     {
-
+        return DB::table('users AS u')
+            ->whereRaw("u.last_login_at < '". Carbon::now()->subMonths(2) ."'")
+            ->whereRaw('u.role = 0')
+            ->whereRaw('(SELECT SUM(amount) FROM transactions t
+                     WHERE t.user_id = u.id) >= 50');
     }
 
     public function process($job, $data)
@@ -37,6 +43,10 @@ class UnusedFunds extends ScheduledJobs
         $scheduleJobs = ScheduledJobsQuery::create()
             ->findOneById($data['jobId']);
 
-        $user = $scheduleJobs->getUser();
+        $lender = $scheduleJobs->getUser()->getLender();
+
+        /** @var  LenderMailer $lenderMailer */
+        $lenderMailer = \App::make('Zidisha\Mail\LenderMailer');
+        $lenderMailer->sendUnusedFundsNotification($lender);
     }
 } // UnusedFunds
