@@ -98,6 +98,9 @@ class LoanController extends BaseController
 
         $borrower = $receiver = $loan->getBorrower();
         $comments = $this->borrowerCommentService->getPaginatedComments($borrower, $page, 10);
+        $commentCount = \Zidisha\Comment\BorrowerCommentQuery::create()
+            ->filterByBorrower($borrower)
+            ->count();
         $loanFeedbackComments = $this->loanFeedbackCommentService->getPaginatedComments($loan, $feedbackCommentPage, 10);
 
         $bids = $this->bidQuery->create()
@@ -133,6 +136,7 @@ class LoanController extends BaseController
                 'follower',
                 'borrower',
                 'comments',
+                'commentCount',
                 'serviceFee',
                 'previousLoans',
                 'totalInterest',
