@@ -64,13 +64,9 @@
                         @endif
                         @if(Auth::getUser()->isBorrower())
                         <li><a href="{{ route('borrower:dashboard') }}">Dashboard</a></li>
-                        <li><a href="{{ route('borrower:public-profile', Auth::getUser()->getUsername()) }}">View Public
-                                Profile</a></li>
+                        <li><a href="#">Public Loan Page</a></li>
                         <li><a href="{{ route('borrower:edit-profile') }}">Edit Profile</a></li>
-                        @if(Auth::user()->getBorrower()->hasActiveLoan())
-                        <li><a href="{{ route('borrower:loan-information', ['loanId' => Auth::user()->getBorrower()->getActiveLoanId() ]) }}">My Loan</a></li>
-                        @endif
-                        <li><a href="{{ route('borrower:history') }}">Transaction History</a></li>
+                        <li><a href="{{ route('borrower:history') }}">Payment History</a></li>
                         @endif
                         <li><a href="{{ route('logout') }}">Log Out</a></li>
                     </ul>
