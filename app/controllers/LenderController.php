@@ -138,8 +138,53 @@ class LenderController extends BaseController
     }
 
     public function getDashboard()
-    {
-        return View::make('lender.dashboard');
+   {
+        $lender = \Auth::user()->getLender();
+        $userId = \Auth::user()->getId();
+        if (!$lender) {
+            \Illuminate\Support\Facades\App::abort(404);
+        }
+
+        $totalFundsUpload = TransactionQuery::create()
+            ->getTotalFundsUpload($userId);
+
+        $currentBalance = TransactionQuery::create()
+            ->getCurrentBalance($userId);
+
+        $newMemberInviteCredit = InviteTransactionQuery::create()
+            ->getTotalInviteCreditAmount($lender);
+
+        $lendingGroups = LendingGroupQuery::create()
+            ->getLendingGroupsForLender($lender);
+
+        $numberOfInvitesSent = InviteQuery::create()
+            ->filterByLender($lender)
+            ->count();
+        $AcceptedInviteesIds = InviteQuery::create()
+            ->getAcceptedInviteesIds($lender);
+        $numberOfInvitesAccepted = $AcceptedInviteesIds->count();
+
+        $numberOfGiftedGiftCards = GiftCardQuery::create()
+            ->filterByLender($lender)
+            ->count();
+
+        $RedeemedGiftCardsRecipientsIds = GiftCardQuery::create()
+            ->getRedeemedGiftCardsRecipientsIds($lender);
+        $numberOfRedeemedGiftCards = $RedeemedGiftCardsRecipientsIds->count();
+
+        $totalLentAmount = TransactionQuery::create()
+            ->getTotalLentAmount($userId);
+
+        $myImpact = $this->lenderService->getMyImpact($lender);
+        $totalLentAmountByInvitees = $this->lenderService->getTotalAmountLentByInvitee($lender);
+        $totalLentAmountByRecipients = $myImpact->subtract($totalLentAmountByInvitees);
+        $totalImpact = $myImpact->add($totalLentAmount);
+
+       return View::make('lender.dashboard', compact('currentBalance', 'totalFundsUpload', 'lendingGroups',
+                'numberOfInvitesSent', 'numberOfInvitesAccepted', 'numberOfGiftedGiftCards', 'numberOfRedeemedGiftCards', 
+                'totalLentAmount', 'totalImpact' , 'loans', 'newMemberInviteCredit',
+                'totalLentAmountByInvitees', 'totalLentAmountByRecipients'
+            ));
     }
 
     public function getTransactionHistory()
@@ -197,7 +242,7 @@ class LenderController extends BaseController
             return $form->makePayment();
         }
 
-        \Flash::error("Entered Amounts are invalid!");
+        \Flash::error("Please enter the amount as a number.");
         return Redirect::route('lender:funds')->withForm($form);
     }
 
@@ -249,36 +294,10 @@ class LenderController extends BaseController
         $principleOutstanding = BidQuery::create()
             ->getTotalOutstandingAmount($lender);
 
-        $lendingGroups = LendingGroupQuery::create()
-            ->getLendingGroupsForLender($lender);
-
-        $numberOfInvitesSent = InviteQuery::create()
-            ->filterByLender($lender)
-            ->count();
-        $AcceptedInviteesIds = InviteQuery::create()
-            ->getAcceptedInviteesIds($lender);
-        $numberOfInvitesAccepted = $AcceptedInviteesIds->count();
-
-        $numberOfLoansByInvitees = LoanQuery::create()
-            ->getNumberOfLoansByInvitees($AcceptedInviteesIds);
-
-        $numberOfGiftedGiftCards = GiftCardQuery::create()
-            ->filterByLender($lender)
-            ->count();
-
-        $RedeemedGiftCardsRecipientsIds = GiftCardQuery::create()
-            ->getRedeemedGiftCardsRecipientsIds($lender);
-        $numberOfRedeemedGiftCards = $RedeemedGiftCardsRecipientsIds->count();
-
-        $numberOfLoansByRecipients = LoanQuery::create()
-            ->getNumberOfLoansByRecipients($RedeemedGiftCardsRecipientsIds);
-
         $totalLentAmount = TransactionQuery::create()
             ->getTotalLentAmount($userId);
 
         $myImpact = $this->lenderService->getMyImpact($lender);
-        $totalLentAmountByInvitees = $this->lenderService->getTotalAmountLentByInvitee($lender);
-        $totalLentAmountByRecipients = $myImpact->subtract($totalLentAmountByInvitees);
         $totalImpact = $myImpact->add($totalLentAmount);
         $page = Request::query('page') ? : 1;
         $page2 = Request::query('page2') ? : 1;
@@ -368,14 +387,11 @@ class LenderController extends BaseController
             $totalNetChangeCompletedBid= $totalNetChangeCompletedBid->add($netChangeCompletedBid[$completedLoansBid->getId()]);
         }
 
-       return View::make('lender.my-stats', compact('currentBalance', 'totalFundsUpload', 'lendingGroups',
-                'numberOfInvitesSent', 'numberOfInvitesAccepted', 'numberOfLoans', 'numberOfLoansByInvitees',
-                'numberOfGiftedGiftCards', 'numberOfRedeemedGiftCards', 'numberOfLoansByRecipients',
+       return View::make('lender.my-stats', compact('currentBalance', 'totalFundsUpload', 'numberOfLoans', 
                 'totalLentAmount', 'myImpact', 'totalImpact' , 'loans', 'activeBids', 'totalBidAmount',
                 'activeLoansBids', 'totalActiveLoansBidsAmount', 'completedLoansBids', 'totalCompletedLoansBidsAmount',
                 'numberOfFundRaisingProjects', 'newMemberInviteCredit',
                 'numberOfActiveProjects', 'numberOfCompletedProjects', 'principleOutstanding',
-                'totalLentAmountByInvitees', 'totalLentAmountByRecipients',
                 'activeLoansBidPaymentStatus', 'completedLoansBidAmountRepaid', 'activeLoansBidAmountRepaid',
                 'activeLoansBidPrincipleOutstanding', 'totalActiveLoansRepaidAmount',
                 'totalActiveLoansTotalOutstandingAmount', 'totalCompletedLoansRepaidAmount',

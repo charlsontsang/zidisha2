@@ -12,7 +12,7 @@
             <span class="text-light">Funded</span>
         </div>
         <div class="col-xs-4 text-center gutter-xs">
-            <span class="text-large">${{ $loan->getStillNeededUsdAmount()->getAmount() }}&nbsp;</span>
+            <span class="text-large">${{ ceil($loan->getStillNeededUsdAmount()->getAmount()) }}&nbsp;</span>
             <br/>
             <span class="text-light">Still Needed</span>
         </div>

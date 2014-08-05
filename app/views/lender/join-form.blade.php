@@ -71,15 +71,16 @@
         'sr-only' => \Lang::get('lender.join.form.country-id'),
     ]) }}
 
+    {{ BootstrapForm::checkbox('termsOfUse') }}
+    I agree to Zidisha's <a target="_blank" href="#">Terms of Use</a>
+    and <a target="_blank" href="http://www.iubenda.com/privacy-policy/629677/legal">Privacy Policy</a>.
+
+
     {{ BootstrapForm::submit('submit', ['class' => 'btn btn-primary btn-block']) }}
 
     {{ BootstrapForm::close() }}
 </div>
 
-{{ BootstrapForm::checkbox('termsOfUse') }}
-I agree to Zidisha's <a target="_blank" href="#">Terms of Use</a>
-and <a target="_blank" href="http://www.iubenda.com/privacy-policy/629677/legal">Privacy Policy</a>.
-
 <hr/>
 
-Already a member?  {{ link_to_route('login', 'Log in' ) }}
+Already a member?  <strong>{{ link_to_route('login', 'Log in' ) }}</strong>

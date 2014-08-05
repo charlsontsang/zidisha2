@@ -46,22 +46,21 @@
                 @if(Auth::check() && Auth::getUser()->getRole() != 'admin')
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        My Account <b class="caret"></b>
+                        {{ Auth::getUser()->getUsername() }} <b class="caret"></b>
                     </a>
 
                     <ul class="dropdown-menu">
                         @if(Auth::getUser()->isLender())
-                        <li><a href="{{ route('lender:my-stats') }}">My Stats</a></li>
                         <li><a href="{{ route('lender:dashboard') }}">Dashboard</a></li>
-                        <li><a href="{{ route('lender:public-profile', Auth::getUser()->getUsername()) }}">View My
-                                Public Profile</a></li>
+                        <li><a href="{{ route('lender:my-stats') }}">Your Loans</a></li>
+                        <li><a href="{{ route('lender:public-profile', Auth::getUser()->getUsername()) }}">View Profile</a></li>
                         <li><a href="{{ route('lender:edit-profile') }}">Edit Profile</a></li>
-                        <li><a href="{{ route('lender:preference') }}">Account Preference</a></li>
+                        <li><a href="{{ route('lender:preference') }}">Account Preferences</a></li>
                         <li><a href="{{ route('lender:gift-cards') }}">Gift Cards</a></li>
-                        <li><a href="{{ route('lender:gift-cards:track') }}">Track My Gift Cards</a></li>
+                        <li><a href="{{ route('lender:gift-cards:track') }}">Track Gift Cards</a></li>
                         <li><a href="{{ route('lender:invite') }}">Invite Your Friends</a></li>
                         <li><a href="{{ route('lender:history') }}">Transaction History</a></li>
-                        <li><a href="{{ route('lender:funds') }}">Add or Withdraw Funds</a></li>
+                        <li><a href="{{ route('lender:funds') }}">Transfer Funds</a></li>
                         @endif
                         @if(Auth::getUser()->isBorrower())
                         <li><a href="{{ route('borrower:dashboard') }}">Dashboard</a></li>
@@ -73,6 +72,7 @@
                         @endif
                         <li><a href="{{ route('borrower:history') }}">Transaction History</a></li>
                         @endif
+                        <li><a href="{{ route('logout') }}">Log Out</a></li>
                     </ul>
                 </li>
                 @endif
@@ -116,17 +116,16 @@
                 </li>
                 @endif
                 <li>
-                    @if(Auth::check())
-                    <a href="{{ route('logout') }}">
-                        Log Out
-                    </a>
-                    @else
+                    @if(!Auth::check())
                     <a href="{{ route('login') }}" data-toggle="modal" data-target="#login-modal">
                         Log In
                     </a>
                     @endif
                 </li>
             </ul>
+            @if(Auth::getUser()->isLender())
+                <p class="navbar-text">Lending Credit: $XX.XX</p>
+            @endif
         </div>
     </div>
 </div>

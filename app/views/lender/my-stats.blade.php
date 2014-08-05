@@ -6,185 +6,172 @@ My Stats
 
 @section('content')
 <div class="page-header">
-    <h2>My Stats</h2>
-</div><br>
-
-<div class="div-header">
-    <h2>My Lending Account</h2>
-</div><br>
+    <h2>Your Loans</h2>
+</div>
 
 <div class="row">
-    <div class="col-xs-4">
-        <p>Total Funds Uploaded: <a href="#" class="funds-upload" data-toggle="tooltip">(?)</a>  </p>
-        <p>Number of Loans Made:  </p>
-        <p>Current Credit Available: <a href="#" class="credit-available" data-toggle="tooltip">(?)</a>  </p>
-        <p>New Member Invite Credit: </p>
-        <p>Principal Outstanding: <a href="#" class="principal-outstanding" data-toggle="tooltip">(?)</a>  </p>
+    <div class="col-sm-5">
+        <div class="page-header">
+            <h3><strong>Lending Totals</strong></h3>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-7">
+                <p>Funds uploaded:<i class="fa fa-info-circle funds-upload" data-toggle="tooltip"></i></p>
+            </div>
+            <div class="col-sm-5">
+                <p>{{ $totalFundsUpload }}</p>
+            </div>
+
+            <div class="col-sm-7">
+                Number of loans made:
+            </div>
+
+            <div class="col-sm-5">
+                <p>{{ $numberOfLoans }}</p>
+            </div>
+
+            <div class="col-sm-7">
+                <p>Total amount lent:</p>
+            </div>
+
+            <div class="col-sm-5">
+                <p>{{ $totalLentAmount }}</p>
+            </div>
+        </div>
     </div>
 
-    <div class="col-xs-8">
-        <p>{{ $totalFundsUpload }}</p>
-        <p>{{ $numberOfLoans }}</p>
-        <p>
-            {{ $currentBalance }}
-            <a href="{{ route('lend:index') }}" class="btn btn-primary">
-                Make A Loan
-            </a>
-        </p>
-        <p>{{ $newMemberInviteCredit }}</p>
-        <p>{{ $principleOutstanding }}</p>
+    <div class="col-sm-5 col-sm-offset-1">
+        <div class="page-header">
+            <h3><strong>Current Status</strong></h3>
+        </div>
+        <div class="row">
+            <div class="col-sm-7">
+                <p>Loans outstanding:<i class="fa fa-info-circle principal-outstanding" data-toggle="tooltip"></i></p>
+            </div>
+            <div class="col-sm-5">
+                <p>{{ $principleOutstanding }}</p>
+            </div>
+
+            <div class="col-sm-7">
+                <p>Lending credit available:<i class="fa fa-info-circle credit-available" data-toggle="tooltip"></i></p>
+            </div>
+
+            <div class="col-sm-5">
+                <p>{{ $currentBalance }}</p>
+            </div>
+
+            <div class="col-sm-7">
+                @if ($newMemberInviteCredit)
+                    <p>New member invite credit:</p>
+                @endif
+            </div>
+
+            <div class="col-sm-5">
+                @if ($newMemberInviteCredit)
+                    <p>{{ $newMemberInviteCredit }}</p>
+                @endif
+            </div>
+        </div>
     </div>
 </div>
 
-<div class="div-header">
-    <h2>My Network</h2>
-</div><br>
-
-<div class="row">
-    <div class="col-xs-4">
-        <p>My Lending Groups:  </p><br>
-        <p>Number of Invites Sent: </p><br>
-        <p>Number of Invites Accepted: </p>
-        <p>Number of Loans Made By My Invitees: </p>
-        <p>Number of Gift Cards Gifted: </p>
-        <p>Number of Gift Cards Redeemed by My Recipients: </p>
-        <p>Number of Loans Made By My Gift Card Recipients: </p>
-    </div>
-
-    <div class="col-xs-8">
-        <p>
-            @foreach($lendingGroups as $lendingGroup)
-                <a href="{{ route('lender:group', $lendingGroup->getId()) }}">{{ $lendingGroup->getName() }}</a>
-            @endforeach
-            <a href="{{ route('lender:groups') }}" class="btn btn-primary">
-                Join A Group
-            </a>
-        </p>
-        <p>
-            {{ $numberOfInvitesSent }}
-            <a href="{{ route('lender:invite') }}" class="btn btn-primary">
-                Send An Invite
-            </a>
-        </p>
-        <p>{{ $numberOfInvitesAccepted }}</p>
-        <p>{{ $numberOfLoansByInvitees }}</p>
-        <p>
-            {{ $numberOfGiftedGiftCards }}
-            <a href="{{ route('lender:gift-cards') }}" class="btn btn-primary">
-                Give A Gift Card
-            </a>
-        </p>
-        <p>{{ $numberOfRedeemedGiftCards }}</p>
-        <p>{{ $numberOfLoansByRecipients }}</p>
-    </div>
-</div>
-
-<div class="div-header">
-    <h2>My Impact</h2>
-</div><br>
-
-<div class="row">
-    <div class="col-xs-4">
-        <p>Amount Lent By Me:  </p>
-        <p>Amount Lent By My Invitees: </p>
-        <p>Amount Lent By My Gift Card Recipients: </p>
-        <p>Total Impact: <a href="#" class="total-impact" data-toggle="tooltip">(?)</a> </p>
-    </div>
-
-    <div class="col-xs-8">
-        <p>{{ $totalLentAmount }}</p>
-        <p> {{ $totalLentAmountByInvitees }} </p>
-        <p>{{ $totalLentAmountByRecipients }}</p>
-        <p>{{ $totalImpact }}</p>
-    </div>
-</div>
+@if (count($activeBids)>0)
 
 <div class="page-header">
-    <h3><strong>FundRaising Loans</strong></h3>
+    <h3><strong>Fundraising Loans</strong></h3>
 </div>
-<table class="table table-striped">
+<table class="table table-striped no-more-tables">
     <thead>
     <tr>
-        <th>Project</th>
-        <th>Bid Date</th>
-        <th>Amount Bid (USD)</th>
-        <th>FundRaising Progress</th>
-        <th>Time Left</th>
+        <th colspan="3" width="50%">Project</th>
+        <th>Date Funded</th>
+        <th>Amount Lent</th>
+        <th>Fundraising Progress</th>
     </tr>
     </thead>
     <tbody>
     @foreach($activeBids as $fundRaisingLoansBid)
     <tr>
+        <td data-title="Project">
+            <a class="pull-left" href="{{ route('loan:index', $fundRaisingLoansBid->getLoanId()) }}">
+                <img src="{{ $fundRaisingLoansBid->getBorrower()->getUser()->getProfilePictureUrl('small-profile-picture') }}" width="100%">
+            </a>
+        </td>
         <td>
-<!--            <a class="pull-left" href="{{ route('loan:index', $fundRaisingLoansBid->getLoanId()) }}">-->
-<!--                <img src="{{ $fundRaisingLoansBid->getBorrower()->getUser()->getProfilePictureUrl('small-profile-picture') }}" width="100%">-->
-<!--            </a>-->
-            <a href="{{ route('loan:index', $fundRaisingLoansBid->getLoanId()) }}">{{ $fundRaisingLoansBid->getLoan()->getSummary() }}</a><br>
-            {{ $fundRaisingLoansBid->getBorrower()->getName() }}<br>
+            {{ $fundRaisingLoansBid->getBorrower()->getName() }}
+            <br/><br/>
             {{ $fundRaisingLoansBid->getBorrower()->getProfile()->getCity() }},
             {{ $fundRaisingLoansBid->getBorrower()->getCountry()->getName() }}
         </td>
-        <td>{{ $fundRaisingLoansBid->getBidAt()->format('d-m-Y') }}</td>
-        <td>{{ $fundRaisingLoansBid->getBidAmount()->getAmount() }}</td>
-        <td> @include('partials/loan-progress', [ 'loan' => $fundRaisingLoansBid->getLoan() ]) </td>
-        <td>{{ $fundRaisingLoansBid->getLoan()->getFundRaisingTimeLeft() }}</td>
+        <td>
+            <a href="{{ route('loan:index', $fundRaisingLoansBid->getLoanId()) }}">{{ $fundRaisingLoansBid->getLoan()->getSummary() }}</a>
+        </td>
+        <td data-title="Date Funded">{{ $fundRaisingLoansBid->getBidAt()->format('M j, Y') }}</td>
+        <td data-title="Amount Lent">{{ $fundRaisingLoansBid->getBidAmount()->getAmount() }}</td>
+        <td data-title="Progress"> @include('partials/loan-progress', [ 'loan' => $fundRaisingLoansBid->getLoan() ]) </td>
     </tr>
     @endforeach
     </tbody>
     <tfoot>
         <tr>
-            <td><strong> Total </strong></td>
+            <td colspan="3"><strong>Total</strong></td>
             <td>{{ $numberOfFundRaisingProjects }}</td>
-            <td>{{ $totalBidAmount->getAmount() }}</td>
+            <td>{{ $totalBidAmount->getAmount() }} Lent</td>
         </tr>
     </tfoot>
 </table>
 {{ BootstrapHtml::paginator($activeBids)->links() }}
+@endif
 
-
+@if (count($activeLoansBids)>0)
 <div class="page-header">
     <h3><strong>Active Loans</strong></h3>
 </div>
-<table class="table table-striped">
+
+<table class="table table-striped no-more-tables">
     <thead>
     <tr>
-        <th>Project</th>
+        <th colspan="3" width="50%">Project</th>
         <th>Date Funded</th>
-        <th>Amount Lent (USD)</th>
-        <th>Amount Repaid (USD) <a href="#" class="amount-repaid-active-loans" data-toggle="tooltip">(?)</a></th>
-        <th>Principal Outstanding (USD) <a href="#" class="principal-outstanding-active-loans" data-toggle="tooltip">(?)</a></th>
-        <th>Loan Status <a href="#" class="loan-status-active-loans" data-toggle="tooltip">(?)</a></th>
+        <th>Amount Lent</th>
+        <th>Amount Repaid<i class="fa fa-info-circle amount-repaid-active-loans" data-toggle="tooltip"></i></th>
+        <th>Amount Outstanding<i class="fa fa-info-circle principal-outstanding-active-loans" data-toggle="tooltip"></i></th>
     </tr>
     </thead>
     <tbody>
     @foreach($activeLoansBids as $activeLoansBid)
     <tr>
+        <td data-title="Project">
+            <a class="pull-left" href="{{ route('loan:index', $fundRaisingLoansBid->getLoanId()) }}">
+                <img src="{{ $fundRaisingLoansBid->getBorrower()->getUser()->getProfilePictureUrl('small-profile-picture') }}" width="100%">
+            </a>
+        </td>
         <td>
-            <!--            <a class="pull-left" href="{{ route('loan:index', $fundRaisingLoansBid->getLoanId()) }}">-->
-            <!--                <img src="{{ $fundRaisingLoansBid->getBorrower()->getUser()->getProfilePictureUrl('small-profile-picture') }}" width="100%">-->
-            <!--            </a>-->
-            <a href="{{ route('loan:index', $activeLoansBid->getLoanId()) }}">{{ $activeLoansBid->getLoan()->getSummary() }}</a><br>
-            {{ $activeLoansBid->getBorrower()->getName() }}<br>
+            {{ $activeLoansBid->getBorrower()->getName() }}
+            <br/><br/>
             {{ $activeLoansBid->getBorrower()->getProfile()->getCity() }},
             {{ $activeLoansBid->getBorrower()->getCountry()->getName() }}
         </td>
-        <td>
+        <td><a href="{{ route('loan:index', $activeLoansBid->getLoanId()) }}">{{ $activeLoansBid->getLoan()->getSummary() }}</a></td>
+        <td data-title="Date Funded">
         @if($activeLoansBid->getLoan()->getStatus() == Zidisha\Loan\Loan::ACTIVE)
-            {{ $activeLoansBid->getLoan()->getDisbursedAt()->format('d-m-Y') }}
+            {{ $activeLoansBid->getLoan()->getDisbursedAt()->format('M j, Y') }}
         @else
-            {{ $activeLoansBid->getLoan()->getAcceptedAt()->format('d-m-Y') }}
+            {{ $activeLoansBid->getLoan()->getAcceptedAt()->format('M j, Y') }}
         @endif
         </td>
-        <td>{{ $activeLoansBid->getAcceptedAmount()->getAmount() }}</td>
-        <td>{{ $activeLoansBidAmountRepaid[$activeLoansBid->getId()]->getAmount() }}</td>
-        <td>{{ $activeLoansBidPrincipleOutstanding[$activeLoansBid->getId()]->getAmount() }}</td>
-        <td>
+        <td data-title="Amount Lent">{{ $activeLoansBid->getAcceptedAmount()->getAmount() }}</td>
+        <td data-title="Amount Repaid">{{ $activeLoansBidAmountRepaid[$activeLoansBid->getId()]->getAmount() }}</td>
+        <td data-title="Outstanding">
+            {{ $activeLoansBidPrincipleOutstanding[$activeLoansBid->getId()]->getAmount() }}
+            <br/><br/>
             @if($activeLoansBidPaymentStatus[$activeLoansBid->getId()] == 'on-time')
                     <span class="label label-success">Repaying on Time</span>
             @elseif($activeLoansBidPaymentStatus[$activeLoansBid->getId()] == 'late')
-                    <span class="label label-danger">Repaying Late</span>
+                    <span class="label label-default">Repaying Late</span>
             @elseif($activeLoansBidPaymentStatus[$activeLoansBid->getId()] == 'early')
-                    <span class="label label-warning">Repaying Early</span>
+                    <span class="label label-success">Repaying Early</span>
             @endif
         </td>
     </tr>
@@ -192,65 +179,69 @@ My Stats
     </tbody>
     <tfoot>
         <tr>
-            <td><strong> Total </strong></td>
+            <td colspan="3"><strong>Total</strong></td>
             <td>{{ $numberOfActiveProjects }}</td>
-            <td>{{ $totalActiveLoansBidsAmount->getAmount() }}</td>
-            <td>{{ $totalActiveLoansRepaidAmount->getAmount() }}</td>
-            <td>{{ $totalActiveLoansTotalOutstandingAmount->getAmount() }}</td>
+            <td>{{ $totalActiveLoansBidsAmount->getAmount() }} Lent</td>
+            <td>{{ $totalActiveLoansRepaidAmount->getAmount() }} Repaid</td>
+            <td>{{ $totalActiveLoansTotalOutstandingAmount->getAmount() }} Outstanding</td>
         </tr>
     </tfoot>
 </table>
 {{ BootstrapHtml::paginator($activeLoansBids, 'page2')->links() }}
+@endif
 
-
+@if (count($completedLoansBids)>0)
 <div class="page-header">
     <h3><strong>Completed Loans</strong></h3>
 </div>
-<table class="table table-striped">
+<table class="table table-striped no-more-tables">
     <thead>
     <tr>
-        <th>Project</th>
+        <th colspan="3" width="50%">Project</th>
         <th>Date Funded</th>
-        <th>Amount Lent (USD)</th>
-        <th>Amount Repaid (USD)<a href="#" class="amount-repaid-completed-loans" data-toggle="tooltip">(?)</a></th>
-        <th>Net Change in Loan Fund Value (USD)<a href="#" class="net-change-completed-loans" data-toggle="tooltip">(?)</a></th>
-        <th>Loan Status</th>
+        <th>Amount Lent</th>
+        <th>Amount Repaid<i class="fa fa-info-circle amount-repaid-completed-loans" data-toggle="tooltip"></i></th>
+        <th>Net Change in Loan Fund Value<i class="fa fa-info-circle net-change-completed-loans" data-toggle="tooltip"></i></th>
     </tr>
     </thead>
     <tbody>
     @foreach($completedLoansBids as $completedLoansBid)
     <tr>
+        <td data-title="Project">
+            <a class="pull-left" href="{{ route('loan:index', $completedLoansBid->getLoanId()) }}">
+                <img src="{{ $completedLoansBid->getBorrower()->getUser()->getProfilePictureUrl('small-profile-picture') }}" width="100%">
+            </a>
+        </td>
         <td>
-            <!--            <a class="pull-left" href="{{ route('loan:index', $completedLoansBid->getLoanId()) }}">-->
-            <!--                <img src="{{ $completedLoansBid->getBorrower()->getUser()->getProfilePictureUrl('small-profile-picture') }}" width="100%">-->
-            <!--            </a>-->
-            <a href="{{ route('loan:index', $completedLoansBid->getLoanId()) }}">{{ $completedLoansBid->getLoan()->getSummary() }}</a><br>
-            {{ $completedLoansBid->getBorrower()->getName() }}<br>
+            {{ $completedLoansBid->getBorrower()->getName() }}
+            <br/><br/>
             {{ $completedLoansBid->getBorrower()->getProfile()->getCity() }},
             {{ $completedLoansBid->getBorrower()->getCountry()->getName() }}
         </td>
-        <td>{{ $completedLoansBid->getLoan()->getDisbursedAt()->format('d-m-Y') }}</td>
-        <td>{{ $completedLoansBid->getAcceptedAmount()->getAmount() }}</td>
-        <td>{{ $completedLoansBidAmountRepaid[$completedLoansBid->getId()]->getAmount() }}</td>
-        <td>{{ $netChangeCompletedBid[$completedLoansBid->getId()]->getAmount() }} </td>
-        <td>
-            100% Repaid<br>
+        <td><a href="{{ route('loan:index', $completedLoansBid->getLoanId()) }}">{{ $completedLoansBid->getLoan()->getSummary() }}</a></td>
+        <td data-title="Date Funded">{{ $completedLoansBid->getLoan()->getDisbursedAt()->format('M j, Y') }}</td>
+        <td data-title="Amount Lent">{{ $completedLoansBid->getAcceptedAmount()->getAmount() }}</td>
+        <td data-title="Amount Repaid">
+            {{ $completedLoansBidAmountRepaid[$completedLoansBid->getId()]->getAmount() }}
+            <br/><br/>
             <a href="{{ route('loan:index', $completedLoansBid->getLoanId()) }}#feedback">Leave Feedback</a>
         </td>
+        <td data-title="Net Change">{{ $netChangeCompletedBid[$completedLoansBid->getId()]->getAmount() }} </td>
     </tr>
     @endforeach
     </tbody>
     <tfoot>
         <tr>
-            <td><strong> Total </strong></td>
+            <td colspan="3"><strong>Total</strong></td>
             <td>{{ $numberOfCompletedProjects }}</td>
-            <td>{{ $totalCompletedLoansBidsAmount->getAmount() }}</td>
-            <td>{{ $totalCompletedLoansRepaidAmount->getAmount() }}</td>
-            <td>{{ $totalNetChangeCompletedBid->getAmount() }}</td>
+            <td>{{ $totalCompletedLoansBidsAmount->getAmount() }} Lent</td>
+            <td>{{ $totalCompletedLoansRepaidAmount->getAmount() }} Repaid</td>
+            <td>{{ $totalNetChangeCompletedBid->getAmount() }} Net Change in Loan Fund Value</td>
         </tr>
     </tfoot>
 </table>
 {{ BootstrapHtml::paginator($completedLoansBids, 'page3')->links() }}
+@endif
 @stop
 
 @section('script-footer')

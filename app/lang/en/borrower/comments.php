@@ -1,11 +1,11 @@
 <?php
 return [
     'loading-text'   => [
-        'post' => 'Posting comment...',
-        'edit' => 'Editing comment...',
+        'post' => 'Posting message...',
+        'edit' => 'Editing message...',
         'reply' => 'Posting reply...',
-        'delete' => 'Deleting comment...',
-        'translate' => 'Translating comment...'
+        'delete' => 'Deleting message...',
+        'translate' => 'Translating message...'
     ],
     'actions' => [
       'translate'  => 'Translate',
@@ -15,16 +15,16 @@ return [
       'share'  => 'Share',
     ],
     'flash'=>[
-        'post-success' => 'Comment posted!',
+        'post-success' => 'Message posted!',
         'file-not-valid' => 'Sorry, we don\'t support this file type. Please try again with a JPG or PNG file.',
-        'edit-success' => 'Comment edited!',
+        'edit-success' => 'Message edited!',
         'reply-success' => 'Reply posted!',
-        'delete-success' => 'The comment has been deleted.',
+        'delete-success' => 'The message has been deleted.',
         'translate-success' => 'Your translation has been published. Thanks!',
         'file-deleted' => 'The file has been deleted.',
     ],
     'upload-file' => 'Add a photo',
     'add-more' => 'Add more',
-    'submit' => 'Submit',
+    'submit' => 'Post message',
     'message' => 'Message'
 ];

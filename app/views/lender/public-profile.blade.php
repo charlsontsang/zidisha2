@@ -6,147 +6,116 @@
 
 @section('content')
 <div class="page-header">
-    <h3><strong>{{ $lender->getUser()->getUsername() }}</strong></h3>
+    <h2>{{ $lender->getUser()->getUsername() }}</h2>
 </div>
+<div class="row">
+    <div class="col-sm-6 pull-right mobile-padding">
+        <img src="{{ $lender->getUser()->getProfilePictureUrl() }}" width="100%">
+    </div>
 
-<img src="{{ $lender->getUser()->getProfilePictureUrl() }}">
-
-<p><strong>About me: </strong> {{ $lender->getProfile()->getAboutMe() }} </p>
-<p><strong>City: </strong> {{ $lender->getProfile()->getCity() }} </p>
-<p><strong>Country: </strong> {{ $lender->getCountry()->getName() }} </p>
-<p><strong>Karma: </strong><a href="#" class="karma" data-toggle="tooltip">(?)</a> {{ $karma }} </p>
+    <div class="col-sm-6">
+        <p>
+            <i class="fa fa-fw fa-map-marker"></i>
+            @if($lender->getProfile()->getCity())
+                {{ $lender->getProfile()->getCity() }},&nbsp;
+            @endif
+            {{ $lender->getCountry()->getName() }}
+        </p>
+        <p>
+            Karma:<i class="fa fa-info-circle karma" data-toggle="tooltip"></i> {{ $karma }} 
+        </p>
+        <p>{{ $lender->getProfile()->getAboutMe() }}</p>
+    </div>
+</div>
 
 <div class="page-header">
-    <h3><strong>Active Bids</strong></h3>
+    <h3><strong>Fundraising Loans</strong></h3>
 </div>
-<table class="table table-striped">
-    <thead>
-    <tr>
-        <th>
-            Date
-        </th>
-        <th>
-            Borrower Details
-        </th>
-        <th>
-            Amount Bid (USD)
-        </th>
-        <th>
-            Bid Status
-        </th>
-    </tr>
-    </thead>
-    <tbody>
+
+@if (count($activeBids)>0)
     @foreach($activeBids as $activeBid)
-    <tr>
-        <td>{{ $activeBid->getBidAt()->format('d-m-Y') }}</td>
-        <td>
-            <a href="{{ route('loan:index', $activeBid->getLoanId()) }}">{{ $activeBid->getBorrower()->getName() }}</a>
-            {{ $activeBid->getBorrower()->getProfile()->getCity() }},
-            {{ $activeBid->getBorrower()->getCountry()->getName() }}
-        </td>
-        <td>{{ $activeBid->getBidAmount()->getAmount() }}</td>
-        <td> Active </td>
-    </tr>
+    <div class="row">
+        <div class="col-sm-3">
+                <a class="pull-left mobile-padding" href="{{ route('loan:index', $activeBid->getLoanId()) }}">
+                    <img src="{{ $activeBid->getBorrower()->getUser()->getProfilePictureUrl('small-profile-picture') }}" width="100%">
+                </a>
+        </div>
+        <div class="col-sm-2 mobile-padding">
+                {{ $activeBid->getBorrower()->getName() }}
+                <br/><br/>
+                {{ $activeBid->getBorrower()->getProfile()->getCity() }},
+                {{ $activeBid->getBorrower()->getCountry()->getName() }}
+        </div>
+        <div class="col-sm-3 mobile-padding">
+                <a href="{{ route('loan:index', $activeBid->getLoanId()) }}">{{ $activeBid->getLoan()->getSummary() }}</a>
+        </div>
+        <div class="col-sm-4 mobile-padding"> 
+            @include('partials/loan-progress', [ 'loan' => $activeBid->getLoan() ]) </td>
+        </div>
+    </div>
+    <hr/>
     @endforeach
-    <tr>
-        <td><strong>Total Current Value</strong></td>
-        <td></td>
-        <td>{{ $totalBidAmount->getAmount() }}</td>
-        <td></td>
-    </tr>
-    </tbody>
-</table>
-{{ BootstrapHtml::paginator($activeBids)->links() }}
 
-<div class="page-header">
-    <h3><strong>Active Loans</strong></h3>
-</div>
-<table class="table table-striped">
-    <thead>
-    <tr>
-        <th>
-            Borrower Details
-        </th>
-        <th>
-            Amount Lent (USD)
-        </th>
-        <th>
-            Loan Status
-        </th>
-    </tr>
-    </thead>
-    <tbody>
+    {{ BootstrapHtml::paginator($activeBids)->links() }}
+@endif
+
+@if (count($activeLoansBids)>0)
+    <div class="page-header">
+        <h3><strong>Active Loans</strong></h3>
+    </div>
     @foreach($activeLoansBids as $activeLoansBid)
-    <tr>
-        <td>
-            <a href="{{ route('loan:index', $activeLoansBid->getLoanId()) }}">{{ $activeLoansBid->getBorrower()->getName() }}</a>
-            {{ $activeLoansBid->getBorrower()->getProfile()->getCity() }},
-            {{ $activeLoansBid->getBorrower()->getCountry()->getName() }}
-        </td>
-        <td>{{ $activeLoansBid->getAcceptedAmount()->getAmount() }}</td>
-        <td>
-            <a href="{{ route('loan:index', $activeLoansBid->getLoanId()) }}">
-            {{ $activeLoansBid->getLoan()->getRepaidPercent() }} % Repaid
-            </a>
-        </td>
-    </tr>
+    <div class="row">
+        <div class="col-sm-3">
+                <a class="pull-left mobile-padding" href="{{ route('loan:index', $activeLoansBid->getLoanId()) }}">
+                    <img src="{{ $activeLoansBid->getBorrower()->getUser()->getProfilePictureUrl('small-profile-picture') }}" width="100%">
+                </a>
+        </div>
+        <div class="col-sm-2 mobile-padding">
+                {{ $activeLoansBid->getBorrower()->getName() }}
+                <br/><br/>
+                {{ $activeLoansBid->getBorrower()->getProfile()->getCity() }},
+                {{ $activeLoansBid->getBorrower()->getCountry()->getName() }}
+        </div>
+        <div class="col-sm-3 mobile-padding">
+                <a href="{{ route('loan:index', $activeLoansBid->getLoanId()) }}">{{ $activeLoansBid->getLoan()->getSummary() }}</a>
+        </div>
+    </div>
+    <hr/>
     @endforeach
-    <tr>
-        <td><strong>Total Amount Lent</strong></td>
-        <td>{{ $totalActiveLoansBidsAmount->getAmount() }}</td>
-        <td></td>
-    </tr>
-    </tbody>
-</table>
-{{ BootstrapHtml::paginator($activeLoansBids, 'page2')->links() }}
 
+    {{ BootstrapHtml::paginator($activeLoansBids, 'page2')->links() }}
+@endif
 
-<div class="page-header">
-    <h3><strong>Completed Loans</strong></h3>
-</div>
-<table class="table table-striped">
-    <thead>
-    <tr>
-        <th>
-            Borrower Details
-        </th>
-        <th>
-            Amount Lent (USD)
-        </th>
-        <th>
-            Loan Status
-        </th>
-    </tr>
-    </thead>
-    <tbody>
+@if (count($completedLoansBids)>0)
+    <div class="page-header">
+        <h3><strong>Completed Loans</strong></h3>
+    </div>
     @foreach($completedLoansBids as $completedLoansBid)
-    <tr>
-        <td>
-            <a href="{{ route('loan:index', $completedLoansBid->getLoanId()) }}">{{ $completedLoansBid->getBorrower()->getName() }}</a>
-            {{ $completedLoansBid->getBorrower()->getProfile()->getCity() }},
-            {{ $completedLoansBid->getBorrower()->getCountry()->getName() }}
-        </td>
-        <td>{{ $completedLoansBid->getAcceptedAmount()->getAmount() }}</td>
-        <td>
-            <a href="{{ route('loan:index', $completedLoansBid->getLoanId()) }}">
-            {{ $completedLoansBid->getLoan()->getRepaidPercent() }} % Repaid
-            </a>
-        </td>
-    </tr>
+    <div class="row">
+        <div class="col-sm-3">
+                <a class="pull-left mobile-padding" href="{{ route('loan:index', $completedLoansBid->getLoanId()) }}">
+                    <img src="{{ $completedLoansBid->getBorrower()->getUser()->getProfilePictureUrl('small-profile-picture') }}" width="100%">
+                </a>
+        </div>
+        <div class="col-sm-2 mobile-padding">
+                {{ $completedLoansBid->getBorrower()->getName() }}
+                <br/><br/>
+                {{ $completedLoansBid->getBorrower()->getProfile()->getCity() }},
+                {{ $completedLoansBid->getBorrower()->getCountry()->getName() }}
+        </div>
+        <div class="col-sm-3 mobile-padding">
+                <a href="{{ route('loan:index', $completedLoansBid->getLoanId()) }}">{{ $completedLoansBid->getLoan()->getSummary() }}</a>
+        </div>
+    </div>
+    <hr/>
     @endforeach
-    <tr>
-        <td><strong>Total Amount Lent</strong></td>
-        <td>{{ $totalCompletedLoansBidsAmount->getAmount() }}</td>
-        <td></td>
-    </tr>
-    </tbody>
-</table>
-{{ BootstrapHtml::paginator($completedLoansBids, 'page3')->links() }}
+    {{ BootstrapHtml::paginator($completedLoansBids, 'page3')->links() }}
+@endif
+
 @stop
 
 @section('script-footer')
 <script type="text/javascript">
-    $('.karma').tooltip({placement: 'bottom', title: 'Karma is calculated on the basis of the total amount lent by the new members a member has recruited to Zidisha via email invites or gift cards, the number of comments a member has posted in the Zidisha website, and the total amount lent by a member.'})
+    $('.karma').tooltip({placement: 'bottom', title: 'Karma goes up with good deeds like posting comments, inviting new lenders and helping to develop our lending group community.'})
 </script>
 @stop

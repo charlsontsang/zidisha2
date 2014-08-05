@@ -1,65 +1,60 @@
 .text-light {
   font-weight: 300;
 }
-
 .text-large {
   font-size: 22px;
 }
-
 .gutter-xs {
   padding-left: 2px;
   padding-right: 2px;
 }
-
 .alpha {
   margin-top: 0;
 }
-
 h5 {
   margin-top: 1.5em;
   margin-bottom: .5em;
 }
-
 h5.alpha {
   display: inline-block;
 }
-
 .omega {
   margin-bottom: 0;
 }
-
 a.inverted {
   color: @text-color;
 }
-
 a.inverted:hover {
   color: @link-color;
 }
-
 hr {
   border-top: 1px solid @gray-lighter;
 }
-
+.footer {
+  margin-top: 15px;
+  @media (min-width: @screen-sm-min) {
+    margin-top: 30px;
+  }
+  @media (min-width: @screen-md-min) {
+    margin-top: 50px;
+  }
+}
 .page-section {
   background-color: #f9f9f9;
   border-bottom: 1px solid #e0e0e0;
   margin-bottom: 22px;
   padding-bottom: 22px;
 }
-
 .page-section-inverted {
   background-color: @text-color;
   color: #e6e6e6;
 }
-
 .page-section-inverted .h2, .h3 {
   color: #e6e6e6;
 }
-
 .page-section-inverted a {
   color: #e6e6e6;
 }
-
 .hr-text {
   position: relative;
   color: @gray;
@@ -68,14 +63,12 @@ hr {
   padding-top: 10px;
   padding-bottom: 10px;
 }
-
 .hr-text hr {
   background-color: #cdcdcd;
   height: 1px;
   margin-top: 0px !important;
   margin-bottom: 0px !important;
 }
-
 .hr-text span {
   display: block;
   position: absolute;
@@ -86,70 +79,70 @@ hr {
   width: 50px;
   text-align: center;
 }
-
 @modal-sm: 340px;
 .modal-sm { 
   width: @modal-sm;
   margin: 30px auto;
 }
-
-.btn-icon {
-  padding: 0;
-  text-align: left;
-}
-
-.btn-icon .icon-container {
-  text-align: center;
-  padding: 10px 16px;
-  display: inline-block;
-  width: 40px;
-}
-
-.btn-icon .text-container {
-  text-align: center;
-  padding: 10px;
-  display: inline-block;
-  width: 78%;
-}
-
-.btn-facebook {
-  background-color: #3B5999;
-  color: white;
-}
-
-.btn-facebook:hover {
-  background-color: lighten(#3B5999, 5%);
-  color: white;
-}
-
-.btn-google .icon-container {
-  color: #dd4b39;
-}
-
-.btn-default:hover {
-  background-color: inherit;
-}
-
 .badge-danger {
   background-color: @brand-danger;
 }
-
-.form-control {
-  .box-shadow(none);
-}
-
 .tooltip-inner {
   border: solid 1px #ccc;
   padding: 12px;
   text-align: left;
+  font-weight: normal;
 }
-
 .media-object {
   height: 70px;
   width: 70px;
   @media (min-width: @screen-md-min) {
     height: 90px;
     width: 90px;
+  }
+}
+.fa-info-circle {
+  color: @gray-light;
+  margin-left: 2px;
+}
+
+.btn-icon {
+  padding: 0;
+  text-align: left;
+}
+.btn-icon .icon-container {
+  text-align: center;
+  padding: 10px 16px;
+  display: inline-block;
+  width: 40px;
+}
+.btn-icon .text-container {
+  text-align: center;
+  padding: 10px;
+  display: inline-block;
+  width: 78%;
+}
+.btn-facebook {
+  background-color: #3B5999;
+  color: white;
+}
+.btn-facebook:hover {
+  background-color: lighten(#3B5999, 5%);
+  color: white;
+}
+.btn-google .icon-container {
+  color: #dd4b39;
+}
+.btn-default:hover {
+  background-color: inherit;
+  border: 1px solid @text-color;
+}
+.lender-dashboard-btn {
+  margin: -7px 0 5px 0;
+}
+.mobile-padding {
+  @media (max-width: @screen-xs-max) {
+    padding-bottom: 15px !important;
   }
 }
 
@@ -178,7 +171,53 @@ hr {
 .info-page {
   padding-bottom: 100px;
 }
-.fa-info-circle {
-  color: @gray-light;
-  margin-left: 2px;
+
+@media (max-width: @screen-xs-max) {
+    
+  /* Force table to not be like tables anymore */
+  .no-more-tables table, 
+  .no-more-tables thead, 
+  .no-more-tables tbody, 
+  .no-more-tables th, 
+  .no-more-tables td, 
+  .no-more-tables tr { 
+    display: block !important; 
+  }
+ 
+  /* Hide table headers (but not display: none;, for accessibility) */
+  .no-more-tables thead tr { 
+    position: absolute !important;
+    top: -9999px !important;
+    left: -9999px !important;
+  }
+ 
+  .no-more-tables tr { border: 1px solid #ccc !important; }
+ 
+ .no-more-tables td { 
+    /* Behave  like a "row" */
+    border: none !important;
+    border-bottom: 1px solid #eee !important; 
+    position: relative !important;
+    padding-left: 50% !important; 
+    white-space: normal !important;
+    text-align:left !important;
+  }
+ 
+  .no-more-tables td:before { 
+    /* Now like a table header */
+    position: absolute !important;
+    /* Top/left values mimic padding */
+    top: 6px !important;
+    left: 6px !important;
+    width: 45% !important; 
+    padding-right: 10px !important; 
+    white-space: nowrap !important;
+    text-align:left !important;
+    font-weight: bold !important;
+  }
+ 
+  /*
+  Label the data
+  */
+  .no-more-tables td:before { content: attr(data-title) !important; }
 }
