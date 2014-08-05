@@ -8019,6 +8019,20 @@ hr {
 .lender-dashboard-btn {
   margin: -7px 0 5px 0;
 }
+.lender-funds-page .btn {
+  margin: 0 15px 0 0;
+}
+@media (max-width: 767px) {
+  .lender-funds-page .btn {
+    margin-bottom: 15px;
+    width: 100%;
+  }
+}
+@media (min-width: 768px) {
+  .lender-funds-page .form-control {
+    width: 30%;
+  }
+}
 @media (max-width: 767px) {
   .mobile-padding {
     padding-bottom: 15px !important;

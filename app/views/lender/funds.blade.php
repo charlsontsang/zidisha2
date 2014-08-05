@@ -1,86 +1,97 @@
 @extends('layouts.master')
 
 @section('page-title')
-Add or Withdraw Funds
+Transfer Funds
 @stop
 
 @section('content')
-<div class="page-header">
-    <h1>Add or Withdraw Funds</h1>
+<div class="row lender-funds-page">
+    <div class="col-sm-8 col-sm-offset-2">
+        <div class="page-header">
+            <h1>Transfer Funds</h1>
+        </div>
+
+        <p>Current lending credit: <strong>{{ $currentBalance }}</strong></p>
+        <br/>
+
+        <h2>Add Funds</h2>
+
+        <p>Transfer funds to your lending account.</p>
+        <br/>
+
+        {{ BootstrapForm::open(array('route' => 'lender:post-funds', 'translationDomain' => 'fund', 'id' => 'funds-upload')) }}
+        {{ BootstrapForm::populate($form) }}
+
+        {{ BootstrapForm::text('amount', null, ['id' => 'amount']) }}
+        {{ BootstrapForm::hidden('creditAmount', null, ['id' => 'credit-amount']) }}
+        {{ BootstrapForm::text('donationAmount', null, ['id' => 'donation-amount']) }}
+        {{ BootstrapForm::hidden('donationCreditAmount', null, ['id' => 'donation-credit-amount']) }}
+
+        {{ BootstrapForm::hidden('transactionFee', null, ['id' => 'transaction-fee-amount']) }}
+        {{ BootstrapForm::hidden('transactionFeeRate', null, ['id' => 'transaction-fee-rate']) }}
+        {{ BootstrapForm::hidden('currentBalance', 0, ['id' => 'current-balance']) }}
+        {{ BootstrapForm::hidden('totalAmount', null, ['id' => 'total-amount']) }}
+
+        {{ BootstrapForm::hidden('stripeToken', null, ['id' => 'stripe-token']) }}
+        {{ BootstrapForm::hidden('paymentMethod', null, ['id' => 'payment-method']) }}
+
+        {{ BootstrapForm::label("Payment Transfer Cost") }}:
+        USD <span id="fee-amount-display"></span>
+
+        <br/><br/>
+
+        {{ BootstrapForm::label("Total amount to be charged to your account") }}
+        USD <span id="total-amount-display"></span>
+
+        <br/><br/>
+
+        <button id="stripe-payment" class="btn btn-primary">Pay with credit card</button>
+
+        <button type="submit" id="paypal-payment" class="btn btn-default" value="Pay With Paypal" name="submit_paypal">
+            Continue with
+            <img src="http://logocurio.us/wp-content/uploads/2014/04/paypal-logo.png" alt="Paypal" style="height: 20px"/>
+        </button>
+
+        {{ BootstrapForm::close() }}
+
+        <hr/>
+        
+        <h2>Redeem Gift Card</h2>
+
+        <p>Redeem a gift card you have received.</p>
+        <br/>
+        <a href="{{ route('lender:gift-cards') }}">Give a gift card</a>
+        <br/><br/>
+
+        {{ BootstrapForm::open(array('route' => 'lender:post-redeem-card', 'translationDomain' => 'redeemCard')) }}
+
+        {{ BootstrapForm::text('redemptionCode') }}
+
+        <button id="stripe-payment" class="btn btn-primary">Redeem</button>
+
+        {{ BootstrapForm::close() }}
+        
+        <hr/>
+
+        <h2>Withdraw Funds</h2>
+
+        <p>Request a transfer of your lending credit to your PayPal account.</p>
+        <br/>
+        <div>
+            <p>Current lending credit: <strong>{{ $currentBalance }}</strong></p>
+        </div>
+        <br/>
+
+        {{ BootstrapForm::open(array('route' => 'lender:post-withdraw-funds', 'translationDomain' => 'withdrawFunds')) }}
+
+        {{ BootstrapForm::text('paypalEmail') }}
+        {{ BootstrapForm::text('withdrawAmount') }}
+
+        <button id="stripe-payment" class="btn btn-primary">Withdraw</button>
+
+        {{ BootstrapForm::close() }}
+    </div>
 </div>
-
-
-<div>
-    <strong>Balance available: ${{ $currentBalance }}</strong>
-</div>
-
-<div>
-    <strong>Add Funds</strong>
-</div>
-
-{{ BootstrapForm::open(array('route' => 'lender:post-funds', 'translationDomain' => 'fund', 'id' => 'funds-upload')) }}
-{{ BootstrapForm::populate($form) }}
-
-{{ BootstrapForm::text('amount', null, ['id' => 'amount']) }}
-{{ BootstrapForm::hidden('creditAmount', null, ['id' => 'credit-amount']) }}
-{{ BootstrapForm::text('donationAmount', null, ['id' => 'donation-amount']) }}
-{{ BootstrapForm::hidden('donationCreditAmount', null, ['id' => 'donation-credit-amount']) }}
-
-{{ BootstrapForm::hidden('transactionFee', null, ['id' => 'transaction-fee-amount']) }}
-{{ BootstrapForm::hidden('transactionFeeRate', null, ['id' => 'transaction-fee-rate']) }}
-{{ BootstrapForm::hidden('currentBalance', 0, ['id' => 'current-balance']) }}
-{{ BootstrapForm::hidden('totalAmount', null, ['id' => 'total-amount']) }}
-
-{{ BootstrapForm::hidden('stripeToken', null, ['id' => 'stripe-token']) }}
-{{ BootstrapForm::hidden('paymentMethod', null, ['id' => 'payment-method']) }}
-
-{{ BootstrapForm::label("Payment Transfer Cost") }}:
-USD <span id="fee-amount-display"></span>
-
-<br/>
-
-{{ BootstrapForm::label("Total amount to be charged to your account") }}
-USD <span id="total-amount-display"></span>
-
-<br/>
-<button id="stripe-payment" class="btn btn-primary">Pay With Card</button>
-<input type="submit" id="paypal-payment" class="btn btn-primary" value="Pay With Paypal" name="submit_paypal">
-
-{{ BootstrapForm::close() }}
-<br><br>
-<div>
-    <strong>Redeem Gift Card</strong>
-</div>
-<a href="{{ route('lender:gift-cards') }}">Purchase Gift Card</a>
-<br/>
-{{ BootstrapForm::open(array('route' => 'lender:post-redeem-card', 'translationDomain' => 'redeemCard')) }}
-
-{{ BootstrapForm::text('redemptionCode') }}
-
-<button id="stripe-payment" class="btn btn-primary">Submit</button>
-
-{{ BootstrapForm::close() }}
-<br><br>
-<div>
-    <strong>Withdraw Funds</strong>
-</div>
-<br>
-<p>Use this form to request a transfer of your lending balance to your PayPal account.</p>
-<br/>
-
-<div>
-    <p>Balance available: ${{ $currentBalance }}</p>
-</div>
-{{ BootstrapForm::open(array('route' => 'lender:post-withdraw-funds', 'translationDomain' => 'withdrawFunds')) }}
-
-{{ BootstrapForm::text('paypalEmail') }}
-{{ BootstrapForm::text('withdrawAmount') }}
-
-<button id="stripe-payment" class="btn btn-primary">Withdraw</button>
-
-{{ BootstrapForm::close() }}
-<br><br>
-
 @stop
 
 @section('script-footer')
