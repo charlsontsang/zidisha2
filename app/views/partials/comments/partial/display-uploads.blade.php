@@ -1,35 +1,44 @@
 @if(!$comment->isOrphanDeleted())
-    @if(\Auth::user() == $comment->getUser())
-        <div class="comment-uploads">
-            @foreach($comment->getUploads() as $upload)
-                @if($upload->isImage())
-                    <div class="comment-form" data-comment-action="delete-upload">
-                        {{ BootstrapForm::open(array('action' => [ $controller.'@postDeleteUpload', 'id' => $receiver->getId()  ], 'translationDomain' => 'comments')) }}
+    <div class="comment-uploads">
+        @foreach($comment->getUploads() as $upload)
+            @if($upload->isImage())
+                <div class="comment-form" data-comment-action="delete-upload">
+                    {{ BootstrapForm::open(array('action' => [ $controller.'@postDeleteUpload', 'id' => $receiver->getId()  ], 'translationDomain' => 'borrower.comments')) }}
 
-                        <a href="{{ $upload->getImageUrl('small-profile-picture') }}">
-                            <img src="{{ $upload->getImageUrl('small-profile-picture') }}" width="100px" height="100px" alt=""/>
-                        </a>
+                    <a href="{{ $upload->getImageUrl('small-profile-picture') }}">
+                        <img src="{{ $upload->getImageUrl('small-profile-picture') }}" style="max-width:100%;" alt=""/>
+                    </a>
+                    
+                    <br/>
+                    <br/>
 
-                        {{ BootstrapForm::hidden('comment_id', $comment->getId()) }}
-                        {{ BootstrapForm::hidden('upload_id', $upload->getId()) }}
-                        {{ BootstrapForm::submit('delete') }}
-                        {{ BootstrapForm::close() }}
+                    @if(\Auth::user() == $comment->getUser())
+
+                    {{ BootstrapForm::hidden('comment_id', $comment->getId()) }}
+                    {{ BootstrapForm::hidden('upload_id', $upload->getId()) }}
+                    {{ BootstrapForm::submit('delete-upload') }}
+                    {{ BootstrapForm::close() }}
+                    
+                    @endif
+                </div>
+            @else
+                <div class="comment-form" data-comment-action="delete-upload">
+                    {{ BootstrapForm::open(array('action' => [ $controller.'@postDeleteUpload', 'id' => $receiver->getId()  ], 'translationDomain' => 'borrower.comments')) }}
+
+                    <div class="well">
+                        <a href="{{  $upload->getFileUrl()  }}">{{ $upload->getFilename() }}</a>
                     </div>
-                @else
-                    <div class="comment-form" data-comment-action="delete-upload">
-                        {{ BootstrapForm::open(array('action' => [ $controller.'@postDeleteUpload', 'id' => $receiver->getId()  ], 'translationDomain' => 'comments')) }}
 
-                        <div class="well">
-                            <a href="{{  $upload->getFileUrl()  }}">{{ $upload->getFilename() }}</a>
-                        </div>
-
-                        {{ BootstrapForm::hidden('comment_id', $comment->getId()) }}
-                        {{ BootstrapForm::hidden('upload_id', $upload->getId()) }}
-                        {{ BootstrapForm::submit('delete', ['data-submit' => '', 'data-loading-text' => \Lang::get('borrower.comments.delete.loading-text')]) }}
-                        {{ BootstrapForm::close() }}
-                    </div>
-                @endif
-            @endforeach
-        </div>
-    @endif
+                    @if(\Auth::user() == $comment->getUser())
+                    
+                    {{ BootstrapForm::hidden('comment_id', $comment->getId()) }}
+                    {{ BootstrapForm::hidden('upload_id', $upload->getId()) }}
+                    {{ BootstrapForm::submit('delete-upload', ['data-submit' => '', 'data-loading-text' => \Lang::get('borrower.comments.delete.loading-text')]) }}
+                    {{ BootstrapForm::close() }}
+                    
+                    @endif
+                </div>
+            @endif
+        @endforeach
+    </div>
 @endif

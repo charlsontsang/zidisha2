@@ -1,4 +1,4 @@
-<div class="text-muted">
+<div>
     @if(\Auth::check())
         @if(\Auth::user()->getRole() == 'lender')
             <a href="#" target="translate" class="comment-action">@lang('borrower.comments.actions.translate')</a> &bull;

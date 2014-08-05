@@ -1,9 +1,12 @@
-<div class="comment-form" style="display: none;" data-comment-action="translate" >
-    {{ BootstrapForm::open(array('action' => [ $controller.'@postTranslate', 'id' => $receiver->getId()  ], 'translationDomain' => 'comments')) }}
+<div class="comment-form clearfix" style="display: none;" data-comment-action="translate" >
+    {{ BootstrapForm::open(array('action' => [ $controller.'@postTranslate', 'id' => $receiver->getId()  ], 'translationDomain' => 'borrower.comments')) }}
 
-    {{ BootstrapForm::textarea('message') }}
+    {{ BootstrapForm::textarea('message', $comment->getMessageTranslation(), ['label' => 'borrower.comments.translation']) }}
     {{ BootstrapForm::hidden('comment_id', $comment->getId()) }}
-    {{ BootstrapForm::submit('translate', ['data-submit' => '', 'data-loading-text' => \Lang::get('borrower.comments.loading-text.translate')]) }}
+    
+    <div class="pull-right">
+        {{ BootstrapForm::submit('actions.translate', ['data-submit' => '', 'data-loading-text' => \Lang::get('borrower.comments.loading-text.translate')]) }}
+    </div>
 
     {{ BootstrapForm::close() }}
 </div>

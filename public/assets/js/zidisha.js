@@ -25,7 +25,7 @@ $(function () {
     var commentUploadTemplate = $('#comment-upload-input-template').html();
 
     $comments.on('click', '.comment-upload-add-more', function () {
-        $(this).closest('.comment').find('.comment-upload-inputs').append($(commentUploadTemplate));
+        $(this).closest('.comment').find('.comment-upload-inputs').prepend($(commentUploadTemplate));
         return false;
     });
 

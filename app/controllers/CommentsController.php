@@ -185,7 +185,7 @@ abstract class CommentsController extends BaseController
     public function postDeleteUpload()
     {
         $comment = $this->getCommentQuery()
-            ->filterById(\Input::get('receiver_id'))
+            ->filterById(\Input::get('comment_id'))
             ->findOne();
 
         $upload = UploadQuery::create()->filterById(\Input::get('upload_id'))->findOne();

@@ -93,14 +93,7 @@ hr {
   text-align: left;
   font-weight: normal;
 }
-.media-object {
-  height: 70px;
-  width: 70px;
-  @media (min-width: @screen-md-min) {
-    height: 90px;
-    width: 90px;
-  }
-}
+
 .fa-info-circle {
   color: @gray-light;
   margin-left: 2px;
@@ -140,10 +133,21 @@ hr {
 .lender-dashboard-btn {
   margin: -7px 0 5px 0;
 }
+
 .mobile-padding {
   @media (max-width: @screen-xs-max) {
     padding-bottom: 15px !important;
   }
+}
+
+.form-control {
+  .box-shadow(none);
+}
+
+.tooltip-inner {
+  border: solid 1px #ccc;
+  padding: 12px;
+  text-align: left;
 }
 
 /* Static info pages */

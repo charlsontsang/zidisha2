@@ -41,6 +41,9 @@
 <div class="row">
     <div class="col-sm-8 loan-body">
         <img src="{{ $loan->getBorrower()->getUser()->getProfilePictureUrl('large-profile-picture') }}" width="100%">
+        
+        <br/>
+        <br/>
 
         <ul class="nav nav-tabs nav-justified" role="tablist">
             <li class="active"><a href="#about" role="tab" data-toggle="tab">About</a></li>
@@ -339,7 +342,7 @@
 
             <div class="tab-pane fade" id="discussion">
                 
-                <div class="loan-section comments">
+                <div class="loan-section">
 
                     <div class="loan-section-title">
                         <span class="text-light">Discussion</span>
@@ -351,15 +354,15 @@
                             <br/><br/>
                         </span>
                     </div>
-
-                    @include('partials.comments.comments', [
-                        'comments' => $comments,
-                        'receiver' => $borrower,
-                        'controller' => 'BorrowerCommentController',
-                        'canPostComment' => \Auth::check(),
-                        'canReplyComment' => \Auth::check()
-                    ])
-                </div> 
+                </div>
+                
+                @include('partials.comments.comments', [
+                    'comments' => $comments,
+                    'receiver' => $borrower,
+                    'controller' => 'BorrowerCommentController',
+                    'canPostComment' => \Auth::check(),
+                    'canReplyComment' => \Auth::check()
+                ])
             </div>
 
             <div class="tab-pane fade" id="repayment">
@@ -653,6 +656,11 @@
             var data = $(this).closest('form').serialize();
             $.post("{{ route('lender:join-lend') }}", data);
         });
+
+        var hash = document.location.hash;
+        if (hash.substring(1, 8) == 'comment') {
+            $('.nav-tabs a[href=#discussion]').tab('show');
+        }
     });
     $('.nav-tabs a').click(function (e) {
         e.preventDefault()

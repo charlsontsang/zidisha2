@@ -1,32 +1,36 @@
-<div class="loan-section-title">
+<div class="comments">
+    
+    <div class="row">
+        <div class="col-sm-10 col-sm-push-2">
+            @if($canPostComment)
+                @include('partials.comments.partial.post', [
+                    'controller' => $controller,
+                    'receiver' => $receiver,
+                    'canPostComment' => $canPostComment,
+                    'canReplyComment' => $canReplyComment
+                ])
+            @else
+                <span class="text-light">Please <a href="#">log in</a> to comment.</span>
+            @endif
+        </div>
+    </div>
+
+    <hr/>
+
+    <ul class="media-list">
+        @foreach($comments as $comment)
+            @include("partials.comments.root", [
+                'comment' => $comment,
+                'controller' => $controller,
+                'receiver' => $receiver,
+                'canPostComment' => $canPostComment,
+                'canReplyComment' => $canReplyComment
+            ])
+        @endforeach
+    </ul>
+    {{ BootstrapHtml::paginator($comments)->links() }}
+    
+    <script type="text/html" id="comment-upload-input-template">
+        {{ BootstrapForm::file('file[]', ['label' => 'borrower.comments.upload-file', 'class' => 'upload-file']) }}
+    </script>
 </div>
-
-<div class="loan-section-content">
-    @if($canPostComment)
-        @include('partials.comments.partial.post', [
-            'controller' => $controller,
-            'receiver' => $receiver,
-            'canPostComment' => $canPostComment,
-            'canReplyComment' => $canReplyComment
-        ])
-    @else
-        <span class="text-light">Please <a href="#">log in</a> to comment.</span>
-    @endif
-</div>
-
-<ul class="list-unstyled">
-    @foreach($comments as $comment)
-        @include("partials.comments.root", [
-            'comment' => $comment,
-            'controller' => $controller,
-            'receiver' => $receiver,
-            'canPostComment' => $canPostComment,
-            'canReplyComment' => $canReplyComment
-        ])
-    @endforeach
-</ul>
-{{ BootstrapHtml::paginator($comments)->links() }}
-
-<script type="text/html" id="comment-upload-input-template">
-    {{ BootstrapForm::file('file[]', ['label' => 'comments.upload-file', 'class' => 'upload-file']) }}
-</script>

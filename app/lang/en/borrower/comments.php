@@ -23,8 +23,11 @@ return [
         'translate-success' => 'Your translation has been published. Thanks!',
         'file-deleted' => 'The file has been deleted.',
     ],
+    'add-photo' => 'Add a photo',
+    'delete-upload' => 'Delete',
     'upload-file' => 'Add a photo',
     'add-more' => 'Add more',
     'submit' => 'Post message',
-    'message' => 'Message'
+    'message' => 'Message',
+    'translation' => 'Translation',
 ];
