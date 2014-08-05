@@ -1035,6 +1035,7 @@
             <inheritance key="7" class="AgainRepaymentReminder"/>
             <inheritance key="8" class="LoanAboutToExpireReminder"/>
             <inheritance key="9" class="NewLenderIntro"/>
+            <inheritance key="10" class="CronToRepay"/>
         </column>
         <foreign-key foreignTable="users">
             <reference local="user_id" foreign="id"/>
