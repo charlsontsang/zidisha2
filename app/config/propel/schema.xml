@@ -917,7 +917,7 @@
 
     <table name="notifications" phpName="Notification" namespace="Notification">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
-        <column name="type" type="ENUM" required="true" valueSet="abandoned"/>
+        <column name="type" type="ENUM" required="true" valueSet="0,1"/>
         <column name="user_id" type="INTEGER" required="true"/>
         <behavior name="timestampable"/>
         <foreign-key foreignTable="users">
