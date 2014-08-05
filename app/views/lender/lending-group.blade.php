@@ -1,53 +1,60 @@
 @extends('layouts.master')
 
 @section('page-title')
-Lending Groups
+{{ $group->getName() }}
+@stop
+
+@section('content-top')
+    <div id="carousel-example-generic" class="carousel">
+        <div class="carousel-inner group-image">
+            <div class="item active">
+                @if($group->getGroupProfilePicture())
+                    <img src="{{ $group->getGroupProfilePicture()->getImageUrl('small-profile-picture') }}" alt=""/>
+                @else
+                    <img src="/assets/images/carousel/mary.jpg" width="300px">
+                @endif
+                <div class="carousel-caption">
+                    <h3>{{ $group->getName() }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
 @stop
 
 @section('content')
 <div class="row">
-    <div class="col-xs-7">
-        <h2>{{ $group->getName() }}</h2>
-
-        <div class="row">
-            <div class="col-xs-5">
-                About Group:
-                <p>
-                    Total Impact All Time:
-                    {{ $groupImpacts['totalImpact'] }}
+    <div class="col-sm-8 loan-body">
+        <div class="loan-section well" style="padding-left: 0 !important;">
+            <div class="loan-section-title">
+                <span class="text-light">Impact</span>
+            </div>
+            <div class="loan-section-content">
+                <p class="text-large">This month: {{ $groupImpacts['totalImpactThisMonth'] }}
                 </p>
-                <p>
-                    Total Impact This Month:
-                    {{ $groupImpacts['totalImpactThisMonth'] }}
+                <p class="text-large">Last month: {{ $groupImpacts['totalImpactLastMonth'] }}
                 </p>
-                <p>
-                    Total Impact Last Month:
-                    {{ $groupImpacts['totalImpactLastMonth'] }}
+        
+                <p class="text-large">
+                    All time: {{ $groupImpacts['totalImpact'] }}
                 </p>
             </div>
-            <div class="col-xs-7">
-                <p>{{ $group->getAbout() }}</p>
+        </div>
 
-                @if(Auth::check() && Auth::getUser()->isLender())
-                    @if($group->isMember(Auth::User()->getLender()))
-                    <a href="{{ route('lender:group:leave', $group->getId()) }}" class="btn btn-primary">
-                        Leave this group
-                    </a>
-                    @else
-                    <a href="{{ route('lender:group:join', $group->getId()) }}" class="btn btn-primary">
-                        Join this group
-                    </a>
-                    @endif
-                <br><br>
-                <div>
-                    @if($group->isLeader(Auth::User()->getLender()))
-                        <a href="{{ route('lender:groups:edit', $group->getId()) }}" class="btn btn-primary">
-                            Edit Group
-                        </a>
-                    @endif
-                </div>
-                @endif
-                <br>
+        <div class="loan-section">
+
+            <div class="loan-section-title">
+                <span class="text-light">About</span>
+            </div>
+            <div class="loan-section-content">
+                <p>{{ $group->getAbout() }}</p>
+            </div>
+
+            <hr/>
+
+            <div class="loan-section-title">
+                <span class="text-light">Members</span>
+            </div>
+            <div class="loan-section-content">
                 {{ $membersCount }} Members
                 @if($membersCount > 0)
                 <div class="Members">
@@ -68,22 +75,44 @@ Lending Groups
                     </div>
                 </div>
                 @endif
+            </div>
 
-                <br/>
-                <br/>
-                <h4>Comments</h4>
-                @include('partials.comments.comments', ['comments' => $comments, 'controller' => 'LendingGroupCommentController', 'canPostComment' => $canPostComment, 'canReplyComment' => $canReplyComment])
+            <hr/>
+
+            <div class="loan-section-title">
+                <span class="text-light">Discussion</span>
+            </div>
+            <div class="loan-section-content">
+                <p></p>
             </div>
         </div>
 
+        @include('partials.comments.comments', ['comments' => $comments, 'controller' => 'LendingGroupCommentController', 'canPostComment' => $canPostComment, 'canReplyComment' => $canReplyComment])
+            
     </div>
 
-    <div class="col-xs-5">
+    <div class="col-xs-4">
+        @if(Auth::check() && Auth::getUser()->isLender())
+            @if($group->isMember(Auth::User()->getLender()))
+            <a href="{{ route('lender:group:leave', $group->getId()) }}" class="btn btn-primary">
+                Leave this group
+            </a>
+            @else
+            <a href="{{ route('lender:group:join', $group->getId()) }}" class="btn btn-primary">
+                Join this group
+            </a>
+            @endif
+        <br><br>
+        <div>
+            @if($group->isLeader(Auth::User()->getLender()))
+                <a href="{{ route('lender:groups:edit', $group->getId()) }}" class="btn btn-primary">
+                    Edit Group
+                </a>
+            @endif
+        </div>
+        @endif
         <a href="{{ route('lender:groups') }}">Back to Lending Groups</a>
         <br>
-        @if($group->getGroupProfilePicture())
-            <img src="{{ $group->getGroupProfilePicture()->getImageUrl('small-profile-picture') }}" alt=""/>
-        @endif
     </div>
 </div>
 
