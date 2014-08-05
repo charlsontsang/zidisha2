@@ -2,6 +2,7 @@
 
 namespace Zidisha\ScheduledJob;
 
+use Carbon\Carbon;
 use Zidisha\ScheduledJob\Map\ScheduledJobsTableMap;
 
 
@@ -29,7 +30,14 @@ class RepaymentReminder extends ScheduledJobs
 
     public function getQuery()
     {
-
+            return "
+                SELECT * 
+                FROM installments 
+                WHERE amount > 0  
+                AND (paid_amount IS NULL OR paid_amount < amount ) 
+                AND `due_date`>= ('".Carbon::now()->addDay()."') 
+                AND `due_date`<= ('".Carbon::now()->addDays(2)."')
+            ";
     }
 
     public function process($job, $data)
