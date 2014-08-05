@@ -9,32 +9,34 @@ Transaction History
     <h1>Transaction History</h1>
 </div>
 
-<p>Balance available: ${{ $currentBalance }} </p>
+<p>Current lending credit: <strong>{{ $currentBalance }}</strong></p>
 
-<table class="table table-striped">
+<br/><br/>
+
+<table class="table table-striped no-more-tables">
     <thead>
         <tr>
             <th>
-                Transaction Date
+                Date
             </th>
             <th>
-                Transaction Description
+                Description
             </th>
             <th>
-                Amount (US $)
+                Amount
             </th>
             <th>
-                Balance (US $)
+                Balance
             </th>
         </tr>
     </thead>
     <tbody>
     @foreach($paginator as $transaction)
         <tr>
-            <td>{{ $transaction->getTransactionDate()->format('d-m-Y') }}</td>
-            <td><a href="#">{{ $transaction->getDescription() }}</a></td>
-            <td>{{ $transaction->getAmount()->getAmount() }}</td>
-            <td>{{ $currentBalancePage->getAmount() }}</td>
+            <td data-title="Date">{{ $transaction->getTransactionDate()->format('M j, Y') }}</td>
+            <td data-title="Description"><a href="#">{{ $transaction->getDescription() }}</a></td>
+            <td data-title="Amount">{{ $transaction->getAmount()->getAmount() }}</td>
+            <td data-title="Balance">{{ $currentBalancePage->getAmount() }}</td>
         </tr>
     <?php $currentBalancePage = $currentBalancePage->subtract($transaction->getAmount()); ?>
     @endforeach
