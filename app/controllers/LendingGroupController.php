@@ -120,7 +120,7 @@ class LendingGroupController extends BaseController
 
         $this->lendingGroupService->joinLendingGroup($group, $lender);
 
-        \Flash::success("Successfully Joined!");
+        \Flash::success("You're now a member!");
         return Redirect::route('lender:group', $group->getId());
     }
 
@@ -136,11 +136,11 @@ class LendingGroupController extends BaseController
         $lender = Auth::user()->getLender();
         $leaved = $this->lendingGroupService->leaveLendingGroup($group, $lender);
         if(!$leaved){
-            \Flash::success("Leader can't leave the group!");
+            \Flash::success("Please transfer leadership to another group member before leaving. Thanks!");
             return Redirect::route('lender:group', $group->getId());
         }
 
-        \Flash::success("Successfully Leaved!");
+        \Flash::success("You have left this group.");
         return Redirect::route('lender:group', $group->getId());
     }
 
