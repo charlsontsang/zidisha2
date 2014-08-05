@@ -57,6 +57,21 @@ return [
             'default' => '14',
             'rule' => 'numeric'
         ],
+        'loan.repaymentReminderDay' => [
+            'label' => 'Number of days after which an repayment reminder will be sent.',
+            'default' => '14',
+            'rule' => 'numeric'
+        ],
+        'loan.repaymentDueAmount' => [
+            'label' => 'Loan Due amount',
+            'default' => '5',
+            'rule' => 'numeric'
+        ],
+        'loan.deadline' => [
+            'label' => 'Loan Due amount',
+            'default' => '5',
+            'rule' => 'numeric'
+        ],
     ],
     'API' => [
         'facebook.appId' => [
