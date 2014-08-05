@@ -8047,6 +8047,16 @@ hr {
   padding: 12px;
   text-align: left;
 }
+.circle {
+  border-radius: 30px;
+  border: 1px solid #dfdcdc;
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  line-height: 40px;
+  margin: 0 auto;
+  margin-top: -6px;
+}
 /* Static info pages */
 .info-page h3 {
   font-size: 1.5em;
