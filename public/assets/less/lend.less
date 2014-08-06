@@ -1,22 +1,19 @@
+.result {
+    border: 1px solid #e5e5e5;
+    box-shadow: 1px 1px 2px #e5e5e5;
+    padding: 10px;
+    height: 460px;
+}
 .loan-category {
-    margin-bottom: 12px;
+    margin-bottom: 10px;
+    margin-top: 10px;
     font-size: 12px;
     font-weight: bolder;
     text-transform: uppercase;
-    @media (max-width: @screen-xs-max) {
-      padding-top: 22px;
-    }
-}
-.profile-photo img {
-	width: 100%;
-	height: auto;
 }
 .loan h2 {
-    font-size: 24px;
-    color: #333;
-    @media (min-width: @screen-md-min) {
-      	font-size: 32px;
-    }
+    font-size: 16px;
+    font-weight: bold;
 }
 .loan h2 a {
     color: #333;
@@ -25,9 +22,23 @@
     color: @brand-primary;
     text-decoration: none;
 }
-.loan-summary {
-    padding: 12px 0;
+.loan .progress {
+    margin-top: 30px;
 }
 a.link-dark {
     color: #333;
+}
+.profile-image {
+    height: 200px;
+    width: 100%;
+    /* lt ie8 */
+    -ms-background-position-x: center;
+    -ms-background-position-y: center;
+    background-position: center;
+
+    /* scale bg image proportionately */
+    background-size: cover;
+    
+    /* ie8 workaround - http://louisremi.github.io/background-size-polyfill/ */
+    -ms-behavior: url(/backgroundsize.min.htc);
 }

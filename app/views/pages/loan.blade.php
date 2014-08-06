@@ -17,6 +17,7 @@
             <div class="row">
                 <div class="col-sm-3 col-md-2">
                     <p>
+                        <i class="fa fa-fw fa-user"></i>
                         {{ $loan->getBorrower()->getName() }}
                     </p>
                 </div>
@@ -310,6 +311,7 @@
 
                 @endif
 
+                @if(count($bids) > 0)
                 <div class="loan-section">
                     <div class="loan-section-title">
                         <span class="text-light">Lenders</span>
@@ -337,6 +339,7 @@
                         </div>
                     </div>
                 </div>
+                @endif
 
                 @if(Auth::check() && Auth::getUser()->isAdmin())
                 <br><br>
