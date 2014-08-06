@@ -34,18 +34,21 @@ class UnusedFunds extends ScheduledJobs
     public function getQuery()
     {
         return DB::table('users AS u')
-            ->whereRaw("u.last_login_at < '". Carbon::now()->subMonths(2) ."'")
+            ->whereRaw("u.last_login_at < '" . Carbon::now()->subMonths(2) . "'")
             ->whereRaw('u.role = 0')
-            ->whereRaw('u.active = 1')
+            ->whereRaw('u.active = true')
             ->whereRaw('(SELECT SUM(amount) FROM transactions t WHERE t.user_id = u.id) >= 50')
-            ->whereRaw('( 
-                            SELECT COUNT(*) 
-                            FROM notifications n
-                            WHERE n.user_id = u.id
-                            AND n.created >= ' . Carbon::now()->subMonth() . '
-                            AND n.type = '. Notification::UNUSED_FUNDS_NOTIFICATION .'
-                        ) = 0
-                        ');
+            ->whereRaw(
+                '
+                    (
+                        SELECT COUNT(*) 
+                        FROM notifications n
+                        WHERE n.user_id = u.id
+                        AND n.created >= \'' . Carbon::now()->subMonth() . '\'
+                        AND n.type = ' . Notification::UNUSED_FUNDS_NOTIFICATION . '
+                    ) = 0
+                '
+            );
     }
 
     public function process($job, $data)

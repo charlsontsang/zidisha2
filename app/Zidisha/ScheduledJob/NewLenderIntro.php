@@ -33,6 +33,7 @@ class NewLenderIntro extends ScheduledJobs
     public function getQuery()
     {
         return DB::table('users AS u')
+            ->selectRaw('u.id AS user_id, u.created_at as start_date, *')
             ->whereRaw('u.role = 0')
             ->whereRaw('u.active = true')
             ->whereRaw("u.created_at  >'".Carbon::now()->subDays(2)."'")

@@ -3,6 +3,7 @@
 namespace Zidisha\ScheduledJob;
 
 use Carbon\Carbon;
+use DB;
 use Zidisha\Loan\Loan;
 use Zidisha\ScheduledJob\Map\ScheduledJobsTableMap;
 
@@ -35,14 +36,14 @@ class LoanAboutToExpireReminder extends ScheduledJobs
         $deadlineDays = \Setting::get('loan.deadline');
         $beforeDays = $deadlineDays - 3;
         $afterDays = $beforeDays + 1;
-        
-        return "SELECT id, borrower_id, applied_at, total_amount, summary, summary_translation
-                FROM loans
-                WHERE status = " . Loan::OPEN . "
-                AND deleted_by_admin = false
-                AND about_to_expire_notification = 0
-                AND applied_at <= ".Carbon::now()->subDays($beforeDays)."
-                AND applied_at >= ".Carbon::now()->subDays($afterDays);
+
+        return DB::table('loans AS u')
+            ->selectRaw('u.id, borrower_id AS user_id, applied_at AS start_date, total_amount, summary, summary_translation')    
+            ->whereRaw("status = " . Loan::OPEN)
+            ->whereRaw("deleted_by_admin = false")
+//            ->whereRaw("about_to_expire_notification = 0")
+            ->whereRaw("applied_at <= '".Carbon::now()->subDays($beforeDays)."'")
+            ->whereRaw("applied_at >= '".Carbon::now()->subDays($afterDays)."'");
     }
 
     public function process($job, $data)
