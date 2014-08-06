@@ -2,6 +2,8 @@
 
 namespace Zidisha\ScheduledJob;
 
+use Carbon\Carbon;
+use DB;
 use Zidisha\ScheduledJob\Map\ScheduledJobsTableMap;
 
 
@@ -31,15 +33,16 @@ class AgainRepaymentReminder extends ScheduledJobs
     {
         $dueDays = \Setting::get('loan.repaymentReminderDay');
         $dueAmount = \Setting::get('loan.repaymentDueAmount');
-
-        return "
-        SELECT rs.user_id, rs.loan_id, rs.due_date, rs.amount, rs.paid_amount 
-        FROM installments as rs 
-        JOIN borrowers AS br ON rs.borrower_id = br. ID
-        WHERE rs.amount > 0  
-        AND (
+        $dueAmount = 15;
+        $dueDays = 15; 
+        
+        return DB::table('installments as rs')
+            ->selectRaw('rs.borrower_id AS user_id, rs.loan_id, rs.due_date AS start_date, rs.amount, rs.paid_amount')
+            ->join('borrowers AS br', 'rs.borrower_id', '=', 'br.id')    
+            ->whereRaw("rs.amount > 0")
+            ->whereRaw("(
                 (
-                    (rs.amount-rs.paid_amount)> $dueAmount * (
+                    (rs.amount - rs.paid_amount) > ". $dueAmount . "* (
                         SELECT
                             rate
                         FROM
@@ -53,11 +56,18 @@ class AgainRepaymentReminder extends ScheduledJobs
                                 WHERE
                                     currency_code = (SELECT countries.currency_code FROM countries where countries.id = br.country_id)
                             )
+                        AND exchange_rates.currency_code = (
+                                    SELECT
+                                        countries.currency_code
+                                    FROM
+                                        countries
+                                    WHERE
+                                        countries.id = br.country_id
+                                )
                         )
-                ) OR paid_amount IS NULL)
-        AND `due_date`<=('" . Carbon::now()->subDays($dueDays) . "') 
-        AND `due_date`>('" . Carbon::now()->subDays($dueDays + 1) . "')
-        ";
+                ) OR paid_amount IS NULL)")
+            ->whereRaw('\'due_date\' <= \'' . Carbon::now()->subDays($dueDays) . '\'')
+            ->whereRaw('\'due_date\' > \'' . Carbon::now()->subDays($dueDays + 1) . '\'');
     }
 
     public function process($job, $data)

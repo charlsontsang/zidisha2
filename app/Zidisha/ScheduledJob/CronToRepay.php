@@ -3,6 +3,7 @@
 namespace Zidisha\ScheduledJob;
 
 use Carbon\Carbon;
+use DB;
 use Zidisha\ScheduledJob\Map\ScheduledJobsTableMap;
 
 
@@ -31,34 +32,41 @@ class CronToRepay extends ScheduledJobs
     public function getQuery()
     {
         $thresholdAmount = \Config::get('constants.repaymentAmountThreshold');
-        return "
-        SELECT rs.borrower_id, rs.loan_id, rs.due_date, rs.amount, rs.paid_amount
-        FROM installments as rs 
-        join borrowers as br on rs.borrower_id=br.id
-        WHERE rs.amount > 0  
-        AND (
-                rs.paid_amount IS NULL 
-                    OR 
-                rs.paidamt < ( 
-                        rs.amount - $thresholdAmount * ( 
-                                SELECT rate 
-                                FROM exchange_rates 
-                                WHERE start_date = ( 
-                                        SELECT MAX (start_date) 
-                                        FROM exchange_rates 
-                                        WHERE currency_code = (
-                                            SELECT countries.currency_code 
-                                            FROM countries 
-                                            where countries.id = br.country_id
-                                        ) 
-                                ) 
-                        ) 
-                )
-        )
-        AND rs.due_date <= (" . Carbon::now()->subDays(60) . ") 
-        AND rs.due_date >(" . Carbon::now()->subDays(61) . ") 
-        order by rs.borrower_id asc
-        ";
+
+        return DB::table('installments as rs')
+            ->selectRaw('rs.borrower_id AS user_id, rs.loan_id, rs.due_date AS start_date, rs.amount, rs.paid_amount')
+//            ->orderByRaw('rs.borrower_id asc')
+            ->join('borrowers AS br', 'rs.borrower_id', '=', 'br.ID')
+            ->whereRaw("rs.amount > 0")
+            ->whereRaw("
+                        ( 
+                            rs.paid_amount < ( 
+                                    rs.amount - $thresholdAmount * ( 
+                                            SELECT rate 
+                                            FROM exchange_rates 
+                                            WHERE start_date = ( 
+                                                    SELECT MAX (start_date) 
+                                                    FROM exchange_rates 
+                                                    WHERE currency_code = (
+                                                        SELECT countries.currency_code 
+                                                        FROM countries 
+                                                        where countries.id = br.country_id
+                                                    ) 
+                                            )
+                                    AND exchange_rates.currency_code = (
+                                        SELECT
+                                            countries.currency_code
+                                        FROM
+                                            countries
+                                        WHERE
+                                            countries.id = br.country_id
+                                    )
+                            ) 
+                            OR paid_amount IS NULL
+                        )
+                ")
+            ->whereRaw('rs.due_date <= \'' . Carbon::now()->subDays(60) . '\'')
+            ->whereRaw('rs.due_date > \'' . Carbon::now()->subDays(61) . '\'');
     }
 
     public function process($job, $data)

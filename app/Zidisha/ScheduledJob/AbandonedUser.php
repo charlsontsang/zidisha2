@@ -42,6 +42,7 @@ class AbandonedUser extends ScheduledJobs
     public function getQuery()
     {
         return DB::table('users AS u')
+            ->selectRaw('u.id AS user_id, u.last_login_at as start_date, *')
             ->whereRaw("u.last_login_at < '".Carbon::now()->subYear()."'")
             ->whereRaw('u.role = 0')
             ->whereRaw('u.active = true');

@@ -3,6 +3,7 @@
 namespace Zidisha\ScheduledJob;
 
 use Carbon\Carbon;
+use DB;
 use Zidisha\ScheduledJob\Map\ScheduledJobsTableMap;
 
 
@@ -31,41 +32,44 @@ class MonthlyLoanArrear extends ScheduledJobs
 
     public function getQuery()
     {
-        $query = "
-        SELECT
-            rs.borrower_id,
-            rs.loan_id,
-            rs.due_date,
-            rs.amount,
-            rs.paid_amount
-        FROM
-            installments AS rs
-        JOIN borrowers AS br ON rs.borrower_id = br. ID
-        WHERE
-            rs.amount > 0
-        AND (
-            rs.paid_amount IS NULL OR rs.paid_amount < (
-                rs.amount - 5 * (
-                    SELECT
-                        rate
-                    FROM
-                        exchange_rates
-                    WHERE
-                        start_date = (
+        return DB::table('installments AS rs')
+            ->selectRaw(
+                'rs.borrower_id AS user_id, rs.loan_id, rs.due_date AS start_date, rs.amount, rs.paid_amount, *'
+            )
+            ->join('borrowers AS br', 'rs.borrower_id', '=', 'br.id')
+            ->whereRaw("rs.amount > 0")
+            ->whereRaw(
+                '(
+                    rs.paid_amount IS NULL OR rs.paid_amount < (
+                        rs.amount - 5 * (
                             SELECT
-                                MAX (start_date)
+                                rate
                             FROM
                                 exchange_rates
                             WHERE
-                                currency_code = (SELECT countries.currency_code FROM countries where countries.id = br.country_id)
+                                start_date = (
+                                    SELECT
+                                        MAX (start_date)
+                                    FROM
+                                        exchange_rates
+                                    WHERE
+                                        currency_code = (SELECT countries.currency_code FROM countries where countries.id = br.country_id)
+                                )
+                                
+                            AND exchange_rates.currency_code = (
+                                    SELECT
+                                        countries.currency_code
+                                    FROM
+                                        countries
+                                    WHERE
+                                        countries.id = br.country_id
+                                )
                         )
-                )
+                    )
+                )'
             )
-        )
-        AND rs.due_date <= ('". Carbon::now()->subDays(30) ."')
-        AND rs.due_date > ('". Carbon::now()->subDays(31) ."')
-        ";
-
+            ->whereRaw('due_date <= \'' . Carbon::now()->subDays(30) . '\'')
+            ->whereRaw('due_date > \'' . Carbon::now()->subDays(31) . '\'');
     }
 
     public function process($job, $data)
