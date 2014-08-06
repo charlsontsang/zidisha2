@@ -15,14 +15,14 @@ class Invite extends AbstractForm {
         return [
             'emails' => 'required|Emails',
             'subject' => '',
-            'note' => 'required|min:20',
+            'note' => 'required|min:1',
         ];
     }
 
     public function getDefaultData()
     {
         return [
-            'subject' => 'Join Zidisha',
+            'subject' => 'Zidisha invitation + $25 lending credit',
         ];
     }
 

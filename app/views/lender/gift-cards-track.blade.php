@@ -1,45 +1,72 @@
 @extends('layouts.master')
 
 @section('page-title')
-Track My Gift Cards
+Track Gift Cards
 @stop
 
 @section('content')
-<h1>Track My Gift Cards</h1>
+<div class="page-header">
+    <h2>Track Gift Cards</h2>
+</div>
 
-<div class="raw">
-    <div class="col-xs-8">
-        <p> Gift Cards Gifted: {{ $countCards }} </p>
+<div class="row">
+    <div class="col-sm-5">
 
-        <p> Gift Cards Redeemed by My Recipients: {{ $countRedeemed }} </p>
+        <div class="row">
+            <div class="col-sm-7">
+                <p>Gift Cards Gifted:</p>
+            </div>
+            <div class="col-sm-5">
+                <p>{{ $countCards }}</p>
+            </div>
+
+            <div class="col-sm-7">
+                Gift Cards Redeemed:
+            </div>
+
+            <div class="col-sm-5">
+                <p>{{ $countRedeemed }}</p>
+            </div>
+        </div>
     </div>
-    <div class="col-xs-4">
-        <a href="{{ route('lender:gift-cards') }}">Purchase Gift Card</a>
+
+    <div class="col-sm-5 col-sm-offset-1">
+        <div class="row">
+            <div class="col-sm-7">
+                <a href="{{ route('lender:gift-cards') }}" class="btn btn-primary">
+                    @if ($countCards==0)
+                        Give your first gift card
+                    @else
+                        Give another gift card
+                    @endif
+                </a>
+            </div>
+        </div>
     </div>
 </div>
 
-<br/>
+<br/><br/>
 
-<table class="table table-striped">
+<table class="table table-striped no-more-tables">
     <thead>
     <tr>
         <th>Date Gifted</th>
-        <th>Name</th>
+        <th>Recipient Name</th>
         <th>Delivery Method</th>
         <th>Recipient Email
-        <th>Amount
+        <th>Card Amount</th>
         <th>Status</th>
     </tr>
     </thead>
     <tbody>
     @foreach($cards as $card)
     <tr>
-        <td>{{ $card->getDate()->format('d-m-Y') }}</td>
-        <td>{{ $card->getRecipientName() }}</td>
-        <td>{{ $card->getOrderType() }}</td>
-        <td>{{ $card->getRecipientEmail() }}</td>
-        <td>{{ $card->getCardAmount()->getAmount() }}</td>
-        <td>
+        <td data-title="Date Gifted">{{ $card->getDate()->format('M j, Y') }}</td>
+        <td data-title="Recipient Name">{{ $card->getRecipientName() }}</td>
+        <td data-title="Delivery Method">{{ $card->getOrderType() }}</td>
+        <td data-title="Recipient Email">{{ $card->getRecipientEmail() }}</td>
+        <td data-title="Card Amount">{{ $card->getCardAmount()->getAmount() }}</td>
+        <td data-title="Status">
             @if($card->getClaimed() == 1)
             <span class="label label-success">{{ $card->getStringClaimed() }}</span>
         @else
