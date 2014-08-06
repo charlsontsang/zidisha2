@@ -60,7 +60,7 @@ hr {
   padding-bottom: 22px;
 }
 .page-section-inverted {
-  background-color: @text-color;
+  background-color: @gray-dark;
   color: #e6e6e6;
 }
 .page-section-inverted .h2, .h3 {
@@ -263,3 +263,18 @@ hr {
   */
   .no-more-tables td:before { content: attr(data-title) !important; }
 }
+
+.profile-image {
+    width: 100%;
+    /* lt ie8 */
+    -ms-background-position-x: center;
+    -ms-background-position-y: center;
+    background-position: center;
+
+    /* scale bg image proportionately */
+    background-size: cover;
+    
+    /* ie8 workaround - http://louisremi.github.io/background-size-polyfill/ */
+    -ms-behavior: url(/backgroundsize.min.htc);
+}
+

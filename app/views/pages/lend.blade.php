@@ -34,7 +34,7 @@ Lend
                     </div>
                     <span class="text">sorted by</span>
                     <div class="btn btn-default btn-filter" target="#filter-sortings">
-                        On-Time Repayments
+                        Recently Added
                         <i class="fa fa-fw fa-caret-down"></i>
                     </div>
                 </div>

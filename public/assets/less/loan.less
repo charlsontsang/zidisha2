@@ -1,8 +1,5 @@
 .loan-body {
   padding-right: 15px;
-  @media (min-width: @screen-md-min) {
-    padding-right: 30px;
-  }
 }
 .loan-body .nav-tabs {
   margin-bottom: 22px;
@@ -27,8 +24,8 @@
     line-height: 2em;
   }
 }
-.loan-titlebar .leaf, {
-  @media (max-width: @screen-xs-max) {
+.loan-titlebar {
+  @media (min-width: @screen-sm-min) {
     display: none;
   }
 }
@@ -81,10 +78,21 @@
   }
 }
 .loan-side {
+  margin-top: 15px;
   padding: 0;
   @media (min-width: @screen-sm-min) {
     padding: 0 15px;
   }
+}
+.loan-side h2 {
+  margin-top: 0;
+}
+.loan-side h2 a {
+  color: #333;
+}
+.loan-side h2 a:hover, .loan-side h2 a:active {
+  color: @brand-primary;
+  text-decoration: none;
 }
 .lend-form {
   margin: 0;
@@ -92,17 +100,13 @@
     display: none;
   }
 }
-.loan-side .panel-body {
-  padding: 10px;
-  background-color: #f9f9f9;
+.loan-side .panel-default {
+  padding: 15px;
   margin-bottom: 0;
-  @media (min-width: @screen-sm-min) {
-    padding: 20px;
-    background-color: #fff;
-  }
 }
 .progress {
   margin-bottom: 8px;
+  margin-top: 30px;
 }
 .lend-form .text-light {
   @media (min-width: @screen-sm-min) {
@@ -142,4 +146,16 @@
   @media (min-width: @screen-sm-min) {
     display: none;
   }
+}
+.loan-body .profile-image {
+  margin-top: 15px;
+  margin-bottom: 15px;
+  height: 225px;
+  @media (min-width: @screen-sm-min) {
+    height: 450px;
+  }
+}
+#lend-form-fields {
+  margin-top: 10px;
+  margin-bottom: 15px;
 }
