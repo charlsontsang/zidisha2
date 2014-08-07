@@ -956,7 +956,7 @@
         </foreign-key>
     </table>
     
-    <table name="scheduled_jobs" phpName="ScheduledJobs" namespace="ScheduledJob">
+    <table name="scheduled_jobs" phpName="ScheduledJob" namespace="ScheduledJob">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="user_id" type="INTEGER" required="true"/>
         <column name="type" type="ENUM" valueSet="abandonedUser" required="true"/>
@@ -981,7 +981,7 @@
         </foreign-key>
     </table>
 
-    <table name="scheduled_jobs_logs" phpName="ScheduledJobsLogs" namespace="ScheduledJob">
+    <table name="scheduled_jobs_logs" phpName="ScheduledJobLog" namespace="ScheduledJob">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="scheduled_jobs_id" type="INTEGER" required="true"/>
         <column name="processed_at" type="TIMESTAMP" required="false"/>
