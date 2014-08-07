@@ -1,26 +1,33 @@
 <?php
 namespace Zidisha\ScheduledJob;
 
+use Zidisha\Vendor\PropelDB;
+
 class ScheduledJobService
 {
-    /**
-     * @param $scheduleJobs
-     * @param $jobId
-     * @param $jobCount
-     */
-    public function updateJob(ScheduledJobs $scheduleJobs, $jobId, $jobCount)
+    public function handleScheduledJob($job, $data)
     {
-        $now = new \DateTime;
+        $jobLogId = $data['jobLogId'];
 
-        $scheduleJobs->setLastProcessedAt($now);
-        $scheduleJobs->save();
+        $scheduleJobLog = ScheduledJobLogQuery::create()
+            ->findOneById($jobLogId);
 
-        $scheduleJobsLogs = ScheduledJobsLogsQuery::create()
-            ->filterByScheduledJobsId($jobId)
-            ->filterByCount($jobCount)
-            ->findOne();
+        $scheduleJob = $scheduleJobLog->getScheduledJobs();
+        $scheduleJob->process($job, $data);
 
-        $scheduleJobsLogs->setProcessedAt($now);
-        $scheduleJobsLogs->save();
+        if ($job->isDeleted()) {
+            PropelDB::transaction(
+                function ($con) use ($scheduleJob, $scheduleJobLog) {
+                    $now = new \DateTime;
+
+                    $scheduleJob->setLastProcessedAt($now);
+                    $scheduleJob->save($con);
+
+                    $scheduleJobLog->setProcessedAt($now);
+                    $scheduleJobLog->save($con);
+                }
+            );
+        }
+        
     }
 } 
