@@ -48,15 +48,17 @@ class AbandonedUser extends ScheduledJob
             ->whereRaw('u.active = true');
     }
     
-    public function process($job, $data)
+    public function process($job)
     {
-        $scheduleJobs = ScheduledJobsQuery::create()
-            ->findOneById($data['jobId']);
+        $user = $this->getUser();
 
-        $user = $scheduleJobs->getUser();
+        if ($user->getLastLoginAt() < Carbon::create()->subYear()) {
+            /** @var  LenderMailer $lenderMailer */
+            $lenderMailer = \App::make('Zidisha\Mail\LenderMailer');
+            $lenderMailer->sendAbandonedUserMail($user);
 
-        /** @var  LenderMailer $lenderMailer */
-        $lenderMailer = \App::make('Zidisha\Mail\LenderMailer');
-        $lenderMailer->sendAbandonedUserMail($user);
+        }
+        
+        $job->delete();
     }
 } // AbandonedUser
