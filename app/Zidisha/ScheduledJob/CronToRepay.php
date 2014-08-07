@@ -17,7 +17,7 @@ use Zidisha\ScheduledJob\Map\ScheduledJobsTableMap;
  * long as it does not already exist in the output directory.
  *
  */
-class CronToRepay extends ScheduledJobs
+class CronToRepay extends ScheduledJob
 {
 
     /**
@@ -71,7 +71,7 @@ class CronToRepay extends ScheduledJobs
 
     public function process($job, $data)
     {
-        $scheduleJobs = ScheduledJobsQuery::create()
+        $scheduleJobs = ScheduledJobQuery::create()
             ->findOneById($data['jobId']);
 
         $user = $scheduleJobs->getUser();
