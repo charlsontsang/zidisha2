@@ -18,4 +18,4 @@ Artisan::add(new ImportTranslationsCommand);
 Artisan::add(new LoanWriteOff(App::make('Zidisha\Loan\LoanService')));
 Artisan::add(new ExpireLoans(App::make('Zidisha\Loan\LoanService')));
 Artisan::add(new ScheduledJobs);
-Artisan::add(new Process);
+Artisan::add(new EnqueueScheduledJobs);
