@@ -15,7 +15,7 @@ use Zidisha\ScheduledJob\Base\ScheduledJobsQuery as BaseScheduledJobsQuery;
  * long as it does not already exist in the output directory.
  *
  */
-class ScheduledJobsQuery extends BaseScheduledJobsQuery
+class ScheduledJobQuery extends BaseScheduledJobsQuery
 {
 
 } // ScheduledJobsQuery
