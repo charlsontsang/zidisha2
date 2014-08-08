@@ -30,7 +30,6 @@ class ScheduledJobs extends Command
      */
     public function fire()
     {
-
         foreach ($this->classes as $class) {
             $scheduledJobClass = \App::make($class);
             $query = $this->joinQuery($scheduledJobClass);
@@ -65,10 +64,12 @@ class ScheduledJobs extends Command
             })
             ->whereRaw('s.count < '.$scheduledJobClass::COUNT);
         
-            if ($scheduledJobClass::COUNT > 0) {
-                return $query->whereRaw("s.last_processed_at IS NULL OR (s.last_processed_at + (s.count || ' months')::interval) > NOW()");
-            } else {
-                return $query->whereRaw("s.last_processed_at IS NULL");
-            }
+        if ($scheduledJobClass::COUNT > 1) {
+            $query->whereRaw("s.last_processed_at IS NULL OR (s.last_processed_at + (s.count || ' months')::interval) > NOW()");
+        } else {
+            $query->whereRaw("s.last_processed_at IS NULL");
+        }
+        
+        return $query;
     }
 }
