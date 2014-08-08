@@ -33,15 +33,15 @@ How It Works
         
         <h2>The Evolution of a Zidisha Loan</h2>
 
-        <p>Start by browsing the listings of available loan opportunities <a href="microfinance/lend.html">here</a>. When you find one (or more!) that you’d like to fund, you can make a bid for any portion of the loan and choose your own interest rate.</p>
+        <p>Start by browsing the listings of available loan opportunities <a href="{{ route('lend:index') }}">here</a>. When you find one (or more!) that you’d like to fund, you can make a bid for any portion of the loan and choose your own interest rate.</p>
 
         <p>Once the loan is fully funded and the borrower confirms acceptance, we disburse 100% of your funds straight to the borrower. From there on, you can communicate directly with the borrower using the Comments section located at the bottom each loan profile. (How amazing is that?)</p>
 
         <p>The repayment of your loan occurs in weekly or monthly installments. As soon as the borrower makes a repayment, we credit the funds back to your lending account. The repaid funds can be withdrawn at any time, or you can reinvest the money in new loans to other borrowers.</p>
 
-        <p>Intrigued? Inspired? Undecided? You can learn even more about how Zidisha works on our <a href="microfinance/faq.html">Frequently Asked Questions</a> page.</p>
+        <p>Intrigued? Inspired? Undecided? You can learn even more about how Zidisha works on our <a href="{{ route('page:faq') }}">Frequently Asked Questions</a> page.</p>
 
-        <p>If you’re ready to give it a try, head over to our <a href="microfinance/lend.html">Lend</a> page. We’d be thrilled to have you join our global person-to-person microlending movement.</p>
+        <p>If you’re ready to give it a try, head over to our <a href="{{ route('lend:index') }}">Lend</a> page. We’d be thrilled to have you join our global person-to-person microlending movement.</p>
     </div>
 </div>
 @stop
