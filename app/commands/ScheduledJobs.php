@@ -38,7 +38,7 @@ class ScheduledJobs extends Command
             
             foreach ($jobs as $job) {
                 /** @var ScheduledJob $scheduledJob */
-                if ($job->schedule_job_id == null) {
+                if ($job->scheduled_job_id == null) {
                     $scheduledJob = new $class;
                     $scheduledJob->setUserId($job->user_id);
                     $scheduledJob->save();
