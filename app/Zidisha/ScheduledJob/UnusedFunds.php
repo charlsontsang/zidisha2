@@ -4,6 +4,7 @@ namespace Zidisha\ScheduledJob;
 
 use Carbon\Carbon;
 use DB;
+use Illuminate\Queue\Jobs\Job;
 use Zidisha\Mail\LenderMailer;
 use Zidisha\Notification\Notification;
 use Zidisha\ScheduledJob\Map\ScheduledJobTableMap;
@@ -51,7 +52,7 @@ class UnusedFunds extends ScheduledJobs
             );
     }
 
-    public function process($job, $data)
+    public function process(Job $job)
     {
         $scheduleJobs = ScheduledJobsQuery::create()
             ->findOneById($data['jobId']);
