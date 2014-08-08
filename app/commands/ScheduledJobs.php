@@ -56,11 +56,13 @@ class ScheduledJobs extends Command
 
     public function joinQuery($scheduledJobClass)
     {
-       $query = $scheduledJobClass->getQuery()
-            ->leftJoin('scheduled_jobs AS s', 'user_id', '=', 's.user_id')
-            ->whereRaw('s.start_date = start_date')
-            ->whereRaw('s.user_id = user_id')
+        $query = $scheduledJobClass->getQuery()
             ->addSelect('s.id as scheduled_job_id')
+            ->leftJoin('scheduled_jobs AS s', function($join) {
+                $join
+                    ->on('user_id', '=', 's.user_id')
+                    ->on('start_date' , '=', 's.start_date');
+            })
             ->whereRaw('s.count < '.$scheduledJobClass::COUNT);
         
             if ($scheduledJobClass::COUNT > 0) {
