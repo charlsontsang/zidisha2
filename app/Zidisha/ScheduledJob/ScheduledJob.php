@@ -1,6 +1,7 @@
 <?php
 namespace Zidisha\ScheduledJob;
 
+use Illuminate\Queue\Jobs\Job;
 use Zidisha\ScheduledJob\Base\ScheduledJob as BaseScheduledJob;
 
 abstract class ScheduledJob extends BaseScheduledJob
@@ -11,4 +12,6 @@ abstract class ScheduledJob extends BaseScheduledJob
      * @return \Illuminate\Database\Query\Builder
      */
     abstract public function getQuery();
+    
+    abstract public function process(Job $job);
 }
