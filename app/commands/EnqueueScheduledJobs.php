@@ -2,7 +2,6 @@
 
 use Illuminate\Console\Command;
 use Zidisha\ScheduledJob\ScheduledJobLog;
-use Zidisha\ScheduledJob\ScheduledJobQuery;
 use Zidisha\Vendor\PropelDB;
 
 class EnqueueScheduledJobs extends Command
