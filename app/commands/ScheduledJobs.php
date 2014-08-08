@@ -40,9 +40,8 @@ class ScheduledJobs extends Command
             
             foreach ($jobs as $job) {
                 if ($job->schedule_job_id == null) {
-                    $scheduledJob = new ScheduledJob();
+                    $scheduledJob = new $class;
                     $scheduledJob->setUserId($job->user_id);
-                    $scheduledJob->SetClassKey($scheduledJobClass->getClassKey());
                     $scheduledJob->save();
                 } else {
                     $scheduledJob = ScheduledJobQuery::create()
