@@ -5,7 +5,7 @@ namespace Zidisha\ScheduledJob;
 use Carbon\Carbon;
 use DB;
 use Zidisha\Mail\LenderMailer;
-use Zidisha\ScheduledJob\Map\ScheduledJobsTableMap;
+use Zidisha\ScheduledJob\Map\ScheduledJobTableMap;
 
 
 /**
@@ -27,7 +27,7 @@ class NewLenderIntro extends ScheduledJobs
     public function __construct()
     {
         parent::__construct();
-        $this->setClassKey(ScheduledJobsTableMap::CLASSKEY_9);
+        $this->setClassKey(ScheduledJobTableMap::CLASSKEY_9);
     }
 
     public function getQuery()

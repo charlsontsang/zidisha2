@@ -5,7 +5,7 @@ namespace Zidisha\ScheduledJob;
 use Carbon\Carbon;
 use DB;
 use Zidisha\Loan\Loan;
-use Zidisha\ScheduledJob\Map\ScheduledJobsTableMap;
+use Zidisha\ScheduledJob\Map\ScheduledJobTableMap;
 
 
 /**
@@ -27,7 +27,7 @@ class LoanAboutToExpireReminder extends ScheduledJobs
     public function __construct()
     {
         parent::__construct();
-        $this->setClassKey(ScheduledJobsTableMap::CLASSKEY_8);
+        $this->setClassKey(ScheduledJobTableMap::CLASSKEY_8);
     }
 
 

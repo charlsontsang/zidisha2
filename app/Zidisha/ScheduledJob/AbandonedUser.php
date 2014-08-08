@@ -5,7 +5,7 @@ namespace Zidisha\ScheduledJob;
 use Carbon\Carbon;
 use DB;
 use Zidisha\Mail\LenderMailer;
-use Zidisha\ScheduledJob\Map\ScheduledJobsTableMap;
+use Zidisha\ScheduledJob\Map\ScheduledJobTableMap;
 
 /**
  * Skeleton subclass for representing a row from one of the subclasses of the 'scheduled_jobs' table.
@@ -35,7 +35,7 @@ class AbandonedUser extends ScheduledJobs
     public function __construct()
     {
         parent::__construct();
-        $this->setClassKey(ScheduledJobsTableMap::CLASSKEY_1);
+        $this->setClassKey(ScheduledJobTableMap::CLASSKEY_1);
     }
 
     public function getQuery()

@@ -4,7 +4,7 @@ namespace Zidisha\ScheduledJob;
 
 use Carbon\Carbon;
 use DB;
-use Zidisha\ScheduledJob\Map\ScheduledJobsTableMap;
+use Zidisha\ScheduledJob\Map\ScheduledJobTableMap;
 
 
 /**
@@ -26,7 +26,7 @@ class LoanFinalArrear extends ScheduledJobs
     public function __construct()
     {
         parent::__construct();
-        $this->setClassKey(ScheduledJobsTableMap::CLASSKEY_3);
+        $this->setClassKey(ScheduledJobTableMap::CLASSKEY_3);
     }
 
 

@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use DB;
 use Zidisha\Mail\LenderMailer;
 use Zidisha\Notification\Notification;
-use Zidisha\ScheduledJob\Map\ScheduledJobsTableMap;
+use Zidisha\ScheduledJob\Map\ScheduledJobTableMap;
 
 
 /**
@@ -28,7 +28,7 @@ class UnusedFunds extends ScheduledJobs
     public function __construct()
     {
         parent::__construct();
-        $this->setClassKey(ScheduledJobsTableMap::CLASSKEY_6);
+        $this->setClassKey(ScheduledJobTableMap::CLASSKEY_6);
     }
 
     public function getQuery()

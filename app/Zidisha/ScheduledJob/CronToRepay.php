@@ -4,7 +4,7 @@ namespace Zidisha\ScheduledJob;
 
 use Carbon\Carbon;
 use DB;
-use Zidisha\ScheduledJob\Map\ScheduledJobsTableMap;
+use Zidisha\ScheduledJob\Map\ScheduledJobTableMap;
 
 
 /**
@@ -26,7 +26,7 @@ class CronToRepay extends ScheduledJobs
     public function __construct()
     {
         parent::__construct();
-        $this->setClassKey(ScheduledJobsTableMap::CLASSKEY_10);
+        $this->setClassKey(ScheduledJobTableMap::CLASSKEY_10);
     }
 
     public function getQuery()
