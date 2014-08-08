@@ -31,15 +31,10 @@ class EnqueueScheduledJobs extends Command
             $jobId = $job->job_id;
             $jobCount = $job->job_count;
 
-            $jobLog = PropelDB::transaction(
-                function ($con) use ($jobId, $jobCount) {
-                    $jobLog = new ScheduledJobLog();
-                    $jobLog->setScheduledJobsId($jobId);
-                    $jobLog->setCount($jobCount);
-                    $jobLog->save($con);
-                    return $jobLog;
-                }
-            );
+            $jobLog = new ScheduledJobLog();
+            $jobLog->setScheduledJobsId($jobId);
+            $jobLog->setCount($jobCount);
+            $jobLog->save();
 
             \Queue::push('Zidisha\ScheduledJob\ScheduledJobService@handleScheduledJob', ['jobLogId' => $jobLog]);
         }
