@@ -13,15 +13,17 @@ class EnqueueScheduledJobs extends Command
 
     public function fire()
     {
-        $jobsQuery = DB::raw('SELECT
-                        scheduled_jobs.id as job_id, scheduled_jobs.count as job_count
-                    FROM
-                        scheduled_jobs
-                    LEFT JOIN scheduled_jobs_logs ON scheduled_jobs.id = scheduled_jobs_logs.scheduled_jobs_id
-                    AND scheduled_jobs.count = scheduled_jobs_logs.count
-                    WHERE
-                        scheduled_jobs_logs.id IS NULL
-                ');
+        $jobsQuery = DB::raw(
+            'SELECT
+                scheduled_jobs.id as job_id, scheduled_jobs.count as job_count
+             FROM
+                 scheduled_jobs
+             LEFT JOIN scheduled_jobs_logs
+               ON scheduled_jobs.id = scheduled_jobs_logs.scheduled_jobs_id
+              AND scheduled_jobs.count = scheduled_jobs_logs.count
+             WHERE
+                scheduled_jobs_logs.id IS NULL'
+        );
 
         $jobs = DB::select($jobsQuery);
 
