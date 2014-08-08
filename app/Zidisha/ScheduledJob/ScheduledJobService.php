@@ -12,7 +12,7 @@ class ScheduledJobService
         $scheduleJobLog = ScheduledJobLogQuery::create()
             ->findOneById($data['scheduledJobLogId']);
 
-        $scheduledJob = $scheduleJobLog->getScheduledJobs();
+        $scheduledJob = $scheduleJobLog->getScheduledJob();
         $scheduledJob->process($job, $data);
 
         if ($job->isDeleted()) {
