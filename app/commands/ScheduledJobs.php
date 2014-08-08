@@ -38,7 +38,17 @@ class ScheduledJobs extends Command
 //            dd();
             $jobs = $query->get();
             foreach ($jobs as $job) {
-                var_dump($job);
+                if ($job->schedule_job_id == null) {
+                    $scheduledJob = new $class;
+                    $scheduledJob->setUserId($job->user_id);
+                    $scheduledJob->save();
+                } else {
+                    $scheduledJob = ScheduledJobQuery::create()
+                        ->findOneById($job->schedule_job_id);
+                    
+                    $scheduledJob->setCount($scheduledJob->getCount() + 1);
+                    $scheduledJob->save();
+                }
             }
                 dd();
         }
