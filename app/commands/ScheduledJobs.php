@@ -2,6 +2,8 @@
 
 use Illuminate\Console\Command;
 use Zidisha\ScheduledJob\AbandonedUser;
+use Zidisha\ScheduledJob\ScheduledJob;
+use Zidisha\ScheduledJob\ScheduledJobQuery;
 
 class ScheduledJobs extends Command
 {
