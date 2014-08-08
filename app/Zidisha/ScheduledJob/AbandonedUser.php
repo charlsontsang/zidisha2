@@ -19,8 +19,7 @@ use Zidisha\ScheduledJob\Map\ScheduledJobsTableMap;
  */
 class AbandonedUser extends ScheduledJobs
 {
-    const PERIOD = 1;
-    const COUNT = 0;
+    const COUNT = 3;
     /**
      * @var \Zidisha\Mail\LenderMailer
      */

@@ -5,5 +5,5 @@ use Zidisha\ScheduledJob\Base\ScheduledJobs as BaseScheduledJobs;
 
 class ScheduledJob extends BaseScheduledJobs
 {
-
+    const COUNT = 1;
 }
