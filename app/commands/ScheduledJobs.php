@@ -40,7 +40,7 @@ class ScheduledJobs extends Command
             $jobs = $query->get();
             foreach ($jobs as $job) {
                 /** @var ScheduledJob $scheduledJob */
-                if ($job->schedule_job_id == null) {
+                if ($job->scheduled_job_id == null) {
                     $scheduledJob = new $class;
                     $scheduledJob->setUserId($job->user_id);
                     $scheduledJob->save();
