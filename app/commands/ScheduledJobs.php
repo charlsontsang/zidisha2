@@ -45,7 +45,7 @@ class ScheduledJobs extends Command
                     $scheduledJob->save();
                 } else {
                     $scheduledJob = ScheduledJobQuery::create()
-                        ->findOneById($job->schedule_job_id);
+                        ->findOneById($job->scheduled_job_id);
                     
                     $scheduledJob->setCount($scheduledJob->getCount() + 1);
                     $scheduledJob->save();
@@ -57,10 +57,10 @@ class ScheduledJobs extends Command
     public function joinQuery($scheduledJobClass)
     {
         $query = $scheduledJobClass->getQuery()
-            ->addSelect('s.id as schedule_job_id')
             ->leftJoin('scheduled_jobs AS s', 'user_id', '=', 's.user_id')
             ->whereRaw('s.start_date = start_date')
             ->whereRaw('s.user_id = user_id')
+            ->addSelect('s.id as scheduled_job_id')
             ->whereRaw('s.count < '.$scheduledJobClass::COUNT);
         
             if ($scheduledJobClass::COUNT > 0) {
