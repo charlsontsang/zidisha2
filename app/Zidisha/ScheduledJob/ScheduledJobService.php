@@ -1,11 +1,13 @@
 <?php
 namespace Zidisha\ScheduledJob;
 
+use Illuminate\Queue\Jobs\Job;
 use Zidisha\Vendor\PropelDB;
 
 class ScheduledJobService
 {
-    public function handleScheduledJob($job, $data)
+
+    public function handleScheduledJob(Job $job, array $data)
     {
         $scheduleJobLog = ScheduledJobLogQuery::create()
             ->findOneById($data['scheduledJobLogId']);
@@ -26,6 +28,5 @@ class ScheduledJobService
                 }
             );
         }
-        
     }
 } 
