@@ -30,12 +30,12 @@ class EnqueueScheduledJobs extends Command
             $jobId = $job->job_id;
             $jobCount = $job->job_count;
 
-            $jobLog = new ScheduledJobLog();
-            $jobLog->setScheduledJobsId($jobId);
-            $jobLog->setCount($jobCount);
-            $jobLog->save();
+            $scheduledJobLog = new ScheduledJobLog();
+            $scheduledJobLog->setScheduledJobsId($jobId);
+            $scheduledJobLog->setCount($jobCount);
+            $scheduledJobLog->save();
 
-            \Queue::push('Zidisha\ScheduledJob\ScheduledJobService@handleScheduledJob', ['jobLogId' => $jobLog->getId()]);
+            \Queue::push('Zidisha\ScheduledJob\ScheduledJobService@handleScheduledJob', ['scheduledJobLogId' => $scheduledJobLog->getId()]);
         }
     }
 }

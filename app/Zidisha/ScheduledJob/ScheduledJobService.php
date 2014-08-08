@@ -7,10 +7,8 @@ class ScheduledJobService
 {
     public function handleScheduledJob($job, $data)
     {
-        $jobLogId = $data['jobLogId'];
-
         $scheduleJobLog = ScheduledJobLogQuery::create()
-            ->findOneById($jobLogId);
+            ->findOneById($data['scheduledJobLogId']);
 
         $scheduleJob = $scheduleJobLog->getScheduledJobs();
         $scheduleJob->process($job, $data);
