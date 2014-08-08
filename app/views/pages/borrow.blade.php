@@ -20,14 +20,17 @@
 <h2>{{ \Lang::get('borrower.borrow.requirements-heading') }}</h2>
 <div class="row">
     <div class="col-md-4">
+        <img src="{{ asset('/assets/images/pages/borrow/fb_icon.png') }}" width="90" height="90" alt="Icon">
         <p>{{ \Lang::get('borrower.borrow.requirements-content-facebook') }}</p>
     </div>
 
     <div class="col-md-4">
+        <img src="{{ asset('/assets/images/pages/borrow/money_icon.png') }}" width="90" height="90" alt="Icon">
         <p>{{ \Lang::get('borrower.borrow.requirements-content-business') }}</p>
     </div>
 
     <div class="col-md-4">
+        <img src="{{ asset('/assets/images/pages/borrow/user_icon.png') }}" width="90" height="90" alt="Icon">
         <p>{{ \Lang::get('borrower.borrow.requirements-content-leader') }}</p>
     </div>
 </div>
