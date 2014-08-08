@@ -13,7 +13,7 @@ class ScheduledJobService
             ->findOneById($data['scheduledJobLogId']);
 
         $scheduledJob = $scheduleJobLog->getScheduledJob();
-        $scheduledJob->process($job, $data);
+        $scheduledJob->process($job);
 
         if ($job->isDeleted()) {
             PropelDB::transaction(
