@@ -2,9 +2,9 @@
 
 namespace Zidisha\ScheduledJob;
 
-use Zidisha\ScheduledJob\Base\ScheduledJobsLogs as BaseScheduledJobsLogs;
+use Zidisha\ScheduledJob\Base\ScheduledJobLog as BaseScheduledJobLog;
 
-class ScheduledJobLog extends BaseScheduledJobsLogs
+class ScheduledJobLog extends BaseScheduledJobLog
 {
 
 }

@@ -2,7 +2,7 @@
 
 namespace Zidisha\ScheduledJob;
 
-use Zidisha\ScheduledJob\Base\ScheduledJobsQuery as BaseScheduledJobsQuery;
+use Zidisha\ScheduledJob\Base\ScheduledJobQuery as BaseScheduledJobQuery;
 
 
 /**
@@ -15,7 +15,7 @@ use Zidisha\ScheduledJob\Base\ScheduledJobsQuery as BaseScheduledJobsQuery;
  * long as it does not already exist in the output directory.
  *
  */
-class ScheduledJobQuery extends BaseScheduledJobsQuery
+class ScheduledJobQuery extends BaseScheduledJobQuery
 {
 
 } // ScheduledJobsQuery
