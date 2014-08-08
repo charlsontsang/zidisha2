@@ -4,6 +4,7 @@ namespace Zidisha\ScheduledJob;
 
 use Carbon\Carbon;
 use DB;
+use Illuminate\Queue\Jobs\Job;
 use Zidisha\ScheduledJob\Map\ScheduledJobTableMap;
 
 
@@ -70,7 +71,7 @@ class AgainRepaymentReminder extends ScheduledJob
             ->whereRaw('\'due_date\' > \'' . Carbon::now()->subDays($dueDays + 1) . '\'');
     }
 
-    public function process($job, $data)
+    public function process(Job $job)
     {
         $scheduleJobs = ScheduledJobQuery::create()
             ->findOneById($data['jobId']);

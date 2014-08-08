@@ -4,6 +4,7 @@ namespace Zidisha\ScheduledJob;
 
 use Carbon\Carbon;
 use DB;
+use Illuminate\Queue\Jobs\Job;
 use Zidisha\Mail\BorrowerMailer;
 use Zidisha\ScheduledJob\Map\ScheduledJobTableMap;
 
@@ -71,7 +72,7 @@ class LoanFirstArrear extends ScheduledJob
             ->whereRaw('due_date > \'' . Carbon::now()->subDays(5) . '\'');
     }
 
-    public function process($job, $data)
+    public function process(Job $job)
     {
         $scheduleJobs = ScheduledJobQuery::create()
             ->findOneById($data['jobId']);

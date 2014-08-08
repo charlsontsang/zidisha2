@@ -4,6 +4,7 @@ namespace Zidisha\ScheduledJob;
 
 use Carbon\Carbon;
 use DB;
+use Illuminate\Queue\Jobs\Job;
 use Zidisha\ScheduledJob\Map\ScheduledJobTableMap;
 
 
@@ -72,7 +73,7 @@ class LoanFinalArrear extends ScheduledJob
 
     }
 
-    public function process($job, $data)
+    public function process(Job $job)
     {
         $scheduleJobs = ScheduledJobQuery::create()
             ->findOneById($data['jobId']);

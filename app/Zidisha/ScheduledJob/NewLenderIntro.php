@@ -4,6 +4,7 @@ namespace Zidisha\ScheduledJob;
 
 use Carbon\Carbon;
 use DB;
+use Illuminate\Queue\Jobs\Job;
 use Zidisha\Mail\LenderMailer;
 use Zidisha\ScheduledJob\Map\ScheduledJobTableMap;
 
@@ -40,7 +41,7 @@ class NewLenderIntro extends ScheduledJob
             ->whereRaw("u.created_at <='".Carbon::now()->subDay()."'");
     }
 
-    public function process($job, $data)
+    public function process(Job $job)
     {
         $scheduleJobs = ScheduledJobQuery::create()
             ->findOneById($data['jobId']);

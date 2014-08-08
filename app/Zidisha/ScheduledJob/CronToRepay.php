@@ -4,6 +4,7 @@ namespace Zidisha\ScheduledJob;
 
 use Carbon\Carbon;
 use DB;
+use Illuminate\Queue\Jobs\Job;
 use Zidisha\ScheduledJob\Map\ScheduledJobTableMap;
 
 
@@ -69,7 +70,7 @@ class CronToRepay extends ScheduledJob
             ->whereRaw('rs.due_date > \'' . Carbon::now()->subDays(61) . '\'');
     }
 
-    public function process($job, $data)
+    public function process(Job $job)
     {
         $scheduleJobs = ScheduledJobQuery::create()
             ->findOneById($data['jobId']);
