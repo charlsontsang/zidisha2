@@ -10,16 +10,16 @@ class ScheduledJobService
         $scheduleJobLog = ScheduledJobLogQuery::create()
             ->findOneById($data['scheduledJobLogId']);
 
-        $scheduleJob = $scheduleJobLog->getScheduledJobs();
-        $scheduleJob->process($job, $data);
+        $scheduledJob = $scheduleJobLog->getScheduledJobs();
+        $scheduledJob->process($job, $data);
 
         if ($job->isDeleted()) {
             PropelDB::transaction(
-                function ($con) use ($scheduleJob, $scheduleJobLog) {
+                function ($con) use ($scheduledJob, $scheduleJobLog) {
                     $now = new \DateTime;
 
-                    $scheduleJob->setLastProcessedAt($now);
-                    $scheduleJob->save($con);
+                    $scheduledJob->setLastProcessedAt($now);
+                    $scheduledJob->save($con);
 
                     $scheduleJobLog->setProcessedAt($now);
                     $scheduleJobLog->save($con);
