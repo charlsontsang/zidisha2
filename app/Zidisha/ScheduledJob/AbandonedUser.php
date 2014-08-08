@@ -4,6 +4,7 @@ namespace Zidisha\ScheduledJob;
 
 use Carbon\Carbon;
 use DB;
+use Illuminate\Queue\Jobs\Job;
 use Zidisha\Mail\LenderMailer;
 use Zidisha\ScheduledJob\Map\ScheduledJobTableMap;
 
@@ -47,7 +48,7 @@ class AbandonedUser extends ScheduledJobs
             ->whereRaw('u.active = true');
     }
     
-    public function process($job)
+    public function process(Job $job)
     {
         $user = $this->getUser();
 
