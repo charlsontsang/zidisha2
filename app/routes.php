@@ -22,6 +22,7 @@ Route::group(
          */
         Route::get('our-story', array('uses' => 'PageController@getOurStory', 'as' => 'page:our-story'));
         Route::get('how-it-works', array('uses' => 'PageController@getHowItWorks', 'as' => 'page:how-it-works'));
+        Route::get('faq', array('uses' => 'PageController@getFaq', 'as' => 'page:faq'));
         Route::get('why-zidisha', array('uses' => 'PageController@getWhyZidisha', 'as' => 'page:why-zidisha'));
         Route::get(
             'trust-and-security',
