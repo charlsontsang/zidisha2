@@ -44,7 +44,7 @@ class ScheduledJobs extends Command
                     $scheduledJob->save();
                 } else {
                     $scheduledJob = ScheduledJobQuery::create()
-                        ->findOneById($job->schedule_job_id);
+                        ->findOneById($job->scheduled_job_id);
                     
                     $scheduledJob->setCount($scheduledJob->getCount() + 1);
                     $scheduledJob->save();
@@ -56,24 +56,17 @@ class ScheduledJobs extends Command
 
     public function joinQuery($scheduledJobClass)
     {
-        return $scheduledJobClass->getQuery()
+       $query = $scheduledJobClass->getQuery()
             ->leftJoin('scheduled_jobs AS s', 'user_id', '=', 's.user_id')
             ->whereRaw('s.start_date = start_date')
             ->whereRaw('s.user_id = user_id')
-            ->whereRaw(
-                "s.last_processed_at IS NULL OR (s.last_processed_at + (s.count || ' months')::interval) > NOW()"
-            )
-            ->whereRaw(
-                "
-                    ( 
-                        (
-                            s.last_processed_at + (s.COUNT || ' months') :: INTERVAL
-                        ) > NOW() OR  
-                        (
-                            s.last_processed_at + (s.COUNT || ' months') :: INTERVAL
-                        ) IS NULL
-                    )
-                "
-            );
+            ->addSelect('s.id as scheduled_job_id')
+            ->whereRaw('s.count < '.$scheduledJobClass::COUNT);
+        
+            if ($scheduledJobClass::COUNT > 0) {
+                return $query->whereRaw("s.last_processed_at IS NULL OR (s.last_processed_at + (s.count || ' months')::interval) > NOW()");
+            } else {
+                return $query->whereRaw("s.last_processed_at IS NULL");
+            }
     }
 }
