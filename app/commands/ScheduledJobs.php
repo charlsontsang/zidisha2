@@ -37,6 +37,7 @@ class ScheduledJobs extends Command
             $jobs = $query->get();
             
             foreach ($jobs as $job) {
+                /** @var ScheduledJob $scheduledJob */
                 if ($job->schedule_job_id == null) {
                     $scheduledJob = new $class;
                     $scheduledJob->setUserId($job->user_id);
@@ -52,6 +53,10 @@ class ScheduledJobs extends Command
         }
     }
 
+    /**
+     * @param ScheduledJob $scheduledJobClass
+     * @return \Illuminate\Database\Query\Builder
+     */
     public function joinQuery($scheduledJobClass)
     {
         $query = $scheduledJobClass->getQuery()
