@@ -34,7 +34,7 @@ Lend
                     </div>
                     <span class="text">sorted by</span>
                     <div class="btn btn-default btn-filter" target="#filter-sortings">
-                        On-Time Repayments
+                        Recently Added
                         <i class="fa fa-fw fa-caret-down"></i>
                     </div>
                 </div>
@@ -55,11 +55,13 @@ Lend
 
 @section('content')
 <div class="row">
-    <div class="col-sm-12 col-md-10 col-md-offset-1">
-        <p>
-            We found <strong>12 projects</strong> for this search.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">View all 198 projects</a>
-        </p>
+    <div class="col-sm-12">
+
+        @if($selectedCountry)
+        <h2>{{ $selectedCountry->getName(); }}</h2>
         <hr/>
+        @endif
+
         @if($selectedLoanCategory)
         <h2>{{ $selectedLoanCategory->getName(); }}</h2>
         <br>
@@ -75,66 +77,61 @@ Lend
         <hr/>
         @endif
 
-        @if($selectedCountry)
-        <h2>{{ $selectedCountry->getName(); }}</h2>
-        <br>
-        @endif
+        <p>
+            We found <strong>12 featured projects</strong>.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">View all 198 projects</a>
+        </p>
+        <hr/>
+
     </div>
 </div>
 
-@foreach($paginator as $loan)
-<div class="row">
+<div class="row" style="padding:5px;">
+    @foreach($paginator as $loan)
+    <div class="col-sm-4" style="padding:10px;">
+        <div class="result">
+            <div class="row">
+                <div class="col-xs-12">
+                    <a class="pull-left profile-image" href="{{ route('loan:index', $loan->getId()) }}"
+                        style="background-image:url(/assets/images/test-photos/esther.JPG)" width="100%" height="200px">
+                <!--
+                        <img src="{{ $loan->getBorrower()->getUser()->getProfilePictureUrl() }}" width="100%">
+                    -->
+                    </a>
+                </div>
+            </div>
+            <div class="row">   
+                <div class="col-xs-12 loan">
+                    @if($loan->getCategory())
+                        <div class="loan-category">
+                            {{ $loan->getCategory()->getName() }}
+                            @if($loan->getSecondaryCategory())
+                            &nbsp;&nbsp;&nbsp;&nbsp;{{ $loan->getSecondaryCategory()->getName() }}
+                            @endif
+                        </div>
+                    @endif
+                    
+                    <h2 class="alpha" style="height:2em;">
+                        <a href="{{ route('loan:index', $loan->getId()) }}">
+                            {{ $loan->getSummary() }}
+                        </a>
+                    </h2>
+                    
+                    <p>
+                        <i class="fa fa-fw fa-user"></i>
+                        {{ $loan->getBorrower()->getName() }}
+                        <br/>
+                        <i class="fa fa-fw fa-map-marker"></i>
+                        {{ $loan->getBorrower()->getProfile()->getCity() }},
+                        {{ $loan->getBorrower()->getCountry()->getName() }}
+                    </p>
 
-    <div class="col-sm-6 col-md-5 col-md-offset-1 col-xs-12">
-        <a class="pull-left" href="{{ route('loan:index', $loan->getId()) }}">
-            <img src="{{ $loan->getBorrower()->getUser()->getProfilePictureUrl() }}" width="100%">
-        </a>
-    </div>
-    
-    <div class="col-sm-6 col-md-5 col-xs-12 loan">
-        @if($loan->getCategory())
-            <div class="loan-category">
-                {{ $loan->getCategory()->getName() }}
-                @if($loan->getSecondaryCategory())
-                &nbsp;&nbsp;&nbsp;&nbsp;{{ $loan->getSecondaryCategory()->getName() }}
-                @endif
-            </div>
-        @endif
-        
-        <h2 class="alpha">
-            <a href="{{ route('loan:index', $loan->getId()) }}">
-                {{ $loan->getSummary() }}
-            </a>
-        </h2>
-        
-        <div class="row">
-            <div class="col-sm-5">
-                <p>
-                    {{ $loan->getBorrower()->getName() }}
-                </p>
-            </div>
-            <div class="col-sm-7">
-                <p>
-                    <i class="fa fa-fw fa-map-marker"></i>
-                    {{ $loan->getBorrower()->getProfile()->getCity() }},
-                    {{ $loan->getBorrower()->getCountry()->getName() }}
-                </p>
+                    @include('partials/loan-progress', [ 'loan' => $loan ])
+                </div>
             </div>
         </div>
-
-        <p class="loan-summary">
-            {{ Zidisha\Utility\Utility::truncate($loan->getProposal(), 100, array('exact' => false)) }}
-        </p>
-        
-        @include('partials/loan-progress', [ 'loan' => $loan ])
     </div>
-</div>
-<div class="row">
-    <div class="col-sm-12 col-md-10 col-md-offset-1">
-        <hr/>
-    </div>
-</div>
 @endforeach
+</div>
 
 <div class="row">
     <div class="col-sm-12 col-md-10 col-md-offset-1">

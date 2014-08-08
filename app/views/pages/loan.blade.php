@@ -17,6 +17,7 @@
             <div class="row">
                 <div class="col-sm-3 col-md-2">
                     <p>
+                        <i class="fa fa-fw fa-user"></i>
                         {{ $loan->getBorrower()->getName() }}
                     </p>
                 </div>
@@ -40,8 +41,14 @@
 @section('content')
 <div class="row">
     <div class="col-sm-8 loan-body">
-        <img src="{{ $loan->getBorrower()->getUser()->getProfilePictureUrl('large-profile-picture') }}" width="100%">
         
+        <div class="pull-left profile-image" href="{{ route('loan:index', $loan->getId()) }}"
+            style="background-image:url(/assets/images/test-photos/esther.JPG)" width="100%" height="450px">
+        </div>
+        <!--
+        <img src="{{ $loan->getBorrower()->getUser()->getProfilePictureUrl('large-profile-picture') }}" width="100%">
+        -->
+
         <br/>
         <br/>
 
@@ -310,6 +317,7 @@
 
                 @endif
 
+                @if(count($bids) > 0)
                 <div class="loan-section">
                     <div class="loan-section-title">
                         <span class="text-light">Lenders</span>
@@ -337,6 +345,7 @@
                         </div>
                     </div>
                 </div>
+                @endif
 
                 @if(Auth::check() && Auth::getUser()->isAdmin())
                 <br><br>
@@ -409,49 +418,45 @@
         </div>
     </div>
 
-    <div class="col-sm-4 loan-side">
-        @if(Auth::check() && Auth::getUser()->isAdmin())
-        <div class="panel panel-default">
-            <div class="panel-body">
-                {{ BootstrapForm::open(['route' => ['admin:post-category', $loan->getId()]]) }}
-                {{ BootstrapForm::populate($categoryForm) }}
+    <div class="col-sm-4 loan-side" style="padding-left:0;">
+        <div class="panel panel-default panel-body">
+            <h2>
+                <a href="{{ route('loan:index', $loan->getId()) }}">
+                    {{ $loan->getSummary() }}
+                </a>
+            </h2>
+            
+            <p>
+                <i class="fa fa-fw fa-user"></i>
+                {{ $loan->getBorrower()->getName() }}
+                <br/>
+                <i class="fa fa-fw fa-map-marker"></i>
+                {{ $loan->getBorrower()->getProfile()->getCity() }},
+                {{ $loan->getBorrower()->getCountry()->getName() }}
+            </p>
 
-                {{ BootstrapForm::select('category', $categoryForm->getCategories(), $loan->getCategoryId()) }}
-
-                {{ BootstrapForm::select('secondaryCategory', $categoryForm->getSecondaryCategories(), $loan->getSecondaryCategoryId())}}
-
-                {{ BootstrapForm::submit('save') }}
-
-                {{ BootstrapForm::close() }}
-
-            </div>
-        </div>
-        @endif
-
-        @if($loan->isActive())
-        <div class="panel panel-default">
+            @if($loan->isActive())
             <div class="panel-heading"><b>Since you last visited...</b></div>
-            <div class="panel-body">
-                July 29 &bull; Lucy posted: "And the piglets came!!!!!!! Yesterday the mother pig gave birth to 8 healthy piglets... <a href="#">>>Read more</a>"
-                <br/><br/>
-                July 26 &bull; Lucy repaid $5.00
-                <br/><br/>
-                July 25 &bull; jkurnia posted: "Thanks for the payment, Lucy!"
-                <br/><br/>
-                July 20 &bull; Lucy adjusted the repayment schedule: "School fees were due this week and... <a href="#">>>Read more</a>"
-                <br/><br/>
-                July 16 &bull; Lucy repaid $10.00
-            </div>
+            
+            July 29 &bull; Lucy posted: "And the piglets came!!!!!!! Yesterday the mother pig gave birth to 8 healthy piglets... <a href="#">>>Read more</a>"
+            <br/><br/>
+            July 26 &bull; Lucy repaid $5.00
+            <br/><br/>
+            July 25 &bull; jkurnia posted: "Thanks for the payment, Lucy!"
+            <br/><br/>
+            July 20 &bull; Lucy adjusted the repayment schedule: "School fees were due this week and... <a href="#">>>Read more</a>"
+            <br/><br/>
+            July 16 &bull; Lucy repaid $10.00
+
         </div>
-        @endif
+            @endif
 
-        @if($loan->isOpen())
+            @if($loan->isOpen())
 
-        <!-- TO DO: this button should open the lend form full screen on a mobile device -->
-        <button id="mobile-lend-button" type="button" class="btn btn-primary btn-block">Lend</button>
+            <!-- TO DO: this button should open the lend form full screen on a mobile device -->
+            <button id="mobile-lend-button" type="button" class="btn btn-primary btn-block">Lend</button>
 
-        <div class="panel panel-default lend-form">
-            <div class="panel-body">
+            <div class="lend-form">
                 <div id="lend-form-initial">
                     @include('partials/loan-progress', [ 'loan' => $loan ])
                     
@@ -480,7 +485,6 @@
                             </div>
                         </div>
                     </div>
-                    <br/>
                     @endif
                     
                     @if (!Request::query('amount'))
@@ -569,13 +573,17 @@
                 {{ BootstrapForm::close() }}
             </div>
         </div>
-        @endif
+            @endif
         
         <div id="follow-button" class="panel-body">
             <button type="button" class="btn btn-default btn-block followBorrower" data-toggle="tooltip">
                 <i class="fa fa-fw fa-star-o"></i>
                 @lang('lender.follow.title', ['name' => $borrower->getFirstName()])
             </button>
+        </div>
+
+        <div class="panel-body"> <!-- TO DO: add social share scripts -->
+            <img src="{{ '/assets/images/test-photos/share.png' }}"/>
         </div>
     </div>
 </div>
