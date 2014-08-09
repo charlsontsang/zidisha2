@@ -219,7 +219,20 @@ class LenderMailer
             [
                 'to'         => $lender->getUser()->getEmail(),
                 'subject'    => 'Unused Funds Notification',
+                'templateId' => \Setting::get('sendwithus.lender-unused-funds-template-id'),
             ]
         );
+    }
+
+    public function sendLoanAboutToExpireMail(Lender $lender)
+    {
+        $this->mailer->send(
+            'emails.hero',
+            [
+                'to'         => $lender->getUser()->getEmail(),
+                'subject'    => 'Loan About to Expire Notification',
+                'templateId' => \Setting::get('sendwithus.loan-about-to-expire-mail-template-id'),
+            ]
+        );                
     }
 }
