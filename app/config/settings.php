@@ -202,10 +202,16 @@ return [
             'label' => 'Introduction template id'
         ],
         'sendwithus.lender-expired-loan-template-id' => [
-            'label' => 'Loan expired notification'
+            'label' => 'Loan expired notification template id'
         ],
         'sendwithus.borrower-notifications-template-id' => [
-            'label' => 'Borrower account notifications'
+            'label' => 'Borrower account notifications template id'
+        ],
+        'sendwithus.lender-unused-funds-template-id' => [
+            'label' => 'Lender\'s unused Funds notification template id'
+        ],
+        'sendwithus.loan-about-to-expire-mail-template-id' => [
+            'label' => 'Loan about to expire mail template id'
         ]
     ]
 ];
