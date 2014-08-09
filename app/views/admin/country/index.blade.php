@@ -9,7 +9,7 @@ Countries
 <hr/>
     <ul class="nav nav-tabs" role="tablist">
         <li class="{{ $otherCountries ? '' : 'active' }}"><a href="{{ route('admin:countries') }}">Borrower Countries</a></li>
-        <li class="{{ !$otherCountries ? '' : 'active' }}"><a href="{{ route('admin:countries') . '?other_countries=true' }}">Other Countires</a></li>
+        <li class="{{ !$otherCountries ? '' : 'active' }}"><a href="{{ route('admin:countries') . '?other_countries=true' }}">Other Countries</a></li>
     </ul>
 
 <table class="table table-striped">

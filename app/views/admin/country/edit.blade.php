@@ -7,7 +7,7 @@ Edit Country
 @section('content')
 <h1>{{ $country->getName() }}</h1>
 <hr/>
-<div class="row">
+<div>
     {{ BootstrapForm::open(['route' => ['admin:post:edit:country', $country->getId()]]) }}
     {{ BootstrapForm::populate($form) }}
 
@@ -21,6 +21,10 @@ Edit Country
     {{ BootstrapForm::text('phone_number_length', null, ['label' => 'Phone Number Length']) }}
 
     {{ BootstrapForm::text('registration_fee', null, ['label' => 'Registration Fee', 'prepend' => $form->getCurrency()]) }}
+    
+    {{ BootstrapForm::text('installment_amount_step', null, ['label' => 'Installment amount step', 'prepend' => $form->getCurrency()]) }}
+    
+    {{ BootstrapForm::text('loan_amount_step', null, ['label' => 'Loan amount step', 'prepend' => $form->getCurrency()]) }}
 
     {{ BootstrapForm::select('installment_period', $form->getInstallmentPeriods(), $form->getDefaultInstallmentPeriod(), ['label' => 'Installment Period']) }}
 

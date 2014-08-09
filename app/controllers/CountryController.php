@@ -62,6 +62,8 @@ class CountryController extends BaseController
                 ->setDialingCode($data['dialing_code'])
                 ->setPhoneNumberLength($data['phone_number_length'])
                 ->setRegistrationFee($data['registration_fee'])
+                ->setInstallmentAmountStep($data['installment_amount_step'])
+                ->setLoanAmountStep($data['loan_amount_step'])
                 ->setInstallmentPeriod($data['installment_period'])
                 ->setRepaymentInstructions($data['repayment_instructions'])
                 ->setAcceptBidsNote($data['accept_bids_note']);
