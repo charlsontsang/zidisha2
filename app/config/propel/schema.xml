@@ -1020,6 +1020,7 @@
     <table name="scheduled_jobs" phpName="ScheduledJob" namespace="ScheduledJob">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="user_id" type="INTEGER" required="true"/>
+        <column name="loan_id" type="INTEGER" required="false"/>
         <column name="type" type="ENUM" valueSet="abandonedUser" required="true"/>
         <column name="last_processed_at" type="TIMESTAMP"/>
         <column name="start_date" type="TIMESTAMP"/>

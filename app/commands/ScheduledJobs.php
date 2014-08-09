@@ -43,6 +43,9 @@ class ScheduledJobs extends Command
                 if ($job->scheduled_job_id == null) {
                     $scheduledJob = new $class;
                     $scheduledJob->setUserId($job->user_id);
+                    if ($class == 'Zidisha\ScheduledJob\AgainRepaymentReminder') {
+                        $scheduledJob->setLoanId($job->loan_id);
+                    }
                     $scheduledJob->save();
                 } else {
                     $scheduledJob = ScheduledJobQuery::create()
