@@ -2,6 +2,7 @@
 
 namespace Zidisha\Repayment;
 
+use Propel\Runtime\ActiveQuery\Criteria;
 use Zidisha\Repayment\Base\BorrowerRefundQuery as BaseBorrowerRefundQuery;
 
 
@@ -18,4 +19,9 @@ use Zidisha\Repayment\Base\BorrowerRefundQuery as BaseBorrowerRefundQuery;
 class BorrowerRefundQuery extends BaseBorrowerRefundQuery
 {
 
+    public function updateRefundToTrue($refundsIds)
+    {
+        return $this->filterById($refundsIds, Criteria::IN)
+            ->update(array('Refunded' => true));
+    }
 } // BorrowerRefundQuery

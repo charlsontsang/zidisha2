@@ -52,6 +52,9 @@ class ImportService
                 default:
                     $skipped += 1;
             }
+            if ($result == false) {
+                return false;
+            }
         }
 
         return compact('complete', 'incomplete', 'skipped');
@@ -188,6 +191,10 @@ class ImportService
             ->endUse()
             ->filterByActive(true)
             ->findOne();
+
+        if (!$borrower) {
+            return false;
+        }
 
         $payment['borrower_id'] = $borrower ? $borrower->getId() : null;
 

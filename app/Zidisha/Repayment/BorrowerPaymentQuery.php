@@ -2,6 +2,8 @@
 
 namespace Zidisha\Repayment;
 
+use Propel\Runtime\ActiveQuery\Criteria;
+use Zidisha\Borrower\Borrower;
 use Zidisha\Repayment\Base\BorrowerPaymentQuery as BaseBorrowerPaymentQuery;
 
 
@@ -18,4 +20,9 @@ use Zidisha\Repayment\Base\BorrowerPaymentQuery as BaseBorrowerPaymentQuery;
 class BorrowerPaymentQuery extends BaseBorrowerPaymentQuery
 {
 
+    public function updateStatusToDeleted($paymentIds)
+    {
+        return $this->filterById($paymentIds, Criteria::IN)
+            ->update(array('Status' => Borrower::PAYMENT_DELETED));
+    }
 } // BorrowerPaymentQuery

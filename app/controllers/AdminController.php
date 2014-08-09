@@ -1,6 +1,8 @@
 <?php
 
 use Carbon\Carbon;
+use Propel\Runtime\ActiveQuery\Criteria;
+use Zidisha\Admin\Form\EnterRepaymentForm;
 use Zidisha\Admin\Form\ExchangeRateForm;
 use Zidisha\Admin\Form\FeatureFeedbackForm;
 use Zidisha\Admin\Form\FilterBorrowers;
@@ -13,6 +15,7 @@ use Zidisha\Admin\Form\TranslateForm;
 use Zidisha\Admin\Form\TranslationFeedForm;
 use Zidisha\Balance\TransactionQuery;
 use Zidisha\Balance\WithdrawalRequestQuery;
+use Zidisha\Borrower\Borrower;
 use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Borrower\BorrowerService;
 use Zidisha\Borrower\FeedbackMessageQuery;
@@ -30,6 +33,10 @@ use Zidisha\Loan\Loan;
 use Zidisha\Mail\LenderMailer;
 use Zidisha\Payment\Paypal\PaypalMassPaymentException;
 use Zidisha\Payment\Paypal\PayPalService;
+use Zidisha\Repayment\BorrowerPaymentQuery;
+use Zidisha\Repayment\BorrowerRefundQuery;
+use Zidisha\Repayment\ImportService;
+use Zidisha\Repayment\RepaymentService;
 
 class AdminController extends BaseController
 {
@@ -46,6 +53,9 @@ class AdminController extends BaseController
     private $lenderMailer;
     private $withdrawalRequestsForm;
     private $payPalService;
+    private $enterRepaymentForm;
+    private $importService;
+    private $repaymentService;
 
     public function  __construct(
         LenderQuery $lenderQuery,
@@ -64,7 +74,10 @@ class AdminController extends BaseController
         TranslationFeedForm $translationFeedForm,
         LenderMailer $lenderMailer,
         WithdrawalRequestsForm $withdrawalRequestsForm,
-        PayPalService $payPalService
+        PayPalService $payPalService,
+        EnterRepaymentForm $enterRepaymentForm,
+        ImportService$importService,
+        RepaymentService $repaymentService
     ) {
         $this->lenderQuery = $lenderQuery;
         $this->$borrowerQuery = $borrowerQuery;
@@ -83,6 +96,9 @@ class AdminController extends BaseController
         $this->lenderMailer = $lenderMailer;
         $this->withdrawalRequestsForm = $withdrawalRequestsForm;
         $this->payPalService = $payPalService;
+        $this->enterRepaymentForm = $enterRepaymentForm;
+        $this->importService = $importService;
+        $this->repaymentService = $repaymentService;
     }
 
     public
@@ -574,5 +590,96 @@ class AdminController extends BaseController
         \Flash::success('Comment is published');
 
         return Redirect::back();
+    }
+
+    public function getEnterRepayment()
+    {
+        $paymentCounts = $this->repaymentService->getNumberOfPayments();
+        return View::make('admin.enter-repayments', ['form' => $this->enterRepaymentForm,], compact('paymentCounts'));
+    }
+
+    public function postEnterRepayment()
+    {
+        $form = $this->enterRepaymentForm;
+        $form->handleRequest(Request::instance());
+
+        if ($form->isValid()) {
+            $data = $form->getData();
+
+            if (Input::hasFile('inputFile')) {
+                $file = Input::file('inputFile');
+                $importPayments =  $this->importService->importBorrowerPayments($data['countryCode'], $file);
+                if ( !$importPayments) {
+                    Flash::error('Import error.');
+                    return Redirect::route('admin:enter-repayment')->withForm($form);
+                }
+                Flash::success('Repayments Added.');
+                return Redirect::route('admin:enter-repayment');
+            }
+        }
+
+        Flash::error('Please submit correct data.');
+        return Redirect::route('admin:enter-repayment')->withForm($form);
+    }
+
+    public function getRepaymentProcess($status = null)
+    {
+        switch ($status) {
+            case Borrower::PAYMENT_COMPLETE:
+                $name = "Ready to process";
+                break;
+            case Borrower::PAYMENT_INCOMPLETE:
+                $name = "Incomplete";
+                break;
+            default:
+                $name = "Failed";
+        }
+
+        $payments = $this->repaymentService->getBorrowerRepayments($status);
+        if ( $status == Borrower::PAYMENT_INCOMPLETE || $status == Borrower::PAYMENT_FAILED) {
+            $deletable = true;
+        } else {
+            $deletable = false;
+        }
+        return View::make('admin.repayment-process', compact('name', 'payments', 'status', 'deletable'));
+    }
+
+    public function postRepaymentProcess()
+    {
+        $paymentIds = Input::get('paymentIds');
+        $paymentIds = is_array($paymentIds) ? $paymentIds : [];
+        $status = Input::get('status');
+
+        $payments = BorrowerPaymentQuery::create()
+            ->updateStatusToDeleted($paymentIds);
+
+        if ($payments) {
+            Flash::success('Successfully Deleted.');
+            return Redirect::route('admin:repayment-process', compact('status'));
+        }
+        Flash::error('error occured.');
+        return Redirect::route('admin:repayment-process', compact('status'));
+    }
+
+    public function getRepaymentRefund()
+    {
+        $refunds = $this->repaymentService->getBorrowerRefunds(false);
+        return View::make('admin.repayment-refunds', compact('refunds'));
+    }
+
+    public function postRepaymentRefund()
+    {
+        $refundsIds = Input::get('refundsIds');
+        $refundsIds = is_array($refundsIds) ? $refundsIds : [];
+
+        $refunds = BorrowerRefundQuery::create()
+            ->updateRefundToTrue($refundsIds);
+
+        if ($refunds) {
+            Flash::success('Successful.');
+            return Redirect::route('admin:repayments-refunds');
+        }
+        Flash::error('error occured.');
+        return Redirect::route('admin:repayments-refunds');
     }
 }

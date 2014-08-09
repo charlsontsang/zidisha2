@@ -9,6 +9,7 @@ use Zidisha\Admin\Setting;
 use Zidisha\Balance\Transaction;
 use Zidisha\Balance\TransactionQuery;
 use Zidisha\Balance\WithdrawalRequest;
+use Zidisha\Borrower\Borrower;
 use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Borrower\JoinLog;
 use Zidisha\Borrower\VolunteerMentor;
@@ -36,6 +37,8 @@ use Zidisha\Loan\Loan;
 use Zidisha\Loan\LoanQuery;
 use Zidisha\Loan\LoanService;
 use Zidisha\Lender\LenderService;
+use Zidisha\Repayment\BorrowerPayment;
+use Zidisha\Repayment\BorrowerPaymentQuery;
 use Zidisha\Repayment\InstallmentQuery;
 use Zidisha\Repayment\RepaymentService;
 use Zidisha\Currency\CurrencyService;
@@ -128,6 +131,7 @@ class GenerateModelData extends Command
             $this->call('fake', array('model' => 'LenderGroup', 'size' => 50));
             $this->call('fake', array('model' => 'LenderGroupMember', 'size' => 200));
             $this->call('fake', array('model' => 'WithdrawalRequest', 'size' => 200));
+//            $this->call('fake', array('model' => 'fakeOneBorrowerRefund', 'size' => 1));
 
             $this->call('import-translations');
 
@@ -274,6 +278,10 @@ class GenerateModelData extends Command
                 ->find();
 
             foreach ($activeLoans as $loan) {
+                //to test repayment upload from kenya
+                if ( $loan->getBorrower()->getCountryId() == 1) {
+                    continue;
+                }
                 $installments = InstallmentQuery::create()
                     ->filterByLoan($loan)
                     ->orderById()// TODO order due date?
@@ -362,6 +370,21 @@ class GenerateModelData extends Command
             }
         }
 
+        if ($model == "fakeOneBorrowerRefund") {
+            $payments = BorrowerpaymentQuery::create()
+                ->findPKs(array(1,3));
+            /** @var $payment BorrowerPayment */
+            foreach ( $payments as $payment) {
+                $payment->setStatus(Borrower::PAYMENT_FAILED)->save();
+                $refund = new \Zidisha\Repayment\BorrowerRefund();
+                $refund->setAmount($payment->getAmount())
+                    ->setBorrower($payment->getBorrower())
+                    ->setLoan($payment->getBorrower()->getActiveLoan())
+                    ->setBorrowerPayment($payment);
+                $refund->save();
+            }
+        }
+
         for ($i = 1; $i <= $size; $i++) {
 
             if ($model == "Invite") {
@@ -407,9 +430,12 @@ class GenerateModelData extends Command
                 $password = '1234567890';
                 $email = 'borrower' . $i . '@mail.com';
 
-                $isMentor = $randArray[array_rand($randArray)];
-                if ($i <= 40 && $isMentor) {
-                    $oneCountry = $allCountries[3];
+                if ($i <= 40 && rand(1, 4) <= 3) {
+                    if (rand(1, 5) <= 4) {
+                        $oneCountry = $allCountries[1];
+                    } else{
+                        $oneCountry = $allCountries[3];
+                    }
                 } else {
                     $oneCountry = $allCountries[array_rand($allCountries->getData())];
                 }
@@ -427,9 +453,6 @@ class GenerateModelData extends Command
                 $borrower = new \Zidisha\Borrower\Borrower();
                 $borrower->setFirstName($firstName);
                 $borrower->setLastName($lastName);
-                if ($isMentor) {
-                    $oneCountry = $allCountries[2];
-                }
                 $borrower->setCountry($oneCountry);
                 $borrower->setUser($user);
                 $borrower->setVerified($faker->boolean());
@@ -450,7 +473,7 @@ class GenerateModelData extends Command
                 $borrower_profile->setAboutBusiness($faker->paragraph(7));
                 $borrower_profile->setAddress($faker->paragraph(3));
                 $borrower_profile->setAddressInstructions($faker->paragraph(6));
-                if ($isMentor) {
+                if (rand(1, 5) <= 2) {
                     $borrower_profile->setCity("Experimento");
                 } elseif ($i <= 20) {
                     $city = $faker->city;

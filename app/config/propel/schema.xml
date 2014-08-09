@@ -484,7 +484,7 @@
             <reference local="borrower_id" foreign="id"/>
         </foreign-key>
         <foreign-key foreignTable="countries">
-            <reference local="country_code" foreign="id"/>
+            <reference local="country_code" foreign="country_code"/>
         </foreign-key>
     </table>
 
@@ -704,6 +704,7 @@
         <column name="loan_id" type="INTEGER" required="true"/>
         <column name="borrower_payment_id" type="INTEGER" required="true"/>
         <column name="refunded" type="BOOLEAN" default="0"/>
+        <behavior name="timestampable"/>
         <foreign-key foreignTable="borrowers">
             <reference local="borrower_id" foreign="id"/>
         </foreign-key>

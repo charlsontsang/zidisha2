@@ -442,6 +442,51 @@ Route::group(
                     )
                 );
                 Route::get(
+                    '/settings/enter-repayment',
+                    array(
+                        'uses' => 'AdminController@getEnterRepayment',
+                        'as'   => 'admin:enter-repayment'
+                    )
+                );
+                Route::post(
+                    '/settings/enter-repayment',
+                    array(
+                        'uses'   => 'AdminController@postEnterRepayment',
+                        'as'     => 'admin:post-enter-repayment',
+                        'before' => 'csrf'
+                    )
+                );
+                Route::get(
+                    '/settings/enter-repayment/process/{name?}',
+                    array(
+                        'uses' => 'AdminController@getRepaymentProcess',
+                        'as'   => 'admin:repayment-process'
+                    )
+                );
+                Route::post(
+                    '/settings/enter-repayment/process/{name?}',
+                    array(
+                        'uses'   => 'AdminController@postRepaymentProcess',
+                        'as'     => 'admin:post-repayment-process',
+                        'before' => 'csrf'
+                    )
+                );
+                Route::get(
+                    '/settings/enter-repayment/refunds',
+                    array(
+                        'uses' => 'AdminController@getRepaymentRefund',
+                        'as'   => 'admin:repayments-refunds'
+                    )
+                );
+                Route::post(
+                    '/settings/enter-repayment/refunds',
+                    array(
+                        'uses'   => 'AdminController@postRepaymentRefund',
+                        'as'     => 'admin:post-repayments-refunds',
+                        'before' => 'csrf'
+                    )
+                );
+                Route::get(
                     'borrower-activation',
                     array('uses' => 'BorrowerActivationController@getIndex', 'as' => 'admin:borrower-activation')
                 );
