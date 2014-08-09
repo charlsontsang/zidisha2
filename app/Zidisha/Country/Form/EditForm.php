@@ -24,6 +24,8 @@ class EditForm extends AbstractForm
             'dialing_code'           => $this->country->getDialingCode(),
             'phone_number_length'    => $this->country->getPhoneNumberLength(),
             'registration_fee'       => $this->country->getRegistrationFee(),
+            'installment_amount_step'=> $this->country->getInstallmentAmountStep(),
+            'loan_amount_step'       => $this->country->getLoanAmountStep(),
             'installment_period'     => $this->country->getInstallmentPeriod(),
             'repayment_instructions' => $this->country->getRepaymentInstructions(),
             'accept_bids_note'       => $this->country->getAcceptBidsNote(),
@@ -36,9 +38,11 @@ class EditForm extends AbstractForm
             'borrower_country'       => 'required',
             'dialing_code'           => 'required|numeric|digits_between:1,3',
             'phone_number_length'    => 'required|numeric',
-            'registration_fee'       => 'required',
+            'registration_fee'       => 'required|numeric',
+            'installment_amount_step'=> 'required|numeric',
+            'loan_amount_step'       => 'required|numeric',
             'installment_period'     => 'required',
-            'repayment_instructions' => 'required',
+            'repayment_instructions' => 'required_if:borrower_country,1',
             'accept_bids_note'       => ''
         ];
     }
