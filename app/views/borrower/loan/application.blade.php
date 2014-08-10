@@ -24,9 +24,9 @@
 
     {{ BootstrapForm::select('categoryId', $form->getCategories()) }}
 
-    {{ BootstrapForm::text('amount') }}
+    {{ BootstrapForm::select('amount', $form->getLoanAmountRange()) }}
 
-    {{ BootstrapForm::text('installmentAmount') }}
+    {{ BootstrapForm::select('installmentAmount', $form->getInstallmentAmountRange()) }}
 
     {{ BootstrapForm::select('installmentDay', $form->getDays()) }}
 

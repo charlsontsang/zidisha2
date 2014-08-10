@@ -100,6 +100,23 @@ class ApplicationForm extends AbstractForm
 
         return array_combine($array, $array);
     }
+    
+    public function getLoanAmountRange() {
+        $step = $this->borrower->getCountry()->getLoanAmountStep();
+        
+        return range($this->loanCalculator->maximumAmount()->getAmount(), $step, $step);
+    }
+
+    public function getInstallmentAmountRange() {
+        $step = $this->borrower->getCountry()->getInstallmentAmountStep();
+        
+        $minInstallmentAmount = $this->loanCalculator->minInstallmentAmount();
+        $minInstallmentAmount = $minInstallmentAmount->divide($step)->ceil()->multiply($step);
+        
+        $maxInstallmentAmount = $this->loanCalculator->maximumAmount()->divide($this->loanCalculator->minimumPeriod());
+
+        return range($maxInstallmentAmount->getAmount(), $minInstallmentAmount->getAmount(), $step);
+    }
 
     public function getDefaultData()
     {
