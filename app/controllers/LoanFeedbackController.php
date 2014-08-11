@@ -10,8 +10,6 @@ use Zidisha\Loan\LoanQuery;
 
 class LoanFeedbackController extends CommentsController
 {
-    protected $allowUploads = false;
-
     /**
      * @return \Zidisha\Comment\CommentService
      */
