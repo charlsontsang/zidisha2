@@ -88,6 +88,18 @@ return [
             'rule'    => 'numeric'
         ],
     ],
+    'Borrower' => [
+        'invite.maxInviteesWithoutPayment' => [
+            'label'   => 'Maximum Invites Without Payments',
+            'default' => '3',
+            'rule'    => 'numeric',
+        ],
+        'invite.minRepaymentRate' => [
+            'label'   => 'Minimum Repayment Rate to send Invites',
+            'default' => '95',
+            'rule'    => 'numeric',
+        ]
+    ],
     'API' => [
         'facebook.appId' => [
             'label' => 'Facebook App ID',
