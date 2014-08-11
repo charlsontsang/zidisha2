@@ -53,7 +53,7 @@ class ApplicationForm extends AbstractForm
         $maximumAmount = $this->loanCalculator->maximumAmount()->getAmount();
         $maximumPeriod = $this->loanCalculator->maximumPeriod();
         $period = $this->borrower->getCountry()->getInstallmentPeriod() == Loan::WEEKLY_INSTALLMENT ? 'weeks' : 'months';
-        $amount = array_get($data, 'amount', $minimumAmount);
+        $amount = array_get($data, 'amount', $maximumAmount);
         $days = implode(',', $this->getDays());
         
         return [

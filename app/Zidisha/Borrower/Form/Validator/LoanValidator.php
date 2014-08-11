@@ -5,16 +5,7 @@ use Zidisha\Form\ZidishaValidator;
 
 class LoanValidator extends ZidishaValidator
 {
-    public function validateGreaterThan($attribute, $value, $parameters)
-    {
-        return $value > $parameters[0];
-    }
 
-    protected function replaceGreaterThan($message, $attribute, $rule, $parameters)
-    {
-        return $attribute . ' should be greater than zero.';
-    }
-    
     public function validateMinimumInstallmentAmount($attribute, $value, $parameters)
     {
         // TODO use Loan->calculateInstallmentCount
