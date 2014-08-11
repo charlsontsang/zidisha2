@@ -50,7 +50,7 @@ abstract class CommentService
         return $comment;
     }
 
-    public function postReply($data, User $user, CommentReceiverInterface $receiver, Comment $parentComment)
+    public function postReply($data, User $user, CommentReceiverInterface $receiver, Comment $parentComment, $files = [])
     {
         $comment = $this->createComment();
         $comment->setUserId($user->getId());
@@ -60,6 +60,17 @@ abstract class CommentService
         $comment->setLevel($parentComment->getLevel() + 1);
         $comment->setRootId($parentComment->getRootId());
         $comment->save();
+
+        if ($files) {
+            foreach ($files as $file) {
+                $upload = Upload::createFromFile($file);
+                $upload->setUser($user);
+                $upload->save();
+                $comment->addUpload($upload);
+
+            }
+            $comment->save();
+        }
 
         $this->notify($comment);
 

@@ -126,7 +126,9 @@ abstract class CommentsController extends BaseController
             return Redirect::back();
         }
 
-        $comment = $this->service->postReply($replyCommentForm->getData(), $user, $receiver, $parentComment);
+        $files = $this->getInputFiles();
+
+        $comment = $this->service->postReply($replyCommentForm->getData(), $user, $receiver, $parentComment, $files);
 
         Flash::success(\Lang::get('borrower.comments.flash.reply-success'));
         return $this->redirect($comment);
