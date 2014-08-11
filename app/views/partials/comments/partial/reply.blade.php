@@ -16,7 +16,7 @@
     @endif
     
     <div class="pull-right">
-        {{ BootstrapForm::submit('actions.reply', ['data-submit' => '', 'data-loading-text' => \Lang::get('borrower.comments.loading-text.reply')]) }}
+        {{ BootstrapForm::submit('actions.reply', ['data-loading-text' => \Lang::get('borrower.comments.loading-text.reply')]) }}
     </div>
     
     {{ BootstrapForm::close() }}

@@ -5,7 +5,7 @@
     {{ BootstrapForm::hidden('comment_id', $comment->getId()) }}
     
     <div class="pull-right">
-        {{ BootstrapForm::submit('actions.translate', ['data-submit' => '', 'data-loading-text' => \Lang::get('borrower.comments.loading-text.translate')]) }}
+        {{ BootstrapForm::submit('actions.translate', ['data-loading-text' => \Lang::get('borrower.comments.loading-text.translate')]) }}
     </div>
 
     {{ BootstrapForm::close() }}
