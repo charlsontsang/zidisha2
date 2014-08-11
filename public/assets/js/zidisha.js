@@ -29,6 +29,22 @@ $(function () {
         return false;
     });
 
+    $comments.on('submit', 'form', function() {
+        var messageBody = $(this).find(':input[name=message]'),
+            submitButton = $(this).find(':submit');
+
+        if (!messageBody.length) return;
+        
+        messageBody.parent().removeClass('has-error');
+
+        if (messageBody.val() == '' || messageBody.val() == null) {
+            messageBody.parent().addClass('has-error');
+            return false;
+        }
+
+        submitButton.button('loading');
+    });
+
     var $borrowerEditForm = $('.borrower-edit-form');
 
     var borrowerUploadTemplate = $('#borrower-upload-input-template').html();
@@ -56,7 +72,6 @@ $(function () {
         if ($success.length == 0) {
             $success = $this.closest('.follow-notifications').find('.text-success').last().clone().appendTo($wrapper);
         }
-        console.log($success);
         
         data[$this.attr('name')] = $this.is(':checked') ? 1 : 0;
         $success.show();
@@ -113,22 +128,6 @@ $(function () {
     $('body').on('click', '[data-dismiss=removeFile]', function() {
         $(this).closest('.file-input-block').remove();
         return false;
-    });
-
-    $( "form" ).submit(function() {
-        var messageBody = $(this).find(':input[name=message]');
-        var submitButton = $(this).find(':submit');
-        
-        messageBody.parent().removeClass('has-error');
-        
-        if (messageBody.val() == '' || messageBody.val() == null) 
-        {
-            messageBody.parent().addClass('has-error');
-            return false;
-        }
-        
-        submitButton.button('loading');
-        return true;
     });
 });
 
