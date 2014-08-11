@@ -75,4 +75,18 @@ class ZidishaValidator extends Validator
     {
         return $attribute . ' already exits in the database.';
     }
+
+    public function validateUniqueEmail($attribute, $value, $parameters)
+    {
+        $userEmailCount = UserQuery::create()
+            ->filterByEmail($value)
+            ->count();
+
+        return $userEmailCount == 0 ? true : false;
+    }
+
+    protected function replaceUniqueEmail($message, $attribute, $rule, $parameters)
+    {
+        return $attribute . ' already exits in the database.';
+    }
 }
