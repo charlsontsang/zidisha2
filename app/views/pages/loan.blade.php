@@ -598,6 +598,7 @@
 @stop
 
 @section('script-footer')
+@if($loan->isOpen() && (!\Auth::check() || \Auth::user()->isLender()))
 <script type="text/javascript">
     $(function () {
         paymentForm({
@@ -607,6 +608,7 @@
         });
     });
 </script>
+@endif
 <script type="text/javascript">
     $('.repayment').tooltip({placement: 'bottom', title: 'Percentage of all repayment installments that the borrower has paid on time (within ten days of the due date), for all loans that he or she has taken since joining Zidisha. The total number of repayment installments that have been due is displayed in parentheses.'})
 </script>
