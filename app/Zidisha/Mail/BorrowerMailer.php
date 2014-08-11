@@ -4,6 +4,7 @@ namespace Zidisha\Mail;
 
 use Zidisha\Borrower\Borrower;
 use Zidisha\Borrower\FeedbackMessage;
+use Zidisha\Borrower\Invite;
 use Zidisha\Comment\Comment;
 use Zidisha\Loan\Loan;
 use Zidisha\Loan\RefundLender;
@@ -148,5 +149,11 @@ class BorrowerMailer{
                 'templateId' => \Setting::get('sendwithus.borrower-expired-loan-template-id'),
             ]
         );
+    }
+
+    public function sendBorrowerInvite(Borrower $lender, Invite $borrowerInvite, $subject, $message)
+    {
+        $email = $borrowerInvite->getEmail();
+        //TODO send invite email
     }
 }

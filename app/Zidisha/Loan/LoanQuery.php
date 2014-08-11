@@ -3,6 +3,7 @@
 namespace Zidisha\Loan;
 
 use Propel\Runtime\ActiveQuery\Criteria;
+use Zidisha\Borrower\Borrower;
 use Zidisha\Lender\Lender;
 use Zidisha\Loan\Base\LoanQuery as BaseLoanQuery;
 
@@ -76,6 +77,15 @@ class LoanQuery extends BaseLoanQuery
                 ->filterByAcceptedAmount(null, Criteria::NOT_EQUAL)
             ->endUse()
             ->count();
+    }
+
+    public function getLastLoan(Borrower $borrower)
+    {
+        return $this
+            ->filterByBorrower($borrower)
+            ->filterByDeletedByAdmin(false)
+            ->orderById('DESC')
+            ->findOne();
     }
 
 } // LoanQuery
