@@ -127,11 +127,11 @@
 
                                     <div id="toggle-example" class="collapse">
                                         @foreach($previousLoans as $oneLoan)
-                                        <p><a href="{{ route('loan:index', $oneLoan->getId()) }}">${{ $oneLoan->getNativeAmount() }}
+                                        <p><a href="{{ route('loan:index', $oneLoan->getId()) }}">${{ $oneLoan->getAmount() }}
                                                 {{ $oneLoan->getAppliedAt()->format('d-m-Y') }}
                                                 {{-- TODO $oneLoan->getAcceptedAt()->format('d-m-Y')
                                                 $oneLoan->getExpiredDate()->format('d-m-Y')
-                                                TODO change nativeAmount to disbursedAmount in USD
+                                                TODO change Amount to disbursedAmount in USD
                                                 --}}
                                             </a>
                                         </p>
