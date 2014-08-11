@@ -115,9 +115,20 @@ $(function () {
         return false;
     });
 
-    $('body').on('click', '[data-submit]', function() {
-        var btn = $(this);
-        btn.button('loading')
+    $( "form" ).submit(function() {
+        var messageBody = $(this).find(':input[name=message]');
+        var submitButton = $(this).find(':submit');
+        
+        messageBody.parent().removeClass('has-error');
+        
+        if (messageBody.val() == '' || messageBody.val() == null) 
+        {
+            messageBody.parent().addClass('has-error');
+            return false;
+        }
+        
+        submitButton.button('loading');
+        return true;
     });
 });
 
