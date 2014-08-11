@@ -14,7 +14,7 @@
                 <i class="fa fa-camera"></i> @lang('borrower.comments.add-photo')
             </a>
             <div class="comment-upload-inputs" id="post-comment-upload-inputs" style="display: none;">
-                {{ BootstrapForm::file('file[]', ['label' => 'borrower.comments.upload-file']) }}
+               <div style="display: inline-block"> {{ BootstrapForm::file('file[]', ['label' => 'borrower.comments.upload-file']) }} <i class="fa fa-times"></i> </div> 
                 <button class="btn btn-primary btn-success comment-upload-add-more">@lang('borrower.comments.add-more')</button>
             </div>
         @endif
