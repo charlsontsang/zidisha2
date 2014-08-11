@@ -32,7 +32,7 @@
             <p class="clearfix">
                 <small class="pull-right">
                     <em>Translated by </em>
-                    {{ link_to($comment->getUser()->getProfileUrl(), $comment->getUser()->getUsername()) }}
+                    {{ link_to($comment->getTranslator()->getProfileUrl(), $comment->getTranslator()->getUsername()) }}
                     &nbsp;&nbsp;&nbsp;
                     <a href="#" class="comment-original-message">Show original</a>
                 </small>

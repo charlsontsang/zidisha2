@@ -13,8 +13,6 @@ abstract class CommentsController extends BaseController
 {
     protected $service;
 
-    protected $allowUploads = true;
-
     public function __construct()
     {
         $this->service = $this->getService();
@@ -39,6 +37,7 @@ abstract class CommentsController extends BaseController
 
         if (!$postCommentForm->isValid()) {
             Flash::success('Input not valid');
+            return \Redirect::back();
         }
 
         $files = $this->getInputFiles();
@@ -126,7 +125,9 @@ abstract class CommentsController extends BaseController
             return Redirect::back();
         }
 
-        $comment = $this->service->postReply($replyCommentForm->getData(), $user, $receiver, $parentComment);
+        $files = $this->getInputFiles();
+
+        $comment = $this->service->postReply($replyCommentForm->getData(), $user, $receiver, $parentComment, $files);
 
         Flash::success(\Lang::get('borrower.comments.flash.reply-success'));
         return $this->redirect($comment);
@@ -176,7 +177,7 @@ abstract class CommentsController extends BaseController
             return Redirect::back();
         }
 
-        $this->service->translateComment($translateCommentForm->getData(), $comment);
+        $this->service->translateComment($translateCommentForm->getData(), $comment, $user);
 
         Flash::success(\Lang::get('borrower.comments.flash.translate-success'));
         return $this->redirect($comment);

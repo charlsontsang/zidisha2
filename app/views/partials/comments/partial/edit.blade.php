@@ -1,7 +1,7 @@
 <div class="comment-form" data-comment-action="edit" style="display: none;">
 {{ BootstrapForm::open(array('action' => [ $controller.'@postEdit', 'id' => $receiver->getId()  ], 'translationDomain' => 'borrower.comments', 'files' => true)) }}
 
-{{ BootstrapForm::textarea('message', $comment->getMessage()) }}
+{{ BootstrapForm::textarea('message', $comment->getMessage(), ['required' => 'required']) }}
 {{ BootstrapForm::hidden('comment_id', $comment->getId()) }}
 
 <div class="clearfix">
@@ -19,7 +19,7 @@
     @endif
     
     <div class="pull-right">
-        {{ BootstrapForm::submit('actions.edit', ['data-submit' => '', 'data-loading-text' => \Lang::get('borrower.comments.loading-text.edit')]) }}
+        {{ BootstrapForm::submit('actions.edit', ['data-loading-text' => \Lang::get('borrower.comments.loading-text.edit')]) }}
     </div>
 
 </div>

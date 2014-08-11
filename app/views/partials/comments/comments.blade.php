@@ -31,6 +31,15 @@
     {{ BootstrapHtml::paginator($comments)->links() }}
     
     <script type="text/html" id="comment-upload-input-template">
-        {{ BootstrapForm::file('file[]', ['label' => 'borrower.comments.upload-file', 'class' => 'upload-file']) }}
+        <div class="file-input-block">
+            <div style="display: inline-block;">
+                {{ BootstrapForm::file('file[]', ['label' => 'borrower.comments.upload-file', 'class' => 'upload-file']) }}
+            </div>
+            <div style="display: inline-block;">
+                <a href="#" data-dismiss='removeFile'>
+                    <i class="fa fa-times"></i>    
+                </a>
+            </div>
+        </div>
     </script>
 </div>
