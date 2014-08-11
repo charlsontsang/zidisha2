@@ -5,6 +5,7 @@ namespace Zidisha\ScheduledJob;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Queue\Jobs\Job;
+use Zidisha\Loan\ForgivenLoanQuery;
 use Zidisha\ScheduledJob\Map\ScheduledJobTableMap;
 
 
@@ -38,7 +39,7 @@ class AgainRepaymentReminder extends ScheduledJobs
         $dueDays = 15; 
         
         return DB::table('installments as rs')
-            ->selectRaw('rs.borrower_id AS user_id, rs.loan_id, rs.due_date AS start_date, rs.amount, rs.paid_amount')
+            ->selectRaw('rs.borrower_id AS user_id, rs.loan_id AS loan_id, rs.due_date AS start_date, rs.amount, rs.paid_amount')
             ->join('borrowers AS br', 'rs.borrower_id', '=', 'br.id')    
             ->whereRaw("rs.amount > 0")
             ->whereRaw("(
@@ -77,6 +78,7 @@ class AgainRepaymentReminder extends ScheduledJobs
             ->findOneById($data['jobId']);
 
         $user = $scheduleJobs->getUser();
+
     }
     
 } // AgainRepaymentReminder

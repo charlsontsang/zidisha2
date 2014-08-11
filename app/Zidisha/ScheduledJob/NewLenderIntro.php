@@ -34,7 +34,7 @@ class NewLenderIntro extends ScheduledJobs
     public function getQuery()
     {
         return DB::table('users AS u')
-            ->selectRaw('u.id AS user_id, u.created_at as start_date, *')
+            ->selectRaw('u.id AS user_id, u.created_at as start_date')
             ->whereRaw('u.role = 0')
             ->whereRaw('u.active = true')
             ->whereRaw("u.created_at  >'".Carbon::now()->subDays(2)."'")
@@ -43,13 +43,13 @@ class NewLenderIntro extends ScheduledJobs
 
     public function process(Job $job)
     {
-        $scheduleJobs = ScheduledJobsQuery::create()
-            ->findOneById($data['jobId']);
-
-        $lender = $scheduleJobs->getUser()->getLender();
-
+        $user = $this->getUser();
+        $lender = $user->getLender();
+        
         /** @var  LenderMailer $lenderMailer */
         $lenderMailer = \App::make('Zidisha\Mail\LenderMailer');
         $lenderMailer->sendIntroductionMail($lender);
+
+        $job->delete();
     }
 } // NewLenderIntro

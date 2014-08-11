@@ -54,13 +54,13 @@ class UnusedFunds extends ScheduledJobs
 
     public function process(Job $job)
     {
-        $scheduleJobs = ScheduledJobsQuery::create()
-            ->findOneById($data['jobId']);
-
-        $lender = $scheduleJobs->getUser()->getLender();
-
+        $user = $this->getUser();
+        $lender = $user->getLender();
+        
         /** @var  LenderMailer $lenderMailer */
         $lenderMailer = \App::make('Zidisha\Mail\LenderMailer');
         $lenderMailer->sendUnusedFundsNotification($lender);
+
+        $job->delete();
     }
 } // UnusedFunds

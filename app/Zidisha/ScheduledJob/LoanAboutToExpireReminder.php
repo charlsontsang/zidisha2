@@ -5,7 +5,12 @@ namespace Zidisha\ScheduledJob;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Queue\Jobs\Job;
+use Zidisha\Currency\Money;
+use Zidisha\Loan\Bid;
+use Zidisha\Loan\BidQuery;
 use Zidisha\Loan\Loan;
+use Zidisha\Loan\LoanQuery;
+use Zidisha\Mail\LenderMailer;
 use Zidisha\ScheduledJob\Map\ScheduledJobTableMap;
 
 
@@ -42,16 +47,34 @@ class LoanAboutToExpireReminder extends ScheduledJobs
             ->selectRaw('u.id, borrower_id AS user_id, applied_at AS start_date, total_amount, summary, summary_translation')    
             ->whereRaw("status = " . Loan::OPEN)
             ->whereRaw("deleted_by_admin = false")
-//            ->whereRaw("about_to_expire_notification = 0")
             ->whereRaw("applied_at <= '".Carbon::now()->subDays($beforeDays)."'")
             ->whereRaw("applied_at >= '".Carbon::now()->subDays($afterDays)."'");
     }
 
     public function process(Job $job)
     {
-        $scheduleJobs = ScheduledJobsQuery::create()
-            ->findOneById($data['jobId']);
+        $user= $this->getUser();
+        $borrower = $user->getBorrower();
+        $loan = LoanQuery::create()
+            ->filterByBorrower($borrower)
+            ->filterByStatus(Loan::OPEN)
+            ->findOne();
+        
+        $bids = $loan->getBids();
+        
+        $totalRaisedAmount = $loan->getTotalAmount();
+        $stillNeeded = $loan->getAmount()->subtract($totalRaisedAmount);
 
-        $user = $scheduleJobs->getUser();
+        /** @var  LenderMailer $lenderMailer */
+        $lenderMailer = \App::make('Zidisha\Mail\LenderMailer');
+
+        /** @var Bid $bid */
+        if ($stillNeeded->greaterThan(Money::create(0, $loan->getCurrencyCode()))) {
+            foreach ($bids as $bid) {
+                $lenderMailer->sendLoanAboutToExpireMail($bid->getLender());
+            }    
+        }
+        
+        $job->delete();        
     }
 } // LoanAboutToExpireReminder
