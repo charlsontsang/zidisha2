@@ -1,7 +1,7 @@
 <div class="comment-form clearfix" data-comment-action="reply" style="display: none;">
     {{ BootstrapForm::open(array('action' => [ $controller.'@postReply', 'id' => $receiver->getId()  ], 'translationDomain' => 'borrower.comments', 'files' => true)) }}
 
-    {{ BootstrapForm::textarea('message') }}
+    {{ BootstrapForm::textarea('message', null, ['required' => 'required']) }}
     {{ BootstrapForm::hidden('receiver_id', $receiver->getId()) }}
     {{ BootstrapForm::hidden('parent_id', $comment->getId()) }}
 

@@ -1,7 +1,7 @@
 <div class="comment-form clearfix" style="display: none;" data-comment-action="translate" >
     {{ BootstrapForm::open(array('action' => [ $controller.'@postTranslate', 'id' => $receiver->getId()  ], 'translationDomain' => 'borrower.comments')) }}
 
-    {{ BootstrapForm::textarea('message', $comment->getMessageTranslation(), ['label' => 'borrower.comments.translation']) }}
+    {{ BootstrapForm::textarea('message', $comment->getMessageTranslation(), ['label' => 'borrower.comments.translation', 'required' => 'required']) }}
     {{ BootstrapForm::hidden('comment_id', $comment->getId()) }}
     
     <div class="pull-right">

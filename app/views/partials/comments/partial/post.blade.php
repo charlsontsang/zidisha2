@@ -6,7 +6,7 @@
         {{ BootstrapForm::select('rating', array('positive' => 'Positive', 'neutral' => 'Neutral', 'negative' => 'Negative'), 'positive') }}
     @endif
 
-    {{ BootstrapForm::textarea('message') }}
+    {{ BootstrapForm::textarea('message', null, ['required' => 'required']) }}
 
     <div class="comment-submit clearfix">
         @if($controller != 'LoanFeedbackController')
