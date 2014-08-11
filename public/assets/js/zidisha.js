@@ -110,6 +110,11 @@ $(function () {
         return false;
     });
 
+    $('body').on('click', '[data-dismiss=removeFile]', function() {
+        $(this).closest('.file-input-block').remove();
+        return false;
+    });
+
     $('body').on('click', '[data-submit]', function() {
         var btn = $(this);
         btn.button('loading')
