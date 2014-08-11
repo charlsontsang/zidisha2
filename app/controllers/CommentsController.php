@@ -13,8 +13,6 @@ abstract class CommentsController extends BaseController
 {
     protected $service;
 
-    protected $allowUploads = true;
-
     public function __construct()
     {
         $this->service = $this->getService();
