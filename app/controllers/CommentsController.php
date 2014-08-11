@@ -39,6 +39,7 @@ abstract class CommentsController extends BaseController
 
         if (!$postCommentForm->isValid()) {
             Flash::success('Input not valid');
+            return \Redirect::back();
         }
 
         $files = $this->getInputFiles();
