@@ -959,4 +959,20 @@
             <reference local="lender_id" foreign="id"/>
         </foreign-key>
     </table>
+
+    <table name="borrower_invites" phpName="Invite" namespace="Borrower">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="borrower_id" type="INTEGER" required="true"/>
+        <column name="email" type="VARCHAR" size="100" required="true"/>
+        <column name="invited" type="BOOLEAN" defaultValue="true"/>
+        <column name="hash" type="VARCHAR" size="40"/>
+        <column name="invitee_id" type="INTEGER"/>
+        <behavior name="timestampable"/>
+        <foreign-key foreignTable="borrowers" phpName="Borrower">
+            <reference local="borrower_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="borrowers" phpName="Invitee">
+            <reference local="invitee_id" foreign="id"/>
+        </foreign-key>
+    </table>
 </database>
