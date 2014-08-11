@@ -178,7 +178,7 @@ abstract class CommentsController extends BaseController
             return Redirect::back();
         }
 
-        $this->service->translateComment($translateCommentForm->getData(), $comment);
+        $this->service->translateComment($translateCommentForm->getData(), $comment, $user);
 
         Flash::success(\Lang::get('borrower.comments.flash.translate-success'));
         return $this->redirect($comment);

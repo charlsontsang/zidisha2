@@ -146,9 +146,10 @@ abstract class CommentService
         return $roots;
     }
 
-    public function translateComment($data, Comment $comment)
+    public function translateComment($data, Comment $comment, User $user)
     {
         $comment->setMessageTranslation($data['message']);
+        $comment->setTranslator($user);
         $comment->save();
     }
 
