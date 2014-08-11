@@ -146,7 +146,9 @@ class GenerateModelData extends Command
             $this->call('fake', array('model' => 'DisburseLoan', 'size' => 1));
             
             $this->call('fake', array('model' => 'Repayment', 'size' => 1));
-            
+
+            $this->call('fake', array('model' => 'BorrowerInvite', 'size' => 200));
+
             $this->call('fake', array('model' => 'Comment', 'size' => 200));
             $this->call('fake', array('model' => 'WithdrawalRequest', 'size' => 200));
 //            $this->call('fake', array('model' => 'fakeOneBorrowerRefund', 'size' => 1));
@@ -256,7 +258,6 @@ class GenerateModelData extends Command
         
         for ($i = 1; $i <= $size; $i++) {
             if ($model == "Comment") {
-
                 $borrower = $allBorrowers[array_rand($allBorrowers)];
                 $user = $allBorrowers[array_rand($allBorrowers)];
                 $isTranslated = $randArray[array_rand($randArray)];
@@ -295,6 +296,24 @@ class GenerateModelData extends Command
                     $withdrawalRequest->setPaid(true);
                 }
                 $withdrawalRequest->save();
+            }
+
+            if ($model == "BorrowerInvite") {
+                do {
+                    $borrower = $allBorrowers[array_rand($allBorrowers)];
+                    $invitee = $allBorrowers[array_rand($allBorrowers)];
+                } while ($borrower->getId() == $invitee->getId());
+
+                $borrowerInvite = new \Zidisha\Borrower\Invite();
+                $borrowerInvite->setBorrower($borrower);
+                if (rand( 1, 10) < 9) {
+                    $borrowerInvite->setEmail($this->faker->email);
+                } else {
+                    $borrowerInvite->setInvitee($invitee);
+                    $borrowerInvite->setInvited(true);
+                    $borrowerInvite->setEmail($invitee->getUser()->getEmail());
+                }
+                $borrowerInvite->save();
             }
         }
     }
