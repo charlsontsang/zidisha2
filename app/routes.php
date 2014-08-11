@@ -375,6 +375,12 @@ Route::group(
 
                 Route::get('loan/{loanId}', [ 'uses' => 'BorrowerLoanController@getLoanInformation', 'as' => 'borrower:loan-information' ] );
                 Route::post('loan/{loanId}/accept-bids', 'BorrowerLoanController@postAcceptBids');
+
+                Route::get('invite', array('uses' => 'BorrowerInviteController@getInvite', 'as' => 'borrower:invite'));
+                Route::post(
+                    'invite',
+                    array('uses' => 'BorrowerInviteController@postInvite', 'as' => 'borrower:post-invite', 'before' => 'csrf')
+                );
             }
         );
 

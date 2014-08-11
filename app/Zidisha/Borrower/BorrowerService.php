@@ -1,10 +1,13 @@
 <?php
 namespace Zidisha\Borrower;
 
+use Propel\Runtime\ActiveQuery\Criteria;
 use Zidisha\Borrower\Base\BorrowerQuery;
 use Zidisha\Loan\Loan;
 use Zidisha\Loan\LoanQuery;
+use Zidisha\Loan\LoanService;
 use Zidisha\Mail\BorrowerMailer;
+use Zidisha\Repayment\InstallmentQuery;
 use Zidisha\Sms\BorrowerSmsService;
 use Zidisha\Upload\Upload;
 use Zidisha\User\User;
@@ -18,14 +21,16 @@ class BorrowerService
     private $userQuery;
     private $borrowerMailer;
     private $borrowerSmsService;
+    private $loanService;
 
     public function __construct(FacebookService $facebookService, UserQuery $userQuery, BorrowerMailer $borrowerMailer,
-        BorrowerSmsService $borrowerSmsService )
+        BorrowerSmsService $borrowerSmsService, LoanService $loanService)
     {
         $this->facebookService = $facebookService;
         $this->userQuery = $userQuery;
         $this->borrowerMailer = $borrowerMailer;
         $this->borrowerSmsService = $borrowerSmsService;
+        $this->loanService = $loanService;
     }
 
     public function joinBorrower($data)
@@ -396,5 +401,165 @@ class BorrowerService
         $params = [];
 
         return $params;
+    }
+    
+    public function borrowerInviteViaEmail(Borrower $borrower, $email, $subject, $message)
+    {
+        $borrowerInvite = new Invite();
+        $borrowerInvite->setBorrower($borrower);
+        $borrowerInvite->setEmail($email);
+        $borrowerInvite->isInvited(true);
+        $success = $borrowerInvite->save();
+
+        if ($success) {
+            $this->borrowerMailer->sendBorrowerInvite($borrower, $borrowerInvite, $subject, $message);
+        }
+
+        return $borrowerInvite;
+    }
+
+    public function isEligibleToInvite(Borrower $borrower)
+    {
+        //borrower must have repaid some amount to Zidisha
+        $previousLoan = $this->getLastRepaidLoan($borrower);
+        //in case where there is no previous loan, checks whether borrower has yet made any payments on current loan
+        if(!empty($previousLoan)){
+            $paid = $previousLoan;
+        } else {
+            $activeLoan = $borrower->getActiveLoan();
+            $paid = InstallmentQuery::create()
+                ->getPaidAmount($activeLoan);
+        }
+        //borrower must be currently active
+        if (empty($paid) || $paid==0 || !$borrower->isActive()){
+            $eligible = 0;
+        } else {
+
+            if (!$this->checkMaxInviteesWithoutPayment($borrower)) {
+                return 0;
+            }
+
+            $repaymentRate = $this->loanService->getOnTimeRepaymentScore($borrower);
+            $minRepaymentRate = \Setting::get('invite.minRepaymentRate');
+
+            if($repaymentRate<$minRepaymentRate){
+
+                $eligible = 2;
+            } else {
+                $invitedMembers= $this->getInviteesWithLoans($borrower); //count only those invited members who have raised loans
+                if (empty($invitedMembers)){
+                    $eligible = 1;
+                } elseif ($invitedMembers>=100){
+                    $eligible = 0; //each person can recruit no more than 100 members with loans via invite function
+                } else {
+                    //if more than 10% of invited members do not meet repayment standard then this user is ineligible to invite more
+                    $inviteesRepaymentRate = $this->getInviteeRepaymentRate($borrower);
+
+                    if ($inviteesRepaymentRate < 0.9) {
+                        $eligible = 3; //not eligible
+                    }else{
+                        $eligible = 1; //eligible
+                    }
+                }
+            }
+        }
+
+        return $eligible;
+    }
+
+    private function getLastRepaidLoan(Borrower $borrower)
+    {
+        $sql = "SELECT id FROM loans WHERE borrower_id  = :borrowerId AND deleted_by_admin = :deleted AND (status=:repaid OR status=:defaulted) AND expired_at is NULL ORDER BY id DESC ";
+
+        $id = ( PropelDB::fetchAll($sql, [
+                'borrowerId' => $borrower->getId(),
+                'deleted' => 0,
+                'repaid' => Loan::REPAID,
+                'defaulted' => Loan::DEFAULTED,
+            ]));
+        return $id;
+    }
+
+    public function checkMaxInviteesWithoutPayment(Borrower $borrower)
+    {
+        $maxInviteesWithoutPayment = \Setting::get('invite.maxInviteesWithoutPayment');
+        $q = 'SELECT COUNT(*) FROM borrower_invites i
+              WHERE i.borrower_id = :borrowerId
+                AND (i.invitee_id IS NULL
+                     OR i.invitee_id = 0
+                     OR NOT EXISTS (SELECT * FROM installment_payments r
+                                    WHERE r.borrower_id = i.invitee_id))';
+
+        $invitesCount = ( PropelDB::fetchNumber($q, [
+                'borrowerId' => $borrower->getId(),
+            ]));
+
+        return $maxInviteesWithoutPayment > $invitesCount;
+    }
+
+    public function getInviteesWithLoans(Borrower $borrower)
+    {
+//set of all members invited by this member
+        $invitees= InviteQuery::create()
+            ->filterByBorrower($borrower)
+            ->filterByInviteeId(null, Criteria::NOT_EQUAL)
+            ->find();
+        $totalLoans=0;
+
+        foreach($invitees as $invite){
+//checks repayment rate of invited members
+            $lastLoanOfInvitee= LoanQuery::create()
+                ->getLastLoan($invite->getInvitee());
+
+            if(!empty($lastLoanOfInvitee)){
+                $totalLoans += 1;
+            }
+        }
+        return $totalLoans;
+    }
+
+    private function getInviteeRepaymentRate(Borrower $borrower)
+    {
+
+//counts all members invited by this user who meet admin on-time repayment rate standard
+        $totalOnTimeInvitees=$this->countSuccessfulInvitees($borrower);
+//counts total members invited by this user who have taken out loans
+        $invitedMembers=$this->getInviteesWithLoans($borrower);
+        if (empty($invitedMembers) || $invitedMembers==0){
+            $successRate=1;
+        } else {
+//calculates percentage of members invited by this user who meet repayment rate standard
+            $successRate=$totalOnTimeInvitees / $invitedMembers;
+        }
+
+        return $successRate;
+    }
+
+    function countSuccessfulInvitees(Borrower $borrower){
+        global $session;
+
+        //gets minimum on-time repayment rate needed to progress to larger loans as set by admin
+        $minRepaymentRate = \Setting::get('invite.minRepaymentRate');
+
+        //set of all members invited by this member
+        $invitees= InviteQuery::create()
+            ->filterByBorrower($borrower)
+            ->filterByInviteeId(null, Criteria::NOT_EQUAL)
+            ->find();
+
+        $count=0;
+        foreach($invitees as $invite){
+            //checks repayment rate of invited members
+            $invite_lastloan= LoanQuery::create()
+                ->getLastLoan($invite->getInvitee());
+
+            if (!empty($lastLoanOfInvitee)) {
+                $repaymentRate = $this->loanService->getOnTimeRepaymentScore($invite->getInvitee());
+                if ($repaymentRate >= $minRepaymentRate){
+                    $count += 1;
+                }
+            }
+        }
+        return $count;
     }
 }
