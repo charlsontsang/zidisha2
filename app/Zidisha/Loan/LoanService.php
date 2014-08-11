@@ -110,7 +110,7 @@ class LoanService
 
         $isFirstLoan = LoanQuery::create()
             ->filterByBorrower($borrower)
-            ->filterByStatus(Loan::REPAID) // TODO correct?
+            ->filterByStatus(Loan::REPAID) // TODO correct? verify database
             ->count();
         $registrationFee = $isFirstLoan ? $borrower->getCountry()->getRegistrationFee() : 0;
         
@@ -122,7 +122,8 @@ class LoanService
             ->setAmount(Money::create($data['amount'], $currencyCode))
             ->setUsdAmount(Money::create($data['usdAmount'], 'USD'))
             ->setInstallmentPeriod($borrower->getCountry()->getInstallmentPeriod())
-            ->setInterestRate(20) // TODO from settings serviceFee or limit
+            ->setInterestRate(Setting::get('loan.maximumLenderInterestRate') + Setting::get('loan.transactionFeeRate'))
+            ->setServiceFeeRate(Setting::get('loan.transactionFeeRate'))
             ->setInstallmentDay($data['installmentDay'])
             ->setAppliedAt($data['date'])
             ->setCategoryId($data['categoryId'])

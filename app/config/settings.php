@@ -57,6 +57,16 @@ return [
             'default' => '14',
             'rule' => 'numeric'
         ],
+        'loan.maximumLenderInterestRate' => [
+            'label' => 'Maximum lender interest rate (% of loan principal per annum)',
+            'default' => '15',
+            'rule' => 'numeric'
+        ],
+        'loan.transactionFeeRate' => [
+            'label' => 'Borrower transaction fee rate (% of loan principal per annum)',
+            'default' => '5',
+            'rule' => 'numeric'
+        ],
     ],
     'API' => [
         'facebook.appId' => [

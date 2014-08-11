@@ -22,7 +22,7 @@
    @if($data)
    <p><strong> {{ \Lang::get('borrower.loan-application.publish-loan.amount-requested') }} : </strong> {{ $data['amount'] }} </p> <br>
 
-   <p><strong> {{ \Lang::get('borrower.loan-application.publish-loan.maximum-interest-rate') }} : </strong> {{ $maxInterestRate }} %  </p> <br>
+   <p><strong> {{ \Lang::get('borrower.loan-application.publish-loan.maximum-interest-rate') }} : </strong> {{ $loan->getInterestRate() }} %  </p> <br>
 
    <p><strong> {{ \Lang::get('borrower.loan-application.publish-loan.monthly-repayment-amount') }} : </strong> {{ $calculator->installmentAmount() }} </p> <br>
 
