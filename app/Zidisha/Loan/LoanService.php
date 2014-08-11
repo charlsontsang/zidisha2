@@ -10,6 +10,7 @@ use Zidisha\Balance\TransactionQuery;
 use Zidisha\Balance\TransactionService;
 use Zidisha\Borrower\Borrower;
 use Zidisha\Currency\Converter;
+use Zidisha\Currency\ExchangeRate;
 use Zidisha\Currency\ExchangeRateQuery;
 use Zidisha\Currency\Money;
 use Zidisha\Lender\Lender;
@@ -91,7 +92,14 @@ class LoanService
 
     public function createLoan(Borrower $borrower, $data)
     {
-        $exchangeRate = ExchangeRateQuery::create()->findCurrent($borrower->getCountry()->getCurrency());
+        if (!isset($data['date'])) {
+            $data['date'] = new \DateTime();
+            $data['exchangeRate'] = ExchangeRateQuery::create()->findCurrent($borrower->getCountry()->getCurrency());
+        }
+
+        /** @var ExchangeRate $exchangeRate */
+        $exchangeRate = $data['exchangeRate'];
+        
         $currencyCode = $borrower->getCountry()->getCurrencyCode();
         $data['usdAmount'] = Converter::toUSD(
             Money::create($data['amount'], $currencyCode),
@@ -116,7 +124,7 @@ class LoanService
             ->setInstallmentPeriod($borrower->getCountry()->getInstallmentPeriod())
             ->setInterestRate(20) // TODO from settings serviceFee or limit
             ->setInstallmentDay($data['installmentDay'])
-            ->setAppliedAt(new \DateTime())
+            ->setAppliedAt($data['date'])
             ->setCategoryId($data['categoryId'])
             ->setBorrower($borrower)
             ->setRegistrationFee($registrationFee)
