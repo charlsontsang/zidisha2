@@ -1,9 +1,18 @@
 <?php
 
+use Zidisha\Borrower\BorrowerService;
 use Zidisha\Comment\BorrowerComment;
 use Zidisha\Comment\BorrowerCommentQuery;
 
 class PageController extends BaseController {
+
+    private $borrowerService;
+
+    public function __construct(BorrowerService $borrowerService)
+    {
+
+        $this->borrowerService = $borrowerService;
+    }
 
 	public function getOurStory() {
         return View::make('pages.our-story');
@@ -58,5 +67,11 @@ class PageController extends BaseController {
             ->paginateWithUploads($page, 10);
 
         return View::make('pages.project-updates', compact('comments'));
+    }
+
+    public function getFaq()
+    {
+        $paramArray = $this->borrowerService->getFaqParameterArray();
+        return View::make('pages.faq');
     }
 }

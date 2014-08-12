@@ -390,4 +390,11 @@ class BorrowerService
 
         return $borrowerRequiresFacebook && !$facebookId && ($createdAt > $requiredDate);
     }
+
+    public function getFaqParameterArray()
+    {
+        $params = [];
+
+        return $params;
+    }
 }
