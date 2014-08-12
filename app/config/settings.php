@@ -67,6 +67,26 @@ return [
             'default' => '5',
             'rule'    => 'numeric'
         ],
+        'loan.loanIncreaseThresholdLow' => [
+            'label'   => 'Number of months between loan size increases (below $200)',
+            'default' => '1',
+            'rule'    => 'numeric'
+        ],
+        'loan.loanIncreaseThresholdMid' => [
+            'label'   => 'Number of months between loan size increases ($200 - $1000)',
+            'default' => '3',
+            'rule'    => 'numeric'
+        ],
+        'loan.loanIncreaseThresholdHigh' => [
+            'label'   => 'Number of months between loan size increases ($1000 - $3000)',
+            'default' => '6',
+            'rule'    => 'numeric'
+        ],
+        'loan.loanIncreaseThresholdTop' => [
+            'label'   => 'Number of months between loan size increases (above $3000)',
+            'default' => '12',
+            'rule'    => 'numeric'
+        ],
     ],
     'API' => [
         'facebook.appId' => [

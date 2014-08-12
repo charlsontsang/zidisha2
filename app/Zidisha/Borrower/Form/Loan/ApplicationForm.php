@@ -4,6 +4,7 @@ namespace Zidisha\Borrower\Form\Loan;
 
 use Zidisha\Borrower\Borrower;
 use Zidisha\Currency\ExchangeRateQuery;
+use Zidisha\Currency\Money;
 use Zidisha\Form\AbstractForm;
 use Zidisha\Loan\Calculator\LoanCalculator;
 use Zidisha\Loan\CategoryQuery;
@@ -32,8 +33,6 @@ class ApplicationForm extends AbstractForm
      */
     protected $exchangeRate;
 
-    protected $validatorClass = 'Zidisha\Borrower\Form\Validator\LoanValidator';
-
     public function __construct(Borrower $borrower)
     {
         $this->borrower = $borrower;
@@ -49,19 +48,22 @@ class ApplicationForm extends AbstractForm
 
     public function getRules($data)
     {
-        $minimumAmount = $this->loanCalculator->minimumAmount()->getAmount();
-        $maximumAmount = $this->loanCalculator->maximumAmount()->getAmount();
-        $maximumPeriod = $this->loanCalculator->maximumPeriod();
-        $period = $this->borrower->getCountry()->getInstallmentPeriod() == Loan::WEEKLY_INSTALLMENT ? 'weeks' : 'months';
-        $amount = array_get($data, 'amount', $maximumAmount);
+        if (isset($data['amount'])) {
+            $amount = Money::create($data['amount'], $this->currency);
+        } else {
+            $amount = $this->loanCalculator->maximumAmount()->getAmount();
+        }
+        
+        $amounts = implode(',', $this->getLoanAmountRange());
+        $installmentAmounts = implode(',', $this->getInstallmentAmountRange($amount));
         $days = implode(',', $this->getDays());
         
         return [
             'summary'           => 'required|min:10', // TODO max
             'proposal'          => 'required|min:200',
             'categoryId'        => 'required|exists:loan_categories,id,admin_only,false',
-            'amount'            => "required|numeric|between:$minimumAmount,$maximumAmount",
-            'installmentAmount' => "required|numeric|greaterThan:0|minimumInstallmentAmount:$maximumPeriod,$period|max:$amount",
+            'amount'            => "required|numeric|in:$amounts",
+            'installmentAmount' => "required|numeric|greaterThan:0|in:$installmentAmounts",
             'installmentDay'    => "required|in:$days",
         ];
     }
@@ -75,8 +77,7 @@ class ApplicationForm extends AbstractForm
             ->findByAdminOnly(false);
         $values = $categories->toKeyValue('id', 'name');
 
-        if ($languageCode != 'EN')
-        {
+        if ($languageCode != 'EN') {
             $translations = CategoryTranslationQuery::create()
                 ->filterByLanguageCode($languageCode)
                 ->find();
@@ -109,13 +110,14 @@ class ApplicationForm extends AbstractForm
         return array_combine($range, $range);
     }
 
-    public function getInstallmentAmountRange() {
+    public function getInstallmentAmountRange(Money $amount = null) {
         $step = $this->borrower->getCountry()->getInstallmentAmountStep();
-        
-        $minInstallmentAmount = $this->loanCalculator->minInstallmentAmount();
+
+        $amount = $amount ?: $this->getAmount();
+        $minInstallmentAmount = $this->loanCalculator->minInstallmentAmount($amount);
         $minInstallmentAmount = $minInstallmentAmount->divide($step)->ceil()->multiply($step);
         
-        $maxInstallmentAmount = $this->loanCalculator->maximumAmount()->divide($this->loanCalculator->minimumPeriod());
+        $maxInstallmentAmount = $amount->divide($this->loanCalculator->minimumPeriod($amount));
 
         $range = range($maxInstallmentAmount->getAmount(), $minInstallmentAmount->getAmount(), $step);
 
@@ -124,6 +126,20 @@ class ApplicationForm extends AbstractForm
 
     public function getDefaultData()
     {
-        return \Session::get('loan_data');
+        return \Session::get('loan_data', []);
+    }
+
+    protected function getAmount()
+    {
+        // Submitted input value
+        if (\Session::has('_old_input.amount')) {
+            $amount = Money::create(\Session::get('_old_input.amount'), $this->currency);
+        } elseif (\Session::has('loan_data.amount')) {
+            $amount = Money::create(\Session::get('loan_data.amount'), $this->currency);
+        } else {
+            $amount = $this->loanCalculator->maximumAmount();
+        }
+        
+        return $amount;
     }
 }

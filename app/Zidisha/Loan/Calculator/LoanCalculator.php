@@ -48,29 +48,49 @@ class LoanCalculator
         return Money::create(10000, $this->currency);
     }
 
-    public function minInstallmentAmount()
+    public function minInstallmentAmount(Money $amount)
     {
-        // TODO fix period, grace period
-        $amount = $this->maximumAmount();
         $period = $this->maximumPeriod();
         
-        // 15% max interest
+        // TODO, include transactionFeeRate?
+        $annualRate = Setting::get('loan.maximumLenderInterestRate') + Setting::get('loan.transactionFeeRate');
         if ($this->borrower->getCountry()->getInstallmentPeriod() == Loan::WEEKLY_INSTALLMENT) {
-            $interest = $amount->multiply(15 * $period)->divide(5200);
+            $interest = $amount->multiply($annualRate * $period)->divide(5200);
         } else {
-            $interest = $amount->multiply(15 * $period)->divide(1200);
+            $interest = $amount->multiply($annualRate * $period)->divide(1200);
         }
         
         $totalAmount = $amount->add($interest);
+        // TODO +1 for grace period, is grace period included in max period?
         $installmentAmount = $totalAmount->divide($period + 1)->ceil();
         
         return $installmentAmount;
     }
 
-    public function minimumPeriod()
+    public function minimumPeriod(Money $amount)
     {
-        // TODO loanapplic_step3.php
-        return 2;
+        $amountUsd = Converter::toUSD($amount, $this->exchangeRate)->getAmount();
+        
+        if ($amountUsd <= 200) {
+            $threshold = Setting::get('loan.loanIncreaseThresholdLow');
+
+        } elseif ($amountUsd <= 1000) {
+            $threshold = Setting::get('loan.loanIncreaseThresholdMid');
+
+        } elseif ($amountUsd <= 3000) {
+            $threshold = Setting::get('loan.loanIncreaseThresholdHigh');
+
+        } else {
+            $threshold = Setting::get('loan.loanIncreaseThresholdTop');
+        }
+
+        $minimumPeriod = $threshold;
+
+        if ($this->borrower->getCountry()->getInstallmentPeriod() == Loan::WEEKLY_INSTALLMENT) {
+            $minimumPeriod = ceil($threshold * (52/12));
+        }
+        
+        return $minimumPeriod;
     }
 
     public function maximumPeriod()
