@@ -54,6 +54,10 @@ trait StepController
     public function stepsBeforeFilter(Route $route)
     {
         $routeStep = $this->getStepFromRoute($route);
+        if (!in_array($routeStep,$this->steps)) {
+            return;
+        }
+        
         $this->stepSessionKey($route);
         
         $currentStep = $this->getCurrentStep();
