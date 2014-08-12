@@ -4,7 +4,7 @@ $(function () {
 
     $comments.on('click', '.comment-action', function () {
         var $this = $(this),
-            $forms = $this.closest('.comment').find('.comment-forms');
+            $forms = $this.closest('.comment').find('.comment-forms:first');
 
         $forms.find('.comment-form').hide();
         $forms.find('[data-comment-action=' + $this.attr('target') + ']').show();
