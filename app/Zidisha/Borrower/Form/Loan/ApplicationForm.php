@@ -46,6 +46,11 @@ class ApplicationForm extends AbstractForm
         return $this->exchangeRate;
     }
 
+    public function getCurrency()
+    {
+        return $this->currency;
+    }
+
     public function getRules($data)
     {
         if (isset($data['amount'])) {
@@ -119,6 +124,10 @@ class ApplicationForm extends AbstractForm
         
         $maxInstallmentAmount = $amount->divide($this->loanCalculator->minimumPeriod($amount));
 
+        if ($step > $maxInstallmentAmount->getAmount()) {
+            return [];
+        }
+        
         $range = range($maxInstallmentAmount->getAmount(), $minInstallmentAmount->getAmount(), $step);
 
         return array_combine($range, $range);
@@ -141,5 +150,14 @@ class ApplicationForm extends AbstractForm
         }
         
         return $amount;
+    }
+
+    public function isValidAmount($amount)
+    {
+        $data = compact('amount');
+        $rules = $this->getRules($data);
+        $validator = \Validator::make($data, ['amount' => $rules['amount']]);
+        
+        return $validator->passes();
     }
 }

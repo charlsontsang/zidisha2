@@ -24,9 +24,9 @@
 
     {{ BootstrapForm::select('categoryId', $form->getCategories()) }}
 
-    {{ BootstrapForm::select('amount', $form->getLoanAmountRange()) }}
+    {{ BootstrapForm::select('amount', $form->getLoanAmountRange(), null, ['id' => 'amount']) }}
 
-    {{ BootstrapForm::select('installmentAmount', $form->getInstallmentAmountRange()) }}
+    {{ BootstrapForm::select('installmentAmount', $form->getInstallmentAmountRange(), null, ['id' => 'installment-amount']) }}
 
     {{ BootstrapForm::select('installmentDay', $form->getDays()) }}
 
@@ -42,4 +42,25 @@
         {{ BootstrapForm::close() }}
     </div>
 </div>
+@stop
+
+@section('script-footer')
+<script type="text/javascript">
+    $(function () {
+        var url = "{{ action('LoanApplicationController@getInstallmentAmountRange') }}";
+        $('#amount').on('change', function() {
+            var $this = $(this),
+                $installmentAmount = $('#installment-amount');
+            $installmentAmount.attr('disabled', 'disabled');
+            $.get(url + '?amount=' + $this.val(), function(res) {
+                $installmentAmount.empty();
+                $.each(res, function(key, option) { 
+                    $installmentAmount.append($("<option></option>")
+                        .attr("value", option[1]).text(option[0]));
+                });
+                $installmentAmount.removeAttr('disabled');
+            });
+        });
+    });
+</script>
 @stop

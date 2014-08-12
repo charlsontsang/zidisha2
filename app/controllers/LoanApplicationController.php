@@ -1,6 +1,7 @@
 <?php
 use Zidisha\Borrower\Form\Loan\ApplicationForm;
 use Zidisha\Borrower\Form\Loan\ProfileForm;
+use Zidisha\Currency\Money;
 use Zidisha\Loan\Calculator\InstallmentCalculator;
 use Zidisha\Loan\Loan;
 use Zidisha\Loan\CategoryQuery;
@@ -135,5 +136,25 @@ class LoanApplicationController extends BaseController
     public function getConfirmation()
     {
         return $this->stepView('confirmation');
+    }
+
+    public function getInstallmentAmountRange()
+    {
+        $form = $this->applicationForm;
+        $amount = Input::get('amount');
+        
+        if (!$form->isValidAmount($amount)) {
+            App::abort('404');
+        }
+        
+        $amount = Money::create($amount, $form->getCurrency());
+        $range = $form->getInstallmentAmountRange($amount);
+        
+        $options = [];
+        foreach ($range as $k => $v) {
+            $options[] = [$k, $v];
+        }
+        
+        return Response::json($options);
     }
 }
