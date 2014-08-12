@@ -306,6 +306,7 @@
         <column name="parent_id" type="INTEGER" required="false"/>
         <column name="root_id" type="INTEGER" required="false"/>
         <column name="level" type="INTEGER" required="true"/>
+        <column name="deleted" type="BOOLEAN" defaultValue="false"/>
         <behavior name="timestampable"/>
         <foreign-key foreignTable="users" phpName="User">
             <reference local="user_id" foreign="id"/>
