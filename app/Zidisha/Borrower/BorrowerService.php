@@ -8,6 +8,7 @@ use Zidisha\Loan\LoanQuery;
 use Zidisha\Loan\LoanService;
 use Zidisha\Mail\BorrowerMailer;
 use Zidisha\Repayment\InstallmentQuery;
+use Zidisha\Repayment\RepaymentSchedule;
 use Zidisha\Sms\BorrowerSmsService;
 use Zidisha\Upload\Upload;
 use Zidisha\User\User;
@@ -518,7 +519,7 @@ class BorrowerService
         return $totalLoans;
     }
 
-    private function getInviteeRepaymentRate(Borrower $borrower)
+    public function getInviteeRepaymentRate(Borrower $borrower)
     {
 
 //counts all members invited by this user who meet admin on-time repayment rate standard
@@ -555,11 +556,40 @@ class BorrowerService
 
             if (!empty($lastLoanOfInvitee)) {
                 $repaymentRate = $this->loanService->getOnTimeRepaymentScore($invite->getInvitee());
+
                 if ($repaymentRate >= $minRepaymentRate){
                     $count += 1;
                 }
             }
         }
         return $count;
+    }
+
+    public function getInviteCredit(Borrower $borrower)
+    {
+        global $session;
+        $invitees= InviteQuery::create()
+            ->filterByBorrower($borrower)
+            ->filterByInviteeId(null, Criteria::NOT_EQUAL)
+            ->find();
+        $minRepaymentRate = \Setting::get('invite.minRepaymentRate');
+
+        $creditEarned = 0;
+        foreach($invitees as $invite){
+            $lastLoanOfInvitee= LoanQuery::create()
+                ->getLastLoan($invite->getInvitee());
+            if(empty($lastLoanOfInvitee)){
+                continue;
+            }
+            $repaymentRate = $this->loanService->getOnTimeRepaymentScore($invite->getInvitee());
+            if($repaymentRate >= $minRepaymentRate)
+            {
+                //TODO using credit_settings
+//                $country=$this->getCountryCodeById($userid);
+//                $binvitecredit=$this->getcreditsettingbyCountry($country,3);
+//                $creditearned+=$binvitecredit['loanamt_limit'];
+            }
+        }
+        return $creditEarned;
     }
 }

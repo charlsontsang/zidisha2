@@ -1,16 +1,24 @@
 <?php
 
+use Zidisha\Borrower\Borrower;
+use Zidisha\Borrower\BorrowerGuestQuery;
 use Zidisha\Borrower\BorrowerService;
 use Zidisha\Borrower\Form\InviteForm;
 use Zidisha\Borrower\InviteQuery;
+use Zidisha\Loan\LoanService;
+use Zidisha\Repayment\RepaymentService;
 
 class BorrowerInviteController extends BaseController
 {
     private $borrowerService;
+    private $loanService;
+    private $repaymentService;
 
-    public function __construct(BorrowerService $borrowerService) {
+    public function __construct(BorrowerService $borrowerService, LoanService $loanService, RepaymentService $repaymentService) {
 
         $this->borrowerService = $borrowerService;
+        $this->loanService = $loanService;
+        $this->repaymentService = $repaymentService;
     }
 
     public function getInvite()
@@ -20,6 +28,10 @@ class BorrowerInviteController extends BaseController
         }
 
         $borrower = Auth::user()->getBorrower();
+
+        if (!$borrower) {
+            App::abort(404, 'Bad Request');
+        }
         $form = new InviteForm($borrower);
         $maxInviteesWithoutPayment = \Setting::get('invite.maxInviteesWithoutPayment');
 
@@ -55,6 +67,10 @@ class BorrowerInviteController extends BaseController
     public function postInvite()
     {
         $borrower = Auth::user()->getBorrower();
+
+        if (!$borrower) {
+            App::abort(404, 'Bad Request');
+        }
         $form = new InviteForm($borrower);
         $form->handleRequest(Request::instance());
 
@@ -75,4 +91,40 @@ class BorrowerInviteController extends BaseController
 
         return Redirect::route('borrower:invite')->withForm($form);
     }
-} 
+
+    public function getInvites()
+    {
+        /** @var $borrower Borrower */
+        $borrower = Auth::user()->getBorrower();
+        if (!$borrower) {
+            App::abort(404, 'Bad Request');
+        }
+        $page = Request::query('page') ? : 1;
+
+        $minRepaymentRate = \Setting::get('invite.minRepaymentRate');
+        $currencyCode = $borrower->getCountry()->getCurrencyCode();
+        $inviteesRepaymentRate = $this->borrowerService->getInviteeRepaymentRate($borrower);
+        $successRate = number_format(($inviteesRepaymentRate)*100);
+        $creditEarned = $this->borrowerService->getInviteCredit($borrower);
+        $bonusEarned = $currencyCode . " " . $creditEarned ;
+        $paginator = InviteQuery::create()
+            ->filterByBorrower($borrower)
+            ->paginate($page, 10);
+        $loanService = $this->loanService;
+        $repaymentService = $this->repaymentService;
+
+        return View::make(
+            'borrower.invites',
+            compact(
+                'minRepaymentRate',
+                'currencyCode',
+                'successRate',
+                'bonusEarned',
+                'invites',
+                'paginator',
+                'loanService',
+                'repaymentService'
+            )
+        );
+    }
+}
