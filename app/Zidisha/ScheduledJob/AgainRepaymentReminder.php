@@ -5,7 +5,11 @@ namespace Zidisha\ScheduledJob;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Queue\Jobs\Job;
+use Zidisha\Currency\Money;
 use Zidisha\Loan\ForgivenLoanQuery;
+use Zidisha\Loan\LoanQuery;
+use Zidisha\Mail\BorrowerMailer;
+use Zidisha\Repayment\InstallmentQuery;
 use Zidisha\ScheduledJob\Map\ScheduledJobTableMap;
 
 
@@ -74,11 +78,27 @@ class AgainRepaymentReminder extends ScheduledJobs
 
     public function process(Job $job)
     {
-        $scheduleJobs = ScheduledJobsQuery::create()
-            ->findOneById($data['jobId']);
-
-        $user = $scheduleJobs->getUser();
-
+        $user = $this->getUser();
+        $borrower = $user->getBorrower();
+        $loanId = $this->getLoanId();
+        
+        $loan = LoanQuery::create()
+            ->findOneById($loanId);
+        
+        $forgivenLoan = ForgivenLoanQuery::create()
+            ->findOneByLoanId($loanId);
+        
+        $installments = InstallmentQuery::create()
+            ->filterByLoan($loan)
+            ->find();
+        
+        if (!$forgivenLoan) {
+            /** @var  BorrowerMailer $borrowerMailer */
+            $borrowerMailer = \App::make('Zidisha\Mail\LenderMailer');
+            $borrowerMailer->sendAgainRepaymentReminder($borrower, $loan, $installments);
+        }
+        
+        $job->delete();
     }
     
 } // AgainRepaymentReminder

@@ -5,8 +5,15 @@ namespace Zidisha\ScheduledJob;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Queue\Jobs\Job;
+use Propel\Runtime\ActiveQuery\Criteria;
+use Zidisha\Borrower\ContactQuery;
+use Zidisha\Loan\LoanQuery;
 use Zidisha\Mail\BorrowerMailer;
+use Zidisha\Repayment\InstallmentPayment;
+use Zidisha\Repayment\InstallmentPaymentQuery;
+use Zidisha\Repayment\InstallmentQuery;
 use Zidisha\ScheduledJob\Map\ScheduledJobTableMap;
+use Zidisha\Sms\BorrowerSmsService;
 
 
 /**
@@ -74,9 +81,36 @@ class LoanFirstArrear extends ScheduledJobs
 
     public function process(Job $job)
     {
-        $scheduleJobs = ScheduledJobsQuery::create()
-            ->findOneById($data['jobId']);
+        $user = $this->getUser();
+        $borrower = $user->getBorrower();
+        
+        $loanId = $this->getLoanId();
+        
+        $loan = LoanQuery::create()
+            ->findOneById($loanId);
 
-        $user = $scheduleJobs->getUser();
+        $installment = InstallmentQuery::create()
+            ->filterByLoan($loan)
+            ->filterByAmount(0, Criteria::GREATER_THAN)
+            ->filterByPaidAmount($loan->getAmount(), Criteria::LESS_THAN)
+            ->orderByDueDate('ASC')
+            ->findOne();
+
+            if($installment->getDueDate() == $this->getStartDate()){
+                //Check if this is the borrowers first missed installment.                
+                if($installment){
+                    /** @var  BorrowerMailer $borrowerMailer */
+                    $borrowerMailer = \App::make('Zidisha\Mail\BorrowerMailer');
+
+                    /** @var  BorrowerSmsService $borrowerSmsService */
+                    $borrowerSmsService = \App::make('Zidisha\Sms\BorrowerSmsService');
+                    
+                    $borrowerMailer->sendLoanFirstArrearMail($borrower, $loan);
+                    $borrowerSmsService->sendLoanFirstArrearNotification($borrower, $loan);
+                }
+            }
+        
+        $job->delete();
+        
     }
 } // LoanFirstArrear

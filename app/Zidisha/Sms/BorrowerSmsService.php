@@ -3,7 +3,9 @@
 namespace Zidisha\Sms;
 
 
+use Zidisha\Borrower\Borrower;
 use Zidisha\Borrower\Contact;
+use Zidisha\Loan\Loan;
 
 class BorrowerSmsService {
 
@@ -25,4 +27,28 @@ class BorrowerSmsService {
         $this->smsService->send($contact->getPhoneNumber(), $text);
     }
 
+    public function sendLoanFinalArrearNotification(Borrower $borrower, Loan $loan)
+    {
+        //TODO: sendLoanFinalArrearNotification
+    }
+
+    public function sendLoanFinalArrearNotificationToContacts(Contact $contact, Loan $loan)
+    {
+        //TODO: sendLoanFinalArrearNotification
+    }
+
+    public function sendLoanFirstArrearNotification(Borrower $borrower, Loan $loan)
+    {
+        //TODO: sendLoanFirstArrearNotification
+    }
+
+    public function sendLoanMonthlyArrearNotificationToContacts(Contact $contact, Loan $loan)
+    {
+        //TODO: sendLoanMonthlyArrearNotificationToContacts
+    }
+
+    public function sendLoanMonthlyArrearNotification(Borrower $borrower, Loan $loan)
+    {
+        //TODO: sendLoanMonthlyArrearNotification        
+    }
 }

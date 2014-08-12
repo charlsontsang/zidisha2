@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use DB;
 use Illuminate\Queue\Jobs\Job;
 use Zidisha\ScheduledJob\Map\ScheduledJobTableMap;
+use Zidisha\Vendor\SiftScience\SiftScienceService;
 
 
 /**
@@ -73,7 +74,15 @@ class CronToRepay extends ScheduledJobs
 
     public function process(Job $job)
     {
-        $this->getUser();
+        $user = $this->getUser();
+        $loanId = $this->getLoanId();
+
+        /** @var  SiftScienceService $siftScienceService */
+        $siftScienceService = \App::make('Zidisha\Vendor\SiftScience\SiftScienceService');
+
+        $siftScienceService->loanArrearLabel($user, $loanId);
+        
+        $job->delete();
     }
 
 } // CronToRepay

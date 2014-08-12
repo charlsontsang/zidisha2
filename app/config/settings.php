@@ -212,6 +212,9 @@ return [
         ],
         'sendwithus.loan-about-to-expire-mail-template-id' => [
             'label' => 'Loan about to expire mail template id'
+        ],
+        'sendwithus.borrower-again-repayment-instruction-template-id' => [
+            'label' => 'Borrower again repayment instructions template id'
         ]
     ]
 ];

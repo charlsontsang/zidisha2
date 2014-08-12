@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use DB;
 use Illuminate\Queue\Jobs\Job;
 use Propel\Runtime\ActiveQuery\Criteria;
+use Zidisha\Currency\Money;
 use Zidisha\Mail\BorrowerMailer;
 use Zidisha\Repayment\InstallmentQuery;
 use Zidisha\ScheduledJob\Map\ScheduledJobTableMap;
@@ -50,23 +51,21 @@ class RepaymentReminder extends ScheduledJobs
         $loan = $borrower->getActiveLoan();
         
         $installment = InstallmentQuery::create()
-            ->filterByLoan($loan)->filterByAmount(0, Criteria::GREATER_THAN)
+            ->filterByLoan($loan)
+            ->filterByAmount(0, Criteria::GREATER_THAN)
             ->filterByPaidAmount($loan->getAmount(), Criteria::LESS_THAN)
             ->orderByDueDate('ASC')
             ->findOne();
 
         /** @var  BorrowerMailer $borrowerMailer */
-        $borrowerMailer = \App::make('Zidisha\Mail\LenderMailer');
+        $borrowerMailer = \App::make('Zidisha\Mail\BorrowerMailer');
         
         if ($installment->getDueDate() == $this->getStartDate()) {
-            if ($installment->getPaidAmount() > 0 && $installment->getPaidAmount() < $installment->getAmount()) {
-                $dueDate = $installment->getDueDate();
-                $paidAmount = $installment->getPaidAmount();
-                $dueAmount = $installment->getAmount()->subtract($installment->getPaidAmount());
-
-                $borrowerMailer->sendRepaymentReminder($borrower, $installment);                
+            if ($installment->getPaidAmount()->greaterThan(Money::create(0, $loan->getCurrencyCode())) && $installment->getPaidAmount() < $installment->getAmount()) {                
+                $borrowerMailer->sendRepaymentReminderTommorow($borrower, $installment);                
             } else {
-
+                // Send mail to borrower
+                $borrowerMailer->sendRepaymentReminder($borrower, $installment);
             }
         } elseif($installment->getDueDate() < $this->getStartDate()) {
             $amounts = InstallmentQuery::create()
@@ -75,7 +74,10 @@ class RepaymentReminder extends ScheduledJobs
                 ->select(array('amount_total', 'paid_amount_total'))
                 ->withColumn('SUM(amount)', 'amount_total')
                 ->withColumn('SUM(paid_amount)', 'paid_amount_total')
-                ->find();            
+                ->find();
+            
+            //Send mail to borrower
+            $borrowerMailer->sendRepaymentReminderForDueAmount($borrower, $loan, $amounts);
         }
     }
 } // RepaymentReminder

@@ -86,4 +86,19 @@ class SiftScienceService
             throw new \Exception('sift api error');
         }
     }
+
+    public function loanArrearLabel(User $user, $loanId)
+    {
+        $this->sift->label(
+            $user->getId(),
+            [
+                '$type'        => 'delay_loan',
+                '$user_id'     => $user->getId(),
+                'loanId'       => $loanId,
+                '$is_bad'      => true,
+                'reasons'      => 'delinquent',
+                '$description' => 'loan falls over two months past due'
+            ]
+        );
+    }
 }

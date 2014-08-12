@@ -5,7 +5,12 @@ namespace Zidisha\ScheduledJob;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Queue\Jobs\Job;
+use Zidisha\Borrower\ContactQuery;
+use Zidisha\Loan\ForgivenLoanQuery;
+use Zidisha\Loan\LoanQuery;
+use Zidisha\Mail\BorrowerMailer;
 use Zidisha\ScheduledJob\Map\ScheduledJobTableMap;
+use Zidisha\Sms\BorrowerSmsService;
 
 
 /**
@@ -75,9 +80,41 @@ class MonthlyLoanArrear extends ScheduledJobs
 
     public function process(Job $job)
     {
-        $scheduleJobs = ScheduledJobsQuery::create()
-            ->findOneById($data['jobId']);
+        $user = $this->getUser();
+        $borrower = $user->getBorrower();
+        $loanId = $this->getLoanId();
 
-        $user = $scheduleJobs->getUser();
+        $loan = LoanQuery::create()
+            ->findOneById($loanId);
+
+        $forgivenLoan = ForgivenLoanQuery::create()
+            ->findOneByLoanId($loanId);
+
+        if (!$forgivenLoan) {
+            /** @var  BorrowerMailer $borrowerMailer */
+            $borrowerMailer = \App::make('Zidisha\Mail\BorrowerMailer');
+
+            /** @var  BorrowerSmsService $borrowerSmsService */
+            $borrowerSmsService = \App::make('Zidisha\Sms\BorrowerSmsService');
+
+            $contacts = ContactQuery::create()
+                ->filterByBorrower($borrower)
+                ->find();
+
+            foreach ($contacts as $contact) {
+                $borrowerSmsService->sendLoanMonthlyArrearNotificationToContacts($contact, $loan);
+            }
+
+            $volunteerMentor = $borrower->getVolunteerMentor();
+
+            if ($volunteerMentor) {
+                $borrowerMailer->sendLoanMonthlyArrearToVolunteerMentor($volunteerMentor, $borrower, $loan);
+            }
+
+            $borrowerMailer->sendLoanMonthlyArrearMail($borrower, $loan);
+            $borrowerSmsService->sendLoanMonthlyArrearNotification($borrower, $loan);
+        }
+
+        $job->delete();
     }
 } // MonthlyLoanArrear
