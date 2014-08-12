@@ -339,8 +339,7 @@
                                                 {{ $bid->getLender()->getUser()->getUserName() }}</a>
                                         </h3>
                                         <p>
-                                            <i class="fa fa-fw fa-map-marker"></i>
-                                            @if($lender->getProfile()->getCity())
+                                            @if($bid->getLender()->getProfile()->getCity())
                                                 {{ $bid->getLender()->getProfile()->getCity() }},&nbsp;
                                             @endif
                                             {{ $bid->getLender()->getCountry()->getName() }}
