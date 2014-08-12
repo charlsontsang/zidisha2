@@ -339,7 +339,11 @@
                                                 {{ $bid->getLender()->getUser()->getUserName() }}</a>
                                         </h3>
                                         <p>
-                                            City, Country <!-- TO DO: if no city, display country only -->
+                                            <i class="fa fa-fw fa-map-marker"></i>
+                                            @if($lender->getProfile()->getCity())
+                                                {{ $bid->getLender()->getProfile()->getCity() }},&nbsp;
+                                            @endif
+                                            {{ $bid->getLender()->getCountry()->getName() }}
                                         </p>
                                     </div>
                                 </div> 
