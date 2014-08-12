@@ -10,8 +10,9 @@ class BorrowController extends BaseController {
         $countries = CountryQuery::create()
             ->filterByBorrowerCountry(true)
             ->find();
+        $registration_fees = [];
 
-        return View::make('pages.borrow', compact('countries'));
+        return View::make('pages.borrow', compact('countries', 'registration_fees'));
     }
 
 }
