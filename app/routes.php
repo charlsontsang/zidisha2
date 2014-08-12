@@ -381,6 +381,7 @@ Route::group(
                     'invite',
                     array('uses' => 'BorrowerInviteController@postInvite', 'as' => 'borrower:post-invite', 'before' => 'csrf')
                 );
+                Route::get('invites', array('uses' => 'BorrowerInviteController@getInvites', 'as' => 'borrower:invites'));
             }
         );
 
