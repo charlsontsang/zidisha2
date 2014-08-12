@@ -1,6 +1,7 @@
 <?php
 namespace Zidisha\Comment;
 
+use Propel\Runtime\ActiveQuery\Criteria;
 use Zidisha\Borrower\Borrower;
 use Zidisha\Upload\Upload;
 use Zidisha\User\User;
@@ -95,13 +96,6 @@ abstract class CommentService
 
     public function deleteComment(Comment $comment)
     {
-        $comment->setUserId(null);
-        $comment->setMessage('This comment was deleted');
-
-        $comment->setMessageTranslation(null);
-        $comment->setTranslatorId(null);
-
-        $comment->save();
 
         if ($this->isUploadsAllowed()) {
             foreach ($comment->getUploads() as $upload) {
@@ -110,18 +104,38 @@ abstract class CommentService
                 $upload->delete();
             }
         }
+
+        $childComments = CommentQuery::create()
+            ->filterById($comment->getId())
+            ->filterByLevel(0, Criteria::GREATER_THAN)
+            ->count();
+
+        if ($comment->isRoot() && $childComments < 1) {
+            $comment->delete();
+        } else {
+            $comment->setUserId(null);
+            $comment->setMessage('This comment has been deleted');
+            $comment->setDeleted(true);
+            $comment->setMessageTranslation(null);
+            $comment->setTranslatorId(null);
+
+            $comment->save();
+        }
+
     }
 
     public function getPaginatedComments(CommentReceiverInterface $receiver, $page, $maxPerPage)
     {
         $roots = $this->createCommentQuery()
             ->filterByReceiverId($receiver->getCommentReceiverId())
+            ->filterByDeleted(false)
             ->filterByLevel(0)
             ->orderById('desc')
             ->paginate($page, $maxPerPage);
 
         $comments = $this->createCommentQuery()
             ->filterByRootId($roots->toKeyValue('id', 'id'))
+            ->filterByDeleted(false)
             ->filterByLevel(['min' => 1])
             ->orderById('asc')
             ->find();
