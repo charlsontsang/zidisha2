@@ -96,7 +96,6 @@ abstract class CommentService
 
     public function deleteComment(Comment $comment)
     {
-
         if ($this->isUploadsAllowed()) {
             foreach ($comment->getUploads() as $upload) {
                 $comment->removeUpload($upload);
@@ -105,37 +104,33 @@ abstract class CommentService
             }
         }
 
-        $childComments = CommentQuery::create()
-            ->filterById($comment->getId())
-            ->filterByLevel(0, Criteria::GREATER_THAN)
+        $childCommentCount = $this->createCommentQuery()
+            ->filterByParentId($comment->getId())
             ->count();
 
-        if ($comment->isRoot() && $childComments < 1) {
+        if (!$childCommentCount) {
             $comment->delete();
         } else {
             $comment->setUserId(null);
             $comment->setMessage('This comment has been deleted');
-            $comment->setDeleted(true);
+            $comment->setRemoved(true);
             $comment->setMessageTranslation(null);
             $comment->setTranslatorId(null);
 
             $comment->save();
         }
-
     }
 
     public function getPaginatedComments(CommentReceiverInterface $receiver, $page, $maxPerPage)
     {
         $roots = $this->createCommentQuery()
             ->filterByReceiverId($receiver->getCommentReceiverId())
-            ->filterByDeleted(false)
             ->filterByLevel(0)
             ->orderById('desc')
             ->paginate($page, $maxPerPage);
 
         $comments = $this->createCommentQuery()
             ->filterByRootId($roots->toKeyValue('id', 'id'))
-            ->filterByDeleted(false)
             ->filterByLevel(['min' => 1])
             ->orderById('asc')
             ->find();

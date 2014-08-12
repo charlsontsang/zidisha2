@@ -100,7 +100,7 @@ class LoanController extends BaseController
         $comments = $this->borrowerCommentService->getPaginatedComments($borrower, $page, 10);
         $commentCount = \Zidisha\Comment\BorrowerCommentQuery::create()
             ->filterByBorrower($borrower)
-            ->filterByDeleted(false)
+            ->filterByRemoved(false)
             ->count();
         $loanFeedbackComments = $this->loanFeedbackCommentService->getPaginatedComments($loan, $feedbackCommentPage, 10);
 
