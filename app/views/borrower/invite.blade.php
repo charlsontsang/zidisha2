@@ -30,9 +30,9 @@ Invite Your Friends
     @if($isEligible == 2)
         {{ \Lang::get('borrower.invite.not-eligible-repayRate') }}
     @elseif($isEligible == 3)
-        {{ \Lang::get('borrower.not-eligible-invitee-repayRate') }}
+        {{ \Lang::get('borrower.invite.not-eligible-invitee-repayRate') }}
     @else
-        {{ \Lang::get('borrower.not-eligible-invitee-quota', ['maxInviteesWithoutPayment' => $maxInviteesWithoutPayment]) }}
+        {{ \Lang::get('borrower.invite.not-eligible-invitee-quota', ['maxInviteesWithoutPayment' => $maxInviteesWithoutPayment]) }}
     @endif
 @endif
 @stop
