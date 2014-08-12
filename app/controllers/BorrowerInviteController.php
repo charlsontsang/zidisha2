@@ -92,12 +92,21 @@ class BorrowerInviteController extends BaseController
         return Redirect::route('borrower:invite')->withForm($form);
     }
 
-    public function getInvites()
+    public function getInvites($id = null)
     {
         /** @var $borrower Borrower */
         $borrower = Auth::user()->getBorrower();
         if (!$borrower) {
             App::abort(404, 'Bad Request');
+        }
+        if ($id) {
+            $invite = InviteQuery::create()
+                ->filterByBorrower($borrower)
+                ->filterById($id)
+                ->findOne();
+            if ($invite) {
+                $invite->delete();
+            }
         }
         $page = Request::query('page') ? : 1;
 
