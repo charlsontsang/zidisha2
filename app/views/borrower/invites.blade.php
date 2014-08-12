@@ -105,6 +105,7 @@ Invites
             {{ $currencyCode }}
             {{ $bonus }}
         </td>
+        <td><a class="btn btn-primary"  href="{{ route('borrower:invites', $invite->getId()) }}">Remove</a></td>
     </tr>
     @endforeach
     </tbody>
