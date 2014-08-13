@@ -119,16 +119,18 @@ class GenerateModelData extends Command
             return;
         }
 
+        if ($model == 'base') {
+            $this->generateBase();
+            return;
+        }
+
         if ($model == 'new') {
             $this->reset();
 
             $this->line('Generate data');
 
-            $this->call('fake', array('model' => 'Language', 'size' => 1));
-            $this->call('fake', array('model' => 'Country', 'size' => 10));
-            $this->call('fake', array('model' => 'ExchangeRate', 'size' => 30));
+            $this->generateBase();
 
-            $this->call('fake', array('model' => 'SpecialUser', 'size' => 1));
             $this->call('fake', array('model' => 'Lender', 'size' => 50));
             $this->call('fake', array('model' => 'VolunteerMentor', 'size' => 20));
             $this->call('fake', array('model' => 'Borrower', 'size' => 80));
@@ -366,6 +368,15 @@ class GenerateModelData extends Command
 
         $this->line('Import settings');
         Setting::import($settings);
+    }
+
+    protected function generateBase()
+    {
+        $this->call('fake', array('model' => 'Language', 'size' => 1));
+        $this->call('fake', array('model' => 'Country', 'size' => 10));
+        $this->call('fake', array('model' => 'ExchangeRate', 'size' => 30));
+
+        $this->call('fake', array('model' => 'SpecialUser', 'size' => 1));
     }
 
     protected function generateLanguages()
