@@ -1,317 +1,297 @@
 @extends('layouts.master')
 
 @section('page-title')
-FAQ
+{{ \Lang::get('borrower.faqs.heading') }}
 @stop
 
 
 @section('content')
-<div class="page-header">
-    <h1>{{ \Lang::get('borrower.faqs.heading') }}</h1>
-</div>
-
 <div class="row">
-    <div>
-        <h3><b>{{ \Lang::get('borrower.faqs.basic') }}</b></h3>
-        <ul>
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question1') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer1') }}</div>
-            </li>
-            
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question2') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer2') }}</div>
-            </li>
-            
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question4') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer4') }}</div>
-            </li>
-            
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question5') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer5') }}</div>
-            </li>
-            
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question3') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer3') }}</div>
-            </li>
-            
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question59') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer59') }}</div>
-            </li>
-            
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question47') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer47') }}</div>
-            </li>
-            
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question6') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer6') }}</div>
-            </li>
-            
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question52') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer52') }}</div>
-            </li>
-            
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question7') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer7') }}</div>
-            </li>
-            
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question9') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer9') }}</div>
-            </li>
-            
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question10') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer10') }}</div>
-            </li>
-            
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question11') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer11') }}</div>
-            </li>
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question12') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer12') }}</div>
-            </li>
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question13') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer13') }}</div>
-            </li>
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question15') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer15') }}</div>
-            </li>
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question49') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer49') }}</div>
-            </li>
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question16') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer16') }}</div>
-            </li>
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question17') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer17') }}</div>
-            </li>
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question46') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer46') }}</div>
-            </li>
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question51') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer51') }}</div>
-            </li>
-        </ul>
-  </div>
-</div>
-
-<div class="row">
-    <div>
-        <h3><b>{{ \Lang::get('borrower.faqs.lenders') }}</b></h3>
-        <ul>
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question53') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer53') }}</div>
-            </li>
-
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question45') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer45') }}</div>
-            </li>
-
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question44') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer44') }}</div>
-            </li>
-
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question43') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer43') }}</div>
-            </li>
-
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question19') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer19') }}</div>
-            </li>
-
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question21') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer21') }}</div>
-            </li>
-
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question18') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer18') }}</div>
-            </li>
-
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question60') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer60') }}</div>
-            </li>
-
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question20') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer20') }}</div>
-            </li>
-
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question22') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer22') }}</div>
-            </li>
-
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question24') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer24') }}</div>
-            </li>
-
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question61') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer61') }}</div>
-            </li>
-
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question62') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer62') }}</div>
-            </li>
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question14') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer14') }}</div>
-            </li>
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question40') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer40') }}</div>
-            </li>
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question41') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer41') }}</div>
-            </li>
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question42') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer42') }}</div>
-            </li>
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question23') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer23') }}</div>
-            </li>
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question48') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer48') }}</div>
-            </li>
-        </ul>
+    
+    <div class="col-xs-12 page-header">
+        <h1>{{ \Lang::get('borrower.faqs.heading') }}</h1>
     </div>
-</div>
 
-<div class="row">
-    <div>
-        <h3><b>{{ \Lang::get('borrower.faqs.borrower') }}</b></h3>
-        <ul>
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question25') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer25') }}</div>
-            </li>
+    <div class="col-md-8 info-page">
+        <h2 id="general-faqs">{{ \Lang::get('borrower.faqs.basic') }}</h2>
+             
+        <h3>{{ \Lang::get('borrower.faqs.question1') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer1') }}</p>
 
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question50') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer50') }}</div>
-            </li>
+     
+        <h3>{{ \Lang::get('borrower.faqs.question2') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer2') }}</p>
+ 
+     
+        <h3>{{ \Lang::get('borrower.faqs.question4') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer4') }}</p>
+    
+     
+        <h3>{{ \Lang::get('borrower.faqs.question5') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer5') }}</p>
+  
+     
+        <h3>{{ \Lang::get('borrower.faqs.question3') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer3') }}</p>
+   
+     
+        <h3>{{ \Lang::get('borrower.faqs.question59') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer59') }}</p>
+   
+     
+        <h3>{{ \Lang::get('borrower.faqs.question47') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer47') }}</p>
+     
+    
+     
+        <h3>{{ \Lang::get('borrower.faqs.question6') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer6') }}</p>
+     
+    
+        <h3>{{ \Lang::get('borrower.faqs.question52') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer52') }}</p>
+    
+     
+        <h3>{{ \Lang::get('borrower.faqs.question7') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer7') }}</p>    
+    
+     
+        <h3>{{ \Lang::get('borrower.faqs.question9') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer9') }}</p>
+    
+     
+        <h3>{{ \Lang::get('borrower.faqs.question10') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer10') }}</p>
+     
+     
+        <h3>{{ \Lang::get('borrower.faqs.question11') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer11') }}</p>
+     
+     
+        <h3>{{ \Lang::get('borrower.faqs.question12') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer12') }}</p>
+     
+     
+        <h3>{{ \Lang::get('borrower.faqs.question13') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer13') }}</p>
+     
+     
+        <h3>{{ \Lang::get('borrower.faqs.question15') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer15') }}</p>
+     
+     
+        <h3>{{ \Lang::get('borrower.faqs.question49') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer49') }}</p>
+     
+     
+        <h3>{{ \Lang::get('borrower.faqs.question16') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer16') }}</p>
+     
+     
+        <h3>{{ \Lang::get('borrower.faqs.question17') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer17') }}</p>
+     
+     
+        <h3>{{ \Lang::get('borrower.faqs.question46') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer46') }}</p>
+     
+     
+        <h3>{{ \Lang::get('borrower.faqs.question51') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer51') }}</p>
+ 
+        <hr/>
 
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question26') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer26') }}</div>
-            </li>
+        <h2 id="lender-faqs">{{ \Lang::get('borrower.faqs.lenders') }}</h2>
+ 
+     
+        <h3>{{ \Lang::get('borrower.faqs.question53') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer53') }}</p>
+     
 
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question27') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer27') }}</div>
-            </li>
+     
+        <h3>{{ \Lang::get('borrower.faqs.question45') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer45') }}</p>
+     
 
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question28') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer28') }}</div>
-            </li>
+     
+        <h3>{{ \Lang::get('borrower.faqs.question44') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer44') }}</p>
+     
 
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question29') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer29') }}</div>
-            </li>
+     
+        <h3>{{ \Lang::get('borrower.faqs.question43') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer43') }}</p>
+     
 
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question36') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer36') }}</div>
-            </li>
+     
+        <h3>{{ \Lang::get('borrower.faqs.question19') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer19') }}</p>
+     
 
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question30') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer30') }}</div>
-            </li>
+     
+        <h3>{{ \Lang::get('borrower.faqs.question21') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer21') }}</p>
+     
 
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question56') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer56') }}</div>
-            </li>
+     
+        <h3>{{ \Lang::get('borrower.faqs.question18') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer18') }}</p>
+     
 
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question38') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer38') }}</div>
-            </li>
+     
+        <h3>{{ \Lang::get('borrower.faqs.question60') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer60') }}</p>
+     
 
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question37') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer37') }}</div>
-            </li>
+     
+        <h3>{{ \Lang::get('borrower.faqs.question20') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer20') }}</p>
+     
 
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question55') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer55') }}</div>
-            </li>
+     
+        <h3>{{ \Lang::get('borrower.faqs.question22') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer22') }}</p>
+     
 
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question31') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer31') }}</div>
-            </li>
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question32') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer32') }}</div>
-            </li>
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question33') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer33') }}</div>
-            </li>
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question34') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer34') }}</div>
-            </li>
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question35') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer35') }}</div>
-            </li>
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question58') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer58') }}</div>
-            </li>
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question57') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer57') }}</div>
-            </li>
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question54') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer54') }}</div>
-            </li>
-            <li>
-                <h4>{{ \Lang::get('borrower.faqs.question39') }}</h4>
-                <div >{{ \Lang::get('borrower.faqs.answer39') }}</div>
-            </li>
-        </ul>
+     
+        <h3>{{ \Lang::get('borrower.faqs.question24') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer24') }}</p>
+     
+
+     
+        <h3>{{ \Lang::get('borrower.faqs.question61') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer61') }}</p>
+     
+
+     
+        <h3>{{ \Lang::get('borrower.faqs.question62') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer62') }}</p>
+     
+     
+        <h3>{{ \Lang::get('borrower.faqs.question14') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer14') }}</p>
+     
+     
+        <h3>{{ \Lang::get('borrower.faqs.question40') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer40') }}</p>
+     
+     
+        <h3>{{ \Lang::get('borrower.faqs.question41') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer41') }}</p>
+     
+     
+        <h3>{{ \Lang::get('borrower.faqs.question42') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer42') }}</p>
+     
+     
+        <h3>{{ \Lang::get('borrower.faqs.question23') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer23') }}</p>
+     
+     
+        <h3>{{ \Lang::get('borrower.faqs.question48') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer48') }}</p>
+     
+
+        <h2 id="borrower-faqs">{{ \Lang::get('borrower.faqs.borrower') }}</h2>
+ 
+     
+        <h3>{{ \Lang::get('borrower.faqs.question25') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer25') }}</p>
+     
+
+     
+        <h3>{{ \Lang::get('borrower.faqs.question50') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer50') }}</p>
+     
+
+     
+        <h3>{{ \Lang::get('borrower.faqs.question26') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer26') }}</p>
+     
+
+     
+        <h3>{{ \Lang::get('borrower.faqs.question27') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer27') }}</p>
+     
+
+     
+        <h3>{{ \Lang::get('borrower.faqs.question28') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer28') }}</p>
+     
+
+     
+        <h3>{{ \Lang::get('borrower.faqs.question29') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer29') }}</p>
+     
+
+     
+        <h3>{{ \Lang::get('borrower.faqs.question36') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer36') }}</p>
+     
+
+     
+        <h3>{{ \Lang::get('borrower.faqs.question30') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer30') }}</p>
+     
+
+     
+        <h3>{{ \Lang::get('borrower.faqs.question56') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer56') }}</p>
+     
+
+     
+        <h3>{{ \Lang::get('borrower.faqs.question38') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer38') }}</p>
+     
+
+     
+        <h3>{{ \Lang::get('borrower.faqs.question37') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer37') }}</p>
+     
+
+     
+        <h3>{{ \Lang::get('borrower.faqs.question55') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer55') }}</p>
+     
+
+     
+        <h3>{{ \Lang::get('borrower.faqs.question31') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer31') }}</p>
+     
+     
+        <h3>{{ \Lang::get('borrower.faqs.question32') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer32') }}</p>
+     
+     
+        <h3>{{ \Lang::get('borrower.faqs.question33') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer33') }}</p>
+     
+     
+        <h3>{{ \Lang::get('borrower.faqs.question34') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer34') }}</p>
+     
+     
+        <h3>{{ \Lang::get('borrower.faqs.question35') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer35') }}</p>
+     
+     
+        <h3>{{ \Lang::get('borrower.faqs.question58') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer58') }}</p>
+     
+     
+        <h3>{{ \Lang::get('borrower.faqs.question57') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer57') }}</p>
+     
+     
+        <h3>{{ \Lang::get('borrower.faqs.question54') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer54') }}</p>
+     
+     
+        <h3>{{ \Lang::get('borrower.faqs.question39') }}</h3>
+        <p>{{ \Lang::get('borrower.faqs.answer39') }}</p>         
+
     </div>
+
 </div>
 @stop
 

@@ -13,22 +13,22 @@ How It Works
         </div>
         <p>Can “pocket change” really make a change? We’re absolutely sure of it. In fact, you’d be amazed at how far a microloan can take someone with all the motivation in the world, but little to no resources. Here at Zidisha, we not only close the gap between borrowers and lenders across the globe — we make funding and fulfilling dreams beyond easy, super satisfying and even a little bit addicting. Here’s how it all works.</p>
 
-        <h2>1. Borrowers apply.</h2>
+        <h3>1. Borrowers apply.</h3>
           <p>An entrepreneurial borrower in a developing country posts a loan request to fund his or her business.</p>
         
-        <h2>2. You choose.</h2>
+        <h3>2. You choose.</h3>
         <p>You pick an available loan, bid to provide all or part of the funding and set your own interest rate.</p>
         
-        <h2>3. Funds flow.</h2>
+        <h3>3. Funds flow.</h3>
         <p>After the loan is fully funded and the borrower accepts it, we disburse 100% of your loan directly to the borrower.</p>
         
-        <h2>4. Everyone stays in touch.</h2>
+        <h3>4. Everyone stays in touch.</h3>
         <p>You and the borrower can message each other back and forth to send updates about the impact of the loan.</p>
         
-        <h2>5. Loans get repaid.</h2>
+        <h3>5. Loans get repaid.</h3>
         <p>The borrower repays your loan in regular installments.</p>
         
-        <h2>6. Funds are renewed.</h2>
+        <h3>6. Funds are renewed.</h3>
         <p>You can turn right around and relend your funds to a new borrower, or withdraw them whenever you wish.</p>
         
         <h2>The Evolution of a Zidisha Loan</h2>

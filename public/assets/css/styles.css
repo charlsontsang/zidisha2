@@ -268,7 +268,7 @@ body {
   font-family: "Lato", Helvetica, Arial, sans-serif;
   font-size: 16px;
   line-height: 1.42857143;
-  color: #5e5e5e;
+  color: #333232;
   background-color: #ffffff;
 }
 input,
@@ -1916,7 +1916,7 @@ select[multiple].input-lg {
   display: block;
   margin-top: 5px;
   margin-bottom: 10px;
-  color: #9e9e9e;
+  color: #737171;
 }
 @media (min-width: 768px) {
   .form-inline .form-group {
@@ -3942,7 +3942,7 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   background-color: transparent;
 }
 .navbar-default .navbar-text {
-  color: #5e5e5e;
+  color: #333232;
 }
 .navbar-default .navbar-nav > li > a {
   color: #777777;
@@ -4414,7 +4414,7 @@ a.thumbnail.active {
 }
 .thumbnail .caption {
   padding: 9px;
-  color: #5e5e5e;
+  color: #333232;
 }
 .alert {
   padding: 15px;
@@ -5219,7 +5219,7 @@ button.close {
 .tooltip-inner {
   max-width: 300px;
   padding: 3px 8px;
-  color: #5e5e5e;
+  color: #333232;
   text-align: center;
   text-decoration: none;
   background-color: #ffffff;
@@ -7491,20 +7491,6 @@ button.close {
 .wizard > .wizard-step.disabled a.wizard-dot {
   pointer-events: none;
 }
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-.h1,
-.h2,
-.h3,
-.h4,
-.h5,
-.h6 {
-  color: #333232;
-}
 .text-light {
   font-weight: 300;
 }
@@ -7529,7 +7515,7 @@ h5.alpha {
   margin-bottom: 0;
 }
 a.inverted {
-  color: #5e5e5e;
+  color: #333232;
 }
 a.inverted:hover {
   color: #2e9df7;
@@ -7637,7 +7623,7 @@ hr {
 }
 .btn-default:hover {
   background-color: inherit;
-  border: 1px solid #5e5e5e;
+  border: 1px solid #333232;
 }
 .lender-dashboard-btn {
   margin: -7px 0 5px 0;
@@ -7694,22 +7680,33 @@ hr {
   }
 }
 .info-page h2 {
-  margin-top: 2em;
+  color: #f15656;
+  font-weight: bold;
 }
 .info-page p,
 .info-page ul li {
-  font-size: 1em;
+  margin-top: 0;
+  margin-bottom: 1em;
+  font-size: 2em;
 }
 @media (min-width: 768px) {
   .info-page p,
   .info-page ul li {
-    font-size: 20px;
+    font-size: 18px;
     line-height: 27px;
     font-weight: 300;
   }
 }
 .info-page {
   padding-bottom: 100px;
+}
+.info-page hr {
+  margin: 3em 0;
+}
+@media (min-width: 768px) {
+  .home p {
+    font-size: 20px !important;
+  }
 }
 @media (max-width: 767px) {
   /* Force table to not be like tables anymore */
@@ -8138,12 +8135,12 @@ a.link-dark {
   }
 }
 .loan-body .profile-image {
-  margin-top: 15px;
   margin-bottom: 15px;
   height: 225px;
 }
 @media (min-width: 768px) {
   .loan-body .profile-image {
+    margin-top: 15px;
     height: 450px;
   }
 }

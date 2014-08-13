@@ -1,17 +1,3 @@
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-.h1,
-.h2,
-.h3,
-.h4,
-.h5,
-.h6 {
-  color: @gray-dark;
-}
 .text-light {
   font-weight: 300;
 }
@@ -200,18 +186,30 @@ hr {
   }
 }
 .info-page h2 {
-  margin-top: 2em;
+  color: @brand-danger;
+  font-weight: bold;
 }
 .info-page p, .info-page ul li {
-  font-size: 1em;
+  margin-top: 0;
+  margin-bottom: 1em;
+  font-size: 2em;
   @media (min-width: @screen-sm-min) {
-    font-size: 20px;
+    font-size: 18px;
     line-height: 27px;
     font-weight: 300;
   }
 }
 .info-page {
   padding-bottom: 100px;
+}
+.info-page hr {
+  margin: 3em 0;
+}
+
+.home p {
+  @media (min-width: @screen-sm-min) {
+    font-size: 20px !important;
+  }
 }
 
 @media (max-width: @screen-xs-max) {
@@ -277,4 +275,3 @@ hr {
     /* ie8 workaround - http://louisremi.github.io/background-size-polyfill/ */
     -ms-behavior: url(/backgroundsize.min.htc);
 }
-
