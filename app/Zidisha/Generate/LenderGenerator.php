@@ -40,7 +40,7 @@ class LenderGenerator extends Generator
 
     protected function doGenerate($i)
     {
-        $number = $this->lenderCount + 1 + $i;
+        $number = $this->lenderCount + $i;
         $data = [
             'firstName' => 'Lender' . $number,
             'lastName'  => $this->faker->lastName,
