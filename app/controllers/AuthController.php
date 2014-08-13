@@ -3,6 +3,7 @@
 use Zidisha\Analytics\MixpanelService;
 use Zidisha\Auth\AuthService;
 use Zidisha\Borrower\BorrowerGuestQuery;
+use Zidisha\Borrower\BorrowerService;
 use Zidisha\Borrower\JoinLogQuery;
 use Zidisha\Country\CountryQuery;
 use Zidisha\User\User;
@@ -20,19 +21,32 @@ class AuthController extends BaseController
     private $authService;
     private $siftScienceService;
     private $googleService;
+    
     /**
      * @var Zidisha\Vendor\Mixpanel
      */
     private $mixpanel;
+    
+    /**
+     * @var Zidisha\Borrower\BorrowerService
+     */
+    private $borrowerService;
 
-    public function __construct(FacebookService $facebookService, AuthService $authService,
-        siftScienceService $siftScienceService, GoogleService $googleService, MixpanelService $mixpanel)
+    public function __construct(
+        FacebookService $facebookService,
+        AuthService $authService,
+        siftScienceService $siftScienceService,
+        GoogleService $googleService,
+        MixpanelService $mixpanel,
+        BorrowerService $borrowerService
+    )
     {
         $this->facebookService = $facebookService;
         $this->authService = $authService;
         $this->siftScienceService = $siftScienceService;
         $this->googleService = $googleService;
         $this->mixpanel = $mixpanel;
+        $this->borrowerService = $borrowerService;
     }
 
     public function getLogin()
@@ -146,20 +160,18 @@ class AuthController extends BaseController
             \Flash::error('borrower.login.flash.code-not-valid');
             return \Redirect::home();
         }
-
-        $joinLog
-            ->setVerifiedAt(new \DateTime());
-        $joinLog->save();
-
-        $borrower = $joinLog->getBorrower();
-        $borrower
-            ->setVerified(1);
-
-        $borrower->save();
-
-        Auth::loginUsingId($borrower->getId());
+        
+        $borrower = $joinLog->getBorrower();        
+        $this->borrowerService->verifyBorrower($borrower);
 
         \Flash::info('borrower.login.flash.verified');
+        if ($borrower->getUser() == \Auth::user()) {
+            return Redirect::route('borrower:dashboard');
+        }
+        
+        $this->flushLogout();
+        Auth::loginUsingId($borrower->getId());
+
         return $this->login();
     }
 
