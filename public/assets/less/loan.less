@@ -50,6 +50,10 @@
   }
 }
 .lender-thumbnail {
+  width: 90px;
+  @media (min-width: @screen-md-min) {
+    width: 120px;
+  }
   img {
     width: 90px;
     height: 90px;
@@ -57,9 +61,9 @@
     display: block;
     margin: 0 auto 0 auto;
     @media (min-width: @screen-md-min) {
-        width: 102px;
-        height: 102px;
-        border-radius: 51px;
+        width: 120px;
+        height: 120px;
+        border-radius: 60px;
     }
   }
   h3, p {

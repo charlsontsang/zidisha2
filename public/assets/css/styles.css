@@ -8186,6 +8186,10 @@ hr {
 .navbar-default .navbar-text {
   color: #777777;
 }
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus {
+  color: #2e9df7;
+}
 .footer {
   margin-bottom: 0;
   padding-bottom: 0;
@@ -8404,6 +8408,14 @@ a.link-dark {
     float: right;
   }
 }
+.lender-thumbnail {
+  width: 90px;
+}
+@media (min-width: 992px) {
+  .lender-thumbnail {
+    width: 120px;
+  }
+}
 .lender-thumbnail img {
   width: 90px;
   height: 90px;
@@ -8413,9 +8425,9 @@ a.link-dark {
 }
 @media (min-width: 992px) {
   .lender-thumbnail img {
-    width: 102px;
-    height: 102px;
-    border-radius: 51px;
+    width: 120px;
+    height: 120px;
+    border-radius: 60px;
   }
 }
 .lender-thumbnail h3,

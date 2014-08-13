@@ -325,21 +325,23 @@
                     <div class="loan-section-content">
                         <div class="row">
                             @foreach($bids as $bid)
-                                <div class="col-xs-4 col-sm-3 lender-thumbnail"
-                                    <a href="{{ $bid->getLender()->getUser()->getProfileUrl() }}">
-                                        @if($bid->getLender()->getUser()->getProfilePictureUrl())
-                                            <img src="{{ $bid->getLender()->getUser()->getProfilePictureUrl() }}" alt="">
-                                        @else
-                                            <img src="{{ asset('/assets/images/default.jpg') }}" alt="">
-                                        @endif
-                                    </a>
-                                    <h3 class="lender-thumbnail">
-                                        <a href="{{ route('lender:public-profile', $bid->getLender()->getUser()->getUserName()) }}">{{
-                                        $bid->getLender()->getUser()->getUserName() }}</a>
-                                    </h3>
-                                    <p>
-                                        City, Country <!-- TO DO: if no city, display country only -->
-                                    </p>
+                                <div class="col-xs-4">
+                                    <div class="lender-thumbnail">
+                                        <a href="{{ $bid->getLender()->getUser()->getProfileUrl() }}">
+                                            @if($bid->getLender()->getUser()->getProfilePictureUrl())
+                                                <img src="{{ $bid->getLender()->getUser()->getProfilePictureUrl() }}" alt="">
+                                            @else
+                                                <img src="{{ asset('/assets/images/default.jpg') }}" alt="">
+                                            @endif
+                                        </a>
+                                        <h3>
+                                            <a href="{{ route('lender:public-profile', $bid->getLender()->getUser()->getUserName()) }}">
+                                                {{ $bid->getLender()->getUser()->getUserName() }}</a>
+                                        </h3>
+                                        <p>
+                                            City, Country <!-- TO DO: if no city, display country only -->
+                                        </p>
+                                    </div>
                                 </div> 
                             @endforeach
                         </div>
