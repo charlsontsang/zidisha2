@@ -248,12 +248,6 @@ class BorrowerService
         $upload->delete();
     }
 
-    public function makeVolunteerMentor(Borrower $borrower)
-    {
-        $borrower->getUser()->setSubRole('volunteerMentorId');
-        $borrower->save();
-    }
-
     public function validateConnectingFacebookUser($facebookUser)
     {
         $checkUser = $this->userQuery
