@@ -28,6 +28,8 @@ class LenderGenerator extends Generator
     {
         $this->joinedAtStartDate = $startDate;
         $this->joinedAtEndDate = $endDate;
+        
+        return $this;
     }
 
     protected function beforeGenerate()
