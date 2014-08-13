@@ -455,28 +455,9 @@ class GenerateModelData extends Command
 
     protected function generateLenders($count)
     {
-        $countryIds = range(1, 7, 1);
-        $lenderCount = LenderQuery::create()->count();
-
-        $return = [];
-        
-        for ($i = 0; $i <= $count; $i++) {
-            $number = $lenderCount + 1 + $i;
-            $data = array();
-            $data['username'] = 'lender' . $number;
-            $data['password'] = '1234567890';
-            $data['email'] = 'lender' . $number . '@mail.com';
-            $data['countryId'] = $this->faker->randomElement($countryIds);
-            
-            $lender = $this->lenderService->joinLender($data);
-            $user = $lender->getUser();
-
-            $user->setLastLoginAt($this->faker->dateTimeBetween('- 16 months'));
-            $user->save();
-            $return[] = $lender;
-        }
-        
-        return $return;
+        return \Zidisha\Generate\LenderGenerator::create()
+            ->size($count)
+            ->generate();
     }
 
     protected function generateBorrowers($count)
