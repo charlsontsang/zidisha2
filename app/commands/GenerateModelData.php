@@ -13,9 +13,6 @@ use Zidisha\Balance\TransactionService;
 use Zidisha\Balance\WithdrawalRequest;
 use Zidisha\Borrower\Borrower;
 use Zidisha\Borrower\BorrowerQuery;
-use Zidisha\Borrower\JoinLog;
-use Zidisha\Borrower\VolunteerMentor;
-use Zidisha\Borrower\VolunteerMentorQuery;
 use Zidisha\Comment\BorrowerComment;
 use Zidisha\Comment\Comment;
 use Zidisha\Country\Country;
@@ -132,6 +129,7 @@ class GenerateModelData extends Command
 
             $this->call('fake', array('model' => 'SpecialUser', 'size' => 1));
             $this->call('fake', array('model' => 'Lender', 'size' => 50));
+            $this->call('fake', array('model' => 'VolunteerMentor', 'size' => 20));
             $this->call('fake', array('model' => 'Borrower', 'size' => 80));
             
             $this->call('fake', array('model' => 'LenderGroup', 'size' => 50));
@@ -186,6 +184,10 @@ class GenerateModelData extends Command
             return $this->generateLenders($size);
         }
 
+        if ($model == "VolunteerMentor") {
+            return $this->generateVolunteerMentors($size);
+        }
+        
         if ($model == "Borrower") {
             return $this->generateBorrowers($size);
         }
@@ -453,96 +455,19 @@ class GenerateModelData extends Command
             ->generate();
     }
 
+    protected function generateVolunteerMentors($count)
+    {
+        return \Zidisha\Generate\BorrowerGenerator::create()
+            ->size($count)
+            ->volunteerMentor(true)
+            ->generate();
+    }
+
     protected function generateBorrowers($count)
     {
-        $countryIds = range(1, 6, 1);
-        
-        $cities = [];
-        foreach ($countryIds as $countryId) {
-            for ($i = 0; $i < 5; $i++) {
-                $cities[$countryId][] = $this->faker->city;
-            }
-        }
-
-        $volunteerMentorIds = [];
-        $return = [];
-        
-        for ($i = 0; $i <= $count; $i++) {
-            $userName = 'borrower' . $i;
-            $password = '1234567890';
-            $email = 'borrower' . $i . '@mail.com';
-
-            $isMentor = $i < $count / 2;
-            $countryId = $this->faker->randomElement($countryIds);
-
-            $user = new \Zidisha\User\User();
-            $user
-                ->setUsername($userName)
-                ->setPassword($password)
-                ->setEmail($email)
-                ->setLastLoginAt(new Carbon())
-                ->setRole('borrower');
-
-            $borrower = new \Zidisha\Borrower\Borrower();
-            $borrower
-                ->setFirstName('borrower' . $i)
-                ->setLastName('last' . $i)
-                ->setCountryId($countryId)
-                ->setUser($user)
-                ->setVerified($this->faker->boolean());
-
-            foreach (['communityLeader', 'familyMember', 'familyMember', 'familyMember', 'neighbor', 'neighbor', 'neighbor'] as $contactType) {
-                $contact = new \Zidisha\Borrower\Contact();
-                $contact
-                    ->setPhoneNumber($this->faker->numberBetween(100000000, 1000000000))
-                    ->setFirstName($this->faker->firstName)
-                    ->setLastName($this->faker->lastName)
-                    ->setDescription($this->faker->sentence(5))
-                    ->setType($contactType);
-                $borrower->addContact($contact);
-            }
-
-            $borrowerProfile = new \Zidisha\Borrower\Profile();
-            $borrowerProfile->setAboutMe($this->faker->paragraph(7))
-                ->setAboutBusiness($this->faker->paragraph(7))
-                ->setAddress($this->faker->paragraph(3))
-                ->setAddressInstructions($this->faker->paragraph(6))
-                ->setCity($this->faker->randomElement($cities[$countryId]))          
-                ->setPhoneNumber($this->faker->numberBetween(100000000, 1000000000))
-                ->setAlternatePhoneNumber($this->faker->numberBetween(100000000, 1000000000))
-                ->setNationalIdNumber($this->faker->randomNumber(10))
-                ->setBorrower($borrower);
-            
-            if ($isMentor) {
-                $user->setSubRole('volunteerMentor');
-                $mentor = new VolunteerMentor();                
-                $mentor
-                    ->setBorrowerVolunteer($borrower)
-                    ->setCountryId($borrower->getCountryId())
-                    ->setStatus(1) // TODO ???
-                    ->setGrantDate(new \DateTime()); // TODO rename
-            } else {
-                $borrower->setVolunteerMentorId($this->faker->randomElement($volunteerMentorIds));
-            }
-            $borrowerProfile->save();
-
-            $joinLog = new JoinLog();
-            $joinLog
-                ->setIpAddress($this->faker->ipv4)
-                ->setVerificationCode($this->faker->randomNumber(20))
-                ->setBorrower($borrower);
-            if ($borrower->getVerified()) {
-                $joinLog->setVerifiedAt(new \DateTime());
-            }
-            $joinLog->save();
-            
-            if ($isMentor) {
-                $volunteerMentorIds[] = $borrower->getId();
-            }
-            $return[] = $borrower;
-        }
-        
-        return $return;
+        return \Zidisha\Generate\BorrowerGenerator::create()
+            ->size($count)
+            ->generate();
     }
 
     protected function generateLendingGroups($count)
