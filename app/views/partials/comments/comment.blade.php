@@ -32,7 +32,11 @@
             <p class="clearfix">
                 <small class="pull-right">
                     <em>Translated by </em>
-                    {{ link_to($comment->getTranslator()->getProfileUrl(), $comment->getTranslator()->getUsername()) }}
+                    @if(!$comment->getTranslator()->isAdmin())
+                        {{ link_to($comment->getTranslator()->getProfileUrl(), $comment->getTranslator()->getUsername()) }}
+                    @else
+                        {{ $comment->getTranslator()->getUsername() }}
+                    @endif
                     &nbsp;&nbsp;&nbsp;
                     <a href="#" class="comment-original-message">Show original</a>
                 </small>
