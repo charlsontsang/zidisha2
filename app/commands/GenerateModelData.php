@@ -2,12 +2,14 @@
 
 use Carbon\Carbon;
 use Faker\Factory as Faker;
+use Faker\Generator;
 use Illuminate\Console\Command;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Symfony\Component\Console\Input\InputArgument;
 use Zidisha\Admin\Setting;
 use Zidisha\Balance\Transaction;
 use Zidisha\Balance\TransactionQuery;
+use Zidisha\Balance\TransactionService;
 use Zidisha\Balance\WithdrawalRequest;
 use Zidisha\Borrower\Borrower;
 use Zidisha\Borrower\BorrowerQuery;
@@ -24,6 +26,7 @@ use Zidisha\Currency\ExchangeRateQuery;
 use Zidisha\Currency\Money;
 
 use Zidisha\Lender\GiftCard;
+use Zidisha\Lender\Lender;
 use Zidisha\Lender\LendingGroup;
 use Zidisha\Lender\LendingGroupMember;
 use Zidisha\Lender\LendingGroupQuery;
@@ -37,12 +40,14 @@ use Zidisha\Loan\Loan;
 use Zidisha\Loan\LoanQuery;
 use Zidisha\Loan\LoanService;
 use Zidisha\Lender\LenderService;
+use Zidisha\Payment\UploadFundPayment;
 use Zidisha\Repayment\BorrowerPayment;
 use Zidisha\Repayment\BorrowerPaymentQuery;
 use Zidisha\Repayment\InstallmentQuery;
 use Zidisha\Repayment\RepaymentService;
 use Zidisha\Currency\CurrencyService;
 use Zidisha\Loan\Stage;
+use Zidisha\Vendor\PropelDB;
 
 class GenerateModelData extends Command
 {
@@ -62,6 +67,34 @@ class GenerateModelData extends Command
     protected $description = 'Used to generate fake data into a model.';
 
     /**
+     * @var Generator
+     */
+    protected $faker;
+
+    /**
+     * @var LenderService
+     */
+    protected $lenderService;
+    /**
+     * @var LoanService
+     */
+    protected $loanService;
+
+    /**
+     * @var TransactionService
+     */
+    protected $transactionService;
+    
+    /**
+     * @var RepaymentService
+     */
+    protected $repaymentService;
+    /**
+     * @var CurrencyService
+     */
+    protected $currencyService;
+
+    /**
      * Execute the console command.
      *
      * @return mixed
@@ -70,66 +103,51 @@ class GenerateModelData extends Command
     {
         \Config::set('mail.enabled', false);
 
-        try {
-            $settings = Setting::getAll();
-        } catch (\Exception $e) {
-            $settings = [];
-        }        
-        
         $model = $this->argument('model');
         $size = $this->argument('size');
-        $faker = Faker::create();
-        $countries = [
-            ['KE', 'Kenya', 'KES', '1000',],
-            ['BJ', 'Benin', 'XOF', '0',],
-            ['BF', 'Burkina Faso', 'XOF', '0',],
-            ['GH', 'Ghana', 'GHS', '0',],
-            ['ID', 'Indonesia', 'IDR', '0',],
-            ['SN', 'Senegal', 'XOF', '0',],
-            ['IN', 'India', 'INR', '0',],
-        ];
+        
+        $this->faker = Faker::create();
+
+        $this->lenderService = App::make('\Zidisha\Lender\LenderService');
+        $this->loanService = App::make('\Zidisha\Loan\LoanService');
+        $this->transactionService = App::make('\Zidisha\Balance\TransactionService');
+        $this->repaymentService = App::make('\Zidisha\Repayment\RepaymentService');        
+        $this->currencyService = App::make('\Zidisha\Currency\CurrencyService');
+        
         $temp = true;
 
-        $allCity = [];
-
         if ($model == 'new') {
-            $this->line('Rebuild database');
-            DB::statement('drop schema public cascade');
-            DB::statement('create schema public');
-            exec('rm -rf app/database/migrations');
-            exec('./propel diff');
-            exec('./propel migrate');
-            exec('./propel build');
-
-            $this->line('Delete loans index');
-            exec("curl -XDELETE 'http://localhost:9200/loans/' -s");
+            $this->reset();
 
             $this->line('Generate data');
 
-            Setting::import($settings);
-
             $this->call('fake', array('model' => 'Language', 'size' => 1));
             $this->call('fake', array('model' => 'Country', 'size' => 10));
-            $this->call('fake', array('model' => 'Category', 'size' => 10));
-            $this->call('fake', array('model' => 'Admin', 'size' => 1));
-            $this->call('fake', array('model' => 'Borrower', 'size' => 80));
-            $this->call('fake', array('model' => 'Lender', 'size' => 50));
             $this->call('fake', array('model' => 'ExchangeRate', 'size' => 30));
-            //$this->call('fake', array('model' => 'LoanOld', 'size' => 150));
+
+            $this->call('fake', array('model' => 'SpecialUser', 'size' => 1));
+            $this->call('fake', array('model' => 'Lender', 'size' => 50));
+            $this->call('fake', array('model' => 'Borrower', 'size' => 80));
+            
+            $this->call('fake', array('model' => 'LenderGroup', 'size' => 50));
+            $this->call('fake', array('model' => 'LenderGroupMember', 'size' => 200));
+
+            $this->call('fake', array('model' => 'Transaction', 'size' => 200));
+
+            $this->call('fake', array('model' => 'LenderInvite', 'size' => 200));
+            $this->call('fake', array('model' => 'GiftCard', 'size' => 100));
+            
+            $this->call('fake', array('model' => 'Category', 'size' => 10));
+            $this->call('fake', array('model' => 'CategoryTranslation', 'size' => 10));
             $this->call('fake', array('model' => 'Loan', 'size' => 80));
-            //$this->call('fake', array('model' => 'BidOld', 'size' => 50));
+            
             $this->call('fake', array('model' => 'Bid', 'size' => 200));
             $this->call('fake', array('model' => 'AcceptBid', 'size' => 1));
             $this->call('fake', array('model' => 'DisburseLoan', 'size' => 1));
+            
             $this->call('fake', array('model' => 'Repayment', 'size' => 1));
-            $this->call('fake', array('model' => 'Transaction', 'size' => 200));
-            $this->call('fake', array('model' => 'Installment', 'size' => 200));
-            $this->call('fake', array('model' => 'Invite', 'size' => 200));
+            
             $this->call('fake', array('model' => 'Comment', 'size' => 200));
-            $this->call('fake', array('model' => 'GiftCard', 'size' => 100));
-            $this->call('fake', array('model' => 'CategoryTranslation', 'size' => 10));
-            $this->call('fake', array('model' => 'LenderGroup', 'size' => 50));
-            $this->call('fake', array('model' => 'LenderGroupMember', 'size' => 200));
             $this->call('fake', array('model' => 'WithdrawalRequest', 'size' => 200));
 //            $this->call('fake', array('model' => 'fakeOneBorrowerRefund', 'size' => 1));
 
@@ -139,235 +157,74 @@ class GenerateModelData extends Command
             return;
         }
 
-        $randArray = [true, false, false, false, false, true, false, false, false, true, false];
-
-        $allLenders = LenderQuery::create()
-            ->orderById()
-            ->find();
-
-        $allGroups = LendingGroupQuery::create()
-            ->orderById()
-            ->find();
-
-        $allLoans = LoanQuery::create()
-            ->orderById()
-            ->find();
-
-        $allCountries = CountryQuery::create()
-            ->find();
-
-        $allCategories = CategoryQuery::create()
-            ->filterByAdminOnly(false)
-            ->orderByRank()
-            ->find()
-            ->getData();
-
-
-        $allLanguages = \Zidisha\Country\LanguageQuery::create()
-            ->filterByActive(true)
-            ->find()
-            ->getData();
-
-        $allBorrowers = BorrowerQuery::create()
-            ->orderById()
-            ->find()
-            ->getData();
-
-        $categories = include(app_path() . '/database/LoanCategories.php');
-        /** @var LoanService $loanService */
-        $loanService = App::make('\Zidisha\Loan\LoanService');
-        $lenderService = App::make('\Zidisha\Lender\LenderService');
-        /** @var RepaymentService $repaymentService */
-        $repaymentService = App::make('\Zidisha\Repayment\RepaymentService');
-        /** @var CurrencyService $currencyService */
-        $currencyService = App::make('\Zidisha\Currency\CurrencyService');
-
         $this->line("Generate $model");
 
-        if ($model == "Loan") {
-            $allCategories = CategoryQuery::create()
-                ->filterByAdminOnly(false)
-                ->orderByRank()
-                ->find()
-                ->getData();
-
-            $allBorrowers = BorrowerQuery::create()
-                ->orderById()
-                ->find()
-                ->getData();
-
-            if ($allCategories == null || count($allBorrowers) < $size) {
-                $this->error("not enough categories or borrowers");
-                return;
-            }
+        if ($model == "Language") {
+            return $this->generateLanguages();
         }
-
-        if ($model == "Admin") {
-            $userName = 'admin';
-            $password = '1234567890';
-            $email = 'admin@mail.com';
-
-            $user = new \Zidisha\User\User();
-            $user->setUsername($userName);
-            $user->setPassword($password);
-            $user->setEmail($email);
-            $user->setRole('admin');
-            $user->setLastLoginAt(new Carbon());
-            $user->save();
-
-            $user = new \Zidisha\User\User();
-            $user->setUsername('YC');
-            $user->setPassword('1234567890');
-            $user->setEmail('yc@mail.com');
-            $user->setLastLoginAt(new Carbon());
-            $user->save();
-        }
-
-        if($model == "Language") {
-
-            $languages = [
-                ['in', 'Bahasa Indonesia', true,],
-                ['fr', 'Français', true,],
-                ['hi', 'Hindi', false,],
-                ['en', 'English', false,],
-            ];
-
-            foreach($languages as $language){
-                $lang = new Language();
-                $lang->setLanguageCode($language[0]);
-                $lang->setName($language[1]);
-                $lang->setActive($language[2]);
-                $lang->save();
-
-            }
-        }
-
-        if ($model == "AcceptBid") {
-            $raisedLoans = LoanQuery::create()
-                ->filterByRaisedPercentage(100)
-                ->find();
-
-            foreach ($raisedLoans as $loan) {
-                if (rand(1,6) <= 5) {
-                    $loanService->acceptBids($loan);
-                }
-            }
-        }
-
-        if ($model == "DisburseLoan") {
-            $fundedLoans = LoanQuery::create()
-                ->filterByStatus(Loan::FUNDED)
-                ->find();
-
-            foreach ($fundedLoans as $loan) {
-                if (true || rand(1,5) <= 4) {
-                    // todo take application date + (15-30) days
-                    $Date = $loan->getAppliedAt();
-                    $newDate = Carbon::createFromDate($Date->format('Y'), $Date->format('m'), $Date->format('d'))->addDays(25);
-                    $loanService->disburseLoan($loan , $newDate, $loan->getAmount());
-                if (rand(1,6) <= 5) {
-                    $loanService->disburseLoan($loan , new \DateTime(), $loan->getAmount());
-                }
-                }
-            }
-        }
-
-        if ($model == "Repayment") {
-            $activeLoans = LoanQuery::create()
-                ->filterByStatus(Loan::ACTIVE)
-                ->find();
-
-            foreach ($activeLoans as $loan) {
-                //to test repayment upload from kenya
-                if ( $loan->getBorrower()->getCountryId() == 1) {
-                    continue;
-                }
-                $installments = InstallmentQuery::create()
-                    ->filterByLoan($loan)
-                    ->orderById()// TODO order due date?
-                    ->find();
-                foreach ($installments as $installment) {
-                    if (!$installment->getAmount()->isPositive()){
-                        continue;
-                    }
-
-//                    if ($loan->getDisbursedAt() < Carbon::create()->subMonths(6)) {
-//                        break;
-//                    }
-
-                    if (rand(1,4) <= 1) {
-//                    if (!$repaid && rand(1,6) <= 1) {
-//                        break;
-//                    }
-                    }
-                    if (rand(1,5) <= 4) {
-                        $installmentAmount = $installment->getAmount();
-                    } else {
-                        $installmentAmount = Money::create(rand($installment->getAmount()->subtract($installment->getAmount()->divide
-                                    (2))
-                                ->getAmount(),
-                            $installment->getAmount()->add($installment->getAmount()->divide(2))->getAmount()), $loan->getCurrency()) ;
-                    }
-                    if(rand(1,10) <= 2) {
-                        if(rand(1,5) <= 4) {
-                            $installmentDate = $installment->getDueDate()->modify('+1 week');
-                        } else {
-                            $installmentDate = $installment->getDueDate()->modify('+2 week');
-                        }
-                        $repaymentService->addRepayment($loan, $installmentDate, $installmentAmount);
-                    } else {
-                        $repaymentService->addRepayment($loan, $installment->getDueDate(), $installmentAmount);
-                    }
-                }
-            }
-        }
-
-        if ($model == "CategoryTranslation") {
-
-            $allCategories = CategoryQuery::create()
-                ->filterByAdminOnly(false)
-                ->find();
-
-            $allLanguages = \Zidisha\Country\LanguageQuery::create()
-                ->filterByActive(true)
-                ->find();
-
-            foreach($allCategories as $Category)
-            {
-                foreach($allLanguages as $language)
-                {
-                    $translation = new CategoryTranslation();
-                    $translation->setCategory($Category)
-                        ->setLanguage($language)
-                        ->setTranslation($Category->getName(). $language->getLanguageCode());
-                    $translation->save();
-                }
-            }
+        
+        if ($model == "Country") {
+            return $this->generateCountries();
         }
 
         if ($model == "ExchangeRate") {
+            return $this->generateExchangeRates();
+        }
 
-            foreach (['KES' => 80, 'XOF' => 20, 'GHS' => 50, 'IDR' => 40, 'INR' => 80] as $currencyCode => $rate) {
-                $dateMonthAgo = new DateTime();
-                $dateMonthAgo->modify('-1 month');
-                $dateNow = new DateTime();
-                $dateNow->modify('-1 second');
+        if ($model == "SpecialUser") {
+            return $this->generateSpecialUsers();
+        }
+        
+        if ($model == "Lender") {
+            return $this->generateLenders($size);
+        }
 
-                $exchangeRate = new \Zidisha\Currency\ExchangeRate();
-                $exchangeRate
-                    ->setCurrencyCode($currencyCode)
-                    ->setRate($rate - 5)
-                    ->setStartDate($dateMonthAgo)
-                    ->setEndDate($dateNow);
-                $exchangeRate->save();
+        if ($model == "Borrower") {
+            return $this->generateBorrowers($size);
+        }
 
-                $exchangeRate = new \Zidisha\Currency\ExchangeRate();
-                $exchangeRate
-                    ->setCurrencyCode($currencyCode)
-                    ->setRate($rate)
-                    ->setStartDate($dateNow);
-                $exchangeRate->save();
-            }
+        if ($model == "LendingGroup") {
+            return $this->generateLendingGroups($size);
+        }
+
+        if ($model == "LendingGroupMember") {
+            return $this->generateLendingGroupMembers($size);
+        }
+
+        if ($model == "LenderInvite") {
+            return $this->generateLenderInvites($size);
+        }
+
+        if ($model == "GiftCard") {
+            return $this->generateGiftCards($size);
+        }
+
+        if ($model == "Category") {
+            return $this->generateCategories();
+        }
+
+        if ($model == "Loan") {
+            return $this->generateLoans($size);
+        }
+
+        if ($model == "Bid") {
+            return $this->generateBids($size);
+        }
+
+        if ($model == "AcceptBid") {
+            return $this->generateAcceptBid();
+        }
+
+        if ($model == "DisburseLoan") {
+            return $this->generateDisburseLoan();
+        }
+
+        if ($model == "Repayment") {
+            return $this->generateRepayments($size);
+        }
+
+        if ($model == "Transaction") {
+            return $this->generateTransactions($size);
         }
 
         if ($model == "fakeOneBorrowerRefund") {
@@ -383,344 +240,21 @@ class GenerateModelData extends Command
                     ->setBorrowerPayment($payment);
                 $refund->save();
             }
+            return true;
         }
 
+        $randArray = [true, false, false, false, false, true, false, false, false, true, false];
+
+        $allLenders = LenderQuery::create()
+            ->orderById()
+            ->find();
+
+        $allBorrowers = BorrowerQuery::create()
+            ->orderById()
+            ->find()
+            ->getData();
+        
         for ($i = 1; $i <= $size; $i++) {
-
-            if ($model == "Invite") {
-
-                do {
-                    $lender = $allLenders[array_rand($allLenders->getData())];
-                    $invitee = $allLenders[array_rand($allLenders->getData())];
-                } while ($lender->getId() == $invitee->getId());
-
-                $lenderInvite = new Invite();
-                $lenderInvite->setLender($lender);
-                if (rand( 1, 10) < 4) {
-                    $lenderInvite->setEmail($faker->email);
-                } else {
-                    $lenderInvite->setInvitee($invitee);
-                    $lenderInvite->setInvited(true);
-                    $lenderInvite->setEmail($invitee->getUser()->getEmail());
-                }
-                $lenderInvite->save();
-            }
-
-            if ($model == "Lender") {
-                $data = array();
-                $data['username'] = 'lender' . $i;
-                $data['password'] = '1234567890';
-                $data['email'] = 'lender' . $i . '@mail.com';
-                $oneCountry = $allCountries[array_rand($allCountries->getData())];
-                $data['countryId'] = $oneCountry->getId();
-                $lenderService->joinLender($data);
-
-//                if($i<5){
-//                    $user->setLastLoginAt(new Carbon('first day of July 2013'));
-//                }elseif($i<10){
-//                    $user->setLastLoginAt(new Carbon('first day of June 2013'));
-//                }else{
-//                    $user->setLastLoginAt(new Carbon());
-//                }
-            }
-
-            if ($model == "Borrower") {
-
-                $userName = 'borrower' . $i;
-                $password = '1234567890';
-                $email = 'borrower' . $i . '@mail.com';
-
-                if ($i <= 40 && rand(1, 4) <= 3) {
-                    if (rand(1, 5) <= 4) {
-                        $oneCountry = $allCountries[1];
-                    } else{
-                        $oneCountry = $allCountries[3];
-                    }
-                } else {
-                    $oneCountry = $allCountries[array_rand($allCountries->getData())];
-                }
-
-                $user = new \Zidisha\User\User();
-                $user->setUsername($userName);
-                $user->setPassword($password);
-                $user->setEmail($email);
-                $user->setLastLoginAt(new Carbon());
-                $user->setRole('borrower');
-
-                $firstName = 'borrower' . $i;
-                $lastName = 'last' . $i;
-
-                $borrower = new \Zidisha\Borrower\Borrower();
-                $borrower->setFirstName($firstName);
-                $borrower->setLastName($lastName);
-                $borrower->setCountry($oneCountry);
-                $borrower->setUser($user);
-                $borrower->setVerified($faker->boolean());
-                
-                foreach (['communityLeader', 'familyMember', 'familyMember', 'familyMember', 'neighbor', 'neighbor', 'neighbor'] as $contactType) {
-                    $contact = new \Zidisha\Borrower\Contact();
-                    $contact
-                        ->setPhoneNumber($faker->numberBetween(100000000, 1000000000))
-                        ->setFirstName($faker->firstName)
-                        ->setLastName($faker->lastName)
-                        ->setDescription($faker->sentence())
-                        ->setType($contactType);
-                    $borrower->addContact($contact);
-                }
-
-                $borrower_profile = new \Zidisha\Borrower\Profile();
-                $borrower_profile->setAboutMe($faker->paragraph(7));
-                $borrower_profile->setAboutBusiness($faker->paragraph(7));
-                $borrower_profile->setAddress($faker->paragraph(3));
-                $borrower_profile->setAddressInstructions($faker->paragraph(6));
-                if (rand(1, 5) <= 2) {
-                    $borrower_profile->setCity("Experimento");
-                } elseif ($i <= 20) {
-                    $city = $faker->city;
-                    array_push($allCity, $city);
-                    $borrower_profile->setCity($city);
-                } else {
-                    $borrower_profile->setCity($allCity[array_rand($allCity)]);
-                }
-                $borrower_profile->setPhoneNumber($faker->phoneNumber);
-                $borrower_profile->setAlternatePhoneNumber($faker->phoneNumber);
-                $borrower_profile->setNationalIdNumber($faker->randomNumber(10));
-                $borrower_profile->setBorrower($borrower);
-                if ($i <= 40) {
-                    $user->setSubRole('volunteerMentor');
-                    $mentor = new VolunteerMentor();
-                    $borrower->setCountry($allCountries[2]);
-                    $mentor->setBorrowerVolunteer($borrower)
-                        ->setCountry($borrower->getCountry())
-                        ->setStatus(1)
-                        ->setGrantDate(new \DateTime());
-                } else {
-                    $allMentors = VolunteerMentorQuery::create()
-                        ->find();
-
-                    $oneMentor = $allMentors[array_rand($allMentors->getData())];
-                    $borrower->setVolunteerMentor($oneMentor);
-                }
-                $borrower_profile->save();
-
-                $joinLog = new JoinLog();
-                $joinLog
-                    ->setIpAddress($faker->ipv4)
-                    ->setVerificationCode($faker->randomNumber(20))
-                    ->setBorrower($borrower);
-                if ($borrower->getVerified()) {
-                    $joinLog->setVerifiedAt(new \DateTime());
-                }
-                $joinLog->save();
-            }
-
-            if ($model == "Country") {
-                if ($i > sizeof($countries)) {
-                    continue;
-                }
-
-                $oneCountry = $countries[$i - 1];
-
-                $country = new Country();
-                $country->setName($oneCountry[1]);
-                $country->setCountryCode($oneCountry[0]);
-                $country->setContinentCode('AF');
-                $country->setDialingCode('000');
-                $country->SetRegistrationFee($oneCountry[3]);
-                if ($oneCountry[0] == 'IN') {
-                    $country->SetBorrowerCountry(false);
-                } else {
-                    $country->SetBorrowerCountry(true);
-                }
-                $country->setCurrencyCode($oneCountry[2]);
-                $country->setPhoneNumberLength(9);
-                $country->setInstallmentPeriod($faker->randomElement([Loan::WEEKLY_INSTALLMENT, Loan::MONTHLY_INSTALLMENT]));
-                if($i<3){
-                    $language = \Zidisha\Country\LanguageQuery::create()
-                        ->filterByLanguageCode('fr')
-                        ->findOne();
-                    $country->setLanguage($language);
-                }elseif($i>2){
-                    $language = \Zidisha\Country\LanguageQuery::create()
-                        ->filterByLanguageCode('in')
-                        ->findOne();
-                    $country->setLanguage($language);
-                }
-                $country->save();
-            }
-
-            if ($model == "Category") {
-                if ($i >= 17) {
-                    continue;
-                }
-
-                $oneCategory = $categories[$i - 1];
-
-                $category = new Category();
-                $category->setName($oneCategory[0]);
-                $category->setWhatDescription($oneCategory[1]);
-                $category->setWhyDescription($oneCategory[2]);
-                $category->setHowDescription($oneCategory[3]);
-                $category->setAdminOnly($oneCategory[4]);
-                $category->save();
-            }
-
-            if ($model == "LoanOld") {
-                if ($i >= 30) {
-                    $installmentDay = $i - (int)(25 - $i);
-                    $amount = 30 + ($i * 100);
-                } else {
-                    $installmentDay = $i;
-                    $amount = 30 + ($i * 200);
-                }
-                $loanCategory = $allCategories[array_rand($allCategories)];
-                $status = floatval($size / 7);
-
-                if($i > 50 && $i < 55 ){
-                    $borrower = $allBorrowers[50];
-                }else{
-                    $borrower = $allBorrowers[$i - 1];
-                }
-
-                $data = array();
-                $data['summary'] = $faker->sentence(8);
-                $data['proposal'] = $faker->paragraph(7);
-                $data['amount'] = $amount;
-                $data['currencyCode'] = 'KES';
-                $data['usdAmount'] = $amount / 2;
-                $installmentAmount = (int)$data['amount'] / 12;
-                $data['installmentAmount'] = $installmentAmount;
-                $data['applicationDate'] = new \DateTime();
-                $data['installmentDay'] = $installmentDay;
-                $data['categoryId'] = $loanCategory->getId();
-                $data['raisedUsdAmount'] = $data['usdAmount']/rand(2, 6);
-
-                if ($i < $status) {
-                    $loanService->applyForLoan($borrower, $data);
-                    continue;
-                }
-
-                $Loan = $loanService->createLoan($borrower, $data);
-                $Loan->setCategory($loanCategory);
-                $Loan->setBorrower($borrower);
-
-                $Stage = new Stage();
-                $Stage->setLoan($Loan);
-                $Stage->setBorrower($borrower);
-
-                $Loan->setRaisedUsdAmount(Money::create($data['raisedUsdAmount']));
-
-                if ($i < ($status * 3)) {
-                    $borrower->setLoanStatus(Loan::FUNDED);
-                    $borrower->setActiveLoan($Loan);
-                    $Loan->setStatus(Loan::FUNDED);
-                    $Loan->setDisbursedAmount($amount);
-                    $Loan->setDisbursedAt(new \DateTime());
-                    $Stage->setStatus(Loan::FUNDED);
-                } elseif ($i < ($status * 4)) {
-                    $borrower->setLoanStatus(Loan::ACTIVE);
-                    $borrower->setActiveLoan($Loan);
-                    $Loan->setStatus(Loan::ACTIVE);
-                    $Loan->setDisbursedAt(new \DateTime());
-                    $Stage->setStatus(Loan::ACTIVE);
-                } elseif ($i < ($status * 5)) {
-                    $borrower->setLoanStatus(Loan::REPAID);
-                    $borrower->setActiveLoan($Loan);
-                    $Loan->setDisbursedAmount($amount);
-                    $Loan->setDisbursedAt(strtotime("-1 year"));
-                    $Loan->setStatus(Loan::REPAID);
-                    $Loan->setRepaidAt(new \DateTime());
-                    $Stage->setStatus(Loan::REPAID);
-                } elseif ($i < ($status * 6)) {
-                    $borrower->setLoanStatus(Loan::DEFAULTED);
-                    $borrower->setActiveLoan($Loan);
-                    $Loan->setStatus(Loan::DEFAULTED);
-                    $Stage->setStatus(Loan::DEFAULTED);
-                } elseif ($i < ($status * 7)) {
-                    $borrower->setLoanStatus(Loan::CANCELED);
-                    $borrower->setActiveLoan($Loan);
-                    $Loan->setStatus(Loan::CANCELED);
-                    $Stage->setStatus(Loan::CANCELED);
-                } else {
-                    $borrower->setLoanStatus(Loan::EXPIRED);
-                    $borrower->setActiveLoan($Loan);
-                    $Loan->setStatus(Loan::EXPIRED);
-                    $Stage->setStatus(Loan::EXPIRED);
-                }
-
-                $Stage->setStartDate(new \DateTime());
-                $Stage->save();
-                $borrower->save();
-
-                $loanService->addToLoanIndex($Loan);
-            }
-
-            if ($model == "Transaction") {
-
-                $oneLender = $allLenders[array_rand($allLenders->getData())];
-                $oneLoan = $allLoans[array_rand($allLoans->getData())];
-                $isTrue = $randArray[array_rand($randArray)];
-
-                $transaction = new Transaction();
-                $transaction->setUser($oneLender->getUser());
-                $transaction->setAmount(Money::create(rand(0, 200), 'USD'));
-                $transaction->setDescription('description');
-                $transaction->setTransactionDate(new \DateTime());
-                $transaction->setType(Transaction::FUND_UPLOAD);
-                $transaction->save();
-
-                if ($isTrue || $i < 20) {
-//                    $transaction = new Transaction();
-//                    $transaction->setUser($oneLender->getUser());
-//                    $transaction->setAmount(Money::create(rand(0, 20), 'USD'));
-//                    $transaction->setLoan($oneLoan);
-//                    $transaction->setDescription('description');
-//                    $transaction->setTransactionDate(new \DateTime());
-//                    $transaction->setType(Transaction::LOAN_BACK_LENDER);
-//                    $transaction->save();
-
-                    $transaction = new Transaction();
-                    $transaction->setUser($oneLender->getUser());
-                    $transaction->setAmount(Money::create(rand(-100, 0), 'USD'));
-                    $transaction->setDescription('description');
-                    $transaction->setTransactionDate(new \DateTime());
-                    $transaction->setType(Transaction::FUND_WITHDRAW);
-                    $transaction->save();
-                }
-
-                if ($temp == true) {
-                    $yc = \Zidisha\User\UserQuery::create()
-                        ->findOneById(2);
-                    $transaction = new Transaction();
-                    $transaction->setUser($yc);
-                    $transaction->setAmount(Money::create(10000, 'USD'));
-                    $transaction->setDescription($faker->sentence(4));
-                    $transaction->setTransactionDate(new \DateTime());
-                    $transaction->setType(Transaction::DONATE_BY_ADMIN);
-                    $transaction->save();
-                    $temp = false;
-                }
-            }
-
-            if ($model == "BidOld") {
-
-                $openLoans = LoanQuery::create()
-                    ->filterByStatus(0)
-                    ->find();
-                $oneLoan = $openLoans[array_rand($openLoans->getData())];
-                $oneLender = $allLenders[array_rand($allLenders->getData())];
-
-                $oneBid = new Bid();
-                $oneBid->setBidAt(new \DateTime());
-                $oneBid->setBidAmount(Money::create(rand(0, 30), 'USD'));
-                $oneBid->setInterestRate(rand(0, 15));
-                $oneBid->setLoan($oneLoan);
-                $oneBid->setLender($oneLender);
-                $oneBid->setBorrower($oneLoan->getBorrower());
-                $oneBid->save();
-            }
-
-
             if ($model == "Comment") {
 
                 $borrower = $allBorrowers[array_rand($allBorrowers)];
@@ -731,11 +265,11 @@ class GenerateModelData extends Command
 
                 $comment->setBorrower($borrower)
                     ->setUser($user->getUser())
-                    ->setMessage($faker->paragraph(3))
+                    ->setMessage($this->faker->paragraph(3))
                     ->setLevel(0);
 
                 if($isTranslated){
-                    $comment->setMessageTranslation($faker->paragraph(3))
+                    $comment->setMessageTranslation($this->faker->paragraph(3))
                         ->setTranslatorId(1);
                 }elseif($i<100){
                     $comment->setUser($borrower->getUser());
@@ -746,65 +280,7 @@ class GenerateModelData extends Command
                 $comment->save();
             }
 
-            if($model == "GiftCard") {
-                $lender = $allLenders[array_rand($allLenders->getData())];
-                $amount = Money::create(rand(15, 1000), 'USD');
-                $faker = Faker::create();
-
-                $giftCard = new GiftCard();
-                $giftCard->setLender($lender)
-                    ->setOrderType(array_rand([0,1]))
-                    ->setCardAmount($amount)
-                    ->setFromName($lender->getName())
-                    ->setMessage($faker->sentence(10))
-                    ->setRecipientEmail($faker->email)
-                    ->setDate(new \DateTime())
-                    ->setExpireDate(strtotime('+1 year'))
-                    ->setCardCode($faker->creditCardNumber);
-
-                if(rand(1 ,5) <= 3){
-                    $recipient = $allLenders[array_rand($allLenders->getData())];
-                    $giftCard->setClaimed(1)
-                        ->setRecipientName($recipient->getName())
-                        ->setRecipient($recipient);
-                }
-
-                $giftCard->save();
-            }
-
-            if($model == "LenderGroup")
-            {
-                $leader = $allLenders[array_rand($allLenders->getData())];
-
-                $group = new LendingGroup();
-                $group->setCreator($leader)
-                    ->setLeader($leader)
-                    ->setCreator($leader)
-                    ->setAbout($faker->paragraph(2))
-                    ->setName($faker->sentence(2));
-
-                $groupMember = new LendingGroupMember();
-                $groupMember->setMember($leader)
-                    ->setLendingGroup($group);
-
-                $groupMember->save();
-
-            }
-
-            if($model == "LenderGroupMember")
-            {
-                $member = $allLenders[array_rand($allLenders->getData())];
-                $group = $allGroups[array_rand($allGroups->getData())];
-
-                $groupMember = new LendingGroupMember();
-                $groupMember->setMember($member)
-                    ->setLendingGroup($group);
-                $groupMember->save();
-            }
-
-
-            if($model == "WithdrawalRequest")
-            {
+            if ($model == "WithdrawalRequest") {
                 $lender = $allLenders[array_rand($allLenders->getData())];
                 $isPaid = $randArray[array_rand($randArray)];
                 $currentBalance = TransactionQuery::create()
@@ -814,72 +290,11 @@ class GenerateModelData extends Command
                 $withdrawalRequest = new WithdrawalRequest();
                 $withdrawalRequest->setLender($lender)
                     ->setAmount(Money::create(rand(1, $currentBalance->getAmount())))
-                    ->setPaypalEmail($faker->email);
+                    ->setPaypalEmail($this->faker->email);
                 if ($isPaid) {
                     $withdrawalRequest->setPaid(true);
                 }
                 $withdrawalRequest->save();
-            }
-
-            if ($model == "Loan") {
-                if ($i >= 30) {
-                    $installmentDay = $i - (int)(25 - $i);
-                    $amount = 30 + ($i * 100);
-                } else {
-                    $installmentDay = $i;
-                    $amount = 30 + ($i * 200);
-                }
-                $loanCategory = $allCategories[array_rand($allCategories)];
-
-                if($i > 50 && $i < 55 ){
-                    $borrower = $allBorrowers[50];
-                }else{
-                    $borrower = $allBorrowers[$i - 1];
-                }
-
-                $data = array();
-                $data['summary'] = $faker->sentence(8);
-                $data['proposal'] = $faker->paragraph(7);
-                $data['amount'] = $amount;
-                $installmentAmount = (int)$data['amount'] / 12;
-                $data['installmentAmount'] = $installmentAmount;
-                $data['currencyCode'] = $borrower->getCountry()->getCurrencyCode();
-                $data['
-                usdAmount'] = $amount / 2;
-                $data['installmentDay'] = $installmentDay;
-                // TODO between now and a year ago
-                $data['applicationDate'] = new \DateTime();
-                $data['categoryId'] = $loanCategory->getId();
-
-                $loanService->applyForLoan($borrower, $data);
-            }
-
-            if ($model == "Bid") {
-
-                $oneLoan = LoanQuery::create()
-                    ->filterByStatus(Loan::OPEN)
-                    ->orderByRand()
-                    ->findOne();
-
-                if ($oneLoan->getAppliedAt() < Carbon::create()->subMonths(8)) {
-                    while ($oneLoan->getRaisedPercentage() < 100) {
-                        $oneLender = $allLenders[array_rand($allLenders->getData())];
-                        $data['amount'] = rand(5, $oneLoan->getUsdAmount()->divide(2)->getAmount());
-                        $data['interestRate'] = rand(0, 15);
-                        $loanService->placeBid($oneLoan, $oneLender, $data);
-                    }
-                    continue;
-                }
-
-                $numberOfBids = rand(5,15);
-                $data = array();
-
-                for ( $j=0; $j<=$numberOfBids; $j++) {
-                    $oneLender = $allLenders[array_rand($allLenders->getData())];
-                    $data['amount'] = rand(intval($oneLoan->getUsdAmount()->divide(6)->getAmount()), intval($oneLoan->getUsdAmount()->divide(4)->getAmount()) + 5);
-                    $data['interestRate'] = rand(0, 15);
-                    $loanService->placeBid($oneLoan, $oneLender, $data);
-                }
             }
         }
     }
@@ -895,5 +310,697 @@ class GenerateModelData extends Command
             array('model', InputArgument::REQUIRED, 'Model in which you want to insert data'),
             array('size', InputArgument::OPTIONAL, 'Number of entries you want for this model', 10)
         );
+    }
+
+    protected function reset()
+    {
+        try {
+            $settings = Setting::getAll();
+        } catch (\Exception $e) {
+            $settings = [];
+        }
+
+        $this->line('Rebuild database');
+        DB::statement('drop schema public cascade');
+        DB::statement('create schema public');
+        exec('rm -rf app/database/migrations');
+        exec('./propel diff');
+        exec('./propel migrate');
+        exec('./propel build');
+
+        $this->line('Delete loans index');
+        exec("curl -XDELETE 'http://localhost:9200/loans/' -s");
+
+        Setting::import($settings);
+    }
+
+    protected function generateLanguages()
+    {
+        $languages = [
+            ['in', 'Bahasa Indonesia', true,],
+            ['fr', 'Français', true,],
+            ['hi', 'Hindi', false,],
+            ['en', 'English', false,],
+        ];
+        
+        $return = [];
+
+        foreach ($languages as $data) {
+            $language = new Language();
+            $language
+                ->setLanguageCode($data[0])
+                ->setName($data[1])
+                ->setActive($data[2])
+                ->save();
+            $return[] = $language;
+        }
+        
+        return $return;
+    }
+    
+    protected function generateCountries()
+    {
+        $countries = [
+            ['KE', 'Kenya', 'KES', '1000', 'en',],
+            ['BJ', 'Benin', 'XOF', '0', 'fr',],
+            ['BF', 'Burkina Faso', 'XOF', '0', 'fr',],
+            ['GH', 'Ghana', 'GHS', '0', 'fr',],
+            ['ID', 'Indonesia', 'IDR', '0', 'in',],
+            ['SN', 'Senegal', 'XOF', '0', 'fr',],
+            ['IN', 'India', 'INR', '0', 'hi',],
+        ];
+
+        $return = [];
+
+        foreach ($countries as $data) {
+            $country = new Country();
+            $country
+                ->setName($data[1])
+                ->setCountryCode($data[0])
+                ->setContinentCode('AF')
+                ->setDialingCode(str_pad($this->faker->numberBetween(1, 200), '3', '0'))
+                ->setRegistrationFee($data[3])
+                ->setBorrowerCountry($data[0] != 'IN')
+                ->setCurrencyCode($data[2])
+                ->setPhoneNumberLength(9)
+                ->setInstallmentPeriod($this->faker->randomElement([Loan::WEEKLY_INSTALLMENT, Loan::MONTHLY_INSTALLMENT]))
+                ->setLanguageCode($data[4]);
+            
+            $country->save();
+            $return[] = $country;
+        }
+        
+        return $return;
+    }
+
+    protected function generateSpecialUsers()
+    {
+        $return = [];
+        
+        $user = new \Zidisha\User\User();
+        $user
+            ->setUsername('admin')
+            ->setPassword('1234567890')
+            ->setEmail('admin@mail.com')
+            ->setRole('admin')
+            ->setLastLoginAt(new Carbon())
+            ->save();
+        
+        $return[] = $user;
+
+        $user = new \Zidisha\User\User();
+        $user
+            ->setUsername('YC')
+            ->setPassword('1234567890')
+            ->setEmail('yc@mail.com')
+            ->setLastLoginAt(new Carbon())
+            ->save();
+
+        $return[] = $user;
+        
+        return $return;
+    }
+
+    protected function generateLenders($count)
+    {
+        $countryIds = range(1, 7, 1);
+        $lenderCount = LenderQuery::create()->count();
+
+        $return = [];
+        
+        for ($i = 0; $i <= $count; $i++) {
+            $number = $lenderCount + 1 + $i;
+            $data = array();
+            $data['username'] = 'lender' . $number;
+            $data['password'] = '1234567890';
+            $data['email'] = 'lender' . $number . '@mail.com';
+            $data['countryId'] = $this->faker->randomElement($countryIds);
+            
+            $lender = $this->lenderService->joinLender($data);
+            $user = $lender->getUser();
+
+            $user->setLastLoginAt($this->faker->dateTimeBetween('- 16 months'));
+            $user->save();
+            $return[] = $lender;
+        }
+        
+        return $return;
+    }
+
+    protected function generateBorrowers($count)
+    {
+        $countryIds = range(1, 6, 1);
+        
+        $cities = [];
+        foreach ($countryIds as $countryId) {
+            for ($i = 0; $i < 5; $i++) {
+                $cities[$countryId][] = $this->faker->city;
+            }
+        }
+
+        $volunteerMentorIds = [];
+        $return = [];
+        
+        for ($i = 0; $i <= $count; $i++) {
+            $userName = 'borrower' . $i;
+            $password = '1234567890';
+            $email = 'borrower' . $i . '@mail.com';
+
+            $isMentor = $i < $count / 2;
+            $countryId = $this->faker->randomElement($countryIds);
+
+            $user = new \Zidisha\User\User();
+            $user
+                ->setUsername($userName)
+                ->setPassword($password)
+                ->setEmail($email)
+                ->setLastLoginAt(new Carbon())
+                ->setRole('borrower');
+
+            $borrower = new \Zidisha\Borrower\Borrower();
+            $borrower
+                ->setFirstName('borrower' . $i)
+                ->setLastName('last' . $i)
+                ->setCountryId($countryId)
+                ->setUser($user)
+                ->setVerified($this->faker->boolean());
+
+            foreach (['communityLeader', 'familyMember', 'familyMember', 'familyMember', 'neighbor', 'neighbor', 'neighbor'] as $contactType) {
+                $contact = new \Zidisha\Borrower\Contact();
+                $contact
+                    ->setPhoneNumber($this->faker->numberBetween(100000000, 1000000000))
+                    ->setFirstName($this->faker->firstName)
+                    ->setLastName($this->faker->lastName)
+                    ->setDescription($this->faker->sentence(5))
+                    ->setType($contactType);
+                $borrower->addContact($contact);
+            }
+
+            $borrowerProfile = new \Zidisha\Borrower\Profile();
+            $borrowerProfile->setAboutMe($this->faker->paragraph(7))
+                ->setAboutBusiness($this->faker->paragraph(7))
+                ->setAddress($this->faker->paragraph(3))
+                ->setAddressInstructions($this->faker->paragraph(6))
+                ->setCity($this->faker->randomElement($cities[$countryId]))          
+                ->setPhoneNumber($this->faker->numberBetween(100000000, 1000000000))
+                ->setAlternatePhoneNumber($this->faker->numberBetween(100000000, 1000000000))
+                ->setNationalIdNumber($this->faker->randomNumber(10))
+                ->setBorrower($borrower);
+            
+            if ($isMentor) {
+                $user->setSubRole('volunteerMentor');
+                $mentor = new VolunteerMentor();                
+                $mentor
+                    ->setBorrowerVolunteer($borrower)
+                    ->setCountryId($borrower->getCountryId())
+                    ->setStatus(1) // TODO ???
+                    ->setGrantDate(new \DateTime()); // TODO rename
+            } else {
+                $borrower->setVolunteerMentorId($this->faker->randomElement($volunteerMentorIds));
+            }
+            $borrowerProfile->save();
+
+            $joinLog = new JoinLog();
+            $joinLog
+                ->setIpAddress($this->faker->ipv4)
+                ->setVerificationCode($this->faker->randomNumber(20))
+                ->setBorrower($borrower);
+            if ($borrower->getVerified()) {
+                $joinLog->setVerifiedAt(new \DateTime());
+            }
+            $joinLog->save();
+            
+            if ($isMentor) {
+                $volunteerMentorIds[] = $borrower->getId();
+            }
+            $return[] = $borrower;
+        }
+        
+        return $return;
+    }
+
+    protected function generateLendingGroups($count)
+    {
+        $lenderIds = LenderQuery::create()
+            ->select('id')
+            ->find();
+        $lenderIds = $lenderIds->getData();
+
+        $return = [];
+        
+        for ($i = 0; $i < $count; $i++) {
+            $creatorId = $this->faker->randomElement($lenderIds);
+            
+            $group = new LendingGroup();
+            $group
+                ->setCreatorId($creatorId)
+                ->setLeaderId($creatorId)
+                ->setAbout($this->faker->paragraph(2))
+                ->setName($this->faker->sentence(2));
+
+            $groupMember = new LendingGroupMember();
+            $groupMember
+                ->setMemberId($group->getLeaderId())
+                ->setLendingGroup($group);
+
+            $groupMember->save();
+            
+            $return[] = $group;
+        }
+
+        return $return;
+    }
+
+    protected function generateLendingGroupMembers($count)
+    {
+        $lenderIds = LenderQuery::create()
+            ->select('id')
+            ->find();
+        $lenderIds = $lenderIds->getData();
+        
+        $lendingGroupIds = LendingGroupQuery::create()
+            ->select('id')
+            ->find();  
+        $lendingGroupIds = $lendingGroupIds->getData();
+        
+        $return = [];
+        $i = 0;
+
+        while ($i < $count) {
+            $memberId = $this->faker->randomElement($lenderIds);
+            $lendingGroupId = $this->faker->randomElement($lendingGroupIds);
+            
+            if (isset($return["$memberId-$lendingGroupId"])) {
+                continue;
+            }
+
+            $groupMember = new LendingGroupMember();
+            $groupMember
+                ->setMember($memberId)
+                ->setLendingGroup($lendingGroupId);
+            $groupMember->save();
+            
+            $return["$memberId-$lendingGroupId"] = $groupMember;
+            $i += 1;
+        }
+        
+        return $return;
+    }
+
+    protected function generateExchangeRates()
+    {
+        $currencies = ['KES' => 80, 'XOF' => 20, 'GHS' => 50, 'IDR' => 40, 'INR' => 80];
+        
+        $return = [];
+        
+        foreach ($currencies as $currencyCode => $baseRate) {
+            for ($i = 16; $i > 0; $i--) {
+                $startDate = new Carbon();
+                $startDate->subMonths($i);
+                
+                $endDate = null;
+                if ($i > 1) {
+                    $endDate = $startDate->copy();
+                    $endDate->addMonth()->subSecond();
+                }
+
+                $rate = $baseRate + $this->faker->numberBetween(-$baseRate/5, $baseRate/5);
+                
+                $exchangeRate = new \Zidisha\Currency\ExchangeRate();
+                $exchangeRate
+                    ->setCurrencyCode($currencyCode)
+                    ->setRate($rate)
+                    ->setStartDate($startDate)
+                    ->setEndDate($endDate);
+                $exchangeRate->save();
+
+                $return[] = $exchangeRate;
+            }
+        }
+        
+        return $return;
+    }
+
+    protected function generateLenderInvites($count)
+    {
+        $lenderIds = LenderQuery::create()
+            ->select('id')
+            ->find();
+        $lenderIds = $lenderIds->getData();
+
+        $invitees = $this->generateLenders(floor($count/10*3));
+       
+        $return = [];
+       
+        for ($i = 0; $i < $count; $i++) {
+            $lenderId = $this->faker->randomElement($lenderIds);
+            $lenderInvite = new Invite();
+            $lenderInvite->setLenderId($lenderId);
+            
+            if (rand(1, 10) < 4 || !$invitees) {
+                $lenderInvite->setEmail($this->faker->email);
+            } else {
+                $invitee = array_pop($invitees);
+                
+                $lenderInvite
+                    ->setInvitee($invitee)
+                    ->setInvited(true)
+                    ->setEmail($invitee->getUser()->getEmail());
+            }
+            $lenderInvite->save();
+
+            $return[] = $lenderInvite;
+        }
+
+        return $return;
+    }
+
+    protected function generateGiftCards($count)
+    {
+        $lenders = LenderQuery::create()->find()->getData();
+
+        $return = [];
+
+        for ($i = 0; $i < $count; $i++) {
+            /** @var Lender $lender */
+            $lender = $this->faker->randomElement($lenders);
+            $amount = Money::create(rand(15, 1000), 'USD');
+            $faker = Faker::create();
+            $date = new Carbon();
+
+            $giftCard = new GiftCard();
+            $giftCard
+                ->setLender($lender)
+                ->setOrderType(array_rand([0,1]))
+                ->setCardAmount($amount)
+                ->setFromName($lender->getName())
+                ->setMessage($faker->sentence(10))
+                ->setRecipientEmail($faker->email)
+                ->setDate($date)
+                ->setExpireDate($date->addYear())
+                ->setCardCode($faker->creditCardNumber);
+
+            if (rand(1 ,5) <= 3) {
+                /** @var Lender $recipient */
+                $recipient = $this->faker->randomElement($lenders);
+                if ($recipient != $lender) {
+                    $giftCard->setClaimed(true)
+                        ->setRecipientName($recipient->getName())
+                        ->setRecipient($recipient);
+                }
+            }
+
+            $giftCard->save();
+            $return[] = $giftCard;
+        }
+
+        return $return;
+    }
+
+    protected function generateCategories()
+    {
+        $categories = include(app_path() . '/database/LoanCategories.php');
+        $allLanguages = \Zidisha\Country\LanguageQuery::create()
+            ->filterByActive(true)
+            ->find();
+        
+        $return = [];
+
+        foreach ($categories as $data) {
+            $category = new Category();
+            $category
+                ->setName($data[0])
+                ->setWhatDescription($data[1])
+                ->setWhyDescription($data[2])
+                ->setHowDescription($data[3])
+                ->setAdminOnly($data[4]);
+            $category->save();
+
+            foreach ($allLanguages as $language) {
+                $categoryTranslation = new CategoryTranslation();
+                $categoryTranslation
+                    ->setCategory($category)
+                    ->setLanguage($language)
+                    ->setTranslation($category->getName() . ' - ' . $language->getLanguageCode());
+                $categoryTranslation->save();
+            }
+            
+            $return[] = $category;
+        }
+        
+        return $return;
+    }
+
+    protected function generateLoans($count)
+    {
+        $categoryIds = CategoryQuery::create()
+            ->filterByAdminOnly(false)
+            ->orderByRank()
+            ->select('id')
+            ->find()
+            ->getData();
+
+        $borrowers = BorrowerQuery::create()
+            ->joinWith('Country')
+            ->orderById()
+            ->find()
+            ->getData();
+
+        if (!$categoryIds || count($borrowers) < $count) {
+            $this->error("Not enough categories or borrowers");
+            return;
+        }
+
+        $return = [];
+
+        for ($i = 0; $i < $count; $i++) {
+            /** @var Borrower $borrower */
+            $borrower = $borrowers[$i];
+            $currency = $borrower->getCountry()->getCurrency();
+
+            $date = $this->faker->dateTimeBetween('-16 months');
+            $exchangeRate = $this->currencyService->getExchangeRate($currency, $date);
+            $usdAmount = Money::create($this->faker->numberBetween(50, 400));
+            $amount = Converter::fromUSD($usdAmount, $currency, $exchangeRate);            
+            
+            $isWeekly = $borrower->getCountry()->getInstallmentPeriod() == Loan::WEEKLY_INSTALLMENT;
+            
+            $data = [
+                'summary'           => $this->faker->sentence(8),
+                'proposal'          => $this->faker->paragraph(7),
+                'amount'            => $amount->getAmount(),
+                'installmentAmount' => $amount->divide($this->faker->numberBetween(6, 16))->getAmount(),
+                'currencyCode'      => $borrower->getCountry()->getCurrencyCode(),
+                'installmentDay'    => $isWeekly ? $this->faker->dayOfWeek : $this->faker->dayOfMonth,
+                'date'              => $date,
+                'exchangeRate'      => $exchangeRate,
+                'categoryId'        => $this->faker->randomElement($categoryIds),
+            ];
+
+            $loan = $this->loanService->applyForLoan($borrower, $data);
+            $return[] = $loan;
+        }
+        
+        return $return;
+    }
+
+    protected function generateBids($count)
+    {
+        $loans = LoanQuery::create()
+            ->filterByStatus(0)
+            ->orderByRand()
+            ->find()
+            ->getData();
+        
+        $lenders = LenderQuery::create()
+            ->filterByActive(true)
+            ->find()
+            ->getData();
+        
+        $return = [];
+        $i = 0;
+
+        while ($i < $count && $loans) {
+            /** @var Loan $loan */
+            $loan = array_pop($loans);
+            $bidDate = Carbon::instance($loan->getAppliedAt());
+    
+            if ($loan->getAppliedAt() < Carbon::create()->subMonths(8)) {
+                while ($loan->getRaisedPercentage() < 100) {
+                    /** @var Lender $lender */
+                    $lender = $this->faker->randomElement($lenders);
+                    $data = [
+                        'date'         => $bidDate->copy()->addDays($this->faker->numberBetween(1, 15)),
+                        'amount'       => rand(5, $loan->getUsdAmount()->divide(2)->getAmount()),
+                        'interestRate' => rand(0, 15),
+                    ];
+                    $bid = $this->loanService->placeBid($loan, $lender, $data);
+                    $return[] = $bid;
+                    $i += 1;
+                }
+                continue;
+            }
+    
+            $numberOfBids = rand(2,5);
+    
+            for ($j=0; $j <= $numberOfBids; $j++) {
+                /** @var Lender $lender */
+                $lender = $this->faker->randomElement($lenders);
+                $data = [
+                    'date'         => $bidDate->copy()->addDays($this->faker->numberBetween(1, 15)),
+                    'amount'       => rand(5, intval($loan->getUsdAmount()->divide(8)->getAmount()) + 5),
+                    'interestRate' => rand(0, 15),
+                ];
+                $bid = $this->loanService->placeBid($loan, $lender, $data);
+                $return[] = $bid;
+                $i += 1;
+            }
+        }
+        
+        return $return;
+    }
+
+    protected function generateAcceptBid()
+    {
+        $raisedLoans = LoanQuery::create()
+            ->filterByRaisedPercentage(100)
+            ->find();
+
+        $return = [];
+        
+        foreach ($raisedLoans as $loan) {
+            if (rand(1, 6) <= 5) {
+                $acceptedAt = Carbon::instance($loan->getAppliedAt());
+                $acceptedAt->addDays($this->faker->numberBetween(15, 20));
+                $this->loanService->acceptBids($loan);
+                $return[] = $loan;
+            }
+        }
+        
+        return $return;
+    }
+
+    protected function generateDisburseLoan()
+    {
+        $fundedLoans = LoanQuery::create()
+            ->filterByStatus(Loan::FUNDED)
+            ->find();
+
+        $return = [];
+
+        foreach ($fundedLoans as $loan) {
+            if (true || rand(1, 5) <= 4) {
+                $disbursedAt = Carbon::instance($loan->getAcceptedAt());
+                $disbursedAt->addDays($this->faker->numberBetween(1, 10));
+                $this->loanService->disburseLoan($loan, $disbursedAt, $loan->getAmount());
+                $return[] = $loan;
+            }
+        }
+        
+        return $return;
+    }
+
+    protected function generateTransactions($count)
+    {
+        $con = PropelDB::getConnection();
+        
+        $lenderIds = LenderQuery::create()
+            ->filterByActive(true)
+            ->select('id')
+            ->find()
+            ->getData();
+
+        $return = [];
+
+        for ($i = 0; $i < $count; $i++) {
+            $lenderId = $this->faker->randomElement($lenderIds);
+            
+            $payment = new UploadFundPayment();
+            $payment
+                ->setLenderId($lenderId)
+                ->setTotalAmount(Money::create(rand(10, 200), 'USD'))
+                ->setTransactionFee(Money::create(rand(1, 3), 'USD'))
+                ->setPaymentMethod($this->faker->randomElement(['paypal', 'stripe']));
+            
+            $this->transactionService->addUploadFundTransaction($con, $payment);
+            if (rand(1, 5) == 1) {
+            }
+
+//            if ($temp == true) {
+//                $yc = \Zidisha\User\UserQuery::create()
+//                    ->findOneById(2);
+//                $transaction = new Transaction();
+//                $transaction->setUser($yc);
+//                $transaction->setAmount(Money::create(10000, 'USD'));
+//                $transaction->setDescription($faker->sentence(4));
+//                $transaction->setTransactionDate(new \DateTime());
+//                $transaction->setType(Transaction::DONATE_BY_ADMIN);
+//                $transaction->save();
+//                $temp = false;
+//            }
+        }
+        
+        return true;
+    }
+
+    protected function generateRepayments($count)
+    {
+        $activeLoans = LoanQuery::create()
+            ->filterByStatus(Loan::ACTIVE)
+            ->find();
+        
+        $i = 0;
+
+        foreach ($activeLoans as $loan) {
+            //to test repayment upload from kenya
+            if ($loan->getBorrower()->getCountryId() == 1) {
+                continue;
+            }
+            $installments = InstallmentQuery::create()
+                ->filterByLoan($loan)
+                ->orderById()// TODO order due date?
+                ->find();
+            
+            foreach ($installments as $installment) {
+                if ($i == $count) {
+                    break;
+                }
+                
+                if (!$installment->getAmount()->isPositive()){
+                    continue;
+                }
+
+//                    if ($loan->getDisbursedAt() < Carbon::create()->subMonths(6)) {
+//                        break;
+//                    }
+
+                if (rand(1,4) <= 1) {
+//                    if (!$repaid && rand(1,6) <= 1) {
+//                        break;
+//                    }
+                }
+                if (rand(1,5) <= 4) {
+                    $installmentAmount = $installment->getAmount();
+                } else {
+                    $installmentAmount = Money::create(rand($installment->getAmount()->subtract($installment->getAmount()->divide
+                            (2))
+                            ->getAmount(),
+                        $installment->getAmount()->add($installment->getAmount()->divide(2))->getAmount()), $loan->getCurrency()) ;
+                }
+                if (rand(1,10) <= 2) {
+                    if(rand(1,5) <= 4) {
+                        $installmentDate = $installment->getDueDate()->modify('+1 week');
+                    } else {
+                        $installmentDate = $installment->getDueDate()->modify('+2 week');
+                    }
+                    $this->repaymentService->addRepayment($loan, $installmentDate, $installmentAmount);
+                } else {
+                    $this->repaymentService->addRepayment($loan, $installment->getDueDate(), $installmentAmount);
+                }
+                $i += 1;
+            }
+        }
+        
+        return true;
     }
 }

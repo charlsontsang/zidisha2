@@ -3,6 +3,7 @@
 namespace Zidisha\Loan;
 
 use Carbon\Carbon;
+use Faker\Provider\DateTime;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Zidisha\Admin\Setting;
 use Zidisha\Analytics\MixpanelService;
@@ -79,7 +80,7 @@ class LoanService
             $loan->save($con);
             $borrower->save($con);
 
-            $this->changeLoanStage($con, $loan, null, Loan::OPEN);
+            $this->changeLoanStage($con, $loan, null, Loan::OPEN, $loan->getAppliedAt());
         });
 
         $this->borrowerMailer->sendLoanConfirmationMail($borrower, $loan);
@@ -272,6 +273,10 @@ class LoanService
 
     public function placeBid(Loan $loan, Lender $lender, $data)
     {
+        $data += [
+            'date' => new \DateTime(),
+        ];
+        
         /** @var Bid $bid */
         list($bid, $changedBids) = PropelDB::transaction(function($con) use($loan, $lender, $data) {
             $oldBids = BidQuery::create()
@@ -480,15 +485,17 @@ class LoanService
         return $bid;
     }
 
-    public function acceptBids(Loan $loan)
+    public function acceptBids(Loan $loan, DateTime $acceptedAt = null)
     {
+        $acceptedAt = $acceptedAt ? : new \DateTime();
+        
         $bids = BidQuery::create()
             ->getOrderedBids($loan)
             ->find();
 
         $acceptedBids = $this->getAcceptedBids($bids, $loan->getUsdAmount());
 
-        PropelDB::transaction(function($con) use ($acceptedBids, $loan) {
+        PropelDB::transaction(function($con) use ($acceptedBids, $loan, $acceptedAt) {
             $totalAmount = Money::create(0);
 
             foreach ($acceptedBids as $bidId => $acceptedBid) {
@@ -509,7 +516,7 @@ class LoanService
             $loan
                 ->setStatus(Loan::FUNDED)
                 ->setInterestRate($totalInterest)
-                ->setAcceptedAt(new \DateTime())
+                ->setAcceptedAt($acceptedAt)
                 ->setFinalInterestRate($totalInterest)
                 ->save($con);
 

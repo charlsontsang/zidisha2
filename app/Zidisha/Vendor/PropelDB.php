@@ -53,4 +53,9 @@ class PropelDB {
         return $rows;
     }
 
+    public static function getConnection()
+    {
+        return Propel::getWriteConnection(UserTableMap::DATABASE_NAME);
+    }
+
 }

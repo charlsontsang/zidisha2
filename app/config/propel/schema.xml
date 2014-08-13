@@ -129,7 +129,7 @@
                 phpType="string"/>
         <column name="bid_at" type="TIMESTAMP" required="true"/>
         <behavior name="timestampable"/>
-        <column name="lender_invite_credit" type="TINYINT" size="1" required="true" defaultValue="0"/>
+        <column name="lender_invite_credit"  type="BOOLEAN" defaultValue="false" required="true"/>
         <foreign-key foreignTable="lenders">
             <reference local="lender_id" foreign="id"/>
         </foreign-key>
@@ -636,10 +636,10 @@
         <column name="date" type="TIMESTAMP"/>
         <column name="expire_date" type="TIMESTAMP"/>
         <column name="card_code" type="VARCHAR" size="20"/>
-        <column name="status" type="TINYINT" size="1" defaultValue="0"/>
-        <column name="claimed" type="TINYINT" size="1" defaultValue="0"/>
+        <column name="status" type="BOOLEAN" defaultValue="false"/>
+        <column name="claimed" type="BOOLEAN" defaultValue="false"/>
         <column name="recipient_id" type="INTEGER"/>
-        <column name="donated" type="TINYINT" size="1" defaultValue="0"/>
+        <column name="donated" type="BOOLEAN" defaultValue="false"/>
         <column name="gift_card_transaction_id" type="INTEGER" size="10"/>
         <foreign-key foreignTable="lenders" phpName="Lender">
             <reference local="lender_id" foreign="id"/>
@@ -658,7 +658,7 @@
         <column name="transaction_type" type="VARCHAR" size="50"/>
         <column name="lender_id" type="INTEGER" size="10"/>
         <column name="invoice_id" type="INTEGER" size="10"/>
-        <column name="status" type="TINYINT" size="1" defaultValue="0"/>
+        <column name="status" type="BOOLEAN" defaultValue="false"/>
         <column name="total_cards" type="INTEGER" size="5" required="true"/>
         <column name="amount" type="DECIMAL" size="10" scale="2" required="true"/>
         <column name="donation" type="DECIMAL" size="10" scale="2"/>
@@ -724,7 +724,7 @@
         <column name="country_id" type="INTEGER" required="true"/>
         <column name="grant_date" type="TIMESTAMP" required="true"/>
         <column name="note" type="LONGVARCHAR"/>
-        <column name="status" type="TINYINT" defaultValue="0"/>
+        <column name="status" type="BOOLEAN" defaultValue="false"/>
         <behavior name="timestampable"/>
         <foreign-key foreignTable="borrowers" phpName="BorrowerVolunteer">
             <reference local="borrower_id" foreign="id"/>
@@ -820,7 +820,7 @@
         <column name="active" type="BOOLEAN" defaultValue="false"/>
     </table>
 
-    <table name="category_translations" phpName="CategoryTranslation" namespace="Loan">
+    <table name="loan_category_translations" phpName="CategoryTranslation" namespace="Loan">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="category_id" type="INTEGER" required="true"/>
         <column name="language_code" type="VARCHAR" size="10"/>
