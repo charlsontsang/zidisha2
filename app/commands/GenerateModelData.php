@@ -115,6 +115,11 @@ class GenerateModelData extends Command
         $this->currencyService = App::make('\Zidisha\Currency\CurrencyService');
         
         $temp = true;
+        
+        if ($model == 'reset') {
+            $this->reset();
+            return;
+        }
 
         if ($model == 'new') {
             $this->reset();
@@ -350,6 +355,7 @@ class GenerateModelData extends Command
         $this->line('Delete loans index');
         exec("curl -XDELETE 'http://localhost:9200/loans/' -s");
 
+        $this->line('Import settings');
         Setting::import($settings);
     }
 
