@@ -25,14 +25,11 @@ class LoanServiceCest
      * @var ConnectionInterface
      */
     protected $con;
-
-    public function __construct()
-    {
-        $this->con = Propel::getWriteConnection(UserTableMap::DATABASE_NAME);
-    }
-
+    
     public function _before(UnitTester $I)
     {
+        $this->con = Propel::getWriteConnection(UserTableMap::DATABASE_NAME);
+
         $this->loanService = $I->grabService('Zidisha\Loan\LoanService');
         $this->transactionService = $I->grabService('Zidisha\Balance\TransactionService');
 
@@ -41,6 +38,8 @@ class LoanServiceCest
 
     public function _after(UnitTester $I)
     {
+        $this->con = Propel::getWriteConnection(UserTableMap::DATABASE_NAME);
+
         $this->con->rollBack();
     }
 
