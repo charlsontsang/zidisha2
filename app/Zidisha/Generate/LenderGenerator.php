@@ -13,8 +13,8 @@ class LenderGenerator extends Generator
      */
     protected $lenderService;
 
-    protected $joinedAtStartDate;
-    protected $joinedAtEndDate;
+    protected $joinedAtStartDate = '- 16 months';
+    protected $joinedAtEndDate = 'now';
     
     protected $countryIds;
     protected $lenderCount;
