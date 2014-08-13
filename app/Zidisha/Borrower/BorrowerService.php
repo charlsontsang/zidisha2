@@ -309,6 +309,24 @@ class BorrowerService
         $this->borrowerMailer->sendVerificationMail($borrower, $hashCode);
     }
 
+    public function verifyBorrower(Borrower $borrower, Datetime $verifiedAt = null)
+    {
+        $verifiedAt = $verifiedAt ?: new \DateTime();
+        
+        PropelDB::transaction(function() use($borrower, $verifiedAt) {
+            $joinLog = $borrower->getJoinLog();
+            $joinLog->setVerifiedAt($verifiedAt);
+            $joinLog->save();
+
+            $borrower->setVerified(true);
+            $borrower->save();
+            
+            return $borrower;
+        });
+        
+        return $borrower;
+    }
+
     public function saveBorrowerGuest($formData, $sessionData)
     {
         $email = array_get($formData, 'email');
