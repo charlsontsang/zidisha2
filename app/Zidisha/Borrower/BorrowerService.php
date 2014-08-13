@@ -1,8 +1,8 @@
 <?php
 namespace Zidisha\Borrower;
 
+use DateTime;
 use Propel\Runtime\ActiveQuery\Criteria;
-use Zidisha\Borrower\Base\BorrowerQuery;
 use Zidisha\Loan\Loan;
 use Zidisha\Loan\LoanQuery;
 use Zidisha\Loan\LoanService;
@@ -36,32 +36,41 @@ class BorrowerService
 
     public function joinBorrower($data)
     {
+        $data += [
+            'joinedAt' => new DateTime(),
+        ];
+        
         $volunteerMentor = VolunteerMentorQuery::create()
             ->findOneByBorrowerId($data['volunteerMentorId']);
         $referrer = BorrowerQuery::create()
             ->findOneById($data['referrerId']);
 
         $user = new User();
-        $user->setUsername($data['username']);
-        $user->setEmail($data['email']);
-        $user->setFacebookId($data['facebookId']);
-        $user->setRole('borrower');
+        $user
+            ->setJoinedAt($data['joinedAt'])
+            ->setUsername($data['username'])
+            ->setPassword($data['password'])
+            ->setEmail($data['email'])
+            ->setFacebookId($data['facebookId'])
+            ->setRole('borrower');
 
         $borrower = new Borrower();
-        $borrower->setFirstName($data['firstName']);
-        $borrower->setLastName($data['lastName']);
-        $borrower->setCountryId($data['countryId']);
-        $borrower->setVolunteerMentor($volunteerMentor);
-        $borrower->setReferrer($referrer);
-        $borrower->setUser($user);
+        $borrower
+            ->setFirstName($data['firstName'])
+            ->setLastName($data['lastName'])
+            ->setCountryId($data['countryId'])
+            ->setVolunteerMentor($volunteerMentor)
+            ->setReferrer($referrer)
+            ->setUser($user);
 
         $profile = new Profile();
-        $profile->setAddress($data['address']);
-        $profile->setAddressInstructions($data['addressInstructions']);
-        $profile->setCity($data['city']);
-        $profile->setNationalIdNumber($data['nationalIdNumber']);
-        $profile->setPhoneNumber($data['phoneNumber']);
-        $profile->setAlternatePhoneNumber($data['alternatePhoneNumber']);
+        $profile
+            ->setAddress($data['address'])
+            ->setAddressInstructions($data['addressInstructions'])
+            ->setCity($data['city'])
+            ->setNationalIdNumber($data['nationalIdNumber'])
+            ->setPhoneNumber($data['phoneNumber'])
+            ->setAlternatePhoneNumber($data['alternatePhoneNumber']);
         $borrower->setProfile($profile);
 
         $communityLeader = new Contact();
