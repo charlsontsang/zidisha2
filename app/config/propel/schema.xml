@@ -13,6 +13,7 @@
         <column name="remember_token" type="VARCHAR" size="100" required="false"/>
         <column name="role" type="ENUM" valueSet="lender, borrower, admin"/>
         <column name="sub_role" type="ENUM" valueSet="volunteer, volunteerMentor"/>
+        <column name="joined_at" type="TIMESTAMP"/>
         <column name="last_login_at" type="TIMESTAMP"/>
         <column name="active" type="BOOLEAN" defaultValue="true"/>
         <behavior name="timestampable"/>

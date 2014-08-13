@@ -2,6 +2,7 @@
 namespace Zidisha\Lender;
 
 use Carbon\Carbon;
+use DateTime;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\Propel;
 use Zidisha\Analytics\MixpanelService;
@@ -214,10 +215,12 @@ class LenderService
             'aboutMe'       => null,
             'facebookId'    => null,
             'password'      => null,
+            'joinedAt'      => new DateTime(),
         ];
 
         $user = new User();
         $user
+            ->setJoinedAt($data['joinedAt'])
             ->setPassword($data['password'])
             ->setEmail($data['email'])
             ->setUsername($data['username'])
