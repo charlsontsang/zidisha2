@@ -142,8 +142,6 @@ class GenerateModelData extends Command
             $this->call('fake', array('model' => 'LenderInvite', 'size' => 200));
             $this->call('fake', array('model' => 'GiftCard', 'size' => 100));
             
-            $this->call('fake', array('model' => 'Category', 'size' => 10));
-            $this->call('fake', array('model' => 'CategoryTranslation', 'size' => 10));
             $this->call('fake', array('model' => 'Loan', 'size' => 80));
             
             $this->call('fake', array('model' => 'Bid', 'size' => 200));
@@ -370,6 +368,9 @@ class GenerateModelData extends Command
         $this->call('fake', array('model' => 'ExchangeRate', 'size' => 30));
 
         $this->call('fake', array('model' => 'SpecialUser', 'size' => 1));
+        
+        $this->call('fake', array('model' => 'Category', 'size' => 10));
+        $this->call('fake', array('model' => 'CategoryTranslation', 'size' => 10));
     }
 
     protected function generateLanguages()
