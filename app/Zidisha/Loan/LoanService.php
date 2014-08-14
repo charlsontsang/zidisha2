@@ -562,7 +562,7 @@ class LoanService
         
         $this->borrowerMailer->sendExpiredLoanMail($loan);
         
-        return true;
+        return $refundsLenders;
     }
 
     public function cancelLoan(Loan $loan)
@@ -725,7 +725,7 @@ class LoanService
                 $refunds[$id]['amount'] = $zero;
             }
             
-            $refundsLenders[] = new RefundLender($refund);
+            $refundsLenders[$id] = new RefundLender($refund);
         }
 
         return $refundsLenders;
