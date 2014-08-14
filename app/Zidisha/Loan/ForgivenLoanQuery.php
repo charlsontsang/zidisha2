@@ -2,9 +2,11 @@
 
 namespace Zidisha\Loan;
 
+use Propel\Runtime\ActiveQuery\Criteria;
 use Zidisha\Currency\Currency;
 use Zidisha\Currency\Money;
 use Zidisha\Loan\Base\ForgivenLoanQuery as BaseForgivenLoanQuery;
+use Zidisha\User\User;
 
 
 /**
@@ -38,5 +40,13 @@ class ForgivenLoanQuery extends BaseForgivenLoanQuery
 
         // Todo currency
         return Money::create($total, $currency);
+    }
+
+    public function getTotalForgivenLendersForLoan(Loan $loan)
+    {
+        return $this
+            ->filterByLoan($loan)
+            ->filterByLenderId(User::ADMIN_ID, Criteria::NOT_EQUAL)
+            ->count();
     }
 } // ForgivenLoanQuery
