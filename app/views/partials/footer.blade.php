@@ -94,7 +94,7 @@
         <hr/>
         <div class="row">
             <div class="col-md-9">
-                <p>&copy; {{ date('Y') }} Zidisha, Inc.&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;Zidisha is a 501(c)(3) nonprofit&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;<a href="#">Terms of Use</a>&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;<a href="#">Contact Us</a></p>
+                <p>&copy; {{ date('Y') }} Zidisha, Inc.&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;Zidisha is a 501(c)(3) nonprofit&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;<a href="{{ route('page:terms-of-use') }}">Terms and Privacy</a>&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;<a href="#">Contact Us</a></p>
             </div>
             <div class="col-md-3">
                 <ul class="list-unstyled list-inline pull-right">
