@@ -48,44 +48,6 @@ class LoanServiceTest extends \IntegrationTestCase
             ->generateOne();
     }
 
-    public function testPlaceBid()
-    {
-        /** @var Loan $loan */
-        $loan = $this->loan;
-
-        $this->assertBid($loan, $this->lenders[0], [
-            'interestRate'    => '10',
-            'amount'          => '20',
-            'acceptedAmount'  => '20',
-            'raisedUsdAmount' => '20',
-        ]);
-        $this->assertBid($loan, $this->lenders[1], [
-            'interestRate'       => '0',
-            'amount'             => '10',
-            'lenderInviteCredit' => true,
-            'acceptedAmount'     => '10',
-            'raisedUsdAmount'    => '30',
-        ]);
-        $this->assertBid($loan, $this->lenders[2], [
-            'interestRate'    => '5',
-            'amount'          => '30',
-            'acceptedAmount'  => '30',
-            'raisedUsdAmount' => '50',
-        ]);
-        $this->assertBid($loan, $this->lenders[1], [
-            'interestRate'    => '7',
-            'amount'          => '20',
-            'acceptedAmount'  => '10',
-            'raisedUsdAmount' => '50',
-        ]);
-        $this->assertBid($loan, $this->lenders[0], [
-            'interestRate'    => '13',
-            'amount'          => '20',
-            'acceptedAmount'  => '0',
-            'raisedUsdAmount' => '50',
-        ]);
-    }
-
     public function testApplyForLoan()
     {
         $borrower = \Zidisha\Borrower\BorrowerQuery::create()
@@ -135,6 +97,44 @@ class LoanServiceTest extends \IntegrationTestCase
             ->count();
 
         $this->assertEquals(1, $recordCount);
+    }
+
+    public function testPlaceBid()
+    {
+        /** @var Loan $loan */
+        $loan = $this->loan;
+
+        $this->assertBid($loan, $this->lenders[0], [
+            'interestRate'    => '10',
+            'amount'          => '20',
+            'acceptedAmount'  => '20',
+            'raisedUsdAmount' => '20',
+        ]);
+        $this->assertBid($loan, $this->lenders[1], [
+            'interestRate'       => '0',
+            'amount'             => '10',
+            'lenderInviteCredit' => true,
+            'acceptedAmount'     => '10',
+            'raisedUsdAmount'    => '30',
+        ]);
+        $this->assertBid($loan, $this->lenders[2], [
+            'interestRate'    => '5',
+            'amount'          => '30',
+            'acceptedAmount'  => '30',
+            'raisedUsdAmount' => '50',
+        ]);
+        $this->assertBid($loan, $this->lenders[1], [
+            'interestRate'    => '7',
+            'amount'          => '20',
+            'acceptedAmount'  => '10',
+            'raisedUsdAmount' => '50',
+        ]);
+        $this->assertBid($loan, $this->lenders[0], [
+            'interestRate'    => '13',
+            'amount'          => '20',
+            'acceptedAmount'  => '0',
+            'raisedUsdAmount' => '50',
+        ]);
     }
     
     protected function assertBid(Loan $loan, Lender $lender, $data)
