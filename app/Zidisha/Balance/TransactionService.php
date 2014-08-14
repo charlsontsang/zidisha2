@@ -109,9 +109,10 @@ class TransactionService
             ->setAmount($amount)
             ->setUserId($lender->getId())
             ->setLoan($loan)
+            ->setTransactionDate(new \DateTime())
             ->setType(Transaction::LOAN_OUTBID)
             ->setSubType(Transaction::LOAN_BID_CANCELED)
-            ->setDescription('Loan bid cancelled');
+            ->setDescription('Loan bid canceled');
 
         $transaction->save($con);
     }
@@ -128,6 +129,7 @@ class TransactionService
             ->setAmount($amount)
             ->setUserId(Setting::get('site.YCAccountId'))
             ->setLoan($loan)
+            ->setTransactionDate(new \DateTime())
             ->setType(Transaction::LOAN_OUTBID)
             ->setSubType(Transaction::LOAN_BID_CANCELED)
             ->setDescription('Loan bid cancelled');

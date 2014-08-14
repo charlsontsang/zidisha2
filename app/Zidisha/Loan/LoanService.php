@@ -15,6 +15,7 @@ use Zidisha\Currency\Converter;
 use Zidisha\Currency\ExchangeRate;
 use Zidisha\Currency\ExchangeRateQuery;
 use Zidisha\Currency\Money;
+use Zidisha\Generate\LoanGenerator;
 use Zidisha\Lender\Lender;
 use Zidisha\Loan\Calculator\InstallmentCalculator;
 use Zidisha\Loan\Calculator\RepaymentCalculator;
@@ -584,23 +585,28 @@ class LoanService
         return $lenderRefunds;
     }
 
-    public function cancelLoan(Loan $loan)
+    public function cancelLoan(Loan $loan, $data = [])
     {
-        $lenderRefunds = PropelDB::transaction(function($con) use($loan) {
-            $loan
-                ->setStatus(Loan::CANCELED)
-                ->setExpiredAt(new \DateTime());
+        $data += [
+            'canceledAt' => new \DateTime()
+        ];
+
+        $loan
+            ->setStatus(Loan::CANCELED)
+            ->setCanceledAt($data['canceledAt']);
+
+        $borrower = $loan->getBorrower();
+        $borrower
+            ->setActiveLoan(null)
+            ->setLoanStatus(Loan::NO_LOAN);
+        
+        $lenderRefunds = PropelDB::transaction(function($con) use($loan, $borrower) {
             $loan->save($con);
-
-            $borrower = $loan->getBorrower();
-            $borrower
-                ->setActiveLoan(null)
-                ->setLoanStatus(Loan::NO_LOAN);
             $borrower->save($con);
-
+            
             $this->changeLoanStage($con, $loan, Loan::OPEN, Loan::CANCELED);
             
-            $lenderRefunds = $this->refundLenders($con, $loan, Loan::CANCELED);
+            $lenderRefunds = $this->refundLenders($con, $loan);
             
             return $lenderRefunds;
         });
