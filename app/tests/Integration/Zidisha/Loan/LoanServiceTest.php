@@ -105,11 +105,13 @@ class LoanServiceTest extends \IntegrationTestCase
         $oldLoanCount = \Zidisha\Loan\LoanQuery::create()
             ->filterByStatus(Loan::OPEN)
             ->filterByBorrowerId($borrowerId)->count();
-        
+
         $loan = $this->loanService->applyForLoan($borrower, $data);
 
         $this->assertEquals(Loan::OPEN, $borrower->getLoanStatus());
         $this->assertEquals($loan->getId(), $borrower->getActiveLoanId());
+        $this->assertEquals(Money::create(0, $loan->getCurrencyCode()), $loan->getPaidAmount());
+        $this->assertEquals(0, $loan->getPaidPercentage());
 
         $loanCount = \Zidisha\Loan\LoanQuery::create()
             ->filterByStatus(Loan::OPEN)
