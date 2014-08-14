@@ -20,6 +20,7 @@ use Zidisha\Loan\Calculator\RepaymentCalculator;
 use Zidisha\Mail\BorrowerMailer;
 use Zidisha\Mail\LenderMailer;
 use Zidisha\Repayment\Installment;
+use Zidisha\Repayment\InstallmentQuery;
 use Zidisha\Repayment\RepaymentService;
 use Zidisha\Vendor\PropelDB;
 use Zidisha\Vendor\SiftScience\SiftScienceService;
@@ -899,5 +900,20 @@ class LoanService
                 $this->expireLoan($loan);
             }
         }
+    }
+
+    public function isRepaidOnTime(Borrower $borrower, Loan $loan)
+    {
+        $id = InstallmentQuery::create()
+            ->filterByBorrower($borrower)
+            ->filterByLoan($loan)
+            ->select('id')
+            ->withColumn('MAX(id)', 'id')
+            ->findOne();
+        $repaymentThreshold = \Config::get('constants.repaymentThreshold');
+        if($id->getPaidDate() && ($id->getPaidDate()->getTimestamp() - $id->getDueDate()->getTimestamp()) <= 86400*$repaymentThreshold)  /* grace time is 10 days that is (86400*10) seconds*/
+            return 1;
+        else
+            return 0;
     }
 }
