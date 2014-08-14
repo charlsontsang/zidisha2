@@ -9,7 +9,7 @@ use Zidisha\Lender\LenderQuery;
 use Zidisha\Loan\Bid;
 use Zidisha\Loan\Loan;
 use Zidisha\Loan\LoanQuery;
-use Zidisha\Loan\RefundLender;
+use Zidisha\Loan\LenderRefund;
 use Zidisha\Mail\LenderMailer;
 use Zidisha\User\User;
 
@@ -106,7 +106,11 @@ class LenderMailerTester
         $lender = LenderQuery::create()
             ->findOne();
         
-        $refundLender = new RefundLender(['amount' => Money::create(55, 'KES'), 'lender' => $lender]);
+        $refundLender = new LenderRefund([
+            'lender'             => $lender,
+            'amount'             => Money::create(55),
+            'lenderInviteCredit' => Money::create(25),
+        ]);
         
         $this->lenderMailer->sendExpiredLoanMail($loan, $refundLender);
     }

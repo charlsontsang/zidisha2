@@ -7,6 +7,7 @@ use Faker\Provider\DateTime;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Zidisha\Admin\Setting;
 use Zidisha\Analytics\MixpanelService;
+use Zidisha\Balance\Transaction;
 use Zidisha\Balance\TransactionQuery;
 use Zidisha\Balance\TransactionService;
 use Zidisha\Borrower\Borrower;
@@ -605,34 +606,58 @@ class LoanService
         $transactions = TransactionQuery::create()
             ->filterByLoan($loan)
             ->filterLoanBids()
+            ->joinWith('Bid')
+            ->joinWith('Bid.Lender')
             ->find();
-
+        
         $refundsLenders = $this->getLenderRefunds($transactions);
+        $totalLenderInviteCredit = Money::create(0);
 
-        /** @var RefundLender $refundsLender */
+        /** @var LenderRefund $refundsLender */
         foreach ($refundsLenders as $refundsLender) {
-            if (!$refundsLender->getAmount()->greaterThan(Money::create(0))) {
+            if ($refundsLender->getTotalAmount()->isZero()) {
                 continue;
             }
+            
+            if ($refundsLender->getAmount()->isPositive()) {
+                if ($status == Loan::CANCELED) {
+                    $this->transactionService->addLoanBidCanceledTransaction(
+                        $con,
+                        $refundsLender->getAmount(),
+                        $loan,
+                        $refundsLender->getLender()
+                    );
+                } else {
+                    $this->transactionService->addLoanBidExpiredTransaction(
+                        $con,
+                        $refundsLender->getAmount(),
+                        $loan,
+                        $refundsLender->getLender()
+                    );
+                }   
+            }
 
+            if ($refundsLender->getLenderInviteCredit()->isPositive()) {
+                $totalLenderInviteCredit = $totalLenderInviteCredit->add($refundsLender->getLenderInviteCredit());
+            }
+        }
+        
+        if ($totalLenderInviteCredit->isPositive()) {
             if ($status == Loan::CANCELED) {
-                $this->transactionService->addLoanBidCanceledTransaction(
+                $this->transactionService->addLenderInviteCreditLoanBidCanceledTransaction(
                     $con,
-                    $refundsLender->getAmount(),
-                    $loan,
-                    $refundsLender->getLender()
+                    $totalLenderInviteCredit,
+                    $loan
                 );
             } else {
-                $this->transactionService->addLoanBidExpiredTransaction(
+                $this->transactionService->addLenderInviteCreditLoanBidExpiredTransaction(
                     $con,
-                    $refundsLender->getAmount(),
-                    $loan,
-                    $refundsLender->getLender()
+                    $totalLenderInviteCredit,
+                    $loan
                 );
             }
         }
-        // TODO: lender invite
-
+        
         return $refundsLenders;
     }
 
@@ -721,23 +746,35 @@ class LoanService
     {
         $refunds = [];
         $zero = Money::create(0);
+        /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
             $userId = $transaction->getUserId();
-            $refunds[$userId] = [
-                'lender' => $transaction->getUser()->getLender(),
-                'amount' => array_get($refunds, "$userId.amount", $zero)->subtract(
-                        $transaction->getAmount()
-                    ),
-            ];
+            
+            if (!isset($refunds[$userId])) {
+                $refunds[$userId] = [
+                    'lender'             => $transaction->getBid()->getLender(),
+                    'amount'             => $zero,
+                    'lenderInviteCredit' => $zero,
+                ];
+            }
+            
+            if ($transaction->getBid()->getLenderInviteCredit()) {
+                $refunds[$userId]['lenderInviteCredit'] = $refunds[$userId]['lenderInviteCredit']->subtract($transaction->getAmount());
+            } else {
+                $refunds[$userId]['amount'] = $refunds[$userId]['amount']->subtract($transaction->getAmount());
+            }
         }
 
         $refundsLenders = [];
         foreach ($refunds as $id => $refund) {
-            if ($refunds[$id]['amount']->lessThan(Money::create(0))) {
+            if ($refunds[$id]['amount']->isNegative()) {
                 $refunds[$id]['amount'] = $zero;
             }
+            if ($refunds[$id]['lenderInviteCredit']->isNegative()) {
+                $refunds[$id]['lenderInviteCredit'] = $zero;
+            }
             
-            $refundsLenders[$id] = new RefundLender($refund);
+            $refundsLenders[$id] = new LenderRefund($refund);
         }
 
         return $refundsLenders;

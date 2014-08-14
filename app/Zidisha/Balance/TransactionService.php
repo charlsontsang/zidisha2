@@ -57,6 +57,23 @@ class TransactionService
         $transaction->save($con);
     }
 
+    public function addLenderInviteCreditLoanBidExpiredTransaction(ConnectionInterface $con, Money $amount, Loan $loan)
+    {
+        $this->assertAmount($amount);
+
+        $transaction = new Transaction();
+        $transaction
+            ->setAmount($amount)
+            ->setUserId(Setting::get('site.YCAccountId'))
+            ->setLoan($loan)
+            ->setType(Transaction::LOAN_OUTBID)
+            ->setSubType(Transaction::LOAN_BID_EXPIRED)
+            ->setTransactionDate(new \DateTime())
+            ->setDescription('Loan bid expired');
+
+        $transaction->save($con);
+    }
+
     public function addOutBidTransaction(
         ConnectionInterface $con,
         Money $amount,
@@ -99,6 +116,25 @@ class TransactionService
         $transaction->save($con);
     }
 
+    public function addLenderInviteCreditLoanBidCanceledTransaction(
+        ConnectionInterface $con,
+        Money $amount,
+        Loan $loan
+    ) {
+        $this->assertAmount($amount);
+
+        $transaction = new Transaction();
+        $transaction
+            ->setAmount($amount)
+            ->setUserId(Setting::get('site.YCAccountId'))
+            ->setLoan($loan)
+            ->setType(Transaction::LOAN_OUTBID)
+            ->setSubType(Transaction::LOAN_BID_CANCELED)
+            ->setDescription('Loan bid cancelled');
+
+        $transaction->save($con);
+    }
+    
     public function addUpdateBidTransaction(
         ConnectionInterface $con,
         Money $amount,

@@ -5,9 +5,10 @@ namespace Integration\Zidisha\Loan;
 use ReflectionMethod;
 use Zidisha\Admin\Setting;
 use Zidisha\Balance\Transaction;
+use Zidisha\Balance\TransactionQuery;
 use Zidisha\Currency\Money;
 use Zidisha\Lender\Lender;
-use Zidisha\Loan\Bid;
+use Zidisha\Loan\LenderRefund;
 use Zidisha\Loan\Loan;
 
 class LoanServiceTest extends \IntegrationTestCase
@@ -36,7 +37,7 @@ class LoanServiceTest extends \IntegrationTestCase
         $this->transactionService = $this->app->make('Zidisha\Balance\TransactionService');
 
         $this->lenders = \Zidisha\Generate\LenderGenerator::create()
-            ->size(3)
+            ->size(4)
             ->generate();
 
         $this->borrowers = \Zidisha\Generate\BorrowerGenerator::create()
@@ -145,7 +146,7 @@ class LoanServiceTest extends \IntegrationTestCase
         $this->assertEquals($data['interestRate'], $bid->getInterestRate());
         $this->assertEquals(Money::create($data['amount']), $bid->getBidAmount());
 
-        $placeBidTransaction = \Zidisha\Balance\TransactionQuery::create()
+        $placeBidTransaction = TransactionQuery::create()
             ->filterByLoanBidId($bid->getId())
             ->filterByUserId($lender->getId())
             ->filterByType(Transaction::LOAN_BID)
@@ -168,14 +169,14 @@ class LoanServiceTest extends \IntegrationTestCase
                 ->filterByType(Transaction::LENDER_INVITE_REDEEM)
                 ->findOne();
 
-            $inviteRedeemTransaction = \Zidisha\Balance\TransactionQuery::create()
+            $inviteRedeemTransaction = TransactionQuery::create()
                 ->filterByLoanBidId($bid->getId())
                 ->filterByUserId($lender->getId())
                 ->filterByType(Transaction::LENDER_INVITE_CREDIT)
                 ->filterBySubType(Transaction::LENDER_INVITE_REDEEM)
                 ->findOne();
 
-            $YCInviteRedeemTransaction = \Zidisha\Balance\TransactionQuery::create()
+            $YCInviteRedeemTransaction = TransactionQuery::create()
                 ->filterByLoanBidId($bid->getId())
                 ->filterByUserId(Setting::get('site.YCAccountId'))
                 ->filterByType(Transaction::LENDER_INVITE_CREDIT)
@@ -200,9 +201,6 @@ class LoanServiceTest extends \IntegrationTestCase
 
     public function testRefundLenders()
     {
-        $method = new ReflectionMethod($this->loanService, 'refundLenders');
-        $method->setAccessible(true);
-
         /** @var Loan $loan */
         $loan = $this->loan;
 
@@ -212,40 +210,67 @@ class LoanServiceTest extends \IntegrationTestCase
         $lender2 = $this->lenders[1];
         /** @var Lender $lender3 */
         $lender3 = $this->lenders[2];
+        /** @var Lender $lender4 */
+        $lender4 = $this->lenders[3];
         
-        $bid1 = $this->loanService->placeBid($loan, $lender1, ['amount' => '10', 'interestRate' => 10]);
-        $bid2 = $this->loanService->placeBid($loan, $lender2, ['amount' => '20', 'interestRate' => 5]);
-        $bid3 = $this->loanService->placeBid($loan, $lender3, ['amount' => '30', 'interestRate' => 15]);
-        $bid4 = $this->loanService->placeBid($loan, $lender1, ['amount' => '5', 'interestRate' => 3]);
+        $bids = [
+            ['lender' => $lender1, 'amount' => '10', 'interestRate' => 10],
+            ['lender' => $lender2, 'amount' => '20', 'interestRate' => 0, 'lenderInviteCredit' => true],
+            ['lender' => $lender3, 'amount' => '30', 'interestRate' => 15],
+            ['lender' => $lender2, 'amount' => '5', 'interestRate' => 3],
+            ['lender' => $lender4, 'amount' => '5', 'interestRate' => 3, 'lenderInviteCredit' => true],
+        ];
+        
+        $refunds = [
+            ['lender' => $lender1, 'amount' => '10', 'lenderInviteCredit' => '0'],
+            ['lender' => $lender2, 'amount' => '5', 'lenderInviteCredit' => '20'],
+            ['lender' => $lender3, 'amount' => '10', 'lenderInviteCredit' => '0'],
+            ['lender' => $lender4, 'amount' => '0', 'lenderInviteCredit' => '5'],
+        ];
+        
+        foreach ($bids as $bid) {
+            $this->loanService->placeBid($loan, $bid['lender'], $bid);  
+        }
 
-        //$this->loanService->editBid($bid2, ['amount' => '30', 'interestRate' => 5]); TODO
+        $lenderRefunds = $this->loanService->expireLoan($loan);
+        $totalLenderInviteCredit = Money::create(0);
+        
+        foreach ($refunds as $refund) {
+            /** @var Lender $lender */
+            $lender = $refund['lender'];
+            /** @var LenderRefund $refundLender */
+            $refundLender = $lenderRefunds[$lender->getId()];
+            $amount = Money::create($refund['amount']);
+            $lenderInviteCredit = Money::create($refund['lenderInviteCredit']);
+            
+            $this->assertEquals($amount, $refundLender->getAmount());
+            $this->assertEquals($lenderInviteCredit, $refundLender->getLenderInviteCredit());
 
-        $refunds = $this->loanService->expireLoan($loan);
+            $lenderTransaction = TransactionQuery::create()
+                ->filterByUserId($lender->getId())
+                ->filterByType(Transaction::LOAN_OUTBID)
+                ->filterBySubType(Transaction::LOAN_BID_EXPIRED)
+                ->findOne();
 
-        $this->assertEquals(Money::create(15), $refunds[$lender1->getId()]->getAmount());
-        $this->assertEquals(Money::create(20), $refunds[$lender2->getId()]->getAmount());
-        $this->assertEquals(Money::create(15), $refunds[$lender3->getId()]->getAmount());
+            if ($amount->isPositive()) {
+                $this->assertEquals($amount, $lenderTransaction->getAmount());
+            } else {
+                $this->assertEmpty($lenderTransaction);
+            }
+            
+            $totalLenderInviteCredit = $totalLenderInviteCredit->add($lenderInviteCredit);
+        }
 
-        $lender1VerifyRefund = \Zidisha\Balance\TransactionQuery::create()
-            ->filterByUserId($lender1->getId())
+        $YCTransaction = TransactionQuery::create()
+            ->filterByUserId(Setting::get('site.YCAccountId'))
             ->filterByType(Transaction::LOAN_OUTBID)
             ->filterBySubType(Transaction::LOAN_BID_EXPIRED)
-            ->count();
-
-        $lender2VerifyRefund = \Zidisha\Balance\TransactionQuery::create()
-            ->filterByUserId($lender2->getId())
-            ->filterByType(Transaction::LOAN_OUTBID)
-            ->filterBySubType(Transaction::LOAN_BID_EXPIRED)
-            ->count();
-
-        $lender3VerifyRefund = \Zidisha\Balance\TransactionQuery::create()
-            ->filterByUserId($lender1->getId())
-            ->filterByType(Transaction::LOAN_OUTBID)
-            ->filterBySubType(Transaction::LOAN_BID_EXPIRED)
-            ->count();
-
-        $this->assertEquals(1, $lender1VerifyRefund);
-        $this->assertEquals(1, $lender2VerifyRefund);
-        $this->assertEquals(1, $lender3VerifyRefund);
+            ->findOne();
+        
+        if ($totalLenderInviteCredit->isPositive()) {
+            $this->assertEquals($totalLenderInviteCredit, $YCTransaction->getAmount());
+        } else {
+            $this->assertEmpty($YCTransaction);
+        }
     }
 }
