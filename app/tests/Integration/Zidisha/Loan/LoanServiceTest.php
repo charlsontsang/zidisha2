@@ -233,8 +233,14 @@ class LoanServiceTest extends \IntegrationTestCase
         }
 
         $lenderRefunds = $this->loanService->expireLoan($loan);
+        $this->assertLenderRefunds($refunds, $lenderRefunds);
+    }
+
+    protected function assertLenderRefunds($refunds, $lenderRefunds, $status = Loan::EXPIRED)
+    {
         $totalLenderInviteCredit = Money::create(0);
-        
+        $transactionType = $status == Loan::CANCELED ? Transaction::LOAN_BID_CANCELED : Transaction::LOAN_BID_EXPIRED;
+
         foreach ($refunds as $refund) {
             /** @var Lender $lender */
             $lender = $refund['lender'];
@@ -242,14 +248,14 @@ class LoanServiceTest extends \IntegrationTestCase
             $refundLender = $lenderRefunds[$lender->getId()];
             $amount = Money::create($refund['amount']);
             $lenderInviteCredit = Money::create($refund['lenderInviteCredit']);
-            
+
             $this->assertEquals($amount, $refundLender->getAmount(), 'amount ' . $lender->getFirstName());
             $this->assertEquals($lenderInviteCredit, $refundLender->getLenderInviteCredit(), 'lenderInviteCredit ' . $lender->getFirstName());
 
             $lenderTransaction = TransactionQuery::create()
                 ->filterByUserId($lender->getId())
                 ->filterByType(Transaction::LOAN_OUTBID)
-                ->filterBySubType(Transaction::LOAN_BID_EXPIRED)
+                ->filterBySubType($transactionType)
                 ->findOne();
 
             if ($amount->isPositive()) {
@@ -257,16 +263,16 @@ class LoanServiceTest extends \IntegrationTestCase
             } else {
                 $this->assertEmpty($lenderTransaction, 'transaction ' . $lender->getFirstName());
             }
-            
+
             $totalLenderInviteCredit = $totalLenderInviteCredit->add($lenderInviteCredit);
         }
 
         $YCTransaction = TransactionQuery::create()
             ->filterByUserId(Setting::get('site.YCAccountId'))
             ->filterByType(Transaction::LOAN_OUTBID)
-            ->filterBySubType(Transaction::LOAN_BID_EXPIRED)
+            ->filterBySubType($transactionType)
             ->findOne();
-        
+
         if ($totalLenderInviteCredit->isPositive()) {
             $this->assertEquals($totalLenderInviteCredit, $YCTransaction->getAmount());
         } else {
