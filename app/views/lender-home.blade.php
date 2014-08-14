@@ -85,7 +85,7 @@
             </footer>
         </blockquote>
         <br/>
-        <h3>Immense potential.</h3>
+        <h3>More than charity.</h3>
         <p>Developing countries are home to unbelievable amounts of energy, ingenuity, and ambition. And because millions of young adults in developing countries are now online, they no longer need charities or aid organizations to tell their remarkable stories.</p>
         <p>But while they <i>may</i> have access to online social connectivity, they <i>don’t</i> have access to the resources needed to live up to all that ambition. Formal jobs are scarce. Self-employed workers make meager earnings and lack the capital needed to grow their businesses. Local banks rarely help them out.</p>
         <p>Learn about a young Kenyan lady's fruitless search for local sources of capital - and <a href="http://p2p-microlending-blog.zidisha.org/2014/03/29/spotlight-on-rose-karanja-kenya/" class="homepage_click_tracking">how Zidisha loans ultimately helped her rise to the top of her town's housing construction industry</a>.</p>

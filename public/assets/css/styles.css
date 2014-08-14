@@ -7686,7 +7686,6 @@ hr {
 .info-page p,
 .info-page ul li {
   margin-top: 0;
-  margin-bottom: 1em;
   font-size: 2em;
 }
 @media (min-width: 768px) {
@@ -7696,6 +7695,9 @@ hr {
     line-height: 27px;
     font-weight: 300;
   }
+}
+.info-page p {
+  margin-bottom: 1em;
 }
 .info-page {
   padding-bottom: 100px;
@@ -8082,6 +8084,7 @@ a.link-dark {
   }
 }
 .loan-side .panel-default {
+  width: 309px;
   padding: 15px;
   margin-bottom: 0;
 }

@@ -108,7 +108,9 @@ class User extends BaseUser implements UserInterface, RemindableInterface
 
     public function getDefaultPicture()
     {
-        return asset('/assets/images/default.jpg');
+        $pictures = array('1', '2', '3', '4', '5', '6');
+        $picture = $pictures[array_rand($pictures)];
+        return asset('/assets/images/profile-default/profile-default'.$picture.'.jpg');
     }
 
     public function getProfileUrl($parameters = [])

@@ -15,15 +15,15 @@
     <div class="col-md-8 info-page">
         <h2 id="general-faqs">{{ \Lang::get('borrower.faqs.basic') }}</h2>
              
-        <h3>{{ \Lang::get('borrower.faqs.question1') }}</h3>
+        <h3 id="gen-1">{{ \Lang::get('borrower.faqs.question1') }}</h3>
         <p>{{ \Lang::get('borrower.faqs.answer1') }}</p>
 
      
-        <h3>{{ \Lang::get('borrower.faqs.question2') }}</h3>
+        <h3 id="gen-2">{{ \Lang::get('borrower.faqs.question2') }}</h3>
         <p>{{ \Lang::get('borrower.faqs.answer2') }}</p>
  
      
-        <h3>{{ \Lang::get('borrower.faqs.question4') }}</h3>
+        <h3 id="gen-4">{{ \Lang::get('borrower.faqs.question4') }}</h3>
         <p>{{ \Lang::get('borrower.faqs.answer4') }}</p>
     
      
@@ -290,6 +290,20 @@
         <h3>{{ \Lang::get('borrower.faqs.question39') }}</h3>
         <p>{{ \Lang::get('borrower.faqs.answer39') }}</p>         
 
+    </div>
+
+    <div class="sidebar col-sm-4 hidden-xs">
+        <div id="faq-sidebar" class="hidden-print hidden-xs" role="complementary">
+            <ul class="nav">
+                <li><a href="#general-faqs">{{ \Lang::get('borrower.faqs.basic') }}</a>
+                    <ul class="nav">
+                        <li><a href="#gen-1">{{ \Lang::get('borrower.faqs.question1') }}</a></li>
+                        <li><a href="#gen-2">{{ \Lang::get('borrower.faqs.question1') }}</a></li>
+                        <li><a href="#gen-4">{{ \Lang::get('borrower.faqs.question1') }}</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
     </div>
 
 </div>

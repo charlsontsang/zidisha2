@@ -331,7 +331,7 @@
                                             @if($bid->getLender()->getUser()->getProfilePictureUrl())
                                                 <img src="{{ $bid->getLender()->getUser()->getProfilePictureUrl() }}" alt="">
                                             @else
-                                                <img src="{{ asset('/assets/images/default.jpg') }}" alt="">
+                                                <img src="{{ asset('/assets/images/profile-default1.jpg') }}" alt="">
                                             @endif
                                         </a>
                                         <h3>
@@ -424,7 +424,7 @@
     </div>
 
     <div class="col-sm-4 loan-side" style="padding-left:0;">
-        <div class="panel panel-default panel-body">
+        <div class="panel panel-default panel-body" data-spy="affix" data-offset-top="15" data-offset-bottom="405">
             <h2>
                 <a href="{{ route('loan:index', $loan->getId()) }}">
                     {{ $loan->getSummary() }}
