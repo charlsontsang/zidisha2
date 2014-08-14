@@ -9,8 +9,8 @@ use Zidisha\Lender\GiftCard;
 use Zidisha\Lender\Invite;
 use Zidisha\Lender\Lender;
 use Zidisha\Loan\Bid;
+use Zidisha\Loan\LenderRefund;
 use Zidisha\Loan\Loan;
-use Zidisha\Loan\RefundLender;
 
 /**
  * Class LenderMailer
@@ -187,7 +187,7 @@ class LenderMailer
         );
     }
     
-    public function sendExpiredLoanMail(Loan $loan, RefundLender $refundLender)
+    public function sendExpiredLoanMail(Loan $loan, LenderRefund $refundLender)
     {
         $this->mailer->send(
             'emails.hero',
