@@ -466,19 +466,29 @@ class LoanService
     {
         $loan = $bid->getLoan();
 
-        $totalBidAmount = BidQuery::create()
-            ->filterByLoan($loan)
-            ->getTotalBidAmount();
+        PropelDB::transaction(function($con) use ($bid, $loan, $data) {
+            $oldBids = BidQuery::create()
+                ->getOrderedBids($loan)
+                ->find();
 
-        $bid
-            ->setBidAmount(Money::create($data['amount'], 'USD'))
-            ->setInterestRate($data['interestRate']);
+            $bid
+                ->setBidAmount(Money::create($data['amount'], 'USD'))
+                ->setInterestRate($data['interestRate']);
+            
+            $bid->save();
 
-        $loan->calculateAmountRaised($totalBidAmount);
+            $newBids = BidQuery::create()
+                ->getOrderedBids($loan)
+                ->find();
 
-        PropelDB::transaction(function($con) use ($bid, $loan) {
-            $bid->save($con);
+            $changedBids = $this->processBids($con, $loan, $oldBids, $newBids);
 
+            $totalBidAmount = BidQuery::create()
+                ->filterByLoan($loan)
+                ->getTotalBidAmount();
+
+            $loan->setRaisedUsdAmount($totalBidAmount);
+            
             $loan->save();
         });
 
