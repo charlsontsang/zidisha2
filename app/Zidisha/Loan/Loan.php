@@ -94,6 +94,7 @@ class Loan extends BaseLoan implements CommentReceiverInterface
                 ->multiply(100)->round(2)
                 ->getAmount();
         } else {
+            $raisedUsdAmount = $this->getUsdAmount();
             $raisedPercentage = 100;
         }
         
