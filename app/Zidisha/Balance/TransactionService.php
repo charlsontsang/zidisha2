@@ -128,6 +128,43 @@ class TransactionService
         Bid $bid
     ) {
         $this->assertAmount($amount);
+        
+        if ($bid->getLenderInviteCredit()) {
+            $inviteTransaction = new InviteTransaction();
+            $inviteTransaction
+                ->setLenderId($bid->getLenderId())
+                ->setAmount($amount->multiply(-1))
+                ->setDescription('Redeem new member invite credit')
+                ->setLoanId($loan->getId())
+                ->setLoanBidId($bid->getId())
+                ->setTransactionDate(new \DateTime())
+                ->setType(Transaction::LENDER_INVITE_REDEEM);
+            $inviteTransaction->save($con);
+            
+            $transaction = new Transaction();
+            $transaction
+                ->setUserId($bid->getLenderId())
+                ->setAmount($amount)
+                ->setDescription('Redeem new member invite credit')
+                ->setLoanId($loan->getId())
+                ->setLoanBidId($bid->getId())
+                ->setTransactionDate(new \DateTime())
+                ->setType(Transaction::LENDER_INVITE_CREDIT)
+                ->setSubType(Transaction::LENDER_INVITE_REDEEM);
+            $transaction->save($con);
+
+            $transaction = new Transaction();
+            $transaction
+                ->setUserId(Setting::get('site.YCAccountId'))
+                ->setAmount($amount->multiply(-1))
+                ->setDescription('Redeem new member invite credit')
+                ->setLoanId($loan->getId())
+                ->setLoanBidId($bid->getId())
+                ->setTransactionDate(new \DateTime())
+                ->setType(Transaction::LENDER_INVITE_CREDIT)
+                ->setSubType(Transaction::LENDER_INVITE_REDEEM);
+            $transaction->save($con);
+        }
 
         $bidTransaction = new Transaction();
         $bidTransaction

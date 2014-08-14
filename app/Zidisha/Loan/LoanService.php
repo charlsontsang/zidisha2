@@ -276,6 +276,7 @@ class LoanService
     {
         $data += [
             'date' => new \DateTime(),
+            'lenderInviteCredit' => false,
         ];
         
         /** @var Bid $bid */
@@ -303,6 +304,7 @@ class LoanService
         });
 
         // Mixpanel
+        // TODO not working for automatic lending
         $this->mixpanelService->trackPlacedBid($bid);
 
         // Emails
@@ -336,7 +338,6 @@ class LoanService
         }
 
         //Todo: refresh elastic search index.
-        //Todo: Lender Invite Credit.
 
         return $bid;
     }
@@ -352,7 +353,8 @@ class LoanService
             ->setBorrower($loan->getBorrower())
             ->setBidAmount($bidAmount)
             ->setInterestRate($data['interestRate'])
-            ->setBidAt(new \DateTime());
+            ->setLenderInviteCredit($data['lenderInviteCredit'])
+            ->setBidAt($data['date']);
 
         $bid->save($con);
 
@@ -374,8 +376,7 @@ class LoanService
             $acceptedBids[$bid->getId()] = compact('bid', 'acceptedAmount');
         }
 
-        // Sort by bid date
-        // TODO: why?
+        // Sort by bid date, this changes the order of the transactions (amounts are the same)
         uasort(
             $acceptedBids,
             function ($b1, $b2) {

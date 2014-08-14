@@ -3,6 +3,7 @@
 namespace Integration\Zidisha\Loan;
 
 use ReflectionMethod;
+use Zidisha\Admin\Setting;
 use Zidisha\Balance\Transaction;
 use Zidisha\Currency\Money;
 use Zidisha\Lender\Lender;
@@ -59,13 +60,19 @@ class LoanServiceTest extends \IntegrationTestCase
             'raisedUsdAmount' => '20',
         ]);
         $this->assertBid($loan, $this->lenders[1], [
+            'interestRate'       => '0',
+            'amount'             => '10',
+            'lenderInviteCredit' => true,
+            'acceptedAmount'     => '10',
+            'raisedUsdAmount'    => '30',
+        ]);
+        $this->assertBid($loan, $this->lenders[2], [
             'interestRate'    => '5',
-            'amount'          => '40',
-            'acceptedAmount'  => '40',
+            'amount'          => '30',
+            'acceptedAmount'  => '30',
             'raisedUsdAmount' => '50',
         ]);
-        // Outbid
-        $this->assertBid($loan, $this->lenders[2], [
+        $this->assertBid($loan, $this->lenders[1], [
             'interestRate'    => '7',
             'amount'          => '20',
             'acceptedAmount'  => '10',
@@ -134,22 +141,56 @@ class LoanServiceTest extends \IntegrationTestCase
     {
         $bid = $this->loanService->placeBid($loan, $lender, $data);
 
-        $newBidTransaction = \Zidisha\Balance\TransactionQuery::create()
+        $this->assertNotEmpty($bid);
+        $this->assertEquals($data['interestRate'], $bid->getInterestRate());
+        $this->assertEquals(Money::create($data['amount']), $bid->getBidAmount());
+
+        $placeBidTransaction = \Zidisha\Balance\TransactionQuery::create()
             ->filterByLoanBidId($bid->getId())
             ->filterByUserId($lender->getId())
             ->filterByType(Transaction::LOAN_BID)
             ->filterBySubType(Transaction::PLACE_BID)
             ->findOne();
-
-        $this->assertNotEmpty($bid);
-        $this->assertEquals($data['interestRate'], $bid->getInterestRate());
-        $this->assertEquals(Money::create($data['amount']), $bid->getBidAmount());
-
-        if (!$data['acceptedAmount']) {
-            $this->assertEmpty($newBidTransaction);
+        
+        $acceptedAmount = Money::create($data['acceptedAmount']);
+        
+        if ($acceptedAmount->isZero()) {
+            $this->assertEmpty($placeBidTransaction);
         } else {
-            $this->assertNotEmpty($newBidTransaction);
-            $this->assertEquals(Money::create($data['acceptedAmount']), $newBidTransaction->getAmount()->multiply(-1));
+            $this->assertNotEmpty($placeBidTransaction);
+            $this->assertEquals($acceptedAmount, $placeBidTransaction->getAmount()->multiply(-1));
+        }
+
+        if ($bid->getLenderInviteCredit()) {
+            $inviteTransaction = \Zidisha\Balance\InviteTransactionQuery::create()
+                ->filterByLoanBidId($bid->getId())
+                ->filterByLenderId($lender->getId())
+                ->filterByType(Transaction::LENDER_INVITE_REDEEM)
+                ->findOne();
+
+            $inviteRedeemTransaction = \Zidisha\Balance\TransactionQuery::create()
+                ->filterByLoanBidId($bid->getId())
+                ->filterByUserId($lender->getId())
+                ->filterByType(Transaction::LENDER_INVITE_CREDIT)
+                ->filterBySubType(Transaction::LENDER_INVITE_REDEEM)
+                ->findOne();
+
+            $YCInviteRedeemTransaction = \Zidisha\Balance\TransactionQuery::create()
+                ->filterByLoanBidId($bid->getId())
+                ->filterByUserId(Setting::get('site.YCAccountId'))
+                ->filterByType(Transaction::LENDER_INVITE_CREDIT)
+                ->filterBySubType(Transaction::LENDER_INVITE_REDEEM)
+                ->findOne();
+
+            if ($acceptedAmount->isZero()) {
+                $this->assertEmpty($inviteTransaction);
+                $this->assertEmpty($inviteRedeemTransaction);
+                $this->assertEmpty($YCInviteRedeemTransaction);
+            } else {
+                $this->assertEquals($acceptedAmount, $inviteTransaction->getAmount()->multiply(-1));
+                $this->assertEquals($acceptedAmount, $inviteRedeemTransaction->getAmount());
+                $this->assertEquals($acceptedAmount, $YCInviteRedeemTransaction->getAmount()->multiply(-1));
+            }
         }
 
         $raisedUsdAmount = Money::create($data['raisedUsdAmount']);

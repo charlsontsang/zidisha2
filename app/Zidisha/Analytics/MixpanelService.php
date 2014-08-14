@@ -60,8 +60,7 @@ class MixpanelService
                 'type' => 'Loan Bid',
                 'interest' => $interest,
                 'id' => $bidId,
-                // TODO: Lender invite
-                'lender invite credit' => false,
+                'lender invite credit' => $bid->getLenderInviteCredit(),
             )
         );
     }
