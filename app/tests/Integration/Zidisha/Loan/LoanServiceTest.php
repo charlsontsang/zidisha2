@@ -199,7 +199,7 @@ class LoanServiceTest extends \IntegrationTestCase
         $this->assertEquals(round($loan->getRaisedUsdAmount()->ratio($loan->getUsdAmount()) * 100, 2), $loan->getRaisedPercentage());
     }
 
-    public function testRefundLenders()
+    public function testExpireLoan()
     {
         /** @var Loan $loan */
         $loan = $this->loan;
