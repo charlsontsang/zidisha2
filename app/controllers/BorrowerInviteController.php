@@ -121,6 +121,7 @@ class BorrowerInviteController extends BaseController
             ->paginate($page, 10);
         $loanService = $this->loanService;
         $repaymentService = $this->repaymentService;
+        $borrowerInviteCredit = $database->getcreditsettingbyCountry($session->userinfo['country'],3);
 
         return View::make(
             'borrower.invites',
