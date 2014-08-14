@@ -565,7 +565,7 @@ class LoanService
 
             $this->changeLoanStage($con, $loan, Loan::OPEN, Loan::EXPIRED);
 
-            $lenderRefunds = $this->refundLenders($con, $loan, Loan::EXPIRED);
+            $lenderRefunds = $this->refundLenders($con, $loan);
 
             if ($loan->getStatus() == Loan::FUNDED) {
                 BidQuery::create()
@@ -611,8 +611,10 @@ class LoanService
         return $lenderRefunds;
     }
 
-    protected function refundLenders(ConnectionInterface $con, Loan $loan, $status = Loan::EXPIRED)
+    protected function refundLenders(ConnectionInterface $con, Loan $loan)
     {
+        $status = $loan->getStatus();
+        
         $transactions = TransactionQuery::create()
             ->filterByLoan($loan)
             ->filterLoanBids()

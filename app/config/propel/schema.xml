@@ -90,6 +90,7 @@
         <column name="applied_at" type="TIMESTAMP" required="true"/>
         <column name="accepted_at" type="TIMESTAMP"/>
         <column name="expired_at" type="TIMESTAMP"/>
+        <column name="canceled_at" type="TIMESTAMP"/>
         <column name="repaid_at" type="TIMESTAMP"/>
         <column name="disbursed_at" type="TIMESTAMP" required="false"/>
         <column name="disbursed_amount" type="DECIMAL" size="10" scale="2" phpType="string"/>
