@@ -10,6 +10,7 @@ use Zidisha\Lender\GiftCard;
 use Zidisha\Lender\GiftCardTransaction;
 use Zidisha\Lender\Invite;
 use Zidisha\Lender\Lender;
+use Zidisha\Loan\Bid;
 use Zidisha\Loan\Loan;
 use Zidisha\Payment\Payment;
 
@@ -60,16 +61,17 @@ class TransactionService
         ConnectionInterface $con,
         Money $amount,
         Loan $loan,
-        Lender $lender
+        Bid $bid
     ) {
         $this->assertAmount($amount);
 
         $bidTransaction = new Transaction();
         $bidTransaction
-            ->setUser($lender->getUser())
+            ->setUserId($bid->getLenderId())
             ->setAmount($amount)
             ->setDescription('Loan outbid')
             ->setLoan($loan)
+            ->setLoanBidId($bid->getId())
             ->setTransactionDate(new \DateTime())
             ->setType(Transaction::LOAN_OUTBID)
             ->setSubType(null);
@@ -101,16 +103,17 @@ class TransactionService
         ConnectionInterface $con,
         Money $amount,
         Loan $loan,
-        Lender $lender
+        Bid $bid
     ) {
         $this->assertAmount($amount);
 
         $bidTransaction = new Transaction();
         $bidTransaction
-            ->setUser($lender->getUser())
+            ->setUserId($bid->getLenderId())
             ->setAmount($amount->multiply(-1))
             ->setDescription('Loan bid')
             ->setLoan($loan)
+            ->setLoanBidId($bid->getId())
             ->setTransactionDate(new \DateTime())
             ->setType(Transaction::LOAN_BID)
             ->setSubType(Transaction::UPDATE_BID);
@@ -122,16 +125,17 @@ class TransactionService
         ConnectionInterface $con,
         Money $amount,
         Loan $loan,
-        Lender $lender
+        Bid $bid
     ) {
         $this->assertAmount($amount);
 
         $bidTransaction = new Transaction();
         $bidTransaction
-            ->setUserId($lender->getId())
+            ->setUserId($bid->getLenderId())
             ->setAmount($amount->multiply(-1))
             ->setDescription('Loan bid')
             ->setLoan($loan)
+            ->setLoanBidId($bid->getId())
             ->setTransactionDate(new \DateTime())
             ->setType(Transaction::LOAN_BID)
             ->setSubType(Transaction::PLACE_BID);

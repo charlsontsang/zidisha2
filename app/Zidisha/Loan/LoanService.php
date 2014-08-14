@@ -439,21 +439,21 @@ class LoanService
                     $con,
                     $changedBid['changedAmount'],
                     $loan,
-                    $changedBid['bid']->getLender()
+                    $changedBid['bid']
                 );
             } elseif ($changedBid['type'] == 'update_bid') {
                 $this->transactionService->addUpdateBidTransaction(
                     $con,
                     $changedBid['changedAmount'],
                     $loan,
-                    $changedBid['bid']->getLender()
+                    $changedBid['bid']
                 );
             } elseif ($changedBid['type'] == 'place_bid') {
                 $this->transactionService->addPlaceBidTransaction(
                     $con,
                     $changedBid['acceptedAmount'],
                     $loan,
-                    $changedBid['bid']->getLender()
+                    $changedBid['bid']
                 );
             }
         }
