@@ -121,32 +121,33 @@ Validator::resolver(function($translator, $data, $rules, $messages)
     return new Zidisha\Form\ZidishaValidator($translator, $data, $rules, $messages);
 });
 
-function getLocalizedRoute ($url, $languageCode) {
-    $url = parse_url($url);
-    $newUrl = null;
-    if (array_get($url, 'scheme')) {
-        $newUrl = $url['scheme'] .'://';
-    }
-    if (array_get($url, 'host')) {
-        $newUrl .= $url['host'] .':';
-    }
-    if (array_get($url, 'port')) {
-        $newUrl .=  $url['port'] .'/';
-    }
-    if (array_get($url, 'path')) {
-        $parts = explode('/', $url['path']);
-        if (in_array($parts[0], ['fr', 'in', 'en'])) {
-            if ($parts[0] != $languageCode) {
-                unset($parts[0]);
-                $newUrl .= $languageCode . '/' . implode('/', $parts);
+if (!function_exists('getLocalizedRoute')) {
+    function getLocalizedRoute ($url, $languageCode) {
+        $url = parse_url($url);
+        $newUrl = null;
+        if (array_get($url, 'scheme')) {
+            $newUrl = $url['scheme'] .'://';
+        }
+        if (array_get($url, 'host')) {
+            $newUrl .= $url['host'] .':';
+        }
+        if (array_get($url, 'port')) {
+            $newUrl .=  $url['port'] .'/';
+        }
+        if (array_get($url, 'path')) {
+            $parts = explode('/', $url['path']);
+            if (in_array($parts[0], ['fr', 'in', 'en'])) {
+                if ($parts[0] != $languageCode) {
+                    unset($parts[0]);
+                    $newUrl .= $languageCode . '/' . implode('/', $parts);
+                }
+            } else {
+                $newUrl .= $languageCode . '/' . $url['path'];
             }
         } else {
             $newUrl .= $languageCode . '/' . $url['path'];
         }
-    } else {
-        $newUrl .= $languageCode . '/' . $url['path'];
+
+        return $newUrl;
     }
-
-    return $newUrl;
 }
-

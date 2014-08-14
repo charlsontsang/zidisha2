@@ -1,5 +1,7 @@
 <?php
 
 //require 'autoload.php';
-define('LARAVEL_ENV', 'testing');
+if (!defined('LARAVEL_ENV')) {
+    define('LARAVEL_ENV', 'testing');
+}
 return require 'start.php';
