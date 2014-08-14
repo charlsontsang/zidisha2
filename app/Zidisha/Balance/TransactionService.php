@@ -84,7 +84,7 @@ class TransactionService
 
         $bidTransaction = new Transaction();
         $bidTransaction
-            ->setUserId($bid->getLenderId())
+            ->setUserId($bid->getLenderInviteCredit() ? Setting::get('site.YCAccountId') : $bid->getLenderId())
             ->setAmount($amount)
             ->setDescription('Loan outbid')
             ->setLoan($loan)
@@ -134,6 +134,44 @@ class TransactionService
 
         $transaction->save($con);
     }
+
+    protected function redeemLenderInvite(ConnectionInterface $con, Money $amount, Loan $loan, Bid $bid)
+    {
+        $inviteTransaction = new InviteTransaction();
+        $inviteTransaction
+            ->setLenderId($bid->getLenderId())
+            ->setAmount($amount->multiply(-1))
+            ->setDescription('Redeem new member invite credit')
+            ->setLoanId($loan->getId())
+            ->setLoanBidId($bid->getId())
+            ->setTransactionDate(new \DateTime())
+            ->setType(Transaction::LENDER_INVITE_REDEEM);
+        $inviteTransaction->save($con);
+
+        $transaction = new Transaction();
+        $transaction
+            ->setUserId($bid->getLenderId())
+            ->setAmount($amount)
+            ->setDescription('Redeem new member invite credit')
+            ->setLoanId($loan->getId())
+            ->setLoanBidId($bid->getId())
+            ->setTransactionDate(new \DateTime())
+            ->setType(Transaction::LENDER_INVITE_CREDIT)
+            ->setSubType(Transaction::LENDER_INVITE_REDEEM);
+        $transaction->save($con);
+
+        $transaction = new Transaction();
+        $transaction
+            ->setUserId(Setting::get('site.YCAccountId'))
+            ->setAmount($amount->multiply(-1))
+            ->setDescription('Redeem new member invite credit')
+            ->setLoanId($loan->getId())
+            ->setLoanBidId($bid->getId())
+            ->setTransactionDate(new \DateTime())
+            ->setType(Transaction::LENDER_INVITE_CREDIT)
+            ->setSubType(Transaction::LENDER_INVITE_REDEEM);
+        $transaction->save($con);
+    }
     
     public function addUpdateBidTransaction(
         ConnectionInterface $con,
@@ -142,6 +180,10 @@ class TransactionService
         Bid $bid
     ) {
         $this->assertAmount($amount);
+
+        if ($bid->getLenderInviteCredit()) {
+            $this->redeemLenderInvite($con, $amount, $loan, $bid);
+        }
 
         $bidTransaction = new Transaction();
         $bidTransaction
@@ -166,40 +208,7 @@ class TransactionService
         $this->assertAmount($amount);
         
         if ($bid->getLenderInviteCredit()) {
-            $inviteTransaction = new InviteTransaction();
-            $inviteTransaction
-                ->setLenderId($bid->getLenderId())
-                ->setAmount($amount->multiply(-1))
-                ->setDescription('Redeem new member invite credit')
-                ->setLoanId($loan->getId())
-                ->setLoanBidId($bid->getId())
-                ->setTransactionDate(new \DateTime())
-                ->setType(Transaction::LENDER_INVITE_REDEEM);
-            $inviteTransaction->save($con);
-            
-            $transaction = new Transaction();
-            $transaction
-                ->setUserId($bid->getLenderId())
-                ->setAmount($amount)
-                ->setDescription('Redeem new member invite credit')
-                ->setLoanId($loan->getId())
-                ->setLoanBidId($bid->getId())
-                ->setTransactionDate(new \DateTime())
-                ->setType(Transaction::LENDER_INVITE_CREDIT)
-                ->setSubType(Transaction::LENDER_INVITE_REDEEM);
-            $transaction->save($con);
-
-            $transaction = new Transaction();
-            $transaction
-                ->setUserId(Setting::get('site.YCAccountId'))
-                ->setAmount($amount->multiply(-1))
-                ->setDescription('Redeem new member invite credit')
-                ->setLoanId($loan->getId())
-                ->setLoanBidId($bid->getId())
-                ->setTransactionDate(new \DateTime())
-                ->setType(Transaction::LENDER_INVITE_CREDIT)
-                ->setSubType(Transaction::LENDER_INVITE_REDEEM);
-            $transaction->save($con);
+            $this->redeemLenderInvite($con, $amount, $loan, $bid);
         }
 
         $bidTransaction = new Transaction();
