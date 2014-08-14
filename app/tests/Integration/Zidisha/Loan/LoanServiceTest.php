@@ -217,15 +217,15 @@ class LoanServiceTest extends \IntegrationTestCase
             ['lender' => $lender1, 'amount' => '10', 'interestRate' => 10],
             ['lender' => $lender2, 'amount' => '20', 'interestRate' => 0, 'lenderInviteCredit' => true],
             ['lender' => $lender3, 'amount' => '30', 'interestRate' => 15],
-            ['lender' => $lender2, 'amount' => '5', 'interestRate' => 3],
-            ['lender' => $lender4, 'amount' => '5', 'interestRate' => 0, 'lenderInviteCredit' => true],
+            ['lender' => $lender2, 'amount' => '5',  'interestRate' => 3],
+            ['lender' => $lender4, 'amount' => '5',  'interestRate' => 0, 'lenderInviteCredit' => true],
         ];
         
         $refunds = [
             ['lender' => $lender1, 'amount' => '10', 'lenderInviteCredit' => '0'],
-            ['lender' => $lender2, 'amount' => '5', 'lenderInviteCredit' => '20'],
+            ['lender' => $lender2, 'amount' => '5',  'lenderInviteCredit' => '20'],
             ['lender' => $lender3, 'amount' => '10', 'lenderInviteCredit' => '0'],
-            ['lender' => $lender4, 'amount' => '0', 'lenderInviteCredit' => '5'],
+            ['lender' => $lender4, 'amount' => '0',  'lenderInviteCredit' => '5'],
         ];
         
         foreach ($bids as $bid) {
@@ -233,7 +233,53 @@ class LoanServiceTest extends \IntegrationTestCase
         }
 
         $lenderRefunds = $this->loanService->expireLoan($loan);
+        
+        $this->assertEquals(Loan::EXPIRED, $loan->getStatus());
+        $this->assertEquals(Loan::NO_LOAN, $loan->getBorrower()->getLoanStatus());
+        $this->assertNull($loan->getBorrower()->getActiveLoanId());
+        
         $this->assertLenderRefunds($refunds, $lenderRefunds);
+    }
+
+    public function testCancelLoan()
+    {
+        /** @var Loan $loan */
+        $loan = $this->loan;
+
+        /** @var Lender $lender1 */
+        $lender1 = $this->lenders[0];
+        /** @var Lender $lender2 */
+        $lender2 = $this->lenders[1];
+        /** @var Lender $lender3 */
+        $lender3 = $this->lenders[2];
+        /** @var Lender $lender4 */
+        $lender4 = $this->lenders[3];
+
+        $bids = [
+            ['lender' => $lender1, 'amount' => '20', 'interestRate' => 5],
+            ['lender' => $lender2, 'amount' => '20', 'interestRate' => 10],
+            ['lender' => $lender3, 'amount' => '10', 'interestRate' => 0, 'lenderInviteCredit' => true],
+            ['lender' => $lender2, 'amount' => '10', 'interestRate' => 3],
+            ['lender' => $lender1, 'amount' => '8',  'interestRate' => 0, 'lenderInviteCredit' => true],
+        ];
+
+        $refunds = [
+            ['lender' => $lender1, 'amount' => '20', 'lenderInviteCredit' => '8'],
+            ['lender' => $lender2, 'amount' => '12', 'lenderInviteCredit' => '0'],
+            ['lender' => $lender3, 'amount' => '0',  'lenderInviteCredit' => '10'],
+        ];
+
+        foreach ($bids as $bid) {
+            $this->loanService->placeBid($loan, $bid['lender'], $bid);
+        }
+
+        $lenderRefunds = $this->loanService->cancelLoan($loan);
+        
+        $this->assertEquals(Loan::CANCELED, $loan->getStatus());
+        $this->assertEquals(Loan::NO_LOAN, $loan->getBorrower()->getLoanStatus());
+        $this->assertNull($loan->getBorrower()->getActiveLoanId());
+        
+        $this->assertLenderRefunds($refunds, $lenderRefunds, Loan::CANCELED);
     }
 
     protected function assertLenderRefunds($refunds, $lenderRefunds, $status = Loan::EXPIRED)
