@@ -53,37 +53,30 @@ class LoanServiceTest extends \IntegrationTestCase
         $loan = $this->loan;
 
         $this->assertBid($loan, $this->lenders[0], [
-            'interestRate'   => '10',
-            'amount'         => '20',
-            'acceptedAmount' => '20',
+            'interestRate'    => '10',
+            'amount'          => '20',
+            'acceptedAmount'  => '20',
+            'raisedUsdAmount' => '20',
         ]);
         $this->assertBid($loan, $this->lenders[1], [
-            'interestRate'   => '5',
-            'amount'         => '40',
-            'acceptedAmount' => '40',
+            'interestRate'    => '5',
+            'amount'          => '40',
+            'acceptedAmount'  => '40',
+            'raisedUsdAmount' => '50',
         ]);
+        // Outbid
         $this->assertBid($loan, $this->lenders[2], [
-            'interestRate'   => '7',
-            'amount'         => '20',
-            'acceptedAmount' => '10',
+            'interestRate'    => '7',
+            'amount'          => '20',
+            'acceptedAmount'  => '10',
+            'raisedUsdAmount' => '50',
         ]);
-    }
-
-    protected function assertBid(Loan $loan, Lender $lender, $data)
-    {
-        $bid = $this->loanService->placeBid($loan, $lender, $data);
-
-        $newBidTransaction = \Zidisha\Balance\TransactionQuery::create()
-            ->filterByLoanBidId($bid->getId())
-            ->filterByUserId($lender->getId())
-            ->findOne();
-
-        $this->assertNotEmpty($bid);
-        $this->assertEquals($data['interestRate'], $bid->getInterestRate());
-        $this->assertEquals(Money::create($data['amount']), $bid->getBidAmount());
-        
-        $this->assertNotEmpty($newBidTransaction);
-        $this->assertEquals(Money::create($data['acceptedAmount'])->multiply(-1), $newBidTransaction->getAmount());        
+        $this->assertBid($loan, $this->lenders[0], [
+            'interestRate'    => '13',
+            'amount'          => '20',
+            'acceptedAmount'  => '0',
+            'raisedUsdAmount' => '50',
+        ]);
     }
 
     public function testApplyForLoan()
@@ -135,7 +128,33 @@ class LoanServiceTest extends \IntegrationTestCase
             ->count();
 
         $this->assertEquals(1, $recordCount);
+    }
+    
+    protected function assertBid(Loan $loan, Lender $lender, $data)
+    {
+        $bid = $this->loanService->placeBid($loan, $lender, $data);
 
+        $newBidTransaction = \Zidisha\Balance\TransactionQuery::create()
+            ->filterByLoanBidId($bid->getId())
+            ->filterByUserId($lender->getId())
+            ->filterByType(Transaction::LOAN_BID)
+            ->filterBySubType(Transaction::PLACE_BID)
+            ->findOne();
+
+        $this->assertNotEmpty($bid);
+        $this->assertEquals($data['interestRate'], $bid->getInterestRate());
+        $this->assertEquals(Money::create($data['amount']), $bid->getBidAmount());
+
+        if (!$data['acceptedAmount']) {
+            $this->assertEmpty($newBidTransaction);
+        } else {
+            $this->assertNotEmpty($newBidTransaction);
+            $this->assertEquals(Money::create($data['acceptedAmount']), $newBidTransaction->getAmount()->multiply(-1));
+        }
+
+        $raisedUsdAmount = Money::create($data['raisedUsdAmount']);
+        $this->assertEquals($raisedUsdAmount, $loan->getRaisedUsdAmount());
+        $this->assertEquals(round($loan->getRaisedUsdAmount()->ratio($loan->getUsdAmount()) * 100, 2), $loan->getRaisedPercentage());
     }
 
     public function testRefundLenders()
