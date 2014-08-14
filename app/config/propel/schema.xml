@@ -267,7 +267,7 @@
         <column name="loan_id" type="INTEGER"/>
         <column name="transaction_date" type="TIMESTAMP" required="true"/>
         <column name="exchange_rate" type="DECIMAL" size="10" scale="4"/>
-        <column name="type" type="ENUM" valueSet="0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18" required="true"/>
+        <column name="type" type="ENUM" valueSet="0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19" required="true"/>
         <column name="sub_type" type="ENUM" valueSet="0,1,2,3,4,5,6,7,8,9,10,11,12,13,14"/>
         <column name="loan_bid_id" type="INTEGER"/>
         <!--To, change to require=true-->
@@ -533,12 +533,18 @@
         <column name="amount" type="DECIMAL" size="12" scale="4" required="true"/>
         <column name="description" type="VARCHAR" size="100" required="true"/>
         <column name="transaction_date" type="TIMESTAMP" required="true"/>
-        <column name="type" type="ENUM" valueSet="0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18" required="true"/>
+        <column name="type" type="ENUM" valueSet="0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19" required="true"/>
         <column name="loan_id" type="INTEGER"/>
         <column name="loan_bid_id" type="INTEGER"/>
         <behavior name="timestampable"/>
         <foreign-key foreignTable="lenders">
             <reference local="lender_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="loans">
+            <reference local="loan_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="loan_bids">
+            <reference local="loan_bid_id" foreign="id"/>
         </foreign-key>
         <index name="lender_id">
             <index-column name="user_id"/>
