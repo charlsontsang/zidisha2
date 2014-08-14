@@ -703,55 +703,9 @@ class GenerateModelData extends Command
 
     protected function generateLoans($count)
     {
-        $categoryIds = CategoryQuery::create()
-            ->filterByAdminOnly(false)
-            ->orderByRank()
-            ->select('id')
-            ->find()
-            ->getData();
-
-        $borrowers = BorrowerQuery::create()
-            ->joinWith('Country')
-            ->orderById()
-            ->find()
-            ->getData();
-
-        if (!$categoryIds || count($borrowers) < $count) {
-            $this->error("Not enough categories or borrowers");
-            return;
-        }
-
-        $return = [];
-
-        for ($i = 0; $i < $count; $i++) {
-            /** @var Borrower $borrower */
-            $borrower = $borrowers[$i];
-            $currency = $borrower->getCountry()->getCurrency();
-
-            $date = $this->faker->dateTimeBetween('-16 months');
-            $exchangeRate = $this->currencyService->getExchangeRate($currency, $date);
-            $usdAmount = Money::create($this->faker->numberBetween(50, 400));
-            $amount = Converter::fromUSD($usdAmount, $currency, $exchangeRate);            
-            
-            $isWeekly = $borrower->getCountry()->getInstallmentPeriod() == Loan::WEEKLY_INSTALLMENT;
-            
-            $data = [
-                'summary'           => $this->faker->sentence(8),
-                'proposal'          => $this->faker->paragraph(7),
-                'amount'            => $amount->getAmount(),
-                'installmentAmount' => $amount->divide($this->faker->numberBetween(6, 16))->getAmount(),
-                'currencyCode'      => $borrower->getCountry()->getCurrencyCode(),
-                'installmentDay'    => $isWeekly ? $this->faker->dayOfWeek : $this->faker->dayOfMonth,
-                'date'              => $date,
-                'exchangeRate'      => $exchangeRate,
-                'categoryId'        => $this->faker->randomElement($categoryIds),
-            ];
-
-            $loan = $this->loanService->applyForLoan($borrower, $data);
-            $return[] = $loan;
-        }
-        
-        return $return;
+        return \Zidisha\Generate\LoanGenerator::create()
+            ->size($count)
+            ->generate();
     }
 
     protected function generateBids($count)
