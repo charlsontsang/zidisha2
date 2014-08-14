@@ -48,7 +48,7 @@ Invites
            <?php $repaymentRate = ''; ?>
            <?php $bonus = 0; ?>
         @else
-            <?php $lastLoan = LoanQuery::create()->getLastLoan($invite->getInvitee()) ?>
+            <?php $lastLoan = \Zidisha\Loan\LoanQuery::create()->getLastLoan($invite->getInvitee()) ?>
             {{-- //TODO endrosement --}}
             @if(empty($lastLoan))
                 <?php $flag=1; ?>
@@ -60,7 +60,7 @@ Invites
                 @endif
                 <?php $volunteerMentor = $invite->getInvitee()->getVolunteerMentor() ?>
                 {{-- $BorrowerReports = //TODO; --}}
-                <?php $borrowerGuest = BorrowerGuestQuery::create()->filterByEmail($invite->getEmail())->findOne(); ?>
+                <?php $borrowerGuest = \Zidisha\Borrower\BorrowerGuestQuery::create()->filterByEmail($invite->getEmail())->findOne(); ?>
                 @if($borrowerGuest && $flag == 1)
                     <?php $status =  \Lang::get('borrower.invite.application-not-submitted'); ?>
                 @elseif($volunteerMentor->getStatus() == \Zidisha\Borrower\VolunteerMentor::STATUS_PENDING_VERIFICATION)
@@ -80,8 +80,9 @@ Invites
             @else
                 <?php $loanStatus = $invite->getInvitee()->getLoanStatus() ?>
                 <?php $repaymentSchedule = $repaymentService->getRepaymentSchedule($invite->getInvitee()->getActiveLoan()); ?>
-                <?php $name = "<a href='route('\loan:index', $invite->getInvitee()->getActiveLoan()->getId()))'>".$invite->getInvitee()->getName()."</a>"; ?>
-                @if($loanStatus == \Zidisha\Loan::OPEN)
+                <?php $id = $invite->getInvitee()->getActiveLoan()->getId(); ?>
+                <?php $name = "<a href='route('loan:index', $id)'>".$invite->getInvitee()->getName()."</a>"; ?>
+                @if($loanStatus == \Zidisha\Loan\Loan::OPEN)
                     <?php $status =  \Lang::get('borrower.invite.fundRaising-loan'); ?>
                 @elseif($repaymentSchedule->getMissedInstallmentCount() == 0 && $loanStatus = \Zidisha\Loan::ACTIVE)
                     <?php $status =  \Lang::get('borrower.invite.repaying-on-time'); ?>
@@ -90,7 +91,7 @@ Invites
                 @endif
                 <?php $rate = $loanService->getOnTimeRepaymentScore($invite->getInvitee()); ?>
                 <?php $repaymentRate = number_format($rate)."%"; ?>
-                @if($rate >= minRepaymentRate)
+                @if($rate >= $minRepaymentRate)
                     {{-- $bonus = //TODO --}}
                 @else
                     <?php $bonus = 0; ?>
