@@ -79,13 +79,46 @@ class LoanQuery extends BaseLoanQuery
             ->count();
     }
 
-    public function getLastLoan(Borrower $borrower)
-    {
+    public function getLastLoan(Borrower $borrower) {
         return $this
             ->filterByBorrower($borrower)
             ->filterByDeletedByAdmin(false)
             ->orderById('DESC')
             ->findOne();
+    }
+
+    public function getLastRepaidLoan(Borrower $borrower)
+    {
+        return $this
+            ->filterByBorrower($borrower)
+            ->filterByDeletedByAdmin(false)
+            ->filterByStatus(Loan::REPAID)
+            ->_or()
+            ->filterByStatus(Loan::DEFAULTED)
+            ->filterByExpiredAt(null)
+            ->orderById('DESC')
+            ->findOne();
+    }
+
+    public function getBeforeFundedLoan(Borrower $borrower)
+    {
+        return $this
+            ->filterByBorrower($borrower)
+            ->filterByStatus(Loan::ACTIVE)
+            ->_or()
+            ->filterByStatus(Loan::REPAID)
+            ->_or()
+            ->filterByStatus(Loan::DEFAULTED)
+            ->findOne();
+    }
+
+    public function getAllRepaidLoansForBorrower(Borrower $borrower)
+    {
+        return $this
+            ->filterByBorrower($borrower)
+            ->filterByDeletedByAdmin(false)
+            ->filterByStatus(Loan::REPAID)
+            ->find();
     }
 
 } // LoanQuery
