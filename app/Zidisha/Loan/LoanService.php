@@ -544,17 +544,24 @@ class LoanService
         return true;
     }
 
-    public function expireLoan(Loan $loan)
+    public function expireLoan(Loan $loan, $data = [])
     {
-        $lenderRefunds = PropelDB::transaction(function($con) use ($loan) {
-            $loan->setStatus(Loan::EXPIRED)
-                ->setExpiredAt(new \DateTime());
-            $loan->save($con);
+        $data += [
+            'expiredAt' => new \DateTime()
+        ];
 
-            $loan->getBorrower()
-                ->setActiveLoan(null)
-                ->setLoanStatus(Loan::NO_LOAN);
+        $loan
+            ->setStatus(Loan::EXPIRED)
+            ->setExpiredAt($data['expiredAt']);
+
+        $borrower = $loan->getBorrower();
+        $borrower
+            ->setActiveLoan(null)
+            ->setLoanStatus(Loan::NO_LOAN);
+        
+        $lenderRefunds = PropelDB::transaction(function($con) use ($loan, $borrower) {
             $loan->save($con);
+            $borrower->save($con);
 
             $this->changeLoanStage($con, $loan, Loan::OPEN, Loan::EXPIRED);
 
