@@ -134,7 +134,7 @@ Lend
 </div>
 
 <div class="row">
-    <div class="col-sm-12 col-md-10 col-md-offset-1">
+    <div class="col-xs-12">
         {{ $paginator->appends(['search' => $searchQuery])->links() }}
     </div>
 </div>
