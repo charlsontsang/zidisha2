@@ -546,7 +546,7 @@ class LoanService
 
     public function expireLoan(Loan $loan)
     {
-        $refundsLenders = PropelDB::transaction(function($con) use ($loan) {
+        $lenderRefunds = PropelDB::transaction(function($con) use ($loan) {
             $loan->setStatus(Loan::EXPIRED)
                 ->setExpiredAt(new \DateTime());
             $loan->save($con);
@@ -558,7 +558,7 @@ class LoanService
 
             $this->changeLoanStage($con, $loan, Loan::OPEN, Loan::EXPIRED);
 
-            $refundsLenders = $this->refundLenders($con, $loan, Loan::EXPIRED);
+            $lenderRefunds = $this->refundLenders($con, $loan, Loan::EXPIRED);
 
             if ($loan->getStatus() == Loan::FUNDED) {
                 BidQuery::create()
@@ -566,21 +566,21 @@ class LoanService
                     ->update(['active' => 0, 'accepted_amount' => null], $con);
             }
             
-            return $refundsLenders;
+            return $lenderRefunds;
         });
 
-        foreach ($refundsLenders as $refundLender) {
+        foreach ($lenderRefunds as $refundLender) {
             $this->lenderMailer->sendExpiredLoanMail($loan, $refundLender);
         }
         
         $this->borrowerMailer->sendExpiredLoanMail($loan);
         
-        return $refundsLenders;
+        return $lenderRefunds;
     }
 
     public function cancelLoan(Loan $loan)
     {
-        PropelDB::transaction(function($con) use($loan) {
+        $lenderRefunds = PropelDB::transaction(function($con) use($loan) {
             $loan
                 ->setStatus(Loan::CANCELED)
                 ->setExpiredAt(new \DateTime());
@@ -593,12 +593,15 @@ class LoanService
             $borrower->save($con);
 
             $this->changeLoanStage($con, $loan, Loan::OPEN, Loan::CANCELED);
-            $this->refundLenders($con, $loan, Loan::CANCELED);
+            
+            $lenderRefunds = $this->refundLenders($con, $loan, Loan::CANCELED);
+            
+            return $lenderRefunds;
         });
         
         // TODO emails to refunded lenders
 
-        return true;
+        return $lenderRefunds;
     }
 
     protected function refundLenders(ConnectionInterface $con, Loan $loan, $status = Loan::EXPIRED)
@@ -610,35 +613,35 @@ class LoanService
             ->joinWith('Bid.Lender')
             ->find();
         
-        $refundsLenders = $this->getLenderRefunds($transactions);
+        $lenderRefunds = $this->getLenderRefunds($transactions);
         $totalLenderInviteCredit = Money::create(0);
 
-        /** @var LenderRefund $refundsLender */
-        foreach ($refundsLenders as $refundsLender) {
-            if ($refundsLender->getTotalAmount()->isZero()) {
+        /** @var LenderRefund $lenderRefund */
+        foreach ($lenderRefunds as $lenderRefund) {
+            if ($lenderRefund->getTotalAmount()->isZero()) {
                 continue;
             }
             
-            if ($refundsLender->getAmount()->isPositive()) {
+            if ($lenderRefund->getAmount()->isPositive()) {
                 if ($status == Loan::CANCELED) {
                     $this->transactionService->addLoanBidCanceledTransaction(
                         $con,
-                        $refundsLender->getAmount(),
+                        $lenderRefund->getAmount(),
                         $loan,
-                        $refundsLender->getLender()
+                        $lenderRefund->getLender()
                     );
                 } else {
                     $this->transactionService->addLoanBidExpiredTransaction(
                         $con,
-                        $refundsLender->getAmount(),
+                        $lenderRefund->getAmount(),
                         $loan,
-                        $refundsLender->getLender()
+                        $lenderRefund->getLender()
                     );
                 }   
             }
 
-            if ($refundsLender->getLenderInviteCredit()->isPositive()) {
-                $totalLenderInviteCredit = $totalLenderInviteCredit->add($refundsLender->getLenderInviteCredit());
+            if ($lenderRefund->getLenderInviteCredit()->isPositive()) {
+                $totalLenderInviteCredit = $totalLenderInviteCredit->add($lenderRefund->getLenderInviteCredit());
             }
         }
         
@@ -658,7 +661,7 @@ class LoanService
             }
         }
         
-        return $refundsLenders;
+        return $lenderRefunds;
     }
 
     private function changeLoanStage(
@@ -765,7 +768,7 @@ class LoanService
             }
         }
 
-        $refundsLenders = [];
+        $lenderRefunds = [];
         foreach ($refunds as $id => $refund) {
             if ($refunds[$id]['amount']->isNegative()) {
                 $refunds[$id]['amount'] = $zero;
@@ -774,10 +777,10 @@ class LoanService
                 $refunds[$id]['lenderInviteCredit'] = $zero;
             }
             
-            $refundsLenders[$id] = new LenderRefund($refund);
+            $lenderRefunds[$id] = new LenderRefund($refund);
         }
 
-        return $refundsLenders;
+        return $lenderRefunds;
     }
 
     public function generateLoanInstallments(Loan $loan)
