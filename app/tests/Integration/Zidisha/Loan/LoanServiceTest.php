@@ -218,7 +218,7 @@ class LoanServiceTest extends \IntegrationTestCase
             ['lender' => $lender2, 'amount' => '20', 'interestRate' => 0, 'lenderInviteCredit' => true],
             ['lender' => $lender3, 'amount' => '30', 'interestRate' => 15],
             ['lender' => $lender2, 'amount' => '5', 'interestRate' => 3],
-            ['lender' => $lender4, 'amount' => '5', 'interestRate' => 3, 'lenderInviteCredit' => true],
+            ['lender' => $lender4, 'amount' => '5', 'interestRate' => 0, 'lenderInviteCredit' => true],
         ];
         
         $refunds = [
@@ -243,8 +243,8 @@ class LoanServiceTest extends \IntegrationTestCase
             $amount = Money::create($refund['amount']);
             $lenderInviteCredit = Money::create($refund['lenderInviteCredit']);
             
-            $this->assertEquals($amount, $refundLender->getAmount());
-            $this->assertEquals($lenderInviteCredit, $refundLender->getLenderInviteCredit());
+            $this->assertEquals($amount, $refundLender->getAmount(), 'amount ' . $lender->getFirstName());
+            $this->assertEquals($lenderInviteCredit, $refundLender->getLenderInviteCredit(), 'lenderInviteCredit ' . $lender->getFirstName());
 
             $lenderTransaction = TransactionQuery::create()
                 ->filterByUserId($lender->getId())
@@ -253,9 +253,9 @@ class LoanServiceTest extends \IntegrationTestCase
                 ->findOne();
 
             if ($amount->isPositive()) {
-                $this->assertEquals($amount, $lenderTransaction->getAmount());
+                $this->assertEquals($amount, $lenderTransaction->getAmount(), 'transaction ' . $lender->getFirstName());
             } else {
-                $this->assertEmpty($lenderTransaction);
+                $this->assertEmpty($lenderTransaction, 'transaction ' . $lender->getFirstName());
             }
             
             $totalLenderInviteCredit = $totalLenderInviteCredit->add($lenderInviteCredit);
