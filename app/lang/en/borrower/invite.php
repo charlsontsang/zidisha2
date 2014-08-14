@@ -5,8 +5,8 @@ return [
     'not-eligible-invitee-repayRate' => 'less than 90% of your current invitees are on time with their repayments.',
     'not-eligible-invitee-quota'     => 'you already have :maxInviteesWithoutPayment invitees who have not yet made payments.<br/><br/>
 To become eligible to issue more invite credits, you may wait for your current invitees to begin to make repayments, or if any of your invitees do not wish to raise loans, you may remove them from your invitee list to make room for new invitees.<br/><br/>
-You may view the status of your current invitees and remove inactive invitees here: <a href=\'#\'>My Invited Members</a>',
-    'invites-message' => 'Here is a list of all members who have accepted your email invite to join Zidisha. For each member you have invited, as long as that member maintains a :minRepaymentRate on-time monthly installment repayment rate, your maximum credit limit will increase by a bonus amount of :currencyCode //TODO.',
+You may view the status of your current invitees and remove inactive invitees here: <a href=\':myInvites\'>My Invited Members</a>',
+    'invites-message' => 'Here is a list of all members who have accepted your email invite to join Zidisha. For each member you have invited, as long as that member maintains a :minRepaymentRate% on-time monthly installment repayment rate, your maximum credit limit will increase by a bonus amount of :currencyCode.',
     'success-rate' => 'Invited Member Success Rate',
     'success-rate-tooltip' => 'This is the percentage of members you have invited who are meeting the on-time repayment rate standard.',
     'bonus-earned' => 'Total Bonus Earned',
