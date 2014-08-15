@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('page-title')
-Invite Your Friends
+Invite Friends
 @stop
 
 @section('content')

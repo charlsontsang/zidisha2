@@ -26,7 +26,7 @@
                         <li><a href="{{ route('page:how-it-works') }}">How It Works</a></li>
                         <li><a href="{{ route('page:trust-and-security') }}">Trust &amp; Security</a></li>
                         <li><a href="{{ route('page:faq') }}">FAQ</a></li>
-                        <li><a href="#">Team</a></li>
+                        <li><a href="{{ route('page:team') }}">Team</a></li>
                         <li><a href="#">Statistics</a></li>
                         <li><a href="{{ route('page:press') }}">Press</a></li>
                     </ul>
@@ -58,7 +58,7 @@
                         <li><a href="{{ route('lender:preference') }}">Account Preferences</a></li>
                         <li><a href="{{ route('lender:gift-cards') }}">Gift Cards</a></li>
                         <li><a href="{{ route('lender:gift-cards:track') }}">Track Gift Cards</a></li>
-                        <li><a href="{{ route('lender:invite') }}">Invite Your Friends</a></li>
+                        <li><a href="{{ route('lender:invite') }}">Invite Friends</a></li>
                         <li><a href="{{ route('lender:history') }}">Transaction History</a></li>
                         <li><a href="{{ route('lender:funds') }}">Transfer Funds</a></li>
                         @endif

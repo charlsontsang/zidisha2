@@ -74,4 +74,9 @@ class PageController extends BaseController {
         $paramArray = $this->borrowerService->getFaqParameterArray();
         return View::make('pages.faq');
     }
+
+    public function getTeam()
+    {
+        return View::make('pages.team');
+    }
 }
