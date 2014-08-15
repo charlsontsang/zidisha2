@@ -39,16 +39,14 @@ class AgainRepaymentReminder extends ScheduledJobs
     {
         $dueDays = \Setting::get('loan.repaymentReminderDay');
         $dueAmount = \Setting::get('loan.repaymentDueAmount');
-        $dueAmount = 15;
-        $dueDays = 15; 
         
         return DB::table('installments as rs')
-            ->selectRaw('rs.borrower_id AS user_id, rs.loan_id AS loan_id, rs.due_date AS start_date, rs.amount, rs.paid_amount')
+            ->selectRaw('rs.borrower_id AS user_id, rs.loan_id AS loan_id, rs.due_date AS start_date')
             ->join('borrowers AS br', 'rs.borrower_id', '=', 'br.id')    
             ->whereRaw("rs.amount > 0")
             ->whereRaw("(
                 (
-                    (rs.amount - rs.paid_amount) > ". $dueAmount . "* (
+                    (rs.amount - rs.paid_amount) > (". $dueAmount . "* (
                         SELECT
                             rate
                         FROM
@@ -71,9 +69,10 @@ class AgainRepaymentReminder extends ScheduledJobs
                                         countries.id = br.country_id
                                 )
                         )
+                        )
                 ) OR paid_amount IS NULL)")
-            ->whereRaw('\'due_date\' <= \'' . Carbon::now()->subDays($dueDays) . '\'')
-            ->whereRaw('\'due_date\' > \'' . Carbon::now()->subDays($dueDays + 1) . '\'');
+            ->whereRaw('rs.due_date <= \'' . Carbon::now()->subDays($dueDays) . '\'')
+            ->whereRaw('rs.due_date > \'' . Carbon::now()->subDays($dueDays + 1) . '\'');
     }
 
     public function process(Job $job)
@@ -94,7 +93,7 @@ class AgainRepaymentReminder extends ScheduledJobs
         
         if (!$forgivenLoan) {
             /** @var  BorrowerMailer $borrowerMailer */
-            $borrowerMailer = \App::make('Zidisha\Mail\LenderMailer');
+            $borrowerMailer = \App::make('Zidisha\Mail\BorrowerMailer');
             $borrowerMailer->sendAgainRepaymentReminder($borrower, $loan, $installments);
         }
         
