@@ -622,7 +622,8 @@ class BorrowerService
     public function getCurrentCreditLimit(Borrower $borrower, Money $creditEarned, $addCreditEarned)
     {
         $firstLoanValue = Money::create(Setting::get('loan.firstLoanValue'), 'USD');
-        $isEverFunded = $this->isEverFundedLoan($borrower);
+        $isFirstFundedLoan = LoanQuery::create()
+            ->isFirstFundedLoan($borrower);
         $loanStatus = $borrower->getActivationStatus();
         $exchangeRate = ExchangeRateQuery::create()
             ->findCurrent($borrower->getCountry()->getCurrency());
@@ -647,7 +648,7 @@ class BorrowerService
         $raisedAmount = Converter::fromUSD($raisedUsdAmount, $loan->getCurrency(), $exchangeRate);
         $requestedAmount = $loan->getAmount();
 
-        if ($isEverFunded == 0) {
+        if ($isFirstFundedLoan) {
 //case where borrower has not yet received first loan disbursement - credit limit should equal admin 1st loan size plus invited borrower credit if applicable
             $isInvited = InviteQuery::create()
                 ->filterByInvitee($borrower)
@@ -746,28 +747,13 @@ class BorrowerService
         return $currentLimit;
     }
 
-    public function isEverFundedLoan(Borrower $borrower)
-    {
-        $isFundedBefore = LoanQuery::create()
-            ->getBeforeFundedLoan($borrower);
-
-        if($isFundedBefore)
-        {
-            return 1;
-        }
-        else
-        {
-            return 0;
-        }
-    }
-
     public function getPreviousLoanAmount(Borrower $borrower, Loan $loan, ExchangeRate $exchangeRate)
     {
-        $beforeFundedLoanCount = LoanQuery::create()
-            ->getNumberOfBeforeFundedLoan($borrower);
+        $isFirstFundedLoan = LoanQuery::create()
+            ->isFirstFundedLoan($borrower);
         $firstLoanValue = Setting::get('loan.firstLoanValue');
 
-        if(!$beforeFundedLoanCount)
+        if($isFirstFundedLoan)
         {
             /* it means it is first loan */
             $previousLoanAmount = $firstLoanValue;

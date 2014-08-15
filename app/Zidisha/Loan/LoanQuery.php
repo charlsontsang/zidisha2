@@ -98,12 +98,17 @@ class LoanQuery extends BaseLoanQuery
             ->findOne();
     }
 
-    public function getNumberOfBeforeFundedLoan(Borrower $borrower)
+    public function isFirstFundedLoan(Borrower $borrower)
     {
-        return $this
+        $count =  $this
             ->filterByBorrower($borrower)
             ->filterByStatus([Loan::ACTIVE, Loan::REPAID, Loan::DEFAULTED])
             ->count();
+
+        if ($count) {
+            return false;
+        }
+        return true;
     }
 
     public function getAllRepaidLoansForBorrower(Borrower $borrower)
