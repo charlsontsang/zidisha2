@@ -427,7 +427,7 @@
     </table>
 
     <table name="settings" phpName="Setting" namespace="Admin">
-        <column name="name" type="VARCHAR" size="45" required="true" primaryKey="true"/>
+        <column name="name" type="VARCHAR" size="128" required="true" primaryKey="true"/>
         <column name="value" type="VARCHAR" size="255" required="true" defaultValue="0"/>
         <behavior name="timestampable"/>
     </table>
@@ -1021,7 +1021,6 @@
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="user_id" type="INTEGER" required="true"/>
         <column name="loan_id" type="INTEGER" required="false"/>
-        <column name="type" type="ENUM" valueSet="abandonedUser" required="true"/>
         <column name="last_processed_at" type="TIMESTAMP"/>
         <column name="start_date" type="TIMESTAMP"/>
         <column name="count" type="INTEGER" required="true" default="0"/>
