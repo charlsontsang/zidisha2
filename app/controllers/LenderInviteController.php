@@ -126,7 +126,7 @@ class LenderInviteController extends BaseController
         if (!$lender) {
             return Redirect::route('/');
         }
-/*
+
         $ycAccountCredit = TransactionQuery::create()
             ->filterByUserId(Setting::get('site.YCAccountId'))
             ->getTotalBalance();
@@ -134,7 +134,6 @@ class LenderInviteController extends BaseController
         if ($ycAccountCredit->getAmount() < 5000) {
             return View::make('lender.invite-inactive');
         }
-        */
 
         if (!Auth::check()) {
             $lenderInvite = $shareType = null;
