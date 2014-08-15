@@ -713,16 +713,16 @@ class BorrowerService
                 $months = Utility::getIntervalInMonths($disbursedAt, $currentTime->getTimestamp());
 
                 if ($raisedUsdAmount->lessThanOrEqual(Money::create(200, 'USD'))) {
-                    $timeThreshold = Setting::get('loan.timeThreshold');
+                    $timeThreshold = Setting::get('loan.loanIncreaseThresholdLow');
                     $percentIncrease = Setting::get('loan.secondLoanPercentage');
                 } elseif ($raisedUsdAmount->lessThanOrEqual(Money::create(1000, 'USD'))) {
-                    $timeThreshold = Setting::get('loan.timeThresholdMid1');
+                    $timeThreshold = Setting::get('loan.loanIncreaseThresholdMid');
                     $percentIncrease = Setting::get('loan.nextLoanPercentage');
                 } elseif ($raisedUsdAmount->lessThanOrEqual(Money::create(3000, 'USD'))) {
-                    $timeThreshold = Setting::get('loan.timeThresholdMid2');
+                    $timeThreshold = Setting::get('loan.loanIncreaseThresholdHigh');
                     $percentIncrease = Setting::get('loan.nextLoanPercentage');
                 } else {
-                    $timeThreshold = Setting::get('loan.timeThresholdAbove');
+                    $timeThreshold = Setting::get('loan.loanIncreaseThresholdTop');
                     $percentIncrease = Setting::get('loan.nextLoanPercentage');
                 }
 

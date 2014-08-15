@@ -121,26 +121,6 @@ return [
             'label' => 'Third and Subsequent Loans Max Value (USD)',
             'default' => '10000',
             'rule' => 'numeric'
-        ],
-        'loan.timeThreshold' => [
-            'label' => 'Loan Time Threshold in Months',
-            'default' => '1',
-            'rule' => 'numeric'
-        ],
-        'loan.timeThresholdMid1' => [
-            'label' => 'Loan Time Threshold in Months, Mid1',
-            'default' => '3',
-            'rule' => 'numeric'
-        ],
-        'loan.timeThresholdMid2' => [
-            'label' => 'Loan Time Threshold in Months, Mid2',
-            'default' => '6',
-            'rule' => 'numeric'
-        ],
-        'loan.timeThresholdAbove' => [
-            'label' => 'Loan Time Threshold in Months, Above',
-            'default' => '12',
-            'rule' => 'numeric'
         ]
     ],
     'Borrower' => [

@@ -412,13 +412,13 @@ class BorrowerController extends BaseController
             $minimumRepaymentRate = $minRepaymentRate = \Setting::get('invite.minRepaymentRate');
 
             if ($raisedUsdAmount->lessThanOrEqual(Money::create(200, 'USD'))) {
-                $timeThreshold = Setting::get('loan.timeThreshold');
+                $timeThreshold = Setting::get('loan.loanIncreaseThresholdLow');
             } elseif ($raisedUsdAmount->lessThanOrEqual(Money::create(1000, 'USD'))) {
-                $timeThreshold = Setting::get('loan.timeThresholdMid1');
+                $timeThreshold = Setting::get('loan.loanIncreaseThresholdMid');
             } elseif ($raisedUsdAmount->lessThanOrEqual(Money::create(3000, 'USD'))) {
-                $timeThreshold = Setting::get('loan.timeThresholdMid2');
+                $timeThreshold = Setting::get('loan.loanIncreaseThresholdHigh');
             } else {
-                $timeThreshold = Setting::get('loan.timeThresholdAbove');
+                $timeThreshold = Setting::get('loan.loanIncreaseThresholdTop');
             }
             $params['TimeThrshld'] = $timeThreshold;
 
