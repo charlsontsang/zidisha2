@@ -13,11 +13,11 @@ class ScheduledJobs extends Command
     protected $description = 'This command is to run scheduled cron jobs';
 
     protected $classes = [
-//        'Zidisha\ScheduledJob\AbandonedUser',
-//        'Zidisha\ScheduledJob\LoanAboutToExpireReminder',
-//        'Zidisha\ScheduledJob\LoanFinalArrear',
-//        'Zidisha\ScheduledJob\AgainRepaymentReminder',
-//        'Zidisha\ScheduledJob\LoanFirstArrear',
+        'Zidisha\ScheduledJob\AbandonedUser',
+        'Zidisha\ScheduledJob\LoanAboutToExpireReminder',
+        'Zidisha\ScheduledJob\LoanFinalArrear',
+        'Zidisha\ScheduledJob\AgainRepaymentReminder',
+        'Zidisha\ScheduledJob\LoanFirstArrear',
         'Zidisha\ScheduledJob\RepaymentReminder',
         'Zidisha\ScheduledJob\MonthlyLoanArrear',
         'Zidisha\ScheduledJob\NewLenderIntro',
@@ -28,8 +28,6 @@ class ScheduledJobs extends Command
 //        'Zidisha\ScheduledJob\CronToRepay',
 //        'Zidisha\ScheduledJob\UnusedFunds',
     ];
-//        'Zidisha\ScheduledJob\MonthlyLoanArrear',
-//        'Zidisha\ScheduledJob\CronToRepay',
     
     protected $classesWithLoan = [
         'Zidisha\ScheduledJob\AgainRepaymentReminder',
@@ -48,16 +46,9 @@ class ScheduledJobs extends Command
     {
         foreach ($this->classes as $class) {
             $scheduledJobClass = \App::make($class);
-//            dd($scheduledJobClass->getClassKey());
             $query = $this->joinQuery($scheduledJobClass);
-
-//             print_r($query->toSql());
-//            dd();
             $jobs = $query->get();
-//            print_r($query ->toSql());
-//            dd();
-            $jobs = $query->get();
-
+            
             foreach ($jobs as $job) {
                 /** @var ScheduledJob $scheduledJob */
                 if ($job->scheduled_job_id == null) {
