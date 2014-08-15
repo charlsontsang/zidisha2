@@ -42,14 +42,14 @@ class LoanFirstArrear extends ScheduledJobs
     {
         return DB::table('installments AS rs')
             ->selectRaw(
-                'rs.borrower_id AS user_id, rs.due_date AS start_date'
+                'rs.borrower_id AS user_id, rs.due_date AS start_date, rs.loan_id AS loan_id'
             )
             ->join('borrowers AS br', 'rs.borrower_id', '=', 'br.id')
             ->whereRaw("rs.amount > 0")
             ->whereRaw(
                 '(
                     rs.paid_amount IS NULL OR rs.paid_amount < (
-                        rs.amount - 5 * (
+                        rs.amount - (5 * (
                             SELECT
                                 rate
                             FROM
@@ -72,11 +72,12 @@ class LoanFirstArrear extends ScheduledJobs
                                         countries.id = br.country_id
                                 )
                         )
+                      )
                     )
                 )'
             )
-            ->whereRaw('due_date <= \'' . Carbon::now()->subDays(4) . '\'')
-            ->whereRaw('due_date > \'' . Carbon::now()->subDays(5) . '\'');
+            ->whereRaw('rs.due_date <= \'' . Carbon::now()->subDays(4) . '\'')
+            ->whereRaw('rs.due_date > \'' . Carbon::now()->subDays(5) . '\'');
     }
 
     public function process(Job $job)
@@ -92,7 +93,7 @@ class LoanFirstArrear extends ScheduledJobs
         $installment = InstallmentQuery::create()
             ->filterByLoan($loan)
             ->filterByAmount(0, Criteria::GREATER_THAN)
-            ->filterByPaidAmount($loan->getAmount(), Criteria::LESS_THAN)
+            ->filterByPaidAmount($loan->getAmount()->getAmount(), Criteria::LESS_THAN)
             ->orderByDueDate('ASC')
             ->findOne();
 
