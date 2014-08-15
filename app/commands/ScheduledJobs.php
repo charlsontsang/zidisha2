@@ -13,16 +13,30 @@ class ScheduledJobs extends Command
     protected $description = 'This command is to run scheduled cron jobs';
 
     protected $classes = [
-        'Zidisha\ScheduledJob\AbandonedUser',
-        'Zidisha\ScheduledJob\LoanAboutToExpireReminder',
-        'Zidisha\ScheduledJob\LoanFinalArrear',
-        'Zidisha\ScheduledJob\AgainRepaymentReminder',
-        'Zidisha\ScheduledJob\LoanFirstArrear',
+//        'Zidisha\ScheduledJob\AbandonedUser',
+//        'Zidisha\ScheduledJob\LoanAboutToExpireReminder',
+//        'Zidisha\ScheduledJob\LoanFinalArrear',
+//        'Zidisha\ScheduledJob\AgainRepaymentReminder',
+//        'Zidisha\ScheduledJob\LoanFirstArrear',
         'Zidisha\ScheduledJob\RepaymentReminder',
         'Zidisha\ScheduledJob\MonthlyLoanArrear',
         'Zidisha\ScheduledJob\NewLenderIntro',
         'Zidisha\ScheduledJob\CronToRepay',
         'Zidisha\ScheduledJob\UnusedFunds',
+//        'Zidisha\ScheduledJob\MonthlyLoanArrear',
+//        'Zidisha\ScheduledJob\NewLenderIntro',
+//        'Zidisha\ScheduledJob\CronToRepay',
+//        'Zidisha\ScheduledJob\UnusedFunds',
+    ];
+//        'Zidisha\ScheduledJob\MonthlyLoanArrear',
+//        'Zidisha\ScheduledJob\CronToRepay',
+    
+    protected $classesWithLoan = [
+        'Zidisha\ScheduledJob\AgainRepaymentReminder',
+        'Zidisha\ScheduledJob\CronToRepay',
+        'Zidisha\ScheduledJob\LoanFinalArrear',
+        'Zidisha\ScheduledJob\LoanFirstArrear',
+        'Zidisha\ScheduledJob\MonthlyLoanArrear',
     ];
 
     /**
@@ -34,16 +48,23 @@ class ScheduledJobs extends Command
     {
         foreach ($this->classes as $class) {
             $scheduledJobClass = \App::make($class);
+//            dd($scheduledJobClass->getClassKey());
             $query = $this->joinQuery($scheduledJobClass);
+
 //             print_r($query->toSql());
 //            dd();
             $jobs = $query->get();
+//            print_r($query ->toSql());
+//            dd();
+            $jobs = $query->get();
+
             foreach ($jobs as $job) {
                 /** @var ScheduledJob $scheduledJob */
                 if ($job->scheduled_job_id == null) {
                     $scheduledJob = new $class;
                     $scheduledJob->setUserId($job->user_id);
-                    if ($class == 'Zidisha\ScheduledJob\AgainRepaymentReminder') {
+                    $scheduledJob->setStartDate($job->start_date);
+                    if (in_array($class, $this->classesWithLoan)) {
                         $scheduledJob->setLoanId($job->loan_id);
                     }
                     $scheduledJob->save();
@@ -67,17 +88,17 @@ class ScheduledJobs extends Command
     {
         $query = $scheduledJobClass->getQuery()
             ->addSelect('s.id as scheduled_job_id')
-            ->leftJoin('scheduled_jobs AS s', function($join) {
+            ->leftJoin('scheduled_jobs AS s', function($join) use ($scheduledJobClass) {
                 $join
                     ->on('user_id', '=', 's.user_id')
-                    ->on('start_date' , '=', 's.start_date');
-            })
-            ->whereRaw('s.count < '.$scheduledJobClass::COUNT);
-        
+                    ->on('start_date' , '=', 's.start_date')
+                    ->where('s.class_key', '=', $scheduledJobClass->getClassKey());
+            });
+
         if ($scheduledJobClass::COUNT > 1) {
-            $query->whereRaw("s.last_processed_at IS NULL OR (s.last_processed_at + (s.count || ' months')::interval) > NOW()");
+            $query->whereRaw("s.id IS NULL OR (s.last_processed_at IS NOT NULL AND (s.created_at + '1 month'::interval) < NOW() AND s.count < ".$scheduledJobClass::COUNT . ")");
         } else {
-            $query->whereRaw("s.last_processed_at IS NULL");
+            $query->whereRaw("s.id IS NULL");
         }
         
         return $query;
