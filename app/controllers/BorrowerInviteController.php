@@ -5,6 +5,7 @@ use Zidisha\Borrower\BorrowerGuestQuery;
 use Zidisha\Borrower\BorrowerService;
 use Zidisha\Borrower\Form\InviteForm;
 use Zidisha\Borrower\InviteQuery;
+use Zidisha\Credit\CreditSettingQuery;
 use Zidisha\Loan\LoanService;
 use Zidisha\Repayment\RepaymentService;
 
@@ -121,7 +122,8 @@ class BorrowerInviteController extends BaseController
             ->paginate($page, 10);
         $loanService = $this->loanService;
         $repaymentService = $this->repaymentService;
-        $borrowerInviteCredit = $database->getcreditsettingbyCountry($session->userinfo['country'],3);
+        $borrowerInviteCredit = CreditSettingQuery::create()
+            ->getBorrowerInviteCredit($borrower);
 
         return View::make(
             'borrower.invites',
@@ -133,7 +135,8 @@ class BorrowerInviteController extends BaseController
                 'invites',
                 'paginator',
                 'loanService',
-                'repaymentService'
+                'repaymentService',
+                'borrowerInviteCredit'
             )
         );
     }

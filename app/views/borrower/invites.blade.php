@@ -92,7 +92,7 @@ Invites
                 <?php $rate = $loanService->getOnTimeRepaymentScore($invite->getInvitee()); ?>
                 <?php $repaymentRate = number_format($rate)."%"; ?>
                 @if($rate >= $minRepaymentRate)
-                    {{-- $bonus = //TODO --}}
+                    <?php $bonus = $borrowerInviteCredit->getLoanAmountLimit(); ?>
                 @else
                     <?php $bonus = 0; ?>
                 @endif
