@@ -27,12 +27,6 @@ class Utility {
         return $country;
     }
 
-    public static function getIntervalInMonths($time1 = null,$time2){
-        $interval =($time2 - $time1)/(3600*24*30); // to converting into months we devided by 30 as round calculation
-        // returns numberofmonths
-        return  floor($interval) ;
-    }
-
     /**
      * Truncates text.
      *

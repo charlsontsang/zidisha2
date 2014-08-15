@@ -1,6 +1,7 @@
 <?php
 
 
+use Carbon\Carbon;
 use Illuminate\Support\ViewErrorBag;
 use Zidisha\Admin\Setting;
 use Zidisha\Borrower\Borrower;
@@ -251,9 +252,6 @@ class BorrowerController extends BaseController
     {
         /** @var $borrower Borrower */
         $borrower = \Auth::user()->getBorrower();
-        if (!$borrower) {
-            App::abort(404, 'Bad Request');
-        }
 
         $lastRepaidLoan = LoanQuery::create()
             ->getLastRepaidLoan($borrower);
@@ -405,9 +403,9 @@ class BorrowerController extends BaseController
             $isFirstFundedLoan = LoanQuery::create()
                 ->isFirstFundedLoan($borrower);
             $disbursedDate = $activeLoan->getDisbursedAt();
-            $currentTime = new \DateTime();
-            $disbursedAt = $disbursedDate ? $disbursedDate->getTimestamp() : null;
-            $months = Utility::getIntervalInMonths($disbursedAt, $currentTime->getTimestamp());
+            $currentTime = new Carbon();
+            $disbursedAt = new Carbon($disbursedDate);
+            $months = $disbursedAt->diffInMonths($currentTime);
             $minimumRepaymentRate = $minRepaymentRate = \Setting::get('invite.minRepaymentRate');
 
             if ($raisedUsdAmount->lessThanOrEqual(Money::create(200, 'USD'))) {
