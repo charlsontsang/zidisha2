@@ -594,15 +594,11 @@ class BorrowerService
 
     public function getVMCredit(Borrower $borrower)
     {
-        $isVM = VolunteerMentorQuery::create()
-            ->filterByBorrowerVolunteer($borrower)
-            ->filterByStatus(VolunteerMentor::STATUS_APPROVED)
-            ->findOne();
         $creditEarned = Money::create(0, $borrower->getCountry()->getCurrency());
 
-        if ($isVM) {
+        if ($borrower->getUser()->isVolunteerMentor()) {
             $mentees = BorrowerQuery::create()
-                ->filterByVolunteerMentor($isVM)
+                ->filterByVolunteerMentorId($borrower->getId())
                 ->find();
             $borrowerInviteCredit = CreditSettingQuery::create()
                 ->getBorrowerInviteCredit($borrower);
