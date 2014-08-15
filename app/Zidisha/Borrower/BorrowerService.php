@@ -763,11 +763,11 @@ class BorrowerService
 
     public function getPreviousLoanAmount(Borrower $borrower, Loan $loan, ExchangeRate $exchangeRate)
     {
-        $beforeFundedLoan = LoanQuery::create()
-            ->getBeforeFundedLoan($borrower);
+        $beforeFundedLoanCount = LoanQuery::create()
+            ->getNumberOfBeforeFundedLoan($borrower);
         $firstLoanValue = Setting::get('loan.firstLoanValue');
 
-        if(!$beforeFundedLoan)
+        if(!$beforeFundedLoanCount)
         {
             /* it means it is first loan */
             $previousLoanAmount = $firstLoanValue;
