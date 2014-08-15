@@ -15,7 +15,7 @@ class HomeController extends BaseController {
         if($country && $country->isBorrowerCountry()) {
             return $this->getBorrowerHome();
         }
-        return $this->getLenderHome();
+        return $this->getBorrowerHome();
     }
     
 	public function getLenderHome()
