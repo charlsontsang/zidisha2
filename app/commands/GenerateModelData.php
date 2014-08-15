@@ -518,7 +518,6 @@ class GenerateModelData extends Command
                         ->setBorrower($loan->getBorrower())
                         ->setAmount($installmentAmount)
                         ->setDueDate(Carbon::now()->subDays(\Setting::get('loan.repaymentReminderDay'))->subHours(12));
-                    var_dump($installment->getDueDate());
                 } else {
                     $installment = new Installment();
                     $installment
@@ -684,7 +683,174 @@ class GenerateModelData extends Command
                         ->setBorrower($loan->getBorrower())
                         ->setAmount($installmentAmount)
                         ->setPaidAmount($installmentAmount->divide(2))
-                        ->setDueDate(Carbon::now()->subDays(2));
+                        ->setDueDate(Carbon::now()->subDays(2)->addHours(12));
+                } else {
+                    $installment = new Installment();
+                    $installment
+                        ->setLoan($loan)
+                        ->setBorrower($loan->getBorrower())
+                        ->setAmount($installmentAmount)
+                        ->setDueDate($calculator->nthInstallmentDate($count));
+
+                }
+                $installment->save();
+            }
+
+            $this->info('Loan Generated with id: '.$loan->getId());
+        }
+
+        if ($model == 'MonthlyLoanArrear') {
+            $categoryIds = CategoryQuery::create()
+                ->filterByAdminOnly(false)
+                ->orderByRank()
+                ->select('id')
+                ->find()
+                ->getData();
+
+            $borrowers = BorrowerQuery::create()
+                ->joinWith('Country')
+                ->orderById()
+                ->find()
+                ->getData();
+
+            /** @var Borrower $borrower */
+            $borrower = $borrowers[0];
+            $currency = $borrower->getCountry()->getCurrency();
+
+            $date = $this->faker->dateTimeBetween('-16 months');
+            $exchangeRate = $this->currencyService->getExchangeRate($currency, $date);
+            $usdAmount = Money::create(100);
+            $amount = Converter::fromUSD($usdAmount, $currency, $exchangeRate);
+
+            $isWeekly = $borrower->getCountry()->getInstallmentPeriod() == Loan::WEEKLY_INSTALLMENT;
+
+            $data = [
+                'summary'           => $this->faker->sentence(8),
+                'proposal'          => $this->faker->paragraph(7),
+                'amount'            => $amount->getAmount(),
+                'installmentAmount' => $amount->divide($this->faker->numberBetween(6, 16))->getAmount(),
+                'currencyCode'      => $borrower->getCountry()->getCurrencyCode(),
+                'installmentDay'    => $isWeekly ? $this->faker->dayOfWeek : $this->faker->dayOfMonth,
+                'date'              => $date,
+                'exchangeRate'      => $exchangeRate,
+                'categoryId'        => $this->faker->randomElement($categoryIds),
+            ];
+
+            $loan = $this->loanService->applyForLoan($borrower, $data);
+            $loan->save();
+
+            $acceptedAt = Carbon::instance($loan->getAppliedAt());
+            $acceptedAt->addDays($this->faker->numberBetween(15, 20));
+
+            $disbursedAt = Carbon::instance($loan->getCreatedAt())->subMonths(3);
+            $disbursedAt->addDays($this->faker->numberBetween(1, 10));
+
+            $loan
+                ->setStatus(Loan::ACTIVE)
+                ->setDisbursedAmount($amount)
+                ->setDisbursedAt($disbursedAt)
+                ->calculateExtraDays($disbursedAt)
+                ->setServiceFeeRate(Setting::get('loan.serviceFeeRate'));
+
+
+            $calculator = new InstallmentCalculator($loan);
+            $installmentAmount = $calculator->installmentAmount();
+            $installmentCount = $loan->getInstallmentCount();
+
+            for ($count = 1; $count <= $installmentCount; $count++) {
+
+                if ($count == $installmentCount) {
+                    $installment = new Installment();
+                    $installment
+                        ->setLoan($loan)
+                        ->setBorrower($loan->getBorrower())
+                        ->setAmount($installmentAmount)
+                        ->setPaidAmount($installmentAmount->divide(2))
+                        ->setDueDate(Carbon::now()->subDays(31)->addHours(12));
+                    var_dump($installment->getDueDate());
+                } else {
+                    $installment = new Installment();
+                    $installment
+                        ->setLoan($loan)
+                        ->setBorrower($loan->getBorrower())
+                        ->setAmount($installmentAmount)
+                        ->setDueDate($calculator->nthInstallmentDate($count));
+
+                }
+                $installment->save();
+            }
+
+            $this->info('Loan Generated with id: '.$loan->getId());
+        }
+
+        if ($model == 'CronToRepay') {
+            $categoryIds = CategoryQuery::create()
+                ->filterByAdminOnly(false)
+                ->orderByRank()
+                ->select('id')
+                ->find()
+                ->getData();
+
+            $borrowers = BorrowerQuery::create()
+                ->joinWith('Country')
+                ->orderById()
+                ->find()
+                ->getData();
+
+            /** @var Borrower $borrower */
+            $borrower = $borrowers[0];
+            $currency = $borrower->getCountry()->getCurrency();
+
+            $date = $this->faker->dateTimeBetween('-16 months');
+            $exchangeRate = $this->currencyService->getExchangeRate($currency, $date);
+            $usdAmount = Money::create(100);
+            $amount = Converter::fromUSD($usdAmount, $currency, $exchangeRate);
+
+            $isWeekly = $borrower->getCountry()->getInstallmentPeriod() == Loan::WEEKLY_INSTALLMENT;
+
+            $data = [
+                'summary'           => $this->faker->sentence(8),
+                'proposal'          => $this->faker->paragraph(7),
+                'amount'            => $amount->getAmount(),
+                'installmentAmount' => $amount->divide($this->faker->numberBetween(6, 16))->getAmount(),
+                'currencyCode'      => $borrower->getCountry()->getCurrencyCode(),
+                'installmentDay'    => $isWeekly ? $this->faker->dayOfWeek : $this->faker->dayOfMonth,
+                'date'              => $date,
+                'exchangeRate'      => $exchangeRate,
+                'categoryId'        => $this->faker->randomElement($categoryIds),
+            ];
+
+            $loan = $this->loanService->applyForLoan($borrower, $data);
+            $loan->save();
+
+            $acceptedAt = Carbon::instance($loan->getAppliedAt());
+            $acceptedAt->addDays($this->faker->numberBetween(15, 20));
+
+            $disbursedAt = Carbon::instance($loan->getCreatedAt())->subMonths(3);
+            $disbursedAt->addDays($this->faker->numberBetween(1, 10));
+
+            $loan
+                ->setStatus(Loan::ACTIVE)
+                ->setDisbursedAmount($amount)
+                ->setDisbursedAt($disbursedAt)
+                ->calculateExtraDays($disbursedAt)
+                ->setServiceFeeRate(Setting::get('loan.serviceFeeRate'));
+
+
+            $calculator = new InstallmentCalculator($loan);
+            $installmentAmount = $calculator->installmentAmount();
+            $installmentCount = $loan->getInstallmentCount();
+
+            for ($count = 1; $count <= $installmentCount; $count++) {
+
+                if ($count == $installmentCount) {
+                    $installment = new Installment();
+                    $installment
+                        ->setLoan($loan)
+                        ->setBorrower($loan->getBorrower())
+                        ->setAmount($installmentAmount)
+                        ->setPaidAmount($installmentAmount->divide(2))
+                        ->setDueDate(Carbon::now()->subDays(61)->addHours(12));
                     var_dump($installment->getDueDate());
                 } else {
                     $installment = new Installment();
