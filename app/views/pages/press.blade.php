@@ -132,7 +132,6 @@ Press
                 <cite><a href="http://algoso.org/2011/12/16/so-that-thing-kiva-just-started-doing-zidisha-was-already-doing-it/" target="_blank">Find What Works</a></cite>
             </footer>
         </blockquote>     
-            
     </div>
 </div>
 
