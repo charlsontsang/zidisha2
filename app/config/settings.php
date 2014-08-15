@@ -133,7 +133,7 @@ return [
             'rule' => 'numeric'
         ],
         'loan.deadline' => [
-            'label' => 'Loan Due amount',
+            'label' => 'Loan DeadLine Date',
             'default' => '15',
             'rule' => 'numeric'
         ],
