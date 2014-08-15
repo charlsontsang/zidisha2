@@ -53,7 +53,7 @@ class RepaymentReminder extends ScheduledJobs
         $installment = InstallmentQuery::create()
             ->filterByLoan($loan)
             ->filterByAmount(0, Criteria::GREATER_THAN)
-            ->filterByPaidAmount($loan->getAmount(), Criteria::LESS_THAN)
+            ->filterByPaidAmount($loan->getAmount()->getAmount(), Criteria::LESS_THAN)
             ->orderByDueDate('ASC')
             ->findOne();
 
@@ -79,5 +79,7 @@ class RepaymentReminder extends ScheduledJobs
             //Send mail to borrower
             $borrowerMailer->sendRepaymentReminderForDueAmount($borrower, $loan, $amounts);
         }
+        
+        $job->delete();
     }
 } // RepaymentReminder
