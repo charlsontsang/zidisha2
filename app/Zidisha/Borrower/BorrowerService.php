@@ -790,15 +790,17 @@ class BorrowerService
             /* it means it is next loan */
             // update by mohit on date 3-11-13 to fix get max loan amount credit from last loan  set expires=NULL
             if(!empty($loan)) {
-                $amount = LoanQuery::create()
+                $amountNative = LoanQuery::create()
                     ->filterByBorrower($borrower)
                     ->filterByDeletedByAdmin(false)
                     ->filterByStatus(Loan::REPAID)
                     ->filterByExpiredAt(null)
                     ->select('AmountRaised')
-                    ->withColumn('MAX(raised_usd_amount)', 'AmountRaised')
+                    ->withColumn('MAX(disbursed_amount)', 'AmountRaised')
                     ->filterById($loan->getId(), Criteria::NOT_EQUAL)
                     ->findOne();
+
+                $amount = Converter::toUSD(Money::create($amountNative, $borrower->getCountry()->getCurrency(), $exchangeRate), $exchangeRate)->getAmount();
 
                 if(!empty($amount) && $amount > 1){
                     $previousLoanAmount = $amount;
@@ -810,14 +812,16 @@ class BorrowerService
                     }
                 }
             } else {
-                $previousLoanAmount = LoanQuery::create()
+                $amountNative = LoanQuery::create()
                     ->filterByBorrower($borrower)
                     ->filterByDeletedByAdmin(false)
                     ->filterByStatus(Loan::REPAID)
                     ->filterByExpiredAt(null)
                     ->select('AmountRaised')
-                    ->withColumn('MAX(raised_usd_amount)', 'AmountRaised')
+                    ->withColumn('MAX(disbursed_amount)', 'AmountRaised')
                     ->findOne();
+
+                $previousLoanAmount = Converter::toUSD(Money::create($amountNative, $borrower->getCountry()->getCurrency(), $exchangeRate), $exchangeRate)->getAmount();
             }
         }
         $previousLoanAmount = Converter::fromUSD($previousLoanAmount, $loan->getCurrency(), $exchangeRate);
