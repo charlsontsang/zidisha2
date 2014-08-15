@@ -126,7 +126,7 @@ class LenderInviteController extends BaseController
         if (!$lender) {
             return Redirect::route('/');
         }
-
+/*
         $ycAccountCredit = TransactionQuery::create()
             ->filterByUserId(Setting::get('site.YCAccountId'))
             ->getTotalBalance();
@@ -134,6 +134,7 @@ class LenderInviteController extends BaseController
         if ($ycAccountCredit->getAmount() < 5000) {
             return View::make('lender.invite-inactive');
         }
+        */
 
         if (!Auth::check()) {
             $lenderInvite = $shareType = null;
@@ -161,9 +162,12 @@ class LenderInviteController extends BaseController
             }
         }
 
+        $carouselHeading = 'Send $25 to an entrepreneur for free';
+        $buttonText = 'Sign up to redeem your credit';
+
         return View::make(
             'lender.invitee',
-            compact('lender')
+            compact('lender','carouselHeading','buttonText')
         );
     }
 }
