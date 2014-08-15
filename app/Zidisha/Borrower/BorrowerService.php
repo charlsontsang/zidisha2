@@ -751,51 +751,38 @@ class BorrowerService
     {
         $isFirstFundedLoan = LoanQuery::create()
             ->isFirstFundedLoan($borrower);
-        $firstLoanValue = Setting::get('loan.firstLoanValue');
+        $firstLoanValue = Money::create(Setting::get('loan.firstLoanValue'), 'USD');
+        $currencyCode = $loan->getCurrencyCode();
 
         if($isFirstFundedLoan)
         {
-            /* it means it is first loan */
             $previousLoanAmount = $firstLoanValue;
         } else {
-            /* it means it is next loan */
-            // update by mohit on date 3-11-13 to fix get max loan amount credit from last loan  set expires=NULL
             if(!empty($loan)) {
                 $amountNative = LoanQuery::create()
-                    ->filterByBorrower($borrower)
-                    ->filterByDeletedByAdmin(false)
-                    ->filterByStatus(Loan::REPAID)
-                    ->filterByExpiredAt(null)
-                    ->select('AmountRaised')
-                    ->withColumn('MAX(disbursed_amount)', 'AmountRaised')
                     ->filterById($loan->getId(), Criteria::NOT_EQUAL)
-                    ->findOne();
+                    ->getMaximumDisbursedAmount($borrower, $currencyCode);
 
-                $amount = Converter::toUSD(Money::create($amountNative, $borrower->getCountry()->getCurrency(), $exchangeRate), $exchangeRate)->getAmount();
+                $amount = Converter::toUSD($amountNative, $exchangeRate);
 
-                if(!empty($amount) && $amount > 1){
+                if(!empty($amount) && $amount->greaterThan(Money::create(1, 'USD'))){
                     $previousLoanAmount = $amount;
                 }else{
-                    if ($loan->getUsdAmount()->getAmount() > $firstLoanValue) {
-                        $previousLoanAmount = $loan->getRaisedUsdAmount();
+                    if ($loan->getUsdAmount()->greaterThan($firstLoanValue)) {
+                        $disbursedAmount = $loan->getDisbursedAmount();
+                        $previousLoanAmount = Converter::toUSD(Money::create($disbursedAmount, $currencyCode), $exchangeRate);
                     } else {
                         $previousLoanAmount = $firstLoanValue;
                     }
                 }
             } else {
                 $amountNative = LoanQuery::create()
-                    ->filterByBorrower($borrower)
-                    ->filterByDeletedByAdmin(false)
-                    ->filterByStatus(Loan::REPAID)
-                    ->filterByExpiredAt(null)
-                    ->select('AmountRaised')
-                    ->withColumn('MAX(disbursed_amount)', 'AmountRaised')
-                    ->findOne();
+                    ->getMaximumDisbursedAmount($borrower, $currencyCode);
 
-                $previousLoanAmount = Converter::toUSD(Money::create($amountNative, $borrower->getCountry()->getCurrency(), $exchangeRate), $exchangeRate)->getAmount();
+                $previousLoanAmount = Converter::toUSD(Money::create($amountNative, $currencyCode, $exchangeRate), $exchangeRate);
             }
         }
-        $previousLoanAmount = Converter::fromUSD($previousLoanAmount, $loan->getCurrency(), $exchangeRate);
+        $previousLoanAmount = Converter::fromUSD($previousLoanAmount, $currencyCode, $exchangeRate);
         return $previousLoanAmount;
     }
 }
