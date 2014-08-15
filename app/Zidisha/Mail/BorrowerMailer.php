@@ -165,11 +165,12 @@ class BorrowerMailer{
         
     }
 
-    public function sendAgainRepaymentReminder(Borrower $borrower, Loan $loan, Installment $installments)
+    public function sendAgainRepaymentReminder(Borrower $borrower, Loan $loan, $installments)
     {
         $totalAmount = Money::create(0, $loan->getCurrencyCode());
         $paidAmount = Money::create(0, $loan->getCurrencyCode());
 
+        /** @var Installment $installment */
         foreach ($installments as $installment) {
             $totalAmount = $totalAmount->add($installment->getAmount());
             $paidAmount = $paidAmount->add($installment->getPaidAmount());
