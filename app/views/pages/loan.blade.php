@@ -152,9 +152,9 @@
                     </div>
                     <div class="loan-section-content">
                         @if($loan->getStatus() >= Zidisha\Loan\Loan::ACTIVE)
-                            <div class="row">
+                            <div class="row" style="margin-top: 5px; margin-bottom: 30px; !important;">
                                 <div class="col-xs-9">
-                                    <div class="progress">
+                                    <div class="progress" style="margin: 0 !important;">
                                         <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="{{ $loan->getRaisedPercentage() }}" aria-valuemin="0"
                                              aria-valuemax="100"
                                              style="width: 50%;">
