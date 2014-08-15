@@ -92,9 +92,7 @@ class LoanQuery extends BaseLoanQuery
         return $this
             ->filterByBorrower($borrower)
             ->filterByDeletedByAdmin(false)
-            ->filterByStatus(Loan::REPAID)
-            ->_or()
-            ->filterByStatus(Loan::DEFAULTED)
+            ->filterByStatus([Loan::REPAID, Loan::DEFAULTED])
             ->filterByExpiredAt(null)
             ->orderById('DESC')
             ->findOne();
@@ -104,11 +102,7 @@ class LoanQuery extends BaseLoanQuery
     {
         return $this
             ->filterByBorrower($borrower)
-            ->filterByStatus(Loan::ACTIVE)
-            ->_or()
-            ->filterByStatus(Loan::REPAID)
-            ->_or()
-            ->filterByStatus(Loan::DEFAULTED)
+            ->filterByStatus([Loan::ACTIVE, Loan::REPAID, Loan::DEFAULTED])
             ->findOne();
     }
 
