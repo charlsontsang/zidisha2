@@ -573,7 +573,7 @@ class BorrowerService
             ->find();
         $minRepaymentRate = Setting::get('invite.minRepaymentRate');
 
-        $creditEarned = 0;
+        $creditEarned = Money::create(0, $borrower->getCountry()->getCurrency());
         foreach($invitees as $invite){
             $lastLoanOfInvitee= LoanQuery::create()
                 ->getLastLoan($invite->getInvitee());
@@ -585,24 +585,19 @@ class BorrowerService
             {
                 $borrowerInviteCredit = CreditSettingQuery::create()
                     ->getBorrowerInviteCredit($borrower);
-                $creditEarned = $borrowerInviteCredit->getLoanAmountLimit();
+                $creditEarned = Money::create($borrowerInviteCredit->getLoanAmountLimit(), $borrower->getCountry()->getCurrency());
             }
         }
         return $creditEarned;
     }
 
-    /**
-     * @param Borrower $borrower
-     * @return int
-     * @throws \Propel\Runtime\Exception\PropelException
-     */
     public function getVMCredit(Borrower $borrower)
     {
         $isVM = VolunteerMentorQuery::create()
             ->filterByBorrowerVolunteer($borrower)
             ->filterByStatus(VolunteerMentor::STATUS_APPROVED)
             ->findOne();
-        $creditEarned = 0;
+        $creditEarned = Money::create(0, $borrower->getCountry()->getCurrency());
 
         if ($isVM) {
             $mentees = BorrowerQuery::create()
@@ -610,31 +605,32 @@ class BorrowerService
                 ->find();
             $borrowerInviteCredit = CreditSettingQuery::create()
                 ->getBorrowerInviteCredit($borrower);
+            $borrowerInviteCredit = Money::create($borrowerInviteCredit->getLoanAmountLimit(), $borrower->getCountry()->getCurrency());
 
             foreach ($mentees as $mentee) {
                 //TODO
                 //$brwrandLoandetail = $this->getBrwrAndLoanStatus($mentee['userid']);
 //                if($brwrandLoandetail['loanActive'] == LOAN_ACTIVE && $brwrandLoandetail['overdue'] == 0){
                 if($mentee->getActiveLoanId()){
-                    $creditEarned += $borrowerInviteCredit->getLoanAmountLimit();
+                    $creditEarned = $creditEarned->add($borrowerInviteCredit);
                 }
             }
         }
         return $creditEarned;
     }
 
-    public function getCurrentCreditLimit(Borrower $borrower, $creditEarned, $addCreditEarned)
+    public function getCurrentCreditLimit(Borrower $borrower, Money $creditEarned, $addCreditEarned)
     {
-        $firstLoanValue = Setting::get('loan.firstLoanValue');
+        $firstLoanValue = Money::create(Setting::get('loan.firstLoanValue'), 'USD');
         $isEverFunded = $this->isEverFundedLoan($borrower);
         $loanStatus = $borrower->getActivationStatus();
         $exchangeRate = ExchangeRateQuery::create()
             ->findCurrent($borrower->getCountry()->getCurrency());
-        $creditEarnedUSD = Converter::toUSD(Money::create($creditEarned, $borrower->getCountry()->getCurrencyCode()), $exchangeRate)->getAmount();
-        if ($creditEarnedUSD > 1000){
-            $creditEarnedUSD = 1000;
+        $creditEarnedUSD = Converter::toUSD($creditEarned, $exchangeRate);
+        if ($creditEarnedUSD->greaterThan(Money::create(1000, 'USD'))) {
+            $creditEarnedUSD = Money::create(1000, 'USD');
         }
-        $creditEarned = Converter::fromUSD(Money::create($creditEarnedUSD, 'USD'), $borrower->getCountry()->getCurrency(), $exchangeRate)->getAmount();
+        $creditEarned = Converter::fromUSD($creditEarnedUSD, $borrower->getCountry()->getCurrency(), $exchangeRate);
 
         if($loanStatus == Loan::ACTIVE || $loanStatus == Loan::FUNDED || $loanStatus == Loan::OPEN){
 //case where borrower has an active loan or fundraising application - we calculate credit limit based on current loan amount
@@ -656,17 +652,17 @@ class BorrowerService
             $isInvited = InviteQuery::create()
                 ->filterByInvitee($borrower)
                 ->findOne();
-            if ($requestedAmount->getAmount() > $firstLoanValue) {
-                if ($creditEarned > 0) {
-                    return round(intval($raisedAmount->getAmount()) + intval($creditEarned));
+            if ($requestedAmount->greaterThan($firstLoanValue)) {
+                if ($creditEarned->isPositive()) {
+                    return $raisedAmount->add($creditEarned);
                 }
-                    return $raisedAmount->getAmount();
+                    return $raisedAmount;
             }
             $bonusCredit = 0 ;
             if (!empty($isInvited)) {
-                $bonusCredit = 100; //adds bonus for new members who were invited by eligible existing members
+                $bonusCredit = Money::create(100, $borrower->getCountry()->getCurrency()); //adds bonus for new members who were invited by eligible existing members
             }
-            $totalValue = $firstLoanValue + $bonusCredit;
+            $totalValue = Converter::fromUSD($firstLoanValue, $borrower->getCountry()->getCurrency(), $exchangeRate)->add($bonusCredit);
             return $totalValue;
         } elseif ($ontime != 1) {
             //case where last loan was repaid late - credit limit should equal last loan repaid on time or admin first loan setting, if no loan was ever repaid on time
@@ -674,11 +670,11 @@ class BorrowerService
             if (!empty($previousAmount) && $previousAmount->getAmount() > 10) {
                 $currentLimit = $previousAmount;
             } else {
-                $nativeFirstLoanValue = Converter::fromUSD($firstLoanValue, $loan->getCurrency(), $exchangeRate);
+                $nativeFirstLoanValue = Converter::fromUSD($firstLoanValue, $borrower->getCountry()->getCurrency(), $exchangeRate);
                 if (!$addCreditEarned) {
                     $currentLimit = $nativeFirstLoanValue;
                 } else {
-                    $currentLimit = ceil(intval($nativeFirstLoanValue->getAmount()) + intval($creditEarned));
+                    $currentLimit = $nativeFirstLoanValue->add($creditEarned);
                 }
             }
             return $currentLimit;
@@ -690,9 +686,9 @@ class BorrowerService
             if ( $repaymentRate < $minRepaymentRate) {
                 //case where last loan repaid on time but monthly installment repayment rate is below admin threshold - loan size stays same
                 if (!$addCreditEarned) {
-                    $currentLimit = ceil($raisedAmount->getAmount());
+                    $currentLimit = $raisedAmount;
                 } else {
-                    $currentLimit = ceil(intval($raisedAmount->getAmount()) + intval($creditEarned));
+                    $currentLimit = $raisedAmount->add($creditEarned);
                 }
             } else {
                 //case where last loan repaid on time and overall repayment is above admin threshold - we next check whether the last loan was held long enough to qualify for credit limit increase, with the amount of time loans need to be held and size of increase both dependent on previous loan amount
@@ -718,9 +714,9 @@ class BorrowerService
                 if ($months < $timeThreshold) {
                     //if the loan has not been held long enough then borrower does not yet qualify for credit limit increase
                     if (!$addCreditEarned) {
-                        $currentLimit = ceil($raisedAmount->getAmount());
+                        $currentLimit = $raisedAmount;
                     } else {
-                        $currentLimit = ceil(intval($raisedAmount->getAmount()) + intval($creditEarned));
+                        $currentLimit = $raisedAmount->add($creditEarned);
                     }
                 } else {
                     //case where last loan was repaid on time, overall repayment rate is above threshold and loan held for long enough to qualify for credit limit increase
@@ -730,18 +726,18 @@ class BorrowerService
                     if ($lastInstallmentAmount > ($raisedAmount->getAmount() * 0.1) && $lastInstallmentUsdAmount > 100) {
                         //case where more than 30% and $100 of last loan was paid in the last installment
                         if (!$addCreditEarned) {
-                            $currentLimit = ceil($raisedAmount->getAmount());
+                            $currentLimit = $raisedAmount;
                         } else {
-                            $currentLimit = ceil(intval($raisedAmount->getAmount()) + intval($creditEarned));
+                            $currentLimit = $raisedAmount->add($creditEarned);
                         }
                     } else {
                         if (!$addCreditEarned) {
-                            $currentLimit = ceil(($raisedAmount->getAmount() * $percentIncrease) / 100);
+                            $currentLimit = $raisedAmount->multiply($percentIncrease)->divide(100);
                             if ($loanStatus == Loan::OPEN) {
-                                $currentLimit = $raisedAmount->getAmount();
+                                $currentLimit = $raisedAmount;
                             }
                         } else {
-                            $currentLimit = ceil(($raisedAmount->getAmount() * $percentIncrease) / 100) + intval($creditEarned);
+                            $currentLimit = $raisedAmount->multiply($percentIncrease)->divide(100)->add($creditEarned);
                         }
                     }
                 }

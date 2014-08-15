@@ -273,23 +273,23 @@ class BorrowerController extends BaseController
 
         $secondLoanPercentage = Setting::get('loan.secondLoanPercentage');
         $nextLoanPercentage = Setting::get('loan.nextLoanPercentage');
-        $firstLoanValue = Setting::get('loan.firstLoanValue');
-        $secondLoanValue = Setting::get('loan.secondLoanValue');
-        $thirdLoanValue = Setting::get('loan.thirdLoanValue');
-        $nextLoanValue = Setting::get('loan.nextLoanValue');
+        $firstLoanValue = Money::create(Setting::get('loan.firstLoanValue'), 'USD');
+        $secondLoanValue = Money::create(Setting::get('loan.secondLoanValue'),'USD');
+        $thirdLoanValue = Money::create(Setting::get('loan.thirdLoanValue'), 'USD');
+        $nextLoanValue = Money::create(Setting::get('loan.nextLoanValue'), 'USD');
         $repaymentSchedule = $this->repaymentService->getRepaymentSchedule($activeLoan);
         $currency = $borrower->getCountry()->getCurrency();
-        $currencyCode = $borrower->getCountry()->getCurrencyCode();
-        $maximumAmount = Converter::fromUSD(Money::create($nextLoanValue, 'USD'), $currency, $exchangeRate)->getAmount();
+        $maximumAmount = Converter::fromUSD($nextLoanValue, $currency, $exchangeRate);
         $loanStatus = $borrower->getLoanStatus();
         $inviteCredit = $this->borrowerService->getInviteCredit($borrower);
         $vmCredit = $this->borrowerService->getVMCredit($borrower);
-        $creditEarned = $inviteCredit + $vmCredit;
+        $creditEarned = $inviteCredit->add($vmCredit);
+        $creditEarned = Money::create($creditEarned, $borrower->getCountry()->getCurrencyCode(), $exchangeRate);
         $repaymentRate = $this->loanService->getOnTimeRepaymentScore($borrower);
         $borrowerAmountExceptCredit = $this->borrowerService->getCurrentCreditLimit($borrower, $creditEarned, false);
         $maximumBorrowerAmountNextLoan = $this->borrowerService->getCurrentCreditLimit($borrower, $creditEarned, true);
         $raisedUsdAmount = $activeLoan->getRaisedUsdAmount();
-        $raisedAmount = Converter::fromUSD($raisedUsdAmount, $activeLoan->getCurrency(), $exchangeRate);
+        $raisedAmount = Converter::fromUSD($raisedUsdAmount, $currency, $exchangeRate);
 
         if ($loanStatus == Loan::OPEN || $loanStatus == Loan::ACTIVE || $lastRepaidLoan || empty($activeLoan)) {
             $borrowerAllRepaidLoans = LoanQuery::create()
@@ -311,15 +311,15 @@ class BorrowerController extends BaseController
                             ->findOne();
                         $loanProfileUrl = route('loan:index', $borrowerAllRepaidLoan->getId());
                         if ($k = 1) {
-                            $params['firstLoanVal'] = '1.'." ".$currencyCode." ".number_format($raisedAmount->getAmount(), 0, ".", ",")." (<a href='$loanProfileUrl' >Repaid ".$loanRepaidDate->format('M j, Y')."</a>)";
+                            $params['firstLoanVal'] = '1.'." ".$raisedAmount." (<a href='$loanProfileUrl' >Repaid ".$loanRepaidDate->format('M j, Y')."</a>)";
                         } else {
-                            $params['nxtLoanvalue'] .= "<br/>".$k.". ".$currencyCode." ".number_format($raisedAmount->getAmount(), 0, ".", ",")." (<a href='$loanProfileUrl' >Repaid ".$loanRepaidDate->format('M j, Y')."</a>)";
+                            $params['nxtLoanvalue'] .= "<br/>".$k.". "." ".$raisedAmount." (<a href='$loanProfileUrl' >Repaid ".$loanRepaidDate->format('M j, Y')."</a>)";
                         }
                         $k++;
                     }
                 } elseif (empty($activeLoan)) {
                     $value = $firstLoanValue;
-                    $params['firstLoanVal'] = '1.'." ".$currencyCode.' '.number_format(Converter::fromUSD($firstLoanValue, $borrower->getCountry()->getCurrency(), $exchangeRate)->getAmount(), 0, ".", ",");
+                    $params['firstLoanVal'] = '1.'." ".Converter::fromUSD($firstLoanValue, $currency, $exchangeRate);
                 }
 
                 if (!empty($activeLoan) && $activeLoan != $lastRepaidLoan) {
@@ -329,51 +329,49 @@ class BorrowerController extends BaseController
                     if ($loanCounts == 0) {
                         $k = 1;
                         if ($loanStatus == Loan::FUNDED || $loanStatus == Loan::OPEN) {
-                            $params['firstLoanVal'] = '1.'." ".$currencyCode." ".number_format($raisedAmount->getAmount(), 0, ".", ",")." (<a href='$loanProfileUrl' >Fundraising Loan</a>)";
+                            $params['firstLoanVal'] = '1.'." "." ".$raisedAmount." (<a href='$loanProfileUrl' >Fundraising Loan</a>)";
                         } else {
-                            $params['firstLoanVal'] = '1.'." ".$currencyCode." ".number_format($raisedAmount->getAmount(), 0, ".", ",")." (<a href='$loanProfileUrl' >Disbursed ".$activeLoan->getDisbursedAt()->format('M j, Y').", ".$repaidPercent."% repaid</a>)";
+                            $params['firstLoanVal'] = '1.'." "." ".$raisedAmount." (<a href='$loanProfileUrl' >Disbursed ".$activeLoan->getDisbursedAt()->format('M j, Y').", ".$repaidPercent."% repaid</a>)";
                         }
                     } else {
                         if ($loanStatus == Loan::FUNDED || $loanStatus == Loan::OPEN) {
-                            $params['nxtLoanvalue'] .= "<br/>".$k.". ".$currencyCode." ".number_format($raisedAmount->getAmount(), 0, ".", ",")." (<a href='$loanProfileUrl' >Fundraising Loan</a>)";
+                            $params['nxtLoanvalue'] .= "<br/>".$k.". "." ".$raisedAmount." (<a href='$loanProfileUrl' >Fundraising Loan</a>)";
                         } else {
-                            $params['nxtLoanvalue'] .= "<br/>".$k.". ".$currencyCode." ".number_format($raisedAmount->getAmount(), 0, ".", ",")." (<a href='$loanProfileUrl' >Disbursed ".$activeLoan->getDisbursedAt()->format('M j, Y').", ".$repaidPercent."% repaid</a>)";
+                            $params['nxtLoanvalue'] .= "<br/>".$k.". "." ".$raisedAmount." (<a href='$loanProfileUrl' >Disbursed ".$activeLoan->getDisbursedAt()->format('M j, Y').", ".$repaidPercent."% repaid</a>)";
                         }
                     }
                     $k++;
                 }
                 if (!empty($activeLoan)) {
                     $valueNative = $borrowerAmountExceptCredit;
-                    $params['nxtLoanvalue'] .= "<br/>".$k.". ".$currencyCode.' '.number_format($maximumBorrowerAmountNextLoan, 0, ".", ",");
+                    $params['nxtLoanvalue'] .= "<br/>".$k.". ".$maximumBorrowerAmountNextLoan;
                     $k++;
-                    $valueObj = Converter::toUSD(Money::create($valueNative, $borrower->getCountry()->getCurrencyCode()), $exchangeRate);
-                    $value = $valueObj->getAmount();
+                    $valueObj = Converter::toUSD($valueNative, $exchangeRate);
+                    $value = $valueObj;
                 }
                 for ($i = $k; $i < 12; $i++) {
-                    if ($value <= 200) {
-                        $value = ($value * $secondLoanPercentage)/100;
+                    if ($value->lessThanOrEqual(Money::create(200, 'USD'))) {
+                        $value = $value->multiply($secondLoanPercentage)->divide(100);
                         if ($i == 2) {
                             $loanUsdValue = $secondLoanValue;
                         } else {
                             $loanUsdValue = $thirdLoanValue;
                         }
-                        if ($loanUsdValue < $value) {
+                        if ($loanUsdValue->lessThan($value)) {
                             $value = $loanUsdValue;
                         }
-                        $val= number_format(Converter::fromUSD(Money::create($value, 'USD'), $borrower->getCountry()->getCurrency(), $exchangeRate)->getAmount(), 0, ".", ",");
+                        $val= Converter::fromUSD($value, $currency, $exchangeRate);
 
-                        $params['nxtLoanvalue'] .= "<br/>".$i.". ".$currencyCode.' '.$val;
+                        $params['nxtLoanvalue'] .= "<br/>".$i.". ".' '.$val;
                     } else {
-                        $value = ($value * $nextLoanPercentage) / 100;
-                        $localValue = Converter::fromUSD(Money::create($value, 'USD'), $borrower->getCountry()->getCurrency(), $exchangeRate)->getAmount();
+                        $value = $value->multiply($nextLoanPercentage)->divide(100);
+                        $localValue = Converter::fromUSD($value, $currency, $exchangeRate);
 
-                        if ($localValue > $maximumAmount) {
-                            $val= number_format($maximumAmount, 0, ".", ",");
-                            $params['nxtLoanvalue'] .= "<br/>".$i.". and thereafter ".$currencyCode.' '.$val;
+                        if ($localValue->greaterThan($maximumAmount)) {
+                            $params['nxtLoanvalue'] .= "<br/>".$i.". and thereafter ".' '.$maximumAmount;
                             break;
                         } else {
-                            $val= number_format($localValue, 0, ".", ",");
-                            $params['nxtLoanvalue'] .="<br/>".$i.". ".$currencyCode.' '.$val;
+                            $params['nxtLoanvalue'] .="<br/>".$i.". ".' '.$localValue;
                         }
                     }
                 }
@@ -382,26 +380,26 @@ class BorrowerController extends BaseController
                 $currentCreditLimit = $maximumBorrowerAmountNextLoan;
 
                 if ($loanStatus == Loan::FUNDED || $loanStatus == Loan::OPEN) {
-                    $params['currentCreditLimit'] = $currencyCode .' '. number_format($raisedAmount->getAmount(), 0, ".", ",");
+                    $params['currentCreditLimit'] = $raisedAmount;
                 } else {
-                    $params['currentCreditLimit'] = $currencyCode .' '. number_format($currentCreditLimit, 0, ".", ",");
+                    $params['currentCreditLimit'] = $currentCreditLimit;
                 }
-                $params['baseCreditLimit'] = $currencyCode .' '. number_format($borrowerAmountExceptCredit, 0, ".", ",");
-                $params['inviteCredit'] = $currencyCode .' '.number_format($inviteCredit);
+                $params['baseCreditLimit'] = $borrowerAmountExceptCredit;
+                $params['inviteCredit'] = $inviteCredit;
                 $params['myInvites'] = route('borrower:invites');
-                $params['volunteerMentorCredit'] = $currencyCode .' '.number_format($vmCredit);
+                $params['volunteerMentorCredit'] = $vmCredit;
             } else {
                 $currentCreditLimit = $maximumBorrowerAmountNextLoan;
 
                 if ($loanStatus == Loan::FUNDED || $loanStatus == Loan::OPEN) {
-                    $params['currentCreditLimit'] = $currencyCode .' '. number_format($raisedAmount->getAmount(), 0, ".", ",");
+                    $params['currentCreditLimit'] = $raisedAmount;
                 } else {
-                    $params['currentCreditLimit'] = $currencyCode .' '. number_format($currentCreditLimit, 0, ".", ",");
+                    $params['currentCreditLimit'] = $currentCreditLimit;
                 }
-                $params['baseCreditLimit'] = $currencyCode .' '. number_format($borrowerAmountExceptCredit, 0, ".", ",");
-                $params['inviteCredit'] = $currencyCode .' '.number_format($inviteCredit);
+                $params['baseCreditLimit'] = $borrowerAmountExceptCredit;
+                $params['inviteCredit'] = $inviteCredit;
                 $params['myInvites'] = route('borrower:invites');
-                $params['volunteerMentorCredit'] = $currencyCode .' '.number_format($vmCredit);
+                $params['volunteerMentorCredit'] = $vmCredit;
             }
 
             $isEverFunded = $this->borrowerService->isEverFundedLoan($borrower);

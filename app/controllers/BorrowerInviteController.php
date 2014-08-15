@@ -112,11 +112,11 @@ class BorrowerInviteController extends BaseController
         $page = Request::query('page') ? : 1;
 
         $minRepaymentRate = \Setting::get('invite.minRepaymentRate');
-        $currencyCode = $borrower->getCountry()->getCurrencyCode();
         $inviteesRepaymentRate = $this->borrowerService->getInviteeRepaymentRate($borrower);
         $successRate = number_format(($inviteesRepaymentRate)*100);
         $creditEarned = $this->borrowerService->getInviteCredit($borrower);
-        $bonusEarned = $currencyCode . " " . $creditEarned ;
+        $currencyCode = $borrower->getCountry()->getCurrencyCode();
+        $bonusEarned = $creditEarned;
         $paginator = InviteQuery::create()
             ->filterByBorrower($borrower)
             ->paginate($page, 10);
