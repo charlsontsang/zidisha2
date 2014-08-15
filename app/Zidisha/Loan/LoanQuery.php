@@ -120,5 +120,4 @@ class LoanQuery extends BaseLoanQuery
             ->filterByStatus(Loan::REPAID)
             ->find();
     }
-
 } // LoanQuery

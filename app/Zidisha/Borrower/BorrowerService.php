@@ -433,7 +433,8 @@ class BorrowerService
     public function isEligibleToInvite(Borrower $borrower)
     {
         //borrower must have repaid some amount to Zidisha
-        $previousLoan = $this->getLastRepaidLoan($borrower);
+        $previousLoan = LoanQuery::create()
+            ->getLastRepaidLoan($borrower);
         //in case where there is no previous loan, checks whether borrower has yet made any payments on current loan
         if(!empty($previousLoan)){
             $paid = $previousLoan;
@@ -477,19 +478,6 @@ class BorrowerService
         }
 
         return $eligible;
-    }
-
-    private function getLastRepaidLoan(Borrower $borrower)
-    {
-        $sql = "SELECT * FROM loans WHERE borrower_id  = :borrowerId AND deleted_by_admin = :deleted AND (status=:repaid OR status=:defaulted) AND expired_at is NULL ORDER BY id DESC ";
-
-        $id = ( PropelDB::fetchOne($sql, [
-                'borrowerId' => $borrower->getId(),
-                'deleted' => 0,
-                'repaid' => Loan::REPAID,
-                'defaulted' => Loan::DEFAULTED,
-            ]));
-        return $id;
     }
 
     public function checkMaxInviteesWithoutPayment(Borrower $borrower)
@@ -655,7 +643,8 @@ class BorrowerService
 
         }else{
 //case where borrower has repaid one or more loans and has not yet posted an application for a new one - we calculate credit limit based on most recently repaid loan amount
-            $loan= $this->getLastRepaidLoan($borrower);
+            $loan= LoanQuery::create()
+                ->getLastRepaidLoan($borrower);
             $ontime = $this->loanService->isRepaidOnTime($borrower, $loan);
         }
         $raisedUsdAmount = $loan->getRaisedUsdAmount();
