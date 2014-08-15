@@ -285,9 +285,9 @@ class GenerateModelData extends Command
         }
         
         if ($model == 'AbandonedUser') {
-            $data['username'] = 'lender-AbandonedUser';
+            $data['username'] = 'lender-abandoned';
             $data['password'] = '1234567890';
-            $data['email'] = 'lender-AbandonedUser@mail.com';
+            $data['email'] = 'lender-abandoned@mail.com';
             $data['countryId'] = '1';
 
             $lender = $this->lenderService->joinLender($data);
@@ -343,7 +343,7 @@ class GenerateModelData extends Command
         }
 
         if ($model == 'NewLenderIntro') {
-            $data['username'] = 'lender-NewLenderIntro';
+            $data['username'] = 'lender-Newlender';
             $data['password'] = '1234567890';
             $data['email'] = 'lender-NewLenderIntro@mail.com';
             $data['countryId'] = '1';
@@ -767,7 +767,6 @@ class GenerateModelData extends Command
                         ->setAmount($installmentAmount)
                         ->setPaidAmount($installmentAmount->divide(2))
                         ->setDueDate(Carbon::now()->subDays(31)->addHours(12));
-                    var_dump($installment->getDueDate());
                 } else {
                     $installment = new Installment();
                     $installment
@@ -851,7 +850,6 @@ class GenerateModelData extends Command
                         ->setAmount($installmentAmount)
                         ->setPaidAmount($installmentAmount->divide(2))
                         ->setDueDate(Carbon::now()->subDays(61)->addHours(12));
-                    var_dump($installment->getDueDate());
                 } else {
                     $installment = new Installment();
                     $installment
