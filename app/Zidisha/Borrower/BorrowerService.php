@@ -616,7 +616,7 @@ class BorrowerService
             ->findOne();
         $creditEarned = 0;
 
-        if ($isVM){
+        if ($isVM) {
             $mentees = BorrowerQuery::create()
                 ->filterByVolunteerMentor($isVM)
                 ->find();
@@ -627,7 +627,7 @@ class BorrowerService
                 //TODO
                 //$brwrandLoandetail = $this->getBrwrAndLoanStatus($mentee['userid']);
 //                if($brwrandLoandetail['loanActive'] == LOAN_ACTIVE && $brwrandLoandetail['overdue'] == 0){
-                if($borrower->getActiveLoanId()){
+                if($mentee->getActiveLoanId()){
                     $creditEarned += $borrowerInviteCredit->getLoanAmountLimit();
                 }
             }
