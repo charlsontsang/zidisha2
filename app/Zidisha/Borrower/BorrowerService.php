@@ -6,8 +6,8 @@ use Propel\Runtime\ActiveQuery\Criteria;
 use Zidisha\Admin\Setting;
 use Zidisha\Borrower\Base\BorrowerQuery;
 use Zidisha\Credit\CreditsEarnedQuery;
-use Zidisha\CreditSetting;
-use Zidisha\CreditSettingQuery;
+use Zidisha\Credit\CreditSetting;
+use Zidisha\Credit\CreditSettingQuery;
 use Zidisha\Currency\Converter;
 use Zidisha\Currency\ExchangeRate;
 use Zidisha\Currency\ExchangeRateQuery;
@@ -595,10 +595,9 @@ class BorrowerService
             $repaymentRate = $this->loanService->getOnTimeRepaymentScore($invite->getInvitee());
             if($repaymentRate >= $minRepaymentRate)
             {
-                //TODO using credit_settings
-//                $country=$this->getCountryCodeById($userid);
-//                $binvitecredit=$this->getcreditsettingbyCountry($country,3);
-//                $creditearned+=$binvitecredit['loanamt_limit'];
+                $borrowerInviteCredit = CreditSettingQuery::create()
+                    ->getBorrowerInviteCredit($borrower);
+                $creditEarned = $borrowerInviteCredit->getLoanAmountLimit();
             }
         }
         return $creditEarned;
@@ -622,9 +621,7 @@ class BorrowerService
                 ->filterByVolunteerMentor($isVM)
                 ->find();
             $borrowerInviteCredit = CreditSettingQuery::create()
-                ->filterByCountry($borrower->getCountry())
-                ->filterByType(CreditSetting::BORROWER_INVITE_CREDIT)
-                ->findOne();
+                ->getBorrowerInviteCredit($borrower);
 
             foreach ($mentees as $mentee) {
                 //TODO
