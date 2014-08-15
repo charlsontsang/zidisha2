@@ -18,7 +18,7 @@ use Zidisha\ScheduledJob\Map\ScheduledJobTableMap;
  * long as it does not already exist in the output directory.
  *
  */
-class AbandonedUser extends ScheduledJobs
+class AbandonedUser extends ScheduledJob
 {
     const COUNT = 3;
     /**

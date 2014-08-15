@@ -22,7 +22,7 @@ use Zidisha\ScheduledJob\Map\ScheduledJobTableMap;
  * long as it does not already exist in the output directory.
  *
  */
-class RepaymentReminder extends ScheduledJobs
+class RepaymentReminder extends ScheduledJob
 {
 
     /**

@@ -19,7 +19,7 @@ use Zidisha\ScheduledJob\Map\ScheduledJobTableMap;
  * long as it does not already exist in the output directory.
  *
  */
-class NewLenderIntro extends ScheduledJobs
+class NewLenderIntro extends ScheduledJob
 {
 
     /**

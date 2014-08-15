@@ -19,7 +19,7 @@ use Zidisha\Vendor\SiftScience\SiftScienceService;
  * long as it does not already exist in the output directory.
  *
  */
-class CronToRepay extends ScheduledJobs
+class CronToRepay extends ScheduledJob
 {
 
     /**

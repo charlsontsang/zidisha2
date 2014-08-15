@@ -20,7 +20,7 @@ use Zidisha\ScheduledJob\Map\ScheduledJobTableMap;
  * long as it does not already exist in the output directory.
  *
  */
-class UnusedFunds extends ScheduledJobs
+class UnusedFunds extends ScheduledJob
 {
 
     /**

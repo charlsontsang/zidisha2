@@ -24,7 +24,7 @@ use Zidisha\Sms\BorrowerSmsService;
  * long as it does not already exist in the output directory.
  *
  */
-class LoanFinalArrear extends ScheduledJobs
+class LoanFinalArrear extends ScheduledJob
 {
 
     /**
