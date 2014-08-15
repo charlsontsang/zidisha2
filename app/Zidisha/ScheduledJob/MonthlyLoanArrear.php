@@ -40,7 +40,7 @@ class MonthlyLoanArrear extends ScheduledJobs
     {
         return DB::table('installments AS rs')
             ->selectRaw(
-                'rs.borrower_id AS user_id, rs.loan_id, rs.due_date AS start_date, rs.amount, rs.paid_amount, *'
+                'rs.borrower_id AS user_id, rs.loan_id, rs.due_date AS start_date, rs.amount, rs.paid_amount'
             )
             ->join('borrowers AS br', 'rs.borrower_id', '=', 'br.id')
             ->whereRaw("rs.amount > 0")
