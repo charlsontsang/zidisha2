@@ -6,7 +6,7 @@ Invites
 
 @section('content')
     <div class="page-header">
-            {{ \Lang::get('borrower.invite.invites-message', ['minRepaymentRate' => $minRepaymentRate, 'currencyCode' => $currencyCode]) }}
+            {{ \Lang::get('borrower.invite.invites-message', ['minRepaymentRate' => $minRepaymentRate, 'borrowerInviteCredit' => $borrowerInviteCredit]) }}
     </div>
     <div>
         {{ \Lang::get('borrower.invite.success-rate') }}
@@ -46,7 +46,7 @@ Invites
            <?php $name = ''; ?>
            <?php $status = \Lang::get('borrower.invite.not-accepted'); ?>
            <?php $repaymentRate = ''; ?>
-           <?php $bonus = 0; ?>
+           <?php $bonus = \Zidisha\Currency\Money::create(0, $currencyCode); ?>
         @else
             <?php $lastLoan = \Zidisha\Loan\LoanQuery::create()->getLastLoan($invite->getInvitee()) ?>
             {{-- //TODO endrosement --}}
@@ -76,7 +76,7 @@ Invites
                     <?php $status =  \Lang::get('borrower.invite.no-loan'); ?>
                 @endif
                 <?php $repaymentRate = ''; ?>
-                <?php $bonus = 0; ?>
+                <?php $bonus = \Zidisha\Currency\Money::create(0, $currencyCode); ?>
             @else
                 <?php $loanStatus = $invite->getInvitee()->getLoanStatus() ?>
                 <?php $repaymentSchedule = $repaymentService->getRepaymentSchedule($invite->getInvitee()->getActiveLoan()); ?>
@@ -92,9 +92,9 @@ Invites
                 <?php $rate = $loanService->getOnTimeRepaymentScore($invite->getInvitee()); ?>
                 <?php $repaymentRate = number_format($rate)."%"; ?>
                 @if($rate >= $minRepaymentRate)
-                    <?php $bonus = $borrowerInviteCredit->getLoanAmountLimit(); ?>
+                    <?php $bonus = $borrowerInviteCredit; ?>
                 @else
-                    <?php $bonus = 0; ?>
+                    <?php $bonus = \Zidisha\Currency\Money::create(0, $currencyCode); ?>
                 @endif
             @endif
         @endif
@@ -103,7 +103,6 @@ Invites
         <td data-title="Status">{{ $status }}</td>
         <td data-title="RepaymentRate">{{ $repaymentRate }}</td>
         <td data-title="BounsCredit">
-            {{ $currencyCode }}
             {{ $bonus }}
         </td>
         <td><a class="btn btn-primary"  href="{{ route('borrower:invites', $invite->getId()) }}">Remove</a></td>
