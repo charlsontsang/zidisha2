@@ -26,11 +26,11 @@ class CreditsEarnedQuery extends BaseCreditsEarnedQuery
 
         $sql = 'SELECT count(id) as commentposted, SUM(credit) as credit FROM credits_earned WHERE borrower_id = :borrowerId AND loan_id = :loanId AND credit_type = :creditType';
 
-        $currentCredit = ( PropelDB::fetchAll($sql, [
+        $currentCredit = PropelDB::fetchAll($sql, [
                 'borrowerId' => $borrower->getId(),
                 'loanId' => $borrower->getActiveLoanId(),
                 'creditType' => $type,
-            ]));
+            ]);
 
         if ($type == CreditSetting::ON_TIME_REPAYMENT_CREDIT) {
             $isForgiven = ForgivenLoanQuery::create()
