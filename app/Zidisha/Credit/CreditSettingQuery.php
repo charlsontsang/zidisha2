@@ -4,6 +4,7 @@ namespace Zidisha\Credit;
 
 use Zidisha\Borrower\Borrower;
 use Zidisha\Credit\Base\CreditSettingQuery as BaseCreditSettingQuery;
+use Zidisha\Currency\Money;
 
 
 /**
@@ -19,11 +20,13 @@ use Zidisha\Credit\Base\CreditSettingQuery as BaseCreditSettingQuery;
 class CreditSettingQuery extends BaseCreditSettingQuery
 {
 
-    public function getBorrowerInviteCredit(Borrower $borrower)
+    public function getBorrowerInviteCreditLoanAmountLimit(Borrower $borrower)
     {
-        return $this
-            ->filterByCountry($borrower->getCountry())
-            ->filterByType(CreditSetting::BORROWER_INVITE_CREDIT)
-            ->findOne();
+        $creditSetting = $this
+                ->filterByCountry($borrower->getCountry())
+                ->filterByType(CreditSetting::BORROWER_INVITE_CREDIT)
+                ->findOne();
+
+        return Money::create($creditSetting->getLoanAmountLimit(), $borrower->getCountry()->getCurrencyCode());
     }
 } // CreditSettingQuery

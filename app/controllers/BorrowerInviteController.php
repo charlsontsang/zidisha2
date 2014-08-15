@@ -123,7 +123,7 @@ class BorrowerInviteController extends BaseController
         $loanService = $this->loanService;
         $repaymentService = $this->repaymentService;
         $borrowerInviteCredit = CreditSettingQuery::create()
-            ->getBorrowerInviteCredit($borrower);
+            ->getBorrowerInviteCreditLoanAmountLimit($borrower);
 
         return View::make(
             'borrower.invites',

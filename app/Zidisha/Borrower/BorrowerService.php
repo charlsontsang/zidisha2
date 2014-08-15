@@ -584,9 +584,8 @@ class BorrowerService
             $repaymentRate = $this->loanService->getOnTimeRepaymentScore($invite->getInvitee());
             if($repaymentRate >= $minRepaymentRate)
             {
-                $borrowerInviteCredit = CreditSettingQuery::create()
-                    ->getBorrowerInviteCredit($borrower);
-                $creditEarned = Money::create($borrowerInviteCredit->getLoanAmountLimit(), $borrower->getCountry()->getCurrency());
+                $creditEarned = CreditSettingQuery::create()
+                    ->getBorrowerInviteCreditLoanAmountLimit($borrower);
             }
         }
         return $creditEarned;
@@ -601,8 +600,7 @@ class BorrowerService
                 ->filterByVolunteerMentorId($borrower->getId())
                 ->find();
             $borrowerInviteCredit = CreditSettingQuery::create()
-                ->getBorrowerInviteCredit($borrower);
-            $borrowerInviteCredit = Money::create($borrowerInviteCredit->getLoanAmountLimit(), $borrower->getCountry()->getCurrency());
+                ->getBorrowerInviteCreditLoanAmountLimit($borrower);
 
             foreach ($mentees as $mentee) {
                 //TODO
