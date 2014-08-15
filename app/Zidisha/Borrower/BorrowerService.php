@@ -754,10 +754,12 @@ class BorrowerService
             ->isFirstFundedLoan($borrower);
         $firstLoanValue = Money::create(Setting::get('loan.firstLoanValue'), 'USD');
         $currencyCode = $loan->getCurrencyCode();
+        $currency = $loan->getCurrency();
+        $firstLoanValueNative = Money::create($firstLoanValue, $currency, $exchangeRate);
 
         if($isFirstFundedLoan)
         {
-            $previousLoanAmount = $firstLoanValue;
+            $previousLoanAmount = $firstLoanValueNative;
         } else {
             if(!empty($loan)) {
                 $amountNative = LoanQuery::create()
@@ -767,23 +769,19 @@ class BorrowerService
                 $amount = Converter::toUSD($amountNative, $exchangeRate);
 
                 if(!empty($amount) && $amount->greaterThan(Money::create(1, 'USD'))){
-                    $previousLoanAmount = $amount;
+                    $previousLoanAmount = $amountNative;
                 }else{
                     if ($loan->getUsdAmount()->greaterThan($firstLoanValue)) {
-                        $disbursedAmount = $loan->getDisbursedAmount();
-                        $previousLoanAmount = Converter::toUSD(Money::create($disbursedAmount, $currencyCode), $exchangeRate);
+                        $previousLoanAmount = $loan->getDisbursedAmount();
                     } else {
-                        $previousLoanAmount = $firstLoanValue;
+                        $previousLoanAmount = $firstLoanValueNative;
                     }
                 }
             } else {
-                $amountNative = LoanQuery::create()
+                $previousLoanAmount = LoanQuery::create()
                     ->getMaximumDisbursedAmount($borrower, $currencyCode);
-
-                $previousLoanAmount = Converter::toUSD(Money::create($amountNative, $currencyCode, $exchangeRate), $exchangeRate);
             }
         }
-        $previousLoanAmount = Converter::fromUSD($previousLoanAmount, $currencyCode, $exchangeRate);
         return $previousLoanAmount;
     }
 }
