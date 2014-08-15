@@ -20,7 +20,10 @@ class HomeController extends BaseController {
     
 	public function getLenderHome()
 	{
-		return View::make('lender-home');
+        $secondaryCaption = 'and join the global <strong>person-to-person</strong> microlending movement.';
+        $buttonText = 'Browse Projects';
+
+		return View::make('lender-home', compact('secondaryCaption','buttonText'));
 	}
 
     private function getBorrowerHome()
