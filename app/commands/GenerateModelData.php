@@ -21,7 +21,7 @@ use Zidisha\Comment\Comment;
 use Zidisha\Country\Country;
 use Zidisha\Country\CountryQuery;
 use Zidisha\Country\Language;
-use Zidisha\CreditSetting;
+use Zidisha\Credit\CreditSetting;
 use Zidisha\Currency\Converter;
 use Zidisha\Currency\ExchangeRateQuery;
 use Zidisha\Currency\Money;

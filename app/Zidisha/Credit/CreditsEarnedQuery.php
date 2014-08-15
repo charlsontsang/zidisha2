@@ -4,7 +4,6 @@ namespace Zidisha\Credit;
 
 use Zidisha\Borrower\Borrower;
 use Zidisha\Credit\Base\CreditsEarnedQuery as BaseCreditsEarnedQuery;
-use Zidisha\CreditSetting;
 use Zidisha\Loan\ForgivenLoanQuery;
 use Zidisha\Vendor\PropelDB;
 
