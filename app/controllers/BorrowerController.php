@@ -261,12 +261,9 @@ class BorrowerController extends BaseController
         if(empty($activeLoan) && $lastRepaidLoan) {
             $activeLoan = $lastRepaidLoan;
         }
-        //$lastRepaidStatus= $lastRepaidLoan->getStatus();
         $loanCounts = LoanQuery::create()
             ->filterByBorrower($borrower)
-            ->filterByStatus(Loan::REPAID)
-            ->_or()
-            ->filterByStatus(Loan::DEFAULTED)
+            ->filterByStatus([Loan::REPAID, Loan::DEFAULTED])
             ->count();
 
         $secondLoanPercentage = Setting::get('loan.secondLoanPercentage');
