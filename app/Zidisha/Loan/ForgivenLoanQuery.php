@@ -3,6 +3,7 @@
 namespace Zidisha\Loan;
 
 use Propel\Runtime\ActiveQuery\Criteria;
+use Zidisha\Admin\Setting;
 use Zidisha\Currency\Currency;
 use Zidisha\Currency\Money;
 use Zidisha\Loan\Base\ForgivenLoanQuery as BaseForgivenLoanQuery;
@@ -46,7 +47,7 @@ class ForgivenLoanQuery extends BaseForgivenLoanQuery
     {
         return $this
             ->filterByLoan($loan)
-            ->filterByLenderId(User::ADMIN_ID, Criteria::NOT_EQUAL)
+            ->filterByLenderId(Setting::get('site.adminId'), Criteria::NOT_EQUAL)
             ->count();
     }
 } // ForgivenLoanQuery

@@ -24,7 +24,10 @@ class CreditsEarnedQuery extends BaseCreditsEarnedQuery
     public function getCurrentCredit(Borrower $borrower, $type)
     {
 
-        $sql = 'SELECT count(id) as commentposted, SUM(credit) as credit FROM credits_earned WHERE borrower_id = :borrowerId AND loan_id = :loanId AND credit_type = :creditType';
+        $sql = 'SELECT count(id) as commentposted, SUM(credit) as credit FROM credits_earned
+                WHERE borrower_id = :borrowerId
+                AND loan_id = :loanId
+                AND credit_type = :creditType';
 
         $currentCredit = PropelDB::fetchAll($sql, [
                 'borrowerId' => $borrower->getId(),

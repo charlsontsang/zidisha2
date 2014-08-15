@@ -636,7 +636,7 @@ class BorrowerService
         if($loanStatus == Loan::ACTIVE || $loanStatus == Loan::FUNDED || $loanStatus == Loan::OPEN){
 //case where borrower has an active loan or fundraising application - we calculate credit limit based on current loan amount
             $loan = $borrower->getActiveLoan();
-            $ontime = 1; //assume current loan will be repaid on time for purpose of displaying future credit limits
+            $ontime = true; //assume current loan will be repaid on time for purpose of displaying future credit limits
 
         }else{
 //case where borrower has repaid one or more loans and has not yet posted an application for a new one - we calculate credit limit based on most recently repaid loan amount
@@ -665,7 +665,7 @@ class BorrowerService
             }
             $totalValue = Converter::fromUSD($firstLoanValue, $borrower->getCountry()->getCurrency(), $exchangeRate)->add($bonusCredit);
             return $totalValue;
-        } elseif ($ontime != 1) {
+        } elseif (!$ontime) {
             //case where last loan was repaid late - credit limit should equal last loan repaid on time or admin first loan setting, if no loan was ever repaid on time
             $previousAmount = $this->getPreviousLoanAmount($borrower, $loan, $exchangeRate);
             if (!empty($previousAmount) && $previousAmount->getAmount() > 10) {

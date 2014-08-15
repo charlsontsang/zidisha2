@@ -425,7 +425,7 @@ class BorrowerController extends BaseController
                 $note = \Lang::get('borrower.loan-application.current-credit.first-loan');
             } elseif (empty($activeLoan) && $lastRepaidLoan) {
                 $ontime = $this->loanService->isRepaidOnTime($borrower, $lastRepaidLoan);
-                if ($ontime != 1) {
+                if (!$ontime) {
                     $note = \Lang::get('borrower.loan-application.current-credit.repaid-late', array('minimumRepaymentRate' => $minimumRepaymentRate) );
                 }
             } elseif ($months < $timeThreshold) {

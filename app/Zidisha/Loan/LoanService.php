@@ -911,9 +911,9 @@ class LoanService
             ->withColumn('MAX(id)', 'id')
             ->findOne();
         $repaymentThreshold = \Config::get('constants.repaymentThreshold');
-        if($id->getPaidDate() && ($id->getPaidDate()->getTimestamp() - $id->getDueDate()->getTimestamp()) <= 86400*$repaymentThreshold)  /* grace time is 10 days that is (86400*10) seconds*/
-            return 1;
+        if($id->getPaidDate() && ($id->getPaidDate()->getTimestamp() - $id->getDueDate()->getTimestamp()) <= 86400*$repaymentThreshold)
+            return true;
         else
-            return 0;
+            return false;
     }
 }

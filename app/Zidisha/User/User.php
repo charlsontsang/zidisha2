@@ -14,8 +14,6 @@ class User extends BaseUser implements UserInterface, RemindableInterface
     const ROLE_BORROWER = 'borrower';
     const ROLE_ADMIN    = 'admin';
 
-    const ADMIN_ID = 1;
-
     const SUB_ROLE_VOLUNTEER        = 'volunteer';
     const SUB_ROLE_VOLUNTEER_MENTOR = 'volunteerMentor';
 
