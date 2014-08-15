@@ -691,9 +691,13 @@ class BorrowerService
             } else {
                 //case where last loan repaid on time and overall repayment is above admin threshold - we next check whether the last loan was held long enough to qualify for credit limit increase, with the amount of time loans need to be held and size of increase both dependent on previous loan amount
                 $disbursedDate = $loan->getDisbursedAt();
-                $currentTime = Carbon::now();
-                $disbursedAt = Carbon::instance($disbursedDate);
-                $months = $disbursedAt->diffInMonths($currentTime);
+                if ($disbursedDate) {
+                    $currentTime = Carbon::now();
+                    $disbursedAt = Carbon::instance($disbursedDate);
+                    $months = $disbursedAt->diffInMonths($currentTime);
+                } else {
+                    $months = 0;
+                }
 
                 if ($raisedUsdAmount->lessThanOrEqual(Money::create(200, 'USD'))) {
                     $timeThreshold = Setting::get('loan.loanIncreaseThresholdLow');

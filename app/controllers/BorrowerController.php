@@ -403,9 +403,13 @@ class BorrowerController extends BaseController
             $isFirstFundedLoan = LoanQuery::create()
                 ->isFirstFundedLoan($borrower);
             $disbursedDate = $activeLoan->getDisbursedAt();
-            $currentTime = Carbon::now();
-            $disbursedAt = Carbon::instance($disbursedDate);
-            $months = $disbursedAt->diffInMonths($currentTime);
+            if ($disbursedDate) {
+                $currentTime = Carbon::now();
+                $disbursedAt = Carbon::instance($disbursedDate);
+                $months = $disbursedAt->diffInMonths($currentTime);
+            } else {
+                $months = 0;
+            }
             $minimumRepaymentRate = $minRepaymentRate = \Setting::get('invite.minRepaymentRate');
 
             if ($raisedUsdAmount->lessThanOrEqual(Money::create(200, 'USD'))) {
