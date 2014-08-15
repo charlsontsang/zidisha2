@@ -37,39 +37,50 @@ class CronToRepay extends ScheduledJobs
 
         return DB::table('installments as rs')
             ->selectRaw('rs.borrower_id AS user_id, rs.loan_id, rs.due_date AS start_date, rs.amount, rs.paid_amount')
-            ->join('borrowers AS br', 'rs.borrower_id', '=', 'br.ID')
+            ->join('borrowers AS br', 'rs.borrower_id', '=', 'br.id')
             ->whereRaw("rs.amount > 0")
             ->whereRaw("
-                        ( 
-                            rs.paid_amount < ( 
-                                    rs.amount - $thresholdAmount * ( 
-                                            SELECT rate 
-                                            FROM exchange_rates 
-                                            WHERE start_date = ( 
-                                                    SELECT MAX (start_date) 
-                                                    FROM exchange_rates 
-                                                    WHERE currency_code = (
-                                                        SELECT countries.currency_code 
-                                                        FROM countries 
-                                                        where countries.id = br.country_id
-                                                    ) 
-                                            )
-                                    AND exchange_rates.currency_code = (
+                (
+                        rs.paid_amount < (
+                            rs.amount - ". $thresholdAmount ." * (
+                                SELECT
+                                    rate
+                                FROM
+                                    exchange_rates
+                                WHERE
+                                    start_date = (
                                         SELECT
-                                            countries.currency_code
+                                            MAX (start_date)
                                         FROM
-                                            countries
+                                            exchange_rates
                                         WHERE
-                                            countries.id = br.country_id
+                                            currency_code = (
+                                                SELECT
+                                                    countries.currency_code
+                                                FROM
+                                                    countries
+                                                WHERE
+                                                    countries. ID = br.country_id
+                                            )
                                     )
-                            ) 
-                            OR paid_amount IS NULL
+                            
+                            AND exchange_rates.currency_code = (
+                                SELECT
+                                    countries.currency_code
+                                FROM
+                                    countries
+                                WHERE
+                                    countries. ID = br.country_id
+                            )
                         )
+                        
+                    )
+                    OR rs.paid_amount IS NULL
+                )
                 ")
             ->whereRaw('rs.due_date <= \'' . Carbon::now()->subDays(60) . '\'')
             ->whereRaw('rs.due_date > \'' . Carbon::now()->subDays(61) . '\'')
-            ->orderByRaw('rs.borrower_id asc');
-
+            ->orderBy('rs.borrower_id', 'asc');
     }
 
     public function process(Job $job)
