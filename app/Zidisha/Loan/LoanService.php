@@ -904,16 +904,13 @@ class LoanService
 
     public function isRepaidOnTime(Borrower $borrower, Loan $loan)
     {
-        $id = InstallmentQuery::create()
+        $installment = InstallmentQuery::create()
             ->filterByBorrower($borrower)
             ->filterByLoan($loan)
-            ->select('id')
-            ->withColumn('MAX(id)', 'id')
+            ->orderById('desc')
             ->findOne();
         $repaymentThreshold = \Config::get('constants.repaymentThreshold');
-        if($id->getPaidDate() && ($id->getPaidDate()->getTimestamp() - $id->getDueDate()->getTimestamp()) <= 86400*$repaymentThreshold)
-            return true;
-        else
-            return false;
+
+        return Carbon::instance($installment->getPaidDate())->diffInDays($installment->getDueDate()) <= $repaymentThreshold;
     }
 }
