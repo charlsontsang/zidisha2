@@ -35,6 +35,7 @@ class UnusedFunds extends ScheduledJobs
     public function getQuery()
     {
         return DB::table('users AS u')
+            ->selectRaw('u.id AS user_id, u.last_login_at as start_date')
             ->whereRaw("u.last_login_at < '" . Carbon::now()->subMonths(2) . "'")
             ->whereRaw('u.role = 0')
             ->whereRaw('u.active = true')
@@ -45,7 +46,6 @@ class UnusedFunds extends ScheduledJobs
                         SELECT COUNT(*) 
                         FROM notifications n
                         WHERE n.user_id = u.id
-                        AND n.created >= \'' . Carbon::now()->subMonth() . '\'
                         AND n.type = ' . Notification::UNUSED_FUNDS_NOTIFICATION . '
                     ) = 0
                 '
