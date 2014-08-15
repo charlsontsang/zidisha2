@@ -402,7 +402,8 @@ class BorrowerController extends BaseController
                 $params['volunteerMentorCredit'] = $vmCredit;
             }
 
-            $isEverFunded = $this->borrowerService->isEverFundedLoan($borrower);
+            $isFirstFundedLoan = LoanQuery::create()
+                ->isFirstFundedLoan($borrower);
             $disbursedDate = $activeLoan->getDisbursedAt();
             $currentTime = new \DateTime();
             $disbursedAt = $disbursedDate ? $disbursedDate->getTimestamp() : null;
@@ -420,7 +421,7 @@ class BorrowerController extends BaseController
             }
             $params['TimeThrshld'] = $timeThreshold;
 
-            if (empty($isEverFunded)) {
+            if ($isFirstFundedLoan) {
                 $note = \Lang::get('borrower.loan-application.current-credit.first-loan');
             } elseif (empty($activeLoan) && $lastRepaidLoan) {
                 $ontime = $this->loanService->isRepaidOnTime($borrower, $lastRepaidLoan);
