@@ -587,7 +587,6 @@ class BorrowerService
 
     public function getInviteCredit(Borrower $borrower)
     {
-        global $session;
         $invitees= InviteQuery::create()
             ->filterByBorrower($borrower)
             ->filterByInviteeId(null, Criteria::NOT_EQUAL)
