@@ -87,6 +87,41 @@ return [
             'default' => '12',
             'rule'    => 'numeric'
         ],
+        'loan.firstLoanPercentage' => [
+            'label' => 'Maximum amount for first Zidisha loan (As percentage of largest previous loan)',
+            'default' => '50',
+            'rule' => 'numeric'
+        ],
+        'loan.secondLoanPercentage' => [
+            'label' => 'Credit limits increase after on-time repayment of loans up to USD 200 (Percentage of largest previous loan)',
+            'default' => '300',
+            'rule' => 'numeric'
+        ],
+        'loan.nextLoanPercentage' => [
+            'label' => 'Credit limits increase after on-time repayment of loans over USD 200 (Percentage of largest previous loan)',
+            'default' => '150',
+            'rule' => 'numeric'
+        ],
+        'loan.firstLoanValue' => [
+            'label' => 'First Loan Max Value (USD)',
+            'default' => '50',
+            'rule' => 'numeric'
+        ],
+        'loan.secondLoanValue' => [
+            'label' => 'Second Loan Max Value (USD)',
+            'default' => '750',
+            'rule' => 'numeric'
+        ],
+        'loan.thirdLoanValue' => [
+            'label' => 'Third Loan Max Value (USD)',
+            'default' => '1125',
+            'rule' => 'numeric'
+        ],
+        'loan.nextLoanValue' => [
+            'label' => 'Third and Subsequent Loans Max Value (USD)',
+            'default' => '10000',
+            'rule' => 'numeric'
+        ]
     ],
     'Borrower' => [
         'invite.maxInviteesWithoutPayment' => [

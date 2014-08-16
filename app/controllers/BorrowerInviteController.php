@@ -5,6 +5,7 @@ use Zidisha\Borrower\BorrowerGuestQuery;
 use Zidisha\Borrower\BorrowerService;
 use Zidisha\Borrower\Form\InviteForm;
 use Zidisha\Borrower\InviteQuery;
+use Zidisha\Credit\CreditSettingQuery;
 use Zidisha\Loan\LoanService;
 use Zidisha\Repayment\RepaymentService;
 
@@ -111,16 +112,18 @@ class BorrowerInviteController extends BaseController
         $page = Request::query('page') ? : 1;
 
         $minRepaymentRate = \Setting::get('invite.minRepaymentRate');
-        $currencyCode = $borrower->getCountry()->getCurrencyCode();
         $inviteesRepaymentRate = $this->borrowerService->getInviteeRepaymentRate($borrower);
         $successRate = number_format(($inviteesRepaymentRate)*100);
         $creditEarned = $this->borrowerService->getInviteCredit($borrower);
-        $bonusEarned = $currencyCode . " " . $creditEarned ;
+        $currencyCode = $borrower->getCountry()->getCurrencyCode();
+        $bonusEarned = $creditEarned;
         $paginator = InviteQuery::create()
             ->filterByBorrower($borrower)
             ->paginate($page, 10);
         $loanService = $this->loanService;
         $repaymentService = $this->repaymentService;
+        $borrowerInviteCredit = CreditSettingQuery::create()
+            ->getBorrowerInviteCreditLoanAmountLimit($borrower);
 
         return View::make(
             'borrower.invites',
@@ -132,7 +135,8 @@ class BorrowerInviteController extends BaseController
                 'invites',
                 'paginator',
                 'loanService',
-                'repaymentService'
+                'repaymentService',
+                'borrowerInviteCredit'
             )
         );
     }

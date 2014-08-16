@@ -3,6 +3,7 @@
 namespace Zidisha\Utility;
 
 
+use Faker\Provider\DateTime;
 use GeoIp2\Database\Reader;
 use Zidisha\Country\CountryQuery;
 

@@ -53,6 +53,16 @@ class PropelDB {
         return $rows;
     }
 
+    public static function fetchOne($sql, $parameters = [])
+    {
+        $con = Propel::getWriteConnection(UserTableMap::DATABASE_NAME);
+        $stmt = $con->prepare($sql);
+        $stmt->execute($parameters);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $row;
+    }
+
     public static function getConnection()
     {
         return Propel::getWriteConnection(UserTableMap::DATABASE_NAME);

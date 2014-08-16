@@ -21,6 +21,7 @@ use Zidisha\Comment\Comment;
 use Zidisha\Country\Country;
 use Zidisha\Country\CountryQuery;
 use Zidisha\Country\Language;
+use Zidisha\Credit\CreditSetting;
 use Zidisha\Currency\Converter;
 use Zidisha\Currency\ExchangeRateQuery;
 use Zidisha\Currency\Money;
@@ -151,6 +152,8 @@ class GenerateModelData extends Command
 
             $this->call('fake', array('model' => 'Comment', 'size' => 200));
             $this->call('fake', array('model' => 'WithdrawalRequest', 'size' => 200));
+            $this->call('fake', array('model' => 'CreditSetting', 'size' => 1));
+
 //            $this->call('fake', array('model' => 'fakeOneBorrowerRefund', 'size' => 1));
 
             $this->call('import-translations');
@@ -219,6 +222,10 @@ class GenerateModelData extends Command
 
         if ($model == "DisburseLoan") {
             return $this->generateDisburseLoan();
+        }
+
+        if ($model == "CreditSetting") {
+            return $this->generateCreditSetting();
         }
 
         if ($model == "Repayment") {
@@ -1021,5 +1028,44 @@ class GenerateModelData extends Command
         }
         
         return true;
+    }
+
+    protected function generateCreditSetting()
+    {
+        $values = [
+            ['KE', 0, 300, 50, 1],
+            ['SN', 0, 300, 50, 1],
+            ['BF', 0, 300, 50, 1],
+            ['ID', 0, 300, 50, 1],
+//            ['NE', 0, 300, 50, 1],
+            ['BJ', 0, 300, 50, 1],
+//            ['GN', 0, 300, 50, 1],
+            ['KE', 0, 0, 0, 2],
+            ['BF', 0, 0, 0, 2],
+            ['SN', 0, 0, 0, 2],
+            ['ID', 0, 0, 0, 2],
+            ['KE', 2000, 0, 0, 3],
+            ['ID', 300000, 0, 0, 3],
+            ['SN', 10000, 0, 0, 3],
+            ['BF', 10000, 0, 0, 3],
+//            ['NE', 10000, 0, 0, 3],
+            ['BJ', 10000, 0, 0, 3],
+//            ['GN', 200000, 0, 0, 3],
+            ['GH', 200, 0, 0, 3],
+//            ['ZM', 150, 0, 0, 3],
+        ];
+
+        foreach ($values as $value) {
+            $creditSetting = new CreditSetting();
+            $creditSetting
+                ->setCountryCode($value[0])
+                ->setLoanAmountLimit($value[1])
+                ->setCharacterLimit($value[2])
+                ->setCommentsLimit($value[3])
+                ->setType($value[4]);
+            $creditSetting->save();
+        }
+
+        return 1;
     }
 }

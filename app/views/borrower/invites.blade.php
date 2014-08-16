@@ -6,7 +6,7 @@ Invites
 
 @section('content')
     <div class="page-header">
-            {{ \Lang::get('borrower.invite.invites-message', ['minRepaymentRate' => $minRepaymentRate, 'currencyCode' => $currencyCode]) }}
+            {{ \Lang::get('borrower.invite.invites-message', ['minRepaymentRate' => $minRepaymentRate, 'borrowerInviteCredit' => $borrowerInviteCredit]) }}
     </div>
     <div>
         {{ \Lang::get('borrower.invite.success-rate') }}
@@ -46,9 +46,9 @@ Invites
            <?php $name = ''; ?>
            <?php $status = \Lang::get('borrower.invite.not-accepted'); ?>
            <?php $repaymentRate = ''; ?>
-           <?php $bonus = 0; ?>
+           <?php $bonus = \Zidisha\Currency\Money::create(0, $currencyCode); ?>
         @else
-            <?php $lastLoan = LoanQuery::create()->getLastLoan($invite->getInvitee()) ?>
+            <?php $lastLoan = \Zidisha\Loan\LoanQuery::create()->getLastLoan($invite->getInvitee()) ?>
             {{-- //TODO endrosement --}}
             @if(empty($lastLoan))
                 <?php $flag=1; ?>
@@ -60,7 +60,7 @@ Invites
                 @endif
                 <?php $volunteerMentor = $invite->getInvitee()->getVolunteerMentor() ?>
                 {{-- $BorrowerReports = //TODO; --}}
-                <?php $borrowerGuest = BorrowerGuestQuery::create()->filterByEmail($invite->getEmail())->findOne(); ?>
+                <?php $borrowerGuest = \Zidisha\Borrower\BorrowerGuestQuery::create()->filterByEmail($invite->getEmail())->findOne(); ?>
                 @if($borrowerGuest && $flag == 1)
                     <?php $status =  \Lang::get('borrower.invite.application-not-submitted'); ?>
                 @elseif($volunteerMentor->getStatus() == \Zidisha\Borrower\VolunteerMentor::STATUS_PENDING_VERIFICATION)
@@ -76,12 +76,13 @@ Invites
                     <?php $status =  \Lang::get('borrower.invite.no-loan'); ?>
                 @endif
                 <?php $repaymentRate = ''; ?>
-                <?php $bonus = 0; ?>
+                <?php $bonus = \Zidisha\Currency\Money::create(0, $currencyCode); ?>
             @else
                 <?php $loanStatus = $invite->getInvitee()->getLoanStatus() ?>
                 <?php $repaymentSchedule = $repaymentService->getRepaymentSchedule($invite->getInvitee()->getActiveLoan()); ?>
-                <?php $name = "<a href='route('\loan:index', $invite->getInvitee()->getActiveLoan()->getId()))'>".$invite->getInvitee()->getName()."</a>"; ?>
-                @if($loanStatus == \Zidisha\Loan::OPEN)
+                <?php $id = $invite->getInvitee()->getActiveLoan()->getId(); ?>
+                <?php $name = "<a href='route('loan:index', $id)'>".$invite->getInvitee()->getName()."</a>"; ?>
+                @if($loanStatus == \Zidisha\Loan\Loan::OPEN)
                     <?php $status =  \Lang::get('borrower.invite.fundRaising-loan'); ?>
                 @elseif($repaymentSchedule->getMissedInstallmentCount() == 0 && $loanStatus = \Zidisha\Loan::ACTIVE)
                     <?php $status =  \Lang::get('borrower.invite.repaying-on-time'); ?>
@@ -90,10 +91,10 @@ Invites
                 @endif
                 <?php $rate = $loanService->getOnTimeRepaymentScore($invite->getInvitee()); ?>
                 <?php $repaymentRate = number_format($rate)."%"; ?>
-                @if($rate >= minRepaymentRate)
-                    {{-- $bonus = //TODO --}}
+                @if($rate >= $minRepaymentRate)
+                    <?php $bonus = $borrowerInviteCredit; ?>
                 @else
-                    <?php $bonus = 0; ?>
+                    <?php $bonus = \Zidisha\Currency\Money::create(0, $currencyCode); ?>
                 @endif
             @endif
         @endif
@@ -102,7 +103,6 @@ Invites
         <td data-title="Status">{{ $status }}</td>
         <td data-title="RepaymentRate">{{ $repaymentRate }}</td>
         <td data-title="BounsCredit">
-            {{ $currencyCode }}
             {{ $bonus }}
         </td>
         <td><a class="btn btn-primary"  href="{{ route('borrower:invites', $invite->getId()) }}">Remove</a></td>

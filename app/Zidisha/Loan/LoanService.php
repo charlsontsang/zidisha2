@@ -20,6 +20,7 @@ use Zidisha\Loan\Calculator\RepaymentCalculator;
 use Zidisha\Mail\BorrowerMailer;
 use Zidisha\Mail\LenderMailer;
 use Zidisha\Repayment\Installment;
+use Zidisha\Repayment\InstallmentQuery;
 use Zidisha\Repayment\RepaymentService;
 use Zidisha\Vendor\PropelDB;
 use Zidisha\Vendor\SiftScience\SiftScienceService;
@@ -899,5 +900,17 @@ class LoanService
                 $this->expireLoan($loan);
             }
         }
+    }
+
+    public function isRepaidOnTime(Borrower $borrower, Loan $loan)
+    {
+        $installment = InstallmentQuery::create()
+            ->filterByBorrower($borrower)
+            ->filterByLoan($loan)
+            ->orderById('desc')
+            ->findOne();
+        $repaymentThreshold = \Config::get('constants.repaymentThreshold');
+
+        return Carbon::instance($installment->getPaidDate())->diffInDays($installment->getDueDate()) <= $repaymentThreshold;
     }
 }

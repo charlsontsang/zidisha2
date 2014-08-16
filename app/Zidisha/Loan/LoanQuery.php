@@ -3,7 +3,9 @@
 namespace Zidisha\Loan;
 
 use Propel\Runtime\ActiveQuery\Criteria;
+use Symfony\Component\Validator\Constraints\Currency;
 use Zidisha\Borrower\Borrower;
+use Zidisha\Currency\Money;
 use Zidisha\Lender\Lender;
 use Zidisha\Loan\Base\LoanQuery as BaseLoanQuery;
 
@@ -79,8 +81,7 @@ class LoanQuery extends BaseLoanQuery
             ->count();
     }
 
-    public function getLastLoan(Borrower $borrower)
-    {
+    public function getLastLoan(Borrower $borrower) {
         return $this
             ->filterByBorrower($borrower)
             ->filterByDeletedByAdmin(false)
@@ -88,4 +89,50 @@ class LoanQuery extends BaseLoanQuery
             ->findOne();
     }
 
+    public function getLastRepaidLoan(Borrower $borrower)
+    {
+        return $this
+            ->filterByBorrower($borrower)
+            ->filterByDeletedByAdmin(false)
+            ->filterByStatus([Loan::REPAID, Loan::DEFAULTED])
+            ->filterByExpiredAt(null)
+            ->orderById('DESC')
+            ->findOne();
+    }
+
+    public function isFirstFundedLoan(Borrower $borrower)
+    {
+        $count =  $this
+            ->filterByBorrower($borrower)
+            ->filterByStatus([Loan::ACTIVE, Loan::REPAID, Loan::DEFAULTED])
+            ->count();
+
+        if ($count) {
+            return false;
+        }
+        return true;
+    }
+
+    public function getAllRepaidLoansForBorrower(Borrower $borrower)
+    {
+        return $this
+            ->filterByBorrower($borrower)
+            ->filterByDeletedByAdmin(false)
+            ->filterByStatus(Loan::REPAID)
+            ->find();
+    }
+
+    public function getMaximumDisbursedAmount(Borrower $borrower, $currencyCode)
+    {
+        $amount = $this
+            ->filterByBorrower($borrower)
+            ->filterByDeletedByAdmin(false)
+            ->filterByStatus(Loan::REPAID)
+            ->filterByExpiredAt(null)
+            ->select('AmountRaised')
+            ->withColumn('MAX(disbursed_amount)', 'AmountRaised')
+            ->findOne();
+
+        return Money::create($amount, $currencyCode);
+    }
 } // LoanQuery

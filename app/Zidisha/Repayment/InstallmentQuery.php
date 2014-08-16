@@ -2,6 +2,7 @@
 
 namespace Zidisha\Repayment;
 
+use Zidisha\Borrower\Base\Borrower;
 use Zidisha\Currency\Currency;
 use Zidisha\Currency\Money;
 use Zidisha\Loan\Loan;
@@ -37,12 +38,25 @@ class InstallmentQuery extends BaseInstallmentQuery
 
     public function getPaidAmount(Loan $loan)
     {
-        $amount = $this
+        return $this
             ->filterByLoan($loan)
             ->select('paidAmount')
             ->withColumn('SUM(paid_amount)', 'paidAmount')
             ->findOne();
+    }
 
-        return $amount;
+    /**
+     * @param Loan $loan
+     * @return float
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    public function getLastInstallmentAmount(Loan $loan)
+    {
+        return $this
+            ->filterByLoan($loan)
+            ->orderById('desc')
+            ->select('paidAmount')
+            ->withColumn('paid_amount', 'paidAmount')
+            ->findOne();
     }
 } // InstallmentQuery

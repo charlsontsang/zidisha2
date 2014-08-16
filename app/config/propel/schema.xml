@@ -976,4 +976,34 @@
             <reference local="invitee_id" foreign="id"/>
         </foreign-key>
     </table>
+
+    <table name="credit_settings" phpName="CreditSetting" namespace="Credit">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="country_code" type="VARCHAR" size="2" required="true"/>
+        <column name="loan_amount_limit" type="INTEGER" required="true"/>
+        <column name="character_limit" type="INTEGER" required="true"/>
+        <column name="comments_limit" type="INTEGER" required="true"/>
+        <column name="type" type="ENUM" valueSet="0,1,2,3" required="true"/>
+        <behavior name="timestampable"/>
+        <foreign-key foreignTable="countries">
+            <reference local="country_code" foreign="country_code"/>
+        </foreign-key>
+    </table>
+
+    <table name="credits_earned" phpName="CreditsEarned" namespace="Credit">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="borrower_id" type="INTEGER" required="true"/>
+        <column name="loan_id" type="INTEGER" required="true"/>
+        <column name="credit_type" type="ENUM" required="true"/>
+        <column name="ref_id" type="INTEGER" required="true"/>
+        <column name="credit" type="INTEGER" required="true"/>
+        <behavior name="timestampable"/>
+        <foreign-key foreignTable="borrowers" phpName="Borrower">
+            <reference local="borrower_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="loans">
+            <reference local="loan_id" foreign="id"/>
+>>>>>>> Stashed changes
+        </foreign-key>
+    </table>
 </database>

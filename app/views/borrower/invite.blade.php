@@ -32,7 +32,7 @@ Invite Your Friends
     @elseif($isEligible == 3)
         {{ \Lang::get('borrower.invite.not-eligible-invitee-repayRate') }}
     @else
-        {{ \Lang::get('borrower.invite.not-eligible-invitee-quota', ['maxInviteesWithoutPayment' => $maxInviteesWithoutPayment]) }}
+        {{ \Lang::get('borrower.invite.not-eligible-invitee-quota', ['maxInviteesWithoutPayment' => $maxInviteesWithoutPayment, 'myInvites' => route('borrower:invites')]) }}
     @endif
 @endif
 @stop
