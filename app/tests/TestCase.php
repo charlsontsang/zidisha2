@@ -1,6 +1,15 @@
 <?php
 
+use Illuminate\Database\ConnectionInterface;
+use Propel\Runtime\Propel;
+use Zidisha\User\Map\UserTableMap;
+
 class TestCase extends Illuminate\Foundation\Testing\TestCase {
+
+    /**
+     * @var ConnectionInterface
+     */
+    protected $con;
 
     /**
      * Creates the application.
@@ -21,6 +30,19 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase {
         parent::setUp();
 
         \Config::set('mail.enabled', false);
+
+        if (!$this->con) {
+            $this->con = Propel::getWriteConnection(UserTableMap::DATABASE_NAME);
+        }
+
+        $this->con->beginTransaction();
+    }
+
+    public function tearDown()
+    {
+        parent::tearDown();
+
+        $this->con->rollBack();
     }
 
     public static function setupBeforeClass()
