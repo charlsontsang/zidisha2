@@ -5,7 +5,6 @@ use Carbon\Carbon;
 use DateTime;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Zidisha\Admin\Setting;
-use Zidisha\Borrower\Base\BorrowerQuery;
 use Zidisha\Credit\CreditsEarnedQuery;
 use Zidisha\Credit\CreditSetting;
 use Zidisha\Credit\CreditSettingQuery;
