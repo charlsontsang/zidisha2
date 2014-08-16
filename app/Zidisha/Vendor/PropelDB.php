@@ -14,6 +14,8 @@ class PropelDB {
         $con = Propel::getWriteConnection(UserTableMap::DATABASE_NAME);
         
         $result = null;
+        // tmp disable, problem with $model->alreadyInSave
+        $retry = 1;
         for ($i = 1; $i <= $retry; $i++) {
             $con->beginTransaction();
             try {
