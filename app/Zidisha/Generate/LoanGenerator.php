@@ -19,8 +19,8 @@ class LoanGenerator extends Generator
     
     protected $appliedAtStartDate = '- 16 months';
     protected $appliedAtEndDate = 'now';
-    protected $minAmount;
-    protected $maxAmount;
+    protected $minAmount = 50;
+    protected $maxAmount = 400;
     /**
      * @var \Zidisha\Loan\LoanService
      */
@@ -88,7 +88,7 @@ class LoanGenerator extends Generator
     protected function doGenerate($i)
     {
         /** @var Borrower $borrower */
-        $borrower = $this->borrowers[$i];
+        $borrower = $this->borrowers[$i-1];
         $currency = $borrower->getCountry()->getCurrency();
 
         $date = $this->faker->dateTimeBetween($this->appliedAtStartDate, $this->appliedAtEndDate);
