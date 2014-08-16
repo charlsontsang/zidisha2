@@ -404,6 +404,7 @@ Route::group(
          * Routes for loan page
          */
         Route::get('loan/{loanId}', array('uses' => 'LoanController@getIndex', 'as' => 'loan:index'));
+        Route::get('loan-success/{loanId}', 'LoanController@getLoanSuccess');
 
         /**
          * Routes for BorrowerComments

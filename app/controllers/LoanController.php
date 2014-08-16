@@ -175,6 +175,34 @@ class LoanController extends BaseController
         return Redirect::route('loan:index', $loanId)->withForm($form);
     }
 
+    public function getLoanSuccess($loanId)
+    {
+        $loan = $this->loanQuery
+            ->filterById($loanId)
+            ->findOne();
+
+        if (!$loan) {
+            App::abort(404);
+        }
+
+        $loan_url = route('loan:index', $loanId);
+        $name = $loan->getBorrower()->getFirstName();
+        $country = $loan->getBorrower()->getCountry()->getName();
+
+        $twitterParams = array(
+            "url" => $loan_url,
+            "text" => "Just made a loan to ".$name." in ".$country." via @ZidishaInc",
+        );
+        $twitter_url = "http://twitter.com/share?" . http_build_query($twitterParams);
+
+        $relative_invite_url = str_replace("https://www.", "", $loan_url);
+        $facebook_url = "http://www.facebook.com/sharer.php?s=100&p[url]=" . urlencode(
+                $relative_invite_url . "?s=3"
+            );
+
+        return View::make('pages.loan-success', compact('loan', 'twitter_url', 'facebook_url'));
+    }
+
     public function postEditBid($loanId, $bidId)
     {
         $data = \Input::all();
