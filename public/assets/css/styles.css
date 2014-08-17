@@ -7985,6 +7985,9 @@ hr {
   color: #adadad;
   margin-left: 2px;
 }
+.btn {
+  border-radius: 2px;
+}
 .btn-icon {
   padding: 0;
   text-align: left;
@@ -8154,7 +8157,7 @@ hr {
   /* lt ie8 */
   -ms-background-position-x: center;
   -ms-background-position-y: center;
-  background-position: center;
+  background-position: center top;
   /* scale bg image proportionately */
   background-size: cover;
   /* ie8 workaround - http://louisremi.github.io/background-size-polyfill/ */
@@ -8192,6 +8195,31 @@ span.text-content {
 span.text-content span {
   display: table-cell;
   vertical-align: middle;
+}
+.btn-social {
+  width: 30%;
+  line-height: 30px;
+  margin-right: 5px;
+  padding-left: 5px;
+  font-size: 18px;
+}
+@media (min-width: 768px) {
+  .btn-social {
+    font-size: 22px;
+  }
+}
+.btn-twitter {
+  color: #ffffff;
+  background-color: #55acee;
+  border-color: #3b88c3;
+}
+.btn-twitter:hover {
+  background-color: #6cb7f0;
+  color: white;
+}
+.btn-danger:hover {
+  background-color: #f36e6e;
+  color: white;
 }
 .form-control-feedback {
   top: 10px !important;

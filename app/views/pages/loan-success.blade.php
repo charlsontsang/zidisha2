@@ -6,42 +6,40 @@
 
 @section('content')
 <div class="row">
-    <div class="col-sm-8 loan-body">
-        
+    <div class="col-sm-6 loan-body">
         <div class="pull-left profile-image" href="{{ route('loan:index', $loan->getId()) }}"
-            style="background-image:url(/assets/images/test-photos/esther.JPG)" width="100%" height="450px">
+            style="background-image:url({{ $loan->getBorrower()->getUser()->getProfilePictureUrl('large-profile-picture') }})" width="100%">
         </div>
-        <!--
-        <img src="{{ $loan->getBorrower()->getUser()->getProfilePictureUrl('large-profile-picture') }}" width="100%">
-        -->
     </div>
 
-    <div class="col-sm-4 loan-side">
-        <div>
-            <p class="lead">
+    <div class="col-sm-6">
+        <div class="lead">
+            <p>
                 <br/><br/>
                 You just supported {{{ $loan->getBorrower()->getFirstName() }}}!
             </p>
-            <p class="lead">
+            <p>
                 Did you know that sharing a loan story makes it 3x more likely to be fully funded?
             </p>
-            <p class="lead">
+            <p>
                 Help {{{ $loan->getBorrower()->getFirstName() }}} by sharing with your friends:
             </p>
-            <div class="row">
-                <div class="col-xs-6">
-                    <a href="{{$facebook_url}}" class="btn btn-primary">
-                        <i class="fa fa-fw fa-facebook"></i>Share
-                    </a>
-                </div>
-                <div class="col-xs-6">
-                    <a href="{{$twitter_url}}" class="btn btn-primary">
-                        <i class="fa fa-fw fa-twitter"></i>Tweet
-                    </a>
-                </div>
-            </div>
+            <p>
+                <a href="{{$facebook_url}}" class="btn btn-facebook btn-social">
+                    <i class="fa fa-fw fa-facebook"></i>Share
+                </a>
+                <a href="{{$twitter_url}}" class="btn btn-twitter btn-social">
+                    <i class="fa fa-fw fa-twitter"></i>Tweet
+                </a>
+                <a href="{{$mail_url}}" class="btn btn-danger btn-social">
+                    <i class="fa fa-fw fa-envelope-o"></i>Email
+                </a>
+            </p>
         </div>
-
+        <p style="font-size: 18px !important;">
+            <br/>
+            <a href="{{ route('lend:index') }}">Make another loan</a>
+        </p>
     </div>
 </div>
 

@@ -199,8 +199,9 @@ class LoanController extends BaseController
         $facebook_url = "http://www.facebook.com/sharer.php?s=100&p[url]=" . urlencode(
                 $relative_invite_url . "?s=3"
             );
+        $mail_url = "mailto:?body=%0D%0A%0D%0A%0D%0A".$loan_url;
 
-        return View::make('pages.loan-success', compact('loan', 'twitter_url', 'facebook_url'));
+        return View::make('pages.loan-success', compact('loan', 'twitter_url', 'facebook_url', 'mail_url'));
     }
 
     public function postEditBid($loanId, $bidId)

@@ -34,8 +34,6 @@ class CompletedHandler extends PaymentHandler
 
     public function redirect()
     {
-        //Todo: sucess message
-        \Flash::success("Place bid successfully " . $this->payment->getAmount()->getAmount());
-        return \Redirect::route('loan:index', ['id' => $this->payment->getLoanId()]);
+        return \Redirect::route('loan:success', ['id' => $this->payment->getLoanId()]);
     }
 }
