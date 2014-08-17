@@ -8,7 +8,7 @@ use Zidisha\ScheduledJob\ScheduledJobQuery;
 class ScheduledJobs extends Command
 {
 
-    protected $name = 'scheduled-jobs';
+    protected $name = 'ScheduledJobs';
 
     protected $description = 'This command is to run scheduled cron jobs';
 
@@ -23,10 +23,6 @@ class ScheduledJobs extends Command
         'Zidisha\ScheduledJob\NewLenderIntro',
         'Zidisha\ScheduledJob\CronToRepay',
         'Zidisha\ScheduledJob\UnusedFunds',
-//        'Zidisha\ScheduledJob\MonthlyLoanArrear',
-//        'Zidisha\ScheduledJob\NewLenderIntro',
-//        'Zidisha\ScheduledJob\CronToRepay',
-//        'Zidisha\ScheduledJob\UnusedFunds',
     ];
     
     protected $classesWithLoan = [
@@ -68,7 +64,6 @@ class ScheduledJobs extends Command
                     $scheduledJob->save();
                 }
             }
-                dd();
         }
     }
 
