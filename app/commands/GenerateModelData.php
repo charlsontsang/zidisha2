@@ -336,7 +336,7 @@ class GenerateModelData extends Command
 
             $loan = $this->loanService->applyForLoan($borrower, $data);
 
-            $loan->setAppliedAt(Carbon::create()->subDays(\Setting::get('loan.deadline')));
+            $loan->setAppliedAt(Carbon::create()->subDays(\Setting::get('loan.deadline') - 3));
             $loan->save();
             
             $this->info('Loan Generated with id: '.$loan->getId());
@@ -385,7 +385,7 @@ class GenerateModelData extends Command
         }
 
         if ($model == 'RepaymentReminder') {
-            $loan = $this->generateLoanForArrear(2,-1);
+            $loan = $this->generateLoanForArrear(1,12);
             $this->info('Loan Generated with id: '.$loan->getId());
         }
 
@@ -1154,9 +1154,7 @@ class GenerateModelData extends Command
                     ->setLoan($loan)
                     ->setBorrower($loan->getBorrower())
                     ->setAmount($installmentAmount)
-                    ->setDueDate(Carbon::create()->subDays(14)->subHours(12));
-                var_dump($installment->getDueDate());
-                
+                    ->setDueDate(Carbon::now()->subDays($days)->subHours($hours));
             } else {
                 $installment = new Installment();
                 $installment
