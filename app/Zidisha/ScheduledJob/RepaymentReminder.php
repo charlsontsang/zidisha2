@@ -37,7 +37,7 @@ class RepaymentReminder extends ScheduledJob
     public function getQuery()
     {
         return DB::table('installments')
-            ->selectRaw( 'borrower_id AS user_id, due_date AS start_date')
+            ->selectRaw( 'borrower_id AS user_id, due_date AS start_date, installments.loan_id AS loan_id')
             ->whereRaw("amount > 0")
             ->whereRaw("(paid_amount IS NULL OR paid_amount < amount )")
             ->whereRaw("due_date <= '".Carbon::now()->subDay()."'")
