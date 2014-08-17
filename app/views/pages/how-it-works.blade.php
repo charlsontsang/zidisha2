@@ -11,7 +11,8 @@ How It Works
         <div class="page-header">
             <h1>How It Works</h1>
         </div>
-        <p>Can “pocket change” really make a change? We’re absolutely sure of it. In fact, you’d be amazed at how far a microloan can take someone with all the motivation in the world, but little to no resources. Here at Zidisha, we not only close the gap between borrowers and lenders across the globe — we make funding and fulfilling dreams beyond easy, super satisfying and even a little bit addicting. Here’s how it all works.</p>
+        <p>Can “pocket change” really make a change?  We’re absolutely sure of it.  In fact, you’d be amazed at how far a microloan can take someone with all the motivation in the world, but little to no resources.</p>
+        <p>Direct microlending closes the gap between borrowers and lenders across the globe — and makes funding and fulfilling dreams beyond easy, super satisfying and even a little bit addicting.  Here’s how it all works.</p>
 
         <h3>1. Borrowers apply.</h3>
           <p>An entrepreneurial borrower in a developing country posts a loan request to fund his or her business.</p>
@@ -31,6 +32,8 @@ How It Works
         <h3>6. Funds are renewed.</h3>
         <p>You can turn right around and relend your funds to a new borrower, or withdraw them whenever you wish.</p>
         
+        <br/>
+
         <h2>The Evolution of a Zidisha Loan</h2>
 
         <p>Start by browsing the listings of available loan opportunities <a href="{{ route('lend:index') }}">here</a>. When you find one (or more!) that you’d like to fund, you can make a bid for any portion of the loan and choose your own interest rate.</p>
