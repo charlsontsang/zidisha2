@@ -40,16 +40,16 @@ class LoanFirstArrear extends ScheduledJob
 
     public function getQuery()
     {
-        return DB::table('installments AS rs')
+        return DB::table('installments AS i')
             ->selectRaw(
-                'rs.borrower_id AS user_id, rs.due_date AS start_date, rs.loan_id AS loan_id'
+                'i.borrower_id AS user_id, i.due_date AS start_date, i.loan_id AS loan_id'
             )
-            ->join('borrowers AS br', 'rs.borrower_id', '=', 'br.id')
-            ->whereRaw("rs.amount > 0")
+            ->join('borrowers AS br', 'i.borrower_id', '=', 'br.id')
+            ->whereRaw("i.amount > 0")
             ->whereRaw(
                 '(
-                    rs.paid_amount IS NULL OR rs.paid_amount < (
-                        rs.amount - (5 * (
+                    i.paid_amount IS NULL OR i.paid_amount < (
+                        i.amount - (5 * (
                             SELECT
                                 rate
                             FROM
@@ -76,8 +76,8 @@ class LoanFirstArrear extends ScheduledJob
                     )
                 )'
             )
-            ->whereRaw('rs.due_date <= \'' . Carbon::now()->subDays(4) . '\'')
-            ->whereRaw('rs.due_date > \'' . Carbon::now()->subDays(5) . '\'');
+            ->whereRaw('i.due_date <= \'' . Carbon::now()->subDays(4) . '\'')
+            ->whereRaw('i.due_date > \'' . Carbon::now()->subDays(5) . '\'');
     }
 
     public function process(Job $job)
@@ -97,7 +97,7 @@ class LoanFirstArrear extends ScheduledJob
             ->orderByDueDate('ASC')
             ->findOne();
 
-        if ($installment->getDueDate() == $this->getStartDate()) {
+        if ($installment && $installment->getDueDate() == $this->getStartDate()) {
             //Check if this is the borrowers first missed installment.                
             if ($installment) {
                 /** @var  BorrowerMailer $borrowerMailer */

@@ -39,16 +39,16 @@ class LoanFinalArrear extends ScheduledJob
 
     public function getQuery()
     {
-        return DB::table('installments AS rs')
+        return DB::table('installments AS i')
             ->selectRaw(
-                'rs.borrower_id AS user_id, rs.loan_id AS loan_id, rs.due_date AS start_date'
+                'i.borrower_id AS user_id, i.loan_id AS loan_id, i.due_date AS start_date'
             )
-            ->join('borrowers AS br', 'rs.borrower_id', '=', 'br.id')
-            ->whereRaw("rs.amount > 0")
+            ->join('borrowers AS br', 'i.borrower_id', '=', 'br.id')
+            ->whereRaw("i.amount > 0")
             ->whereRaw(
                 '(
-                    rs.paid_amount IS NULL OR rs.paid_amount < (
-                        rs.amount - 5 * (
+                    i.paid_amount IS NULL OR i.paid_amount < (
+                        i.amount - 5 * (
                             SELECT
                                 rate
                             FROM

@@ -60,17 +60,15 @@ class RepaymentReminder extends ScheduledJob
         /** @var  BorrowerMailer $borrowerMailer */
         $borrowerMailer = \App::make('Zidisha\Mail\BorrowerMailer');
 
-        if ($installment->getDueDate() == $this->getStartDate()) {
-            if ($installment->getPaidAmount()->greaterThan(
-                    Money::create(0, $loan->getCurrencyCode())
-                ) && $installment->getPaidAmount() < $installment->getAmount()
+        if ($installment  && $installment->getDueDate() == $this->getStartDate()) {
+            if ($installment->getPaidAmount()->greaterThan(Money::create(0, $loan->getCurrencyCode())) && $installment->getPaidAmount() < $installment->getAmount()
             ) {
                 $borrowerMailer->sendRepaymentReminderTommorow($borrower, $installment);
             } else {
                 // Send mail to borrower
                 $borrowerMailer->sendRepaymentReminder($borrower, $installment);
             }
-        } elseif ($installment->getDueDate() < $this->getStartDate()) {
+        } elseif ($installment  && $installment->getDueDate() < $this->getStartDate()) {
             $amounts = InstallmentQuery::create()
                 ->filterByLoan($loan)
                 ->filterByDueDate(Carbon::now(), Criteria::LESS_EQUAL)

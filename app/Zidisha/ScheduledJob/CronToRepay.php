@@ -35,15 +35,15 @@ class CronToRepay extends ScheduledJob
     {
         $thresholdAmount = \Config::get('constants.repaymentAmountThreshold');
 
-        return DB::table('installments as rs')
-            ->selectRaw('rs.borrower_id AS user_id, rs.loan_id, rs.due_date AS start_date, rs.amount, rs.paid_amount')
-            ->join('borrowers AS br', 'rs.borrower_id', '=', 'br.id')
-            ->whereRaw("rs.amount > 0")
+        return DB::table('installments as i')
+            ->selectRaw('i.borrower_id AS user_id, i.loan_id, i.due_date AS start_date, i.amount, i.paid_amount')
+            ->join('borrowers AS br', 'i.borrower_id', '=', 'br.id')
+            ->whereRaw("i.amount > 0")
             ->whereRaw(
                 "
                 (
-                        rs.paid_amount < (
-                            rs.amount - " . $thresholdAmount . " * (
+                        i.paid_amount < (
+                            i.amount - " . $thresholdAmount . " * (
                                 SELECT
                                     rate
                                 FROM
@@ -76,13 +76,13 @@ class CronToRepay extends ScheduledJob
                         )
                         
                     )
-                    OR rs.paid_amount IS NULL
+                    OR i.paid_amount IS NULL
                 )
                 "
             )
-            ->whereRaw('rs.due_date <= \'' . Carbon::now()->subDays(60) . '\'')
-            ->whereRaw('rs.due_date > \'' . Carbon::now()->subDays(61) . '\'')
-            ->orderBy('rs.borrower_id', 'asc');
+            ->whereRaw('i.due_date <= \'' . Carbon::now()->subDays(60) . '\'')
+            ->whereRaw('i.due_date > \'' . Carbon::now()->subDays(61) . '\'')
+            ->orderBy('i.borrower_id', 'asc');
     }
 
     public function process(Job $job)
