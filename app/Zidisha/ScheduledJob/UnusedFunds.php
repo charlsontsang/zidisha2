@@ -56,7 +56,7 @@ class UnusedFunds extends ScheduledJob
     {
         $user = $this->getUser();
         $lender = $user->getLender();
-        
+
         /** @var  LenderMailer $lenderMailer */
         $lenderMailer = \App::make('Zidisha\Mail\LenderMailer');
         $lenderMailer->sendUnusedFundsNotification($lender);

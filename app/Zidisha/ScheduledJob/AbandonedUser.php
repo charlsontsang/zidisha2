@@ -43,22 +43,21 @@ class AbandonedUser extends ScheduledJob
     {
         return DB::table('users AS u')
             ->selectRaw('u.id AS user_id, u.last_login_at as start_date')
-            ->whereRaw("u.last_login_at < '".Carbon::now()->subYear()."'")
+            ->whereRaw("u.last_login_at < '" . Carbon::now()->subYear() . "'")
             ->whereRaw('u.role = 0')
             ->whereRaw('u.active = true');
     }
-    
+
     public function process(Job $job)
     {
         $user = $this->getUser();
 
-        if ($user->getLastLoginAt() < Carbon::create()->subYear()) {
+        if ($user->getLastLoginAt() < Carbon::now()->subYear()) {
             /** @var  LenderMailer $lenderMailer */
             $lenderMailer = \App::make('Zidisha\Mail\LenderMailer');
             $lenderMailer->sendAbandonedUserMail($user);
-
         }
-        
+
         $job->delete();
     }
 } // AbandonedUser

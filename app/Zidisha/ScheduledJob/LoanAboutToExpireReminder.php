@@ -44,24 +44,26 @@ class LoanAboutToExpireReminder extends ScheduledJob
         $afterDays = $beforeDays + 1;
 
         return DB::table('loans AS u')
-            ->selectRaw('u.id, borrower_id AS user_id, applied_at AS start_date, total_amount, summary, summary_translation')    
+            ->selectRaw(
+                'u.id, borrower_id AS user_id, applied_at AS start_date, total_amount, summary, summary_translation'
+            )
             ->whereRaw("status = " . Loan::OPEN)
             ->whereRaw("deleted_by_admin = false")
-            ->whereRaw("applied_at <= '".Carbon::now()->subDays($beforeDays)."'")
-            ->whereRaw("applied_at >= '".Carbon::now()->subDays($afterDays)."'");
+            ->whereRaw("applied_at <= '" . Carbon::now()->subDays($beforeDays) . "'")
+            ->whereRaw("applied_at >= '" . Carbon::now()->subDays($afterDays) . "'");
     }
 
     public function process(Job $job)
     {
-        $user= $this->getUser();
+        $user = $this->getUser();
         $borrower = $user->getBorrower();
         $loan = LoanQuery::create()
             ->filterByBorrower($borrower)
             ->filterByStatus(Loan::OPEN)
             ->findOne();
-        
+
         $bids = $loan->getBids();
-        
+
         $totalRaisedAmount = $loan->getTotalAmount();
         $stillNeeded = $loan->getAmount()->subtract($totalRaisedAmount);
 
@@ -72,9 +74,9 @@ class LoanAboutToExpireReminder extends ScheduledJob
         if ($stillNeeded->greaterThan(Money::create(0, $loan->getCurrencyCode()))) {
             foreach ($bids as $bid) {
                 $lenderMailer->sendLoanAboutToExpireMail($bid->getLender());
-            }    
+            }
         }
-        
-        $job->delete();        
+
+        $job->delete();
     }
 } // LoanAboutToExpireReminder

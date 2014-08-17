@@ -12,6 +12,6 @@ abstract class ScheduledJob extends BaseScheduledJob
      * @return \Illuminate\Database\Query\Builder
      */
     abstract public function getQuery();
-    
+
     abstract public function process(Job $job);
 }

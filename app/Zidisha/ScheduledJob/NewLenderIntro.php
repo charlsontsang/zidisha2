@@ -37,15 +37,15 @@ class NewLenderIntro extends ScheduledJob
             ->selectRaw('u.id AS user_id, u.created_at as start_date')
             ->whereRaw('u.role = 0')
             ->whereRaw('u.active = true')
-            ->whereRaw("u.created_at  >'".Carbon::now()->subDays(2)."'")
-            ->whereRaw("u.created_at <='".Carbon::now()->subDay()."'");
+            ->whereRaw("u.created_at  >'" . Carbon::now()->subDays(2) . "'")
+            ->whereRaw("u.created_at <='" . Carbon::now()->subDay() . "'");
     }
 
     public function process(Job $job)
     {
         $user = $this->getUser();
         $lender = $user->getLender();
-        
+
         /** @var  LenderMailer $lenderMailer */
         $lenderMailer = \App::make('Zidisha\Mail\LenderMailer');
         $lenderMailer->sendIntroductionMail($lender);

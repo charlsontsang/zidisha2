@@ -6,7 +6,6 @@ use Zidisha\Vendor\PropelDB;
 
 class ScheduledJobService
 {
-
     public function handleScheduledJob(Job $job, array $data)
     {
         $scheduleJobLog = ScheduledJobLogQuery::create()

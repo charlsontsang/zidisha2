@@ -39,10 +39,11 @@ class CronToRepay extends ScheduledJob
             ->selectRaw('rs.borrower_id AS user_id, rs.loan_id, rs.due_date AS start_date, rs.amount, rs.paid_amount')
             ->join('borrowers AS br', 'rs.borrower_id', '=', 'br.id')
             ->whereRaw("rs.amount > 0")
-            ->whereRaw("
+            ->whereRaw(
+                "
                 (
                         rs.paid_amount < (
-                            rs.amount - ". $thresholdAmount ." * (
+                            rs.amount - " . $thresholdAmount . " * (
                                 SELECT
                                     rate
                                 FROM
@@ -77,7 +78,8 @@ class CronToRepay extends ScheduledJob
                     )
                     OR rs.paid_amount IS NULL
                 )
-                ")
+                "
+            )
             ->whereRaw('rs.due_date <= \'' . Carbon::now()->subDays(60) . '\'')
             ->whereRaw('rs.due_date > \'' . Carbon::now()->subDays(61) . '\'')
             ->orderBy('rs.borrower_id', 'asc');
@@ -92,7 +94,7 @@ class CronToRepay extends ScheduledJob
         $siftScienceService = \App::make('Zidisha\Vendor\SiftScience\SiftScienceService');
 
         $siftScienceService->loanArrearLabel($user, $loanId);
-        
+
         $job->delete();
     }
 

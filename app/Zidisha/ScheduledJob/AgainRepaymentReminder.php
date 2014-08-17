@@ -39,14 +39,15 @@ class AgainRepaymentReminder extends ScheduledJob
     {
         $dueDays = \Setting::get('loan.repaymentReminderDay');
         $dueAmount = \Setting::get('loan.repaymentDueAmount');
-        
+
         return DB::table('installments as rs')
             ->selectRaw('rs.borrower_id AS user_id, rs.loan_id AS loan_id, rs.due_date AS start_date')
-            ->join('borrowers AS br', 'rs.borrower_id', '=', 'br.id')    
+            ->join('borrowers AS br', 'rs.borrower_id', '=', 'br.id')
             ->whereRaw("rs.amount > 0")
-            ->whereRaw("(
+            ->whereRaw(
+                "(
                 (
-                    (rs.amount - rs.paid_amount) > (". $dueAmount . "* (
+                    (rs.amount - rs.paid_amount) > (" . $dueAmount . "* (
                         SELECT
                             rate
                         FROM
@@ -70,7 +71,8 @@ class AgainRepaymentReminder extends ScheduledJob
                                 )
                         )
                         )
-                ) OR paid_amount IS NULL)")
+                ) OR paid_amount IS NULL)"
+            )
             ->whereRaw('rs.due_date <= \'' . Carbon::now()->subDays($dueDays) . '\'')
             ->whereRaw('rs.due_date > \'' . Carbon::now()->subDays($dueDays + 1) . '\'');
     }
@@ -99,5 +101,4 @@ class AgainRepaymentReminder extends ScheduledJob
         
         $job->delete();
     }
-    
 } // AgainRepaymentReminder

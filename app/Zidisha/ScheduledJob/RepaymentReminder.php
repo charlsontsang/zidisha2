@@ -37,11 +37,11 @@ class RepaymentReminder extends ScheduledJob
     public function getQuery()
     {
         return DB::table('installments')
-            ->selectRaw( 'borrower_id AS user_id, due_date AS start_date, installments.loan_id AS loan_id')
+            ->selectRaw('borrower_id AS user_id, due_date AS start_date, installments.loan_id AS loan_id')
             ->whereRaw("amount > 0")
             ->whereRaw("(paid_amount IS NULL OR paid_amount < amount )")
-            ->whereRaw("due_date <= '".Carbon::now()->subDay()."'")
-            ->whereRaw("due_date >='".Carbon::now()->subDays(2)."'");
+            ->whereRaw("due_date <= '" . Carbon::now()->subDay() . "'")
+            ->whereRaw("due_date >='" . Carbon::now()->subDays(2) . "'");
     }
 
     public function process(Job $job)
@@ -59,27 +59,30 @@ class RepaymentReminder extends ScheduledJob
 
         /** @var  BorrowerMailer $borrowerMailer */
         $borrowerMailer = \App::make('Zidisha\Mail\BorrowerMailer');
-        
+
         if ($installment->getDueDate() == $this->getStartDate()) {
-            if ($installment->getPaidAmount()->greaterThan(Money::create(0, $loan->getCurrencyCode())) && $installment->getPaidAmount() < $installment->getAmount()) {                
-                $borrowerMailer->sendRepaymentReminderTommorow($borrower, $installment);                
+            if ($installment->getPaidAmount()->greaterThan(
+                    Money::create(0, $loan->getCurrencyCode())
+                ) && $installment->getPaidAmount() < $installment->getAmount()
+            ) {
+                $borrowerMailer->sendRepaymentReminderTommorow($borrower, $installment);
             } else {
                 // Send mail to borrower
                 $borrowerMailer->sendRepaymentReminder($borrower, $installment);
             }
-        } elseif($installment->getDueDate() < $this->getStartDate()) {
+        } elseif ($installment->getDueDate() < $this->getStartDate()) {
             $amounts = InstallmentQuery::create()
                 ->filterByLoan($loan)
-                ->filterByDueDate(Carbon::create(), Criteria::LESS_EQUAL)
+                ->filterByDueDate(Carbon::now(), Criteria::LESS_EQUAL)
                 ->select(array('amount_total', 'paid_amount_total'))
                 ->withColumn('SUM(amount)', 'amount_total')
                 ->withColumn('SUM(paid_amount)', 'paid_amount_total')
                 ->find();
-            
+
             //Send mail to borrower
             $borrowerMailer->sendRepaymentReminderForDueAmount($borrower, $loan, $amounts);
         }
-        
+
         $job->delete();
     }
 } // RepaymentReminder

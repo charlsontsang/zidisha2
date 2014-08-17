@@ -84,9 +84,9 @@ class LoanFirstArrear extends ScheduledJob
     {
         $user = $this->getUser();
         $borrower = $user->getBorrower();
-        
+
         $loanId = $this->getLoanId();
-        
+
         $loan = LoanQuery::create()
             ->findOneById($loanId);
 
@@ -97,21 +97,21 @@ class LoanFirstArrear extends ScheduledJob
             ->orderByDueDate('ASC')
             ->findOne();
 
-            if($installment->getDueDate() == $this->getStartDate()){
-                //Check if this is the borrowers first missed installment.                
-                if($installment){
-                    /** @var  BorrowerMailer $borrowerMailer */
-                    $borrowerMailer = \App::make('Zidisha\Mail\BorrowerMailer');
+        if ($installment->getDueDate() == $this->getStartDate()) {
+            //Check if this is the borrowers first missed installment.                
+            if ($installment) {
+                /** @var  BorrowerMailer $borrowerMailer */
+                $borrowerMailer = \App::make('Zidisha\Mail\BorrowerMailer');
 
-                    /** @var  BorrowerSmsService $borrowerSmsService */
-                    $borrowerSmsService = \App::make('Zidisha\Sms\BorrowerSmsService');
-                    
-                    $borrowerMailer->sendLoanFirstArrearMail($borrower, $loan);
-                    $borrowerSmsService->sendLoanFirstArrearNotification($borrower, $loan);
-                }
+                /** @var  BorrowerSmsService $borrowerSmsService */
+                $borrowerSmsService = \App::make('Zidisha\Sms\BorrowerSmsService');
+
+                $borrowerMailer->sendLoanFirstArrearMail($borrower, $loan);
+                $borrowerSmsService->sendLoanFirstArrearNotification($borrower, $loan);
             }
-        
+        }
+
         $job->delete();
-        
+
     }
 } // LoanFirstArrear
