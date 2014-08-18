@@ -129,6 +129,36 @@ $(function () {
         $(this).closest('.file-input-block').remove();
         return false;
     });
+
+    // Scrollspy
+    var $window = $(window);
+    var $body   = $(document.body);
+
+    $body.scrollspy({
+        target: '.sidenav'
+    });
+    $window.on('load', function () {
+        $body.scrollspy('refresh');
+    });
+
+    // Sidenav affixing
+    setTimeout(function () {
+        var $sideBar = $('.sidenav');
+
+        $sideBar.affix({
+            offset: {
+                top: function () {
+                    var offsetTop      = $sideBar.offset().top;
+                    var sideBarMargin  = parseInt($sideBar.children(0).css('margin-top'), 10);
+                    
+                    return (this.top = offsetTop - sideBarMargin);
+                },
+                bottom: function () {
+                    return (this.bottom = $('.footer').outerHeight(true));
+                }
+            }
+        })
+    }, 100);
 });
 
 function parseMoney(value) {
