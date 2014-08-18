@@ -50,14 +50,12 @@ Invite Friends
                 </p>
 
                 <p>
-                    <span class="share-actions">
-                        <a href="{{$facebook_url}}">
-                            <img src="{{ asset('/assets/images/icons/fb.png') }}" width="50px" style="margin-right: 15px;" alt="Share on Facebook"/>
-                        </a>
-                        <a href="{{$twitter_url}}">
-                            <img src="{{ asset('/assets/images/icons/twitter.png') }}" width="50px" alt="Tweet"/>
-                        </a>
-                    </span>
+                    <a href="{{$facebook_url}}" class="btn btn-facebook btn-social fb-share" style="width:45% !important;">
+                        <i class="fa fa-fw fa-facebook"></i>Share
+                    </a>
+                    <a href="{{$twitter_url}}" class="btn btn-twitter btn-social tweet" style="width:45% !important;">
+                        <i class="fa fa-fw fa-twitter"></i>Tweet
+                    </a>
                 </p>
                 
             </div>
