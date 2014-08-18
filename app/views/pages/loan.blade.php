@@ -512,6 +512,7 @@
                     {{ BootstrapForm::hidden('transactionFee', null, ['id' => 'transaction-fee-amount']) }}
                     {{ BootstrapForm::hidden('transactionFeeRate', null, ['id' => 'transaction-fee-rate']) }}
                     {{ BootstrapForm::hidden('currentBalance', null, ['id' => 'current-balance']) }}
+                    {{ BootstrapForm::hidden('useLenderInviteCredit', null, ['id' => 'current-balance']) }}
                     {{ BootstrapForm::hidden('totalAmount', null, ['id' => 'total-amount']) }}
 
                     {{ BootstrapForm::hidden('stripeToken', null, ['id' => 'stripe-token']) }}
@@ -519,7 +520,12 @@
 
                     <table class="table">
                         <tbody>
-                            @if($placeBidForm->getCurrentBalance()->isPositive())
+                            @if($placeBidForm->getLenderInviteCredit()->isPositive())
+                            <tr>
+                                <td>Lender invite credit</td>
+                                <td>${{ number_format($placeBidForm->getLenderInviteCredit()->getAmount(), 2, '.', '') }}</td>
+                            </tr>
+                            @elseif($placeBidForm->getCurrentBalance()->isPositive())
                             <tr>
                                 <td>Current Balance</td>
                                 <td>${{ number_format($placeBidForm->getCurrentBalance()->getAmount(), 2, '.', '') }}</td>
@@ -527,7 +533,7 @@
                             @endif
                             <tr>
                                 <td>Loan for {{ $loan->getBorrower()->getFirstName() }}</td>
-                                <td>TO DO</td> 
+                                <td>$<span id="amount-display"></span></td> 
                             </tr>
                             <tr style="display: none;">
                                 <td>
@@ -606,10 +612,16 @@
 @if($loan->isOpen() && (!\Auth::check() || \Auth::user()->isLender()))
 <script type="text/javascript">
     $(function () {
+        var $amount = $('#amount');
         paymentForm({
             stripeToken: "{{ \Zidisha\Admin\Setting::get('stripe.publicKey') }}",
             email: "{{ \Auth::check() ? \Auth::user()->getEmail() : '' }}",
-            amount: $('#amount')
+            amount: $amount
+        });
+
+        $('#amount-display').text(formatMoney(parseMoney($amount.val()), 2));
+        $amount.on('change', function() {
+            $('#amount-display').text(formatMoney(parseMoney($amount.val()), 2));
         });
     });
 </script>

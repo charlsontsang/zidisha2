@@ -2,6 +2,7 @@
 namespace Zidisha\Payment\Form;
 
 
+use Zidisha\Balance\InviteTransactionQuery;
 use Zidisha\Currency\Money;
 use Zidisha\Loan\Loan;
 use Zidisha\Payment\BidPayment;
@@ -13,6 +14,8 @@ class PlaceBidForm extends AbstractPaymentForm
      * @var \Zidisha\Loan\Loan
      */
     private $loan;
+    
+    protected $lenderInviteCredit;
 
     public function __construct(Loan $loan)
     {
@@ -22,8 +25,9 @@ class PlaceBidForm extends AbstractPaymentForm
     public function getRules($data)
     {
         return [
-            'interestRate' => '', // TODO
-            'amount'       => '', // TODO
+            'interestRate'          => '', // TODO
+            'amount'                => '', // TODO
+            'useLenderInviteCredit' => '', // TODO
         ] + parent::getRules($data);
     }
 
@@ -47,6 +51,7 @@ class PlaceBidForm extends AbstractPaymentForm
             ->setLoan($this->loan)
             ->setAmount(Money::create($data['amount']))
             ->setInterestRate($data['interestRate'])
+            ->setUseLenderInviteCredit($data['useLenderInviteCredit'])
             ->setLender($lender);
 
         return $placeBidPayment;
@@ -67,11 +72,36 @@ class PlaceBidForm extends AbstractPaymentForm
 
     public function getDefaultData()
     {
+        $max = 30;
+        if ($this->getLenderInviteCredit()->isPositive()) {
+            $max = $this->getLenderInviteCredit()->getAmount();
+        }
+        
         $defaults = [
             'interestRate' => 3,
-            'amount' => min(30, max(10, $this->loan->getStillNeededUsdAmount()->getAmount()))
+            'amount' => min($max, max(10, $this->loan->getStillNeededUsdAmount()->getAmount())),
+            'useLenderInviteCredit' => $this->getLenderInviteCredit()->isPositive(),
         ];
         
         return  $defaults + parent::getDefaultData();
+    }
+
+    public function getLenderInviteCredit()
+    {
+        if ($this->lenderInviteCredit === null) {
+            if (!\Auth::check() || !\Auth::user()->isLender()) {
+                $this->lenderInviteCredit = Money::create(0);
+            } else {
+                $this->lenderInviteCredit = InviteTransactionQuery::create()
+                    ->getTotalInviteCreditAmount(\Auth::user()->getLender());
+            }
+        }
+
+        return $this->lenderInviteCredit;
+    }
+
+    public function getCurrentBalance()
+    {
+        return $this->getLenderInviteCredit()->isPositive() ? $this->getLenderInviteCredit() : parent::getCurrentBalance(); 
     }
 }
