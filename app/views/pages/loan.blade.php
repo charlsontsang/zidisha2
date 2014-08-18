@@ -529,7 +529,7 @@
                                 <td>Loan for {{ $loan->getBorrower()->getFirstName() }}</td>
                                 <td>TO DO</td> 
                             </tr>
-                            <tr>
+                            <tr style="display: none;">
                                 <td>
                                     Credit card fee
                                     <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="bottom" title="Covers credit card charges"></i>

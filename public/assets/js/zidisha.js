@@ -222,6 +222,7 @@ var handler;
         $transactionFeeAmount.val(formatMoney(transactionFeeAmount));
         $totalAmount.val(formatMoney(totalAmount));
         $transactionFeeAmountDisplay.text(formatMoney(transactionFeeAmount, 2));
+        $transactionFeeAmountDisplay.closest('tr')[transactionFeeAmount > 0 ? 'show' : 'hide']();
         $totalAmountDisplay.text(formatMoney(totalAmount, 2));
         
         if (totalAmount > 0) {
