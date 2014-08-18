@@ -61,11 +61,26 @@ Invite Friends
             </div>
         </div>
 
+        @if ($count_invites > 0)
+
         <br/><br/>
 
         <h3 style="margin-bottom: 25px" style="text-align: center;">
-            <span style="color:#00aeef;">{{$count_joined_invites}}</span> of your {{$count_invites}} invitees have joined
+            @if ($count_joined_invites == 0 && $count_invites == 1) 
+            Your first invitee has not yet joined.
+
+            @elseif ($count_joined_invites == 0 && $count_invites > 1) 
+            None of your {{$count_invites}} invitees have joined.
+            
+            @elseif ($count_joined_invites == 1) 
+            Way to go - your first invitee has joined Zidisha!&nbsp;&nbsp;&nbsp;
+            <a href="mailto:@foreach($invites as $invite){{ $invite->getEmail() }}@endforeach">Send a welcome note</a>
+            
+            @else
+            <span style="color:#f15656">{{$count_joined_invites}}</span> of your {{$count_invites}} invitees have joined
             Zidisha.
+
+            @endif
         </h3>
 
         <table class="table table-striped no-more-tables">
@@ -99,6 +114,7 @@ Invite Friends
             @endforeach
             </tbody>
         </table>
+        @endif
     </div>
 </div>
 @stop
