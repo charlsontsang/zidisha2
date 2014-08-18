@@ -385,7 +385,7 @@ class GenerateModelData extends Command
         }
 
         if ($model == 'RepaymentReminder') {
-            $loan = $this->generateLoanForArrear(1,12);
+            $loan = $this->generateLoanForArrear(1,12, 'addition');
             $this->info('Loan Generated with id: '.$loan->getId());
         }
 
@@ -1087,7 +1087,7 @@ class GenerateModelData extends Command
         return 1;
     }
 
-    private function generateLoanForArrear($days, $hours = null)
+    private function generateLoanForArrear($days, $hours = null, $operator = 'subtract')
     {
         $categoryIds = CategoryQuery::create()
             ->filterByAdminOnly(false)
@@ -1153,8 +1153,12 @@ class GenerateModelData extends Command
                 $installment
                     ->setLoan($loan)
                     ->setBorrower($loan->getBorrower())
-                    ->setAmount($installmentAmount)
-                    ->setDueDate(Carbon::now()->subDays($days)->subHours($hours));
+                    ->setAmount($installmentAmount);
+                    if ($operator == 'subtract') {
+                        $installment->setDueDate(Carbon::now()->subDays($days)->subHours($hours));
+                    } else {
+                        $installment->setDueDate(Carbon::now()->addDays($days)->addHours($hours));
+                    }
             } else {
                 $installment = new Installment();
                 $installment
@@ -1166,7 +1170,7 @@ class GenerateModelData extends Command
             }
             $installment->save();
         }
-        
+
         return $loan;
     }
 }
