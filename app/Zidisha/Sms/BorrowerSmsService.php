@@ -6,6 +6,7 @@ namespace Zidisha\Sms;
 use Zidisha\Borrower\Borrower;
 use Zidisha\Borrower\Contact;
 use Zidisha\Loan\Loan;
+use Zidisha\Repayment\Installment;
 
 class BorrowerSmsService {
 
@@ -50,5 +51,20 @@ class BorrowerSmsService {
     public function sendLoanMonthlyArrearNotification(Borrower $borrower, Loan $loan)
     {
         //TODO: sendLoanMonthlyArrearNotification        
+    }
+
+    public function sendRepaymentReminderTommorow(Borrower $borrower, Installment $installment)
+    {
+        //TODO: sendRepaymentReminderTommorowSms
+    }
+
+    public function sendRepaymentReminder(Borrower $borrower, Installment $installment)
+    {
+        //TODO: sendRepaymentReminder
+    }
+
+    public function sendRepaymentReminderForDueAmount(Borrower $borrower, Loan $loan, $amounts)
+    {
+        
     }
 }
