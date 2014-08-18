@@ -531,4 +531,9 @@ class LenderService
                 ->filterByUser($lender->getUser())
                 ->count();
     }
+
+    public function autoLendingSetting(Lender $lender, $data)
+    {
+        //TODO: Implement autoLendingSetting
+    }
 }
