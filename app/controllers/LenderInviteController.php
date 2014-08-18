@@ -128,8 +128,7 @@ class LenderInviteController extends BaseController
         }
 
         $ycAccountCredit = TransactionQuery::create()
-            ->filterByUserId(Setting::get('site.YCAccountId'))
-            ->getTotalBalance();
+            ->getCurrentBalance(Setting::get('site.YCAccountId'));
 
         if ($ycAccountCredit->getAmount() < 5000) {
             return View::make('lender.invite-inactive');
