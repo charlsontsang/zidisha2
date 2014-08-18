@@ -2,6 +2,7 @@
 
 use Zidisha\Lender\Form\AccountPreferencesForm;
 use Zidisha\Lender\Form\AutoLendingSettingForm;
+use Zidisha\Lender\LenderQuery;
 use Zidisha\Lender\LenderService;
 
 class LenderPreferencesController extends BaseController
@@ -51,7 +52,9 @@ class LenderPreferencesController extends BaseController
     public function getAutoLending()
     {
         $form = $this->autoLendingSettingForm;
-        return \View::make('lender.auto-lending-setting', compact('form'));
+        $lender = \Auth::user()->getLender();
+        
+        return \View::make('lender.auto-lending-setting', compact('form', 'lender'));
     }
 
     public function postAutoLending($lenderId)
@@ -68,7 +71,7 @@ class LenderPreferencesController extends BaseController
 
         if ($form->isValid()) {
             $data = $form->getData();
-            $this->lenderService->autoLendingSetting($data);
+            $this->lenderService->autoLendingSetting($lender, $data);
 
             \Flash::success('Your settings are saved.');
             return \Redirect::route('lender:auto-lending');
