@@ -10,6 +10,7 @@ use Zidisha\Currency\Money;
 use Zidisha\Mail\BorrowerMailer;
 use Zidisha\Repayment\InstallmentQuery;
 use Zidisha\ScheduledJob\Map\ScheduledJobTableMap;
+use Zidisha\Sms\BorrowerSmsService;
 
 
 /**
@@ -40,8 +41,8 @@ class RepaymentReminder extends ScheduledJob
             ->selectRaw('borrower_id AS user_id, due_date AS start_date, installments.loan_id AS loan_id')
             ->whereRaw("amount > 0")
             ->whereRaw("(paid_amount IS NULL OR paid_amount < amount )")
-            ->whereRaw("due_date <= '" . Carbon::now()->subDay() . "'")
-            ->whereRaw("due_date >='" . Carbon::now()->subDays(2) . "'");
+            ->whereRaw("due_date >= '" . Carbon::now()->addDay() . "'")
+            ->whereRaw("due_date <='" . Carbon::now()->addDays(2) . "'"); 
     }
 
     public function process(Job $job)
@@ -52,21 +53,24 @@ class RepaymentReminder extends ScheduledJob
         
         $installment = InstallmentQuery::create()
             ->filterByLoan($loan)
-            ->filterByAmount(0, Criteria::GREATER_THAN)
-            ->where('Installment.PaidAmount < Installment.Amount')
+            ->where('Installment.Amount > 0')
+            ->where('Installment.PaidAmount IS NULL OR Installment.PaidAmount < Installment.Amount')
             ->orderByDueDate('ASC')
             ->findOne();
 
         /** @var  BorrowerMailer $borrowerMailer */
         $borrowerMailer = \App::make('Zidisha\Mail\BorrowerMailer');
 
+        /** @var  BorrowerSmsService $borrowerSmsService */
+        $borrowerSmsService = \App::make('Zidisha\Sms\BorrowerSmsService');
+
         if ($installment  && $installment->getDueDate() == $this->getStartDate()) {
-            if ($installment->getPaidAmount()->greaterThan(Money::create(0, $loan->getCurrencyCode())) && $installment->getPaidAmount() < $installment->getAmount()
-            ) {
+            if ($installment->getPaidAmount()->isPositive() && $installment->getPaidAmount()->lessThan($installment->getAmount())) {
                 $borrowerMailer->sendRepaymentReminderTommorow($borrower, $installment);
+                $borrowerSmsService->sendRepaymentReminderTommorow($borrower, $installment);
             } else {
-                // Send mail to borrower
                 $borrowerMailer->sendRepaymentReminder($borrower, $installment);
+                $borrowerSmsService->sendRepaymentReminder($borrower, $installment);
             }
         } elseif ($installment  && $installment->getDueDate() < $this->getStartDate()) {
             $amounts = InstallmentQuery::create()
@@ -79,6 +83,7 @@ class RepaymentReminder extends ScheduledJob
 
             //Send mail to borrower
             $borrowerMailer->sendRepaymentReminderForDueAmount($borrower, $loan, $amounts);
+            $borrowerSmsService->sendRepaymentReminderForDueAmount($borrower, $loan, $amounts);
         }
 
         $job->delete();
