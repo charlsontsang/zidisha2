@@ -22,7 +22,7 @@ Invite Friends
         <div class="row">
             <div class="col-sm-5">
 
-                {{ BootstrapForm::open(array('route' => 'lender:post-invite')) }}
+                {{ BootstrapForm::open(array('route' => 'lender:post-invite', 'class' => 'hide-label')) }}
                 {{ BootstrapForm::populate($form) }}
 
                 {{ BootstrapForm::text('emails', null, ['placeholder' => 'Enter emails separated by commas']) }}

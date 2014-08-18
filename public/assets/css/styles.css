@@ -8197,6 +8197,9 @@ hr {
 .modal-body .btn-primary {
   margin-top: 11px;
 }
+.hide-label label {
+  display: none;
+}
 .navbar-brand {
   padding-top: 11px;
   padding-bottom: 17px;
