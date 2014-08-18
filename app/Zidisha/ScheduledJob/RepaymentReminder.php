@@ -53,7 +53,7 @@ class RepaymentReminder extends ScheduledJob
         $installment = InstallmentQuery::create()
             ->filterByLoan($loan)
             ->filterByAmount(0, Criteria::GREATER_THAN)
-            ->filterByPaidAmount($loan->getAmount()->getAmount(), Criteria::LESS_THAN)
+            ->where('Installment.PaidAmount < Installment.Amount')
             ->orderByDueDate('ASC')
             ->findOne();
 
