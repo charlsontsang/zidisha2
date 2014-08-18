@@ -35,7 +35,7 @@ class LenderInviteController extends BaseController
 
         $twitterParams = array(
             "url" => $invite_url . "?s=2",
-            "text" => "Use this link to fund a Zidisha microloan project for free! @ZidishaInc",
+            "text" => "Use this link to try direct microlending for free @ZidishaInc",
         );
         $twitter_url = "http://twitter.com/share?" . http_build_query($twitterParams);
 
