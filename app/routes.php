@@ -298,6 +298,9 @@ Route::group(
                     '/my-stats',
                     array('uses' => 'LenderController@getMyStats', 'as' => 'lender:my-stats')
                 );
+                
+                Route::get('/auto-lending', array('uses' => 'LenderPreferencesController@getAutoLending', 'as' => 'lender:auto-lending'));
+                Route::post('/auto-lending/{lenderId}', array('uses' => 'LenderPreferencesController@postAutoLending', 'as' => 'lender:post:auto-lending'));
             }
         );
 
