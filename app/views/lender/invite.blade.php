@@ -26,8 +26,8 @@ Invite Friends
                 {{ BootstrapForm::populate($form) }}
 
                 {{ BootstrapForm::text('emails', null, ['placeholder' => 'Enter emails separated by commas']) }}
-                {{ BootstrapForm::text('subject') }}
-                {{ BootstrapForm::textarea('note', null, ['style' => 'height:100px'], ['placeholder' => 'Add a note']) }}
+                {{ BootstrapForm::text('subject', null, ['placeholder' => 'Subject']) }}
+                {{ BootstrapForm::textarea('note', null, array('style' => 'height:100px', 'placeholder' => 'Add a note')) }}
                 {{ BootstrapForm::submit('Send', ['class' => 'btn btn-primary btn-block']) }}
 
                 {{ BootstrapForm::close() }}
@@ -36,17 +36,17 @@ Invite Friends
 
             <div class="col-sm-2">
                 <div class="circle" style="margin-top: 30px; margin-bottom: 30px;">
-                    OR
+                    <p>OR</p>
                 </div>
             </div>
 
             <div class="col-sm-5">
-                <p>
+                <p class="lead">
                     Share or tweet your personal invite link:
                 </p>
 
                 <p class="text-large">
-                    {{ $invite_url }}
+                    <a href="{{ $invite_url }}">{{ $invite_url }}</a>
                 </p>
 
                 <p>
@@ -89,7 +89,7 @@ Invite Friends
                 <th>Date Invited</th>
                 <th>Email</th>
                 <th>Status</th>
-                <th class="td-profile-image"></th>
+                <th class="td-profile-image">Profile</th>
             </tr>
             </thead>
             <tbody>

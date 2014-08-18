@@ -8060,6 +8060,9 @@ hr {
   margin: 0 auto;
   margin-top: -6px;
 }
+.circle p {
+  margin-top: -1px;
+}
 /* Static info pages */
 .info-page h3 {
   font-size: 1.5em;
