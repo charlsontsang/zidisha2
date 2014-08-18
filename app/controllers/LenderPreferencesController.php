@@ -54,4 +54,27 @@ class LenderPreferencesController extends BaseController
         return \View::make('lender.auto-lending-setting', compact('form'));
     }
 
+    public function postAutoLending($lenderId)
+    {
+        $lender = LenderQuery::create()
+            ->findOneById($lenderId);
+
+        if (!$lender) {
+            \App::abort(404, 'Lender Not found.');
+        }
+
+        $form = $this->autoLendingSettingForm;
+        $form->handleRequest(\Request::instance());
+
+        if ($form->isValid()) {
+            $data = $form->getData();
+            $this->lenderService->autoLendingSetting($data);
+
+            \Flash::success('Your settings are saved.');
+            return \Redirect::route('lender:auto-lending');
+        }
+
+        \Flash::error('Please use proper options.');
+        return \Redirect::route('lender:auto-lending');
+    }
 }
