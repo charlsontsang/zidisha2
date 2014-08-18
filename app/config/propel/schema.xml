@@ -1078,4 +1078,20 @@
             <reference local="user_id" foreign="id"/>
         </foreign-key>
     </table>
+    
+    <table name="auto_lending_settings" phpName="AutoLendingSetting" namespace="Lender">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="lender_id" type="INTEGER" required="true"/>
+        <column name="preference" type="SMALLINT" required="true"/>
+        <column name="min_desired_interest" type="DECIMAL" size="10" scale="2" phpType="string" required="true"/>
+        <column name="max_desired_interest" type="DECIMAL" size="10" scale="2" phpType="string" required="true"/>
+        <column name="current_allocated" type="SMALLINT" required="true"/>
+        <column name="lender_credit" type="DECIMAL" size="10" scale="2" phpType="string" required="true"/>
+        <column name="active" type="BOOLEAN" required="true"/>
+        <column name="last_processed" type="TIMESTAMP" required="true"/>
+        <behavior name="timestampable"/>
+        <foreign-key foreignTable="lenders" phpName="Borrower">
+            <reference local="lender_id" foreign="id"/>
+        </foreign-key>
+    </table>
 </database>
