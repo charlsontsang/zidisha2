@@ -93,11 +93,18 @@ class LoanFirstArrear extends ScheduledJob
         $installment = InstallmentQuery::create()
             ->filterByLoan($loan)
             ->filterByAmount(0, Criteria::GREATER_THAN)
-            ->where('Installment.PaidAmount < Installment.Amount')
+            ->where('Installment.PaidAmount IS NULL OR  Installment.PaidAmount < Installment.Amount')
             ->orderByDueDate('ASC')
             ->findOne();
+        
+        $missedInstallmentCount =  InstallmentQuery::create()
+            ->filterByLoan($loan)
+            ->filterByAmount(0, Criteria::GREATER_THAN)
+            ->where('Installment.PaidAmount IS NULL OR Installment.PaidAmount < Installment.Amount')
+            ->where('Installment.DueDate < ?', Carbon::now())
+            ->count();
 
-        if ($installment && $installment->getDueDate() == $this->getStartDate()) {
+        if ($installment && $missedInstallmentCount < 1 && $installment->getDueDate() == $this->getStartDate()) {
             //Check if this is the borrowers first missed installment.                
             if ($installment) {
                 /** @var  BorrowerMailer $borrowerMailer */

@@ -5,6 +5,7 @@ namespace Zidisha\ScheduledJob;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Queue\Jobs\Job;
+use Propel\Runtime\ActiveQuery\Criteria;
 use Zidisha\Borrower\ContactQuery;
 use Zidisha\Borrower\Invite;
 use Zidisha\Borrower\InviteQuery;
@@ -12,6 +13,7 @@ use Zidisha\Borrower\VolunteerMentor;
 use Zidisha\Loan\ForgivenLoanQuery;
 use Zidisha\Loan\LoanQuery;
 use Zidisha\Mail\BorrowerMailer;
+use Zidisha\Repayment\InstallmentQuery;
 use Zidisha\ScheduledJob\Map\ScheduledJobTableMap;
 use Zidisha\Sms\BorrowerSmsService;
 
@@ -92,7 +94,15 @@ class LoanFinalArrear extends ScheduledJob
         $forgivenLoan = ForgivenLoanQuery::create()
             ->findOneByLoanId($loanId);
 
-        if (!$forgivenLoan) {
+        $missedInstallmentCount =  InstallmentQuery::create()
+            ->filterByLoan($loan)
+            ->filterByAmount(0, Criteria::GREATER_THAN)
+            ->where('Installment.PaidAmount IS NULL OR Installment.PaidAmount < Installment.Amount')
+            ->where('Installment.DueDate < ?', Carbon::now())
+            ->count();
+        
+
+        if (!$forgivenLoan && $missedInstallmentCount < 2) {
             /** @var  BorrowerMailer $borrowerMailer */
             $borrowerMailer = \App::make('Zidisha\Mail\BorrowerMailer');
 
