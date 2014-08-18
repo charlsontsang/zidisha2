@@ -11,6 +11,7 @@ use Zidisha\Loan\LoanQuery;
 use Zidisha\Mail\BorrowerMailer;
 use Zidisha\Repayment\InstallmentQuery;
 use Zidisha\ScheduledJob\Map\ScheduledJobTableMap;
+use Zidisha\Sms\BorrowerSmsService;
 
 
 /**
@@ -97,6 +98,10 @@ class AgainRepaymentReminder extends ScheduledJob
             /** @var  BorrowerMailer $borrowerMailer */
             $borrowerMailer = \App::make('Zidisha\Mail\BorrowerMailer');
             $borrowerMailer->sendAgainRepaymentReminder($borrower, $loan, $installments);
+
+            /** @var  BorrowerSmsService $borrowerSmsService */
+            $borrowerSmsService = \App::make('Zidisha\Sms\BorrowerSmsService');
+            $borrowerSmsService->sendAgainRepaymentReminder($borrower, $loan, $installments);
         }
         
         $job->delete();
