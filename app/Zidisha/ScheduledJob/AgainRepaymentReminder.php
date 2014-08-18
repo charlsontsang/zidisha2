@@ -94,7 +94,7 @@ class AgainRepaymentReminder extends ScheduledJob
             ->filterByLoan($loan)
             ->find();
         
-        if (!$forgivenLoan) {
+        if (!$forgivenLoan && $installments) {
             /** @var  BorrowerMailer $borrowerMailer */
             $borrowerMailer = \App::make('Zidisha\Mail\BorrowerMailer');
             $borrowerMailer->sendAgainRepaymentReminder($borrower, $loan, $installments);

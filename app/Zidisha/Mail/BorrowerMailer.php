@@ -281,4 +281,9 @@ class BorrowerMailer{
             ]
         );
     }
+
+    public function sendLoanFinalArrearToInvite(Invite $invite, Borrower $borrower, Loan $loan)
+    {
+        //TODO: sendLoanFinalArrearToInvite
+    }
 }

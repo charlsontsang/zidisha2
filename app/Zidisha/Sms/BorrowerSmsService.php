@@ -5,6 +5,7 @@ namespace Zidisha\Sms;
 
 use Zidisha\Borrower\Borrower;
 use Zidisha\Borrower\Contact;
+use Zidisha\Currency\Money;
 use Zidisha\Loan\Loan;
 use Zidisha\Repayment\Installment;
 
@@ -65,11 +66,23 @@ class BorrowerSmsService {
 
     public function sendRepaymentReminderForDueAmount(Borrower $borrower, Loan $loan, $amounts)
     {
-        
+        //TODO : sendRepaymentReminderForDueAmount
     }
 
     public function sendAgainRepaymentReminder(Borrower $borrower, Loan $loan, $installments)
     {
-        //TODO: sendAgainRepaymentReminder
+        $totalAmount = Money::create(0, $loan->getCurrencyCode());
+        $paidAmount = Money::create(0, $loan->getCurrencyCode());
+
+        /** @var Installment $installment */
+        foreach ($installments as $installment) {
+            $totalAmount = $totalAmount->add($installment->getAmount());
+            $paidAmount = $paidAmount->add($installment->getPaidAmount());
+        }
+
+        $dueAmount = $totalAmount->subtract($paidAmount)->round(2);
+        
+        //TODO: Send Sms to borrower
+
     }
 }

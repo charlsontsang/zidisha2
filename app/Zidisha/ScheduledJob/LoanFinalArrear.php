@@ -6,6 +6,8 @@ use Carbon\Carbon;
 use DB;
 use Illuminate\Queue\Jobs\Job;
 use Zidisha\Borrower\ContactQuery;
+use Zidisha\Borrower\Invite;
+use Zidisha\Borrower\InviteQuery;
 use Zidisha\Borrower\VolunteerMentor;
 use Zidisha\Loan\ForgivenLoanQuery;
 use Zidisha\Loan\LoanQuery;
@@ -101,10 +103,23 @@ class LoanFinalArrear extends ScheduledJob
                 ->filterByBorrower($borrower)
                 ->find();
 
-            foreach ($contacts as $contact) {
-                $borrowerSmsService->sendLoanFinalArrearNotificationToContacts($contact, $loan);
+            if ($contacts) {
+                foreach ($contacts as $contact) {
+                    $borrowerSmsService->sendLoanFinalArrearNotificationToContacts($contact, $loan);
+                }
+            }
+            
+            $invitee = InviteQuery::create()
+                ->filterByBorrower($borrower)
+                ->find();
+            if ($invitee) {
+                foreach ($invitee as $invite) {
+                    $borrowerMailer->sendLoanFinalArrearToInvite($invite, $borrower, $loan);
+                }
             }
 
+            //TODO: add facebook contacts
+            
             $volunteerMentor = $borrower->getVolunteerMentor();
 
             if ($volunteerMentor) {
