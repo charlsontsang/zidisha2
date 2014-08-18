@@ -15,7 +15,8 @@ Account Preferences
         Automated lending allows you to maximize your impact by continuously relending your available lending credit. Talk about paying it forward! <a href="#">Learn more</a>
         </p>
         </div>        
-        {{ BootstrapForm::open(array('route' => 'lender:post:auto-lending', 'translationDomain' => 'lender.auto-lending.preferences')) }}
+        
+        {{ BootstrapForm::open(array('route' => [ 'lender:post:auto-lending', $lender->getId() ], 'translationDomain' => 'lender.auto-lending.preferences')) }}
         {{ BootstrapForm::populate($form) }}
         
         {{ \BootstrapForm::radio('active', 'true'); }} YES!  Activate automated lending.
@@ -27,11 +28,11 @@ Account Preferences
         <p>
         Please set your minimum desired interest rate.  
         </p>
-        {{ \BootstrapForm::radio('minimumInterestRate', '0') }} 
+        {{ \BootstrapForm::radio('minimumInterestRate', '0') }} 0%
         {{ \BootstrapForm::radio('minimumInterestRate', '3') }} 3%
         {{ \BootstrapForm::radio('minimumInterestRate', '5') }} 5%
         {{ \BootstrapForm::radio('minimumInterestRate', '10') }} 10%
-        {{ \BootstrapForm::radio('minimumInterestRate', 'other') }} Other: {{ \BootstrapForm::text('minimumInterestRateOther', 'other') }} 
+        {{ \BootstrapForm::radio('minimumInterestRate', 'other') }} Other: {{ \BootstrapForm::text('minimumInterestRateOther') }} 
 
         <br/>
         <hr/>
@@ -42,7 +43,7 @@ Account Preferences
         {{ \BootstrapForm::radio('maximumInterestRate', '3') }} 3%
         {{ \BootstrapForm::radio('maximumInterestRate', '5') }} 5%
         {{ \BootstrapForm::radio('maximumInterestRate', '10') }} 10%
-        {{ \BootstrapForm::radio('maximumInterestRate', 'other') }} Other: {{ \BootstrapForm::text('maximumInterestRateOther', 'other') }} 
+        {{ \BootstrapForm::radio('maximumInterestRate', 'other') }} Other: {{ \BootstrapForm::text('maximumInterestRateOther') }} 
 
         <br/>
         <hr/>
