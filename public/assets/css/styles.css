@@ -8238,7 +8238,7 @@ hr {
 .sidenav .nav > li > a {
   display: block;
   padding: 4px 20px;
-  font-size: 13px;
+  font-size: 16px;
   font-weight: 500;
   color: #999;
 }
@@ -8269,7 +8269,7 @@ hr {
   padding-top: 1px;
   padding-bottom: 1px;
   padding-left: 30px;
-  font-size: 12px;
+  font-size: 16px;
   font-weight: normal;
 }
 .sidenav .nav .nav > li > a:hover,
@@ -8315,7 +8315,7 @@ hr {
   /* Widen the fixed sidebar */
   .sidenav.affix,
   .sidenav.affix-bottom {
-    width: 213px;
+    width: 293px;
   }
   .sidenav.affix {
     position: fixed;

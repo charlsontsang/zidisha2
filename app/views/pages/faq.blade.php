@@ -7,9 +7,89 @@
 
 @section('content')
 <div class="row" class="bs-docs-sidebar">
-    
     <div class="col-xs-12 page-header">
         <h1>{{ \Lang::get('borrower.faqs.heading') }}</h1>
+    </div>
+
+    <div class="sidebar col-sm-4 pull-right">
+        <div class="sidenav hidden-print hidden-xs affix-top" role="complementary">
+            <ul class="nav sidenav-first-level">
+                <li><a href="#general-faqs">{{ \Lang::get('borrower.faqs.basic') }}</a>
+                    <ul class="nav">
+                        <li><a href="#faq-1">{{ \Lang::get('borrower.faqs.question1') }}</a></li>
+                        <li><a href="#faq-2">{{ \Lang::get('borrower.faqs.question2') }}</a></li>
+                        <li><a href="#faq-4">{{ \Lang::get('borrower.faqs.question4') }}</a></li>
+                        <li><a href="#faq-5">{{ \Lang::get('borrower.faqs.question5') }}</a></li>
+                        <li><a href="#faq-3">{{ \Lang::get('borrower.faqs.question3') }}</a></li>
+                        <li><a href="#faq-4">{{ \Lang::get('borrower.faqs.question4') }}</a></li>
+                        <li><a href="#faq-59">{{ \Lang::get('borrower.faqs.question59') }}</a></li>
+                        <li><a href="#faq-47">{{ \Lang::get('borrower.faqs.question47') }}</a></li>
+                        <li><a href="#faq-6">{{ \Lang::get('borrower.faqs.question6') }}</a></li>
+                        <li><a href="#faq-52">{{ \Lang::get('borrower.faqs.question52') }}</a></li>
+                        <li><a href="#faq-7">{{ \Lang::get('borrower.faqs.question7') }}</a></li>
+                        <li><a href="#faq-9">{{ \Lang::get('borrower.faqs.question9') }}</a></li>
+                        <li><a href="#faq-10">{{ \Lang::get('borrower.faqs.question10') }}</a></li>
+                        <li><a href="#faq-11">{{ \Lang::get('borrower.faqs.question11') }}</a></li>
+                        <li><a href="#faq-12">{{ \Lang::get('borrower.faqs.question12') }}</a></li>
+                        <li><a href="#faq-13">{{ \Lang::get('borrower.faqs.question13') }}</a></li>
+                        <li><a href="#faq-15">{{ \Lang::get('borrower.faqs.question15') }}</a></li>
+                        <li><a href="#faq-49">{{ \Lang::get('borrower.faqs.question49') }}</a></li>
+                        <li><a href="#faq-16">{{ \Lang::get('borrower.faqs.question16') }}</a></li>
+                        <li><a href="#faq-17">{{ \Lang::get('borrower.faqs.question17') }}</a></li>
+                        <li><a href="#faq-46">{{ \Lang::get('borrower.faqs.question46') }}</a></li>
+                        <li><a href="#faq-51">{{ \Lang::get('borrower.faqs.question51') }}</a></li>
+                    </ul>
+                </li>
+                <li><a href="#lender-faqs">{{ \Lang::get('borrower.faqs.lenders') }}</a>
+                    <ul class="nav">
+                        <li><a href="#faq-53">{{ \Lang::get('borrower.faqs.question53') }}</a></li>
+                        <li><a href="#faq-45">{{ \Lang::get('borrower.faqs.question45') }}</a></li>
+                        <li><a href="#faq-44">{{ \Lang::get('borrower.faqs.question44') }}</a></li>
+                        <li><a href="#faq-43">{{ \Lang::get('borrower.faqs.question43') }}</a></li>
+                        <li><a href="#faq-19">{{ \Lang::get('borrower.faqs.question19') }}</a></li>
+                        <li><a href="#faq-21">{{ \Lang::get('borrower.faqs.question21') }}</a></li>
+                        <li><a href="#faq-18">{{ \Lang::get('borrower.faqs.question18') }}</a></li>
+                        <li><a href="#faq-60">{{ \Lang::get('borrower.faqs.question60') }}</a></li>
+                        <li><a href="#faq-20">{{ \Lang::get('borrower.faqs.question20') }}</a></li>
+                        <li><a href="#faq-22">{{ \Lang::get('borrower.faqs.question22') }}</a></li>
+                        <li><a href="#faq-24">{{ \Lang::get('borrower.faqs.question24') }}</a></li>
+                        <li><a href="#faq-61">{{ \Lang::get('borrower.faqs.question61') }}</a></li>
+                        <li><a href="#faq-62">{{ \Lang::get('borrower.faqs.question62') }}</a></li>
+                        <li><a href="#faq-14">{{ \Lang::get('borrower.faqs.question14') }}</a></li>
+                        <li><a href="#faq-40">{{ \Lang::get('borrower.faqs.question40') }}</a></li>
+                        <li><a href="#faq-41">{{ \Lang::get('borrower.faqs.question41') }}</a></li>
+                        <li><a href="#faq-42">{{ \Lang::get('borrower.faqs.question42') }}</a></li>
+                        <li><a href="#faq-23">{{ \Lang::get('borrower.faqs.question23') }}</a></li>
+                        <li><a href="#faq-48">{{ \Lang::get('borrower.faqs.question48') }}</a></li>
+                    </ul>
+                </li>
+                <li><a href="#borrower-faqs">{{ \Lang::get('borrower.faqs.borrower') }}</a>
+                    <ul class="nav">
+                        <li><a href="#faq-25">{{ \Lang::get('borrower.faqs.question25') }}</a></li>
+                        <li><a href="#faq-50">{{ \Lang::get('borrower.faqs.question50') }}</a></li>
+                        <li><a href="#faq-26">{{ \Lang::get('borrower.faqs.question26') }}</a></li>
+                        <li><a href="#faq-27">{{ \Lang::get('borrower.faqs.question27') }}</a></li>
+                        <li><a href="#faq-28">{{ \Lang::get('borrower.faqs.question28') }}</a></li>
+                        <li><a href="#faq-29">{{ \Lang::get('borrower.faqs.question29') }}</a></li>
+                        <li><a href="#faq-36">{{ \Lang::get('borrower.faqs.question36') }}</a></li>
+                        <li><a href="#faq-30">{{ \Lang::get('borrower.faqs.question30') }}</a></li>
+                        <li><a href="#faq-56">{{ \Lang::get('borrower.faqs.question56') }}</a></li>
+                        <li><a href="#faq-38">{{ \Lang::get('borrower.faqs.question38') }}</a></li>
+                        <li><a href="#faq-37">{{ \Lang::get('borrower.faqs.question37') }}</a></li>
+                        <li><a href="#faq-55">{{ \Lang::get('borrower.faqs.question55') }}</a></li>
+                        <li><a href="#faq-31">{{ \Lang::get('borrower.faqs.question31') }}</a></li>
+                        <li><a href="#faq-32">{{ \Lang::get('borrower.faqs.question32') }}</a></li>
+                        <li><a href="#faq-33">{{ \Lang::get('borrower.faqs.question33') }}</a></li>
+                        <li><a href="#faq-34">{{ \Lang::get('borrower.faqs.question34') }}</a></li>
+                        <li><a href="#faq-35">{{ \Lang::get('borrower.faqs.question35') }}</a></li>
+                        <li><a href="#faq-58">{{ \Lang::get('borrower.faqs.question58') }}</a></li>
+                        <li><a href="#faq-57">{{ \Lang::get('borrower.faqs.question57') }}</a></li>
+                        <li><a href="#faq-54">{{ \Lang::get('borrower.faqs.question54') }}</a></li>
+                        <li><a href="#faq-39">{{ \Lang::get('borrower.faqs.question39') }}</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
     </div>
 
     <div class="col-md-8 info-page">
@@ -190,7 +270,8 @@
      
         <h3 id="faq-4">{{ \Lang::get('borrower.faqs.question48') }}</h3>
         <p>{{ \Lang::get('borrower.faqs.answer48') }}</p>
-     
+
+        <hr/>
 
         <h2 id="borrower-faqs">{{ \Lang::get('borrower.faqs.borrower') }}</h2>
  
@@ -291,88 +372,6 @@
         <p>{{ \Lang::get('borrower.faqs.answer39') }}</p>         
 
     </div>
-
-    <div class="sidebar col-sm-4 hidden-xs">
-        <div class="sidenav hidden-print hidden-xs affix-top" role="complementary">
-            <ul class="nav sidenav-first-level">
-                <li><a href="#general-faqs">{{ \Lang::get('borrower.faqs.basic') }}</a>
-                    <ul class="nav">
-                        <li><a href="#faq-1">{{ \Lang::get('borrower.faqs.question1') }}</a></li>
-                        <li><a href="#faq-2">{{ \Lang::get('borrower.faqs.question2') }}</a></li>
-                        <li><a href="#faq-4">{{ \Lang::get('borrower.faqs.question4') }}</a></li>
-                        <li><a href="#faq-5">{{ \Lang::get('borrower.faqs.question5') }}</a></li>
-                        <li><a href="#faq-3">{{ \Lang::get('borrower.faqs.question3') }}</a></li>
-                        <li><a href="#faq-4">{{ \Lang::get('borrower.faqs.question4') }}</a></li>
-                        <li><a href="#faq-59">{{ \Lang::get('borrower.faqs.question59') }}</a></li>
-                        <li><a href="#faq-47">{{ \Lang::get('borrower.faqs.question47') }}</a></li>
-                        <li><a href="#faq-6">{{ \Lang::get('borrower.faqs.question6') }}</a></li>
-                        <li><a href="#faq-52">{{ \Lang::get('borrower.faqs.question52') }}</a></li>
-                        <li><a href="#faq-7">{{ \Lang::get('borrower.faqs.question7') }}</a></li>
-                        <li><a href="#faq-9">{{ \Lang::get('borrower.faqs.question9') }}</a></li>
-                        <li><a href="#faq-10">{{ \Lang::get('borrower.faqs.question10') }}</a></li>
-                        <li><a href="#faq-11">{{ \Lang::get('borrower.faqs.question11') }}</a></li>
-                        <li><a href="#faq-12">{{ \Lang::get('borrower.faqs.question12') }}</a></li>
-                        <li><a href="#faq-13">{{ \Lang::get('borrower.faqs.question13') }}</a></li>
-                        <li><a href="#faq-15">{{ \Lang::get('borrower.faqs.question15') }}</a></li>
-                        <li><a href="#faq-49">{{ \Lang::get('borrower.faqs.question49') }}</a></li>
-                        <li><a href="#faq-16">{{ \Lang::get('borrower.faqs.question16') }}</a></li>
-                        <li><a href="#faq-17">{{ \Lang::get('borrower.faqs.question17') }}</a></li>
-                        <li><a href="#faq-46">{{ \Lang::get('borrower.faqs.question46') }}</a></li>
-                        <li><a href="#faq-51">{{ \Lang::get('borrower.faqs.question51') }}</a></li>
-                    </ul>
-                </li>
-                <li><a href="#lender-faqs">{{ \Lang::get('borrower.faqs.lenders') }}</a>
-                    <ul class="nav">
-                        <li><a href="#faq-53">{{ \Lang::get('borrower.faqs.question53') }}</a></li>
-                        <li><a href="#faq-45">{{ \Lang::get('borrower.faqs.question45') }}</a></li>
-                        <li><a href="#faq-44">{{ \Lang::get('borrower.faqs.question44') }}</a></li>
-                        <li><a href="#faq-43">{{ \Lang::get('borrower.faqs.question43') }}</a></li>
-                        <li><a href="#faq-19">{{ \Lang::get('borrower.faqs.question19') }}</a></li>
-                        <li><a href="#faq-21">{{ \Lang::get('borrower.faqs.question21') }}</a></li>
-                        <li><a href="#faq-18">{{ \Lang::get('borrower.faqs.question18') }}</a></li>
-                        <li><a href="#faq-60">{{ \Lang::get('borrower.faqs.question60') }}</a></li>
-                        <li><a href="#faq-20">{{ \Lang::get('borrower.faqs.question20') }}</a></li>
-                        <li><a href="#faq-22">{{ \Lang::get('borrower.faqs.question22') }}</a></li>
-                        <li><a href="#faq-24">{{ \Lang::get('borrower.faqs.question24') }}</a></li>
-                        <li><a href="#faq-61">{{ \Lang::get('borrower.faqs.question61') }}</a></li>
-                        <li><a href="#faq-62">{{ \Lang::get('borrower.faqs.question62') }}</a></li>
-                        <li><a href="#faq-14">{{ \Lang::get('borrower.faqs.question14') }}</a></li>
-                        <li><a href="#faq-40">{{ \Lang::get('borrower.faqs.question40') }}</a></li>
-                        <li><a href="#faq-41">{{ \Lang::get('borrower.faqs.question41') }}</a></li>
-                        <li><a href="#faq-42">{{ \Lang::get('borrower.faqs.question42') }}</a></li>
-                        <li><a href="#faq-23">{{ \Lang::get('borrower.faqs.question23') }}</a></li>
-                        <li><a href="#faq-48">{{ \Lang::get('borrower.faqs.question48') }}</a></li>
-                    </ul>
-                </li>
-                <li><a href="#borrower-faqs">{{ \Lang::get('borrower.faqs.borrower') }}</a>
-                    <ul class="nav">
-                        <li><a href="#faq-25">{{ \Lang::get('borrower.faqs.question25') }}</a></li>
-                        <li><a href="#faq-50">{{ \Lang::get('borrower.faqs.question50') }}</a></li>
-                        <li><a href="#faq-26">{{ \Lang::get('borrower.faqs.question26') }}</a></li>
-                        <li><a href="#faq-27">{{ \Lang::get('borrower.faqs.question27') }}</a></li>
-                        <li><a href="#faq-28">{{ \Lang::get('borrower.faqs.question28') }}</a></li>
-                        <li><a href="#faq-29">{{ \Lang::get('borrower.faqs.question29') }}</a></li>
-                        <li><a href="#faq-36">{{ \Lang::get('borrower.faqs.question36') }}</a></li>
-                        <li><a href="#faq-30">{{ \Lang::get('borrower.faqs.question30') }}</a></li>
-                        <li><a href="#faq-56">{{ \Lang::get('borrower.faqs.question56') }}</a></li>
-                        <li><a href="#faq-38">{{ \Lang::get('borrower.faqs.question38') }}</a></li>
-                        <li><a href="#faq-37">{{ \Lang::get('borrower.faqs.question37') }}</a></li>
-                        <li><a href="#faq-55">{{ \Lang::get('borrower.faqs.question55') }}</a></li>
-                        <li><a href="#faq-31">{{ \Lang::get('borrower.faqs.question31') }}</a></li>
-                        <li><a href="#faq-32">{{ \Lang::get('borrower.faqs.question32') }}</a></li>
-                        <li><a href="#faq-33">{{ \Lang::get('borrower.faqs.question33') }}</a></li>
-                        <li><a href="#faq-34">{{ \Lang::get('borrower.faqs.question34') }}</a></li>
-                        <li><a href="#faq-35">{{ \Lang::get('borrower.faqs.question35') }}</a></li>
-                        <li><a href="#faq-58">{{ \Lang::get('borrower.faqs.question58') }}</a></li>
-                        <li><a href="#faq-57">{{ \Lang::get('borrower.faqs.question57') }}</a></li>
-                        <li><a href="#faq-54">{{ \Lang::get('borrower.faqs.question54') }}</a></li>
-                        <li><a href="#faq-39">{{ \Lang::get('borrower.faqs.question39') }}</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-    </div>
-
 </div>
 @stop
 
