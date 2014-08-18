@@ -8332,13 +8332,6 @@ hr {
     margin-bottom: 0;
   }
 }
-@media (min-width: 1200px) {
-  /* Widen the fixed sidebar again */
-  .sidenav.affix-bottom,
-  .sidenav.affix {
-    width: 263px;
-  }
-}
 .footer {
   margin-bottom: 0;
   padding-bottom: 0;
@@ -8667,6 +8660,13 @@ a.link-dark {
   #mobile-lend-button {
     display: none;
   }
+}
+#follow-button {
+  position: absolute;
+  top: 453px;
+  width: 278px;
+  height: 36px;
+  z-index: -1;
 }
 @media (max-width: 767px) {
   #follow-button {

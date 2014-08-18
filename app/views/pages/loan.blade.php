@@ -586,16 +586,13 @@
         </div>
             @endif
         
-        <div id="follow-button" class="panel-body">
-            <button type="button" class="btn btn-default btn-block followBorrower" data-toggle="tooltip">
+        <div class="panel-body">
+            <button id="follow-button" type="button" class="btn btn-default btn-block followBorrower" data-toggle="tooltip">
                 <i class="fa fa-fw fa-star-o"></i>
                 @lang('lender.follow.title', ['name' => $borrower->getFirstName()])
             </button>
         </div>
-
-        <div class="panel-body"> <!-- TO DO: add social share scripts -->
-            <img src="{{ '/assets/images/test-photos/share.png' }}"/>
-        </div>
+        
     </div>
 </div>
 
