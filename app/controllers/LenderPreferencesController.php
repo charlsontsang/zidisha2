@@ -1,6 +1,7 @@
 <?php
 
 use Zidisha\Lender\Form\AccountPreferencesForm;
+use Zidisha\Lender\Form\AutoLendingSettingForm;
 use Zidisha\Lender\LenderService;
 
 class LenderPreferencesController extends BaseController
@@ -9,13 +10,20 @@ class LenderPreferencesController extends BaseController
     private $accountPreferencesForm;
     private $lenderService;
 
+    /**
+     * @var AutoLendingSettingForm
+     */
+    private $autoLendingSettingForm;
+    
     public function __construct(
         AccountPreferencesForm $accountPreferencesForm,
-        LenderService $lenderService
+        LenderService $lenderService,
+        AutoLendingSettingForm $autoLendingSettingForm
     )
     {
         $this->accountPreferencesForm = $accountPreferencesForm;
         $this->lenderService = $lenderService;
+        $this->autoLendingSettingForm = $autoLendingSettingForm;
     }
     public function getAccountPreference()
     {
@@ -39,4 +47,11 @@ class LenderPreferencesController extends BaseController
         }
         return Redirect::route('lender.account-preference')->withForm($form);
     }
+    
+    public function getAutoLending()
+    {
+        $form = $this->autoLendingSettingForm;
+        return \View::make('lender.auto-lending-setting', compact('form'));
+    }
+
 }
