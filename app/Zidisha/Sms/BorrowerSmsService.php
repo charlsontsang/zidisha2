@@ -67,4 +67,9 @@ class BorrowerSmsService {
     {
         
     }
+
+    public function sendAgainRepaymentReminder(Borrower $borrower, Loan $loan, $installments)
+    {
+        //TODO: sendAgainRepaymentReminder
+    }
 }
