@@ -1090,7 +1090,7 @@
         <column name="active" type="BOOLEAN" required="true"/>
         <column name="last_processed" type="TIMESTAMP" required="true"/>
         <behavior name="timestampable"/>
-        <foreign-key foreignTable="lenders" phpName="Borrower">
+        <foreign-key foreignTable="lenders" phpName="Lender">
             <reference local="lender_id" foreign="id"/>
         </foreign-key>
     </table>
