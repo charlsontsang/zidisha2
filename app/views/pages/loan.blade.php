@@ -424,7 +424,7 @@
     </div>
 
     <div class="col-sm-4 loan-side" style="padding-left:0;">
-        <div class="panel panel-default panel-body" data-spy="affix" data-offset-top="15" data-offset-bottom="405">
+        <div class="panel panel-default panel-body sidenav">
             <h2>
                 <a href="{{ route('loan:index', $loan->getId()) }}">
                     {{ $loan->getSummary() }}
