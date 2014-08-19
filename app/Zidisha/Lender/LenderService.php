@@ -534,64 +534,41 @@ class LenderService
 
     public function autoLendingSetting(Lender $lender, $data)
     {
-        $preferences = AutoLendingSettingQuery::create()
+        $autoLendingSetting = AutoLendingSettingQuery::create()
             ->filterByLender($lender)
             ->findOne();
 
         $currentBalance = TransactionQuery::create()
             ->getCurrentBalance($lender->getId());
-        
-        if ($preferences) {
-            $preferences->setActive($data['active']);
-            
-            if ($data['minimumInterestRate'] == 'other') {
-                $preferences->setMinDesiredInterest($data['minimumInterestRateOther']);
-            } else {
-                $preferences->setMinDesiredInterest($data['minimumInterestRate']);
-            }
 
-            if ($data['maximumInterestRate'] == 'other') {
-                $preferences->setMaxDesiredInterest($data['maximumInterestRateOther']);
-            } else {
-                $preferences->setMaxDesiredInterest($data['maximumInterestRate']);
-            }
-            
-            if ($data['currentAllocated'] == 1) {
-                $preferences->setCurrentAllocated($data['currentAllocated']);                
-            } else {
-                $preferences->setCurrentAllocated($data['currentAllocated']);
-                $preferences->setLenderCredit($currentBalance);
-            }
-            
-            $preferences->setPreference($data['preference']);
-            $preferences->save();
-        } else {
-            $preferences = new AutoLendingSetting();
-            $preferences->setActive($data['active']);
-            $preferences->setLender($lender);
-            
-            if ($data['minimumInterestRate'] == 'other') {
-                $preferences->setMinDesiredInterest($data['minimumInterestRateOther']);
-            } else {
-                $preferences->setMinDesiredInterest($data['minimumInterestRate']);                
-            }
-
-            if ($data['maximumInterestRate'] == 'other') {
-                $preferences->setMaxDesiredInterest($data['maximumInterestRateOther']);
-            } else {
-                $preferences->setMaxDesiredInterest($data['maximumInterestRate']);
-            }
-
-            if ($data['currentAllocated'] == 1) {
-                $preferences->setCurrentAllocated($data['currentAllocated']);
-            } else {
-                $preferences->setCurrentAllocated($data['currentAllocated']);
-                $preferences->setLenderCredit($currentBalance);
-            }
-            
-            $preferences->setPreference($data['preference']);
-            
-            $preferences->save();
+        if (!$autoLendingSetting) {
+            $autoLendingSetting = new AutoLendingSetting();
+            $autoLendingSetting->setLender($lender);
         }
+
+
+        $autoLendingSetting->setActive($data['active']);
+
+        if ($data['minimumInterestRate'] == 'other') {
+            $autoLendingSetting->setMinDesiredInterest($data['minimumInterestRateOther']);
+        } else {
+            $autoLendingSetting->setMinDesiredInterest($data['minimumInterestRate']);
+        }
+
+        if ($data['maximumInterestRate'] == 'other') {
+            $autoLendingSetting->setMaxDesiredInterest($data['maximumInterestRateOther']);
+        } else {
+            $autoLendingSetting->setMaxDesiredInterest($data['maximumInterestRate']);
+        }
+
+        if ($data['currentAllocated'] == 1) {
+            $autoLendingSetting->setCurrentAllocated($data['currentAllocated']);
+        } else {
+            $autoLendingSetting->setCurrentAllocated($data['currentAllocated']);
+            $autoLendingSetting->setLenderCredit($currentBalance);
+        }
+
+        $autoLendingSetting->setPreference($data['preference']);
+        $autoLendingSetting->save();
     }
 }
