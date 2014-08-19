@@ -1,7 +1,9 @@
 <?php
 
+use Zidisha\Balance\TransactionQuery;
 use Zidisha\Lender\Form\AccountPreferencesForm;
 use Zidisha\Lender\Form\AutoLendingSettingForm;
+use Zidisha\Lender\Lender;
 use Zidisha\Lender\LenderQuery;
 use Zidisha\Lender\LenderService;
 
@@ -52,9 +54,13 @@ class LenderPreferencesController extends BaseController
     public function getAutoLending()
     {
         $form = $this->autoLendingSettingForm;
+        /** @var Lender $lender */
         $lender = \Auth::user()->getLender();
         
-        return \View::make('lender.auto-lending-setting', compact('form', 'lender'));
+        $currentBalance = TransactionQuery::create()
+            ->getCurrentBalance($lender->getId());
+
+        return \View::make('lender.auto-lending-setting', compact('form', 'lender', 'currentBalance'));
     }
 
     public function postAutoLending($lenderId)
