@@ -17,6 +17,7 @@ class AutoLendingSettingForm extends AbstractForm
             'maximumInterestRate'      => 'CheckInterestRate',
             'maximumInterestRateOther' => 'numeric|min:0|max:100',
             'preference'               => 'required|in:' . implode(',', array_keys($this->getPreferenceArray())),
+            'currentAllocated'         => 'required|in:0,1'
         ];
     }
 
@@ -35,14 +36,16 @@ class AutoLendingSettingForm extends AbstractForm
                 'minimumInterestRateOther' =>$this->getOtherInterestRate($autoLendingPreferences->getMinDesiredInterest()),
                 'maximumInterestRate' => $this->getDefaultInterestRate($autoLendingPreferences->getMaxDesiredInterest()),
                 'maximumInterestRateOther' => $this->getOtherInterestRate($autoLendingPreferences->getMaxDesiredInterest()),
-                'preference'          => $autoLendingPreferences->getPreference()
+                'preference'          => $autoLendingPreferences->getPreference(),
+                'currentAllocated'    => $autoLendingPreferences->getCurrentAllocated()
             ];
         } else {
             return [
                 'active'              => 'true',
                 'minimumInterestRate' => '0',
                 'maximumInterestRate' => '0',
-                'preference'          => '1'
+                'preference'          => '1',
+                'currentAllocated'    => '1'
             ];
         }
     }
