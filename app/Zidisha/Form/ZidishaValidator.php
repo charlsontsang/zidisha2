@@ -89,4 +89,22 @@ class ZidishaValidator extends Validator
     {
         return $attribute . ' already exits in the database.';
     }
+
+    public function validateCheckInterestRate($attribute, $value, $parameters)
+    {
+        $interestRate = $this->getValue($attribute);
+
+        if ($interestRate == 'other') {
+            return true;
+        } else {
+            if (in_array($interestRate, [0,3,5,10]) && $interestRate <= 100) {
+                return true;
+            }
+        }
+    }
+    
+    protected function replaceCheckInterestRate($message, $attribute, $rule, $parameters)
+    {
+        return $attribute . ' is not correct';
+    }
 }
