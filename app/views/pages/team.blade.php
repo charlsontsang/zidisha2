@@ -18,7 +18,7 @@ Meet the Team
 	</div>
 	<div class="col-sm-6">
 		<p>Some of us are full-time staff, but most of us are volunteers who either work with Zidisha from our own homes around the world or have actually relocated to developing countries to serve as ambassadors to current and prospective borrowers.</p>
-		<p>Check out our <a href="#">Volunteer</a> page to learn about our volunteer and internship opportunities.</p>
+		<p>Check out our <a href="{{ route('page:volunteer') }}">Volunteer</a> page to learn about our volunteer and internship opportunities.</p>
 	</div>
 </div>
 

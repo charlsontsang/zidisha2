@@ -71,7 +71,7 @@
                         <ul class="list-unstyled">
                             <li><a href="{{ route('lend:index') }}">Lend</a></li>
                             <li><a href="#">Borrow</a></li>
-                            <li><a href="#">Volunteer</a></li>
+                            <li><a href="{{ route('page:volunteer') }}">Volunteer</a></li>
                             <li><a href="{{ route('lender:gift-cards') }}">Gift Cards</a></li>
                             <li><a href="#">Donate</a></li>
                             <li><a href="#">Book</a></li>
