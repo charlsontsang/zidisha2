@@ -534,6 +534,47 @@ class LenderService
 
     public function autoLendingSetting(Lender $lender, $data)
     {
-        //TODO: Implement autoLendingSetting
+        $preferences = AutoLendingSettingQuery::create()
+            ->filterByLender($lender)
+            ->findOne();
+        
+        if ($preferences) {
+            $preferences->setActive($data['active']);
+            
+            if ($data['minimumInterestRate'] == 'other') {
+                $preferences->setMinDesiredInterest($data['minimumInterestRateOther']);
+            } else {
+                $preferences->setMinDesiredInterest($data['minimumInterestRate']);
+            }
+
+            if ($data['maximumInterestRate'] == 'other') {
+                $preferences->setMaxDesiredInterest($data['maximumInterestRateOther']);
+            } else {
+                $preferences->setMaxDesiredInterest($data['maximumInterestRate']);
+            }
+
+            $preferences->setPreference($data['preference']);
+            $preferences->save();
+        } else {
+            $preferences = new AutoLendingSetting();
+            $preferences->setActive($data['active']);
+            $preferences->setLender($lender);
+            
+            if ($data['minimumInterestRate'] == 'other') {
+                $preferences->setMinDesiredInterest($data['minimumInterestRateOther']);
+            } else {
+                $preferences->setMinDesiredInterest($data['minimumInterestRate']);                
+            }
+
+            if ($data['maximumInterestRate'] == 'other') {
+                $preferences->setMaxDesiredInterest($data['maximumInterestRateOther']);
+            } else {
+                $preferences->setMaxDesiredInterest($data['maximumInterestRate']);
+            }
+
+            $preferences->setPreference($data['preference']);
+            
+            $preferences->save();
+        }
     }
 }
