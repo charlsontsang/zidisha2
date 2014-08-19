@@ -12,16 +12,11 @@ class AutoLendingSettingForm extends AbstractForm
     {
         return [
             'active'                   => 'required',
-            'minimumInterestRate'      => 'numeric|min:0|max:100',
-            'minimumInterestRateOther' => 'numeric|min:0|max:100|required:minimumInterestRate,other',
-            'maximumInterestRate'      => 'numeric|min:0|max:100',
-            'maximumInterestRateOther' => 'numeric|min:0|max:100|required:maximumInterestRate,other',
-            'preference'               => 'required|numeric|in:' . AutoLendingSetting::AUTO_LEND_AS_PREV_LOAN,
-            AutoLendingSetting::LOAN_RANDOM,
-            AutoLendingSetting::HIGH_NO_COMMENTS,
-            AutoLendingSetting::HIGH_OFFER_INTEREST,
-            AutoLendingSetting::EXPIRE_SOON,
-            AutoLendingSetting::HIGH_FEEDBCK_RATING
+            'minimumInterestRate'      => 'CheckInterestRate',
+            'minimumInterestRateOther' => 'numeric|min:0|max:100',
+            'maximumInterestRate'      => 'CheckInterestRate',
+            'maximumInterestRateOther' => 'numeric|min:0|max:100',
+            'preference'               => 'required|in:' . implode(',', array_keys($this->getPreferenceArray())),
         ];
     }
 
@@ -35,18 +30,48 @@ class AutoLendingSettingForm extends AbstractForm
 
         if ($autoLendingPreferences) {
             return [
-                'active'              => $autoLendingPreferences->getActive(),
-                'minimumInterestRate' => $autoLendingPreferences->getMinDesiredInterest(),
-                'maximumInterestRate' => $autoLendingPreferences->getMaxDesiredInterest(),
+                'active'              =>  $autoLendingPreferences->getActive(),
+                'minimumInterestRate' =>$this->getDefaultInterestRate($autoLendingPreferences->getMinDesiredInterest()),
+                'minimumInterestRateOther' =>$this->getOtherInterestRate($autoLendingPreferences->getMinDesiredInterest()),
+                'maximumInterestRate' => $this->getDefaultInterestRate($autoLendingPreferences->getMaxDesiredInterest()),
+                'maximumInterestRateOther' => $this->getOtherInterestRate($autoLendingPreferences->getMaxDesiredInterest()),
                 'preference'          => $autoLendingPreferences->getPreference()
             ];
         } else {
             return [
-                'active'              => true,
-                'minimumInterestRate' => 0,
-                'maximumInterestRate' => 0,
-                'preference'          => 0
+                'active'              => 'true',
+                'minimumInterestRate' => '0',
+                'maximumInterestRate' => '0',
+                'preference'          => '1'
             ];
         }
+    }
+
+    public function getDefaultInterestRate($interestRate)
+    {
+        if (in_array($interestRate, [0,3,5,10])) {
+            return $interestRate;
+        } else {
+          return 'other';  
+        }
+    }
+
+    private function getOtherInterestRate($interestRate)
+    {
+        if (in_array($interestRate, [0,3,5,10])) {
+            return '';
+        } else {
+            return $interestRate;
+        }
+    }
+
+    public function getPreferenceArray()
+    {
+        return [AutoLendingSetting::AUTO_LEND_AS_PREV_LOAN,
+            AutoLendingSetting::LOAN_RANDOM,
+            AutoLendingSetting::HIGH_NO_COMMENTS,
+            AutoLendingSetting::HIGH_OFFER_INTEREST,
+            AutoLendingSetting::EXPIRE_SOON,
+            AutoLendingSetting::HIGH_FEEDBCK_RATING];
     }
 } 
