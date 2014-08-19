@@ -537,6 +537,9 @@ class LenderService
         $preferences = AutoLendingSettingQuery::create()
             ->filterByLender($lender)
             ->findOne();
+
+        $currentBalance = TransactionQuery::create()
+            ->getCurrentBalance($lender->getId());
         
         if ($preferences) {
             $preferences->setActive($data['active']);
@@ -552,7 +555,14 @@ class LenderService
             } else {
                 $preferences->setMaxDesiredInterest($data['maximumInterestRate']);
             }
-
+            
+            if ($data['currentAllocated'] == 1) {
+                $preferences->setCurrentAllocated($data['currentAllocated']);                
+            } else {
+                $preferences->setCurrentAllocated($data['currentAllocated']);
+                $preferences->setLenderCredit($currentBalance);
+            }
+            
             $preferences->setPreference($data['preference']);
             $preferences->save();
         } else {
@@ -572,6 +582,13 @@ class LenderService
                 $preferences->setMaxDesiredInterest($data['maximumInterestRate']);
             }
 
+            if ($data['currentAllocated'] == 1) {
+                $preferences->setCurrentAllocated($data['currentAllocated']);
+            } else {
+                $preferences->setCurrentAllocated($data['currentAllocated']);
+                $preferences->setLenderCredit($currentBalance);
+            }
+            
             $preferences->setPreference($data['preference']);
             
             $preferences->save();
