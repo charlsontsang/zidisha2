@@ -51,7 +51,19 @@
             
             <p>{{ \Lang::get('borrower.borrow.how-much-max-loan') }}</p>
             
-            [TO DO: insert local currency values of loan size progression]
+            <ol>
+                <li><span>{{ $firstLoanValue }}</span></li>
+                <li><span>{{ $secondLoanValue }}</span></li>
+                <li><span>{{ $thirdLoanValue }}</span></li>
+                <li><span>{{ $fourthLoanValue }}</span></li>
+                <li><span>{{ $fifthLoanValue }}</span></li>
+                <li><span>{{ $sixthLoanValue }}</span></li>
+                <li><span>{{ $seventhLoanValue }}</span></li>
+                <li><span>{{ $eighthLoanValue }}</span></li>
+                <li><span>{{ $ninethLoanValue }}</span></li>
+                <li><span>{{ $tenthLoanValue }}</span></li>
+                <li><span>{{ $nextLoanValue }}</span></li>
+            </ol>
   
         <h3>{{ \Lang::get('borrower.borrow.fees-heading') }}</h3>
         
