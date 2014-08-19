@@ -19,8 +19,8 @@ Account Preferences
         {{ BootstrapForm::open(array('route' => [ 'lender:post:auto-lending', $lender->getId() ], 'translationDomain' => 'lender.auto-lending.preferences')) }}
         {{ BootstrapForm::populate($form) }}
         
-        {{ \BootstrapForm::radio('active', 'true'); }} YES!  Activate automated lending.
-        {{ \BootstrapForm::radio('active', 'false'); }} No thanks, deactivate automated lending.
+        {{ \BootstrapForm::radio('active', 1); }} YES!  Activate automated lending.
+        {{ \BootstrapForm::radio('active', 0); }} No thanks, deactivate automated lending.
         
         
         <br/>
