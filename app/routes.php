@@ -119,11 +119,6 @@ Route::group(
         );
 
         /**
-         * Routes for borrow page
-         */
-        Route::get('borrow', array('uses' => 'BorrowController@getPage', 'as' => 'borrow.page'));
-
-        /**
          * Routes for Password Reminder page.
          */
         Route::controller('password', 'RemindersController', ['before' => 'csrf']);

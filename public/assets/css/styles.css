@@ -8080,13 +8080,15 @@ body {
   }
 }
 .info-page p,
-.info-page ul li {
+.info-page ul li,
+.info-page ol li {
   margin-top: 0;
   font-size: 16px;
 }
 @media (min-width: 768px) {
   .info-page p,
-  .info-page ul li {
+  .info-page ul li,
+  .info-page ol li {
     font-size: 18px;
     line-height: 27px;
     font-weight: 300;

@@ -3,6 +3,10 @@
 use Zidisha\Country\CountryQuery;
 use Zidisha\User\User;
 use Zidisha\Utility\Utility;
+use Zidisha\Admin\Setting;
+use Zidisha\Currency\ExchangeRateQuery;
+use Zidisha\Currency\Money;
+use Zidisha\Currency\Converter;
 
 class HomeController extends BaseController {
 
@@ -10,6 +14,7 @@ class HomeController extends BaseController {
     public function getHome()
     {
         $countryCode = Utility::getCountryCodeByIP();
+
         $country = CountryQuery::create()
             ->findOneByCountryCode($countryCode);
         if($country && $country->isBorrowerCountry()) {
