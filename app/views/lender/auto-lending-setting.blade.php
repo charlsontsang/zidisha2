@@ -57,6 +57,15 @@ Account Preferences
         {{ \BootstrapForm::radio('preference', \Zidisha\Lender\AutoLendingSetting::LOAN_RANDOM) }} Choose loans at random.
         {{ \BootstrapForm::radio('preference', \Zidisha\Lender\AutoLendingSetting::AUTO_LEND_AS_PREV_LOAN) }} Match loans made manually by other lenders.
                 
+        @if ($currentBalance->isPositive()) 
+            <br/>
+            <hr/>
+            <p>
+                Would you like your current credit balance of <b><i>{{$currentBalance->getAmount()}} {{$currentBalance->getCurrency()}}</i></b> to be automatically allocated to fundraising loans according to these criteria?
+            </p>
+            {{ \BootstrapForm::radio('currentAllocated', 1) }}  Yes, apply automated lending to both my current balance and to future repayments that are credited to my account.
+            {{ \BootstrapForm::radio('currentAllocated', 0) }} No, apply automated lending only to future repayments and leave my current balance available for manual lending.   
+        @endif
         <br/>
         <br/>
         <hr/>
