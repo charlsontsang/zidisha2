@@ -31,6 +31,7 @@ Route::group(
         );
         Route::get('press', array('uses' => 'PageController@getPress', 'as' => 'page:press'));
         Route::get('terms-of-use', array('uses' => 'PageController@getTermsOfUse', 'as' => 'page:terms-of-use'));
+        Route::get('contact', array('uses' => 'PageController@getContact', 'as' => 'page:contact'));
         Route::get('volunteer', array('uses' => 'PageController@getVolunteer', 'as' => 'page:volunteer'));
         Route::get(
             'volunteer-mentor-guidelines',
