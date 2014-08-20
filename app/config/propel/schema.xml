@@ -1048,9 +1048,13 @@
             <inheritance key="8" class="LoanAboutToExpireReminder"/>
             <inheritance key="9" class="NewLenderIntro"/>
             <inheritance key="10" class="CronToRepay"/>
+            <inheritance key="11" class="AutomatedLending"/>
         </column>
         <foreign-key foreignTable="users">
             <reference local="user_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="loans">
+            <reference local="loan_id" foreign="id"/>
         </foreign-key>
     </table>
 
