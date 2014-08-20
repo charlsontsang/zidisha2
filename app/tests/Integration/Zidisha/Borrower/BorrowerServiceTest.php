@@ -220,12 +220,13 @@ class BorrowerServiceTest extends \IntegrationTestCase
         $raisedAmount = Converter::fromUSD($raisedUsdAmount, $currency, $exchangeRate);
         $percentIncrease = Setting::get('loan.secondLoanPercentage');
         $amount = $raisedAmount->multiply($percentIncrease)->divide(100);
-
         $creditEarned = Money::create(550, $this->borrower->getCountry()->getCurrencyCode(), $exchangeRate);
+        $amountAddCredit = $raisedAmount->multiply($percentIncrease)->divide(100)->add($creditEarned);
 
         $creditLimit = $method->invoke($this->borrowerService, $this->borrower, $creditEarned, false);
+        $creditLimitAddCredit = $method->invoke($this->borrowerService, $this->borrower, $creditEarned, true);
 
         $this->assertEquals($creditLimit, $amount);
+        $this->assertEquals($creditLimitAddCredit, $amountAddCredit);
     }
-
 }
