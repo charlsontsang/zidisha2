@@ -40,11 +40,12 @@ Lend
                 </div>
             </div>
             <div class="col-md-2">
-                <form class="form-inline" role="form" action="{{ route('lend:index', $searchRouteParams) }}" method="get">
+                <form role="search" action="{{ route('lend:index', $searchRouteParams) }}" method="get">
                     <div class="input-group">
-                        <label class="sr-only" for="search">Search</label>
-                        <span class="input-group-addon"><i class="fa fa-fw fa-search"></i></span>
                         <input type="text" class="form-control" placeholder="Search" name="search" value="{{{ $searchQuery }}}">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -164,7 +165,7 @@ Lend
 <div id="filter-countries" class="hide">
     <ul class="list-unstyled">
         @if($selectedCountry == null)
-        <strong>Everywhere</strong>
+        <strong>All Countries</strong>
         @else
         <li>
             <a href="{{ route('lend:index', ['country' => 'everywhere'] + $routeParams) }}"> Everywhere </a>
