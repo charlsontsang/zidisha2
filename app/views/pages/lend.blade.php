@@ -44,23 +44,28 @@ Lend
 
 @section('content')
 <div class="row">
-    <div class="col-sm-12">
+    <div class="col-sm-6 col-md-4">
         <p>
             We found 
             <strong>{{ $countResults }} {{ $selectedLoanCategory ? $selectedLoanCategory->getName() : '' }} projects</strong>@if($selectedCountry) in {{ $selectedCountry->getName(); }}@endif.
-            
-            @if($countAll > $countResults)
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </div>
+    @if($countAll > $countResults)
+    <div class="col-sm-6 col-md-3">
             <a href="{{ route('lend:index', ['category' => 'all'] + ['country' => 'everywhere'] + $routeParams) }}">View all {{ $countAll }} projects</a>
-            @endif
+    </div>
+    @endif
 
-            @if ($selectedLoanCategory)
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <a href="#" data-toggle="collapse" data-target="#toggle-aboutCategory" data-toggle-text="Hide description">
-                Learn more about {{ $selectedLoanCategory->getName() }} projects
+    @if ($selectedLoanCategory)
+    <div class="col-sm-12 col-md-5">
+            <a href="#" id="about-category" data-toggle="collapse" data-target="#toggle-aboutCategory" data-toggle-text="Hide description">
+                <i class="fa fa-info-circle" style="color: inherit;"></i> Learn more about {{ $selectedLoanCategory->getName() }} projects
             </a>
-            @endif
+    </div>
+    @endif
         </p>
+</div>
+<div class="row">
+    <div class="col-sm-12">
         <hr/>
 
         @if($selectedLoanCategory)
@@ -92,7 +97,7 @@ Lend
 
 <div class="row" style="padding:5px;">
     @foreach($paginator as $loan)
-    <div class="col-sm-4" style="padding:10px;">
+    <div class="col-sm-6 col-md-4" style="padding:10px;">
         <div class="result">
             <div class="row">
                 <div class="col-xs-12">
