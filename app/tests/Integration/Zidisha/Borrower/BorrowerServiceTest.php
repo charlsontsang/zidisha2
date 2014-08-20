@@ -155,4 +155,36 @@ class BorrowerServiceTest extends \IntegrationTestCase
         $this->assertEquals($creditLimit, $raisedAmount->add($creditEarned));
     }
 
+    public function testGetCurrentCreditLimitForPluralLoanWithLoanNotHeldLongEnough()
+    {
+        /** @var $loan Loan */
+        $loan = \Zidisha\Generate\LoanGenerator::create()
+            ->amount(50)
+            ->generateOne();
+
+        /** @var $secondLoan Loan */
+        $secondLoan = \Zidisha\Generate\LoanGenerator::create()
+            ->amount(50)
+            ->generateOne();
+
+        $method = new ReflectionMethod($this->borrowerService, 'getCurrentCreditLimit');
+        $method->setAccessible(true);
+        $loan->setStatus(Loan::ACTIVE)
+            ->setDisbursedAt(new Carbon('yesterday'))
+            ->setDisbursedAmount($loan->getAmount());
+        $loan->save();
+
+        $exchangeRate = ExchangeRateQuery::create()
+            ->findCurrent($this->borrower->getCountry()->getCurrency());
+        $currency = $loan->getCurrency();
+        $raisedUsdAmount = $loan->getRaisedUsdAmount();
+        $raisedAmount = Converter::fromUSD($raisedUsdAmount, $currency, $exchangeRate);
+
+        $creditEarned = Money::create(550, $this->borrower->getCountry()->getCurrencyCode(), $exchangeRate);
+
+        $creditLimit = $method->invoke($this->borrowerService, $this->borrower, $creditEarned, false);
+
+        $this->assertEquals($creditLimit, $raisedAmount);
+    }
+
 }
