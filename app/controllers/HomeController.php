@@ -14,7 +14,6 @@ class HomeController extends BaseController {
     public function getHome()
     {
         $countryCode = Utility::getCountryCodeByIP();
-        $countryCode = 'KE';
 
         $country = CountryQuery::create()
             ->findOneByCountryCode($countryCode);
