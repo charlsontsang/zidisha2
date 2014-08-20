@@ -132,6 +132,7 @@
         <column name="bid_at" type="TIMESTAMP" required="true"/>
         <behavior name="timestampable"/>
         <column name="lender_invite_credit"  type="BOOLEAN" defaultValue="false" required="true"/>
+        <column name="is_automated_lending"  type="BOOLEAN" defaultValue="false" required="true"/>
         <foreign-key foreignTable="lenders">
             <reference local="lender_id" foreign="id"/>
         </foreign-key>
