@@ -45,28 +45,47 @@ Lend
 @section('content')
 <div class="row">
     <div class="col-sm-12">
-
-        @if($selectedLoanCategory)
-        <h1>{{ $selectedLoanCategory->getName(); }}</h1>
-
-        <p><strong>How it works: </strong> {{ $selectedLoanCategory->getHowDescription() }} </p>
-
-        <p><strong>Why it's important: </strong> {{ $selectedLoanCategory->getWhyDescription() }} </p>
-
-        <p><strong>What your loan can do: </strong> {{ $selectedLoanCategory->getWhatDescription() }}
-        </p>
-        <hr/>
-        @endif
-
         <p>
             We found 
             <strong>{{ $countResults }} {{ $selectedLoanCategory ? $selectedLoanCategory->getName() : '' }} projects</strong>@if($selectedCountry) in {{ $selectedCountry->getName(); }}@endif.
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            
             @if($countAll > $countResults)
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <a href="{{ route('lend:index', ['category' => 'all'] + ['country' => 'everywhere'] + $routeParams) }}">View all {{ $countAll }} projects</a>
+            @endif
+
+            @if ($selectedLoanCategory)
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="#" data-toggle="collapse" data-target="#toggle-aboutCategory" data-toggle-text="Hide description">
+                Learn more about {{ $selectedLoanCategory->getName() }} projects
+            </a>
             @endif
         </p>
         <hr/>
+
+        @if($selectedLoanCategory)
+
+        <div id="toggle-aboutCategory" class="collapse">            
+        
+            <div class="page-header">
+                <h3>{{ $selectedLoanCategory->getName(); }}</h3>
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-6">
+                    <p><strong>How it works: </strong> {{ $selectedLoanCategory->getHowDescription() }} </p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Why it's important: </strong> {{ $selectedLoanCategory->getWhyDescription() }} </p>
+
+                    <p><strong>What your loan can do: </strong> {{ $selectedLoanCategory->getWhatDescription() }}
+                    </p>
+                </div>
+            </div>
+            <hr/>
+        </div>
+        @endif
 
     </div>
 </div>
@@ -170,3 +189,12 @@ Lend
 </div>
 @stop
 
+@section('script-footer')
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.aboutCategory').click(function () {
+            $("#toggle-aboutCategory").collapse('toggle');
+        });
+    });
+</script>
+@stop
