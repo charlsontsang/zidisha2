@@ -30,7 +30,7 @@ Meet the Team
 			    <img src="/assets/images/pages/team/julia.jpg" width="100%" style="border: 1px solid gray;" />
 			    <span class="text-content"><span>
 			    	<strong>Julia Kurnia</strong><br/>
-			    	Co-founded the world's first microfinance institution built on capital raised from individuals over the internet. Developed grant projects in Africa for the US government before founding Zidisha. Enjoys practicing Indonesian martial arts.
+			    	Co-founded the world's first microfinance institution built on capital raised from individuals over the internet. Developed grant projects in Africa for the US government before founding Zidisha. Loves Renaissance painting, learning new languages and Indonesian martial arts.
 			    </span></span>
 			  </li>
 			</ul>
@@ -180,7 +180,7 @@ Meet the Team
 			    <img src="/assets/images/pages/team/taylor.png" width="100%" />
 			    <span class="text-content"><span>
 			    	<strong>Taylor Hanna</strong><br/>
-			    	BA in Sociology.  Developed an interest in innovative development initiatives while working as an intern with Awamaki, an NGO in Peru. Works with Facebook’s ads integrity team and spends her spare time reading, running and eating tacos.
+			    	BA in Sociology.  Developed an interest in innovative development initiatives while working as an intern with Awamaki, a community development organization in Peru. Now works with Facebook’s ads integrity team and spends her spare time reading, running and eating tacos.
 			    </span></span>
 			  </li>
 			</ul>
@@ -208,7 +208,7 @@ Meet the Team
 			    <img src="/assets/images/pages/team/kimberly.png" width="100%" />
 			    <span class="text-content"><span>
 			    	<strong>Kimberly Gollogly</strong><br/>
-					Studying Commerce and Global Development at the University of Virginia.  Her passion for service and business originally began in high school when she worked with a social enterprise to create a customer loyalty plan.
+					Studying Commerce and Global Development at the University of Virginia.  Her passion for service and business originally began in high school when she worked with a social enterprise to create a customer loyalty plan and has been active in volunteering ever since.
 				</span></span>
 			  </li>
 			</ul>
