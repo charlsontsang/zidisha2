@@ -24,7 +24,7 @@ class CompletedHandler extends PaymentHandler
         $data = [
             'interestRate' => $payment->getInterestRate(),
             'amount' => $payment->getAmount()->getAmount(),
-            'lenderInviteCredit' => $payment->getUseLenderInviteCredit(),
+            'isLenderInviteCredit' => $payment->getIsLenderInviteCredit(),
         ];
 
         $this->balanceService->uploadFunds($payment);

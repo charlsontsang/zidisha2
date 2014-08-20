@@ -50,7 +50,7 @@ class PlaceBidForm extends AbstractPaymentForm
             ->setLoan($this->loan)
             ->setAmount(Money::create($data['amount']))
             ->setInterestRate($data['interestRate'])
-            ->setUseLenderInviteCredit($data['useLenderInviteCredit'])
+            ->setIsLenderInviteCredit($data['isLenderInviteCredit'])
             ->setLender($lender);
 
         return $placeBidPayment;

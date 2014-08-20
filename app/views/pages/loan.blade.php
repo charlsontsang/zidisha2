@@ -512,7 +512,7 @@
                     {{ BootstrapForm::hidden('transactionFee', null, ['id' => 'transaction-fee-amount']) }}
                     {{ BootstrapForm::hidden('transactionFeeRate', null, ['id' => 'transaction-fee-rate']) }}
                     {{ BootstrapForm::hidden('currentBalance', null, ['id' => 'current-balance']) }}
-                    {{ BootstrapForm::hidden('useLenderInviteCredit', null, ['id' => 'current-balance']) }}
+                    {{ BootstrapForm::hidden('isLenderInviteCredit', null, ['id' => 'current-balance']) }}
                     {{ BootstrapForm::hidden('totalAmount', null, ['id' => 'total-amount']) }}
 
                     {{ BootstrapForm::hidden('stripeToken', null, ['id' => 'stripe-token']) }}
