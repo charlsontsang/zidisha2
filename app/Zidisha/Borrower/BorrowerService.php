@@ -81,6 +81,10 @@ class BorrowerService
             ->setCity($data['city'])
             ->setNationalIdNumber($data['nationalIdNumber'])
             ->setPhoneNumber($data['phoneNumber'])
+            ->setBusinessCategoryId($data['businessCategoryId'])
+            ->setBusinessYears($data['businessYears'])
+            ->setLoanUsage($data['loanUsage'])
+            ->setBirthDate($data['birthDate'])
             ->setAlternatePhoneNumber($data['alternatePhoneNumber']);
         $borrower->setProfile($profile);
 
