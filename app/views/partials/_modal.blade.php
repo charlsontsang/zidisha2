@@ -14,9 +14,11 @@
                     @include($template)
                 @endif
             </div>
+            @if (isset($footer))
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
+            @endif
         </div>
     </div>
 </div>

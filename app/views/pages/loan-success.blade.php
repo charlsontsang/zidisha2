@@ -25,10 +25,10 @@
                 Help {{{ $loan->getBorrower()->getFirstName() }}} by sharing with your friends:
             </p>
             <p>
-                <a href="{{$facebookUrl}}" class="btn btn-facebook btn-social fb-share">
+                <a href="{{$facebookUrl}}" class="btn btn-facebook btn-social share-window">
                     <i class="fa fa-fw fa-facebook"></i>Share
                 </a>
-                <a href="{{$twitterUrl}}" class="btn btn-twitter btn-social tweet">
+                <a href="{{$twitterUrl}}" class="btn btn-twitter btn-social share-window">
                     <i class="fa fa-fw fa-twitter"></i>Tweet
                 </a>
                 <a href="{{$mailUrl}}" class="btn btn-danger btn-social">
@@ -42,19 +42,35 @@
         </p>
     </div>
 </div>
+
+@include('partials._modal', [
+    'title' => 'Thanks for sharing!',
+    'body' => 'Know someone else who might like to try direct microlending?
+               Send them $25 to lend at Zidisha for free!<br/>
+               <a href="' . route('lender:invite') . '" class="btn btn-primary">Learn more</a>',
+    'id' => 'share-invite-modal'
+])
 @stop
 
 @section('script-footer')
 <script type="text/javascript">
-$(document).ready(function() {
-    $('.fb-share').click(function(e) {
+$(function() {
+    $('.share-window').click(function(e) {
         e.preventDefault();
-        window.open($(this).attr('href'), 'fbShareWindow', 'height=450, width=550, top=' + ($(window).height() / 2 - 275) + ', left=' + ($(window).width() / 2 - 225) + ', toolbar=0, location=0, menubar=0, directories=0, scrollbars=0');
-        return false;
-    });
-    $('.tweet').click(function(e) {
-        e.preventDefault();
-        window.open($(this).attr('href'), 'tweetWindow', 'height=450, width=550, top=' + ($(window).height() / 2 - 275) + ', left=' + ($(window).width() / 2 - 225) + ', toolbar=0, location=0, menubar=0, directories=0, scrollbars=0');
+        
+        var shareWindow = window.open(
+            $(this).attr('href'),
+            'fbShareWindow',
+            'height=450, width=550, top=' + ($(window).height() / 2 - 275) + ', left=' + ($(window).width() / 2 - 225) + ', toolbar=0, location=0, menubar=0, directories=0, scrollbars=0'
+        );
+
+        var pollTimer = window.setInterval(function() {
+            if (shareWindow.closed !== false) {
+                window.clearInterval(pollTimer);
+                $('#share-invite-modal').modal();
+            }
+        }, 200);
+        
         return false;
     });
 });
