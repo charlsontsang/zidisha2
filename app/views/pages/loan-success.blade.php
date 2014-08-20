@@ -25,13 +25,13 @@
                 Help {{{ $loan->getBorrower()->getFirstName() }}} by sharing with your friends:
             </p>
             <p>
-                <a href="{{$facebook_url}}" class="btn btn-facebook btn-social fb-share">
+                <a href="{{$facebookUrl}}" class="btn btn-facebook btn-social fb-share">
                     <i class="fa fa-fw fa-facebook"></i>Share
                 </a>
-                <a href="{{$twitter_url}}" class="btn btn-twitter btn-social tweet">
+                <a href="{{$twitterUrl}}" class="btn btn-twitter btn-social tweet">
                     <i class="fa fa-fw fa-twitter"></i>Tweet
                 </a>
-                <a href="{{$mail_url}}" class="btn btn-danger btn-social">
+                <a href="{{$mailUrl}}" class="btn btn-danger btn-social">
                     <i class="fa fa-fw fa-envelope-o"></i>Email
                 </a>
             </p>

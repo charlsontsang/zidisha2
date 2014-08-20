@@ -186,23 +186,22 @@ class LoanController extends BaseController
             App::abort(404);
         }
 
-        $loan_url = route('loan:index', $loanId);
+        $loanUrl = route('loan:index', $loanId);
         $name = $loan->getBorrower()->getFirstName();
         $country = $loan->getBorrower()->getCountry()->getName();
 
         $twitterParams = array(
-            "url" => $loan_url,
-            "text" => "Just made a loan to ".$name." in ".$country." via @ZidishaInc",
+            "url" => $loanUrl,
+            "text" => "Just made a loan to $name in $country via @ZidishaInc",
         );
-        $twitter_url = "http://twitter.com/share?" . http_build_query($twitterParams);
+        $twitterUrl = "http://twitter.com/share?" . http_build_query($twitterParams);
 
-        $relative_invite_url = str_replace("https://www.", "", $loan_url);
-        $facebook_url = "http://www.facebook.com/sharer.php?s=100&p[url]=" . urlencode(
-                $relative_invite_url . "?s=3"
-            );
-        $mail_url = "mailto:?body=%0D%0A%0D%0A%0D%0A".$loan_url;
+        $relativeInviteUrl = str_replace("https://www.", "", $loanUrl);
+        $relativeInviteUrl = str_replace("http://www.", "", $relativeInviteUrl);
+        $facebookUrl = "http://www.facebook.com/sharer.php?s=100&p[url]=" . urlencode($relativeInviteUrl);
+        $mailUrl = "mailto:?body=%0D%0A%0D%0A%0D%0A".$loanUrl;
 
-        return View::make('pages.loan-success', compact('loan', 'twitter_url', 'facebook_url', 'mail_url'));
+        return View::make('pages.loan-success', compact('loan', 'twitterUrl', 'facebookUrl', 'mailUrl'));
     }
 
     public function postEditBid($loanId, $bidId)
