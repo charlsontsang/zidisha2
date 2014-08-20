@@ -642,10 +642,12 @@ class BorrowerService
         $exchangeRate = ExchangeRateQuery::create()
             ->findCurrent($borrower->getCountry()->getCurrency());
         $creditEarnedUSD = Converter::toUSD($creditEarned, $exchangeRate);
+        $currencyCode = $borrower->getCountry()->getCurrencyCode();
+        $currency = $borrower->getCountry()->getCurrency();
         if ($creditEarnedUSD->greaterThan(Money::create(1000, 'USD'))) {
             $creditEarnedUSD = Money::create(1000, 'USD');
         }
-        $creditEarned = Converter::fromUSD($creditEarnedUSD, $borrower->getCountry()->getCurrency(), $exchangeRate);
+        $creditEarned = Converter::fromUSD($creditEarnedUSD, $currency, $exchangeRate);
 
         if($loanStatus == Loan::ACTIVE || $loanStatus == Loan::FUNDED || $loanStatus == Loan::OPEN){
 //case where borrower has an active loan or fundraising application - we calculate credit limit based on current loan amount
@@ -654,12 +656,12 @@ class BorrowerService
 
         }else{
 //case where borrower has repaid one or more loans and has not yet posted an application for a new one - we calculate credit limit based on most recently repaid loan amount
-            $loan= LoanQuery::create()
+            $loan = LoanQuery::create()
                 ->getLastRepaidLoan($borrower);
             $ontime = $this->loanService->isRepaidOnTime($borrower, $loan);
         }
         $raisedUsdAmount = $loan->getRaisedUsdAmount();
-        $raisedAmount = Converter::fromUSD($raisedUsdAmount, $loan->getCurrency(), $exchangeRate);
+        $raisedAmount = Converter::fromUSD($raisedUsdAmount, $currency, $exchangeRate);
         $requestedAmount = $loan->getAmount();
 
         if ($isFirstFundedLoan) {
@@ -667,17 +669,17 @@ class BorrowerService
             $isInvited = InviteQuery::create()
                 ->filterByInvitee($borrower)
                 ->findOne();
-            if ($requestedAmount->greaterThan($firstLoanValue)) {
+            if ($requestedAmount->greaterThan(Converter::fromUSD($firstLoanValue, $currency, $exchangeRate))) {
                 if ($creditEarned->isPositive()) {
                     return $raisedAmount->add($creditEarned);
                 }
                     return $raisedAmount;
             }
-            $bonusCredit = 0 ;
+            $bonusCredit = Money::create(0, $currencyCode) ;
             if (!empty($isInvited)) {
-                $bonusCredit = Money::create(100, $borrower->getCountry()->getCurrency()); //adds bonus for new members who were invited by eligible existing members
+                $bonusCredit = Money::create(100, $currencyCode); //adds bonus for new members who were invited by eligible existing members
             }
-            $totalValue = Converter::fromUSD($firstLoanValue, $borrower->getCountry()->getCurrency(), $exchangeRate)->add($bonusCredit);
+            $totalValue = Converter::fromUSD($firstLoanValue, $currency, $exchangeRate)->add($bonusCredit);
             return $totalValue;
         } elseif (!$ontime) {
             //case where last loan was repaid late - credit limit should equal last loan repaid on time or admin first loan setting, if no loan was ever repaid on time
@@ -685,7 +687,7 @@ class BorrowerService
             if (!empty($previousAmount) && $previousAmount->getAmount() > 10) {
                 $currentLimit = $previousAmount;
             } else {
-                $nativeFirstLoanValue = Converter::fromUSD($firstLoanValue, $borrower->getCountry()->getCurrency(), $exchangeRate);
+                $nativeFirstLoanValue = Converter::fromUSD($firstLoanValue, $currency, $exchangeRate);
                 if (!$addCreditEarned) {
                     $currentLimit = $nativeFirstLoanValue;
                 } else {
@@ -741,7 +743,7 @@ class BorrowerService
                     //case where last loan was repaid on time, overall repayment rate is above threshold and loan held for long enough to qualify for credit limit increase
                     $lastInstallmentAmount = InstallmentQuery::create()
                         ->getLastInstallmentAmount($borrower, $loan);
-                    $lastInstallmentUsdAmount = Converter::toUSD(Money::create($lastInstallmentAmount, $loan->getCurrencyCode()), $exchangeRate)->getAmount();
+                    $lastInstallmentUsdAmount = Converter::toUSD(Money::create($lastInstallmentAmount, $currencyCode), $exchangeRate)->getAmount();
                     if ($lastInstallmentAmount > ($raisedAmount->getAmount() * 0.1) && $lastInstallmentUsdAmount > 100) {
                         //case where more than 30% and $100 of last loan was paid in the last installment
                         if (!$addCreditEarned) {

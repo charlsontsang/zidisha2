@@ -95,4 +95,22 @@ class BorrowerServiceTest extends \IntegrationTestCase
 
         $this->assertEquals($loanAmount, $firstLoanValueNative);
     }
+
+    public function testGetCurrentCreditLimit()
+    {
+        $method = new ReflectionMethod($this->borrowerService, 'getCurrentCreditLimit');
+        $method->setAccessible(true);
+
+        $exchangeRate = ExchangeRateQuery::create()
+            ->findCurrent($this->borrower->getCountry()->getCurrency());
+        $firstLoanValue = Money::create(Setting::get('loan.firstLoanValue'), 'USD');
+        $currency = $this->loan->getCurrency();
+        $firstLoanValueNative = Converter::fromUSD($firstLoanValue, $currency, $exchangeRate);
+        $creditEarned = Money::create(550, $this->borrower->getCountry()->getCurrencyCode(), $exchangeRate);
+
+        $creditLimit = $method->invoke($this->borrowerService, $this->borrower, $creditEarned, false);
+
+        $this->assertEquals($creditLimit, $firstLoanValueNative);
+    }
+
 }
