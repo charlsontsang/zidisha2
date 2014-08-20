@@ -37,7 +37,7 @@ return [
 // How much can I borrow
     'how-much-heading'              => 'How much can I borrow?',
     
-    'how-much-content'              => 'If you have been invited to join by an existing member in good standing, you can borrow up to USD 150 (150 US Dollars).  If you do not have an invite from an existing member, you can borrow up to USD 50 (50 US Dollars).<br/><br/>
+    'how-much-content'              => 'If you have been invited to join by an existing member in good standing, you can borrow up to :firstLoanValInvited for your first loan.  If you do not have an invite from an existing member, you can borrow up to :firstLoanVal for your first loan.<br/><br/>
 After that, your credit limit will increase depending on your record of on-time repayments.',
     
     'how-much-max-loan'             => 'The current standard credit limit progression is as follows:',

@@ -45,11 +45,14 @@ class HomeController extends BaseController {
         
         /* TO DO: Comment out these hard-coded values once Setting::get is defined */
         $firstLoanValue = Money::create('50', 'USD');
+        $inviteBonus = Money::create('100', 'USD');
+        $firstLoanValueInvited = $firstLoanValue->add($inviteBonus);
         $nextLoanValue = Money::create('10000', 'USD');
         $secondLoanPercentage = 300;
         $nextLoanPercentage = 150;
 
         $params['firstLoanVal'] = Converter::fromUSD($firstLoanValue, $currency, $exchangeRate);
+        $params['firstLoanValInvited'] = Converter::fromUSD($firstLoanValueInvited, $currency, $exchangeRate);
         $params['nxtLoanvalue'] = '';
         $value = $firstLoanValue;
 
@@ -69,8 +72,11 @@ class HomeController extends BaseController {
                 $params['nxtLoanvalue'] .= "<br/>".$i.". ".' '.$val;
             }
         }
+
+        $howMuchContent = \Lang::get('borrower.borrow.how-much-content', array('firstLoanVal' => $params['firstLoanVal'], 'firstLoanValInvited' => $params['firstLoanValInvited']));
+            
         
-        return View::make('borrower-home', compact ('params'));
+        return View::make('borrower-home', compact ('howMuchContent', 'params'));
     }
 
 }

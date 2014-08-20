@@ -47,7 +47,7 @@
 
         <h3>{{ \Lang::get('borrower.borrow.how-much-heading') }}</h3>
         
-            <p>{{ \Lang::get('borrower.borrow.how-much-content') }}</p>
+            <p>{{ $howMuchContent }}</p>
             
             <p>{{ \Lang::get('borrower.borrow.how-much-max-loan') }}</p>
             
