@@ -121,7 +121,22 @@ return [
             'label' => 'Third and Subsequent Loans Max Value (USD)',
             'default' => '10000',
             'rule' => 'numeric'
-        ]
+        ],
+        'loan.repaymentReminderDay' => [
+            'label' => 'Number of days after which an repayment reminder will be sent.',
+            'default' => '14',
+            'rule' => 'numeric'
+        ],
+        'loan.repaymentDueAmount' => [
+            'label' => 'Loan Due amount',
+            'default' => '5',
+            'rule' => 'numeric'
+        ],
+        'loan.deadline' => [
+            'label' => 'Loan DeadLine Date',
+            'default' => '15',
+            'rule' => 'numeric'
+        ],
     ],
     'Borrower' => [
         'invite.maxInviteesWithoutPayment' => [
@@ -187,10 +202,19 @@ return [
             'label' => 'Introduction template id'
         ],
         'sendwithus.lender-expired-loan-template-id' => [
-            'label' => 'Loan expired notification'
+            'label' => 'Loan expired notification template id'
         ],
         'sendwithus.borrower-notifications-template-id' => [
-            'label' => 'Borrower account notifications'
+            'label' => 'Borrower account notifications template id'
+        ],
+        'sendwithus.lender-unused-funds-template-id' => [
+            'label' => 'Lender\'s unused Funds notification template id'
+        ],
+        'sendwithus.loan-about-to-expire-mail-template-id' => [
+            'label' => 'Loan about to expire mail template id'
+        ],
+        'sendwithus.borrower-again-repayment-instruction-template-id' => [
+            'label' => 'Borrower again repayment instructions template id'
         ]
     ]
 ];

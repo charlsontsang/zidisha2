@@ -428,7 +428,7 @@
     </table>
 
     <table name="settings" phpName="Setting" namespace="Admin">
-        <column name="name" type="VARCHAR" size="45" required="true" primaryKey="true"/>
+        <column name="name" type="VARCHAR" size="128" required="true" primaryKey="true"/>
         <column name="value" type="VARCHAR" size="255" required="true" defaultValue="0"/>
         <behavior name="timestampable"/>
     </table>
@@ -919,7 +919,7 @@
 
     <table name="notifications" phpName="Notification" namespace="Notification">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
-        <column name="type" type="ENUM" required="true" valueSet="abandoned"/>
+        <column name="type" type="ENUM" required="true" valueSet="0,1"/>
         <column name="user_id" type="INTEGER" required="true"/>
         <behavior name="timestampable"/>
         <foreign-key foreignTable="users">
@@ -972,7 +972,7 @@
             <reference local="lender_id" foreign="id"/>
         </foreign-key>
     </table>
-
+    
     <table name="borrower_invites" phpName="Invite" namespace="Borrower">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="borrower_id" type="INTEGER" required="true"/>
@@ -989,7 +989,7 @@
             <reference local="invitee_id" foreign="id"/>
         </foreign-key>
     </table>
-
+    
     <table name="credit_settings" phpName="CreditSetting" namespace="Credit">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="country_code" type="VARCHAR" size="2" required="true"/>
@@ -1016,7 +1016,42 @@
         </foreign-key>
         <foreign-key foreignTable="loans">
             <reference local="loan_id" foreign="id"/>
->>>>>>> Stashed changes
+        </foreign-key>
+    </table>
+    
+    <table name="scheduled_jobs" phpName="ScheduledJob" namespace="ScheduledJob">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="user_id" type="INTEGER" required="true"/>
+        <column name="loan_id" type="INTEGER" required="false"/>
+        <column name="last_processed_at" type="TIMESTAMP"/>
+        <column name="start_date" type="TIMESTAMP"/>
+        <column name="count" type="INTEGER" required="true" default="0"/>
+        <behavior name="timestampable"/>
+        <column name="class_key" type="INTEGER" inheritance="single">
+            <inheritance key="1" class="AbandonedUser"/>
+            <inheritance key="2" class="LoanFirstArrear"/>
+            <inheritance key="3" class="LoanFinalArrear"/>
+            <inheritance key="4" class="MonthlyLoanArrear"/>
+            <inheritance key="5" class="RepaymentReminder"/>
+            <inheritance key="6" class="UnusedFunds"/>
+            <inheritance key="7" class="AgainRepaymentReminder"/>
+            <inheritance key="8" class="LoanAboutToExpireReminder"/>
+            <inheritance key="9" class="NewLenderIntro"/>
+            <inheritance key="10" class="CronToRepay"/>
+        </column>
+        <foreign-key foreignTable="users">
+            <reference local="user_id" foreign="id"/>
+        </foreign-key>
+    </table>
+
+    <table name="scheduled_jobs_logs" phpName="ScheduledJobLog" namespace="ScheduledJob">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="scheduled_jobs_id" type="INTEGER" required="true"/>
+        <column name="processed_at" type="TIMESTAMP" required="false"/>
+        <column name="count" type="INTEGER" required="true"/>
+        <behavior name="timestampable"/>
+        <foreign-key foreignTable="scheduled_jobs">
+            <reference local="scheduled_jobs_id" foreign="id"/>
         </foreign-key>
     </table>
 </database>

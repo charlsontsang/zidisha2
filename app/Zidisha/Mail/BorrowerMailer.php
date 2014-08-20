@@ -5,9 +5,12 @@ namespace Zidisha\Mail;
 use Zidisha\Borrower\Borrower;
 use Zidisha\Borrower\FeedbackMessage;
 use Zidisha\Borrower\Invite;
+use Zidisha\Borrower\VolunteerMentor;
 use Zidisha\Comment\Comment;
+use Zidisha\Currency\Money;
 use Zidisha\Loan\Loan;
-use Zidisha\Loan\RefundLender;
+use Zidisha\Repayment\Installment;
+use Zidisha\User\User;
 
 class BorrowerMailer{
 
@@ -155,5 +158,132 @@ class BorrowerMailer{
     {
         $email = $borrowerInvite->getEmail();
         //TODO send invite email
+    }
+    
+    public function sendLoanFirstArrear(User $user)
+    {
+        
+    }
+
+    public function sendAgainRepaymentReminder(Borrower $borrower, Loan $loan, $installments)
+    {
+        $totalAmount = Money::create(0, $loan->getCurrencyCode());
+        $paidAmount = Money::create(0, $loan->getCurrencyCode());
+
+        /** @var Installment $installment */
+        foreach ($installments as $installment) {
+            $totalAmount = $totalAmount->add($installment->getAmount());
+            $paidAmount = $paidAmount->add($installment->getPaidAmount());
+        }
+
+        $dueAmount = $totalAmount->subtract($paidAmount)->round(2);
+
+        $this->mailer->send(
+            'emails.hero',
+            [
+                'to'         => $borrower->getUser()->getEmail(),
+                'subject'    => 'Borrower Again Repayment Instructions',
+                'templateId' => \Setting::get('sendwithus.borrower-again-repayment-instruction-template-id'),
+            ]
+        );
+
+    }
+
+    public function sendRepaymentReminder(Borrower $borrower, Installment $installment)
+    {
+        $dueDate = $installment->getDueDate();
+        $paidAmount = $installment->getPaidAmount();
+        $dueAmount = $installment->getAmount()->subtract($installment->getPaidAmount());
+
+
+        $this->mailer->send(
+            'emails.hero',
+            [
+                'to'      => $borrower->getUser()->getEmail(),
+                'subject' => 'Borrower Repayment Remainder',
+            ]
+        );
+    }
+
+    public function sendLoanFinalArrearMail(Borrower $borrower, Loan $loan)
+    {
+        $this->mailer->send(
+            'emails.hero',
+            [
+                'to'      => $borrower->getUser()->getEmail(),
+                'subject' => 'Borrower account notifications',
+            ]
+        );
+    }
+    
+    public function sendLoanFinalArrearToVolunteerMentor(VolunteerMentor $volunteerMentor, Borrower $borrower, Loan $loan)
+    {
+        $this->mailer->send(
+            'emails.hero',
+            [
+                'to'      => $borrower->getUser()->getEmail(),
+                'subject' => 'Borrower account notifications',
+            ]
+        );
+    }
+
+    public function sendLoanFirstArrearMail(Borrower $borrower, Loan $loan)
+    {
+        $this->mailer->send(
+            'emails.hero',
+            [
+                'to'      => $borrower->getUser()->getEmail(),
+                'subject' => 'Borrower account notifications',
+            ]
+        );
+    }
+
+    public function sendLoanMonthlyArrearToVolunteerMentor(VolunteerMentor $volunteerMentor, Borrower $borrower, Loan $loan)
+    {
+        $this->mailer->send(
+            'emails.hero',
+            [
+                'to'      => $borrower->getUser()->getEmail(),
+                'subject' => 'Borrower account notifications',
+            ]
+        );
+    }
+
+    public function sendLoanMonthlyArrearMail(Borrower $borrower, Loan $loan)
+    {
+        $this->mailer->send(
+            'emails.hero',
+            [
+                'to'      => $borrower->getUser()->getEmail(),
+                'subject' => 'Borrower account notifications',
+            ]
+        );
+    }
+
+    public function sendRepaymentReminderTommorow(Borrower $borrower, Installment $installment)
+    {
+        $this->mailer->send(
+            'emails.hero',
+            [
+                'to'      => $borrower->getUser()->getEmail(),
+                'subject' => 'Borrower Repayment Remainder',
+            ]
+        );
+    }
+
+    public function sendRepaymentReminderForDueAmount(Borrower $borrower, Loan $loan, $amounts)
+    {
+        $this->mailer->send(
+            'emails.hero',
+            [
+                'to'      => $borrower->getUser()->getEmail(),
+                'subject' => 'Borrower Repayment Remainder',
+            ]
+        );
+    }
+
+    public function sendLoanFinalArrearToInvite(Invite $invite, Borrower $borrower, Loan $loan)
+    {
+        //TODO: sendLoanFinalArrearToInvite
     }
 }

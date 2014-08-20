@@ -11,6 +11,8 @@ use Zidisha\Lender\Lender;
 use Zidisha\Loan\Bid;
 use Zidisha\Loan\LenderRefund;
 use Zidisha\Loan\Loan;
+use Zidisha\Loan\RefundLender;
+use Zidisha\User\User;
 
 /**
  * Class LenderMailer
@@ -197,5 +199,40 @@ class LenderMailer
                 'templateId' => \Setting::get('sendwithus.lender-expired-loan-template-id'),
             ]
         );        
+    }
+
+    public function sendAbandonedUserMail(User $user)
+    {
+        $this->mailer->send(
+            'emails.hero',
+            [
+                'to'         => $user->getEmail(),
+                'subject'    => 'Abandoned User Notification',
+            ]
+        );
+    }
+
+    public function sendUnusedFundsNotification(Lender $lender)
+    {
+        $this->mailer->send(
+            'emails.hero',
+            [
+                'to'         => $lender->getUser()->getEmail(),
+                'subject'    => 'Unused Funds Notification',
+                'templateId' => \Setting::get('sendwithus.lender-unused-funds-template-id'),
+            ]
+        );
+    }
+
+    public function sendLoanAboutToExpireMail(Lender $lender)
+    {
+        $this->mailer->send(
+            'emails.hero',
+            [
+                'to'         => $lender->getUser()->getEmail(),
+                'subject'    => 'Loan About to Expire Notification',
+                'templateId' => \Setting::get('sendwithus.loan-about-to-expire-mail-template-id'),
+            ]
+        );                
     }
 }
