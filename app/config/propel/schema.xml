@@ -756,6 +756,9 @@
         <column name="borrower_id" type="INTEGER" required="true" primaryKey="true" />
         <column name="ip_address" type="VARCHAR" size="256" required="true"/>
         <column name="verification_code" type="VARCHAR" required="false" />
+        <column name="preferred_loan_amount" type="VARCHAR" required="false" />
+        <column name="preferred_interest_rate" type="VARCHAR" required="false" />
+        <column name="preferred_repayment_amount" type="VARCHAR" required="false" />
         <column name="verified_at" type="TIMESTAMP" required="false" />
         <behavior name="timestampable"/>
         <foreign-key foreignTable="borrowers" phpName="Borrower">

@@ -9,6 +9,11 @@
 {{ BootstrapForm::password('password') }}
 {{ BootstrapForm::text('email') }}
 
+<p>MORE INFORMATION</p>
+{{ BootstrapForm::text('preferredLoanAmount') }} USD
+{{ BootstrapForm::text('preferredInterestRate') }} %
+{{ BootstrapForm::text('preferredRepaymentAmount') }}
+
 <br><br>
 <p>CONTACT INFORMATION</p>
 {{ BootstrapForm::text('firstName') }}

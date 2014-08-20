@@ -120,6 +120,9 @@ class BorrowerService
         $joinLog = new JoinLog();
         $joinLog
             ->setIpAddress($data['ipAddress'])
+            ->setPreferredLoanAmount($data['preferredLoanAmount'])
+            ->setPreferredInterestRate($data['preferredInterestRate'])
+            ->setPreferredRepaymentAmount($data['preferredRepaymentAmount'])
             ->setBorrower($borrower);
         $joinLog->save();
 
