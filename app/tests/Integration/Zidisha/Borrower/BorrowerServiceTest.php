@@ -96,7 +96,7 @@ class BorrowerServiceTest extends \IntegrationTestCase
         $this->assertEquals($loanAmount, $firstLoanValueNative);
     }
 
-    public function testGetCurrentCreditLimit()
+    public function testGetCurrentCreditLimitForFirstLoan()
     {
         $method = new ReflectionMethod($this->borrowerService, 'getCurrentCreditLimit');
         $method->setAccessible(true);
