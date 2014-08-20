@@ -17,10 +17,6 @@ class BorrowerServiceTest extends \IntegrationTestCase
 {
     /** @var  Borrower $borrower */
     protected $borrower;
-    /** @var  Loan $loan */
-    protected $loan;
-    /** @var  Loan $secondLoan */
-    protected $secondLoan;
     private $borrowerService;
 
     public function setUp()
@@ -32,14 +28,6 @@ class BorrowerServiceTest extends \IntegrationTestCase
             ->size(1)
             ->generate();
 
-        $this->loan = \Zidisha\Generate\LoanGenerator::create()
-            ->amount(50)
-            ->generateOne();
-
-        $this->secondLoan = \Zidisha\Generate\LoanGenerator::create()
-            ->amount(50)
-            ->generateOne();
-
     }
 
     public function testGetPreviousLoanAmountFirstLoan()
@@ -47,70 +35,124 @@ class BorrowerServiceTest extends \IntegrationTestCase
         $method = new ReflectionMethod($this->borrowerService, 'getPreviousLoanAmount');
         $method->setAccessible(true);
 
+        /** @var $loan Loan */
+        $loan = \Zidisha\Generate\LoanGenerator::create()
+            ->amount(50)
+            ->generateOne();
+
+
         $exchangeRate = ExchangeRateQuery::create()
             ->findCurrent($this->borrower->getCountry()->getCurrency());
         $firstLoanValue = Money::create(Setting::get('loan.firstLoanValue'), 'USD');
-        $currency = $this->loan->getCurrency();
+        $currency = $loan->getCurrency();
         $firstLoanValueNative = Money::create($firstLoanValue, $currency, $exchangeRate);
 
-        $loanAmount = $method->invoke($this->borrowerService, $this->borrower, $this->loan, $exchangeRate);
+        $loanAmount = $method->invoke($this->borrowerService, $this->borrower, $loan, $exchangeRate);
 
         $this->assertEquals($loanAmount, $firstLoanValueNative);
     }
 
     public function testGetPreviousLoanAmountPluralLoan()
     {
+        /** @var $loan Loan */
+        $loan = \Zidisha\Generate\LoanGenerator::create()
+            ->amount(50)
+            ->generateOne();
+
+        /** @var $secondLoan Loan */
+        $secondLoan = \Zidisha\Generate\LoanGenerator::create()
+            ->amount(50)
+            ->generateOne();
+
         $method = new ReflectionMethod($this->borrowerService, 'getPreviousLoanAmount');
         $method->setAccessible(true);
-        $this->loan->setStatus(Loan::REPAID)
+        $loan->setStatus(Loan::REPAID)
             ->setDisbursedAt(new Carbon('yesterday'))
-            ->setDisbursedAmount($this->loan->getAmount());
-        $this->loan->save();
+            ->setDisbursedAmount($loan->getAmount());
+        $loan->save();
 
         $exchangeRate = ExchangeRateQuery::create()
             ->findCurrent($this->borrower->getCountry()->getCurrency());
         $amountNative = LoanQuery::create()
-            ->filterById($this->secondLoan->getId(), Criteria::NOT_EQUAL)
-            ->getMaximumDisbursedAmount($this->borrower, $this->loan->getCurrencyCode());
+            ->filterById($secondLoan->getId(), Criteria::NOT_EQUAL)
+            ->getMaximumDisbursedAmount($this->borrower, $loan->getCurrencyCode());
 
-        $loanAmount = $method->invoke($this->borrowerService, $this->borrower, $this->secondLoan, $exchangeRate);
+        $loanAmount = $method->invoke($this->borrowerService, $this->borrower, $secondLoan, $exchangeRate);
 
         $this->assertEquals($loanAmount, $amountNative);
     }
 
     public function testGetPreviousLoanAmountPluralLoanWithActiveLoan()
     {
+        /** @var $loan Loan */
+        $loan = \Zidisha\Generate\LoanGenerator::create()
+            ->amount(50)
+            ->generateOne();
+
+        /** @var $secondLoan Loan */
+        $secondLoan = \Zidisha\Generate\LoanGenerator::create()
+            ->amount(50)
+            ->generateOne();
+
         $method = new ReflectionMethod($this->borrowerService, 'getPreviousLoanAmount');
         $method->setAccessible(true);
-        $this->loan->setStatus(Loan::ACTIVE);
-        $this->loan->save();
+        $loan->setStatus(Loan::ACTIVE);
+        $loan->save();
 
         $exchangeRate = ExchangeRateQuery::create()
             ->findCurrent($this->borrower->getCountry()->getCurrency());
         $firstLoanValue = Money::create(Setting::get('loan.firstLoanValue'), 'USD');
-        $currency = $this->loan->getCurrency();
+        $currency = $loan->getCurrency();
         $firstLoanValueNative = Money::create($firstLoanValue, $currency, $exchangeRate);
 
-        $loanAmount = $method->invoke($this->borrowerService, $this->borrower, $this->secondLoan, $exchangeRate);
+        $loanAmount = $method->invoke($this->borrowerService, $this->borrower, $secondLoan, $exchangeRate);
 
         $this->assertEquals($loanAmount, $firstLoanValueNative);
     }
 
-    public function testGetCurrentCreditLimitForFirstLoan()
+    public function testGetCurrentCreditLimitForFirstLoanWithRequestAmountLess()
     {
         $method = new ReflectionMethod($this->borrowerService, 'getCurrentCreditLimit');
         $method->setAccessible(true);
+        /** @var $loan Loan */
+        $loan = \Zidisha\Generate\LoanGenerator::create()
+            ->amount(50)
+            ->generateOne();
 
         $exchangeRate = ExchangeRateQuery::create()
             ->findCurrent($this->borrower->getCountry()->getCurrency());
         $firstLoanValue = Money::create(Setting::get('loan.firstLoanValue'), 'USD');
-        $currency = $this->loan->getCurrency();
+        $currency = $loan->getCurrency();
         $firstLoanValueNative = Converter::fromUSD($firstLoanValue, $currency, $exchangeRate);
         $creditEarned = Money::create(550, $this->borrower->getCountry()->getCurrencyCode(), $exchangeRate);
 
         $creditLimit = $method->invoke($this->borrowerService, $this->borrower, $creditEarned, false);
 
         $this->assertEquals($creditLimit, $firstLoanValueNative);
+    }
+
+    public function testGetCurrentCreditLimitForFirstLoanWithRequestAmountMore()
+    {
+        $method = new ReflectionMethod($this->borrowerService, 'getCurrentCreditLimit');
+        $method->setAccessible(true);
+
+        /** @var $loan Loan */
+        $loan = \Zidisha\Generate\LoanGenerator::create()
+            ->amount(100)
+            ->generateOne();
+
+        $exchangeRate = ExchangeRateQuery::create()
+            ->findCurrent($this->borrower->getCountry()->getCurrency());
+        $currency = $loan->getCurrency();
+        $raisedUsdAmount = $loan->getRaisedUsdAmount();
+        $raisedAmount = Converter::fromUSD($raisedUsdAmount, $currency, $exchangeRate);
+
+
+        $creditEarned = Money::create(550, $this->borrower->getCountry()->getCurrencyCode(), $exchangeRate);
+
+        $creditLimit = $method->invoke($this->borrowerService, $this->borrower, $creditEarned, false);
+
+        $this->assertEquals($creditLimit, $raisedAmount->add($creditEarned));
     }
 
 }

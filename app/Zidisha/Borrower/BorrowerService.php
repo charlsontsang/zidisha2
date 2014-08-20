@@ -641,7 +641,6 @@ class BorrowerService
         $loanStatus = $borrower->getActivationStatus();
         $exchangeRate = ExchangeRateQuery::create()
             ->findCurrent($borrower->getCountry()->getCurrency());
-        $creditEarnedUSD = Converter::toUSD($creditEarned, $exchangeRate);
         $currencyCode = $borrower->getCountry()->getCurrencyCode();
         $currency = $borrower->getCountry()->getCurrency();
         $creditEarnedThreshold = Converter::fromUSD(Money::create(1000, 'USD'), $currency, $exchangeRate);
