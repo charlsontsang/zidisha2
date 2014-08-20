@@ -26,7 +26,6 @@ class PlaceBidForm extends AbstractPaymentForm
     {
         return [
             'interestRate'          => '', // TODO
-            'amount'                => '', // TODO
             'useLenderInviteCredit' => '', // TODO
         ] + parent::getRules($data);
     }

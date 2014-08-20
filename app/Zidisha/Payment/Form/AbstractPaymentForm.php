@@ -29,7 +29,7 @@ abstract class AbstractPaymentForm extends AbstractForm
             'paymentMethod'        => 'required|in:' . implode(',', $this->allowedServices),
             'stripeToken'          => 'required_if:paymentMethod,stripe',
             'transactionFeeRate'   => '',
-            'amount'               => '',
+            'amount'               => 'required|numeric|greaterThan:0',
         ];
     }
 

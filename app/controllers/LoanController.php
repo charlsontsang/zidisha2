@@ -171,6 +171,7 @@ class LoanController extends BaseController
             return $form->makePayment();
         }
 
+        // TODO error message
         Flash::error("Please enter the amount as a number.");
         return Redirect::route('loan:index', $loanId)->withForm($form);
     }
