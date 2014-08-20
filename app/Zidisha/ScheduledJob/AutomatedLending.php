@@ -56,19 +56,47 @@ class AutomatedLending extends ScheduledJob
         $autoLendingSetting = AutoLendingSettingQuery::create()
             ->findOneByLenderId($lender->getId());
 
-        $currentBalance = TransactionQuery::create()
+        $currentBalanceOfLender = TransactionQuery::create()
             ->getCurrentBalance($lender->getId());
         
-        $autoLendAmount = Money::create(\Config::get('constants.autoLendAmount'), 'USD');
+        $maximumAllowedAmountForAutomaticLending = Money::create(\Config::get('constants.autoLendAmount'), 'USD');
+
+        $loanPreference = $autoLendingSetting->getPreference();
+        $minimumInterestRate = $autoLendingSetting->getMinDesiredInterest();
+        $maximumInterestRate = $autoLendingSetting->getMaxDesiredInterest();
+        
+        
+        $loansForLending = $this->getLoansForLending($loanPreference);
+        
         
         if($autoLendingSetting->getCurrentAllocated() == 0 ) {
-            $amountToAutoLend = $currentBalance->subtract($autoLendingSetting->getLenderCredit());
-            
-            if($amountToAutoLend->greaterThan($autoLendAmount)) {
-                $numberOfLoans = floor($amountToAutoLend->divide($autoLendAmount)->getAmount());        
-                for ($i = 0; $i <= $numberOfLoans; $i++) {
+            $totalAmountForAutomaticLending = $currentBalanceOfLender->subtract($autoLendingSetting->getLenderCredit());
+
+            if ($totalAmountForAutomaticLending->greaterThan($maximumAllowedAmountForAutomaticLending)) {
+                $numberOfLoans = floor($totalAmountForAutomaticLending->divide($maximumAllowedAmountForAutomaticLending)->getAmount());
+                
+                if ($numberOfLoans > 0) {
+                    for ($i = 0; $i <= $numberOfLoans; $i++) {
+//                        $data = [
+//                            'amount'       => $totalAmountForAutomaticLending,
+//                            'interestRate' => 34,
+//                        ];
+                    }
+                }
+            }
+
+        } else {
+            $totalAmountForAutomaticLending = $currentBalanceOfLender;
+            if ($totalAmountForAutomaticLending->greaterThan($maximumAllowedAmountForAutomaticLending)) {
+                $numberOfLoans = floor($totalAmountForAutomaticLending->divide($maximumAllowedAmountForAutomaticLending)->getAmount());
+                
+                if ($numberOfLoans > 0) {
+                    for ($i = 0; $i <= $numberOfLoans; $i++) {
+
+                    }
                 }
             }
         }
+        
     }
 } // AutomatedLending
