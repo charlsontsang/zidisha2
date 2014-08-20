@@ -37,6 +37,20 @@ class HomeController extends BaseController {
         $exchangeRate = ExchangeRateQuery::create()
             ->findCurrent($country->getCurrency());
         $currency = $country->getCurrency();
+        
+        $installmentPeriod = $country->getInstallmentPeriod();
+        if ($installmentPeriod == 'weekly') {
+            $period = \Lang::get('borrower.borrow.week');
+        } else {
+            $period = \Lang::get('borrower.borrow.month');
+        }
+
+        $regFee = $country->getRegistrationFee();
+        if ($regFee > 0) {
+            $regFeeNote = \Lang::get('borrower.borrow.fees-content-part2', array('regFee' => $currency." ".$regFee));
+        } else {
+            $regFeeNote = '';
+        }
 
         $firstLoanValue = Money::create(Setting::get('loan.firstLoanValue'), 'USD');
         $nextLoanValue = Money::create(Setting::get('loan.nextLoanValue'), 'USD');
@@ -52,31 +66,35 @@ class HomeController extends BaseController {
         $nextLoanPercentage = 150;
 
         $params['firstLoanVal'] = Converter::fromUSD($firstLoanValue, $currency, $exchangeRate);
-        $params['firstLoanValInvited'] = Converter::fromUSD($firstLoanValueInvited, $currency, $exchangeRate);
+        $firstLoanValInvited = Converter::fromUSD($firstLoanValueInvited, $currency, $exchangeRate);
         $params['nxtLoanvalue'] = '';
         $value = $firstLoanValue;
 
         for ($i = 2; $i < 12; $i++) {
             if ($value->lessThanOrEqual(Money::create(200, 'USD'))) {
                 $value = $value->multiply($secondLoanPercentage)->divide(100);
-                $val= Converter::fromUSD($value, $currency, $exchangeRate);
-                $params['nxtLoanvalue'] .= "<br/>".$i.". ".' '.$val;
+                $localValue= Converter::fromUSD($value, $currency, $exchangeRate);
+                $params['nxtLoanvalue'] .= "<br/>".$i.". ".' '.$localValue;
             } else {
                 $value = $value->multiply($nextLoanPercentage)->divide(100);
-                $localValue = Converter::fromUSD($value, $currency, $exchangeRate);
-                $params['nxtLoanvalue'] .="<br/>".$i.". ".' '.$localValue;
-            }
-            if (!$value->lessThanOrEqual($nextLoanValue)) {
-                $value = $nextLoanValue;
-                $val= Converter::fromUSD($value, $currency, $exchangeRate);
-                $params['nxtLoanvalue'] .= "<br/>".$i.". ".' '.$val;
+
+                if ($value->lessThanOrEqual($nextLoanValue)) {
+                    $localValue = Converter::fromUSD($value, $currency, $exchangeRate);
+                    $params['nxtLoanvalue'] .="<br/>".$i.". ".' '.$localValue;
+                } else {
+                    $value = $nextLoanValue;
+                    $localValue= Converter::fromUSD($value, $currency, $exchangeRate);
+                    $params['nxtLoanvalue'] .= "<br/>".$i.". ".' '.$localValue;
+                }
             }
         }
 
-        $howMuchContent = \Lang::get('borrower.borrow.how-much-content', array('firstLoanVal' => $params['firstLoanVal'], 'firstLoanValInvited' => $params['firstLoanValInvited']));
+        $advantage3 = \Lang::get('borrower.borrow.advantage3', array('installmentFrequency' => $period));
+        $requirementsContentBusiness = \Lang::get('borrower.borrow.requirements-content-business', array('installmentFrequency' => $period));
+        $howMuchContent = \Lang::get('borrower.borrow.how-much-content', array('firstLoanVal' => $params['firstLoanVal'], 'firstLoanValInvited' => $firstLoanValInvited));
             
         
-        return View::make('borrower-home', compact ('howMuchContent', 'params'));
+        return View::make('borrower-home', compact ('advantage3', 'requirementsContentBusiness', 'howMuchContent', 'regFeeNote', 'params'));
     }
 
 }

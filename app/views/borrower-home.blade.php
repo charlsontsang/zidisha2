@@ -26,7 +26,7 @@
         
                 <li>{{ \Lang::get('borrower.borrow.advantage2') }}</li>
             
-                <li>{{ \Lang::get('borrower.borrow.advantage3') }}</li>
+                <li>{{ $advantage3 }}</li>
 
                 <li>{{ \Lang::get('borrower.borrow.advantage4') }}</li>
             </ul>
@@ -40,7 +40,7 @@
             <ul>
                 <li>{{ \Lang::get('borrower.borrow.requirements-content-facebook') }}</li>
         
-                <li>{{ \Lang::get('borrower.borrow.requirements-content-business') }})</li>
+                <li>{{ $requirementsContentBusiness }}</li>
             
                 <li>{{ \Lang::get('borrower.borrow.requirements-content-leader') }}</li>
             </ul>
@@ -58,7 +58,7 @@
         
             <p>{{ \Lang::get('borrower.borrow.fees-content-part1') }}</p>
         
-            <p>{{ \Lang::get('borrower.borrow.fees-content-part2') }}</p>
+            <p>{{ $regFeeNote }}</p>
         
             <p>{{ \Lang::get('borrower.borrow.fees-content-part3') }}</p>
 
