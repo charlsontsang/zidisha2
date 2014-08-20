@@ -126,7 +126,7 @@ class LoanService
             ->setAmount(Money::create($data['amount'], $currencyCode))
             ->setUsdAmount(Money::create($data['usdAmount'], 'USD'))
             ->setInstallmentPeriod($borrower->getCountry()->getInstallmentPeriod())
-            ->setInterestRate(Setting::get('loan.maximumLenderInterestRate') + Setting::get('loan.transactionFeeRate'))
+            ->setMaxInterestRate(Setting::get('loan.maximumLenderInterestRate') + Setting::get('loan.transactionFeeRate'))
             ->setServiceFeeRate(Setting::get('loan.transactionFeeRate'))
             ->setInstallmentDay($data['installmentDay'])
             ->setAppliedAt($data['date'])
@@ -531,7 +531,6 @@ class LoanService
             $totalInterest = $totalAmount->divide($loan->getAmount()->getAmount())->round(2)->getAmount();
             $loan
                 ->setStatus(Loan::FUNDED)
-                ->setInterestRate($totalInterest)
                 ->setAcceptedAt($acceptedAt)
                 ->setFinalInterestRate($totalInterest)
                 ->save($con);

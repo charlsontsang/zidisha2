@@ -28,7 +28,7 @@ class InstallmentCalculator
     
     public function calculateInstallmentCount(Money $installmentAmount)
     {
-        $maxYearlyInterest = $this->amount()->multiply($this->loan->getInterestRate() / 100);
+        $maxYearlyInterest = $this->amount()->multiply($this->loan->getMaxInterestRate() / 100);
 
         if ($this->loan->isWeeklyInstallment()) {
             $maxInstallmentInterest = $maxYearlyInterest->divide(52);
