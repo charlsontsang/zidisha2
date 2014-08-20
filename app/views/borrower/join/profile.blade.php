@@ -13,6 +13,13 @@
 {{ BootstrapForm::text('preferredLoanAmount') }} USD
 {{ BootstrapForm::text('preferredInterestRate') }} %
 {{ BootstrapForm::text('preferredRepaymentAmount') }}
+{{ BootstrapForm::select('businessCategoryId', $form->getCategories()) }}
+{{ BootstrapForm::select('businessYears', $form->getBusinessYears()) }}
+{{ BootstrapForm::select('loanUsage', $form->getLoanUsage()) }}
+{{--{{ TODO }}--}}
+{{ BootstrapForm::text('birthDate','' , array('data-datepicker' => 'datepicker')) }}
+
+
 
 <br><br>
 <p>CONTACT INFORMATION</p>
