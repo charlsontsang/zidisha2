@@ -2,6 +2,7 @@
 
 namespace Zidisha\ScheduledJob;
 
+use DB;
 use Illuminate\Queue\Jobs\Job;
 use Zidisha\ScheduledJob\Map\ScheduledJobTableMap;
 
@@ -33,6 +34,9 @@ class AutomatedLending extends ScheduledJob
      */
     public function getQuery()
     {
+        return DB::table('auto_lending_settings as s')
+            ->selectRaw('s.lender_id AS user_id, COALESCE(s.last_processed, s.created_at) AS start_date')
+            ->whereRaw('s.preference = 1');
     }
 
     public function process(Job $job)
