@@ -165,7 +165,7 @@ class BorrowerJoinController extends BaseController
             return Redirect::action('BorrowerJoinController@getProfile')->withForm($form);
         }
 
-        if (Input::has('diconnect_facebook_account')) {
+        if (Input::has('disconnect_facebook_account')) {
             Session::set('BorrowerJoin.disconnect-facebook', Input::all());
             $url = $this->facebookService->getLogoutUrl('BorrowerJoinController@getFacebook');
             return Redirect::away($url);

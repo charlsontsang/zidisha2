@@ -109,7 +109,7 @@
 <br/>
 {{ BootstrapForm::submit('submit') }} -
 {{ BootstrapForm::submit('save_later') }} -
-{{ BootstrapForm::submit('diconnect_facebook_account') }}
+{{ BootstrapForm::submit('disconnect_facebook_account') }}
 
 
 {{ BootstrapForm::close() }}
