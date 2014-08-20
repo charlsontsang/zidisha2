@@ -146,8 +146,6 @@ class BorrowerServiceTest extends \IntegrationTestCase
         $currency = $loan->getCurrency();
         $raisedUsdAmount = $loan->getRaisedUsdAmount();
         $raisedAmount = Converter::fromUSD($raisedUsdAmount, $currency, $exchangeRate);
-
-
         $creditEarned = Money::create(550, $this->borrower->getCountry()->getCurrencyCode(), $exchangeRate);
 
         $creditLimit = $method->invoke($this->borrowerService, $this->borrower, $creditEarned, false);
@@ -182,12 +180,14 @@ class BorrowerServiceTest extends \IntegrationTestCase
         $currency = $loan->getCurrency();
         $raisedUsdAmount = $secondLoan->getRaisedUsdAmount();
         $raisedAmount = Converter::fromUSD($raisedUsdAmount, $currency, $exchangeRate);
-
         $creditEarned = Money::create(550, $this->borrower->getCountry()->getCurrencyCode(), $exchangeRate);
+        $raisedAmountAddCredit = Converter::fromUSD($raisedUsdAmount, $currency, $exchangeRate)->add($creditEarned);
 
         $creditLimit = $method->invoke($this->borrowerService, $this->borrower, $creditEarned, false);
+        $creditLimitAddCredit = $method->invoke($this->borrowerService, $this->borrower, $creditEarned, true);
 
         $this->assertEquals($creditLimit, $raisedAmount);
+        $this->assertEquals($creditLimitAddCredit, $raisedAmountAddCredit);
     }
 
     public function testGetCurrentCreditLimitForPluralLoanWithLoanHeldLongEnough()
