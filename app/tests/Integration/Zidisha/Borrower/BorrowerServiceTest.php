@@ -169,15 +169,18 @@ class BorrowerServiceTest extends \IntegrationTestCase
 
         $method = new ReflectionMethod($this->borrowerService, 'getCurrentCreditLimit');
         $method->setAccessible(true);
-        $loan->setStatus(Loan::ACTIVE)
+        $secondLoan->setStatus(Loan::ACTIVE)
             ->setDisbursedAt(new Carbon('yesterday'))
-            ->setDisbursedAmount($loan->getAmount());
-        $loan->save();
+            ->setRaisedUsdAmount($secondLoan->getUsdAmount())
+            ->setDisbursedAmount($secondLoan->getAmount());
+        $secondLoan->save();
+        $this->borrower->setActiveLoan($secondLoan);
+        $this->borrower->save();
 
         $exchangeRate = ExchangeRateQuery::create()
             ->findCurrent($this->borrower->getCountry()->getCurrency());
         $currency = $loan->getCurrency();
-        $raisedUsdAmount = $loan->getRaisedUsdAmount();
+        $raisedUsdAmount = $secondLoan->getRaisedUsdAmount();
         $raisedAmount = Converter::fromUSD($raisedUsdAmount, $currency, $exchangeRate);
 
         $creditEarned = Money::create(550, $this->borrower->getCountry()->getCurrencyCode(), $exchangeRate);
@@ -185,6 +188,44 @@ class BorrowerServiceTest extends \IntegrationTestCase
         $creditLimit = $method->invoke($this->borrowerService, $this->borrower, $creditEarned, false);
 
         $this->assertEquals($creditLimit, $raisedAmount);
+    }
+
+    public function testGetCurrentCreditLimitForPluralLoanWithLoanHeldLongEnough()
+    {
+        /** @var $loan Loan */
+        $loan = \Zidisha\Generate\LoanGenerator::create()
+            ->amount(50)
+            ->generateOne();
+
+        /** @var $secondLoan Loan */
+        $secondLoan = \Zidisha\Generate\LoanGenerator::create()
+            ->amount(50)
+            ->generateOne();
+
+        $method = new ReflectionMethod($this->borrowerService, 'getCurrentCreditLimit');
+        $method->setAccessible(true);
+        $disburseDate = Carbon::createFromDate(null, 5, 25);
+        $secondLoan->setStatus(Loan::ACTIVE)
+            ->setDisbursedAt($disburseDate)
+            ->setRaisedUsdAmount($secondLoan->getUsdAmount())
+            ->setDisbursedAmount($secondLoan->getAmount());
+        $secondLoan->save();
+        $this->borrower->setActiveLoan($secondLoan);
+        $this->borrower->save();
+
+        $exchangeRate = ExchangeRateQuery::create()
+            ->findCurrent($this->borrower->getCountry()->getCurrency());
+        $currency = $loan->getCurrency();
+        $raisedUsdAmount = $secondLoan->getRaisedUsdAmount();
+        $raisedAmount = Converter::fromUSD($raisedUsdAmount, $currency, $exchangeRate);
+        $percentIncrease = Setting::get('loan.secondLoanPercentage');
+        $amount = $raisedAmount->multiply($percentIncrease)->divide(100);
+
+        $creditEarned = Money::create(550, $this->borrower->getCountry()->getCurrencyCode(), $exchangeRate);
+
+        $creditLimit = $method->invoke($this->borrowerService, $this->borrower, $creditEarned, false);
+
+        $this->assertEquals($creditLimit, $amount);
     }
 
 }
