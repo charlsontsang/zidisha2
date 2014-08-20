@@ -14,6 +14,7 @@ class HomeController extends BaseController {
     public function getHome()
     {
         $countryCode = Utility::getCountryCodeByIP();
+        $countryCode = 'KE';
 
         $country = CountryQuery::create()
             ->findOneByCountryCode($countryCode);
@@ -35,21 +36,40 @@ class HomeController extends BaseController {
     {
         $exchangeRate = ExchangeRateQuery::create()
             ->findCurrent($country->getCurrency());
+        $currency = $country->getCurrency();
 
-        $firstLoanValue = Money::create(Setting::get('loan.firstLoanValue'), $country->getCurrencyCode(), $exchangeRate);
-        $firstLoanInvited = Money::create((Setting::get('loan.firstLoanValue')+50), $country->getCurrencyCode(), $exchangeRate);
-        $secondLoanValue = $firstLoanValue * (Setting::get('loan.secondLoanPercentage')/100);
-        $thirdLoanValue = $secondLoanValue * (Setting::get('loan.secondLoanPercentage')/100);
-        $fourthLoanValue = $thirdLoanValue * (Setting::get('loan.nextLoanPercentage')/100);
-        $fifthLoanValue = $fourthLoanValue * (Setting::get('loan.nextLoanPercentage')/100);
-        $sixthLoanValue = $fifthLoanValue * (Setting::get('loan.nextLoanPercentage')/100);
-        $seventhLoanValue = $sixthLoanValue * (Setting::get('loan.nextLoanPercentage')/100);
-        $eighthLoanValue = $seventhLoanValue * (Setting::get('loan.nextLoanPercentage')/100);
-        $ninethLoanValue = $eighthLoanValue * (Setting::get('loan.nextLoanPercentage')/100);
-        $tenthLoanValue = $ninethLoanValue * (Setting::get('loan.nextLoanPercentage')/100);
-        $nextLoanValue = Money::create(Setting::get('loan.nextLoanValue'), $country->getCurrencyCode(), $exchangeRate);
+        $firstLoanValue = Money::create(Setting::get('loan.firstLoanValue'), 'USD');
+        $nextLoanValue = Money::create(Setting::get('loan.nextLoanValue'), 'USD');
+        $secondLoanPercentage = Setting::get('loan.secondLoanPercentage');
+        $nextLoanPercentage = Setting::get('loan.nextLoanPercentage');
+        
+        /* TO DO: Comment out these hard-coded values once Setting::get is defined */
+        $firstLoanValue = Money::create('50', 'USD');
+        $nextLoanValue = Money::create('10000', 'USD');
+        $secondLoanPercentage = 300;
+        $nextLoanPercentage = 150;
 
-        return View::make('borrower-home', compact ('firstLoanValue', 'firstLoanInvited', 'secondLoanValue', 'thirdLoanValue', 'fourthLoanValue', 'fifthLoanValue', 'sixthLoanValue', 'seventhLoanValue', 'eighthLoanValue', 'ninethLoanValue', 'tenthLoanValue', 'nextLoanValue'));
+        $params['firstLoanVal'] = Converter::fromUSD($firstLoanValue, $currency, $exchangeRate);
+        $params['nxtLoanvalue'] = '';
+        $value = $firstLoanValue;
+
+        for ($i = 2; $i < 12; $i++) {
+            if ($value->lessThanOrEqual(Money::create(200, 'USD'))) {
+                $value = $value->multiply($secondLoanPercentage)->divide(100);
+                $val= Converter::fromUSD($value, $currency, $exchangeRate);
+                $params['nxtLoanvalue'] .= "<br/>".$i.". ".' '.$val;
+            } elseif (!$value->lessThanOrEqual(Money::create(10000, 'USD'))) {
+                $value = $nextLoanValue;
+                $val= Converter::fromUSD($value, $currency, $exchangeRate);
+                $params['nxtLoanvalue'] .= "<br/>".$i.". ".' '.$val;
+            } else {
+                $value = $value->multiply($nextLoanPercentage)->divide(100);
+                $localValue = Converter::fromUSD($value, $currency, $exchangeRate);
+                $params['nxtLoanvalue'] .="<br/>".$i.". ".' '.$localValue;
+            }
+        }
+        
+        return View::make('borrower-home', compact ('params'));
     }
 
 }

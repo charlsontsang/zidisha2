@@ -51,19 +51,8 @@
             
             <p>{{ \Lang::get('borrower.borrow.how-much-max-loan') }}</p>
             
-            <ol>
-                <li><span>{{ $firstLoanValue }}</span></li>
-                <li><span>{{ $secondLoanValue }}</span></li>
-                <li><span>{{ $thirdLoanValue }}</span></li>
-                <li><span>{{ $fourthLoanValue }}</span></li>
-                <li><span>{{ $fifthLoanValue }}</span></li>
-                <li><span>{{ $sixthLoanValue }}</span></li>
-                <li><span>{{ $seventhLoanValue }}</span></li>
-                <li><span>{{ $eighthLoanValue }}</span></li>
-                <li><span>{{ $ninethLoanValue }}</span></li>
-                <li><span>{{ $tenthLoanValue }}</span></li>
-                <li><span>{{ $nextLoanValue }}</span></li>
-            </ol>
+            <p>1. {{ $params['firstLoanVal'] }}<br/>
+            <p>{{ $params['nxtLoanvalue'] }}</p>
   
         <h3>{{ \Lang::get('borrower.borrow.fees-heading') }}</h3>
         
