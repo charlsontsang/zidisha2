@@ -18,7 +18,7 @@ return [
 
     'advantage2'    => 'Interest rates are usually far lower than for bank loans.',
 
-    'advantage3'    => 'You can choose the installment amount you commit to repay each week.',
+    'advantage3'    => 'You can choose the installment amount you commit to repay each :installmentFrequency.',
 
     'advantage4'    => 'You become part of a supportive community of high-achieving entrepreneurs and lenders from all over the world.',
     // Requirements block
@@ -31,13 +31,17 @@ return [
 
     'requirements-content-facebook' => 'Be an active internet user, and have your own Facebook account with extensive social connections.',
     
-    'requirements-content-business' => 'Have a business or source of income that will ensure repayment of the loan in weekly installments.',
+    'week'                          => 'week',
+
+    'month'                         => 'month',
+
+    'requirements-content-business' => 'Have a business or source of income that will allow you to make repayments each :installmentFrequency.',
     
     'requirements-content-leader'   => 'Be able to secure endorsements from your family, neighbors or work associates, and the leader of an organization in your community.',
 // How much can I borrow
     'how-much-heading'              => 'How much can I borrow?',
     
-    'how-much-content'              => 'If you have been invited to join by an existing member in good standing, you can borrow up to USD 150 (150 US Dollars).  If you do not have an invite from an existing member, you can borrow up to USD 50 (50 US Dollars).<br/><br/>
+    'how-much-content'              => 'If you have been invited to join by an existing member in good standing, you can borrow up to :firstLoanValInvited for your first loan.  If you do not have an invite from an existing member, you can borrow up to :firstLoanVal for your first loan.<br/><br/>
 After that, your credit limit will increase depending on your record of on-time repayments.',
     
     'how-much-max-loan'             => 'The current standard credit limit progression is as follows:',
@@ -46,7 +50,7 @@ After that, your credit limit will increase depending on your record of on-time 
     
     'fees-content-part1'            => 'The interest rate for Zidisha loans is between 5% and 20%, expressed as a flat percentage of the loan amount per year the loan is held. (For example, if you borrow $100 at 10% annual interest and hold the loan for half a year, the total interest will be $100 * 10% * 1/2 = $5.)',
     
-    'fees-content-part2'            => 'In addition, new applicants who succeed in raising a loan pay a one-time registration fee, which is deducted at the time the first loan is disbursed.<br/><br/><a data-toggle="modal" data-target="#registrationFees">View current registration fees</a>',
+    'fees-content-part2'            => 'In addition, new applicants who succeed in raising a loan pay a one-time registration fee of :regFee, which is deducted at the time the first loan is disbursed.',
     
     'fees-content-part3'            => 'If your loan is not funded, you are not charged any fees at all.',
 // How do I Get Started

@@ -18,22 +18,82 @@ class HomeController extends BaseController {
         $country = CountryQuery::create()
             ->findOneByCountryCode($countryCode);
         if($country && $country->isBorrowerCountry()) {
-            return $this->getBorrowerHome();
+            return $this->getBorrowerHome($country);
         }
         return $this->getLenderHome();
     }
     
-	public function getLenderHome()
-	{
+    public function getLenderHome()
+    {
         $secondaryCaption = 'and join the global <strong>person-to-person</strong> microlending movement.';
         $buttonText = 'Browse Projects';
 
-		return View::make('lender-home', compact('secondaryCaption','buttonText'));
-	}
+        return View::make('lender-home', compact('secondaryCaption','buttonText'));
+    }
 
-    private function getBorrowerHome()
+    private function getBorrowerHome($country)
     {
-        return View::make('borrower-home');
+        $exchangeRate = ExchangeRateQuery::create()
+            ->findCurrent($country->getCurrency());
+        $currency = $country->getCurrency();
+        
+        $installmentPeriod = $country->getInstallmentPeriod();
+        if ($installmentPeriod == 'weekly') {
+            $period = \Lang::get('borrower.borrow.week');
+        } else {
+            $period = \Lang::get('borrower.borrow.month');
+        }
+
+        $regFee = $country->getRegistrationFee();
+        if ($regFee > 0) {
+            $regFeeNote = \Lang::get('borrower.borrow.fees-content-part2', array('regFee' => $currency." ".$regFee));
+        } else {
+            $regFeeNote = '';
+        }
+
+        $firstLoanValue = Money::create(Setting::get('loan.firstLoanValue'), 'USD');
+        $nextLoanValue = Money::create(Setting::get('loan.nextLoanValue'), 'USD');
+        $secondLoanPercentage = Setting::get('loan.secondLoanPercentage');
+        $nextLoanPercentage = Setting::get('loan.nextLoanPercentage');
+        
+        /* TO DO: Comment out these hard-coded values once Setting::get is defined */
+        $firstLoanValue = Money::create('50', 'USD');
+        $inviteBonus = Money::create('100', 'USD');
+        $firstLoanValueInvited = $firstLoanValue->add($inviteBonus);
+        $nextLoanValue = Money::create('10000', 'USD');
+        $secondLoanPercentage = 300;
+        $nextLoanPercentage = 150;
+
+        $params['firstLoanVal'] = Converter::fromUSD($firstLoanValue, $currency, $exchangeRate);
+        $firstLoanValInvited = Converter::fromUSD($firstLoanValueInvited, $currency, $exchangeRate);
+        $params['nxtLoanvalue'] = '';
+        $value = $firstLoanValue;
+
+        for ($i = 2; $i < 12; $i++) {
+            if ($value->lessThanOrEqual(Money::create(200, 'USD'))) {
+                $value = $value->multiply($secondLoanPercentage)->divide(100);
+                $localValue= Converter::fromUSD($value, $currency, $exchangeRate);
+                $params['nxtLoanvalue'] .= "<br/>".$i.". ".' '.$localValue;
+            } else {
+                $value = $value->multiply($nextLoanPercentage)->divide(100);
+
+                if ($value->lessThanOrEqual($nextLoanValue)) {
+                    $localValue = Converter::fromUSD($value, $currency, $exchangeRate);
+                    $params['nxtLoanvalue'] .="<br/>".$i.". ".' '.$localValue;
+                } else {
+                    $value = $nextLoanValue;
+                    $localValue= Converter::fromUSD($value, $currency, $exchangeRate);
+                    $params['nxtLoanvalue'] .= "<br/>".$i.". ".' '.$localValue;
+                }
+            }
+        }
+
+        $advantage3 = \Lang::get('borrower.borrow.advantage3', array('installmentFrequency' => $period));
+        $requirementsContentBusiness = \Lang::get('borrower.borrow.requirements-content-business', array('installmentFrequency' => $period));
+        $howMuchContent = \Lang::get('borrower.borrow.how-much-content', array('firstLoanVal' => $params['firstLoanVal'], 'firstLoanValInvited' => $firstLoanValInvited));
+            
+        
+        return View::make('borrower-home', compact ('advantage3', 'requirementsContentBusiness', 'howMuchContent', 'regFeeNote', 'params'));
     }
 
 }

@@ -26,7 +26,7 @@
         
                 <li>{{ \Lang::get('borrower.borrow.advantage2') }}</li>
             
-                <li>{{ \Lang::get('borrower.borrow.advantage3') }}</li>
+                <li>{{ $advantage3 }}</li>
 
                 <li>{{ \Lang::get('borrower.borrow.advantage4') }}</li>
             </ul>
@@ -40,24 +40,25 @@
             <ul>
                 <li>{{ \Lang::get('borrower.borrow.requirements-content-facebook') }}</li>
         
-                <li>{{ \Lang::get('borrower.borrow.requirements-content-business') }})</li>
+                <li>{{ $requirementsContentBusiness }}</li>
             
                 <li>{{ \Lang::get('borrower.borrow.requirements-content-leader') }}</li>
             </ul>
 
         <h3>{{ \Lang::get('borrower.borrow.how-much-heading') }}</h3>
         
-            <p>{{ \Lang::get('borrower.borrow.how-much-content') }}</p>
+            <p>{{ $howMuchContent }}</p>
             
             <p>{{ \Lang::get('borrower.borrow.how-much-max-loan') }}</p>
             
-            [TO DO: insert local currency values of loan size progression]
+            <p>1. {{ $params['firstLoanVal'] }}
+                {{ $params['nxtLoanvalue'] }}</p>
   
         <h3>{{ \Lang::get('borrower.borrow.fees-heading') }}</h3>
         
             <p>{{ \Lang::get('borrower.borrow.fees-content-part1') }}</p>
         
-            <p>{{ \Lang::get('borrower.borrow.fees-content-part2') }}</p>
+            <p>{{ $regFeeNote }}</p>
         
             <p>{{ \Lang::get('borrower.borrow.fees-content-part3') }}</p>
 
