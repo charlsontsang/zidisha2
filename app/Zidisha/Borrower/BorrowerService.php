@@ -638,7 +638,7 @@ class BorrowerService
         $firstLoanValue = Money::create(Setting::get('loan.firstLoanValue'), 'USD');
         $isFirstFundedLoan = LoanQuery::create()
             ->isFirstFundedLoan($borrower);
-        $loanStatus = $borrower->getActivationStatus();
+        $loanStatus = $borrower->getActiveLoan()->getStatus();
         $exchangeRate = ExchangeRateQuery::create()
             ->findCurrent($borrower->getCountry()->getCurrency());
         $currencyCode = $borrower->getCountry()->getCurrencyCode();
@@ -739,7 +739,7 @@ class BorrowerService
                 } else {
                     //case where last loan was repaid on time, overall repayment rate is above threshold and loan held for long enough to qualify for credit limit increase
                     $lastInstallmentAmount = InstallmentQuery::create()
-                        ->getLastInstallmentAmount($borrower, $loan);
+                        ->getLastInstallmentAmount($loan);
                     $lastInstallmentUsdAmount = Converter::toUSD(Money::create($lastInstallmentAmount, $currencyCode), $exchangeRate)->getAmount();
                     if ($lastInstallmentAmount > ($raisedAmount->getAmount() * 0.1) && $lastInstallmentUsdAmount > 100) {
                         //case where more than 30% and $100 of last loan was paid in the last installment
