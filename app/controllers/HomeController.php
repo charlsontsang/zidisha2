@@ -58,14 +58,15 @@ class HomeController extends BaseController {
                 $value = $value->multiply($secondLoanPercentage)->divide(100);
                 $val= Converter::fromUSD($value, $currency, $exchangeRate);
                 $params['nxtLoanvalue'] .= "<br/>".$i.". ".' '.$val;
-            } elseif (!$value->lessThanOrEqual(Money::create(10000, 'USD'))) {
-                $value = $nextLoanValue;
-                $val= Converter::fromUSD($value, $currency, $exchangeRate);
-                $params['nxtLoanvalue'] .= "<br/>".$i.". ".' '.$val;
             } else {
                 $value = $value->multiply($nextLoanPercentage)->divide(100);
                 $localValue = Converter::fromUSD($value, $currency, $exchangeRate);
                 $params['nxtLoanvalue'] .="<br/>".$i.". ".' '.$localValue;
+            }
+            if (!$value->lessThanOrEqual($nextLoanValue)) {
+                $value = $nextLoanValue;
+                $val= Converter::fromUSD($value, $currency, $exchangeRate);
+                $params['nxtLoanvalue'] .= "<br/>".$i.". ".' '.$val;
             }
         }
         

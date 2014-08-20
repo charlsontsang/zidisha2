@@ -51,8 +51,8 @@
             
             <p>{{ \Lang::get('borrower.borrow.how-much-max-loan') }}</p>
             
-            <p>1. {{ $params['firstLoanVal'] }}<br/>
-            <p>{{ $params['nxtLoanvalue'] }}</p>
+            <p>1. {{ $params['firstLoanVal'] }}
+                {{ $params['nxtLoanvalue'] }}</p>
   
         <h3>{{ \Lang::get('borrower.borrow.fees-heading') }}</h3>
         
