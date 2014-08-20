@@ -54,21 +54,6 @@ Meet the Team
 	    <div class="col-sm-4">
 		    <ul class="img-list">
 			  <li>
-			    <img src="/assets/images/pages/team/michaela.jpg" width="100%" />
-			    <span class="text-content"><span>
-			    	<strong>Michaela Ladstaetter</strong><br/>
-			    	Holds degrees in business management and in political economy. Italian certified auditor and tax consultant. Speaks German, Italian and English. Arrived to Zidisha as a lender and felt that she would like to contribute more to the growth of this innovative model.
-			    </span></span>
-			  </li>
-			</ul>
-	        <p><i class="fa fa-fw fa-user"></i><strong>Michaela Ladstaetter</strong>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;Accountant</p>
-	        <p><i class="fa fa-fw fa-map-marker"></i>South Tyrol, Italy</p>
-	    </div>
-	</div>
-	<div class="row">
-	    <div class="col-sm-4">
-		    <ul class="img-list">
-			  <li>
 			    <img src="/assets/images/pages/team/paige.jpg" width="100%" />
 			    <span class="text-content"><span>
 			    	<strong>Paige Klunk</strong><br/>
@@ -80,6 +65,8 @@ Meet the Team
 	        <p><i class="fa fa-fw fa-map-marker"></i>Athens, Ohio</p>
 	        <p><a href="https://www.linkedin.com/profile/view?id=89784658"><i class="fa fa-fw fa-linkedin-square"></i>LinkedIn</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://klunpa02.blogspot.com/"><i class="fa fa-fw fa-rss-square"></i>Blog</a></p>
 	    </div>
+	</div>
+	<div class="row">
 	    <div class="col-sm-4">
 		    <ul class="img-list">
 			  <li>
@@ -96,30 +83,31 @@ Meet the Team
 		<div class="col-sm-4">
 		    <ul class="img-list">
 			  <li>
-			    <img src="/assets/images/pages/team/jonas.jpg" width="100%" />
+			    <img src="/assets/images/pages/team/michaela.jpg" width="100%" />
 			    <span class="text-content"><span>
-			    	<strong>Jonas De Taeye</strong><br/>
-			    	Has a master's degree in Mathematics and a passion for web development. First became involved with Zidisha as an open-source contributor. Enjoys playing music, jazz, cinema, reading, mountain biking, and independent study of mathematics and machine learning.
+			    	<strong>Michaela Ladstaetter</strong><br/>
+			    	Holds degrees in business management and in political economy. Italian certified auditor and tax consultant. Speaks German, Italian and English. Arrived to Zidisha as a lender and felt that she would like to contribute more to the growth of this innovative model.
 			    </span></span>
 			  </li>
 			</ul>
-	        <p><i class="fa fa-fw fa-user"></i><strong>Jonas De Taeye</strong>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;Web Developer</p>
-	        <p><i class="fa fa-fw fa-map-marker"></i>Ghent, Belgium</p>
+	        <p><i class="fa fa-fw fa-user"></i><strong>Michaela Ladstaetter</strong>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;Accountant</p>
+	        <p><i class="fa fa-fw fa-map-marker"></i>South Tyrol, Italy</p>
+	    </div>		
+	    <div class="col-sm-4">
+		    <ul class="img-list">
+			  <li>
+			    <img src="/assets/images/pages/team/alissa.jpg" width="100%" />
+			    <span class="text-content"><span>
+			    	<strong>Alissa Jordan</strong><br/>
+			    	Holds a B.A. in Communication Studies and is passionate about international nonprofit work. Has family from Kenya and looks forward to soon traveling to East Africa. Runner, writer, an avid bookworm, consumer of coffee and lover of new cultural experiences.
+			    </span></span>
+			  </li>
+			</ul>
+	        <p><i class="fa fa-fw fa-user"></i><strong>Alissa Jordan</strong>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;Ghana Liaison</p>
+	        <p><i class="fa fa-fw fa-map-marker"></i>Minneapolis, Minnesota</p>
 	    </div>
 	</div>
 	<div class="row">
-		<div class="col-sm-4">
-		    <ul class="img-list">
-			  <li>
-			    <img src="/assets/images/pages/team/kevin.jpg" width="100%" />
-			    <span class="text-content"><span>
-			    	<strong>Kevin Zeigler</strong><br/>
-			    	Helped start an NGO in Nicaragua while in college and continues to volunteer in Nicaragua today. Left a job as an IT risk advisor to pursue opportunities with innovative organizations on the forefront of poverty alleviation and social enterprise.</span></span>
-			  </li>
-			</ul>
-	        <p><i class="fa fa-fw fa-user"></i><strong>Kevin Zeigler</strong>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;Kenya Liaison</p>
-	        <p><i class="fa fa-fw fa-map-marker"></i>León, Nicaragua&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://www.linkedin.com/profile/view?id=158437994"><i class="fa fa-fw fa-linkedin-square"></i>LinkedIn</a></p>
-	    </div>
 	    <div class="col-sm-4">
 		    <ul class="img-list">
 			  <li>
@@ -146,22 +134,22 @@ Meet the Team
 	        <p><i class="fa fa-fw fa-user"></i><strong>Miriam Frost</strong>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;Senegal Ambassador</p>
 	        <p><i class="fa fa-fw fa-map-marker"></i>Dakar, Senegal</p>
 	    </div>
-	</div>
-	<div class="row" style="margin: 0 -20px 40px -20px !important;">
 		<div class="col-sm-4">
 		    <ul class="img-list">
 			  <li>
-			    <img src="/assets/images/pages/team/alissa.jpg" width="100%" />
+			    <img src="/assets/images/pages/team/jonas.jpg" width="100%" />
 			    <span class="text-content"><span>
-			    	<strong>Alissa Jordan</strong><br/>
-			    	Holds a B.A. in Communication Studies and is passionate about international nonprofit work. Has family from Kenya and looks forward to soon traveling to East Africa. Runner, writer, an avid bookworm, consumer of coffee and lover of new cultural experiences.
+			    	<strong>Jonas De Taeye</strong><br/>
+			    	Has a master's degree in Mathematics and a passion for web development. First became involved with Zidisha as an open-source contributor. Enjoys playing music, jazz, cinema, reading, mountain biking, and independent study of mathematics and machine learning.
 			    </span></span>
 			  </li>
 			</ul>
-	        <p><i class="fa fa-fw fa-user"></i><strong>Alissa Jordan</strong>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;Ghana Liaison</p>
-	        <p><i class="fa fa-fw fa-map-marker"></i>Minneapolis, Minnesota</p>
+	        <p><i class="fa fa-fw fa-user"></i><strong>Jonas De Taeye</strong>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;Web Developer</p>
+	        <p><i class="fa fa-fw fa-map-marker"></i>Ghent, Belgium</p>
 	    </div>
-	    <div class="col-sm-4">
+	</div>
+	<div class="row" style="margin: 0 -20px 40px -20px !important;">
+		<div class="col-sm-4">
 		    <ul class="img-list">
 			  <li>
 			    <img src="/assets/images/pages/team/mamadou.jpg" width="100%" />
@@ -187,8 +175,6 @@ Meet the Team
 	        <p><i class="fa fa-fw fa-user"></i><strong>Taylor Hanna</strong>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;Kenya Liaison</p>
 	        <p><i class="fa fa-fw fa-map-marker"></i>Austin, Texas</p>
 	    </div>
-	</div>
-	<div class="row">
 		<div class="col-sm-4">
 		    <ul class="img-list">
 			  <li>
@@ -202,6 +188,8 @@ Meet the Team
 	        <p><i class="fa fa-fw fa-user"></i><strong>Tom Skacel</strong>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;Kenya Liaison</p>
 	        <p><i class="fa fa-fw fa-map-marker"></i>Sydney, Australia</p>
 	    </div>
+	</div>
+	<div class="row">
 	    <div class="col-sm-4">
 		    <ul class="img-list">
 			  <li>
@@ -228,8 +216,6 @@ Meet the Team
 	        <p><i class="fa fa-fw fa-user"></i><strong>Caite Alexander</strong>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;Kenya Liaison</p>
 	        <p><i class="fa fa-fw fa-map-marker"></i>New London, Connecticut</p>
 	    </div>
-	</div>
-	<div class="row">
 		<div class="col-sm-4">
 		    <ul class="img-list">
 			  <li>
@@ -243,6 +229,8 @@ Meet the Team
 	        <p><i class="fa fa-fw fa-user"></i><strong>Erin Eagan</strong>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;Senegal Ambassador</p>
 	        <p><i class="fa fa-fw fa-map-marker"></i>Dakar, Senegal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://www.linkedin.com/profile/view?id=182320699"><i class="fa fa-fw fa-linkedin-square"></i>LinkedIn</a></p>
 	    </div>
+	</div>
+	<div class="row">
 	    <div class="col-sm-4">
 		    <ul class="img-list">
 			  <li>
@@ -269,8 +257,6 @@ Meet the Team
 	        <p><i class="fa fa-fw fa-user"></i><strong>Samantha Bell</strong>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;Kenya Liaison</p>
 	        <p><i class="fa fa-fw fa-map-marker"></i>San Francisco, California</p>
 	    </div>
-	</div>
-	<div class="row">
 		<div class="col-sm-4">
 		    <ul class="img-list">
 			  <li>
@@ -284,6 +270,8 @@ Meet the Team
 	        <p><i class="fa fa-fw fa-user"></i><strong>Vikas Lalwani</strong>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;Community Manager</p>
 	        <p><i class="fa fa-fw fa-map-marker"></i>Bangalore, India&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://www.linkedin.com/profile/view?id=274721265"><i class="fa fa-fw fa-linkedin-square"></i>LinkedIn</a></p>
 	    </div>
+	</div>
+	<div class="row">
 	    <div class="col-sm-4">
 		    <ul class="img-list">
 			  <li>
@@ -310,8 +298,6 @@ Meet the Team
 	        <p><i class="fa fa-fw fa-user"></i><strong>Kevin O'Brien</strong>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;Kenya Liaison</p>
 	        <p><i class="fa fa-fw fa-map-marker"></i>Boston, Massachusetts&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://www.linkedin.com/profile/view?id=190440938"><i class="fa fa-fw fa-linkedin-square"></i>LinkedIn</a></p>
 	    </div>
-	</div>
-	<div class="row">
 	    <div class="col-sm-4">
 		    <ul class="img-list">
 			  <li>
