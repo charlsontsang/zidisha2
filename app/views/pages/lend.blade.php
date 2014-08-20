@@ -12,25 +12,13 @@ Lend
                 <div class="filter-bar">
                     <span class="text" style="padding-left: 0;">Show</span>
                     <div class="btn btn-default btn-filter" target="#filter-categories">
-                        {{ $selectedLoanCategory ? $selectedLoanCategory->getName() : 'Featured' }}
-                        @if($selectedLoanCategory)
-                            <a href="{{ route('lend:index', ['category' => 'featured'] + $routeParams) }}" class="inverted">
-                                <i class="fa fa-fw fa-times"></i>
-                            </a>
-                        @else
-                            <i class="fa fa-fw fa-caret-down"></i>
-                        @endif
+                        {{ $selectedLoanCategory ? $selectedLoanCategory->getName() : 'All' }}
+                        <i class="fa fa-fw fa-caret-down"></i>
                     </div>
                     <span class="text">projects in</span>
                     <div class="btn btn-default btn-filter" target="#filter-countries">
                         {{ $selectedCountry ? $selectedCountry->getName() : 'All Countries' }}
-                        @if($selectedCountry)
-                        <a href="{{ route('lend:index', ['country' => 'everywhere'] + $routeParams) }}" class="inverted">
-                            <i class="fa fa-fw fa-times"></i>
-                        </a>
-                        @else
                         <i class="fa fa-fw fa-caret-down"></i>
-                        @endif
                     </div>
                     <span class="text">sorted by</span>
                     <div class="btn btn-default btn-filter" target="#filter-sortings">
@@ -58,28 +46,25 @@ Lend
 <div class="row">
     <div class="col-sm-12">
 
-        @if($selectedCountry)
-        <h2>{{ $selectedCountry->getName(); }}</h2>
-        <hr/>
-        @endif
-
         @if($selectedLoanCategory)
-        <h2>{{ $selectedLoanCategory->getName(); }}</h2>
-        <br>
+        <h1>{{ $selectedLoanCategory->getName(); }}</h1>
 
-        <p><strong>@lang('lend.category.how-it-works'): </strong> {{ $selectedLoanCategory->getHowDescription() }} </p>
-        <br>
+        <p><strong>How it works: </strong> {{ $selectedLoanCategory->getHowDescription() }} </p>
 
-        <p><strong>@lang('lend.category.why-important'): </strong> {{ $selectedLoanCategory->getWhyDescription() }} </p>
-        <br>
+        <p><strong>Why it's important: </strong> {{ $selectedLoanCategory->getWhyDescription() }} </p>
 
-        <p><strong>@lang('lend.category.what-your-loan-do'): </strong> {{ $selectedLoanCategory->getWhatDescription() }}
+        <p><strong>What your loan can do: </strong> {{ $selectedLoanCategory->getWhatDescription() }}
         </p>
         <hr/>
         @endif
 
         <p>
-            We found <strong>12 featured projects</strong>.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">View all 198 projects</a>
+            We found 
+            <strong>{{ $countResults }} {{ $selectedLoanCategory ? $selectedLoanCategory->getName() : '' }} projects</strong>@if($selectedCountry) in {{ $selectedCountry->getName(); }}@endif.
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            @if($countAll > $countResults)
+            <a href="{{ route('lend:index', ['category' => 'all'] + ['country' => 'everywhere'] + $routeParams) }}">View all {{ $countAll }} projects</a>
+            @endif
         </p>
         <hr/>
 
@@ -168,7 +153,7 @@ Lend
         <strong>All Countries</strong>
         @else
         <li>
-            <a href="{{ route('lend:index', ['country' => 'everywhere'] + $routeParams) }}"> Everywhere </a>
+            <a href="{{ route('lend:index', ['country' => 'everywhere'] + $routeParams) }}"> All Countries </a>
         </li>
         @endif
         @foreach($countries as $country)

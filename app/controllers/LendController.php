@@ -23,11 +23,11 @@ class LendController extends BaseController
         $this->loanService = $loanService;
     }
 
-    public function getIndex($stage = null, $category = null, $country = null)
+    public function getIndex($stage = null, $category = 'null', $country = null)
     {
         // for categories
         $loanCategories = $this->loanCategoryQuery
-            ->orderByRank()
+            ->orderByName()
             ->find();
 
         //for countries
@@ -83,13 +83,15 @@ class LendController extends BaseController
 
         $page = Request::query('page') ? : 1;
         $paginator = $this->loanService->searchLoans($conditions, $page);
+        $countResults = $paginator->count();
+        $countAll = $this->loanService->searchLoans()->count();
 
         return View::make(
             'pages.lend',
             compact(
                 'countries', 'selectedCountry', 'loanCategories',
                 'selectedLoanCategory', 'paginator', 'routeParams',
-                'searchQuery', 'searchRouteParams'
+                'searchQuery', 'searchRouteParams', 'countResults', 'countAll'
             )
         );
 
