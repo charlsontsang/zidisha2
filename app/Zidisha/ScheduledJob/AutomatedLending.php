@@ -4,6 +4,11 @@ namespace Zidisha\ScheduledJob;
 
 use DB;
 use Illuminate\Queue\Jobs\Job;
+use Zidisha\Balance\TransactionQuery;
+use Zidisha\Currency\Money;
+use Zidisha\Lender\AutoLendingSettingQuery;
+use Zidisha\Lender\LenderQuery;
+use Zidisha\Loan\LoanService;
 use Zidisha\ScheduledJob\Map\ScheduledJobTableMap;
 
 
@@ -41,5 +46,29 @@ class AutomatedLending extends ScheduledJob
 
     public function process(Job $job)
     {
+        /** @var LoanService $loanService */
+        $loanService = \App::make('Zidisha\Loan\LoanService');
+        
+        $userId = $this->getUserId();
+        $lender = LenderQuery::create()
+            ->findOneById($userId);
+
+        $autoLendingSetting = AutoLendingSettingQuery::create()
+            ->findOneByLenderId($lender->getId());
+
+        $currentBalance = TransactionQuery::create()
+            ->getCurrentBalance($lender->getId());
+        
+        $autoLendAmount = Money::create(\Config::get('constants.autoLendAmount'), 'USD');
+        
+        if($autoLendingSetting->getCurrentAllocated() == 0 ) {
+            $amountToAutoLend = $currentBalance->subtract($autoLendingSetting->getLenderCredit());
+            
+            if($amountToAutoLend->greaterThan($autoLendAmount)) {
+                $numberOfLoans = floor($amountToAutoLend->divide($autoLendAmount)->getAmount());        
+                for ($i = 0; $i <= $numberOfLoans; $i++) {
+                }
+            }
+        }
     }
 } // AutomatedLending
