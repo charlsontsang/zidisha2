@@ -46,6 +46,10 @@ class PageController extends BaseController {
         return View::make('pages.volunteer');
     }
 
+    public function getDonate(){
+        return View::make('pages.donate');
+    }
+
     public function getVolunteerMentorGuidelines(){
         return View::make('borrower.volunteerMentor.guidelines');
     }

@@ -72,7 +72,7 @@
                             <li><a href="{{ route('lend:index') }}">Lend</a></li>
                             <li><a href="{{ route('page:volunteer') }}">Volunteer</a></li>
                             <li><a href="{{ route('lender:gift-cards') }}">Gift Cards</a></li>
-                            <li><a href="#">Donate</a></li>
+                            <li><a href="{{ route('page:donate') }}">Donate</a></li>
                             <li><a href="http://www.amazon.com/Venture-Collection-True-Microfinance-Stories-ebook/dp/B009JC6V12">Book</a></li>
                         </ul>
                     </div>
