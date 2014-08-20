@@ -8787,7 +8787,6 @@ span.text-content {
   cursor: pointer;
   display: table;
   width: 100%;
-  padding: 8px 5px;
   position: absolute;
   top: 0;
   opacity: 0;
@@ -8799,4 +8798,5 @@ span.text-content {
 span.text-content span {
   display: table-cell;
   vertical-align: middle;
+  padding: 11px 5px;
 }
