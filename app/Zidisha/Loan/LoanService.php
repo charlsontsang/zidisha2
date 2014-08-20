@@ -277,9 +277,9 @@ class LoanService
     public function placeBid(Loan $loan, Lender $lender, $data)
     {
         $data += [
-            'date'               => new \DateTime(),
-            'lenderInviteCredit' => false,
-            'isAutomatedLending' => false,
+            'date'                 => new \DateTime(),
+            'isLenderInviteCredit' => false,
+            'isAutomatedLending'   => false,
         ];
         
         /** @var Bid $bid */
@@ -356,7 +356,7 @@ class LoanService
             ->setBorrower($loan->getBorrower())
             ->setBidAmount($bidAmount)
             ->setInterestRate($data['interestRate'])
-            ->setLenderInviteCredit($data['lenderInviteCredit'])
+            ->setIsLenderInviteCredit($data['isLenderInviteCredit'])
             ->setIsAutomatedLending($data['isAutomatedLending'])
             ->setBidAt($data['date']);
 
@@ -778,7 +778,7 @@ class LoanService
                 ];
             }
             
-            if ($transaction->getBid()->getLenderInviteCredit()) {
+            if ($transaction->getBid()->getIsLenderInviteCredit()) {
                 $refunds[$userId]['lenderInviteCredit'] = $refunds[$userId]['lenderInviteCredit']->subtract($transaction->getAmount());
             } else {
                 $refunds[$userId]['amount'] = $refunds[$userId]['amount']->subtract($transaction->getAmount());

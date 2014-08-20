@@ -151,7 +151,7 @@ class RepaymentCalculator extends InstallmentCalculator
             $share = $bid->getAcceptedAmount()->ratio($totalAmount);
             $repaidAmount = $repaymentAmountForLenders->multiply($share);
 
-            $loanRepayment->addRepaidAmount($repaidAmount, $bid->getLenderInviteCredit());
+            $loanRepayment->addRepaidAmount($repaidAmount, $bid->getIsLenderInviteCredit());
         }
 
         return $loanRepayments;

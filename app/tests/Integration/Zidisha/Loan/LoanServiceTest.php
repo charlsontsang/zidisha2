@@ -112,11 +112,11 @@ class LoanServiceTest extends \IntegrationTestCase
             'raisedUsdAmount' => '20',
         ]);
         $this->assertBid($loan, $this->lenders[1], [
-            'interestRate'       => '0',
-            'amount'             => '10',
-            'lenderInviteCredit' => true,
-            'acceptedAmount'     => '10',
-            'raisedUsdAmount'    => '30',
+            'interestRate'         => '0',
+            'amount'               => '10',
+            'isLenderInviteCredit' => true,
+            'acceptedAmount'       => '10',
+            'raisedUsdAmount'      => '30',
         ]);
         $this->assertBid($loan, $this->lenders[2], [
             'interestRate'    => '5',
@@ -162,7 +162,7 @@ class LoanServiceTest extends \IntegrationTestCase
             $this->assertEquals($acceptedAmount, $placeBidTransaction->getAmount()->multiply(-1));
         }
 
-        if ($bid->getLenderInviteCredit()) {
+        if ($bid->getIsLenderInviteCredit()) {
             $inviteTransaction = \Zidisha\Balance\InviteTransactionQuery::create()
                 ->filterByLoanBidId($bid->getId())
                 ->filterByLenderId($lender->getId())
@@ -215,17 +215,17 @@ class LoanServiceTest extends \IntegrationTestCase
         
         $bids = [
             ['lender' => $lender1, 'amount' => '10', 'interestRate' => 10],
-            ['lender' => $lender2, 'amount' => '20', 'interestRate' => 0, 'lenderInviteCredit' => true],
+            ['lender' => $lender2, 'amount' => '20', 'interestRate' => 0, 'isLenderInviteCredit' => true],
             ['lender' => $lender3, 'amount' => '30', 'interestRate' => 15],
             ['lender' => $lender2, 'amount' => '5',  'interestRate' => 3],
-            ['lender' => $lender4, 'amount' => '5',  'interestRate' => 0, 'lenderInviteCredit' => true],
+            ['lender' => $lender4, 'amount' => '5',  'interestRate' => 0, 'isLenderInviteCredit' => true],
         ];
         
         $refunds = [
-            ['lender' => $lender1, 'amount' => '10', 'lenderInviteCredit' => '0'],
-            ['lender' => $lender2, 'amount' => '5',  'lenderInviteCredit' => '20'],
-            ['lender' => $lender3, 'amount' => '10', 'lenderInviteCredit' => '0'],
-            ['lender' => $lender4, 'amount' => '0',  'lenderInviteCredit' => '5'],
+            ['lender' => $lender1, 'amount' => '10', 'isLenderInviteCredit' => '0'],
+            ['lender' => $lender2, 'amount' => '5',  'isLenderInviteCredit' => '20'],
+            ['lender' => $lender3, 'amount' => '10', 'isLenderInviteCredit' => '0'],
+            ['lender' => $lender4, 'amount' => '0',  'isLenderInviteCredit' => '5'],
         ];
         
         foreach ($bids as $bid) {
@@ -258,15 +258,15 @@ class LoanServiceTest extends \IntegrationTestCase
         $bids = [
             ['lender' => $lender1, 'amount' => '20', 'interestRate' => 5],
             ['lender' => $lender2, 'amount' => '20', 'interestRate' => 10],
-            ['lender' => $lender3, 'amount' => '10', 'interestRate' => 0, 'lenderInviteCredit' => true],
+            ['lender' => $lender3, 'amount' => '10', 'interestRate' => 0, 'isLenderInviteCredit' => true],
             ['lender' => $lender2, 'amount' => '10', 'interestRate' => 3],
-            ['lender' => $lender1, 'amount' => '8',  'interestRate' => 0, 'lenderInviteCredit' => true],
+            ['lender' => $lender1, 'amount' => '8',  'interestRate' => 0, 'isLenderInviteCredit' => true],
         ];
 
         $refunds = [
-            ['lender' => $lender1, 'amount' => '20', 'lenderInviteCredit' => '8'],
-            ['lender' => $lender2, 'amount' => '12', 'lenderInviteCredit' => '0'],
-            ['lender' => $lender3, 'amount' => '0',  'lenderInviteCredit' => '10'],
+            ['lender' => $lender1, 'amount' => '20', 'isLenderInviteCredit' => '8'],
+            ['lender' => $lender2, 'amount' => '12', 'isLenderInviteCredit' => '0'],
+            ['lender' => $lender3, 'amount' => '0',  'isLenderInviteCredit' => '10'],
         ];
 
         foreach ($bids as $bid) {
@@ -293,7 +293,7 @@ class LoanServiceTest extends \IntegrationTestCase
             /** @var LenderRefund $refundLender */
             $refundLender = $lenderRefunds[$lender->getId()];
             $amount = Money::create($refund['amount']);
-            $lenderInviteCredit = Money::create($refund['lenderInviteCredit']);
+            $lenderInviteCredit = Money::create($refund['isLenderInviteCredit']);
 
             $this->assertEquals($amount, $refundLender->getAmount(), 'amount ' . $lender->getFirstName());
             $this->assertEquals($lenderInviteCredit, $refundLender->getLenderInviteCredit(), 'lenderInviteCredit ' . $lender->getFirstName());

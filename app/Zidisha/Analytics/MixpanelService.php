@@ -60,7 +60,7 @@ class MixpanelService
                 'type' => 'Loan Bid',
                 'interest' => $interest,
                 'id' => $bidId,
-                'lender invite credit' => $bid->getLenderInviteCredit(),
+                'lender invite credit' => $bid->getIsLenderInviteCredit(),
             )
         );
     }

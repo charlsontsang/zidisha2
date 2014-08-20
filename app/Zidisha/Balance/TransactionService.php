@@ -84,7 +84,7 @@ class TransactionService
 
         $bidTransaction = new Transaction();
         $bidTransaction
-            ->setUserId($bid->getLenderInviteCredit() ? Setting::get('site.YCAccountId') : $bid->getLenderId())
+            ->setUserId($bid->getIsLenderInviteCredit() ? Setting::get('site.YCAccountId') : $bid->getLenderId())
             ->setAmount($amount)
             ->setDescription('Loan outbid')
             ->setLoan($loan)
@@ -183,7 +183,7 @@ class TransactionService
     ) {
         $this->assertAmount($amount);
 
-        if ($bid->getLenderInviteCredit()) {
+        if ($bid->getIsLenderInviteCredit()) {
             $this->redeemLenderInvite($con, $amount, $loan, $bid);
         }
 
@@ -209,7 +209,7 @@ class TransactionService
     ) {
         $this->assertAmount($amount);
         
-        if ($bid->getLenderInviteCredit()) {
+        if ($bid->getIsLenderInviteCredit()) {
             $this->redeemLenderInvite($con, $amount, $loan, $bid);
         }
 
