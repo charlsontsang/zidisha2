@@ -644,10 +644,8 @@ class BorrowerService
         $creditEarnedUSD = Converter::toUSD($creditEarned, $exchangeRate);
         $currencyCode = $borrower->getCountry()->getCurrencyCode();
         $currency = $borrower->getCountry()->getCurrency();
-        if ($creditEarnedUSD->greaterThan(Money::create(1000, 'USD'))) {
-            $creditEarnedUSD = Money::create(1000, 'USD');
-        }
-        $creditEarned = Converter::fromUSD($creditEarnedUSD, $currency, $exchangeRate);
+        $creditEarnedThreshold = Converter::fromUSD(Money::create(1000, 'USD'), $currency, $exchangeRate);
+        $creditEarned = $creditEarned->min($creditEarnedThreshold);
 
         if($loanStatus == Loan::ACTIVE || $loanStatus == Loan::FUNDED || $loanStatus == Loan::OPEN){
 //case where borrower has an active loan or fundraising application - we calculate credit limit based on current loan amount
