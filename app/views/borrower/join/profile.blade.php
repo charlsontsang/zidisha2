@@ -125,6 +125,7 @@
 
 
 {{ BootstrapForm::close() }}
+<input data-date-format="mm/dd/yyyy" data-provide="datepicker">
 <br/>
 <br/>
 {{ link_to_route('lender:join', 'Join as lender') }}
