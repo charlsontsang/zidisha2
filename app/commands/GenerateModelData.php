@@ -151,9 +151,9 @@ class GenerateModelData extends Command
             $this->call('fake', array('model' => 'LenderInvite', 'size' => 200));
             $this->call('fake', array('model' => 'GiftCard', 'size' => 100));
             
-            $this->call('fake', array('model' => 'Loan', 'size' => 80));
-            
-            $this->call('fake', array('model' => 'Bid', 'size' => 200));
+            $this->call('fake', array('model' => 'Loan', 'size' => 50));
+            $this->call('fake', array('model' => 'Bid', 'size' => 100));
+            $this->call('fake', array('model' => 'FullyFundedLoan', 'size' => 20));
             $this->call('fake', array('model' => 'AcceptBid', 'size' => 1));
             $this->call('fake', array('model' => 'DisburseLoan', 'size' => 1));
             
@@ -229,6 +229,10 @@ class GenerateModelData extends Command
 
         if ($model == "Bid") {
             return $this->generateBids($size);
+        }
+        
+        if ($model == "FullyFundedLoan") {
+            return $this->generateFullyFundedLoans($size);
         }
 
         if ($model == "AcceptBid") {
@@ -856,58 +860,55 @@ class GenerateModelData extends Command
 
     protected function generateBids($count)
     {
+        $lenders = LenderQuery::create()
+            ->filterByActive(true)
+            ->find()
+            ->getData();
+
         $loans = LoanQuery::create()
             ->filterByStatus(0)
             ->orderByRand()
             ->find()
             ->getData();
         
+        $bids = [];
+        
+        foreach ($loans as $loan) {
+            $bidCount = $this->faker->numberBetween(0, 5);
+            for ($i = 0; $i < $bidCount; $i ++) {
+                $lender = $this->faker->randomElement($lenders);
+                $bids[] = \Zidisha\Generate\BidGenerator::create()
+                    ->setLender($lender)
+                    ->setLoan($loan)
+                    ->generateOne();
+            }
+            
+            if (count($bids) == $count) {
+                break;
+            }
+        }
+        
+        return $bids;
+    }
+    
+    protected function generateFullyFundedLoans($count)
+    {
         $lenders = LenderQuery::create()
             ->filterByActive(true)
             ->find()
             ->getData();
         
-        $return = [];
-        $i = 0;
-
-        while ($i < $count && $loans) {
-            /** @var Loan $loan */
-            $loan = array_pop($loans);
-            $bidDate = Carbon::instance($loan->getAppliedAt());
-    
-            if ($loan->getAppliedAt() < Carbon::create()->subMonths(8)) {
-                while ($loan->getRaisedPercentage() < 100) {
-                    /** @var Lender $lender */
-                    $lender = $this->faker->randomElement($lenders);
-                    $data = [
-                        'date'         => $bidDate->copy()->addDays($this->faker->numberBetween(1, 15)),
-                        'amount'       => rand(5, $loan->getUsdAmount()->divide(2)->getAmount()),
-                        'interestRate' => rand(0, 15),
-                    ];
-                    $bid = $this->loanService->placeBid($loan, $lender, $data);
-                    $return[] = $bid;
-                    $i += 1;
-                }
-                continue;
-            }
-    
-            $numberOfBids = rand(2,5);
-    
-            for ($j=0; $j <= $numberOfBids; $j++) {
-                /** @var Lender $lender */
-                $lender = $this->faker->randomElement($lenders);
-                $data = [
-                    'date'         => $bidDate->copy()->addDays($this->faker->numberBetween(1, 15)),
-                    'amount'       => rand(5, intval($loan->getUsdAmount()->divide(8)->getAmount()) + 5),
-                    'interestRate' => rand(0, 15),
-                ];
-                $bid = $this->loanService->placeBid($loan, $lender, $data);
-                $return[] = $bid;
-                $i += 1;
-            }
+        $loans = \Zidisha\Generate\LoanGenerator::create()
+            ->size($count)
+            ->generate();
+        
+        $bidGenerator = \Zidisha\Generate\BidGenerator::create();
+        foreach ($loans as $loan) {
+            $bidGenerator->setLoan($loan);
+            $bidGenerator->fullyFund($lenders);
         }
         
-        return $return;
+        return $loans;
     }
 
     protected function generateAcceptBid()
