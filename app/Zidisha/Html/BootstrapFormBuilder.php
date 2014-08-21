@@ -104,6 +104,25 @@ class BootstrapFormBuilder
         return $this->input('text', $name, $value, $options);
     }
 
+    /**
+     * Create a Bootstrap datepicker input.
+     *
+     * @param  string $name
+     * @param  string $value
+     * @param  array $options
+     * @return string
+     */
+    public function datepicker($name, $value = null, $options = [])
+    {
+        $options += [
+            'date-format' => "mm/dd/yyyy",
+        ];
+        $options['data-provide'] = 'datepicker';
+        $options['data-date-format'] = $options['date-format'];
+        unset($options['date-format']);
+        return $this->input('text', $name, $value, $options);
+    }
+
     public function file($name, $options = [])
     {
         return $this->input('file', $name, null, $options);
