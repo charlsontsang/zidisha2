@@ -923,7 +923,7 @@ class GenerateModelData extends Command
             if (rand(1, 6) <= 5) {
                 $acceptedAt = Carbon::instance($loan->getAppliedAt());
                 $acceptedAt->addDays($this->faker->numberBetween(15, 20));
-                $this->loanService->acceptBids($loan);
+                $this->loanService->acceptBids($loan, ['acceptedAt' => $acceptedAt]);
                 $return[] = $loan;
             }
         }
