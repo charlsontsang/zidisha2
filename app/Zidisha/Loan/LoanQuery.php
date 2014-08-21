@@ -107,10 +107,7 @@ class LoanQuery extends BaseLoanQuery
             ->filterByStatus([Loan::ACTIVE, Loan::REPAID, Loan::DEFAULTED])
             ->count();
 
-        if ($count) {
-            return false;
-        }
-        return true;
+        return $count == 0;
     }
 
     public function getAllRepaidLoansForBorrower(Borrower $borrower)
