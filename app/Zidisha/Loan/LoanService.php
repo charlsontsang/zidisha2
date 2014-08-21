@@ -501,17 +501,19 @@ class LoanService
         return $bid;
     }
 
-    public function acceptBids(Loan $loan, DateTime $acceptedAt = null)
+    public function acceptBids(Loan $loan, $data = [])
     {
-        $acceptedAt = $acceptedAt ? : new \DateTime();
-        
+        $data += [
+            'acceptedAt' => new \DateTime(),            
+        ];
+
         $bids = BidQuery::create()
             ->getOrderedBids($loan)
             ->find();
 
         $acceptedBids = $this->getAcceptedBids($bids, $loan->getUsdAmount());
 
-        PropelDB::transaction(function($con) use ($acceptedBids, $loan, $acceptedAt) {
+        PropelDB::transaction(function($con) use ($acceptedBids, $loan, $data) {
             $totalAmount = Money::create(0);
 
             foreach ($acceptedBids as $bidId => $acceptedBid) {
@@ -519,7 +521,7 @@ class LoanService
                 $acceptedAmount = $acceptedBid['acceptedAmount'];
                 /** @var Bid $bid */
                 $bid = $acceptedBid['bid'];
-                if ($acceptedAmount->greaterThan(Money::create(0))) {
+                if ($acceptedAmount->isPositive()) {
                     $bid
                         ->setActive(true)
                         ->setAcceptedAmount($acceptedAmount);
@@ -531,7 +533,7 @@ class LoanService
             $totalInterest = $totalAmount->divide($loan->getAmount()->getAmount())->round(2)->getAmount();
             $loan
                 ->setStatus(Loan::FUNDED)
-                ->setAcceptedAt($acceptedAt)
+                ->setAcceptedAt($data['acceptedAt'])
                 ->setFinalInterestRate($totalInterest)
                 ->save($con);
 
