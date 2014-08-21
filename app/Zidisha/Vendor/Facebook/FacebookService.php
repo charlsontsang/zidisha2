@@ -64,7 +64,7 @@ class FacebookService
         return null;
     }
 
-    public function hasEnoughFriends()
+    public function getFriendCount()
     {
         $data = $this->facebook->api(
             array(
@@ -73,14 +73,7 @@ class FacebookService
             )
         );
 
-        $numberOfFriends = $data[0]['friend_count'];
-
-        //TODO: get minimum number of friends from admin settings.
-        if($numberOfFriends > 50){
-            return true;
-        }
-        return false;
-
+        return $data[0]['friend_count'];
     }
 
     public function isAccountOldEnough()

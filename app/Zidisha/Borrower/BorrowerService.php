@@ -273,6 +273,8 @@ class BorrowerService
             ->_or()
             ->filterByEmail($facebookUser['email'])
             ->findOne();
+        $facebookFriendsCount  = $this->facebookService->getFriendCount();
+        $minimumFriendsRequired = \Setting::get('facebook.minimumFriends');
 
         $errors = array();
         if ($checkUser) {
@@ -287,7 +289,7 @@ class BorrowerService
             $errors[] = \Lang::get('borrower-registration.account-not-old');
         }
 
-        if (!$this->facebookService->hasEnoughFriends()) {
+        if ($facebookFriendsCount < $minimumFriendsRequired) {
             $errors[] = \Lang::get('borrower-registration.does-not-have-enough-friends');
         }
 
