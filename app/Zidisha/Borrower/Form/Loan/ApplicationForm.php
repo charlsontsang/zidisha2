@@ -64,7 +64,7 @@ class ApplicationForm extends AbstractForm
         $days = implode(',', $this->getDays());
         
         return [
-            'summary'           => 'required|min:10', // TODO max
+            'summary'           => 'required|min:1|max:60', 
             'proposal'          => 'required|min:200',
             'categoryId'        => 'required|exists:loan_categories,id,admin_only,false',
             'amount'            => "required|numeric|in:$amounts",
