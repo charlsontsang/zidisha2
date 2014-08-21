@@ -125,6 +125,12 @@ class GenerateModelData extends Command
             $this->generateBase();
             return;
         }
+        
+        if ($model == 'test') {
+            $this->reset();
+            $this->generateBase();
+            return;
+        }
 
         if ($model == 'new') {
             $this->reset();
