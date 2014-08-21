@@ -78,14 +78,10 @@ class FacebookService
 
     public function isAccountOldEnough()
     {
-        //Todo: get date from configuration
+        $minimumMonths = \Setting::get('facebook.minimumMonths');
+        $minMonthsAgoDate=strtotime(date("Y-m-d H:i:s",time())." -$minimumMonths month");
+        $post = $this->facebook->api('/me/posts?limit=1&until='.$minMonthsAgoDate);
 
-        $data = $this->facebook->api('/me/posts?limit=1&until=1388534400');
-
-        if (!empty($data['data']['0'])) {
-            return true;
-        } else {
-            return false;
-        }
+        return !empty($post);
     }
 }
