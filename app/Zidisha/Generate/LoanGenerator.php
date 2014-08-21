@@ -44,7 +44,7 @@ class LoanGenerator extends Generator
         return $this;
     }
 
-    public function amountAtBetween($min = 50, $max = 400)
+    public function amountBetween($min = 50, $max = 400)
     {
         $this->minAmount = $min;
         $this->maxAmount = $max;
@@ -54,7 +54,7 @@ class LoanGenerator extends Generator
 
     public function amount($amount)
     {
-        $this->amountAtBetween($amount, $amount);
+        $this->amountBetween($amount, $amount);
         
         return $this;
     }
