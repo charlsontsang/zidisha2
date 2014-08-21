@@ -277,7 +277,7 @@ class LoanService
     public function placeBid(Loan $loan, Lender $lender, $data)
     {
         $data += [
-            'date'                 => new \DateTime(),
+            'bidAt'                => new \DateTime(),
             'isLenderInviteCredit' => false,
             'isAutomatedLending'   => false,
         ];
@@ -358,7 +358,7 @@ class LoanService
             ->setInterestRate($data['interestRate'])
             ->setIsLenderInviteCredit($data['isLenderInviteCredit'])
             ->setIsAutomatedLending($data['isAutomatedLending'])
-            ->setBidAt($data['date']);
+            ->setBidAt($data['bidAt']);
 
         $bid->save($con);
 
