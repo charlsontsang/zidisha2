@@ -940,7 +940,7 @@ class GenerateModelData extends Command
         $return = [];
 
         foreach ($fundedLoans as $loan) {
-            if (true || rand(1, 5) <= 4) {
+            if (rand(1, 5) <= 4) {
                 $disbursedAt = Carbon::instance($loan->getAcceptedAt());
                 $disbursedAt->addDays($this->faker->numberBetween(1, 10));
                 $this->loanService->disburseLoan($loan, $disbursedAt, $loan->getAmount());
