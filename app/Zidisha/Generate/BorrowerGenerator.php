@@ -88,39 +88,46 @@ class BorrowerGenerator extends Generator
         $countryId = $this->faker->randomElement($this->countryIds);
 
         $data = [
-            'volunteerMentorId'    => $this->faker->randomElement($this->volunteerMentorIdsByCountryId[$countryId]),
-            'referrerId'           => null,
+            'preferredLoanAmount'      => rand(50, 1000),
+            'preferredInterestRate'    => rand(1, 15),
+            'preferredRepaymentAmount' => rand(10, 40),
+            'businessCategoryId'       => 3,
+            'businessYears'            => 2,
+            'loanUsage'                => 2,
+            'birthDate'                => 22 - 2 - 1978,
+            'volunteerMentorId'        => $this->faker->randomElement($this->volunteerMentorIdsByCountryId[$countryId]),
+            'referrerId'               => null,
             // User
-            'joinedAt'             => $this->faker->dateTimeBetween($this->joinedAtStartDate, $this->joinedAtEndDate),
-            'username'             => 'borrower' . $number,
-            'password'             => '1234567890',
-            'email'                => 'borrower' . $number . '@mail.com',
-            'facebookId'           => 1000000000 + $number,
+            'joinedAt'                 => $this->faker->dateTimeBetween($this->joinedAtStartDate, $this->joinedAtEndDate),
+            'username'                 => 'borrower' . $number,
+            'password'                 => '1234567890',
+            'email'                    => 'borrower' . $number . '@mail.com',
+            'facebookId'               => 1000000000 + $number,
             // Borrower
-            'firstName'            => 'Borrower' . $number,
-            'lastName'             => $this->faker->lastName,
-            'countryId'            => $countryId,
+            'firstName'                => 'Borrower' . $number,
+            'lastName'                 => $this->faker->lastName,
+            'countryId'                => $countryId,
             // Profile
-            'address'              => $this->faker->paragraph(3),
-            'addressInstructions'  => $this->faker->paragraph(6),
-            'city'                 => $this->faker->randomElement($this->cities[$countryId]),
-            'nationalIdNumber'     => $this->faker->randomNumber(10),
-            'phoneNumber'          => $this->faker->numberBetween(100000000, 1000000000),
-            'alternatePhoneNumber' => $this->faker->numberBetween(100000000, 1000000000),
+            'address'                  => $this->faker->paragraph(3),
+            'addressInstructions'      => $this->faker->paragraph(6),
+            'city'                     => $this->faker->randomElement($this->cities[$countryId]),
+            'nationalIdNumber'         => $this->faker->randomNumber(10),
+            'phoneNumber'              => $this->faker->numberBetween(100000000, 1000000000),
+            'alternatePhoneNumber'     => $this->faker->numberBetween(100000000, 1000000000),
             // Contacts
-            'communityLeader'      => $this->generateContact(),
-            'familyMember'         => [
+            'communityLeader'          => $this->generateContact(),
+            'familyMember'             => [
                 1 => $this->generateContact(),
                 2 => $this->generateContact(),
                 3 => $this->generateContact(),
             ],
-            'neighbor'             => [
+            'neighbor'                 => [
                 1 => $this->generateContact(),
                 2 => $this->generateContact(),
                 3 => $this->generateContact(),
             ],
             // JoinLog
-            'ipAddress'            => $this->faker->ipv4,
+            'ipAddress'                => $this->faker->ipv4,
         ];
 
         $borrower = $this->borrowerService->joinBorrower($data);

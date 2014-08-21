@@ -229,9 +229,16 @@
         <column name="national_id_number" type="VARCHAR" size="100" required="true"/>
         <column name="phone_number" type="VARCHAR" size="45" required="true"/>
         <column name="alternate_phone_number" type="VARCHAR" size="45" required="true"/>
+        <column name="business_category_id" type="INTEGER" required="true"/>
+        <column name="business_years" type="ENUM" valueSet="0,1,2,3,4" required="true"/>
+        <column name="loan_usage" type="ENUM" valueSet="0,1,2,3,4,5,6,7" required="true"/>
+        <column name="birth_date" type="TIMESTAMP" required="true"/>
         <behavior name="timestampable"/>
         <foreign-key foreignTable="borrowers">
             <reference local="borrower_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="loan_categories" phpName="BusinessCategory">
+            <reference local="business_category_id" foreign="id"/>
         </foreign-key>
     </table>
 
@@ -756,6 +763,9 @@
         <column name="borrower_id" type="INTEGER" required="true" primaryKey="true" />
         <column name="ip_address" type="VARCHAR" size="256" required="true"/>
         <column name="verification_code" type="VARCHAR" required="false" />
+        <column name="preferred_loan_amount" type="VARCHAR" required="true" />
+        <column name="preferred_interest_rate" type="VARCHAR" required="true" />
+        <column name="preferred_repayment_amount" type="VARCHAR" required="true" />
         <column name="verified_at" type="TIMESTAMP" required="false" />
         <behavior name="timestampable"/>
         <foreign-key foreignTable="borrowers" phpName="Borrower">
@@ -1052,6 +1062,20 @@
         <behavior name="timestampable"/>
         <foreign-key foreignTable="scheduled_jobs">
             <reference local="scheduled_jobs_id" foreign="id"/>
+        </foreign-key>
+    </table>
+
+    <table name="facebook_users" phpName="FacebookUser" namespace="User">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="user_id" type="INTEGER" required="true" phpType="string"/>
+        <column name="account_name" type="VARCHAR"/>
+        <column name="email" type="VARCHAR"/>
+        <column name="birth_date" type="TIMESTAMP"/>
+        <column name="city" type="VARCHAR"/>
+        <column name="first_post_date" type="TIMESTAMP"/>
+        <column name="friends_count" type="INTEGER"/>
+        <foreign-key foreignTable="users">
+            <reference local="user_id" foreign="id"/>
         </foreign-key>
     </table>
 </database>

@@ -21,6 +21,7 @@ use Zidisha\Repayment\InstallmentQuery;
 use Zidisha\Repayment\RepaymentSchedule;
 use Zidisha\Sms\BorrowerSmsService;
 use Zidisha\Upload\Upload;
+use Zidisha\User\FacebookUser;
 use Zidisha\User\User;
 use Zidisha\User\UserQuery;
 use Zidisha\Utility\Utility;
@@ -55,6 +56,7 @@ class BorrowerService
             ->findOneByBorrowerId($data['volunteerMentorId']);
         $referrer = BorrowerQuery::create()
             ->findOneById($data['referrerId']);
+        $facebookData = \Session::get('BorrowerJoin.facebookData');
 
         $user = new User();
         $user
@@ -64,6 +66,17 @@ class BorrowerService
             ->setEmail($data['email'])
             ->setFacebookId($data['facebookId'])
             ->setRole('borrower');
+
+        $facebookUser = new FacebookUser();
+        $facebookUser
+            ->setUser($user)
+            ->setEmail($facebookData['email'])
+            ->setAccountName($facebookData['name'])
+            ->setCity($facebookData['location'])
+            ->setBirthDate($facebookData['birthday'])
+            ->setFriendsCount($this->facebookService->getFriendCount())
+            ->setFirstPostDate($this->facebookService->getFirstPostDate());
+        $facebookUser->save();
 
         $borrower = new Borrower();
         $borrower
@@ -81,6 +94,10 @@ class BorrowerService
             ->setCity($data['city'])
             ->setNationalIdNumber($data['nationalIdNumber'])
             ->setPhoneNumber($data['phoneNumber'])
+            ->setBusinessCategoryId($data['businessCategoryId'])
+            ->setBusinessYears($data['businessYears'])
+            ->setLoanUsage($data['loanUsage'])
+            ->setBirthDate($data['birthDate'])
             ->setAlternatePhoneNumber($data['alternatePhoneNumber']);
         $borrower->setProfile($profile);
 
@@ -120,6 +137,9 @@ class BorrowerService
         $joinLog = new JoinLog();
         $joinLog
             ->setIpAddress($data['ipAddress'])
+            ->setPreferredLoanAmount($data['preferredLoanAmount'])
+            ->setPreferredInterestRate($data['preferredInterestRate'])
+            ->setPreferredRepaymentAmount($data['preferredRepaymentAmount'])
             ->setBorrower($borrower);
         $joinLog->save();
 
@@ -266,6 +286,8 @@ class BorrowerService
             ->_or()
             ->filterByEmail($facebookUser['email'])
             ->findOne();
+        $facebookFriendsCount  = $this->facebookService->getFriendCount();
+        $minimumFriendsRequired = \Setting::get('facebook.minimumFriends');
 
         $errors = array();
         if ($checkUser) {
@@ -280,7 +302,7 @@ class BorrowerService
             $errors[] = \Lang::get('borrower-registration.account-not-old');
         }
 
-        if (!$this->facebookService->hasEnoughFriends()) {
+        if ($facebookFriendsCount < $minimumFriendsRequired) {
             $errors[] = \Lang::get('borrower-registration.does-not-have-enough-friends');
         }
 

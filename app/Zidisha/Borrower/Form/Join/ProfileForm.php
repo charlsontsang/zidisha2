@@ -9,6 +9,7 @@ use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Borrower\VolunteerMentorQuery;
 use Zidisha\Country\CountryQuery;
 use Zidisha\Form\AbstractForm;
+use Zidisha\Loan\CategoryQuery;
 
 class ProfileForm extends AbstractForm
 {
@@ -27,17 +28,24 @@ class ProfileForm extends AbstractForm
         }
 
         return [
-            'username'             => 'required|unique:users,username',
-            'password'             => 'required',
-            'email'                => 'required|email|unique:users,email',
-            'firstName'            => 'required',
-            'lastName'             => 'required',
-            'address'              => 'required',
-            'addressInstructions'  => 'required',
-            'city'                 => 'required',
-            'nationalIdNumber'     => 'required|unique:borrower_profiles,national_id_number',
-            'phoneNumber'          => 'required|numeric|digits:' . $phoneNumberLength .'|UniqueNumber|MutualUniqueNumber',
-            'alternatePhoneNumber' => 'numeric|digits:' . $phoneNumberLength . '|UniqueNumber|MutualUniqueNumber',
+            'username'                 => 'required|unique:users,username',
+            'password'                 => 'required',
+            'email'                    => 'required|email|unique:users,email',
+            'preferredLoanAmount'      => 'required',
+            'preferredInterestRate'    => 'required',
+            'preferredRepaymentAmount' => 'required',
+            'businessCategoryId'       => 'required|in:' . implode(',', array_keys($this->getCategories())),
+            'businessYears'            => 'required|in:' . implode(',', array_keys($this->getBusinessYears())),
+            'loanUsage'                => 'required|in:' . implode(',', array_keys($this->getLoanUsage())),
+            'birthDate'                => 'required',
+            'firstName'                => 'required',
+            'lastName'                 => 'required',
+            'address'                  => 'required',
+            'addressInstructions'      => 'required',
+            'city'                     => 'required',
+            'nationalIdNumber'         => 'required|unique:borrower_profiles,national_id_number',
+            'phoneNumber'              => 'required|numeric|digits:' . $phoneNumberLength . '|UniqueNumber|MutualUniqueNumber',
+            'alternatePhoneNumber'     => 'numeric|digits:' . $phoneNumberLength . '|UniqueNumber|MutualUniqueNumber',
             'communityLeader_firstName'    => 'required',
             'communityLeader_lastName'     => 'required',
             'communityLeader_phoneNumber'  => 'required|numeric|ContactUniqueNumber|digits:' . $phoneNumberLength,
@@ -167,5 +175,39 @@ class ProfileForm extends AbstractForm
     public function setIsSaveLater($state = true)
     {
         $this->isSaveLater = $state;
+    }
+
+    public function getCategories()
+    {
+        $categories = CategoryQuery::create()
+            ->orderBySortableRank()
+            ->findByAdminOnly(false);
+
+        return $categories->toKeyValue('id', 'name');
+    }
+
+    public function getBusinessYears()
+    {
+        return [
+            '0' => 'Less than a year',
+            '1' => ' 1 - 2 years',
+            '2' => '2 - 5 years',
+            '3' => '5 - 10 years',
+            '4' => 'More than 10 years',
+        ];
+    }
+
+    public function getLoanUsage()
+    {
+        return [
+            '0' => 'Inventory',
+            '1' => 'Equipment',
+            '2' => 'Livestock',
+            '3' => 'School fees',
+            '4' => 'Hospital Fees',
+            '5' => 'Home renovation',
+            '6' => 'Repay another loan',
+            '7' => 'Other',
+        ];
     }
 }

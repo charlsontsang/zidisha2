@@ -148,6 +148,16 @@ return [
             'label'   => 'Minimum Repayment Rate to send Invites',
             'default' => '95',
             'rule'    => 'numeric',
+        ],
+        'facebook.minimumFriends' => [
+            'label'   => 'Minimum facebook friends required',
+            'default' => '20',
+            'rule'    => 'numeric',
+        ],
+        'facebook.minimumMonths' => [
+            'label'   => 'Minimum months account should be old',
+            'default' => '3',
+            'rule'    => 'numeric',
         ]
     ],
     'API' => [

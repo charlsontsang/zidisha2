@@ -64,7 +64,7 @@ class FacebookService
         return null;
     }
 
-    public function hasEnoughFriends()
+    public function getFriendCount()
     {
         $data = $this->facebook->api(
             array(
@@ -73,26 +73,24 @@ class FacebookService
             )
         );
 
-        $numberOfFriends = $data[0]['friend_count'];
-
-        //TODO: get minimum number of friends from admin settings.
-        if($numberOfFriends > 50){
-            return true;
-        }
-        return false;
-
+        return $data[0]['friend_count'];
     }
 
     public function isAccountOldEnough()
     {
-        //Todo: get date from configuration
+        $minimumMonths = \Setting::get('facebook.minimumMonths');
+        $minMonthsAgoDate=strtotime(date("Y-m-d H:i:s",time())." -$minimumMonths month");
+        $post = $this->facebook->api('/me/posts?limit=1&until='.$minMonthsAgoDate);
 
-        $data = $this->facebook->api('/me/posts?limit=1&until=1388534400');
+        return !empty($post);
+    }
 
-        if (!empty($data['data']['0'])) {
-            return true;
-        } else {
-            return false;
-        }
+    public function getFirstPostDate()
+    {
+        $minimumMonths = \Setting::get('facebook.minimumMonths');
+        $minMonthsAgoDate=strtotime(date("Y-m-d H:i:s",time())." -$minimumMonths month");
+        $post = $this->facebook->api('/me/posts?limit=1&until='.$minMonthsAgoDate);
+
+        return $post['created_time'];
     }
 }
