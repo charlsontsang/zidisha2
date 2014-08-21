@@ -154,6 +154,11 @@ return [
             'default' => '20',
             'rule'    => 'numeric',
         ],
+        'facebook.minimumMonths' => [
+            'label'   => 'Minimum months account should be old',
+            'default' => '3',
+            'rule'    => 'numeric',
+        ]
     ],
     'API' => [
         'facebook.appId' => [

@@ -17,7 +17,7 @@
 {{ BootstrapForm::select('businessYears', $form->getBusinessYears()) }}
 {{ BootstrapForm::select('loanUsage', $form->getLoanUsage()) }}
 {{--{{ TODO }}--}}
-{{ BootstrapForm::text('birthDate','' , array('data-datepicker' => 'datepicker')) }}
+<input data-date-format="mm/dd/yyyy" data-provide="datepicker" id="birthDate">
 
 
 
@@ -125,7 +125,6 @@
 
 
 {{ BootstrapForm::close() }}
-<input data-date-format="mm/dd/yyyy" data-provide="datepicker">
 <br/>
 <br/>
 {{ link_to_route('lender:join', 'Join as lender') }}
