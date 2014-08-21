@@ -534,7 +534,7 @@ class LoanService
             $loan
                 ->setStatus(Loan::FUNDED)
                 ->setAcceptedAt($data['acceptedAt'])
-                ->setFinalInterestRate($totalInterest)
+                ->setLenderInterestRate($totalInterest)
                 ->save($con);
 
             $this->changeLoanStage($con, $loan, Loan::OPEN, Loan::FUNDED);

@@ -57,7 +57,7 @@ class InstallmentCalculator
     public function lenderInterest()
     {
         return $this->amount()
-            ->multiply($this->yearlyInterestRateRatio() * $this->loan->getFinalInterestRate() / 100);
+            ->multiply($this->yearlyInterestRateRatio() * $this->loan->getLenderInterestRate() / 100);
     }
 
     public function serviceFee()

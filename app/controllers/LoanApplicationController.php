@@ -112,7 +112,7 @@ class LoanApplicationController extends BaseController
         $loan = $this->loanService->createLoan($borrower, $data);
         $loan
             ->setDisbursedAt(new \DateTime())
-            ->setFinalInterestRate(Setting::get('loan.maximumLenderInterestRate'));
+            ->setLenderInterestRate(Setting::get('loan.maximumLenderInterestRate'));
 
         $calculator = new InstallmentCalculator($loan);
         $installments = $this->loanService->generateLoanInstallments($loan);
