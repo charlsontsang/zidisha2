@@ -38,8 +38,16 @@ class PageController extends BaseController {
         return View::make('pages.terms-and-conditions');
     }
 
+    public function getContact(){
+        return View::make('pages.contact');
+    }
+
     public function getVolunteer(){
         return View::make('pages.volunteer');
+    }
+
+    public function getDonate(){
+        return View::make('pages.donate');
     }
 
     public function getVolunteerMentorGuidelines(){

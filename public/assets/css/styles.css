@@ -8454,6 +8454,11 @@ body {
 .filter-bar .input-group {
   width: 100%;
 }
+@media (min-width: 992px) {
+  #about-category {
+    float: right !important;
+  }
+}
 .result {
   border: 1px solid #e5e5e5;
   box-shadow: 1px 1px 2px #e5e5e5;
@@ -8674,7 +8679,7 @@ a.link-dark {
 }
 #follow-button {
   position: absolute;
-  top: 453px;
+  top: 483px;
   width: 278px;
   height: 36px;
   z-index: -1;
@@ -8787,7 +8792,6 @@ span.text-content {
   cursor: pointer;
   display: table;
   width: 100%;
-  padding: 8px 5px;
   position: absolute;
   top: 0;
   opacity: 0;
@@ -8799,4 +8803,5 @@ span.text-content {
 span.text-content span {
   display: table-cell;
   vertical-align: middle;
+  padding: 8px 5px;
 }

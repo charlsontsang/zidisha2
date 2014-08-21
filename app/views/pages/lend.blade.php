@@ -12,25 +12,13 @@ Lend
                 <div class="filter-bar">
                     <span class="text" style="padding-left: 0;">Show</span>
                     <div class="btn btn-default btn-filter" target="#filter-categories">
-                        {{ $selectedLoanCategory ? $selectedLoanCategory->getName() : 'Featured' }}
-                        @if($selectedLoanCategory)
-                            <a href="{{ route('lend:index', ['category' => 'featured'] + $routeParams) }}" class="inverted">
-                                <i class="fa fa-fw fa-times"></i>
-                            </a>
-                        @else
-                            <i class="fa fa-fw fa-caret-down"></i>
-                        @endif
+                        {{ $selectedLoanCategory ? $selectedLoanCategory->getName() : 'All' }}
+                        <i class="fa fa-fw fa-caret-down"></i>
                     </div>
                     <span class="text">projects in</span>
                     <div class="btn btn-default btn-filter" target="#filter-countries">
                         {{ $selectedCountry ? $selectedCountry->getName() : 'All Countries' }}
-                        @if($selectedCountry)
-                        <a href="{{ route('lend:index', ['country' => 'everywhere'] + $routeParams) }}" class="inverted">
-                            <i class="fa fa-fw fa-times"></i>
-                        </a>
-                        @else
                         <i class="fa fa-fw fa-caret-down"></i>
-                        @endif
                     </div>
                     <span class="text">sorted by</span>
                     <div class="btn btn-default btn-filter" target="#filter-sortings">
@@ -40,11 +28,12 @@ Lend
                 </div>
             </div>
             <div class="col-md-2">
-                <form class="form-inline" role="form" action="{{ route('lend:index', $searchRouteParams) }}" method="get">
+                <form role="search" action="{{ route('lend:index', $searchRouteParams) }}" method="get">
                     <div class="input-group">
-                        <label class="sr-only" for="search">Search</label>
-                        <span class="input-group-addon"><i class="fa fa-fw fa-search"></i></span>
                         <input type="text" class="form-control" placeholder="Search" name="search" value="{{{ $searchQuery }}}">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -55,39 +44,60 @@ Lend
 
 @section('content')
 <div class="row">
-    <div class="col-sm-12">
+    <div class="col-sm-6 col-md-4">
+        <p>
+            We found 
+            <strong>{{ $countResults }} {{ $selectedLoanCategory ? $selectedLoanCategory->getName() : '' }} projects</strong>@if($selectedCountry) in {{ $selectedCountry->getName(); }}@endif.
+    </div>
+    @if($countAll > $countResults)
+    <div class="col-sm-6 col-md-3">
+            <a href="{{ route('lend:index', ['category' => 'all'] + ['country' => 'everywhere'] + $routeParams) }}">View all {{ $countAll }} projects</a>
+    </div>
+    @endif
 
-        @if($selectedCountry)
-        <h2>{{ $selectedCountry->getName(); }}</h2>
+    @if ($selectedLoanCategory)
+    <div class="col-sm-12 col-md-5">
+            <a href="#" id="about-category" data-toggle="collapse" data-target="#toggle-aboutCategory" data-toggle-text="Hide description">
+                <i class="fa fa-info-circle" style="color: inherit;"></i> Learn more about {{ $selectedLoanCategory->getName() }} projects
+            </a>
+    </div>
+    @endif
+        </p>
+</div>
+<div class="row">
+    <div class="col-sm-12">
         <hr/>
-        @endif
 
         @if($selectedLoanCategory)
-        <h2>{{ $selectedLoanCategory->getName(); }}</h2>
-        <br>
 
-        <p><strong>@lang('lend.category.how-it-works'): </strong> {{ $selectedLoanCategory->getHowDescription() }} </p>
-        <br>
+        <div id="toggle-aboutCategory" class="collapse">            
+        
+            <div class="page-header">
+                <h3>{{ $selectedLoanCategory->getName(); }}</h3>
+            </div>
 
-        <p><strong>@lang('lend.category.why-important'): </strong> {{ $selectedLoanCategory->getWhyDescription() }} </p>
-        <br>
+            <div class="row">
 
-        <p><strong>@lang('lend.category.what-your-loan-do'): </strong> {{ $selectedLoanCategory->getWhatDescription() }}
-        </p>
-        <hr/>
+                <div class="col-md-6">
+                    <p><strong>How it works: </strong> {{ $selectedLoanCategory->getHowDescription() }} </p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Why it's important: </strong> {{ $selectedLoanCategory->getWhyDescription() }} </p>
+
+                    <p><strong>What your loan can do: </strong> {{ $selectedLoanCategory->getWhatDescription() }}
+                    </p>
+                </div>
+            </div>
+            <hr/>
+        </div>
         @endif
-
-        <p>
-            We found <strong>12 featured projects</strong>.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#">View all 198 projects</a>
-        </p>
-        <hr/>
 
     </div>
 </div>
 
 <div class="row" style="padding:5px;">
     @foreach($paginator as $loan)
-    <div class="col-sm-4" style="padding:10px;">
+    <div class="col-sm-6 col-md-4" style="padding:10px;">
         <div class="result">
             <div class="row">
                 <div class="col-xs-12">
@@ -164,10 +174,10 @@ Lend
 <div id="filter-countries" class="hide">
     <ul class="list-unstyled">
         @if($selectedCountry == null)
-        <strong>Everywhere</strong>
+        <strong>All Countries</strong>
         @else
         <li>
-            <a href="{{ route('lend:index', ['country' => 'everywhere'] + $routeParams) }}"> Everywhere </a>
+            <a href="{{ route('lend:index', ['country' => 'everywhere'] + $routeParams) }}"> All Countries </a>
         </li>
         @endif
         @foreach($countries as $country)
@@ -184,3 +194,12 @@ Lend
 </div>
 @stop
 
+@section('script-footer')
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.aboutCategory').click(function () {
+            $("#toggle-aboutCategory").collapse('toggle');
+        });
+    });
+</script>
+@stop

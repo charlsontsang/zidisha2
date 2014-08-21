@@ -72,8 +72,8 @@
                             <li><a href="{{ route('lend:index') }}">Lend</a></li>
                             <li><a href="{{ route('page:volunteer') }}">Volunteer</a></li>
                             <li><a href="{{ route('lender:gift-cards') }}">Gift Cards</a></li>
-                            <li><a href="#">Donate</a></li>
-                            <li><a href="#">Book</a></li>
+                            <li><a href="{{ route('page:donate') }}">Donate</a></li>
+                            <li><a href="http://www.amazon.com/Venture-Collection-True-Microfinance-Stories-ebook/dp/B009JC6V12">Book</a></li>
                         </ul>
                     </div>
                     <div class="col-xs-4">
@@ -93,7 +93,7 @@
         <hr/>
         <div class="row">
             <div class="col-md-9">
-                <p>&copy; {{ date('Y') }} Zidisha, Inc.&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;Zidisha is a 501(c)(3) nonprofit&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;<a href="{{ route('page:terms-of-use') }}">Terms and Privacy</a>&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;<a href="#">Contact Us</a></p>
+                <p>&copy; {{ date('Y') }} Zidisha, Inc.&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;Zidisha is a 501(c)(3) nonprofit&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;<a href="{{ route('page:terms-of-use') }}">Terms and Privacy</a>&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;<a href="{{ route('page:contact') }}">Contact Us</a></p>
             </div>
             <div class="col-md-3">
                 <ul class="list-unstyled list-inline pull-right">
