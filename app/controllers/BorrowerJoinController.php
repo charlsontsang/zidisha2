@@ -104,8 +104,8 @@ class BorrowerJoinController extends BaseController
 
             Session::put('BorrowerJoin.facebookId', $facebookUser['id']);
             Session::put('BorrowerJoin.email', $facebookUser['email']);
+            Session::put('BorrowerJoin.facebookData', $facebookUser);
             Session::put('BorrowerJoin.ipAddress', \Request::getClientIp());
-
             $this->setCurrentStep('profile');
             return Redirect::action('BorrowerJoinController@getProfile');
         }

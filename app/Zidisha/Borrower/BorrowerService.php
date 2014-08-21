@@ -21,6 +21,7 @@ use Zidisha\Repayment\InstallmentQuery;
 use Zidisha\Repayment\RepaymentSchedule;
 use Zidisha\Sms\BorrowerSmsService;
 use Zidisha\Upload\Upload;
+use Zidisha\User\FacebookUser;
 use Zidisha\User\User;
 use Zidisha\User\UserQuery;
 use Zidisha\Utility\Utility;
@@ -55,6 +56,7 @@ class BorrowerService
             ->findOneByBorrowerId($data['volunteerMentorId']);
         $referrer = BorrowerQuery::create()
             ->findOneById($data['referrerId']);
+        $facebookData = \Session::get('BorrowerJoin.facebookData');
 
         $user = new User();
         $user
@@ -64,6 +66,17 @@ class BorrowerService
             ->setEmail($data['email'])
             ->setFacebookId($data['facebookId'])
             ->setRole('borrower');
+
+        $facebookUser = new FacebookUser();
+        $facebookUser
+            ->setUser($user)
+            ->setEmail($facebookData['email'])
+            ->setAccountName($facebookData['name'])
+            ->setCity($facebookData['location'])
+            ->setBirthDate($facebookData['birthday'])
+            ->setFriendsCount($this->facebookService->getFriendCount())
+            ->setFirstPostDate($this->facebookService->getFirstPostDate());
+        $facebookUser->save();
 
         $borrower = new Borrower();
         $borrower

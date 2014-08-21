@@ -84,4 +84,13 @@ class FacebookService
 
         return !empty($post);
     }
+
+    public function getFirstPostDate()
+    {
+        $minimumMonths = \Setting::get('facebook.minimumMonths');
+        $minMonthsAgoDate=strtotime(date("Y-m-d H:i:s",time())." -$minimumMonths month");
+        $post = $this->facebook->api('/me/posts?limit=1&until='.$minMonthsAgoDate);
+
+        return $post['created_time'];
+    }
 }
