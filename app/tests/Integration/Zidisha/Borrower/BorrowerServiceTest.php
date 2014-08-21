@@ -7,9 +7,13 @@ use Propel\Runtime\ActiveQuery\Criteria;
 use ReflectionMethod;
 use Zidisha\Admin\Setting;
 use Zidisha\Borrower\Borrower;
+use Zidisha\Borrower\BorrowerService;
+use Zidisha\Borrower\Map\BorrowerTableMap;
 use Zidisha\Currency\Converter;
 use Zidisha\Currency\ExchangeRateQuery;
 use Zidisha\Currency\Money;
+use Zidisha\Generate\BorrowerGenerator;
+use Zidisha\Generate\LoanGenerator;
 use Zidisha\Loan\Loan;
 use Zidisha\Loan\LoanQuery;
 
@@ -17,17 +21,22 @@ class BorrowerServiceTest extends \IntegrationTestCase
 {
     /** @var  Borrower $borrower */
     protected $borrower;
+    
+    /**
+     * @var BorrowerService
+     */
     private $borrowerService;
 
     public function setUp()
     {
         parent::setUp();
+        
         $this->borrowerService = $this->app->make('Zidisha\Borrower\BorrowerService');
-
-        $this->borrower = \Zidisha\Generate\BorrowerGenerator::create()
+        BorrowerTableMap::clearInstancePool();
+        BorrowerTableMap::clearRelatedInstancePool();
+        $this->borrower = BorrowerGenerator::create()
             ->size(1)
             ->generate();
-
     }
 
     public function testGetPreviousLoanAmountFirstLoan()
@@ -36,10 +45,9 @@ class BorrowerServiceTest extends \IntegrationTestCase
         $method->setAccessible(true);
 
         /** @var $loan Loan */
-        $loan = \Zidisha\Generate\LoanGenerator::create()
+        $loan = LoanGenerator::create()
             ->amount(50)
             ->generateOne();
-
 
         $exchangeRate = ExchangeRateQuery::create()
             ->findCurrent($this->borrower->getCountry()->getCurrency());
@@ -55,12 +63,12 @@ class BorrowerServiceTest extends \IntegrationTestCase
     public function testGetPreviousLoanAmountPluralLoan()
     {
         /** @var $loan Loan */
-        $loan = \Zidisha\Generate\LoanGenerator::create()
+        $loan = LoanGenerator::create()
             ->amount(50)
             ->generateOne();
 
         /** @var $secondLoan Loan */
-        $secondLoan = \Zidisha\Generate\LoanGenerator::create()
+        $secondLoan = LoanGenerator::create()
             ->amount(50)
             ->generateOne();
 
@@ -85,12 +93,12 @@ class BorrowerServiceTest extends \IntegrationTestCase
     public function testGetPreviousLoanAmountPluralLoanWithActiveLoan()
     {
         /** @var $loan Loan */
-        $loan = \Zidisha\Generate\LoanGenerator::create()
+        $loan = LoanGenerator::create()
             ->amount(50)
             ->generateOne();
 
         /** @var $secondLoan Loan */
-        $secondLoan = \Zidisha\Generate\LoanGenerator::create()
+        $secondLoan = LoanGenerator::create()
             ->amount(50)
             ->generateOne();
 
@@ -115,7 +123,7 @@ class BorrowerServiceTest extends \IntegrationTestCase
         $method = new ReflectionMethod($this->borrowerService, 'getCurrentCreditLimit');
         $method->setAccessible(true);
         /** @var $loan Loan */
-        $loan = \Zidisha\Generate\LoanGenerator::create()
+        $loan = LoanGenerator::create()
             ->amount(50)
             ->generateOne();
 
@@ -133,11 +141,8 @@ class BorrowerServiceTest extends \IntegrationTestCase
 
     public function testGetCurrentCreditLimitForFirstLoanWithRequestAmountMore()
     {
-        $method = new ReflectionMethod($this->borrowerService, 'getCurrentCreditLimit');
-        $method->setAccessible(true);
-
         /** @var $loan Loan */
-        $loan = \Zidisha\Generate\LoanGenerator::create()
+        $loan = LoanGenerator::create()
             ->amount(100)
             ->generateOne();
 
@@ -148,20 +153,21 @@ class BorrowerServiceTest extends \IntegrationTestCase
         $raisedAmount = Converter::fromUSD($raisedUsdAmount, $currency, $exchangeRate);
         $creditEarned = Money::create(550, $this->borrower->getCountry()->getCurrencyCode(), $exchangeRate);
 
-        $creditLimit = $method->invoke($this->borrowerService, $this->borrower, $creditEarned, false);
+        $creditLimit = $this->borrowerService->getCurrentCreditLimit($this->borrower, $creditEarned, false);
 
+        $this->assertEquals(Money::create(0), $raisedUsdAmount);
         $this->assertEquals($creditLimit, $raisedAmount->add($creditEarned));
     }
 
     public function testGetCurrentCreditLimitForPluralLoanWithLoanNotHeldLongEnough()
     {
         /** @var $loan Loan */
-        $loan = \Zidisha\Generate\LoanGenerator::create()
+        $loan = LoanGenerator::create()
             ->amount(50)
             ->generateOne();
 
         /** @var $secondLoan Loan */
-        $secondLoan = \Zidisha\Generate\LoanGenerator::create()
+        $secondLoan = LoanGenerator::create()
             ->amount(50)
             ->generateOne();
 
@@ -193,12 +199,12 @@ class BorrowerServiceTest extends \IntegrationTestCase
     public function testGetCurrentCreditLimitForPluralLoanWithLoanHeldLongEnough()
     {
         /** @var $loan Loan */
-        $loan = \Zidisha\Generate\LoanGenerator::create()
+        $loan = LoanGenerator::create()
             ->amount(50)
             ->generateOne();
 
         /** @var $secondLoan Loan */
-        $secondLoan = \Zidisha\Generate\LoanGenerator::create()
+        $secondLoan = LoanGenerator::create()
             ->amount(50)
             ->generateOne();
 
@@ -211,6 +217,7 @@ class BorrowerServiceTest extends \IntegrationTestCase
             ->setDisbursedAmount($secondLoan->getAmount());
         $secondLoan->save();
         $this->borrower->setActiveLoan($secondLoan);
+        $this->borrower->setLoanStatus(Loan::ACTIVE);
         $this->borrower->save();
 
         $exchangeRate = ExchangeRateQuery::create()

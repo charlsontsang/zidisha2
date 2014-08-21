@@ -638,7 +638,7 @@ class BorrowerService
         $firstLoanValue = Money::create(Setting::get('loan.firstLoanValue'), 'USD');
         $isFirstFundedLoan = LoanQuery::create()
             ->isFirstFundedLoan($borrower);
-        $loanStatus = $borrower->getActiveLoan()->getStatus();
+        $loanStatus = $borrower->getLoanStatus();
         $exchangeRate = ExchangeRateQuery::create()
             ->findCurrent($borrower->getCountry()->getCurrency());
         $currencyCode = $borrower->getCountry()->getCurrencyCode();
@@ -646,23 +646,25 @@ class BorrowerService
         $creditEarnedThreshold = Converter::fromUSD(Money::create(1000, 'USD'), $currency, $exchangeRate);
         $creditEarned = $creditEarned->min($creditEarnedThreshold);
 
-        if($loanStatus == Loan::ACTIVE || $loanStatus == Loan::FUNDED || $loanStatus == Loan::OPEN){
-//case where borrower has an active loan or fundraising application - we calculate credit limit based on current loan amount
+        if ($loanStatus == Loan::ACTIVE || $loanStatus == Loan::FUNDED || $loanStatus == Loan::OPEN){
+            // case where borrower has an active loan or fundraising application
+            // we calculate credit limit based on current loan amount
             $loan = $borrower->getActiveLoan();
-            $ontime = true; //assume current loan will be repaid on time for purpose of displaying future credit limits
-
-        }else{
-//case where borrower has repaid one or more loans and has not yet posted an application for a new one - we calculate credit limit based on most recently repaid loan amount
+            $onTime = true; //assume current loan will be repaid on time for purpose of displaying future credit limits
+        } else{
+            // case where borrower has repaid one or more loans and has not yet posted an application for a new one
+            // we calculate credit limit based on most recently repaid loan amount
             $loan = LoanQuery::create()
                 ->getLastRepaidLoan($borrower);
-            $ontime = $this->loanService->isRepaidOnTime($borrower, $loan);
+            $onTime = $loan ? $this->loanService->isRepaidOnTime($borrower, $loan) : true;
         }
         $raisedUsdAmount = $loan->getRaisedUsdAmount();
         $raisedAmount = Converter::fromUSD($raisedUsdAmount, $currency, $exchangeRate);
         $requestedAmount = $loan->getAmount();
 
         if ($isFirstFundedLoan) {
-//case where borrower has not yet received first loan disbursement - credit limit should equal admin 1st loan size plus invited borrower credit if applicable
+            // case where borrower has not yet received first loan disbursement
+            // credit limit should equal admin 1st loan size plus invited borrower credit if applicable
             $isInvited = InviteQuery::create()
                 ->filterByInvitee($borrower)
                 ->findOne();
@@ -670,7 +672,7 @@ class BorrowerService
                 if ($creditEarned->isPositive()) {
                     return $raisedAmount->add($creditEarned);
                 }
-                    return $raisedAmount;
+                return $raisedAmount;
             }
             $bonusCredit = Money::create(0, $currencyCode) ;
             if (!empty($isInvited)) {
@@ -678,8 +680,9 @@ class BorrowerService
             }
             $totalValue = Converter::fromUSD($firstLoanValue, $currency, $exchangeRate)->add($bonusCredit);
             return $totalValue;
-        } elseif (!$ontime) {
-            //case where last loan was repaid late - credit limit should equal last loan repaid on time or admin first loan setting, if no loan was ever repaid on time
+        } elseif (!$onTime) {
+            //case where last loan was repaid late
+            // credit limit should equal last loan repaid on time or admin first loan setting, if no loan was ever repaid on time
             $previousAmount = $this->getPreviousLoanAmount($borrower, $loan, $exchangeRate);
             if (!empty($previousAmount) && $previousAmount->getAmount() > 10) {
                 $currentLimit = $previousAmount;
