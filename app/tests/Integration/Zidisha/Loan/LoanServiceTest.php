@@ -7,7 +7,13 @@ use Zidisha\Admin\Setting;
 use Zidisha\Balance\Transaction;
 use Zidisha\Balance\TransactionQuery;
 use Zidisha\Currency\Money;
+use Zidisha\Generate\BidGenerator;
+use Zidisha\Generate\BorrowerGenerator;
+use Zidisha\Generate\LenderGenerator;
+use Zidisha\Generate\LoanGenerator;
 use Zidisha\Lender\Lender;
+use Zidisha\Loan\Bid;
+use Zidisha\Loan\BidQuery;
 use Zidisha\Loan\LenderRefund;
 use Zidisha\Loan\Loan;
 
@@ -36,15 +42,15 @@ class LoanServiceTest extends \IntegrationTestCase
         $this->loanService = $this->app->make('Zidisha\Loan\LoanService');
         $this->transactionService = $this->app->make('Zidisha\Balance\TransactionService');
 
-        $this->lenders = \Zidisha\Generate\LenderGenerator::create()
+        $this->lenders = LenderGenerator::create()
             ->size(4)
             ->generate();
 
-        $this->borrowers = \Zidisha\Generate\BorrowerGenerator::create()
+        $this->borrowers = BorrowerGenerator::create()
             ->size(3)
             ->generate();
 
-        $this->loan = \Zidisha\Generate\LoanGenerator::create()
+        $this->loan = LoanGenerator::create()
             ->amount(50)
             ->generateOne();
     }
@@ -324,5 +330,28 @@ class LoanServiceTest extends \IntegrationTestCase
         } else {
             $this->assertEmpty($YCTransaction);
         }
+    }
+    
+    public function testAcceptBids()
+    {
+        BidGenerator::create()
+            ->setLoan($this->loan)
+            ->fullyFund($this->lenders);
+        
+        $acceptedBids = $this->loanService->acceptBids($this->loan);
+        $lenderInterestRate = 0;
+
+        foreach ($acceptedBids as $acceptedBid) {
+            /** @var Bid $bid */
+            $bid = $acceptedBid['bid'];
+            $lenderInterestRate += $bid->getAcceptedAmount()->getAmount() * (1 + $bid->getInterestRate() / 100);
+        }
+        $lenderInterestRate = round($lenderInterestRate / $this->loan->getUsdAmount()->getAmount(), 2);
+        
+        
+        $this->assertEquals(Loan::FUNDED, $this->loan->getStatus());
+        $this->assertEquals(100, $this->loan->getRaisedPercentage());
+        $this->assertEquals(Money::create(50), $this->loan->getRaisedUsdAmount());
+        $this->assertEquals($lenderInterestRate,  $this->loan->getLenderInterestRate());
     }
 }

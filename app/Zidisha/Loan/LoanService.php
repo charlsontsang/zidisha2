@@ -526,11 +526,11 @@ class LoanService
                         ->setActive(true)
                         ->setAcceptedAmount($acceptedAmount);
                     $bid->save($con);
-                    $totalAmount = $totalAmount->add($acceptedAmount->multiply(0.01 * $bid->getInterestRate()));
+                    $totalAmount = $totalAmount->add($acceptedAmount->multiply(1 + $bid->getInterestRate() / 100));
                 }
             }
 
-            $totalInterest = $totalAmount->divide($loan->getAmount()->getAmount())->round(2)->getAmount();
+            $totalInterest = $totalAmount->divide($loan->getUsdAmount()->getAmount())->round(2)->getAmount();
             $loan
                 ->setStatus(Loan::FUNDED)
                 ->setAcceptedAt($data['acceptedAt'])
@@ -545,7 +545,7 @@ class LoanService
         
         //TODO send emails
 
-        return true;
+        return $acceptedBids;
     }
 
     public function expireLoan(Loan $loan, $data = [])
