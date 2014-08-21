@@ -43,7 +43,7 @@
                                 Pending Authorization
                                 <br/>
                                 {{ BootstrapForm::open(array('action' => 'PendingDisbursementsController@postAuthorize', 'translationDomain' => 'admin.reports.pending-disbursements.date-authorized')) }}
-                                    {{ BootstrapForm::text('authorizedAt') }}
+                                    {{ BootstrapForm::datepicker('authorizedAt') }}
                                     {{ BootstrapForm::hidden('loanId', $loan->getId()) }}
                                     {{ BootstrapForm::submit('Confirm Authorization') }}
                                 {{ BootstrapForm::close() }}
@@ -54,7 +54,7 @@
                                 Date : {{ $loan->getAuthorizedAt('M D, Y') }}
 
                                 {{ BootstrapForm::open(array('action' => 'PendingDisbursementsController@postDisburse', 'translationDomain' => 'admin.reports.pending-disbursements.loan-notes')) }}
-                                    {{ BootstrapForm::text('disbursedAt') }}
+                                    {{ BootstrapForm::datepicker('disbursedAt') }}
                                     {{ BootstrapForm::hidden('loanId', $loan->getId()) }}
                                     {{ BootstrapForm::hidden('principalAmount', $principalAmount->getAmount()) }}
                                     {{ BootstrapForm::submit('Confirm Disbursement') }}
