@@ -86,15 +86,15 @@ class BidsCalculator {
         $totalAmount = Money::create(0);
 
         /** @var AcceptedBid $acceptedBid */
-        foreach ($acceptedBids as $bidId => $acceptedBid) {
+        foreach ($acceptedBids as $acceptedBid) {
             $acceptedAmount = $acceptedBid->getAcceptedAmount();
             $bid = $acceptedBid->getBid();
 
             if ($acceptedAmount->isPositive()) {
-                $totalAmount = $totalAmount->add($acceptedAmount->multiply(1 + $bid->getInterestRate() / 100));
+                $totalAmount = $totalAmount->add($acceptedAmount->multiply($bid->getInterestRate()));
             }
         }
 
-        return $totalAmount->divide($loanUsdAmount->getAmount())->round(2)->getAmount();
+        return round($totalAmount->ratio($loanUsdAmount), 2);
     }
 }

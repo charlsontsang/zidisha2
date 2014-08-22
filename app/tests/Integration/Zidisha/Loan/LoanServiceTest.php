@@ -345,10 +345,9 @@ class LoanServiceTest extends \IntegrationTestCase
         /** @var AcceptedBid $acceptedBid */
         foreach ($acceptedBids as $acceptedBid) {
             $bid = $acceptedBid->getBid();
-            $lenderInterestRate += $bid->getAcceptedAmount()->getAmount() * (1 + $bid->getInterestRate() / 100);
+            $lenderInterestRate += (float) $bid->getAcceptedAmount()->multiply($bid->getInterestRate())->getAmount();
         }
         $lenderInterestRate = round($lenderInterestRate / $this->loan->getUsdAmount()->getAmount(), 2);
-        
         
         $this->assertEquals(Loan::FUNDED, $this->loan->getStatus());
         $this->assertEquals(100, $this->loan->getRaisedPercentage());

@@ -5,6 +5,7 @@ namespace Unit\Zidisha\Loan;
 use Zidisha\Currency\Money;
 use Zidisha\Loan\AcceptedBid;
 use Zidisha\Loan\Bid;
+use Zidisha\Loan\Calculator\BidsCalculator;
 
 class BidsCalculatorTest extends \TestCase
 {
@@ -215,5 +216,58 @@ class BidsCalculatorTest extends \TestCase
             $this->assertEquals(Money::create($haveKeys['changedAmount']), $changedBids[$id]['changedAmount']);
             $this->assertEquals($haveKeys['type'], $changedBids[$id]['type']);
         }
+    }
+
+    public function testGetLenderInterestRate()
+    {
+        // ['interestRate', 'acceptedAmount']
+
+        $this->assertLenderInterestRate(
+            [
+                ['3', '50'],
+                ['4', '20'],
+                ['10', '100'],
+            ],
+            170,
+            7.24
+        );
+
+        $this->assertLenderInterestRate(
+            [
+                ['1', '23'],
+                ['3', '50'],
+                ['4', '20'],
+                ['5', '34'],
+                ['6', '34'],
+                ['8', '39'],
+                ['9',  '0'],
+                ['11', '0'],
+                ['15', '0'],
+            ],
+            200,
+            4.7
+        );
+
+        $this->assertLenderInterestRate(
+            [
+                ['3', '10'],
+            ],
+            10,
+            3
+        );
+    }
+
+    protected function assertLenderInterestRate($acceptedBidsData, $loanUsdAmount, $expectedInterestRate)
+    {
+        $bidsCalculator = new BidsCalculator();
+        $acceptedBids = [];
+
+        foreach ($acceptedBidsData as $acceptedBid) {
+            $bid = new Bid();
+            $bid->setInterestRate($acceptedBid[0]);
+            $acceptedBids[] = new AcceptedBid($bid, Money::create($acceptedBid[1]));
+        }
+
+        $this->assertEquals($expectedInterestRate, $bidsCalculator->getLenderInterestRate($acceptedBids, Money::create($loanUsdAmount)));
     }
 }
