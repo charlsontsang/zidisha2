@@ -111,8 +111,8 @@ class StatisticsService
         return PropelDB::fetchNumber('SELECT COUNT(id) FROM borrowers WHERE active = TRUE');
     }
 
-    public function getUserCountriesCount() {
-
+    public function getUserCountriesCount()
+    {
         $sql = 'SELECT DISTINCT country_id FROM borrowers WHERE active = TRUE
               UNION
               SELECT DISTINCT country_id FROM lenders WHERE active = TRUE';
