@@ -11,7 +11,7 @@ class StatisticsService
 
     public function getStatistics($name, $date, $countryId=null)
     {
-        $maxDate = StatisticsQuery::create()
+        $maxDate = StatisticQuery::create()
             ->filterByCountryId($countryId)
             ->filterByName($name)
             ->select('maxDate')
@@ -21,7 +21,7 @@ class StatisticsService
         if($date-$maxDate> 24*60*60){
             return false;
         }else{
-            return StatisticsQuery::create()
+            return StatisticQuery::create()
                 ->filterByName($name)
                 ->filterByCountryId($countryId)
                 ->filterByDate($maxDate)

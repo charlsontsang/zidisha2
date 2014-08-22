@@ -2,7 +2,7 @@
 
 namespace Zidisha\Statistic;
 
-use Zidisha\Statistic\Base\StatisticsQuery as BaseStatisticsQuery;
+use Zidisha\Statistic\Base\StatisticQuery as BaseStatisticQuery;
 
 
 /**
@@ -15,7 +15,7 @@ use Zidisha\Statistic\Base\StatisticsQuery as BaseStatisticsQuery;
  * long as it does not already exist in the output directory.
  *
  */
-class StatisticsQuery extends BaseStatisticsQuery
+class StatisticQuery extends BaseStatisticQuery
 {
 
-} // StatisticsQuery
+} // StatisticQuery

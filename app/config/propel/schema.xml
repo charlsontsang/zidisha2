@@ -1121,11 +1121,10 @@
         </foreign-key>
     </table>
 
-    <table name="statistics" phpName="Statistics" namespace="Statistic">
+    <table name="statistics" phpName="Statistic" namespace="Statistic">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="name" type="VARCHAR" required="true"/>
         <column name="value" type="LONGVARCHAR" required="true"/>
-        <column name="date" type="TIMESTAMP" required="true"/>
         <column name="country_id" type="INTEGER" required="true"/>
         <column name="date" type="TIMESTAMP" required="true"/>
         <foreign-key foreignTable="countries">
