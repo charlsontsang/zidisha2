@@ -99,4 +99,56 @@ class AutomatedLending extends ScheduledJob
         }
         
     }
+    
+    private function getLoansForLending($loanPreference)
+    {
+        if ($loanPreference == AutoLendingSetting::HIGH_FEEDBCK_RATING) {
+            $loans = LoanQuery::create()
+                ->filterByStatus(Loan::OPEN)
+                ->filterByLoanWithHighFeedbackComment()
+                ->find();
+            
+            return $loans;
+            
+        } elseif ($loanPreference = AutoLendingSetting::EXPIRE_SOON) {
+            $loans = LoanQuery::create()
+                ->filterByAppliedAt()
+                ->filterByStatus(Loan::OPEN)
+                ->filterByAutoLendableLoan()
+                ->orderByAppliedAt('DESC')
+                ->find();
+            
+            return $loans;
+            
+        } elseif ($loanPreference == AutoLendingSetting::HIGH_NO_COMMENTS) {
+            
+            $loans = LoanQuery::create()
+                ->filterByStatus(Loan::OPEN)
+                ->filterByAutoLendableLoan()
+                ->orderByAppliedAt('DESC')
+                ->find();
+
+            return $loans;
+            
+        } elseif ($loanPreference == AutoLendingSetting::LOAN_RANDOM) {
+            $loans = LoanQuery::create()
+                ->filterByStatus(Loan::OPEN)
+                ->filterByAutoLendableLoan()
+                ->orderByAppliedAt('ASC')
+                ->find();
+
+            $loans = shuffle ($loans);
+
+            return $loans;
+            
+        } elseif ($loanPreference == AutoLendingSetting::AUTO_LEND_AS_PREV_LOAN) {
+            $loans = LoanQuery::create()
+                ->filterByStatus(Loan::OPEN)
+                ->filterByAutoLendableLoan()
+                ->find();
+            
+            return $loans;
+        }
+        return null;
+    }
 } // AutomatedLending
