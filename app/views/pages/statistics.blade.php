@@ -16,6 +16,9 @@ Statistics
 
     Loan money raised:<i class="fa fa-info-circle raisedAmount" data-toggle="tooltip"></i>
     <br/>
+    <p>
+    USD {{ number_format($totalStatistics['disbursed_amount'], 0, ".", ","); }}
+    </p>
     Loan projects funded: <i class="fa fa-info-circle loansFunded" data-toggle="tooltip"></i>
     <br/>
     {{ number_format($totalStatistics['raised_count'], 0, ".", ","); }}

@@ -33,7 +33,7 @@ class StatisticsService
     public function getTotalStatistics() {
         return array(
             'raised_count'            => $this->getLoansRaisedCount(),
-//            'disbursed_amount'        => $this->getLoansDisbursedAmount(),
+            'disbursed_amount'        => $this->getLoansDisbursedAmount(),
 //            'average_lender_interest' => $this->getLoansRaisedAverageInterest(),
 //            'lenders_count'           => $this->getLendersCount(),
 //            'borrowers_count'         => $this->getBorrowersCount(),
@@ -61,6 +61,39 @@ class StatisticsService
                     WHERE l.status IN (:loanActive, :loanRepaid, :loanDefaulted)
                     AND l.deleted_by_admin = FALSE';
         }
+        if ($start_date) {
+            $sql .= ' AND l.accepted_at >= :acceptedAt';
+            $params['acceptedAt'] = $start_date;
+        }
+
+        return PropelDB::fetchNumber($sql, $params);
+    }
+
+    public function getLoansDisbursedAmount($countryId = null, $start_date = null)
+    {
+        $params = [
+            'loanActive' => Loan::ACTIVE,
+            'loanRepaid' => Loan::REPAID,
+            'loanDefaulted' => Loan::DEFAULTED
+        ];
+
+        $sql = 'SELECT SUM(l.disbursed_amount / r.rate)
+                FROM loans l
+                JOIN borrowers b ON l.borrower_id = b.id
+                JOIN (SELECT e.currency_code, e.rate
+                      FROM exchange_rates e
+                      JOIN (SELECT currency_code, MAX(start_date) as max_start
+                              FROM exchange_rates GROUP BY currency_code) ee
+                        ON e.currency_code = ee.currency_code AND e.start_date = ee.max_start) r
+                ON r.currency_code = l.currency_code
+                WHERE l.status IN (:loanActive, :loanRepaid, :loanDefaulted)
+                AND l.deleted_by_admin = FALSE';
+
+        if ($countryId) {
+            $sql .= ' AND b.country_id= :countryId';
+            $params['countryId'] = $countryId;
+        }
+
         if ($start_date) {
             $sql .= ' AND l.accepted_at >= :acceptedAt';
             $params['acceptedAt'] = $start_date;
