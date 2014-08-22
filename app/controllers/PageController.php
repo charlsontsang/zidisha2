@@ -3,15 +3,18 @@
 use Zidisha\Borrower\BorrowerService;
 use Zidisha\Comment\BorrowerComment;
 use Zidisha\Comment\BorrowerCommentQuery;
+use Zidisha\Statistic\StatisticsService;
 
 class PageController extends BaseController {
 
     private $borrowerService;
+    private $statisticsService;
 
-    public function __construct(BorrowerService $borrowerService)
+    public function __construct(BorrowerService $borrowerService, StatisticsService $statisticsService)
     {
 
         $this->borrowerService = $borrowerService;
+        $this->statisticsService = $statisticsService;
     }
 
 	public function getOurStory() {
@@ -94,6 +97,18 @@ class PageController extends BaseController {
 
     public function getStatistics()
     {
-        return View::make('pages.statistics');
+        $date= time();
+        $totalStats = $this->statisticsService->getStatistics('totalStatistics', $date, null);
+
+        if(!empty($totalStats)){
+            $totalStatistics = unserialize($totalStats);
+        }else{
+            $totalStatistics = $this->statisticsService->getTotalStatistics();
+//            $database->setStatistics('totalStatistics', serialize($totalStatistics), '');
+        }
+
+        return View::make('pages.statistics',
+            compact('totalStatistics')
+        );
     }
 }

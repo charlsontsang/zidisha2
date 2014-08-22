@@ -18,6 +18,8 @@ Statistics
     <br/>
     Loan projects funded: <i class="fa fa-info-circle loansFunded" data-toggle="tooltip"></i>
     <br/>
+    {{ number_format($totalStatistics['raised_count'], 0, ".", ","); }}
+    <br/><br/>
     Lenders joined:
     <br/>
     Borrowers joined:
@@ -53,10 +55,7 @@ Statistics
     <br/><br/>
 
 
-
-
 </div>
-
 @stop
 
 @section('script-footer')
