@@ -109,7 +109,7 @@
                                 @if($previousLoans != null)
                                 <div class="DemoBS2">
                                     <!-- Toogle Buttons -->
-                                    <a class="previous-loans" id="toggle-btn"
+                                    <a href="#" class="previous-loans" id="toggle-btn"
                                        data-toggle="collapse" data-target="#toggle-example">View Previous Loans</a>
 
                                     <div id="toggle-example" class="collapse">
@@ -216,7 +216,7 @@
                         @if($loan->getBorrower()->getProfile()->getAboutMeTranslation())
                         <div>
                             <p class="text-right">
-                                <a data-toggle="collapse" data-target="#toggle-aboutMe" data-toggle-text="Hide original language">
+                                <a href="#" data-toggle="collapse" data-target="#toggle-aboutMe" data-toggle-text="Hide original language">
                                     Display posting in original language
                                 </a>
                             </p>
@@ -240,7 +240,7 @@
                         @if($loan->getBorrower()->getProfile()->getAboutBusinessTranslation())
                         <div>
                             <p class="text-right">
-                                <a data-toggle="collapse" data-target="#toggle-aboutBusiness" data-toggle-text="Hide original language">
+                                <a  href="#" data-toggle="collapse" data-target="#toggle-aboutBusiness" data-toggle-text="Hide original language">
                                     Display posting in original language
                                 </a>
                             </p>
@@ -266,7 +266,7 @@
                         @if($loan->getProposalTranslation())
                         <div>
                             <p class="text-right">
-                                <a data-toggle="collapse" data-target="#toggle-proposal" data-toggle-text="Hide original language">
+                                <a  href="#" data-toggle="collapse" data-target="#toggle-proposal" data-toggle-text="Hide original language">
                                     Display posting in original language
                                 </a>
                             </p>
@@ -638,6 +638,7 @@
     $(document).ready(function () {
         $('.previous-loans').click(function () {
             $("#toggle-example").collapse('toggle');
+            return false;
         });
     });
 </script>
@@ -645,6 +646,7 @@
     $(document).ready(function () {
         $('.original-aboutMe').click(function () {
             $("#toggle-aboutMe").collapse('toggle');
+            return false;
         });
     });
 </script>
@@ -652,6 +654,7 @@
     $(document).ready(function () {
         $('.original-aboutBusiness').click(function () {
             $("#toggle-aboutBusiness").collapse('toggle');
+            return false;
         });
     });
 </script>
@@ -659,6 +662,7 @@
     $(document).ready(function () {
         $('.original-proposal').click(function () {
             $("#toggle-proposal").collapse('toggle');
+            return false;
         });
     });
     
