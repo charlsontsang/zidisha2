@@ -452,11 +452,11 @@ class LoanService
         PropelDB::transaction(function($con) use ($acceptedBids, $loan, $data) {
             $totalAmount = Money::create(0);
 
+            /** @var AcceptedBid $acceptedBid */
             foreach ($acceptedBids as $bidId => $acceptedBid) {
-                /** @var Money $acceptedAmount */
-                $acceptedAmount = $acceptedBid['acceptedAmount'];
-                /** @var Bid $bid */
-                $bid = $acceptedBid['bid'];
+                $acceptedAmount = $acceptedBid->getAcceptedAmount();
+                $bid = $acceptedBid->getBid();
+                
                 if ($acceptedAmount->isPositive()) {
                     $bid
                         ->setActive(true)

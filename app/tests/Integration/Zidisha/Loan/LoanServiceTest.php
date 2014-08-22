@@ -12,6 +12,7 @@ use Zidisha\Generate\BorrowerGenerator;
 use Zidisha\Generate\LenderGenerator;
 use Zidisha\Generate\LoanGenerator;
 use Zidisha\Lender\Lender;
+use Zidisha\Loan\AcceptedBid;
 use Zidisha\Loan\Bid;
 use Zidisha\Loan\BidQuery;
 use Zidisha\Loan\LenderRefund;
@@ -341,9 +342,9 @@ class LoanServiceTest extends \IntegrationTestCase
         $acceptedBids = $this->loanService->acceptBids($this->loan);
         $lenderInterestRate = 0;
 
+        /** @var AcceptedBid $acceptedBid */
         foreach ($acceptedBids as $acceptedBid) {
-            /** @var Bid $bid */
-            $bid = $acceptedBid['bid'];
+            $bid = $acceptedBid->getBid();
             $lenderInterestRate += $bid->getAcceptedAmount()->getAmount() * (1 + $bid->getInterestRate() / 100);
         }
         $lenderInterestRate = round($lenderInterestRate / $this->loan->getUsdAmount()->getAmount(), 2);

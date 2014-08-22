@@ -4,6 +4,7 @@ namespace Zidisha\Loan\Calculator;
 
 
 use Zidisha\Currency\Money;
+use Zidisha\Loan\AcceptedBid;
 use Zidisha\Loan\Bid;
 
 class BidsCalculator {
@@ -22,14 +23,14 @@ class BidsCalculator {
             $totalBidAmount = $totalBidAmount->add($bidAmount);
             $acceptedAmount = $missingAmount->min($bidAmount);
 
-            $acceptedBids[$bid->getId()] = compact('bid', 'acceptedAmount');
+            $acceptedBids[$bid->getId()] = new AcceptedBid($bid, $acceptedAmount);
         }
 
         // Sort by bid date, this changes the order of the transactions (amounts are the same)
         uasort(
             $acceptedBids,
-            function ($b1, $b2) {
-                return $b1['bid']->getBidAt() <= $b2['bid']->getBidAt();
+            function (AcceptedBid $b1, AcceptedBid $b2) {
+                return $b1->getBid()->getBidAt() <= $b2->getBid()->getBidAt();
             }
         );
 
@@ -40,14 +41,16 @@ class BidsCalculator {
     {
         $changedBids = [];
 
+        /** @var AcceptedBid $acceptedBid */
         foreach ($newAcceptedBids as $bidId => $acceptedBid) {
-            /** @var Money $acceptedAmount */
-            $acceptedAmount = $acceptedBid['acceptedAmount'];
-            /** @var Bid $bid */
-            $bid = $acceptedBid['bid'];
+            $acceptedAmount = $acceptedBid->getAcceptedAmount();
+            $bid = $acceptedBid->getBid();
+            
             if (isset($oldAcceptedBids[$bidId])) {
-                /** @var Money $oldAcceptedAmount */
-                $oldAcceptedAmount = $oldAcceptedBids[$bidId]['acceptedAmount'];
+                /** @var AcceptedBid $oldAcceptedBid */
+                $oldAcceptedBid = $oldAcceptedBids[$bidId];
+                $oldAcceptedAmount = $oldAcceptedBid->getAcceptedAmount();
+                
                 if ($oldAcceptedAmount->greaterThan($acceptedAmount)) {
                     $changedBids[$bidId] = [
                         'bid'            => $bid,

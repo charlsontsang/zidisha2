@@ -3,6 +3,7 @@
 namespace Unit\Zidisha\Loan;
 
 use Zidisha\Currency\Money;
+use Zidisha\Loan\AcceptedBid;
 use Zidisha\Loan\Bid;
 
 class BidsCalculatorTest extends \TestCase
@@ -79,8 +80,10 @@ class BidsCalculatorTest extends \TestCase
         $acceptedBids = $this->getAcceptedBids($bidData, $amount);
 
         foreach ($bidData as $id => $data) {
+            /** @var AcceptedBid $acceptedBid */
+            $acceptedBid = $acceptedBids[$id];
             $this->assertArrayHasKey($id, $acceptedBids);
-            $this->assertEquals(Money::create($data[2]), $acceptedBids[$id]['acceptedAmount']);
+            $this->assertEquals(Money::create($data[2]), $acceptedBid->getAcceptedAmount());
         }
     }
 
