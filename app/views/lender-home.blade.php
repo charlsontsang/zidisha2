@@ -120,7 +120,7 @@
 <div class="row">
     <div class="col-md-8 col-md-offset-2 info-page home">
         
-        @include('partials.why-zidisha')
+        @include('partials.landing-page')
 
         <p class="text-center">
             <a class="btn btn-primary btn-lg" href="{{ route('lend:index') }}">{{ $buttonText }}</a>

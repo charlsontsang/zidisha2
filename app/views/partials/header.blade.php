@@ -22,6 +22,7 @@
                         About <b class="caret"></b>
                     </a>
                     <ul class="dropdown-menu">
+                        <li><a href="{{ route('page:why-zidisha') }}">Why Zidisha?</a></li>
                         <li><a href="{{ route('page:our-story') }}">Our Story</a></li>
                         <li><a href="{{ route('page:how-it-works') }}">How It Works</a></li>
                         <li><a href="{{ route('page:trust-and-security') }}">Trust &amp; Security</a></li>
