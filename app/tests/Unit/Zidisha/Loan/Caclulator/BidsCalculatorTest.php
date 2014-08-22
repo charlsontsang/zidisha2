@@ -2,21 +2,20 @@
 
 namespace Unit\Zidisha\Loan;
 
-use ReflectionMethod;
 use Zidisha\Currency\Money;
 use Zidisha\Loan\Bid;
 
-class LoanServiceTest extends \TestCase
+class BidsCalculatorTest extends \TestCase
 {
     /**
-     * @var \Zidisha\Loan\LoanService
+     * @var \Zidisha\Loan\Calculator\BidsCalculator
      */
-    private $loanService;
+    private $bidsCalculator;
 
     public function setUp()
     {
         parent::setUp();
-        $this->loanService = $this->app->make('Zidisha\Loan\LoanService');
+        $this->bidsCalculator = $this->app->make('Zidisha\Loan\Calculator\BidsCalculator');
     }
 
     public function testGetAcceptedBids()
@@ -192,12 +191,10 @@ class LoanServiceTest extends \TestCase
      */
     protected function getAcceptedBids($bidData, $amount)
     {
-        $method = new ReflectionMethod($this->loanService, 'getAcceptedBids');
-        $method->setAccessible(true);
-
         $bids = $this->generateBid($bidData);
 
-        $acceptedBids = $method->invoke($this->loanService, $bids, Money::create($amount));
+        $acceptedBids =$this->bidsCalculator->getAcceptedBids($bids, Money::create($amount));
+        
         return $acceptedBids;
     }
 
@@ -206,10 +203,7 @@ class LoanServiceTest extends \TestCase
         $oldAcceptedBids = $this->getAcceptedBids($oldBids, $LoanAmount);
         $newAcceptedBids = $this->getAcceptedBids($newBids, $LoanAmount);
 
-        $method = new ReflectionMethod($this->loanService, 'getChangedBids');
-        $method->setAccessible(true);
-
-        $changedBids = $method->invoke($this->loanService, $oldAcceptedBids, $newAcceptedBids);
+        $changedBids = $this->bidsCalculator->getChangedBids($oldAcceptedBids, $newAcceptedBids);
 
         $this->assertCount(count($expected), $changedBids);
 

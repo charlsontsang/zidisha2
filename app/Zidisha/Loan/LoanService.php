@@ -17,6 +17,7 @@ use Zidisha\Currency\ExchangeRateQuery;
 use Zidisha\Currency\Money;
 use Zidisha\Generate\LoanGenerator;
 use Zidisha\Lender\Lender;
+use Zidisha\Loan\Calculator\BidsCalculator;
 use Zidisha\Loan\Calculator\InstallmentCalculator;
 use Zidisha\Loan\Calculator\RepaymentCalculator;
 use Zidisha\Mail\BorrowerMailer;
@@ -365,79 +366,13 @@ class LoanService
         return $bid;
     }
 
-    protected function getAcceptedBids($bids, Money $loanAmount)
+    protected function processBids($con, Loan $loan, $oldBids, $newBids)
     {
-        $zero = Money::create(0, 'USD');
-        $totalBidAmount = $zero;
-        $acceptedBids = [];
-
-        foreach ($bids as $bid) {
-            $bidAmount = $bid->getBidAmount();
-            $missingAmount = $loanAmount->subtract($totalBidAmount)->max($zero)->round(3);
-            $totalBidAmount = $totalBidAmount->add($bidAmount);
-            $acceptedAmount = $missingAmount->min($bidAmount);
-
-            $acceptedBids[$bid->getId()] = compact('bid', 'acceptedAmount');
-        }
-
-        // Sort by bid date, this changes the order of the transactions (amounts are the same)
-        uasort(
-            $acceptedBids,
-            function ($b1, $b2) {
-                return $b1['bid']->getBidAt() <= $b2['bid']->getBidAt();
-            }
-        );
-
-        return $acceptedBids;
-    }
-
-    protected function getChangedBids($oldAcceptedBids, $newAcceptedBids)
-    {
-        $changedBids = [];
-
-        foreach ($newAcceptedBids as $bidId => $acceptedBid) {
-            /** @var Money $acceptedAmount */
-            $acceptedAmount = $acceptedBid['acceptedAmount'];
-            /** @var Bid $bid */
-            $bid = $acceptedBid['bid'];
-            if (isset($oldAcceptedBids[$bidId])) {
-                /** @var Money $oldAcceptedAmount */
-                $oldAcceptedAmount = $oldAcceptedBids[$bidId]['acceptedAmount'];
-                if ($oldAcceptedAmount->greaterThan($acceptedAmount)) {
-                    $changedBids[$bidId] = [
-                        'bid'            => $bid,
-                        'acceptedAmount' => $acceptedAmount,
-                        'type'           => 'out_bid',
-                        'changedAmount'  => $oldAcceptedAmount->subtract($acceptedAmount),
-                    ];
-                } else {
-                    if ($oldAcceptedAmount->lessThan($acceptedAmount)) {
-                        $changedBids[$bidId] = [
-                            'bid'            => $bid,
-                            'acceptedAmount' => $acceptedAmount,
-                            'type'           => 'update_bid',
-                            'changedAmount'  => $acceptedAmount->subtract($oldAcceptedAmount),
-                        ];
-                    }
-                }
-            } elseif ($acceptedAmount->greaterThan(Money::create(0))) {
-                $changedBids[$bidId] = [
-                    'bid'            => $bid,
-                    'acceptedAmount' => $acceptedAmount,
-                    'type'           => 'place_bid',
-                    'changedAmount'  => $acceptedAmount,
-                ];
-            }
-        }
-
-        return $changedBids;
-    }
-
-    private function processBids($con, Loan $loan, $oldBids, $newBids)
-    {
-        $oldAcceptedBids = $this->getAcceptedBids($oldBids, $loan->getUsdAmount());
-        $newAcceptedBids = $this->getAcceptedBids($newBids, $loan->getUsdAmount());
-        $changedBids = $this->getChangedBids($oldAcceptedBids, $newAcceptedBids);
+        $bidsCalculator = new BidsCalculator();
+        
+        $oldAcceptedBids = $bidsCalculator->getAcceptedBids($oldBids, $loan->getUsdAmount());
+        $newAcceptedBids = $bidsCalculator->getAcceptedBids($newBids, $loan->getUsdAmount());
+        $changedBids = $bidsCalculator->getChangedBids($oldAcceptedBids, $newAcceptedBids);
 
         foreach ($changedBids as $bidId => $changedBid) {
             if ($changedBid['type'] == 'out_bid') {
@@ -511,7 +446,8 @@ class LoanService
             ->getOrderedBids($loan)
             ->find();
 
-        $acceptedBids = $this->getAcceptedBids($bids, $loan->getUsdAmount());
+        $bidsCalculator = new BidsCalculator();
+        $acceptedBids = $bidsCalculator->getAcceptedBids($bids, $loan->getUsdAmount());
 
         PropelDB::transaction(function($con) use ($acceptedBids, $loan, $data) {
             $totalAmount = Money::create(0);
