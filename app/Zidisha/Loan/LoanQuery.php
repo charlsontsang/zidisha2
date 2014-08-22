@@ -152,4 +152,9 @@ class LoanQuery extends BaseLoanQuery
         return false;
     }
 
+    public function filterByLoanWithHighFeedbackComment()
+    {
+        
+        return $this;
+    }
 } // LoanQuery
