@@ -577,7 +577,7 @@
         
         <div class="panel-body">
             <button id="follow-button" type="button" class="btn btn-default btn-block followBorrower" data-toggle="tooltip">
-                <i class="fa fa-fw fa-star-o"></i>
+                <i class="fa fa-fw fa-bookmark"></i>
                 @lang('lender.follow.title', ['name' => $borrower->getFirstName()])
             </button>
         </div>

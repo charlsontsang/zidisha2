@@ -121,7 +121,7 @@
 @include('partials.landing-page')
 
 <p class="text-center">
-    <a class="btn btn-primary btn-lg" href="{{ route('lend:index') }}">{{ $buttonTextBottom }}</a>
+    <a class="btn btn-default btn-lg" style="color:#2e9df7; border: 2px solid #2e9df7; font-size: 24px; font-weight: bold;" href="{{ route('lend:index') }}">{{ $buttonTextBottom }}</a>
 </p>
 
 @stop

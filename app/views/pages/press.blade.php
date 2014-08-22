@@ -15,7 +15,7 @@ Press
         
         <br/><br/>
         
-        <p><a href="{{ asset('assets/images/pages/press/tc_logo.png'); }}" target="_blank"><img src="{{ asset('assets/images/pages/press/tc_logo.png'); }}" /></a></p>
+        <p><a href="http://techcrunch.com/2014/01/23/zidisha-launches-a-kickstarter-style-micro-lending-platform-for-low-income-entrepreneurs-in-developing-countries/" target="_blank"><img src="{{ asset('assets/images/pages/press/tc_logo.png'); }}" /></a></p>
         <br/>
         <blockquote>
             <p>"By enabling the efficient flow of capital across international boundaries and wealth divisions, and by allowing lenders to connect with and send money directly to borrowers, peer-to-peer micro-lending has the ability to have an enormous impact — on a global scale."</p>
