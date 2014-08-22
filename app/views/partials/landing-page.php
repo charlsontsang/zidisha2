@@ -35,7 +35,7 @@
     </div>
 
     <div class="col-sm-3">
-      <p><a href="http://paulbuchheit.blogspot.com/2014/03/help-me-distribute-100000-to-new.html" target="_blank"><img src="assets/images/pages/press/yc_logo.png" width="100%"/></a></p>
+      <p><a href="http://paulbuchheit.blogspot.com/2014/03/help-me-distribute-100000-to-new.html" target="_blank"><img src="assets/images/pages/press/yc_logo.png" width="90%" style="padding-top: 11px; -webkit-filter: grayscale(1); filter: grayscale(1);" /></a></p>
     </div>
     <div class="col-sm-9">
         
@@ -47,7 +47,7 @@
         </blockquote>   
     </div>
     <div class="col-sm-3">
-      <p><a href="http://venturebeat.com/2014/03/25/meet-the-tech-for-good-startups-at-y-combinators-demo-day/" target="_blank"><img src="assets/images/pages/press/VB_logo.png" /></a></p>
+      <p><a href="http://venturebeat.com/2014/03/25/meet-the-tech-for-good-startups-at-y-combinators-demo-day/" target="_blank"><img src="assets/images/pages/press/VB_logo.png"  width="90%" style="padding-top: 11px; -webkit-filter: grayscale(1); filter: grayscale(1);" /></a></p>
     </div>
     <div class="col-sm-9">
         <blockquote style="text-align: left !important;">
@@ -58,7 +58,7 @@
         </blockquote> 
     </div>    
     <div class="col-sm-3">
-      <p><a href="http://techcrunch.com/2014/01/23/zidisha-launches-a-kickstarter-style-micro-lending-platform-for-low-income-entrepreneurs-in-developing-countries/" target="_blank"><img src="assets/images/pages/press/tc_logo.png" /></a></p>
+      <p><a href="http://techcrunch.com/2014/01/23/zidisha-launches-a-kickstarter-style-micro-lending-platform-for-low-income-entrepreneurs-in-developing-countries/" target="_blank"><img src="assets/images/pages/press/tc_logo.png" style="padding-top: 11px; -webkit-filter: grayscale(1); filter: grayscale(1);" width="60%" /></a></p>
     </div>
     <div class="col-sm-9">
         <blockquote style="text-align: left !important;">
