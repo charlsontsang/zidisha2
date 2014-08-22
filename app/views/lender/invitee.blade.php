@@ -133,12 +133,13 @@ You're invited!
         </p>
 
         <hr/>
-
-        @include('partials.landing-page')
-
-        <p class="text-center">
-            <a class="btn btn-primary btn-lg" href="{{ route('join') }}">{{ $buttonText }}</a>
-        </p>
     </div>
 </div>
+
+@include('partials.landing-page')
+
+<p class="text-center">
+    <a class="btn btn-primary btn-lg" href="{{ route('lend:index') }}">{{ $buttonText }}</a>
+</p>
+
 @stop
