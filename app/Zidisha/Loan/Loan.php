@@ -197,7 +197,7 @@ class Loan extends BaseLoan implements CommentReceiverInterface
 
     public function isFullyFunded()
     {
-        return !$this->getAmount()->greaterThan($this->getRaisedUsdAmount());
+        return $this->getRaisedPercentage() == 100;
     }
 
     public function isAuthorized()
