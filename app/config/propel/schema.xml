@@ -1048,9 +1048,13 @@
             <inheritance key="8" class="LoanAboutToExpireReminder"/>
             <inheritance key="9" class="NewLenderIntro"/>
             <inheritance key="10" class="CronToRepay"/>
+            <inheritance key="11" class="AutomatedLending"/>
         </column>
         <foreign-key foreignTable="users">
             <reference local="user_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="loans">
+            <reference local="loan_id" foreign="id"/>
         </foreign-key>
     </table>
 
@@ -1076,6 +1080,22 @@
         <column name="friends_count" type="INTEGER"/>
         <foreign-key foreignTable="users">
             <reference local="user_id" foreign="id"/>
+        </foreign-key>
+    </table>
+    
+    <table name="auto_lending_settings" phpName="AutoLendingSetting" namespace="Lender">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="lender_id" type="INTEGER" required="true"/>
+        <column name="preference" type="SMALLINT" required="true"/>
+        <column name="min_desired_interest" type="DECIMAL" size="10" scale="2" phpType="string" required="true"/>
+        <column name="max_desired_interest" type="DECIMAL" size="10" scale="2" phpType="string" required="true"/>
+        <column name="current_allocated" type="SMALLINT" required="false"/>
+        <column name="lender_credit" type="DECIMAL" size="10" scale="2" phpType="string" required="false"/>
+        <column name="active" type="BOOLEAN" required="true"/>
+        <column name="last_processed" type="TIMESTAMP" required="false"/>
+        <behavior name="timestampable"/>
+        <foreign-key foreignTable="lenders" phpName="Lender">
+            <reference local="lender_id" foreign="id"/>
         </foreign-key>
     </table>
 </database>

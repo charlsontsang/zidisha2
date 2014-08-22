@@ -1,6 +1,10 @@
 <?php
 
+use Zidisha\Balance\TransactionQuery;
 use Zidisha\Lender\Form\AccountPreferencesForm;
+use Zidisha\Lender\Form\AutoLendingSettingForm;
+use Zidisha\Lender\Lender;
+use Zidisha\Lender\LenderQuery;
 use Zidisha\Lender\LenderService;
 
 class LenderPreferencesController extends BaseController
@@ -9,13 +13,20 @@ class LenderPreferencesController extends BaseController
     private $accountPreferencesForm;
     private $lenderService;
 
+    /**
+     * @var AutoLendingSettingForm
+     */
+    private $autoLendingSettingForm;
+    
     public function __construct(
         AccountPreferencesForm $accountPreferencesForm,
-        LenderService $lenderService
+        LenderService $lenderService,
+        AutoLendingSettingForm $autoLendingSettingForm
     )
     {
         $this->accountPreferencesForm = $accountPreferencesForm;
         $this->lenderService = $lenderService;
+        $this->autoLendingSettingForm = $autoLendingSettingForm;
     }
     public function getAccountPreference()
     {
@@ -38,5 +49,41 @@ class LenderPreferencesController extends BaseController
             }
         }
         return Redirect::route('lender.account-preference')->withForm($form);
+    }
+    
+    public function getAutoLending()
+    {
+        $form = $this->autoLendingSettingForm;
+        /** @var Lender $lender */
+        $lender = \Auth::user()->getLender();
+        
+        $currentBalance = TransactionQuery::create()
+            ->getCurrentBalance($lender->getId());
+
+        return \View::make('lender.auto-lending-setting', compact('form', 'lender', 'currentBalance'));
+    }
+
+    public function postAutoLending($lenderId)
+    {
+        $lender = LenderQuery::create()
+            ->findOneById($lenderId);
+
+        if (!$lender) {
+            \App::abort(404, 'Lender Not found.');
+        }
+
+        $form = $this->autoLendingSettingForm;
+        $form->handleRequest(\Request::instance());
+
+        if ($form->isValid()) {
+            $data = $form->getData();
+            $this->lenderService->autoLendingSetting($lender, $data);
+
+            \Flash::success('Your settings are saved.');
+            return \Redirect::route('lender:auto-lending');
+        }
+
+        \Flash::error('Please use proper options.');
+        return \Redirect::route('lender:auto-lending');
     }
 }

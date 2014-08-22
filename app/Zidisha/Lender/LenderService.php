@@ -531,4 +531,44 @@ class LenderService
                 ->filterByUser($lender->getUser())
                 ->count();
     }
+
+    public function autoLendingSetting(Lender $lender, $data)
+    {
+        $autoLendingSetting = AutoLendingSettingQuery::create()
+            ->filterByLender($lender)
+            ->findOne();
+
+        $currentBalance = TransactionQuery::create()
+            ->getCurrentBalance($lender->getId());
+
+        if (!$autoLendingSetting) {
+            $autoLendingSetting = new AutoLendingSetting();
+            $autoLendingSetting->setLender($lender);
+        }
+
+
+        $autoLendingSetting->setActive($data['active']);
+
+        if ($data['minimumInterestRate'] == 'other') {
+            $autoLendingSetting->setMinDesiredInterest($data['minimumInterestRateOther']);
+        } else {
+            $autoLendingSetting->setMinDesiredInterest($data['minimumInterestRate']);
+        }
+
+        if ($data['maximumInterestRate'] == 'other') {
+            $autoLendingSetting->setMaxDesiredInterest($data['maximumInterestRateOther']);
+        } else {
+            $autoLendingSetting->setMaxDesiredInterest($data['maximumInterestRate']);
+        }
+
+        if ($data['currentAllocated'] == 1) {
+            $autoLendingSetting->setCurrentAllocated($data['currentAllocated']);
+        } else {
+            $autoLendingSetting->setCurrentAllocated($data['currentAllocated']);
+            $autoLendingSetting->setLenderCredit($currentBalance);
+        }
+
+        $autoLendingSetting->setPreference($data['preference']);
+        $autoLendingSetting->save();
+    }
 }
