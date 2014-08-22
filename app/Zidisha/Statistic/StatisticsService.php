@@ -35,9 +35,9 @@ class StatisticsService
             'raised_count'            => $this->getLoansRaisedCount(),
             'disbursed_amount'        => $this->getLoansDisbursedAmount(),
 //            'average_lender_interest' => $this->getLoansRaisedAverageInterest(),
-//            'lenders_count'           => $this->getLendersCount(),
-//            'borrowers_count'         => $this->getBorrowersCount(),
-//            'countries_count'         => $this->getUserCountriesCount()
+            'lenders_count'           => $this->getLendersCount(),
+            'borrowers_count'         => $this->getBorrowersCount(),
+            'countries_count'         => $this->getUserCountriesCount()
         );
     }
 
@@ -79,7 +79,6 @@ class StatisticsService
 
         $sql = 'SELECT SUM(l.disbursed_amount / r.rate)
                 FROM loans l
-                JOIN borrowers b ON l.borrower_id = b.id
                 JOIN (SELECT e.currency_code, e.rate
                       FROM exchange_rates e
                       JOIN (SELECT currency_code, MAX(start_date) as max_start
@@ -101,5 +100,12 @@ class StatisticsService
 
         return PropelDB::fetchNumber($sql, $params);
     }
+
+    public function getLendersCount()
+    {
+        return PropelDB::fetchNumber('SELECT COUNT(id) FROM lenders WHERE active = TRUE');
+    }
+
+   
 
 } 
