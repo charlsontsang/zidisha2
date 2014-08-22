@@ -13,7 +13,7 @@ Why Zidisha?
         </div>
         <h3>Direct loans that make dramatic impact.</h3>
 
-        <p>Zidisha is the first online microlending community that directly  connects lenders and borrowers — no matter the distance or disparity between them. We bypass expensive local banks and intermediaries that charge sky-high interest rates and offer a person-to-person platform that lets lenders and borrowers communicate openly and instantly.  <a href="/index.php?p=43">More than 14,000 people worldwide</a> have started using Zidisha.</p>
+        <p>Zidisha is the first online microlending community that directly connects lenders and borrowers — no matter the distance or disparity between them. We bypass expensive local banks and intermediaries that charge sky-high interest rates and offer a person-to-person platform that lets lenders and borrowers communicate openly and instantly.  <a href="#">More than 14,000 people worldwide</a> have started using Zidisha.</p>
         <br/>
 
         <h3>No middleman.</h3>
