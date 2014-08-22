@@ -91,4 +91,9 @@ class PageController extends BaseController {
     {
         return View::make('pages.team');
     }
+
+    public function getStatistics()
+    {
+        return View::make('pages.statistics');
+    }
 }
