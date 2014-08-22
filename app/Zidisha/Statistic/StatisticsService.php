@@ -106,6 +106,11 @@ class StatisticsService
         return PropelDB::fetchNumber('SELECT COUNT(id) FROM lenders WHERE active = TRUE');
     }
 
-   
+    public function getBorrowersCount()
+    {
+        return PropelDB::fetchNumber('SELECT COUNT(id) FROM borrowers WHERE active = TRUE');
+    }
+
+    
 
 } 
