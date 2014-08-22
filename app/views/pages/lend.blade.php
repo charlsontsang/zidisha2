@@ -126,7 +126,7 @@ Lend
                         </a>
                     </h2>
                     
-                    <p>
+                    <p class="text-light">
                         <i class="fa fa-fw fa-user"></i>
                         {{ $loan->getBorrower()->getName() }}
                         <br/>

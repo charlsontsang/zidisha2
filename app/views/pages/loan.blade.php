@@ -66,19 +66,6 @@
 
         <div id="tab-content" class="tab-content">
             <div class="tab-pane fade active in" id="about">
-        
-                <div class="loan-section">
-                    <div class="loan-section-title">
-                        <span class="text-light">Summary</span>
-                    </div>
-                    <div class="loan-section-content">
-                        <p class="omega">
-                            {{{ $loan->getSummary() }}}
-                        </p>
-                    </div>
-                </div>
-
-                <hr/>
                 
                 <div class="loan-section">
                     <div class="loan-section-title">
@@ -101,23 +88,23 @@
                                 <a href="#">TO DO</a>
                             </div>
                             <div class="col-sm-6">
-                                On-Time Repayments:<i class="fa fa-info-circle repayment" data-toggle="tooltip"></i>
-                                <strong>TODO</strong>
-                                <br/>
-
-                                Feedback Rating:<i class="fa fa-info-circle rating" data-toggle="tooltip"></i>
-                                <strong>TODO</strong>
-                                <br/>
-
                                 Followers: 
                                 <strong>@choice('lender.follow.count', $followersCount)</strong>
                                 <br/>
 
                                 <a id="follow-link" href="#">Follow {{{ $loan->getBorrower()->getFirstName() }}}</a>
 
+                                Feedback Rating:<i class="fa fa-info-circle rating" data-toggle="tooltip"></i>
+                                <strong>TODO</strong>
+                                <br/>
+
                                 @if($displayFeedbackComments)
                                     <p><a href="#feedback">View Lender Feedback</a></p>
                                 @endif
+
+                                On-Time Repayments:<i class="fa fa-info-circle repayment" data-toggle="tooltip"></i>
+                                <strong>TODO</strong>
+                                <br/>
                                 
                                 @if($previousLoans != null)
                                 <div class="DemoBS2">
@@ -433,7 +420,7 @@
                 </a>
             </h2>
             
-            <p>
+            <p class="text-light">
                 <i class="fa fa-fw fa-user"></i>
                 {{ $loan->getBorrower()->getName() }}
                 <br/>
