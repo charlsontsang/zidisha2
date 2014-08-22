@@ -67,16 +67,18 @@ class BorrowerService
             ->setFacebookId($data['facebookId'])
             ->setRole('borrower');
 
-        $facebookUser = new FacebookUser();
-        $facebookUser
-            ->setUser($user)
-            ->setEmail($facebookData['email'])
-            ->setAccountName($facebookData['name'])
-            ->setCity($facebookData['location'])
-            ->setBirthDate($facebookData['birthday'])
-            ->setFriendsCount($this->facebookService->getFriendCount())
-            ->setFirstPostDate($this->facebookService->getFirstPostDate());
-        $facebookUser->save();
+        if ($facebookData) {
+            $facebookUser = new FacebookUser();
+            $facebookUser
+                ->setUser($user)
+                ->setEmail($facebookData['email'])
+                ->setAccountName($facebookData['name'])
+                ->setCity($facebookData['location'])
+                ->setBirthDate($facebookData['birthday'])
+                ->setFriendsCount($this->facebookService->getFriendCount())
+                ->setFirstPostDate($this->facebookService->getFirstPostDate());
+            $facebookUser->save();   
+        }
 
         $borrower = new Borrower();
         $borrower
