@@ -10,7 +10,7 @@ use Zidisha\Loan\Bid;
 class BidsCalculator {
 
 
-    public function getAcceptedBids($bids, Money $loanAmount)
+    public function getAcceptedBids($bids, Money $loanUsdAmount)
     {
         $zero = Money::create(0, 'USD');
         $totalBidAmount = $zero;
@@ -19,7 +19,7 @@ class BidsCalculator {
         /** @var Bid $bid */
         foreach ($bids as $bid) {
             $bidAmount = $bid->getBidAmount();
-            $missingAmount = $loanAmount->subtract($totalBidAmount)->max($zero)->round(3);
+            $missingAmount = $loanUsdAmount->subtract($totalBidAmount)->max($zero)->round(3);
             $totalBidAmount = $totalBidAmount->add($bidAmount);
             $acceptedAmount = $missingAmount->min($bidAmount);
 
@@ -81,7 +81,7 @@ class BidsCalculator {
         return $changedBids;
     }
 
-    public function getLenderInterestRate($acceptedBids, Money $loanAmount)
+    public function getLenderInterestRate($acceptedBids, Money $loanUsdAmount)
     {
         $totalAmount = Money::create(0);
 
@@ -95,6 +95,6 @@ class BidsCalculator {
             }
         }
 
-        return $totalAmount->divide($loanAmount->getAmount())->round(2)->getAmount();
+        return $totalAmount->divide($loanUsdAmount->getAmount())->round(2)->getAmount();
     }
 }
