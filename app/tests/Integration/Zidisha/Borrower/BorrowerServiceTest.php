@@ -130,7 +130,7 @@ class BorrowerServiceTest extends \IntegrationTestCase
         $exchangeRate = ExchangeRateQuery::create()
             ->findCurrent($this->borrower->getCountry()->getCurrency());
         $firstLoanValue = Money::create(Setting::get('loan.firstLoanValue'), 'USD');
-        $currency = $loan->getCurrency();
+        $currency = $this->borrower->getCountry()->getCurrency();
         $firstLoanValueNative = Converter::fromUSD($firstLoanValue, $currency, $exchangeRate);
         $creditEarned = Money::create(550, $this->borrower->getCountry()->getCurrencyCode(), $exchangeRate);
 

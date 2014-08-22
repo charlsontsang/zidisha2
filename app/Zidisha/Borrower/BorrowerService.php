@@ -682,9 +682,15 @@ class BorrowerService
                 ->getLastRepaidLoan($borrower);
             $onTime = $loan ? $this->loanService->isRepaidOnTime($borrower, $loan) : true;
         }
-        $raisedUsdAmount = $loan->getRaisedUsdAmount();
-        $raisedAmount = Converter::fromUSD($raisedUsdAmount, $currency, $exchangeRate);
-        $requestedAmount = $loan->getAmount();
+        if ($loan) {
+            $raisedUsdAmount = $loan->getRaisedUsdAmount();
+            $raisedAmount = Converter::fromUSD($raisedUsdAmount, $currency, $exchangeRate);
+            $requestedAmount = $loan->getAmount();
+        } else {
+            $raisedUsdAmount = Money::create(0, 'USD');
+            $raisedAmount = Money::create(0, $currencyCode);
+            $requestedAmount = Money::create(0, $currencyCode);
+        }
 
         if ($isFirstFundedLoan) {
             // case where borrower has not yet received first loan disbursement
