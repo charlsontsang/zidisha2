@@ -80,4 +80,21 @@ class BidsCalculator {
 
         return $changedBids;
     }
+
+    public function getLenderInterestRate($acceptedBids, Money $loanAmount)
+    {
+        $totalAmount = Money::create(0);
+
+        /** @var AcceptedBid $acceptedBid */
+        foreach ($acceptedBids as $bidId => $acceptedBid) {
+            $acceptedAmount = $acceptedBid->getAcceptedAmount();
+            $bid = $acceptedBid->getBid();
+
+            if ($acceptedAmount->isPositive()) {
+                $totalAmount = $totalAmount->add($acceptedAmount->multiply(1 + $bid->getInterestRate() / 100));
+            }
+        }
+
+        return $totalAmount->divide($loanAmount->getAmount())->round(2)->getAmount();
+    }
 }

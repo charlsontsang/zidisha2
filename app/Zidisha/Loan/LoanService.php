@@ -449,9 +449,7 @@ class LoanService
         $bidsCalculator = new BidsCalculator();
         $acceptedBids = $bidsCalculator->getAcceptedBids($bids, $loan->getUsdAmount());
 
-        PropelDB::transaction(function($con) use ($acceptedBids, $loan, $data) {
-            $totalAmount = Money::create(0);
-
+        PropelDB::transaction(function($con) use ($acceptedBids, $loan, $data, $bidsCalculator) {
             /** @var AcceptedBid $acceptedBid */
             foreach ($acceptedBids as $bidId => $acceptedBid) {
                 $acceptedAmount = $acceptedBid->getAcceptedAmount();
@@ -462,11 +460,10 @@ class LoanService
                         ->setActive(true)
                         ->setAcceptedAmount($acceptedAmount);
                     $bid->save($con);
-                    $totalAmount = $totalAmount->add($acceptedAmount->multiply(1 + $bid->getInterestRate() / 100));
                 }
             }
 
-            $totalInterest = $totalAmount->divide($loan->getUsdAmount()->getAmount())->round(2)->getAmount();
+            $totalInterest = $bidsCalculator->getLenderInterestRate($acceptedBids, $loan->getUsdAmount());
             $loan
                 ->setStatus(Loan::FUNDED)
                 ->setAcceptedAt($data['acceptedAt'])
