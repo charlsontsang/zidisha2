@@ -1,6 +1,7 @@
 <?php
 
 use Zidisha\Loan\BidQuery;
+use Zidisha\Loan\Calculator\InstallmentCalculator;
 use Zidisha\Loan\Loan;
 use Zidisha\Loan\LoanQuery;
 use Zidisha\Loan\LoanService;
@@ -28,11 +29,16 @@ class BorrowerLoanController extends BaseController
             App::abort('404');
         }
 
+        $data = compact('loan', 'borrower');
+
         $bids = BidQuery::create()
             ->getOrderedBids($loan)
             ->find();
+        
+        $data['bids'] = $bids;
+        $data['calculator'] = new InstallmentCalculator($loan);
 
-        return View::make('borrower.loan.loan-information' , compact('loan', 'bids' , 'borrower'));
+        return View::make('borrower.loan.loan-information' , $data);
     }
 
     public function postAcceptBids($loanId)
