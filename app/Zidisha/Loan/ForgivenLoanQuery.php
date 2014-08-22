@@ -26,7 +26,7 @@ class ForgivenLoanQuery extends BaseForgivenLoanQuery
     {
         $total = $this
             ->select(array('total'))
-            ->withColumn('SUM(amount)', 'total')
+            ->withColumn('SUM(usd_amount)', 'total')
             ->findOne();
 
         return Money::create($total, 'USD');
@@ -36,7 +36,7 @@ class ForgivenLoanQuery extends BaseForgivenLoanQuery
     {
         $total = $this
             ->select(array('total'))
-            ->withColumn('SUM(native_amount)', 'total')
+            ->withColumn('SUM(amount)', 'total')
             ->findOne();
 
         // Todo currency
