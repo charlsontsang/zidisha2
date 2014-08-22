@@ -132,4 +132,24 @@ class LoanQuery extends BaseLoanQuery
 
         return Money::create($amount, $currencyCode);
     }
+
+    public function filterByAutoLendableLoan()
+    {
+        $autoLendedBids = BidQuery::create()
+            ->filterByLoan($this)
+            ->filterByIsAutomatedLending(true)
+            ->count();
+        
+        $loanBids = BidQuery::create()
+            ->filterByLoan($this)
+            ->filterByIsAutomatedLending(false)
+            ->count();
+        
+        if ($loanBids > $autoLendedBids) {
+            return true;
+        }
+        
+        return false;
+    }
+
 } // LoanQuery
