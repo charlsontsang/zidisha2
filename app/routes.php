@@ -62,7 +62,13 @@ Route::group(
                 'as'   => 'page:loan-feature-criteria'
             )
         );
-
+        Route::get(
+            'statistics',
+            array(
+                'uses' => 'PageController@getStatistics',
+                'as'   => 'page:statistics'
+            )
+        );
         /**
          * Routes for Authentication
          */
