@@ -6,8 +6,11 @@ use DB;
 use Illuminate\Queue\Jobs\Job;
 use Zidisha\Balance\TransactionQuery;
 use Zidisha\Currency\Money;
+use Zidisha\Lender\AutoLendingSetting;
 use Zidisha\Lender\AutoLendingSettingQuery;
 use Zidisha\Lender\LenderQuery;
+use Zidisha\Loan\Loan;
+use Zidisha\Loan\LoanQuery;
 use Zidisha\Loan\LoanService;
 use Zidisha\ScheduledJob\Map\ScheduledJobTableMap;
 
@@ -64,40 +67,29 @@ class AutomatedLending extends ScheduledJob
         $loanPreference = $autoLendingSetting->getPreference();
         $minimumInterestRate = $autoLendingSetting->getMinDesiredInterest();
         $maximumInterestRate = $autoLendingSetting->getMaxDesiredInterest();
-        
-        
         $loansForLending = $this->getLoansForLending($loanPreference);
-        
         
         if($autoLendingSetting->getCurrentAllocated() == 0 ) {
             $totalAmountForAutomaticLending = $currentBalanceOfLender->subtract($autoLendingSetting->getLenderCredit());
-
-            if ($totalAmountForAutomaticLending->greaterThan($maximumAllowedAmountForAutomaticLending)) {
-                $numberOfLoans = floor($totalAmountForAutomaticLending->divide($maximumAllowedAmountForAutomaticLending)->getAmount());
-                
-                if ($numberOfLoans > 0) {
-                    for ($i = 0; $i <= $numberOfLoans; $i++) {
-//                        $data = [
-//                            'amount'       => $totalAmountForAutomaticLending,
-//                            'interestRate' => 34,
-//                        ];
-                    }
-                }
-            }
-
         } else {
             $totalAmountForAutomaticLending = $currentBalanceOfLender;
-            if ($totalAmountForAutomaticLending->greaterThan($maximumAllowedAmountForAutomaticLending)) {
-                $numberOfLoans = floor($totalAmountForAutomaticLending->divide($maximumAllowedAmountForAutomaticLending)->getAmount());
-                
-                if ($numberOfLoans > 0) {
-                    for ($i = 0; $i <= $numberOfLoans; $i++) {
+        }
 
-                    }
+        if ($totalAmountForAutomaticLending->greaterThan($maximumAllowedAmountForAutomaticLending)) {
+            $numberOfLoans = floor($totalAmountForAutomaticLending->divide($maximumAllowedAmountForAutomaticLending)->getAmount());
+            
+            if ($numberOfLoans > 0 && $loansForLending) {
+                foreach ($loansForLending as $loan) {
+                    $data = [
+                        'amount'             => $totalAmountForAutomaticLending,
+                        'interestRate'       => $maximumInterestRate,
+                        'isAutomatedLending' => true
+                    ];
+                    
+                    $loanService->placeBid($loan, $lender, $data);
                 }
             }
         }
-        
     }
     
     private function getLoansForLending($loanPreference)
