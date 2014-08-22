@@ -1104,7 +1104,7 @@
             <reference local="user_id" foreign="id"/>
         </foreign-key>
     </table>
-    
+
     <table name="auto_lending_settings" phpName="AutoLendingSetting" namespace="Lender">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="lender_id" type="INTEGER" required="true"/>
@@ -1118,6 +1118,17 @@
         <behavior name="timestampable"/>
         <foreign-key foreignTable="lenders" phpName="Lender">
             <reference local="lender_id" foreign="id"/>
+        </foreign-key>
+    </table>
+
+    <table name="statistics" phpName="Statistics" namespace="Statistic">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="name" type="VARCHAR" required="true"/>
+        <column name="value" type="LONGVARCHAR" required="true"/>
+        <column name="date" type="TIMESTAMP" required="true"/>
+        <column name="country_id" type="INTEGER" required="true"/>
+        <foreign-key foreignTable="countries">
+            <reference local="country_id" foreign="id"/>
         </foreign-key>
     </table>
 </database>
