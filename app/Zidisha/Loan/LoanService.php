@@ -183,7 +183,7 @@ class LoanService
         return $loanIndex;
     }
 
-    public function searchLoans($conditions = array(), $page = 1, $limit = 20)
+    public function searchLoans($conditions = array(), $page = 1, $limit = 18)
     {
         $conditions += ['search' => false];
         $search = $conditions['search'];
