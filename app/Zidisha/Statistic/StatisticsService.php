@@ -41,9 +41,8 @@ class StatisticsService
         );
     }
 
-    public function getLoansRaisedCount($countryId = null, $start_date = null) {
-        global $db;
-
+    public function getLoansRaisedCount($countryId = null, $start_date = null)
+    {
         $params = [
             'loanActive' => Loan::ACTIVE,
             'loanRepaid' => Loan::REPAID,
