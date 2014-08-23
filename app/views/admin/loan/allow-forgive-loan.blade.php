@@ -15,9 +15,9 @@ Allow Forgive Loans
 <div>
     {{ BootstrapForm::open(['route' => ['admin:post:allow-forgive-loan', $country->getId()]]) }}
     
-    {{ BootstrapForm::select('country', $borrowerCountries, $country->getCountryCode(), ['label' => 'Select Country', 'id' => 'countrySelect']) }}
+    {{ BootstrapForm::select('countryCode', $borrowerCountries, $country->getCountryCode(), ['label' => 'Select Country', 'id' => 'countrySelect']) }}
 
-    {{ BootstrapForm::select('loan', $loans, null,['label' => 'Select Country']) }}
+    {{ BootstrapForm::select('loanId', $loans, null,['label' => 'Select Country']) }}
 
     {{ BootstrapForm::textarea('comment', null, ['label' => 'Comment']) }}
 
