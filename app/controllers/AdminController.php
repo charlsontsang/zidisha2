@@ -682,4 +682,31 @@ class AdminController extends BaseController
         Flash::error('error occured.');
         return Redirect::route('admin:repayments-refunds');
     }
+
+    public function getLoanForgivenessIndex()
+    {
+        $page = Input::get('page', 1);
+
+        $countryCode = Input::get('countryCode', 'KE');
+
+        $country = CountryQuery::create()
+            ->findOneByCountryCode($countryCode);
+
+        if (!$country) {
+            \App::abort(404, 'wrong country code.');    
+        }
+        
+        $borrowerCountries = CountryQuery::create()
+            ->filterByBorrowerCountry(true)
+            ->find();
+        
+        $forgivenLoans = \Zidisha\Loan\ForgivenLoanQuery::create()
+            ->useBorrowerQuery()
+                ->filterByCountry($country)
+            ->endUse()
+            ->orderByCreatedAt('DESC')
+            ->paginate($page, 10);
+        
+        return View::make('admin.loan.loan-forgiveness-index', compact('forgivenLoans', 'borrowerCountries', 'countryCode'));                
+    }
 }
