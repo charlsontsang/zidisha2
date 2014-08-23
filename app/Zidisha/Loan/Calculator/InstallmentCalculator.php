@@ -102,11 +102,19 @@ class InstallmentCalculator
         if ($this->loan->isWeeklyInstallment()) {
             $date->addWeeks($n);
         } else {
-            if ($date->day == 31) {
-                $date->firstOfMonth()->addMonths($n)->lastOfMonth();
+            $day = $date->day;
+            $hour = $date->hour;
+            $minute = $date->minute;
+            $second = $date->second;
+            $date->firstOfMonth()->addMonths($n);
+            
+            if ($day >= $date->copy()->lastOfMonth()->day) {
+                $date->lastOfMonth();
             } else {
-                $date->addMonths($n);
+                $date->addDays($day - 1);
             }
+            
+            $date->setTime($hour, $minute, $second);
         }
 
         return $date;

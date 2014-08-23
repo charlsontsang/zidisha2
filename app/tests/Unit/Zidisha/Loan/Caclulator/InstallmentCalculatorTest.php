@@ -2,6 +2,7 @@
 
 namespace Unit\Zidisha\Loan;
 
+use Carbon\Carbon;
 use \DateTime;
 use Zidisha\Borrower\Borrower;
 use Zidisha\Currency\Money;
@@ -98,6 +99,27 @@ class InstallmentCalculatorTest extends \TestCase
         return $loan;
     }
 
+    public function testNthInstallmentDate()
+    {
+        $loan = new Loan();
+        $calculator = new InstallmentCalculator($loan);
+
+        $loan->setDisbursedAt(Carbon::createFromDate(2014, 12, 5));
+        $this->assertEquals(Carbon::createFromDate(2015, 1, 5), $calculator->nthInstallmentDate(1));
+        $this->assertEquals(Carbon::createFromDate(2015, 5, 5), $calculator->nthInstallmentDate(5));
+
+        $loan->setDisbursedAt(Carbon::createFromDate(2015, 1, 31));
+        $this->assertEquals(Carbon::createFromDate(2015, 2, 28), $calculator->nthInstallmentDate(1));
+        $this->assertEquals(Carbon::createFromDate(2015, 3, 31), $calculator->nthInstallmentDate(2));
+        $this->assertEquals(Carbon::createFromDate(2015, 4, 30), $calculator->nthInstallmentDate(3));
+
+        $loan->setDisbursedAt(Carbon::createFromDate(2015, 12, 31));
+        $this->assertEquals(Carbon::createFromDate(2016, 2, 29), $calculator->nthInstallmentDate(2));
+
+        $loan->setDisbursedAt(Carbon::createFromDate(2016, 2, 29));
+        $this->assertEquals(Carbon::createFromDate(2017, 2, 28), $calculator->nthInstallmentDate(12));
+    }
+    
     public function testGenerateLoanInstallments()
     {
         $loans = [
