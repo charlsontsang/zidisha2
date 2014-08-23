@@ -693,6 +693,16 @@ Route::group(
                     'forgiven-loans',
                     ['uses' => 'AdminController@getLoanForgivenessIndex', 'as' => 'admin:forgiven-loan:index']
                 );
+
+                Route::get(
+                    'allow-forgive-loan',
+                    ['uses' => 'AdminController@getForgiveLoan', 'as' => 'admin:allow-forgive-loan']
+                );
+
+                Route::post(
+                    'allow-forgive-loan',
+                    ['uses' => 'AdminController@postForgiveLoan', 'as' => 'admin:post:allow-forgive-loan']
+                );
             }
         );
 
