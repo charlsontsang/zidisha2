@@ -8638,6 +8638,19 @@ a.link-dark {
     width: 83.33333333%;
   }
 }
+.loan-section p {
+  line-height: 23px;
+}
+.loan-section-content p,
+.media-body p {
+  line-height: 23px;
+}
+@media (min-width: 768px) {
+  .loan-section-content p,
+  .media-body p {
+    line-height: 25px;
+  }
+}
 @media (min-width: 768px) {
   .social-icons {
     float: right;
