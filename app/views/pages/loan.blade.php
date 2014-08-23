@@ -418,11 +418,13 @@
         @else
         <div class="panel panel-default panel-body">
         @endif
-            <h2>
-                <a href="{{ route('loan:index', $loan->getId()) }}">
-                    {{ $loan->getSummary() }}
-                </a>
-            </h2>
+            <div class="loan-title">
+                <{{ $tag }}>
+                    <a href="{{ route('loan:index', $loan->getId()) }}">
+                        {{ $loan->getSummary() }}
+                    </a>
+                </{{ $tag }}>
+            </div>
             
             <p class="text-light">
                 <i class="fa fa-fw fa-user"></i>

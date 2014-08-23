@@ -97,11 +97,18 @@
     padding: 0 15px;
   }
 }
-.loan-side h2 {
+.loan-title {
+  height: 100px;
+}
+.loan-side h2, .loan-side p {
   margin-top: 0;
 }
 .loan-side h2 a {
   color: #333;
+  font-size: 24px;
+  @media (min-width: @screen-md-min) {
+    font-size: 28px;
+  }
 }
 .loan-side h2 a:hover, .loan-side h2 a:active {
   color: @brand-primary;
@@ -114,9 +121,12 @@
   }
 }
 .loan-side .panel-default {
-  width: 309px;
+  width: 240px;
   padding: 15px;
   margin-bottom: 0;
+  @media (min-width: @screen-md-min) {
+    width: 309px;
+  }
 }
 .progress {
   margin-bottom: 8px;
@@ -124,7 +134,7 @@
 }
 .lend-form .text-light {
   @media (min-width: @screen-sm-min) {
-    font-size: 12px;
+    font-size: 14px;
   }
   @media (min-width: @screen-md-min) {
     font-size: 16px;
@@ -152,11 +162,15 @@
   }
 }
 #follow-button {
+  width: 208px;
   position: absolute;
-  top: 453px;
-  width: 278px;
+  top: 437px;
   height: 36px;
   z-index: -1;
+  @media (min-width: @screen-md-min) {
+    width: 278px;
+    top: 453px;
+  }
   @media (max-width: @screen-xs-max) {
     display: none;
   }
