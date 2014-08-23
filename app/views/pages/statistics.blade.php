@@ -14,32 +14,32 @@ Statistics
     What the whole Zidisha community has achieved so far
     <br/><br/>
 
-    Loan money raised:<i class="fa fa-info-circle raisedAmount" data-toggle="tooltip"></i>
+    <p>Loan money raised:<i class="fa fa-info-circle raisedAmount" data-toggle="tooltip"></i>
     <br/>
-    <p>
     USD {{ number_format($totalStatistics['disbursed_amount'], 0, ".", ","); }}
     </p>
     <br/>
-    Loan projects funded: <i class="fa fa-info-circle loansFunded" data-toggle="tooltip"></i>
+    <p>Loan projects funded: <i class="fa fa-info-circle loansFunded" data-toggle="tooltip"></i>
     <br/>
     {{ number_format($totalStatistics['raised_count'], 0, ".", ","); }}
-    <br/><br/>
-    Lenders joined:
+    </p>
+    <br/>
+    <p>Lenders joined:
     <br/>
     {{ number_format($totalStatistics['lenders_count'], 0, ".", ","); }}
-    <br/><br/>
-    Borrowers joined:
+    </p><br/>
+    <p>Borrowers joined:
     <br/>
     {{ number_format($totalStatistics['borrowers_count'], 0, ".", ",") }}
-    <br/><br/>
-    Total members:
+    </p><br/>
+    <p>Total members:
     <br/>
     {{ number_format($totalStatistics['lenders_count'] + $totalStatistics['borrowers_count'], 0, ".", ",") }}
-    <br/><br/>
-    Countries represented by Zidisha members:
+    </p><br/>
+    <p>Countries represented by Zidisha members:
     <br/>
     {{ number_format($totalStatistics['countries_count'], 0, ".", ",") }}
-    <br/><br/>
+    </p><br/>
 
     <h4>Lending Statistics</h4>
     Use the dropdowns below to get filtered performance statistics for all loans funded since our founding in 2009.
