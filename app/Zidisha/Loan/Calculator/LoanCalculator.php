@@ -61,10 +61,8 @@ class LoanCalculator
         }
         
         $totalAmount = $amount->add($interest);
-        // TODO +1 for grace period, is grace period included in max period?
-        $installmentAmount = $totalAmount->divide($period + 1)->ceil();
         
-        return $installmentAmount;
+        return $totalAmount->divide($period)->ceil();
     }
 
     public function minimumPeriod(Money $amount)
@@ -73,13 +71,10 @@ class LoanCalculator
         
         if ($amountUsd <= 200) {
             $threshold = Setting::get('loan.loanIncreaseThresholdLow');
-
         } elseif ($amountUsd <= 1000) {
             $threshold = Setting::get('loan.loanIncreaseThresholdMid');
-
         } elseif ($amountUsd <= 3000) {
             $threshold = Setting::get('loan.loanIncreaseThresholdHigh');
-
         } else {
             $threshold = Setting::get('loan.loanIncreaseThresholdTop');
         }
