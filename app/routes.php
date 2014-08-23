@@ -691,17 +691,17 @@ Route::group(
                 
                 Route::get(
                     'forgiven-loans',
-                    ['uses' => 'AdminController@getLoanForgivenessIndex', 'as' => 'admin:forgiven-loan:index']
+                    ['uses' => 'AdminLoanForgivenessController@getLoanForgivenessIndex', 'as' => 'admin:forgiven-loan:index']
                 );
 
                 Route::get(
                     'allow-forgive-loan',
-                    ['uses' => 'AdminController@getForgiveLoan', 'as' => 'admin:allow-forgive-loan']
+                    ['uses' => 'AdminLoanForgivenessController@getForgiveLoan', 'as' => 'admin:allow-forgive-loan']
                 );
 
                 Route::post(
                     'allow-forgive-loan/{countryId}',
-                    ['uses' => 'AdminController@postForgiveLoan', 'as' => 'admin:post:allow-forgive-loan']
+                    ['uses' => 'AdminLoanForgivenessController@postForgiveLoan', 'as' => 'admin:post:allow-forgive-loan']
                 );
             }
         );
