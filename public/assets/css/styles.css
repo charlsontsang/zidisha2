@@ -8084,13 +8084,14 @@ body {
 .info-page ol li {
   margin-top: 0;
   font-size: 16px;
+  line-height: 23px;
 }
 @media (min-width: 768px) {
   .info-page p,
   .info-page ul li,
   .info-page ol li {
     font-size: 18px;
-    line-height: 27px;
+    line-height: 28px;
     font-weight: 300;
   }
 }
@@ -8396,7 +8397,7 @@ body {
 }
 .carousel-inner h3 {
   font-size: 36px;
-  line-height: 42px;
+  line-height: 40px;
   font-weight: 900;
   margin: 0;
   padding: 0 0 20px 0;
@@ -8437,7 +8438,21 @@ body {
 @media (min-width: 768px) {
   .home p {
     font-size: 20px;
+    line-height: 28px;
   }
+}
+@media (min-width: 768px) {
+  .home p.lead {
+    line-height: 31px;
+  }
+}
+@media (max-width: 767px) {
+  .home h1 {
+    font-size: 28px;
+  }
+}
+.home h3 {
+  margin-top: 0;
 }
 .home .fa {
   font-size: 50px;
@@ -8535,6 +8550,7 @@ body {
 }
 .loan h2 {
   font-size: 16px;
+  line-height: 23px;
   font-weight: bold;
 }
 .loan h2 a {

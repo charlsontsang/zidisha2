@@ -29,7 +29,6 @@
     </div>
     
     <div class="col-sm-12">
-      <br/>
       <p class="lead"><a href="/why-zidisha"><strong>Learn more >></strong></a></p>
       <hr/>
     </div>
@@ -70,7 +69,6 @@
     </div>
 
     <div class="col-sm-12">
-      <br/>
       <p class="lead"><a href="/press"><strong>More press >></strong></a></p>
       <hr/>
     </div>
