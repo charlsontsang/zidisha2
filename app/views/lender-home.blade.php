@@ -103,7 +103,7 @@
 @include('partials.landing-page')
 
 <p class="text-center">
-    <a class="btn btn-default btn-lg btn-home" href="{{ route('lend:index') }}">{{ $buttonTextBottom }}</a>
+    <a class="btn btn-home btn-lg" href="{{ route('lend:index') }}">{{ $buttonTextBottom }}</a>
 </p>
 
 @stop
