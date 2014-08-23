@@ -700,7 +700,7 @@ Route::group(
                 );
 
                 Route::post(
-                    'allow-forgive-loan',
+                    'allow-forgive-loan/{countryId}',
                     ['uses' => 'AdminController@postForgiveLoan', 'as' => 'admin:post:allow-forgive-loan']
                 );
             }
