@@ -168,7 +168,7 @@
                         @endif
                         <div class="row">
                             <div class="col-sm-6">
-                                @if($loan->getStatus() >= Zidisha\Loan\Loan::ACTIVE)
+                                @if($loan->isDisbursed())
                                     Amount: 
                                     <strong>${{ $loan->getDisbursedAmount() }}</strong>
                                     <br/>
@@ -195,6 +195,7 @@
                                     <strong>TO DO</strong>
                                 @endif
                             </div>
+                            @if($loan->isDisbursed())
                             <div class="col-sm-6">     
                                 Lender interest:</b><i class="fa fa-info-circle totalInterest" data-toggle="tooltip"></i> 
                                 <strong>${{ $totalInterest }} TO DO</strong> 
@@ -205,6 +206,7 @@
                                 Total cost of loan:<i class="fa fa-info-circle repaidAmount" data-toggle="tooltip"></i>
                                 <strong>${{ $totalInterest->add($serviceFee)->getAmount() }}</strong>
                             </div>
+                            @endif
                         </div>
                     </div>
                 </div>

@@ -284,4 +284,9 @@ class Loan extends BaseLoan implements CommentReceiverInterface
         }
         return $timeLeft;
     }
+
+    public function isDisbursed()
+    {
+        return $this->getStatus() >= Loan::ACTIVE;
+    }
 }

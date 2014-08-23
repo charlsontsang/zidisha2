@@ -109,9 +109,11 @@ class LoanController extends BaseController
             ->orderByBidAt()
             ->find();
 
-        $calculator = new \Zidisha\Loan\Calculator\InstallmentCalculator($loan);
-        $totalInterest = $calculator->totalInterest();
-        $serviceFee = $calculator->serviceFee();
+        if ($loan->isDisbursed()) {
+            $calculator = new \Zidisha\Loan\Calculator\InstallmentCalculator($loan);
+            $totalInterest = $calculator->totalInterest();
+            $serviceFee = $calculator->serviceFee();
+        }
         $previousLoans = $this->borrowerService->getPreviousLoans($borrower, $loan);
 
         $placeBidForm = new PlaceBidForm($loan);
