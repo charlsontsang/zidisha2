@@ -28,7 +28,7 @@ class InstallmentCalculator
     
     public function period(Money $installmentAmount)
     {
-        $maxAnnualInterest = $this->amount()->multiply($this->loan->getMaxInterestRate() / 100);
+        $maxAnnualInterest = $this->amount()->multiply($this->loan->getMaxInterestRate())->divide(100);
 
         if ($this->loan->isWeeklyInstallment()) {
             $maxInstallmentInterest = $maxAnnualInterest->divide(52);
@@ -38,9 +38,8 @@ class InstallmentCalculator
 
         $minInstallmentAmount = $installmentAmount->subtract($maxInstallmentInterest);
 
-        $period = ceil($this->amount()->getAmount() / $minInstallmentAmount->getAmount());
-
-        return $period;
+        // The period includes one grace week/month
+        return ceil($this->amount()->ratio($minInstallmentAmount));
     }
 
     public function annualInterestRateRatio()
