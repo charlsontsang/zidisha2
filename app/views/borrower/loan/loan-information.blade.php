@@ -47,7 +47,7 @@
                                     <strong>@lang('borrower.your-loans.final-lender-interest-rate'):</strong>
                                 </td>
                                 <td>
-                                    5%
+                                    {{ $lenderInterestRate }}%
                                 </td>
                             </tr>
     
