@@ -225,6 +225,9 @@ return [
         ],
         'sendwithus.borrower-again-repayment-instruction-template-id' => [
             'label' => 'Borrower again repayment instructions template id'
+        ],
+        'sendwithus.lender-loan-forgiveness-mail-template-id' => [
+            'label' => 'Lender loan forgiveness template id'
         ]
     ]
 ];
