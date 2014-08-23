@@ -413,7 +413,11 @@
     </div>
 
     <div class="col-sm-4 loan-side" style="padding-left:0;">
+        @if($loan->isOpen())       
         <div class="panel panel-default panel-body sidenav">
+        @else
+        <div class="panel panel-default panel-body">
+        @endif
             <h2>
                 <a href="{{ route('loan:index', $loan->getId()) }}">
                     {{ $loan->getSummary() }}
