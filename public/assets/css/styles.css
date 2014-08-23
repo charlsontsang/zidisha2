@@ -8453,11 +8453,16 @@ body {
   filter: grayscale(1);
 }
 .btn-home {
+  font-size: 20px;
   background-color: #fff;
   color: #2e9df7;
   border: 2px solid #2e9df7;
-  font-size: 24px;
   font-weight: bold;
+}
+@media (min-width: 768px) {
+  .btn-home {
+    font-size: 24px;
+  }
 }
 .btn-home:hover {
   background-color: #2e9df7;

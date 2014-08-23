@@ -75,8 +75,8 @@
       <hr/>
     </div>
   
-    <div class="col-md-10 col-md-offset-1 lead">
-      <h2>Enjoy connecting with remarkable people and helping them reach their goals, regardless of their location.</h2>
+    <div class="col-md-8 col-md-offset-2">
+      <h2 class="lead">Enjoy connecting with remarkable people around the world and helping them reach their goals.</h2>
     </div>
   </div>
 </div>

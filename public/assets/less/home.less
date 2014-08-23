@@ -17,11 +17,14 @@
   filter: grayscale(1);
 }
 .btn-home {
+  font-size: 20px;
   background-color: #fff;
   color: @brand-primary; 
   border: 2px solid @brand-primary; 
-  font-size: 24px; 
   font-weight: bold;
+  @media (min-width: @screen-sm-min) {
+    font-size: 24px;
+  }
 }
 .btn-home:hover {
   background-color: @brand-primary;
