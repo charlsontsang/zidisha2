@@ -8,6 +8,7 @@ use Zidisha\Admin\Form\FeatureFeedbackForm;
 use Zidisha\Admin\Form\FilterBorrowers;
 use Zidisha\Admin\Form\FilterLenders;
 use Zidisha\Admin\Form\FilterLoans;
+use Zidisha\Admin\Form\ForgiveLoanForm;
 use Zidisha\Admin\Form\SettingsForm;
 use Zidisha\Admin\Form\WithdrawalRequestsForm;
 use Zidisha\Admin\Setting;
@@ -56,6 +57,10 @@ class AdminController extends BaseController
     private $enterRepaymentForm;
     private $importService;
     private $repaymentService;
+    /**
+     * @var ForgiveLoanForm
+     */
+    private $forgiveLoanForm;
 
     public function  __construct(
         LenderQuery $lenderQuery,
@@ -77,7 +82,8 @@ class AdminController extends BaseController
         PayPalService $payPalService,
         EnterRepaymentForm $enterRepaymentForm,
         ImportService$importService,
-        RepaymentService $repaymentService
+        RepaymentService $repaymentService,
+        ForgiveLoanForm $forgiveLoanForm
     ) {
         $this->lenderQuery = $lenderQuery;
         $this->$borrowerQuery = $borrowerQuery;
@@ -99,6 +105,7 @@ class AdminController extends BaseController
         $this->enterRepaymentForm = $enterRepaymentForm;
         $this->importService = $importService;
         $this->repaymentService = $repaymentService;
+        $this->forgiveLoanForm = $forgiveLoanForm;
     }
 
     public
@@ -735,5 +742,30 @@ class AdminController extends BaseController
             ->toKeyValue('id', 'summary');
         
         return View::make('admin.loan.allow-forgive-loan', compact('borrowerCountries', 'country', 'loans'));
+    }
+
+    public function postForgiveLoan($countryId)
+    {
+        $country = CountryQuery::create()
+            ->findOneById($countryId);
+
+        if (!$country) {
+            \App::abort(404, 'wrong country code.');
+        }
+        
+        $form = $this->forgiveLoanForm;
+        $form->handleRequest(Request::instance());
+        
+        if ($form->isValid()) {
+            $data = $form->getData();
+            
+            $this->loanService->saveForgiveLoan($data);
+            
+            \Flash::success('Loan forgiven.');
+            return Redirect::route('admin:allow-forgive-loan');
+        }
+
+        \Flash::error('Please enter valid inputs');
+        return Redirect::back();
     }
 }
