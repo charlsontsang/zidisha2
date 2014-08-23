@@ -235,4 +235,16 @@ class LenderMailer
             ]
         );                
     }
+
+    public function sendAllowLoanForgivenessMail(Loan $loan, Bid $bid)
+    {
+        $this->mailer->send(
+            'emails.hero',
+            [
+                'to'         => $bid->getLender(),
+                'subject'    => 'Loan forgiveness mail',
+                'templateId' => \Setting::get('sendwithus.lender-loan-forgiveness-mail-template-id'),
+            ]
+        );
+    }
 }
