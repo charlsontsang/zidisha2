@@ -120,11 +120,13 @@ Lend
                         </div>
                     @endif
                     
-                    <h2 class="alpha" style="height:2em;">
-                        <a href="{{ route('loan:index', $loan->getId()) }}">
-                            {{ $loan->getSummary() }}
-                        </a>
-                    </h2>
+                    <div class="lend-title">
+                        <h2 class="alpha" style="height:2em;">
+                            <a href="{{ route('loan:index', $loan->getId()) }}">
+                                {{ $loan->getSummary() }}
+                            </a>
+                        </h2>
+                    </div>
                     
                     <p class="text-light">
                         <i class="fa fa-fw fa-user"></i>

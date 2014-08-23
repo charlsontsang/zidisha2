@@ -131,7 +131,7 @@ class LoanController extends BaseController
         $repaymentSchedule = $this->repaymentService->getRepaymentSchedule($loan);
         $repaymentScore = $this->loanService->getOnTimeRepaymentScore($borrower);
 
-        if (strlen($loan->getSummary() <= 60)) {
+        if (strlen($loan->getSummary()) <= 60) {
             $tag = 'h2';
         } else {
             $tag = 'h3';

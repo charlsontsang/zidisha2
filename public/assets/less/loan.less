@@ -18,12 +18,6 @@
     vertical-align: middle;
   }
 }
-.loan-titlebar p, {
-  margin-bottom: 0;
-  @media (max-width: @screen-xs-max) {
-    line-height: 2em;
-  }
-}
 .loan-titlebar {
   @media (min-width: @screen-sm-min) {
     display: none;
@@ -99,20 +93,19 @@
 }
 .loan-title {
   height: 100px;
+  overflow: hidden;
 }
-.loan-side h2, .loan-side p {
+.loan-side h2, .loan-side h3, .loan-side p {
   margin-top: 0;
 }
-.loan-side h2 a {
-  color: #333;
+.loan-side h2 {
   font-size: 24px;
   @media (min-width: @screen-md-min) {
     font-size: 28px;
   }
 }
-.loan-side h2 a:hover, .loan-side h2 a:active {
-  color: @brand-primary;
-  text-decoration: none;
+.loan-side h3 {
+  line-height: 30px;
 }
 .lend-form {
   margin: 0;

@@ -5,32 +5,23 @@
 @stop
 
 @section('content-top')
-    <div class="page-section loan-titlebar">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <h1>
-                        {{{ $loan->getSummary() }}}
-                    </h1>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-3 col-md-2">
-                    <p>
+    <div class="container page-section loan-titlebar" style="padding-bottom: 5px;">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="loan-side">
+                    <div class="loan-title">
+                        <h3>
+                            {{ $loan->getSummary() }}
+                        </h3>
+                    </div>
+                    
+                    <p class="text-light">
                         <i class="fa fa-fw fa-user"></i>
                         {{ $loan->getBorrower()->getName() }}
-                    </p>
-                </div>
-                <div class="col-sm-4 col-md-5">
-                    <p>
+                        <br/>
                         <i class="fa fa-fw fa-map-marker"></i>
                         {{ $loan->getBorrower()->getProfile()->getCity() }},
                         {{ $loan->getBorrower()->getCountry()->getName() }}
-                    </p>
-                </div>
-                <div class="col-sm-5 col-md-5"> <!-- TO DO: add social share scripts -->
-                    <p>
-                         <img class="social-icons" src="{{ '/assets/images/test-photos/share.png' }}"/>
                     </p>
                 </div>
             </div>
@@ -420,9 +411,7 @@
         @endif
             <div class="loan-title">
                 <{{ $tag }}>
-                    <a href="{{ route('loan:index', $loan->getId()) }}">
-                        {{ $loan->getSummary() }}
-                    </a>
+                    {{ $loan->getSummary() }}
                 </{{ $tag }}>
             </div>
             
