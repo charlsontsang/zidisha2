@@ -45,11 +45,22 @@ Statistics
     Use the dropdowns below to get filtered performance statistics for all loans funded since our founding in 2009.
     <br/><br/>
     Display data for loans disbursed within:
+    <br/>
+    <div class="btn btn-default btn-filter" target="#filter-time-periods">
+        {{ $selectedTimePeriod ? $selectedTimePeriod : 'All time' }}
+        <i class="fa fa-fw fa-caret-down"></i>
+    </div>
     <br/>Display data for loans in:
+    <br/>
+    <div class="btn btn-default btn-filter" target="#filter-countries">
+        {{ $selectedCountry ? $selectedCountry->getName() : 'All Countries' }}
+        <i class="fa fa-fw fa-caret-down"></i>
+    </div>
     <br/>
     Loan money raised: <i class="fa fa-info-circle raisedAmountFiltered" data-toggle="tooltip"></i>
     <br/>
-    Loan projects funded: <i class="fa fa-info-circle loansFundedFiltered" data-toggle="tooltip"></i>
+    <p>Loan projects funded: <i class="fa fa-info-circle loansFundedFiltered" data-toggle="tooltip"></i></p>
+    <p>{{ number_format($lendingStatistics['raised_count'], 0, ".", ","); }}</p>
     <br/>
     Average lender interest: <i class="fa fa-info-circle lenderInterest" data-toggle="tooltip"></i>
     <br/>
@@ -65,8 +76,44 @@ Statistics
     <br/>
     Want to dive deeper? You can see the individual loan reports that provided the raw data for these statistics <a href="https://www.zidisha.org/index.php?p=114">here, TODO</a>.
     <br/><br/>
+</div>
+
+<div id="filter-countries" class="hide">
+    <ul class="list-unstyled">
+        @if($selectedCountry == null)
+        <strong>All Countries</strong>
+        @else
+        <li>
+            <a href="{{ route('page:statistics', ['country' => 'everywhere'] + $routeParams) }}"> All Countries </a>
+        </li>
+        @endif
+        @foreach($countries as $country)
+        <li>
+            @if($selectedCountry == $country)
+            <strong>{{ $country->getName()}}</strong>
+            @else
+                <a href="{{ route('page:statistics', ['country' => $country->getSlug()] + $routeParams) }}">
+                {{ $country->getName()}} </a>
+            @endif
+        </li>
+        @endforeach
+    </ul>
+</div>
 
 
+<div id="filter-time-periods" class="hide">
+    <ul class="list-unstyled">
+        @foreach($timePeriods as $timePeriod)
+        <li>
+            @if($selectedTimePeriod == $timePeriod)
+            <strong>{{ $timePeriod }}</strong>
+            @else
+            <a href="{{ route('page:statistics', ['timePeriod' => $timePeriod] + $routeParams) }}"> {{
+                $timePeriod }} </a>
+            @endif
+        </li>
+        @endforeach
+    </ul>
 </div>
 @stop
 
