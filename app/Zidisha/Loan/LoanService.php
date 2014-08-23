@@ -17,6 +17,7 @@ use Zidisha\Currency\ExchangeRateQuery;
 use Zidisha\Currency\Money;
 use Zidisha\Generate\LoanGenerator;
 use Zidisha\Lender\Lender;
+use Zidisha\Loan\Base\BidQuery;
 use Zidisha\Loan\Calculator\BidsCalculator;
 use Zidisha\Loan\Calculator\InstallmentCalculator;
 use Zidisha\Loan\Calculator\RepaymentCalculator;
@@ -902,5 +903,21 @@ class LoanService
             ->setComment($data['comment'])
             ->setBorrower($borrower)
             ->save();
+
+        $bids = BidQuery::create()
+            ->filterByLoan($loan)
+            ->filterByActive(true)
+            ->find();
+
+        foreach ($bids as $bid) {
+            $forgivenLoanShare = new ForgivenLoanShare();
+            $forgivenLoanShare->setLender($bid->getLender());
+            $forgivenLoanShare->setBorrower($borrower);
+            $forgivenLoanShare->setAmount($bid->getAcceptedAmount());
+            $forgivenLoanShare->setUsdamount($bid->getAcceptedAmount());
+            $forgivenLoanShare->save();
+
+            $this->lenderMailer->sendAllowLoanForgivenessMail($loan, $bid);
+        }
     }
 }
