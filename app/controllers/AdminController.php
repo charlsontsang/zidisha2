@@ -709,4 +709,31 @@ class AdminController extends BaseController
         
         return View::make('admin.loan.loan-forgiveness-index', compact('forgivenLoans', 'borrowerCountries', 'countryCode'));                
     }
+
+    public function getForgiveLoan()
+    {
+        $countryCode = Input::get('countryCode', 'KE');
+
+        $country = CountryQuery::create()
+            ->findOneByCountryCode($countryCode);
+
+        if (!$country) {
+            \App::abort(404, 'wrong country code.');
+        }
+        
+        $borrowerCountries = CountryQuery::create()
+            ->filterByBorrowerCountry(true)
+            ->find()
+            ->toKeyValue('countryCode', 'name');
+
+        $loans = LoanQuery::create()
+            ->useBorrowerQuery()
+                ->filterByCountry($country)
+            ->endUse()
+            ->filterByStatus(Loan::ACTIVE)
+            ->find()
+            ->toKeyValue('id', 'summary');
+        
+        return View::make('admin.loan.allow-forgive-loan', compact('borrowerCountries', 'country', 'loans'));
+    }
 }
