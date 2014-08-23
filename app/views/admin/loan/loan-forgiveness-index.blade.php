@@ -42,7 +42,9 @@ Forgiven Loans
                     {{ $loan->getLoanId() }}
                 </td>
                 <td>
-                    //TODO comment
+                   <p>
+                        {{{ $loan->getComment() }}}
+                   </p> 
                 </td>
                 <td>
                     {{ $loan->getCreatedAt()->format('M DD, YY') }}
