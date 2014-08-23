@@ -109,9 +109,6 @@
 }
 .lend-form {
   margin: 0;
-  @media (max-width: @screen-xs-max) {
-    display: none;
-  }
 }
 .loan-side .panel-default {
   width: 240px;
@@ -119,6 +116,9 @@
   margin-bottom: 0;
   @media (min-width: @screen-md-min) {
     width: 309px;
+  }
+  @media (max-width: @screen-xs-max) {
+    display: none;
   }
 }
 .progress {
@@ -147,9 +147,19 @@
 .lend-form .form-group {
   margin: 20px 0 8px 0;
 }
+.lend-form button {
+  font-size: 18px;
+}
 
-#mobile-lend-button {
+#mobile-lend-btn {
+  font-size: 20px;
+  letter-spacing: 1px;
   opacity: 0.9;
+  width: 100%;
+  position: fixed;
+  top: auto;
+  bottom: 0;
+  border-radius: 1px;
   @media (min-width: @screen-sm-min) {
     display: none;
   }

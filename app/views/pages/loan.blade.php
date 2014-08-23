@@ -442,9 +442,6 @@
 
             @if($loan->isOpen())
 
-            <!-- TO DO: this button should open the lend form full screen on a mobile device -->
-            <button id="mobile-lend-button" type="button" class="btn btn-primary btn-block">Lend</button>
-
             <div class="lend-form">
                 <div id="lend-form-initial">
                     @include('partials/loan-progress', [ 'loan' => $loan ])
@@ -586,6 +583,11 @@
 
         </div>
     </div>
+</div>
+
+
+<div class="row">
+    <button id="mobile-lend-btn" type="button" class="btn btn-primary btn-block">Lend</button>
 </div>
 @stop
 
