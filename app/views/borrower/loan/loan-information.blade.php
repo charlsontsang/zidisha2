@@ -38,7 +38,7 @@
                                     <strong>@lang('borrower.your-loans.repayment-period'):</strong>
                                 </td>
                                 <td>
-                                    {{ $loan->getInstallmentCount() }}
+                                    {{ $loan->getPeriod() }}
                                 </td>
                             </tr>
     
@@ -80,7 +80,7 @@
                                     {{ $calculator->totalInterest() }}
                                     ({{ Lang::get($loan->isWeeklyInstallment() ? 'borrower.your-loans.interest-rate-for-weeks' : 'borrower.your-loans.interest-rate-for-months', [
                                         'interestRate' => 16,
-                                        'period' => $loan->getInstallmentCount(),
+                                        'period' => $loan->getPeriod(),
                                     ]) }})
                                 </td>
                             </tr>

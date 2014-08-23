@@ -26,7 +26,7 @@
 
    <p><strong> {{ \Lang::get('borrower.loan-application.publish-loan.monthly-repayment-amount') }} : </strong> {{ $calculator->installmentAmount() }} </p> <br>
 
-   <p><strong> {{ \Lang::get('borrower.loan-application.publish-loan.repayment-period') }} : </strong> {{ $loan->getInstallmentCount() }} </p> <br>
+   <p><strong> {{ \Lang::get('borrower.loan-application.publish-loan.repayment-period') }} : </strong> {{ $loan->getPeriod() }} </p> <br>
 
     <p><strong> {{ \Lang::get('borrower.loan-application.publish-loan.maximum-interest-and-transaction-fees') }} : </strong>  {{ $calculator->totalInterest() }} </p> <br>
 

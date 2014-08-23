@@ -102,7 +102,7 @@
         <column name="extra_days" type="INTEGER"/>
         <column name="currency_code" type="VARCHAR" size="3" required="true"/>
         <column name="installment_period" type="ENUM" valueSet="monthly, weekly"/>
-        <column name="installment_count" type="INTEGER"/>
+        <column name="period" type="INTEGER"/>
         <column name="accept_bids_note" type="LONGVARCHAR" required="false"/>
         <column name="sift_science_score" type="DECIMAL" required="false"/>
         <column name="authorized_at" type="TIMESTAMP" required="false"/>

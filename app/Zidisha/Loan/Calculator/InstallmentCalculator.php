@@ -26,7 +26,7 @@ class InstallmentCalculator
         return $this->loan->getStatus() >= Loan::ACTIVE ? $this->loan->getDisbursedAmount() : $this->loan->getAmount();
     }
     
-    public function calculateInstallmentCount(Money $installmentAmount)
+    public function period(Money $installmentAmount)
     {
         $maxYearlyInterest = $this->amount()->multiply($this->loan->getMaxInterestRate() / 100);
 
@@ -38,19 +38,19 @@ class InstallmentCalculator
 
         $minInstallmentAmount = $installmentAmount->subtract($maxInstallmentInterest);
 
-        $installmentCount = ceil($this->amount()->getAmount() / $minInstallmentAmount->getAmount());
+        $period = ceil($this->amount()->getAmount() / $minInstallmentAmount->getAmount());
 
-        return $installmentCount;
+        return $period;
     }
 
     public function yearlyInterestRateRatio()
     {
         if ($this->loan->isWeeklyInstallment()) {
-            $totalTimeLoanInWeeks = $this->loan->getInstallmentCount() + round($this->loan->getExtraDays() / 7, 4);
+            $totalTimeLoanInWeeks = $this->loan->getPeriod() + round($this->loan->getExtraDays() / 7, 4);
             return $totalTimeLoanInWeeks / 52;
         }
 
-        $totalTimeLoanInMonths = $this->loan->getInstallmentCount() + round($this->loan->getExtraDays() / 30, 4);
+        $totalTimeLoanInMonths = $this->loan->getPeriod() + round($this->loan->getExtraDays() / 30, 4);
         return $totalTimeLoanInMonths / 12;
     }
 
@@ -78,7 +78,7 @@ class InstallmentCalculator
 
     public function installmentAmount()
     {
-        return $this->totalAmount()->divide($this->loan->getInstallmentCount());
+        return $this->totalAmount()->divide($this->loan->getPeriod());
     }
 
     public function installmentGraceDate()

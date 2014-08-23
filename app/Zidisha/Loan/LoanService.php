@@ -139,9 +139,9 @@ class LoanService
 
         $calculator = new InstallmentCalculator($loan);
         $installmentAmount = Money::create($data['installmentAmount'], $currencyCode);
-        $installmentCount = $calculator->calculateInstallmentCount($installmentAmount);
+        $period = $calculator->period($installmentAmount);
         
-        $loan->setInstallmentCount($installmentCount);
+        $loan->setPeriod($period);
         
         return $loan;
     }
@@ -738,7 +738,7 @@ class LoanService
     {
         $calculator = new Calculator\InstallmentCalculator($loan);
         $installmentAmount = $calculator->installmentAmount();
-        $installmentCount = $loan->getInstallmentCount();
+        $period = $loan->getPeriod();
 
         $installments = [];
 
@@ -751,7 +751,7 @@ class LoanService
 
         $installments[] = $graceInstallment;
 
-        for ($count = 1; $count <= $installmentCount; $count++) {
+        for ($count = 1; $count <= $period; $count++) {
             $installment = new Installment();
             $installment
                 ->setLoan($loan)

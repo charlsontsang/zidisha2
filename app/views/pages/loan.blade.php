@@ -176,7 +176,7 @@
                                     <strong>{{ $loan->getDisbursedAt()->format('M j, Y') }}</strong>
                                     <br/>
                                     Repayment period:<i class="fa fa-info-circle repaymentPeriod" data-toggle="tooltip"></i>
-                                    <strong>{{ $loan->getInstallmentCount() }}
+                                    <strong>{{ $loan->getPeriod() }}
                                     @if($loan->getInstallmentPeriod() == 0)
                                     months
                                     @else

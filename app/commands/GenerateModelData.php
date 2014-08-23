@@ -1151,11 +1151,11 @@ class GenerateModelData extends Command
 
         $calculator = new InstallmentCalculator($loan);
         $installmentAmount = $calculator->installmentAmount();
-        $installmentCount = $loan->getInstallmentCount();
+        $period = $loan->getPeriod();
 
-        for ($count = 1; $count <= $installmentCount; $count++) {
+        for ($count = 1; $count <= $period; $count++) {
 
-            if ($count == $installmentCount) {
+            if ($count == $period) {
                 $installment = new Installment();
                 $installment
                     ->setLoan($loan)
