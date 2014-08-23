@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('page-title')
-Allow Forgive Loans
+Allow loan forgiveness
 @stop
 
 @section('content')

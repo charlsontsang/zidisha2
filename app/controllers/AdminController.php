@@ -759,7 +759,7 @@ class AdminController extends BaseController
         if ($form->isValid()) {
             $data = $form->getData();
             
-            $this->loanService->saveForgivenLoan($data);
+            $this->loanService->allowLoanForgiveness($data);
             
             \Flash::success('Loan forgiven.');
             return Redirect::route('admin:allow-forgive-loan');

@@ -887,7 +887,7 @@ class LoanService
         return Carbon::instance($installment->getPaidDate())->diffInDays($installment->getDueDate()) <= $repaymentThreshold;
     }
 
-    public function saveForgivenLoan($data)
+    public function allowLoanForgiveness($data)
     {
         $loanId = $data['loanId'];
         
