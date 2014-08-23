@@ -59,10 +59,12 @@ Statistics
     <br/>
     Loan money raised: <i class="fa fa-info-circle raisedAmountFiltered" data-toggle="tooltip"></i>
     <br/>
-    <p>Loan projects funded: <i class="fa fa-info-circle loansFundedFiltered" data-toggle="tooltip"></i></p>
-    <p>{{ number_format($lendingStatistics['raised_count'], 0, ".", ","); }}</p>
+    <p>Loan projects funded: <i class="fa fa-info-circle loansFundedFiltered" data-toggle="tooltip"></i><br/>
+    {{ number_format($lendingStatistics['raised_count'], 0, ".", ","); }}</p>
     <br/>
-    Average lender interest: <i class="fa fa-info-circle lenderInterest" data-toggle="tooltip"></i>
+    <p>Average lender interest: <i class="fa fa-info-circle lenderInterest" data-toggle="tooltip"></i>
+    <br/>
+    {{ number_format($lendingStatistics['average_lender_interest'], 1, ".", ","); }}</p>
     <br/>
     Principal repaid: <i class="fa fa-info-circle principalRepaid" data-toggle="tooltip"></i>
     <br/>

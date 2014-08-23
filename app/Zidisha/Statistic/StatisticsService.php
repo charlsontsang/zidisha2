@@ -130,7 +130,7 @@ class StatisticsService
         return $statistics;
     }
 
-    private function getLoansRaisedAverageInterest($country, $startDate)
+    private function getLoansRaisedAverageInterest($countryId, $startDate)
     {
         $params = [
             'loanActive' => Loan::ACTIVE,
@@ -139,24 +139,24 @@ class StatisticsService
             'loanFunded' => Loan::FUNDED
         ];
 
-        if ($country) {
-            $q = 'SELECT AVG(l.finalrate) FROM loans AS l
+        if ($countryId) {
+            $sql = 'SELECT AVG(l.lender_interest_rate) FROM loans AS l
                   JOIN borrowers AS b ON l.borrower_id = b.id
                   WHERE l.status IN (:loanActive, :loanRepaid, :loanDefaulted, :loanFunded)
                   AND l.deleted_by_admin = FALSE
                   AND b.country_id= :countryId';
-            $params[] = $country;
+            $params['countryId'] = $countryId;
         } else {
-            $q = 'SELECT AVG(l.finalrate) FROM loanapplic AS l
-                  WHERE l.active IN (?, ?, ?, ?)
-                    AND adminDelete = 0';
+            $sql = 'SELECT AVG(l.lender_interest_rate) FROM loans AS l
+                  WHERE l.status IN (:loanActive, :loanRepaid, :loanDefaulted, :loanFunded)
+                    AND l.deleted_by_admin = FALSE';
         }
         if ($startDate) {
-            $q .= ' AND l.AcceptDate >= ?';
-            $params[] = $startDate;
+            $sql .= ' AND l.accepted_at >= :acceptedAt';
+            $params['acceptedAt'] = $startDate;
         }
 
-        return $db->getOne($q, $params);
+        return PropelDB::fetchNumber($sql, $params);
     }
 
 } 
