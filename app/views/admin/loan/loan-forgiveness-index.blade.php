@@ -9,6 +9,9 @@ Forgiven Loans
     <h1>Forgiven Loans</h1>
 </div>
 
+<a href="{{route('admin:allow-forgive-loan')}}"> Allow Forgive Loan</a>
+<hr/>
+
 <ul class="nav nav-tabs" role="tablist">
     @foreach($borrowerCountries as $borrowerCountry)
         <li class="{{ $borrowerCountry->getCountryCode() == $countryCode ? 'active' : '' }}">
