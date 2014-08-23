@@ -678,7 +678,8 @@ class LoanService
                 ->calculateExtraDays($disbursedAt)
                 ->setServiceFeeRate(Setting::get('loan.serviceFeeRate'));
 
-            $installments = $this->generateLoanInstallments($loan);
+            $calculator = new InstallmentCalculator($loan);
+            $installments = $calculator->generateLoanInstallments($loan);
 
             $totalAmount = Money::create(0, $loan->getCurrency());
             /** @var Installment $installment */
@@ -732,36 +733,6 @@ class LoanService
         }
 
         return $lenderRefunds;
-    }
-
-    public function generateLoanInstallments(Loan $loan)
-    {
-        $calculator = new Calculator\InstallmentCalculator($loan);
-        $installmentAmount = $calculator->installmentAmount();
-        $period = $loan->getPeriod();
-
-        $installments = [];
-
-        $graceInstallment = new Installment();
-        $graceInstallment
-            ->setLoan($loan)
-            ->setBorrower($loan->getBorrower())
-            ->setAmount(Money::create(0, $loan->getCurrencyCode()))
-            ->setDueDate($calculator->installmentGraceDate());
-
-        $installments[] = $graceInstallment;
-
-        for ($count = 1; $count <= $period; $count++) {
-            $installment = new Installment();
-            $installment
-                ->setLoan($loan)
-                ->setBorrower($loan->getBorrower())
-                ->setAmount($installmentAmount)
-                ->setDueDate($calculator->nthInstallmentDate($count));
-            $installments[] = $installment;
-        }
-
-        return $installments;
     }
 
     public function updateLoanCategories(Loan $loan, $data)

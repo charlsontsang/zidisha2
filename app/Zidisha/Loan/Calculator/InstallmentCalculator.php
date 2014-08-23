@@ -5,6 +5,7 @@ namespace Zidisha\Loan\Calculator;
 use Carbon\Carbon;
 use Zidisha\Currency\Money;
 use Zidisha\Loan\Loan;
+use Zidisha\Repayment\Installment;
 
 class InstallmentCalculator
 {
@@ -42,27 +43,39 @@ class InstallmentCalculator
         return ceil($this->amount()->ratio($minInstallmentAmount));
     }
 
-    public function annualInterestRateRatio()
+    protected function multiplyWithAnnualInterestRateRatio(Money $money)
     {
         if ($this->loan->isWeeklyInstallment()) {
-            $totalTimeLoanInWeeks = $this->loan->getPeriod() + round($this->loan->getExtraDays() / 7, 4);
-            return $totalTimeLoanInWeeks / 52;
+            $periodLength = 7;
+            $periodsInYear = 52;
+        } else {
+            $periodLength = 30;
+            $periodsInYear = 12;
         }
-
-        $totalTimeLoanInMonths = $this->loan->getPeriod() + round($this->loan->getExtraDays() / 30, 4);
-        return $totalTimeLoanInMonths / 12;
+        
+        $totalTimeLoanInInstallmentPeriods = bcadd(
+            $this->loan->getPeriod(),
+            bcdiv($this->loan->getExtraDays(), $periodLength, 4),
+            4
+        );
+        
+        return $money
+            ->multiply($totalTimeLoanInInstallmentPeriods)
+            ->divide($periodsInYear);
     }
 
     public function lenderInterest()
     {
-        return $this->amount()
-            ->multiply($this->annualInterestRateRatio() * $this->loan->getLenderInterestRate() / 100);
+        return $this->multiplyWithAnnualInterestRateRatio($this->amount())
+            ->multiply($this->loan->getLenderInterestRate())
+            ->divide(100);
     }
 
     public function serviceFee()
     {
-        return $this->amount()
-            ->multiply($this->annualInterestRateRatio() * $this->loan->getServiceFeeRate() / 100);
+        return $this->multiplyWithAnnualInterestRateRatio($this->amount())
+            ->multiply($this->loan->getServiceFeeRate())
+            ->divide(100);
     }
 
     public function totalInterest()
@@ -73,11 +86,6 @@ class InstallmentCalculator
     public function totalAmount()
     {
         return $this->amount()->add($this->totalInterest());
-    }
-
-    public function installmentAmount()
-    {
-        return $this->totalAmount()->divide($this->loan->getPeriod());
     }
 
     public function installmentGraceDate()
@@ -102,5 +110,38 @@ class InstallmentCalculator
         }
 
         return $date;
+    }
+
+    public function generateLoanInstallments()
+    {
+        $totalAmount = $this->totalAmount();
+        $period = $this->loan->getPeriod();
+        $installmentAmount = $totalAmount->divide($period)->floor();
+
+        $installments = [];
+
+        for ($count = 0; $count <= $period; $count++) {
+            $installment = new Installment();
+            $installment
+                ->setLoan($this->loan)
+                ->setBorrower($this->loan->getBorrower());
+            
+            if ($count == 0) {
+                $installment
+                    ->setAmount(Money::create(0, $this->loan->getCurrencyCode()))
+                    ->setDueDate($this->installmentGraceDate());
+            } elseif ($count == $period) {
+                $installment
+                    ->setAmount($totalAmount->subtract($installmentAmount->multiply($period-1)))
+                    ->setDueDate($this->nthInstallmentDate($count));
+            } else {
+                $installment
+                    ->setAmount($installmentAmount)
+                    ->setDueDate($this->nthInstallmentDate($count));
+            }
+            $installments[] = $installment;
+        }
+
+        return $installments;
     }
 }

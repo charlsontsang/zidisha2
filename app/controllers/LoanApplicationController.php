@@ -115,7 +115,7 @@ class LoanApplicationController extends BaseController
             ->setLenderInterestRate(Setting::get('loan.maximumLenderInterestRate'));
 
         $calculator = new InstallmentCalculator($loan);
-        $installments = $this->loanService->generateLoanInstallments($loan);
+        $installments = $calculator->generateLoanInstallments($loan);
 
         return $this->stepView('publish', compact('data', 'calculator', 'installments', 'loan'));
     }

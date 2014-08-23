@@ -24,7 +24,7 @@
 
    <p><strong> {{ \Lang::get('borrower.loan-application.publish-loan.maximum-interest-rate') }} : </strong> {{ $loan->getMaxInterestRate() }} %  </p> <br>
 
-   <p><strong> {{ \Lang::get('borrower.loan-application.publish-loan.monthly-repayment-amount') }} : </strong> {{ $calculator->installmentAmount() }} </p> <br>
+   <p><strong> {{ \Lang::get('borrower.loan-application.publish-loan.monthly-repayment-amount') }} : </strong> {{ $data['installmentAmount'] }} </p> <br>
 
    <p><strong> {{ \Lang::get('borrower.loan-application.publish-loan.repayment-period') }} : </strong> {{ $loan->getPeriod() }} </p> <br>
 
@@ -69,6 +69,7 @@
             <tr>
                 <td> <strong>{{ \Lang::get('borrower.loan-application.publish-loan.table.total-repayment') }}</strong> </td>
                 <td> <strong> {{  $calculator->totalAmount() }} </strong> </td>
+                <td></td>
             </tr>
         </tbody>
     </table>

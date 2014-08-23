@@ -1150,7 +1150,7 @@ class GenerateModelData extends Command
 
 
         $calculator = new InstallmentCalculator($loan);
-        $installmentAmount = $calculator->installmentAmount();
+        $installmentAmount = $calculator->totalAmount()->divide($loan->getPeriod());
         $period = $loan->getPeriod();
 
         for ($count = 1; $count <= $period; $count++) {
