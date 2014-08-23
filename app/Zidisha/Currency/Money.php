@@ -258,7 +258,7 @@ class Money
      *
      * @return Money
      */
-    public function truncate($decimalDigits = null)
+    public function truncate($decimalDigits = 0)
     {
         return $this->round($decimalDigits, self::ROUND_TRUNCATE);
     }
@@ -270,7 +270,7 @@ class Money
      *
      * @return Money
      */
-    public function ceil($decimalDigits = null)
+    public function ceil($decimalDigits = 0)
     {
         return $this->round($decimalDigits, self::ROUND_CEILING);
     }
@@ -282,7 +282,7 @@ class Money
      *
      * @return Money
      */
-    public function floor($decimalDigits = null)
+    public function floor($decimalDigits = 0)
     {
         return $this->round($decimalDigits, self::ROUND_FLOOR);
     }
@@ -295,7 +295,7 @@ class Money
      *
      * @return Money
      */
-    public function round($decimalDigits = null, $mode = self::ROUND_HALF_AWAY_FROM_ZERO)
+    public function round($decimalDigits = 0, $mode = self::ROUND_HALF_AWAY_FROM_ZERO)
     {
         if (null === $decimalDigits) {
             $decimalDigits = $this->currency->getDecimalDigits();
