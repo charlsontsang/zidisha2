@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use Zidisha\Borrower\BorrowerService;
 use Zidisha\Comment\BorrowerComment;
 use Zidisha\Comment\BorrowerCommentQuery;
@@ -108,10 +109,10 @@ class PageController extends BaseController {
             'all_time'         => 'All time',
         );
         $start_date_values = array(
-            'one_month_ago'    => strtotime('1 month ago'),
-            'three_months_ago' => strtotime('3 months ago'),
-            'six_months_ago'   => strtotime('6 months ago'),
-            'year_ago'         => strtotime('1 year ago'),
+            'one_month_ago'    => Carbon::now()->subMonths(1),
+            'three_months_ago' => Carbon::now()->subMonths(3),
+            'six_months_ago'   => Carbon::now()->subMonths(6),
+            'year_ago'         => Carbon::now()->subYear(),
             'all_time'         => null,
         );
         $countries = CountryQuery::create()
@@ -129,7 +130,7 @@ class PageController extends BaseController {
         $selectedStartDate = array_get($start_date_values, $selectedTimePeriod);
         $selectedCountry = $this->countryQuery->findOneBySlug($country);
         if ($country) {
-            $totalStats = $this->statisticsService->getStatistics('totalStatistics', $selectedTimePeriod, null);
+            $totalStats = $this->statisticsService->getStatistics('totalStatistics', $selectedStartDate, null);
             if ($selectedCountry) {
                 $routeParams['country'] = $selectedCountry->getSlug();
                 $lendingStats = $this->statisticsService->getStatistics('lendingStatistics-' . $timePeriod, $selectedStartDate, $selectedCountry->getId());

@@ -3,13 +3,14 @@
 namespace Zidisha\Statistic;
 
 
+use Carbon\Carbon;
 use Zidisha\Loan\Loan;
 use Zidisha\Vendor\PropelDB;
 
 class StatisticsService
 {
 
-    public function getStatistics($name, $date, $countryId=null)
+    public function getStatistics($name, Carbon $date, $countryId=null)
     {
         $maxDate = StatisticQuery::create()
             ->filterByCountryId($countryId)
@@ -18,7 +19,7 @@ class StatisticsService
             ->withColumn('max(date)', 'maxDate')
             ->findOne();
 
-        if($date-$maxDate> 24*60*60){
+        if($date->getTimestamp()-$maxDate> 24*60*60){
             return false;
         }else{
             return StatisticQuery::create()

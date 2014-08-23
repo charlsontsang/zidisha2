@@ -42,21 +42,20 @@ Statistics
     </p><br/>
 
     <h4>Lending Statistics</h4>
-    Use the dropdowns below to get filtered performance statistics for all loans funded since our founding in 2009.
-    <br/><br/>
-    Display data for loans disbursed within:
+    <p>Use the dropdowns below to get filtered performance statistics for all loans funded since our founding in 2009.</p>
     <br/>
+    Display data for loans disbursed within:
     <div class="btn btn-default btn-filter" target="#filter-time-periods">
-        {{ $selectedTimePeriod ? $selectedTimePeriod : 'All time' }}
+        {{ $selectedTimePeriod ? array_get($timePeriods, $selectedTimePeriod) : 'All time' }}
         <i class="fa fa-fw fa-caret-down"></i>
     </div>
-    <br/>Display data for loans in:
     <br/>
+    <br/>Display data for loans in:
     <div class="btn btn-default btn-filter" target="#filter-countries">
         {{ $selectedCountry ? $selectedCountry->getName() : 'All Countries' }}
         <i class="fa fa-fw fa-caret-down"></i>
     </div>
-    <br/>
+    <br/><br/>
     Loan money raised: <i class="fa fa-info-circle raisedAmountFiltered" data-toggle="tooltip"></i>
     <br/>
     <p>Loan projects funded: <i class="fa fa-info-circle loansFundedFiltered" data-toggle="tooltip"></i><br/>
@@ -105,12 +104,12 @@ Statistics
 
 <div id="filter-time-periods" class="hide">
     <ul class="list-unstyled">
-        @foreach($timePeriods as $timePeriod)
+        @foreach($timePeriods as $key=>$timePeriod)
         <li>
             @if($selectedTimePeriod == $timePeriod)
             <strong>{{ $timePeriod }}</strong>
             @else
-            <a href="{{ route('page:statistics', ['timePeriod' => $timePeriod] + $routeParams) }}"> {{
+            <a href="{{ route('page:statistics', ['timePeriod' => $key] + $routeParams) }}"> {{
                 $timePeriod }} </a>
             @endif
         </li>
