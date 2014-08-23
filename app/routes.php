@@ -688,6 +688,11 @@ Route::group(
                     'test-sms',
                     ['uses' => 'SmsTesterController@postSms', 'as' => 'admin:sms:post:sms']
                 );
+                
+                Route::get(
+                    'forgiven-loans',
+                    ['uses' => 'AdminController@getLoanForgivenessIndex', 'as' => 'admin:forgiven-loan:index']
+                );
             }
         );
 
