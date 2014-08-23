@@ -28,12 +28,12 @@ class InstallmentCalculator
     
     public function period(Money $installmentAmount)
     {
-        $maxYearlyInterest = $this->amount()->multiply($this->loan->getMaxInterestRate() / 100);
+        $maxAnnualInterest = $this->amount()->multiply($this->loan->getMaxInterestRate() / 100);
 
         if ($this->loan->isWeeklyInstallment()) {
-            $maxInstallmentInterest = $maxYearlyInterest->divide(52);
+            $maxInstallmentInterest = $maxAnnualInterest->divide(52);
         } else {
-            $maxInstallmentInterest = $maxYearlyInterest->divide(12);
+            $maxInstallmentInterest = $maxAnnualInterest->divide(12);
         }
 
         $minInstallmentAmount = $installmentAmount->subtract($maxInstallmentInterest);
@@ -43,7 +43,7 @@ class InstallmentCalculator
         return $period;
     }
 
-    public function yearlyInterestRateRatio()
+    public function annualInterestRateRatio()
     {
         if ($this->loan->isWeeklyInstallment()) {
             $totalTimeLoanInWeeks = $this->loan->getPeriod() + round($this->loan->getExtraDays() / 7, 4);
@@ -57,13 +57,13 @@ class InstallmentCalculator
     public function lenderInterest()
     {
         return $this->amount()
-            ->multiply($this->yearlyInterestRateRatio() * $this->loan->getLenderInterestRate() / 100);
+            ->multiply($this->annualInterestRateRatio() * $this->loan->getLenderInterestRate() / 100);
     }
 
     public function serviceFee()
     {
         return $this->amount()
-            ->multiply($this->yearlyInterestRateRatio() * $this->loan->getServiceFeeRate() / 100);
+            ->multiply($this->annualInterestRateRatio() * $this->loan->getServiceFeeRate() / 100);
     }
 
     public function totalInterest()
