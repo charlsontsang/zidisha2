@@ -63,7 +63,7 @@ Route::group(
             )
         );
         Route::get(
-            'statistics',
+            'statistics/{timePeriod?}/{country?}',
             array(
                 'uses' => 'PageController@getStatistics',
                 'as'   => 'page:statistics'
