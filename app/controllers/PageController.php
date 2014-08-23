@@ -3,18 +3,21 @@
 use Zidisha\Borrower\BorrowerService;
 use Zidisha\Comment\BorrowerComment;
 use Zidisha\Comment\BorrowerCommentQuery;
+use Zidisha\Country\CountryQuery;
 use Zidisha\Statistic\StatisticsService;
 
 class PageController extends BaseController {
 
     private $borrowerService;
     private $statisticsService;
+    private $countryQuery;
 
-    public function __construct(BorrowerService $borrowerService, StatisticsService $statisticsService)
+    public function __construct(BorrowerService $borrowerService, StatisticsService $statisticsService, CountryQuery $countryQuery)
     {
 
         $this->borrowerService = $borrowerService;
         $this->statisticsService = $statisticsService;
+        $this->countryQuery = $countryQuery;
     }
 
 	public function getOurStory() {
@@ -95,10 +98,45 @@ class PageController extends BaseController {
         return View::make('pages.team');
     }
 
-    public function getStatistics()
+    public function getStatistics($timePeriod = null, $country = null)
     {
-        $date= time();
-        $totalStats = $this->statisticsService->getStatistics('totalStatistics', $date, null);
+        $timePeriods = array(
+            'one_month_ago'    => 'Past 1 month',
+            'three_months_ago' => 'Past 3 months',
+            'six_months_ago'   => 'Past 6 months',
+            'year_ago'         => 'Past year',
+            'all_time'         => 'All time',
+        );
+        $start_date_values = array(
+            'one_month_ago'    => strtotime('1 month ago'),
+            'three_months_ago' => strtotime('3 months ago'),
+            'six_months_ago'   => strtotime('6 months ago'),
+            'year_ago'         => strtotime('1 year ago'),
+            'all_time'         => null,
+        );
+        $countries = CountryQuery::create()
+            ->filterByBorrowerCountry(true);
+        $routeParams = [
+            'timePeriod' => 'all time',
+            'country' => 'everywhere'
+        ];
+        $selectedTimePeriod = $timePeriod;
+        if (!$timePeriod) {
+            $selectedTimePeriod = 'year_ago';
+        } else {
+            $routeParams['timePeriod'] = $timePeriod;
+        }
+        $selectedStartDate = array_get($start_date_values, $selectedTimePeriod);
+        $selectedCountry = $this->countryQuery->findOneBySlug($country);
+        if ($country) {
+            $totalStats = $this->statisticsService->getStatistics('totalStatistics', $selectedTimePeriod, null);
+            if ($selectedCountry) {
+                $routeParams['country'] = $selectedCountry->getSlug();
+                $lendingStats = $this->statisticsService->getStatistics('lendingStatistics-' . $timePeriod, $selectedStartDate, $selectedCountry->getId());
+            } else {
+                $lendingStats = $this->statisticsService->getStatistics('lendingStatistics-' . $timePeriod, $selectedStartDate, null);
+            }
+        }
 
         if(!empty($totalStats)){
             $totalStatistics = unserialize($totalStats);
@@ -107,8 +145,19 @@ class PageController extends BaseController {
 //            $database->setStatistics('totalStatistics', serialize($totalStatistics), '');
         }
 
+        if(!empty($lendingStats)){
+            $lendingStatistics = unserialize($lendingStats);
+        }else{
+            if ($selectedCountry) {
+                $lendingStatistics = $this->statisticsService->getLendingStatistics($selectedStartDate, $selectedCountry->getId());
+            } else {
+                $lendingStatistics = $this->statisticsService->getLendingStatistics($selectedStartDate, null);
+            }
+//            $database->setStatistics('lendingStatistics-' . $selected_start_date, serialize($lendingStatistics), $c);
+        }
+
         return View::make('pages.statistics',
-            compact('totalStatistics')
+            compact('totalStatistics', 'lendingStatistics', 'time', 'countries', 'selectedCountry', 'timePeriods', 'selectedTimePeriod', 'routeParams')
         );
     }
 }
