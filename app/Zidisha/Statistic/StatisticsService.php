@@ -41,7 +41,7 @@ class StatisticsService
         );
     }
 
-    public function getLoansRaisedCount($countryId = null, $start_date = null)
+    public function getLoansRaisedCount($countryId = null, $startDate = null)
     {
         $params = [
             'loanActive' => Loan::ACTIVE,
@@ -61,15 +61,15 @@ class StatisticsService
                     WHERE l.status IN (:loanActive, :loanRepaid, :loanDefaulted)
                     AND l.deleted_by_admin = FALSE';
         }
-        if ($start_date) {
+        if ($startDate) {
             $sql .= ' AND l.accepted_at >= :acceptedAt';
-            $params['acceptedAt'] = $start_date;
+            $params['acceptedAt'] = $startDate;
         }
 
         return PropelDB::fetchNumber($sql, $params);
     }
 
-    public function getLoansDisbursedAmount($countryId = null, $start_date = null)
+    public function getLoansDisbursedAmount($countryId = null, $startDate = null)
     {
         $params = [
             'loanActive' => Loan::ACTIVE,
@@ -93,9 +93,9 @@ class StatisticsService
             $params['countryId'] = $countryId;
         }
 
-        if ($start_date) {
+        if ($startDate) {
             $sql .= ' AND l.accepted_at >= :acceptedAt';
-            $params['acceptedAt'] = $start_date;
+            $params['acceptedAt'] = $startDate;
         }
 
         return PropelDB::fetchNumber($sql, $params);
@@ -118,6 +118,45 @@ class StatisticsService
               SELECT DISTINCT country_id FROM lenders WHERE active = TRUE';
 
         return count(PropelDB::fetchAll($sql));
+    }
+
+    public function getLendingStatistics($startDate = null, $country = null) {
+
+        $statistics =  array(
+            'raised_count' => $this->getLoansRaisedCount($country, $startDate),
+            'average_lender_interest' => $this->getLoansRaisedAverageInterest($country, $startDate),
+        );
+
+        return $statistics;
+    }
+
+    private function getLoansRaisedAverageInterest($country, $startDate)
+    {
+        $params = [
+            'loanActive' => Loan::ACTIVE,
+            'loanRepaid' => Loan::REPAID,
+            'loanDefaulted' => Loan::DEFAULTED,
+            'loanFunded' => Loan::FUNDED
+        ];
+
+        if ($country) {
+            $q = 'SELECT AVG(l.finalrate) FROM loans AS l
+                  JOIN borrowers AS b ON l.borrower_id = b.id
+                  WHERE l.status IN (:loanActive, :loanRepaid, :loanDefaulted, :loanFunded)
+                  AND l.deleted_by_admin = FALSE
+                  AND b.country_id= :countryId';
+            $params[] = $country;
+        } else {
+            $q = 'SELECT AVG(l.finalrate) FROM loanapplic AS l
+                  WHERE l.active IN (?, ?, ?, ?)
+                    AND adminDelete = 0';
+        }
+        if ($startDate) {
+            $q .= ' AND l.AcceptDate >= ?';
+            $params[] = $startDate;
+        }
+
+        return $db->getOne($q, $params);
     }
 
 } 
