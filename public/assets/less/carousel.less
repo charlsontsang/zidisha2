@@ -16,9 +16,16 @@
 .carousel-caption {
   display:none;
   @media (min-width: @screen-sm-min) {
-    top: 180px;
+    top: 120px;
     z-index: 5;
     display: inline-block;
+    left: 15%;
+    right: 15%;
+  }
+  @media (min-width: @screen-md-min) {
+    top: 180px;
+    left: 20%;
+    right: 20%;
   }
 }
 .carousel-control, .carousel-indicators {
@@ -28,22 +35,36 @@
   }
 }
 .carousel-inner h3 {
+  font-size: 36px;
+  line-height: 42px;
+  font-weight: 900;
   margin: 0;
   padding: 0 0 20px 0;
   color: #fff;
-  font-size: 45px;
-  font-weight: 900;
-  line-height: 50px;
   text-transform: uppercase;
   text-shadow: 1px 1px 5px rgba(0, 0, 0, .5), -1px -1px 5px rgba(0, 0, 0, .5);
+  @media (min-width: @screen-md-min) {
+    font-size: 45px; 
+    line-height: 50px;
+  }
 }
 .carousel-inner p {
-  margin: 0;
-  padding: 0 0 30px;
-  font-size: 22px;
-  color: #fff;
-  text-shadow: 1px 1px 5px rgba(0, 0, 0, .5), -1px -1px 5px rgba(0, 0, 0, .5);
+  display: none;
+  @media (min-width: @screen-md-min) {
+    display: inline-block;
+    margin: 0;
+    padding: 0 0 30px;
+    font-size: 22px;
+    color: #fff;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, .5), -1px -1px 5px rgba(0, 0, 0, .5);
+  }
 }
 .group-image {
   height: 400px; 
+}
+.carousel-indicators {
+  display: none;
+  @media (min-width: @screen-md-min) {
+    display: inline-block;
+  }
 }
