@@ -379,4 +379,4 @@ class StatisticsService
         return PropelDB::fetchNumber($sql, $params);
     }
 
-} 
+}
