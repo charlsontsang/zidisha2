@@ -6,10 +6,10 @@ Allow loan forgiveness
 
 @section('content')
 <div class="page-header">
-    <h1>Allow Forgive Loans</h1>
+    <h1>Allow Loan Forgiveness</h1>
 </div>
 
-<a href="{{route('admin:loan-forgiveness:index'), $form->getCountry()->getCountryCode() }} }}">See Forgiven Loans</a>
+<a href="{{route('admin:loan-forgiveness:index', $form->getCountry()->getCountryCode()) }}">Back to overview</a>
 <hr/>
 
 <div>

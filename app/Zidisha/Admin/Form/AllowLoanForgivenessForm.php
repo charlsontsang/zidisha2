@@ -30,7 +30,7 @@ class AllowLoanForgivenessForm extends AbstractForm
         if (!$this->country) {
             $countryCode = array_get($this->getData(), 'countryCode', 'KE');
             $this->country = CountryQuery::create()
-                ->findOneByCountryCode($countryCode);   
+                ->findOneByCountryCode($countryCode);
         }
 
         return $this->country;
