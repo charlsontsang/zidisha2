@@ -888,36 +888,25 @@ class LoanService
         return Carbon::instance($installment->getPaidDate())->diffInDays($installment->getDueDate()) <= $repaymentThreshold;
     }
 
-    public function allowLoanForgiveness($data)
+    public function allowLoanForgiveness(Loan $loan, $data)
     {
-        $loanId = $data['loanId'];
-        
-        $loan = LoanQuery::create()
-            ->findOneById($loanId);
-        
-        $borrower = $loan->getBorrower();
-        
-        $forgivenLoan = new ForgivenessLoan();
-        $forgivenLoan
-            ->setLoanId($loanId)
-            ->setComment($data['comment'])
-            ->setBorrower($borrower)
-            ->save();
+        $forgivenessLoan = new ForgivenessLoan();
+//        $forgivenessLoan
+//            ->setLoan($loan)
+//            ->setComment($data['comment'])
+//            ->setBorrowerId ($loan->getBorrowerId())
+//            ->save();
 
+        // TODO lenders instead of bids
         $bids = BidQuery::create()
             ->filterByLoan($loan)
             ->filterByActive(true)
             ->find();
 
         foreach ($bids as $bid) {
-            $forgivenLoanShare = new ForgivenessLoanShare();
-            $forgivenLoanShare->setLender($bid->getLender());
-            $forgivenLoanShare->setBorrower($borrower);
-            $forgivenLoanShare->setAmount($bid->getAcceptedAmount());
-            $forgivenLoanShare->setUsdamount($bid->getAcceptedAmount());
-            $forgivenLoanShare->save();
-
             $this->lenderMailer->sendAllowLoanForgivenessMail($loan, $bid);
         }
+        
+        return $forgivenessLoan;
     }
 }
