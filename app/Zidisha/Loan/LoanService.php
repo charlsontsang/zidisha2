@@ -911,44 +911,153 @@ class LoanService
 
     public function allowLoanForgiveness(Loan $loan, $data)
     {
+        $validationCode = md5(mt_rand(0, 32).time());
+        
         $forgivenessLoan = new ForgivenessLoan();
         $forgivenessLoan
             ->setLoan($loan)
             ->setComment($data['comment'])
-            ->setBorrowerId($loan->getBorrowerId())
+            ->setValidationCode($validationCode)
+            ->setBorrowerId ($loan->getBorrowerId())
             ->save();
 
         // TODO lenders instead of bids
         $bids = BidQuery::create()
+            ->joinWith('Lenders')
             ->filterByLoan($loan)
             ->filterByActive(true)
             ->find();
 
+        $lenders = [];
         foreach ($bids as $bid) {
-            $this->lenderMailer->sendAllowLoanForgivenessMail($loan, $bid);
+            $lenders[$bid->getLenderId()] = $bid->getLender();
+        }
+        
+        foreach ($lenders as $lender) {
+            $this->lenderMailer->sendAllowLoanForgivenessMail($loan, $forgivenessLoan, $lender);
         }
 
         return $forgivenessLoan;
     }
-
+    
     public function getPrincipalRatio($loanId, $date=0)
     {
         $sql = "SELECT sum(amount) amt from installments where loan_id = $loanId";
         $all = PropelDB::fetchNumber($sql);
         $forgiveAmount = 0;
-        if($date) {
+        if ($date) {
             //TODO
         } else {
             $s = "SELECT sum(amount) from forgiveness_loan_shares where loan_id = :loanId";
             $forgiveAmount = PropelDB::fetchNumber($s, ['loanId' => $loanId]);
         }
 
-        if($forgiveAmount) {
+        if ($forgiveAmount) {
             $all += $forgiveAmount;
         }
-        $q="SELECT disbursed_amount from loans where id = $loanId ";
+        $q = "SELECT disbursed_amount from loans where id = $loanId ";
         $disbursedAmount = PropelDB::fetchNumber($q);
-        $ratio = $disbursedAmount/$all;
+        $ratio = $disbursedAmount / $all;
         return round($ratio, 4);
+
+    }
+    
+    public function forgiveLoanShare(Loan $loan,Lender $lender)
+    {
+        
+        $forgivenLoanShareCount = ForgivenessLoanShareQuery::create()
+            ->filterByLender($lender)
+            ->filterByLoan($loan)
+            ->count();
+        
+        if ($forgivenLoanShareCount) {
+            return true; 
+        }
+        
+        $acceptedBids = BidQuery::create()
+            ->filterByLender($lender)
+            ->filterByLoan($loan)
+            ->filterByActive(true)
+            ->find();
+
+        $bidCalculator = new BidsCalculator();
+        $lenderTotalAmount = $bidCalculator->getLenderInterestRate($acceptedBids, $loan->getUsdAmount());
+        
+        $loanPaidShare = new RepaymentCalculator($loan);
+        $lenderRepaymentAmount = $loanPaidShare->repaymentAmountForLenders();
+        
+        PropelDB::transaction(function () use ($loan, $lender, $lenderTotalAmount) {
+                $forgiveLoanShare = new ForgivenessLoanShare();
+                $forgiveLoanShare->setLoan($loan);
+                $forgiveLoanShare->setBorrower($loan->getBorrower());
+                $forgiveLoanShare->setLender($lender);
+                $forgiveLoanShare->setAmount($lenderTotalAmount);
+                $forgiveLoanShare->setUsdAmount($lenderTotalAmount);
+                $forgiveLoanShare->setAcceptedforgiveness(true);
+                $forgiveLoanShare->save();
+        });
+        
+        $con = PropelDB::getConnection();
+        $this->transactionService->lenderLoanForgivenessTransaction($con, $lender, Money::create($lenderTotalAmount, 'USD'));
+        
+        //TODO: updateScheduleAfterForgive
+        
+        $allLenderForgiven = $this->checkAllLenderForgiven($loan);
+        
+        if ($allLenderForgiven) {
+            $installments = InstallmentQuery::create()
+                ->withColumn('SUM(installments.paid_amount)', 'TotalPaidAmount')
+                ->withColumn('SUM(installments.amount)', 'TotalAmount')
+                ->filterByLoan($loan)
+                ->find();
+            
+            foreach ($installments as $installment) {
+                $totalAmount = $installment->getTotalAmount();
+                $totalPaidAmount = $installment->getTotalPaidAmount();
+                break;
+            }
+            
+            $amountToRepay = $totalAmount - $totalPaidAmount;
+            
+            if ($amountToRepay >0) {
+                //TODO: forgive Zidisha fees
+                
+                $loan->setStatus(Loan::REPAID);
+                $loan->save();
+            }
+        }
+    }
+
+    public function rejectForgiveLoanShare(Loan $loan, Lender $lender)
+    {
+        PropelDB::transaction(function () use ($loan, $lender, $lenderTotalAmount) {
+                $forgiveLoanShare = new ForgivenessLoanShare();
+                $forgiveLoanShare->setLoan($loan);
+                $forgiveLoanShare->setBorrower($loan->getBorrower());
+                $forgiveLoanShare->setLender($lender);
+                $forgiveLoanShare->setAmount($lenderTotalAmount);
+                $forgiveLoanShare->setUsdAmount($lenderTotalAmount);
+                $forgiveLoanShare->setAcceptedforgiveness(false);
+                $forgiveLoanShare->save();
+            });
+    }
+
+    private function checkAllLenderForgiven(Loan $loan)
+    {
+        $bids = BidQuery::create()
+            ->filterByLoan($loan)
+            ->find();
+        
+        foreach ($bids as $bid) {
+            $forgivenLoanShare = ForgivenessLoanShareQuery::create()
+                ->filterByLender($bid->getLender())
+                ->find();
+            
+            if (!$forgivenLoanShare) {
+                return false;
+            }
+        }
+        
+        return true;        
     }
 }
