@@ -24,11 +24,9 @@ class AdminLoanForgivenessController extends BaseController
         $this->forgiveLoanForm = $forgiveLoanForm;
     }
 
-    public function getIndex()
+    public function getIndex($countryCode = 'KE')
     {
         $page = Input::get('page', 1);
-
-        $countryCode = Input::get('countryCode', 'KE');
 
         $country = CountryQuery::create()
             ->findOneByCountryCode($countryCode);

@@ -15,7 +15,7 @@ Forgiven Loans
 <ul class="nav nav-tabs" role="tablist">
     @foreach($borrowerCountries as $borrowerCountry)
         <li class="{{ $borrowerCountry->getCountryCode() == $countryCode ? 'active' : '' }}">
-            <a href="{{ route('admin:loan-forgiveness:index') }}?countryCode={{ $borrowerCountry->getCountryCode() }} ">
+            <a href="{{ route('admin:loan-forgiveness:index', $borrowerCountry->getCountryCode()) }}">
                 {{ $borrowerCountry->getName() }}
             </a>
         </li>
