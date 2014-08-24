@@ -241,7 +241,7 @@ class LenderMailer
         $this->mailer->send(
             'emails.hero',
             [
-                'to'         => $bid->getLender(),
+                'to'         => $bid->getLender()->getUser()->getEmail(),
                 'subject'    => 'Loan forgiveness mail',
                 'templateId' => \Setting::get('sendwithus.lender-loan-forgiveness-mail-template-id'),
             ]

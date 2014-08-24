@@ -114,4 +114,16 @@ class LenderMailerTester
         
         $this->lenderMailer->sendExpiredLoanMail($loan, $refundLender);
     }
+
+    public function sendAllowLoanForgivenessMail()
+    {
+        $loan = new Loan();
+
+        $bid = new Bid();
+        $bid->setLender(new Lender);
+        $bid->getLender()->setUser(new User());
+        $bid->getLender()->getUser()->setEmail('test@mail.com');
+            
+        $this->lenderMailer->sendAllowLoanForgivenessMail($loan, $bid);
+    }
 }
