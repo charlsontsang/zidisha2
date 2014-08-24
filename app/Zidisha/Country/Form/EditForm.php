@@ -23,7 +23,7 @@ class EditForm extends AbstractForm
             'borrower_country'       => $this->country->getBorrowerCountry(),
             'dialing_code'           => $this->country->getDialingCode(),
             'phone_number_length'    => $this->country->getPhoneNumberLength(),
-            'registration_fee'       => $this->country->getRegistrationFee(),
+            'registration_fee'       => $this->country->getRegistrationFee()->getAmount(),
             'installment_amount_step'=> $this->country->getInstallmentAmountStep(),
             'loan_amount_step'       => $this->country->getLoanAmountStep(),
             'installment_period'     => $this->country->getInstallmentPeriod(),

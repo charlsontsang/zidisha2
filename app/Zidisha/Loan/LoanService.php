@@ -116,9 +116,9 @@ class LoanService
 
         $isFirstLoan = LoanQuery::create()
             ->filterByBorrower($borrower)
-            ->filterByStatus(Loan::REPAID) // TODO correct? verify database
+            ->filterEnded() // TODO correct? verify database
             ->count();
-        $registrationFee = $isFirstLoan ? $borrower->getCountry()->getRegistrationFee() : 0;
+        $registrationFee = $isFirstLoan ? $borrower->getCountry()->getRegistrationFee() : Money::create(0, $currencyCode);
         
         $loan = new Loan();
         $loan

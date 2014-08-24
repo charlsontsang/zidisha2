@@ -2,6 +2,7 @@
 
 use Zidisha\Country\CountryQuery;
 use Zidisha\Country\Form\EditForm;
+use Zidisha\Currency\Money;
 
 class CountryController extends BaseController
 {
@@ -61,7 +62,7 @@ class CountryController extends BaseController
                 ->setBorrowerCountry($data['borrower_country'])
                 ->setDialingCode($data['dialing_code'])
                 ->setPhoneNumberLength($data['phone_number_length'])
-                ->setRegistrationFee($data['registration_fee'])
+                ->setRegistrationFee(Money::create($data['registration_fee'], $country->getCurrencyCode()))
                 ->setInstallmentAmountStep($data['installment_amount_step'])
                 ->setLoanAmountStep($data['loan_amount_step'])
                 ->setInstallmentPeriod($data['installment_period'])
