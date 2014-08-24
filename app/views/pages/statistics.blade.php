@@ -83,9 +83,15 @@ Statistics
         </p>
         <br/>
     @endif
+    @if ($lendingStatistics['outstanding_late_amount'])
+        <p>Principal held by borrowers more than 30 days past due with scheduled repayments: <i class="fa fa-info-circle principalRepaidDue" data-toggle="tooltip"></i>
+        <br/>
+        USD {{ number_format($lendingStatistics['outstanding_late_amount'], 0, ".", ",") }}
+        ( {{ number_format($lendingStatistics['outstanding_late_rate'], 1, ".", ","); }}% of amount disbursed)
+        </p>
+        <br/>
+    @endif
 
-    Principal held by borrowers more than 30 days past due with scheduled repayments: <i class="fa fa-info-circle principalRepaidDue" data-toggle="tooltip"></i>
-    <br/>
     Principal that has been forgiven by lenders: <i class="fa fa-info-circle principalForgiven" data-toggle="tooltip"></i>
     <br/>
     Principal that has been written off: <i class="fa fa-info-circle principalWrittenOff" data-toggle="tooltip"></i>
