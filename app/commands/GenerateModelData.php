@@ -575,7 +575,7 @@ class GenerateModelData extends Command
                 ->setCountryCode($data[0])
                 ->setContinentCode('AF')
                 ->setDialingCode(str_pad($this->faker->numberBetween(1, 200), '3', '0'))
-                ->setRegistrationFee($data[3])
+                ->setRegistrationFee(Money::create($data[3], $data[2]))
                 ->setBorrowerCountry($data[0] != 'IN')
                 ->setCurrencyCode($data[2])
                 ->setPhoneNumberLength(9)
