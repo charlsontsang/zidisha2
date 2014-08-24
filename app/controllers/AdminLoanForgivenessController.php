@@ -76,4 +76,25 @@ class AdminLoanForgivenessController extends BaseController
         \Flash::error('Please enter valid inputs');
         return Redirect::back();
     }
+
+    public function getLoans()
+    {
+        $form = $this->allowLoanForgivenessForm;
+        $countryCode = Input::get('countryCode');
+
+        if (!$form->isValidCountryCode($countryCode)) {
+            App::abort('404');
+        }
+        $country = CountryQuery::create()
+            ->findOneByCountryCode($countryCode);
+
+        $range = $form->getLoans($country);
+
+        $options = [];
+        foreach ($range as $k => $v) {
+            $options[] = [$k, $v];
+        }
+
+        return Response::json($options);
+    }
 } 

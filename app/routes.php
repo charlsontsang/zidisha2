@@ -703,6 +703,11 @@ Route::group(
                     'allow-loan-forgiveness',
                     ['uses' => 'AdminLoanForgivenessController@postAllow', 'as' => 'admin:loan-forgiveness:allow']
                 );
+
+                Route::get(
+                    'allow-loan-forgiveness-loans',
+                    ['uses' => 'AdminLoanForgivenessController@getLoans', 'as' => 'admin:loan-forgiveness:loans']
+                );
             }
         );
 

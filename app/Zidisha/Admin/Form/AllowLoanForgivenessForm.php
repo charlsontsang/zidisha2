@@ -29,11 +29,11 @@ class AllowLoanForgivenessForm extends AbstractForm
     public function getCountry()
     {
         if (!$this->country) {
-            $countryCode = array_get($this->getData(), 'countryCode', 'KE');
+            $countryCode = \Input::get('countryCode', 'KE');
             $this->country = CountryQuery::create()
                 ->findOneByCountryCode($countryCode);
         }
-
+        
         return $this->country;
     }
     
@@ -45,11 +45,11 @@ class AllowLoanForgivenessForm extends AbstractForm
             ->toKeyValue('countryCode', 'name');
     }
 
-    public function getLoans()
+    public function getLoans(Country $country = null)
     {
         $_loans = LoanQuery::create()
             ->useBorrowerQuery()
-                ->filterByCountryId($this->getCountry()->getId())
+                ->filterByCountryId($country ? $country->getId() : $this->getCountry()->getId())
             ->endUse()
             ->useForgivenessLoanQuery(null, Criteria::LEFT_JOIN)
                 ->filterByLoanId(null, Criteria::ISNULL)
@@ -63,6 +63,15 @@ class AllowLoanForgivenessForm extends AbstractForm
         }
         
         return $loans;
+    }
+
+    public function isValidCountryCode($countryCode)
+    {
+        $data = compact('countryCode');
+        $rules = $this->getRules($data);
+        $validator = \Validator::make($data, ['countryCode' => $rules['countryCode']]);
+
+        return $validator->passes();
     }
 }
 
