@@ -1,4 +1,4 @@
-<p>Last updated: May 16, 2014</p>
+<p>Last updated: August 22, 2014</p>
 
 <p>Via our website, www.zidisha.org, Zidisha matches its funding participants (to whom we refer as "lenders") with prospective borrowers, who are small business entrepreneurs in low-income countries. Zidisha works to improve access to affordable business financing for disadvantaged entrepreneurs, while making available information on borrowers' businesses and credit histories to allow each lender to choose which entrepreneurs receive the funds that lender provides. </p>
 
@@ -26,7 +26,7 @@
 
 <p>8.  In the event that a lender does not log in to his or her lender account for over one year, Zidisha will attempt to contact the aforementioned lender using the email address registered with his or her lender account. If Zidisha does not receive a response from the lender within one month from the date of the first contact attempt, the balance of lender funds that have been credited to that account will automatically convert to an unrestricted donation to Zidisha.  Lenders whose expired accounts have converted to donations may reverse this conversion at any time by sending a written or email request to Zidisha.  Upon receipt of such a request, Zidisha will credit the lender balance that had been converted to a donation back to the lender's Zidisha account.</p>
 
-<p>9.  Unsolicited advertising, offensive or discriminatory language, personal attacks or accusations, and other content that is harmful to our community is prohibited in the Zidisha website and forum.  Zidisha reserves the right, at its sole discretion, to remove content that violates this prohibition, and to close the accounts of users who post such content.</p>
+<p>9.  Unsolicited advertising, offensive or discriminatory language, personal attacks or accusations, and other content that is harmful to our community is prohibited in the Zidisha website and forum.  In particular, posting unproven accusations or speculation that harms the reputation of any of our members is strictly prohibited.  Zidisha reserves the right, at its sole discretion, to remove content that violates this prohibition, and to close the accounts of users who post such content.</p>
 
 <p>This Terms of Use Agreement is governed by the laws of the state of Virginia, USA. The Agreement will remain in effect as long as you use the Zidisha website, are participating in any outstanding loan or have any amount credited to your funded balance with Zidisha.</p>
 

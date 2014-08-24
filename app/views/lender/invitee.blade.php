@@ -18,81 +18,63 @@ You're invited!
                 <img src="/assets/images/carousel/esther.jpg">
                 <div class="carousel-caption">
                     <h3>{{ $carouselHeading }}</h3>
-                    <p>
-                        <a href="{{ route('join') }}" class="btn btn-primary btn-lg">{{ $buttonText }}</a>
-                    </p>
+                    <a href="{{ route('join') }}" class="btn btn-primary btn-lg">{{ $buttonText }}</a>
                 </div>
             </div>
             <div class="item">
                 <img src="/assets/images/carousel/bineta.jpg">
                 <div class="carousel-caption">
                     <h3>{{ $carouselHeading }}</h3>
-                    <p>
-                        <a href="{{ route('join') }}" class="btn btn-primary btn-lg">{{ $buttonText }}</a>
-                    </p>
+                    <a href="{{ route('join') }}" class="btn btn-primary btn-lg">{{ $buttonText }}</a>
                 </div>
             </div>
             <div class="item">
                 <img src="/assets/images/carousel/mary.jpg">
                 <div class="carousel-caption">
                     <h3>{{ $carouselHeading }}</h3>
-                    <p>
-                        <a href="{{ route('join') }}" class="btn btn-primary btn-lg">{{ $buttonText }}</a>
-                    </p>
+                    <a href="{{ route('join') }}" class="btn btn-primary btn-lg">{{ $buttonText }}</a>
                 </div>
             </div>
             <div class="item">
                 <img src="/assets/images/carousel/aloysius.jpg">
                 <div class="carousel-caption">
                     <h3>{{ $carouselHeading }}</h3>
-                    <p>
-                        <a href="{{ route('join') }}" class="btn btn-primary btn-lg">{{ $buttonText }}</a>
-                    </p>
+                    <a href="{{ route('join') }}" class="btn btn-primary btn-lg">{{ $buttonText }}</a>
                 </div>
             </div>
             <div class="item">
                 <img src="/assets/images/carousel/pherister.jpg">
                 <div class="carousel-caption">
                     <h3>{{ $carouselHeading }}</h3>
-                    <p>
-                        <a href="{{ route('join') }}" class="btn btn-primary btn-lg">{{ $buttonText }}</a>
-                    </p>
+                    <a href="{{ route('join') }}" class="btn btn-primary btn-lg">{{ $buttonText }}</a>
                 </div>
             </div>
             <div class="item">
                 <img src="/assets/images/carousel/melita.jpg">
                 <div class="carousel-caption">
                     <h3>{{ $carouselHeading }}</h3>
-                    <p>
-                        <a href="{{ route('join') }}" class="btn btn-primary btn-lg">{{ $buttonText }}</a>
-                    </p>
+                    <a href="{{ route('join') }}" class="btn btn-primary btn-lg">{{ $buttonText }}</a>
                 </div>
             </div>
             <div class="item">
                 <img src="/assets/images/carousel/fatou.jpg">
                 <div class="carousel-caption">
                     <h3>{{ $carouselHeading }}</h3>
-                    <p>
-                        <a href="{{ route('join') }}" class="btn btn-primary btn-lg">{{ $buttonText }}</a>
-                    </p>
+                    <a href="{{ route('join') }}" class="btn btn-primary btn-lg">{{ $buttonText }}</a>
                 </div>
             </div>
             <div class="item">
                 <img src="/assets/images/carousel/elizabeth.jpg">
                 <div class="carousel-caption">
                     <h3>{{ $carouselHeading }}</h3>
-                    <p>
-                        <a href="{{ route('join') }}" class="btn btn-primary btn-lg">{{ $buttonText }}</a>
-                    </p>
+                    <a href="{{ route('join') }}" class="btn btn-primary btn-lg">{{ $buttonText }}</a>
                 </div>
             </div>
             <div class="item">
                 <img src="/assets/images/carousel/thilor.jpg">
                 <div class="carousel-caption">
                     <h3>{{ $carouselHeading }}</h3>
-                    <p>
-                        <a href="{{ route('join') }}" class="btn btn-primary btn-lg">{{ $buttonText }}</a>
-                    </p>
+                    <a href="{{ route('join') }}" class="btn btn-primary btn-lg">{{ $buttonText }}</a>
                 </div>
             </div>
         </div>
@@ -133,12 +115,13 @@ You're invited!
         </p>
 
         <hr/>
-
-        @include('partials.why-zidisha')
-
-        <p class="text-center">
-            <a class="btn btn-primary btn-lg" href="{{ route('join') }}">{{ $buttonText }}</a>
-        </p>
     </div>
 </div>
+
+@include('partials.landing-page')
+
+<p class="text-center">
+    <a class="btn btn-home btn-lg" href="{{ route('lend:index') }}">{{ $buttonText }}</a>
+</p>
+
 @stop

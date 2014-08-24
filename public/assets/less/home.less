@@ -1,0 +1,46 @@
+.home p {
+  @media (min-width: @screen-sm-min) {
+    font-size: 20px;
+    line-height: 28px;
+  }
+}
+.home p.lead {
+  @media (min-width: @screen-sm-min) {
+    line-height: 31px;
+  }
+}
+.home h1 {
+  @media (max-width: @screen-xs-max) {
+    font-size: 28px;
+  }
+}
+.home h3 {
+  margin-top: 0;
+}
+.home .fa {
+  font-size: 50px; 
+  margin-top: 30px; 
+  margin-bottom: 0;
+}
+.home blockquote {
+  text-align: left !important;
+}
+.home img.press-logo {
+  padding-top: 11px; 
+  -webkit-filter: grayscale(1); 
+  filter: grayscale(1);
+}
+.btn-home {
+  font-size: 20px;
+  background-color: #fff;
+  color: @brand-primary; 
+  border: 2px solid @brand-primary; 
+  font-weight: bold;
+  @media (min-width: @screen-sm-min) {
+    font-size: 24px;
+  }
+}
+.btn-home:hover {
+  background-color: @brand-primary;
+  color: #fff;
+}

@@ -18,12 +18,6 @@
     vertical-align: middle;
   }
 }
-.loan-titlebar p, {
-  margin-bottom: 0;
-  @media (max-width: @screen-xs-max) {
-    line-height: 2em;
-  }
-}
 .loan-titlebar {
   @media (min-width: @screen-sm-min) {
     display: none;
@@ -43,6 +37,15 @@
 .loan-section-content {
   .make-xs-column(12);
   .make-sm-column(10);
+}
+.loan-section p {
+  line-height: 23px;
+}
+.loan-section-content p, .media-body p {
+  line-height: 23px;
+  @media (min-width: @screen-sm-min) {
+    line-height: 25px;
+  }
 }
 @media (min-width: @screen-sm-min) {
   .social-icons {
@@ -88,26 +91,35 @@
     padding: 0 15px;
   }
 }
-.loan-side h2 {
+.loan-title {
+  height: 100px;
+  overflow: hidden;
+}
+.loan-side h2, .loan-side h3, .loan-side p {
   margin-top: 0;
 }
-.loan-side h2 a {
-  color: #333;
+.loan-side h2 {
+  font-size: 24px;
+  @media (min-width: @screen-md-min) {
+    font-size: 28px;
+  }
 }
-.loan-side h2 a:hover, .loan-side h2 a:active {
-  color: @brand-primary;
-  text-decoration: none;
+.loan-side h3 {
+  line-height: 30px;
 }
 .lend-form {
   margin: 0;
+}
+.loan-side .panel-default {
+  width: 240px;
+  padding: 15px;
+  margin-bottom: 0;
+  @media (min-width: @screen-md-min) {
+    width: 309px;
+  }
   @media (max-width: @screen-xs-max) {
     display: none;
   }
-}
-.loan-side .panel-default {
-  width: 309px;
-  padding: 15px;
-  margin-bottom: 0;
 }
 .progress {
   margin-bottom: 8px;
@@ -115,7 +127,7 @@
 }
 .lend-form .text-light {
   @media (min-width: @screen-sm-min) {
-    font-size: 12px;
+    font-size: 14px;
   }
   @media (min-width: @screen-md-min) {
     font-size: 16px;
@@ -135,19 +147,33 @@
 .lend-form .form-group {
   margin: 20px 0 8px 0;
 }
+.lend-form button {
+  font-size: 18px;
+}
 
-#mobile-lend-button {
+#mobile-lend-btn {
+  font-size: 20px;
+  letter-spacing: 1px;
   opacity: 0.9;
+  width: 100%;
+  position: fixed;
+  top: auto;
+  bottom: 0;
+  border-radius: 1px;
   @media (min-width: @screen-sm-min) {
     display: none;
   }
 }
 #follow-button {
+  width: 208px;
   position: absolute;
-  top: 453px;
-  width: 278px;
+  top: 437px;
   height: 36px;
   z-index: -1;
+  @media (min-width: @screen-md-min) {
+    width: 278px;
+    top: 453px;
+  }
   @media (max-width: @screen-xs-max) {
     display: none;
   }

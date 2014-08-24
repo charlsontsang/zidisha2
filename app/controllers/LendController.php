@@ -1,6 +1,7 @@
 <?php
 
 use Zidisha\Loan\Loan;
+use Zidisha\Utility\Utility;
 
 class LendController extends BaseController
 {

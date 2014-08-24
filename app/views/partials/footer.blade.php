@@ -57,6 +57,7 @@
                     <div class="col-xs-4">
                         <div class="h3">Explore</div>
                         <ul class="list-unstyled">
+                            <li><a href="{{ route('page:why-zidisha') }}">Why Zidisha?</a></li>
                             <li><a href="{{ route('page:our-story') }}">Our Story</a></li>
                             <li><a href="{{ route('page:how-it-works') }}">How It Works</a></li>
                             <li><a href="{{ route('page:trust-and-security') }}">Trust & Security</a></li>

@@ -5,32 +5,23 @@
 @stop
 
 @section('content-top')
-    <div class="page-section loan-titlebar">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <h1>
-                        {{{ $loan->getSummary() }}}
-                    </h1>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-3 col-md-2">
-                    <p>
+    <div class="container page-section loan-titlebar" style="padding-bottom: 5px;">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="loan-side">
+                    <div class="loan-title">
+                        <h3>
+                            {{ $loan->getSummary() }}
+                        </h3>
+                    </div>
+                    
+                    <p class="text-light">
                         <i class="fa fa-fw fa-user"></i>
                         {{ $loan->getBorrower()->getName() }}
-                    </p>
-                </div>
-                <div class="col-sm-4 col-md-5">
-                    <p>
+                        <br/>
                         <i class="fa fa-fw fa-map-marker"></i>
                         {{ $loan->getBorrower()->getProfile()->getCity() }},
                         {{ $loan->getBorrower()->getCountry()->getName() }}
-                    </p>
-                </div>
-                <div class="col-sm-5 col-md-5"> <!-- TO DO: add social share scripts -->
-                    <p>
-                         <img class="social-icons" src="{{ '/assets/images/test-photos/share.png' }}"/>
                     </p>
                 </div>
             </div>
@@ -66,19 +57,6 @@
 
         <div id="tab-content" class="tab-content">
             <div class="tab-pane fade active in" id="about">
-        
-                <div class="loan-section">
-                    <div class="loan-section-title">
-                        <span class="text-light">Summary</span>
-                    </div>
-                    <div class="loan-section-content">
-                        <p class="omega">
-                            {{{ $loan->getSummary() }}}
-                        </p>
-                    </div>
-                </div>
-
-                <hr/>
                 
                 <div class="loan-section">
                     <div class="loan-section-title">
@@ -101,28 +79,28 @@
                                 <a href="#">TO DO</a>
                             </div>
                             <div class="col-sm-6">
-                                On-Time Repayments:<i class="fa fa-info-circle repayment" data-toggle="tooltip"></i>
-                                <strong>TODO</strong>
-                                <br/>
-
-                                Feedback Rating:<i class="fa fa-info-circle rating" data-toggle="tooltip"></i>
-                                <strong>TODO</strong>
-                                <br/>
-
                                 Followers: 
                                 <strong>@choice('lender.follow.count', $followersCount)</strong>
                                 <br/>
 
                                 <a id="follow-link" href="#">Follow {{{ $loan->getBorrower()->getFirstName() }}}</a>
 
+                                Feedback Rating:<i class="fa fa-info-circle rating" data-toggle="tooltip"></i>
+                                <strong>TODO</strong>
+                                <br/>
+
                                 @if($displayFeedbackComments)
                                     <p><a href="#feedback">View Lender Feedback</a></p>
                                 @endif
+
+                                On-Time Repayments:<i class="fa fa-info-circle repayment" data-toggle="tooltip"></i>
+                                <strong>TODO</strong>
+                                <br/>
                                 
                                 @if($previousLoans != null)
                                 <div class="DemoBS2">
                                     <!-- Toogle Buttons -->
-                                    <a class="previous-loans" id="toggle-btn"
+                                    <a href="#" class="previous-loans" id="toggle-btn"
                                        data-toggle="collapse" data-target="#toggle-example">View Previous Loans</a>
 
                                     <div id="toggle-example" class="collapse">
@@ -229,7 +207,7 @@
                         @if($loan->getBorrower()->getProfile()->getAboutMeTranslation())
                         <div>
                             <p class="text-right">
-                                <a data-toggle="collapse" data-target="#toggle-aboutMe" data-toggle-text="Hide original language">
+                                <a href="#" data-toggle="collapse" data-target="#toggle-aboutMe" data-toggle-text="Hide original language">
                                     Display posting in original language
                                 </a>
                             </p>
@@ -253,7 +231,7 @@
                         @if($loan->getBorrower()->getProfile()->getAboutBusinessTranslation())
                         <div>
                             <p class="text-right">
-                                <a data-toggle="collapse" data-target="#toggle-aboutBusiness" data-toggle-text="Hide original language">
+                                <a  href="#" data-toggle="collapse" data-target="#toggle-aboutBusiness" data-toggle-text="Hide original language">
                                     Display posting in original language
                                 </a>
                             </p>
@@ -279,7 +257,7 @@
                         @if($loan->getProposalTranslation())
                         <div>
                             <p class="text-right">
-                                <a data-toggle="collapse" data-target="#toggle-proposal" data-toggle-text="Hide original language">
+                                <a  href="#" data-toggle="collapse" data-target="#toggle-proposal" data-toggle-text="Hide original language">
                                     Display posting in original language
                                 </a>
                             </p>
@@ -426,14 +404,18 @@
     </div>
 
     <div class="col-sm-4 loan-side" style="padding-left:0;">
+        @if($loan->isOpen())       
         <div class="panel panel-default panel-body sidenav">
-            <h2>
-                <a href="{{ route('loan:index', $loan->getId()) }}">
+        @else
+        <div class="panel panel-default panel-body">
+        @endif
+            <div class="loan-title">
+                <{{ $tag }}>
                     {{ $loan->getSummary() }}
-                </a>
-            </h2>
+                </{{ $tag }}>
+            </div>
             
-            <p>
+            <p class="text-light">
                 <i class="fa fa-fw fa-user"></i>
                 {{ $loan->getBorrower()->getName() }}
                 <br/>
@@ -459,9 +441,6 @@
             @endif
 
             @if($loan->isOpen())
-
-            <!-- TO DO: this button should open the lend form full screen on a mobile device -->
-            <button id="mobile-lend-button" type="button" class="btn btn-primary btn-block">Lend</button>
 
             <div class="lend-form">
                 <div id="lend-form-initial">
@@ -590,7 +569,7 @@
         
         <div class="panel-body">
             <button id="follow-button" type="button" class="btn btn-default btn-block followBorrower" data-toggle="tooltip">
-                <i class="fa fa-fw fa-star-o"></i>
+                <i class="fa fa-fw fa-bookmark"></i>
                 @lang('lender.follow.title', ['name' => $borrower->getFirstName()])
             </button>
         </div>
@@ -604,6 +583,11 @@
 
         </div>
     </div>
+</div>
+
+
+<div class="row">
+    <button id="mobile-lend-btn" type="button" class="btn btn-primary btn-block">Lend</button>
 </div>
 @stop
 
@@ -651,6 +635,7 @@
     $(document).ready(function () {
         $('.previous-loans').click(function () {
             $("#toggle-example").collapse('toggle');
+            return false;
         });
     });
 </script>
@@ -658,6 +643,7 @@
     $(document).ready(function () {
         $('.original-aboutMe').click(function () {
             $("#toggle-aboutMe").collapse('toggle');
+            return false;
         });
     });
 </script>
@@ -665,6 +651,7 @@
     $(document).ready(function () {
         $('.original-aboutBusiness').click(function () {
             $("#toggle-aboutBusiness").collapse('toggle');
+            return false;
         });
     });
 </script>
@@ -672,6 +659,7 @@
     $(document).ready(function () {
         $('.original-proposal').click(function () {
             $("#toggle-proposal").collapse('toggle');
+            return false;
         });
     });
     
