@@ -10,7 +10,7 @@ use Zidisha\Borrower\ContactQuery;
 use Zidisha\Borrower\Invite;
 use Zidisha\Borrower\InviteQuery;
 use Zidisha\Borrower\VolunteerMentor;
-use Zidisha\Loan\ForgivenLoanQuery;
+use Zidisha\Loan\ForgivenessLoanQuery;
 use Zidisha\Loan\LoanQuery;
 use Zidisha\Mail\BorrowerMailer;
 use Zidisha\Repayment\InstallmentQuery;
@@ -91,7 +91,7 @@ class LoanFinalArrear extends ScheduledJob
         $loan = LoanQuery::create()
             ->findOneById($loanId);
 
-        $forgivenLoan = ForgivenLoanQuery::create()
+        $forgivenessLoan = ForgivenessLoanQuery::create()
             ->findOneByLoanId($loanId);
 
         $missedInstallmentCount =  InstallmentQuery::create()
@@ -102,7 +102,7 @@ class LoanFinalArrear extends ScheduledJob
             ->count();
         
 
-        if (!$forgivenLoan && $missedInstallmentCount < 2) {
+        if (!$forgivenessLoan && $missedInstallmentCount < 2) {
             /** @var  BorrowerMailer $borrowerMailer */
             $borrowerMailer = \App::make('Zidisha\Mail\BorrowerMailer');
 

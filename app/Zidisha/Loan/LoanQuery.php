@@ -43,7 +43,7 @@ class LoanQuery extends BaseLoanQuery
 
     public function filterNotForgivenByLender(Lender $lender)
     {
-        return $this->where('NOT EXISTS (SELECT NULL FROM forgiven_loans fl WHERE loans.id = fl.loan_id AND fl.lender_id = ?)', $lender->getId());
+        return $this->where('NOT EXISTS (SELECT NULL FROM forgiveness_loan_shares fl WHERE loans.id = fl.loan_id AND fl.lender_id = ?)', $lender->getId());
     }
 
     public function getRepaidAmounts(Lender $lender)

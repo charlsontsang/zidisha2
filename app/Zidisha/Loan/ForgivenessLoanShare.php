@@ -3,11 +3,15 @@
 namespace Zidisha\Loan;
 
 use Zidisha\Currency\Money;
-use Zidisha\Loan\Base\ForgivenLoanShare as BaseForgivenLoanShare;
+use Zidisha\Loan\Base\ForgivenessLoanShare as BaseForgivenessLoanShare;
 
-class ForgivenLoanShare extends BaseForgivenLoanShare
+class ForgivenessLoanShare extends BaseForgivenessLoanShare
 {
 
+    /**
+     * @param Money $money
+     * @return $this|ForgivenessLoanShare
+     */
     public function setAmount($money)
     {
         return parent::setAmount($money->getAmount());
@@ -21,6 +25,10 @@ class ForgivenLoanShare extends BaseForgivenLoanShare
         return Money::create(parent::getAmount(), 'USD');
     }
 
+    /**
+     * @param Money $money
+     * @return $this|ForgivenessLoanShare
+     */
     public function setUsdAmount($money)
     {
         return parent::setUsdAmount($money->getAmount());

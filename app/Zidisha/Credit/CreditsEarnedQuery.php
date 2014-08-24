@@ -4,7 +4,7 @@ namespace Zidisha\Credit;
 
 use Zidisha\Borrower\Borrower;
 use Zidisha\Credit\Base\CreditsEarnedQuery as BaseCreditsEarnedQuery;
-use Zidisha\Loan\ForgivenLoanQuery;
+use Zidisha\Loan\ForgivenessLoanShareQuery;
 use Zidisha\Vendor\PropelDB;
 
 
@@ -36,7 +36,7 @@ class CreditsEarnedQuery extends BaseCreditsEarnedQuery
             ]);
 
         if ($type == CreditSetting::ON_TIME_REPAYMENT_CREDIT) {
-            $isForgiven = ForgivenLoanQuery::create()
+            $isForgiven = ForgivenessLoanShareQuery::create()
                 ->getTotalForgivenLendersForLoan($borrower->getActiveLoan());
             if ($isForgiven > 0) {
                 $currentCredit['credit'] = 0;

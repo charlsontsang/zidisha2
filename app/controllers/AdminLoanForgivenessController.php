@@ -2,7 +2,7 @@
 
 use Zidisha\Admin\Form\ForgiveLoanForm;
 use Zidisha\Country\CountryQuery;
-use Zidisha\Loan\ForgivenLoanQuery;
+use Zidisha\Loan\ForgivenessLoanQuery;
 use Zidisha\Loan\Loan;
 use Zidisha\Loan\LoanQuery;
 use Zidisha\Loan\LoanService;
@@ -39,7 +39,7 @@ class AdminLoanForgivenessController extends BaseController
             ->filterByBorrowerCountry(true)
             ->find();
 
-        $forgivenLoans = ForgivenLoanQuery::create()
+        $forgivenessLoans = ForgivenessLoanQuery::create()
             ->useBorrowerQuery()
             ->filterByCountry($country)
             ->endUse()
@@ -48,7 +48,7 @@ class AdminLoanForgivenessController extends BaseController
 
         return View::make(
             'admin.loan-forgiveness.index',
-            compact('forgivenLoans', 'borrowerCountries', 'countryCode')
+            compact('forgivenessLoans', 'borrowerCountries', 'countryCode')
         );
     }
 

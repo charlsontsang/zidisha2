@@ -897,7 +897,7 @@ class LoanService
         
         $borrower = $loan->getBorrower();
         
-        $forgivenLoan = new ForgivenLoan();
+        $forgivenLoan = new ForgivenessLoan();
         $forgivenLoan
             ->setLoanId($loanId)
             ->setComment($data['comment'])
@@ -910,7 +910,7 @@ class LoanService
             ->find();
 
         foreach ($bids as $bid) {
-            $forgivenLoanShare = new ForgivenLoanShare();
+            $forgivenLoanShare = new ForgivenessLoanShare();
             $forgivenLoanShare->setLender($bid->getLender());
             $forgivenLoanShare->setBorrower($borrower);
             $forgivenLoanShare->setAmount($bid->getAcceptedAmount());

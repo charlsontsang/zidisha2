@@ -689,7 +689,7 @@
         </foreign-key>
     </table>
 
-    <table name="forgiven_loan_share" phpName="ForgivenLoanShare" namespace="Loan">
+    <table name="forgiveness_loan_shares" phpName="ForgivenessLoanShare" namespace="Loan">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="loan_id" type="INTEGER"/>
         <column name="lender_id" type="INTEGER"/>
@@ -720,7 +720,7 @@
         </index>
     </table>
 
-    <table name="forgiveness_loans" phpName="ForgivenLoan" namespace="Loan">
+    <table name="forgiveness_loans" phpName="ForgivenessLoan" namespace="Loan">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="loan_id" type="INTEGER"/>
         <column name="borrower_id" type="INTEGER"/>

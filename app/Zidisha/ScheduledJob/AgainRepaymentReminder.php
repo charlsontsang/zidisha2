@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use DB;
 use Illuminate\Queue\Jobs\Job;
 use Zidisha\Currency\Money;
-use Zidisha\Loan\ForgivenLoanQuery;
+use Zidisha\Loan\ForgivenessLoanQuery;
 use Zidisha\Loan\LoanQuery;
 use Zidisha\Mail\BorrowerMailer;
 use Zidisha\Repayment\InstallmentQuery;
@@ -87,14 +87,14 @@ class AgainRepaymentReminder extends ScheduledJob
         $loan = LoanQuery::create()
             ->findOneById($loanId);
         
-        $forgivenLoan = ForgivenLoanQuery::create()
+        $forgivenessLoan = ForgivenessLoanQuery::create()
             ->findOneByLoanId($loanId);
         
         $installments = InstallmentQuery::create()
             ->filterByLoan($loan)
             ->find();
         
-        if (!$forgivenLoan && $installments) {
+        if (!$forgivenessLoan && $installments) {
             /** @var  BorrowerMailer $borrowerMailer */
             $borrowerMailer = \App::make('Zidisha\Mail\BorrowerMailer');
             $borrowerMailer->sendAgainRepaymentReminder($borrower, $loan, $installments);

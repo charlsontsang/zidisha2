@@ -59,7 +59,7 @@ class BidQuery extends BaseBidQuery
         return $this
             ->filterByLoan($loan)
             ->filterByActive(true)
-            ->where("Bid.lender_id NOT IN (SELECT lender_id from forgiven_loans where loan_id = $loanId)");
+            ->where("Bid.lender_id NOT IN (SELECT lender_id from forgiveness_loan_shares where loan_id = $loanId)");
     }
 
     public function getTotalActiveBidAmount(Lender $lender)

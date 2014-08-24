@@ -33,7 +33,7 @@ Forgiven Loans
         </tr>
     </thead>
     <tbody>
-        @foreach($forgivenLoans as $loan)
+        @foreach($forgivenessLoans as $loan)
             <tr>
                 <td>
                      {{ $loan->getBorrower()->getFirstName() }} {{ $loan->getBorrower()->getLastName() }}
@@ -57,6 +57,6 @@ Forgiven Loans
     </tbody>
 </table>
 
-{{ BootstrapHtml::paginator($forgivenLoans)->links() }}
+{{ BootstrapHtml::paginator($forgivenessLoans)->links() }}
 @stop
 

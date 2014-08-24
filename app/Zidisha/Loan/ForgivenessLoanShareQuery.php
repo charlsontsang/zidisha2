@@ -3,15 +3,13 @@
 namespace Zidisha\Loan;
 
 use Propel\Runtime\ActiveQuery\Criteria;
-use Zidisha\Admin\Setting;
 use Zidisha\Currency\Currency;
 use Zidisha\Currency\Money;
-use Zidisha\Loan\Base\ForgivenLoanQuery as BaseForgivenLoanQuery;
-use Zidisha\User\User;
+use Zidisha\Loan\Base\ForgivenessLoanShareQuery as BaseForgivenessLoanShareQuery;
 
 
 /**
- * Skeleton subclass for performing query and update operations on the 'forgiven_loans' table.
+ * Skeleton subclass for performing query and update operations on the 'forgiven_loan_share' table.
  *
  *
  *
@@ -20,7 +18,7 @@ use Zidisha\User\User;
  * long as it does not already exist in the output directory.
  *
  */
-class ForgivenLoanQuery extends BaseForgivenLoanQuery
+class ForgivenessLoanShareQuery extends BaseForgivenessLoanShareQuery
 {
     public function getTotalAmount()
     {
@@ -47,7 +45,7 @@ class ForgivenLoanQuery extends BaseForgivenLoanQuery
     {
         return $this
             ->filterByLoan($loan)
-            ->filterByLenderId(Setting::get('site.adminId'), Criteria::NOT_EQUAL)
+            ->filterByLenderId(\Setting::get('site.adminId'), Criteria::NOT_EQUAL)
             ->count();
     }
-} // ForgivenLoanQuery
+} // ForgivenessLoanShareQuery

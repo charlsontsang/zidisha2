@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use DB;
 use Illuminate\Queue\Jobs\Job;
 use Zidisha\Borrower\ContactQuery;
-use Zidisha\Loan\ForgivenLoanQuery;
+use Zidisha\Loan\ForgivenessLoanQuery;
 use Zidisha\Loan\LoanQuery;
 use Zidisha\Mail\BorrowerMailer;
 use Zidisha\ScheduledJob\Map\ScheduledJobTableMap;
@@ -87,10 +87,10 @@ class MonthlyLoanArrear extends ScheduledJob
         $loan = LoanQuery::create()
             ->findOneById($loanId);
 
-        $forgivenLoan = ForgivenLoanQuery::create()
+        $forgivenessLoan = ForgivenessLoanQuery::create()
             ->findOneByLoanId($loanId);
 
-        if (!$forgivenLoan) {
+        if (!$forgivenessLoan) {
             /** @var  BorrowerMailer $borrowerMailer */
             $borrowerMailer = \App::make('Zidisha\Mail\BorrowerMailer');
 

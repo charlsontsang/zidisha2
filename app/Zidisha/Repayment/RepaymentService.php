@@ -11,9 +11,9 @@ use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Currency\Converter;
 use Zidisha\Currency\CurrencyService;
 use Zidisha\Currency\Money;
+use Zidisha\Loan\Base\ForgivenessLoanShareQuery;
 use Zidisha\Loan\BidQuery;
 use Zidisha\Loan\Calculator\RepaymentCalculator;
-use Zidisha\Loan\ForgivenLoanQuery;
 use Zidisha\Loan\Loan;
 use Zidisha\Vendor\PropelDB;
 
@@ -136,7 +136,7 @@ class RepaymentService
             ->filterServiceFee()
             ->getForeignTotalAmount($loan->getCurrency());
 
-        $forgivenAmount = ForgivenLoanQuery::create()
+        $forgivenAmount = ForgivenessLoanShareQuery::create()
             ->filterByLoan($loan)
             ->getForeignTotalAmount($loan->getCurrency());
 
