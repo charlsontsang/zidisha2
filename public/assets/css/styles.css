@@ -8457,6 +8457,10 @@ body {
     font-size: 28px;
   }
 }
+.home h2 a {
+  font-size: 16px;
+  font-weight: bold;
+}
 .home h3 {
   margin-top: 0;
 }
@@ -8488,6 +8492,9 @@ body {
 .btn-home:hover {
   background-color: #2e9df7;
   color: #fff;
+}
+.home .result {
+  height: 300px;
 }
 .filter-bar {
   margin-bottom: 0;
