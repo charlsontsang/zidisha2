@@ -891,11 +891,11 @@ class LoanService
     public function allowLoanForgiveness(Loan $loan, $data)
     {
         $forgivenessLoan = new ForgivenessLoan();
-//        $forgivenessLoan
-//            ->setLoan($loan)
-//            ->setComment($data['comment'])
-//            ->setBorrowerId ($loan->getBorrowerId())
-//            ->save();
+        $forgivenessLoan
+            ->setLoan($loan)
+            ->setComment($data['comment'])
+            ->setBorrowerId ($loan->getBorrowerId())
+            ->save();
 
         // TODO lenders instead of bids
         $bids = BidQuery::create()
