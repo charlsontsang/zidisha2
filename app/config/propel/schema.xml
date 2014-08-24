@@ -721,13 +721,11 @@
     </table>
 
     <table name="forgiveness_loans" phpName="ForgivenessLoan" namespace="Loan">
-        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
-        <column name="loan_id" type="INTEGER"/>
+        <column name="loan_id" type="INTEGER" required="true" primaryKey="true"/>
         <column name="borrower_id" type="INTEGER"/>
         <column name="comment" type="LONGVARCHAR" required="false"/>
         <column name="validation_code" type="VARCHAR" required="false" />
         <column name="is_reminder_sent" type="BOOLEAN" default="false" />
-        <column name="date" type="TIMESTAMP"/>
         <behavior name="timestampable"/>
         <foreign-key foreignTable="loans" phpName="Loan">
             <reference local="loan_id" foreign="id"/>
@@ -738,9 +736,9 @@
         <index name="borrower">
             <index-column name="borrower_id"/>
         </index>
-        <index name="loan_date">
+        <index name="loan_created">
             <index-column name="loan_id"/>
-            <index-column name="date"/>
+            <index-column name="created"/>
         </index>
     </table>
     
