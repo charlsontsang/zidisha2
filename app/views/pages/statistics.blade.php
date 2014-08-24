@@ -56,7 +56,9 @@ Statistics
         <i class="fa fa-fw fa-caret-down"></i>
     </div>
     <br/><br/>
-    Loan money raised: <i class="fa fa-info-circle raisedAmountFiltered" data-toggle="tooltip"></i>
+    <p>Loan money raised: <i class="fa fa-info-circle raisedAmountFiltered" data-toggle="tooltip"></i>
+    <br/>
+    USD {{ number_format($lendingStatistics['disbursed_amount'], 0, ".", ","); }}</p>
     <br/>
     <p>Loan projects funded: <i class="fa fa-info-circle loansFundedFiltered" data-toggle="tooltip"></i><br/>
     {{ number_format($lendingStatistics['raised_count'], 0, ".", ","); }}</p>
@@ -65,10 +67,8 @@ Statistics
     <br/>
     {{ number_format($lendingStatistics['average_lender_interest'], 1, ".", ","); }}%</p>
     <br/>
-    Principal repaid: <i class="fa fa-info-circle principalRepaid" data-toggle="tooltip"></i>
-    <br/>
-    Principal held by borrowers repaying on time (within 30-day threshold): <i class="fa fa-info-circle principalRepaidOnTime" data-toggle="tooltip"></i>
-    <br/>
+    
+
     Principal held by borrowers more than 30 days past due with scheduled repayments: <i class="fa fa-info-circle principalRepaidDue" data-toggle="tooltip"></i>
     <br/>
     Principal that has been forgiven by lenders: <i class="fa fa-info-circle principalForgiven" data-toggle="tooltip"></i>
