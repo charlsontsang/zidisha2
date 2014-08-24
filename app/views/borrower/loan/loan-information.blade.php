@@ -47,7 +47,7 @@
                                     <strong>@lang('borrower.your-loans.final-lender-interest-rate'):</strong>
                                 </td>
                                 <td>
-                                    {{ $lenderInterestRate }}%
+                                    {{ $loan->getLenderInterestRate() }}%
                                 </td>
                             </tr>
     
@@ -60,8 +60,7 @@
                                 </td>
                             </tr>
     
-                            <!--  TODO first loan -->
-                            @if(true)
+                            @if($loan->getRegistrationFee()->isPositive())
                             <tr>
                                 <td>
                                     <strong>@lang('borrower.your-loans.registration-fee'):</strong>
@@ -79,7 +78,7 @@
                                 <td>
                                     {{ $calculator->totalInterest() }}
                                     ({{ Lang::get($loan->isWeeklyInstallment() ? 'borrower.your-loans.interest-rate-for-weeks' : 'borrower.your-loans.interest-rate-for-months', [
-                                        'interestRate' => 16,
+                                        'interestRate' => $loan->getLenderInterestRate() + $loan->getServiceFeeRate(),
                                         'period' => $loan->getPeriod(),
                                     ]) }})
                                 </td>
