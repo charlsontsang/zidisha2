@@ -75,7 +75,14 @@ Statistics
         </p>
         <br/>
     @endif
-    
+    @if ($lendingStatistics['outstanding_on_time_amount'])
+        <p>Principal held by borrowers repaying on time (within 30-day threshold): <i class="fa fa-info-circle principalRepaidOnTime" data-toggle="tooltip"></i>
+        <br/>
+        USD {{ number_format($lendingStatistics['outstanding_on_time_amount'], 0, ".", ",") }}
+        ( {{ number_format($lendingStatistics['outstanding_on_time_rate'], 1, ".", ","); }}% of amount disbursed)
+        </p>
+        <br/>
+    @endif
 
     Principal held by borrowers more than 30 days past due with scheduled repayments: <i class="fa fa-info-circle principalRepaidDue" data-toggle="tooltip"></i>
     <br/>
