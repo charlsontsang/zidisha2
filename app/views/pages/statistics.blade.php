@@ -99,10 +99,14 @@ Statistics
          </p>
          <br/>
     @endif
-    
+    @if ($lendingStatistics['written_off_amount'])
+        <p>Principal that has been written off: <i class="fa fa-info-circle principalWrittenOff" data-toggle="tooltip"></i>
+        <br/>
+        USD {{ number_format($lendingStatistics['written_off_amount'], 0, ".", ","); }}
+        ( {{ number_format($lendingStatistics['written_off_rate'], 1, ".", ","); }}% of amount disbursed)
+    @endif
 
-    Principal that has been written off: <i class="fa fa-info-circle principalWrittenOff" data-toggle="tooltip"></i>
-    <br/>
+
     Want to dive deeper? You can see the individual loan reports that provided the raw data for these statistics <a href="https://www.zidisha.org/index.php?p=114">here, TODO</a>.
     <br/><br/>
 </div>
