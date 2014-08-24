@@ -27,7 +27,7 @@
 
         {{ BootstrapForm::select(
             'orderBy',
-            ['borrowerName' => 'Borrower Name', 'acceptedAt' => 'Bids Accepted Date'],
+            ['acceptedAt' => 'Bids Accepted Date', 'borrowerName' => 'Borrower Name'],
             $orderBy,
             ['label' => false]
         ) }}
@@ -45,24 +45,27 @@
     </div>
 </div>
 
-    @if($loans)
+    @if(!$loans->isEmpty())
         <table class="table table-striped">
             <tbody>
                 @foreach($loans as $loan)
 
                 <?php
+                    if ($loan->isAuthorized()) {
+                        $principalAmount = $loan->getAuthorizedAmount();
+                    } else {
+                        $principalAmount = Zidisha\Currency\Converter::fromUSD($loan->getUsdAmount(), $currency, $exchangeRate);
+                    }
 
-                $loanAmount = Zidisha\Currency\Converter::fromUSD($loan->getUsdAmount(), $currency, $exchangeRate);
-                $registrationFee = Zidisha\Currency\Money::create($loan->getRegistrationFee(), $currency);
-                $principalAmount = $loanAmount->subtract($registrationFee);
-
+                    $siftScienceScore = $loan->getSiftScienceScore();
+                    $siftScienceProfile = "https://siftscience.com/console/users/" . $loan->getBorrowerId();
                 ?>
 
                 <tr>
                     <td>
                         <div class="row">
                             <div class="col-xs-12">
-                                <h3>{{ $loan->getBorrower()->getName() }}</h3>
+                                <h3><a href="{{ route('borrower:public-profile', $loan->getBorrower()->getId()) }}">{{ $loan->getBorrower()->getName() }}</a></h3>
                             </div>
                         </div>
                         <div class="row">
@@ -82,13 +85,6 @@
                                 <dd>{{ $loan->getAcceptBidsNote() }}</dd>
                                 @endif
                             </dl>
-
-                            <?php 
-                                // TODO
-                                $siftScienceScore = $loan->getSiftScienceScore() + 50;
-                                $siftScienceProfile = "https://siftscience.com/console/users/" . $loan->getBorrowerId();
-                            ?>
-
 
                             @if($siftScienceScore > 50 && $siftScienceScore <75)
                                 <div class="alert alert-warning">
@@ -114,6 +110,10 @@
 
                         </div>
                         <div class="col-sm-6">
+                            {{ BootstrapForm::open(['action' => 'PendingDisbursementsController@post' . ($loan->isAuthorized() ? 'Disburse' : 'Authorize')]) }}
+
+                            {{ BootstrapForm::hidden('loanId', $loan->getId()) }}
+
                             <dl class="dl-horizontal dl-horizontal-left">
                                 <dt>Status</dt>
                                 <dd>
@@ -125,36 +125,42 @@
                                 </dd>
                                 
                                 <dt>Date Bids Accepted</dt>
-                                <dd>{{ $loan->getAcceptedAt('D M, Y') }}</dd>
-                                
-                                <dt>Requested Amount</dt>
-                                <dd>{{ $principalAmount }}</dd>
-
-                                <dt>Date Authorized</dt>
-                                <dd>
-                                    @if($loan->isAuthorized())
-                                        {{ $loan->getAuthorizedAt('M D, Y') }}
-                                    @else
-                                        {{ BootstrapForm::open(array('action' => 'PendingDisbursementsController@postAuthorize')) }}
-                                        {{ BootstrapForm::datepicker('authorizedAt', null, ['label' => false, 'style' => 'width: 180px;']) }}
-                                        {{ BootstrapForm::hidden('loanId', $loan->getId()) }}
-                                        {{ BootstrapForm::submit('Confirm Authorization') }}
-                                        {{ BootstrapForm::close() }}
-                                    @endif
-                                </dd>
+                                <dd>{{ $loan->getAcceptedAt('M j, Y') }}</dd>
 
                                 @if($loan->isAuthorized())
-                                <dt>Disbursement Date</dt>
+                                <dt>Date Authorized</dt>
+                                <dd>{{ $loan->getAuthorizedAt('M j, Y') }}</dd>
+                                @endif
+                                
+                                <dt>Principal Amount</dt>
                                 <dd>
-                                    {{ BootstrapForm::open(array('action' => 'PendingDisbursementsController@postDisburse')) }}
-                                    {{ BootstrapForm::datepicker('disbursedAt', null, ['label' => false, 'style' => 'width: 180px;']) }}
-                                    {{ BootstrapForm::hidden('loanId', $loan->getId()) }}
-                                    {{ BootstrapForm::hidden('principalAmount', $principalAmount->getAmount()) }}
-                                    {{ BootstrapForm::submit('Confirm Disbursement') }}
-                                    {{ BootstrapForm::close() }}
+                                    {{ BootstrapForm::text($loan->isAuthorized() ? 'disbursedAmount' : 'authorizedAmount', $principalAmount->getAmount(), ['label' => false, 'style' => 'width: 180px;']) }}
                                 </dd>
+
+                                @if(!$loan->isAuthorized())
+                                <dt>Date Authorized</dt>
+                                    <dd>
+                                        {{ BootstrapForm::datepicker('authorizedAt', null, ['label' => false, 'style' => 'width: 180px;']) }}
+                                        {{ BootstrapForm::submit('Confirm Authorization') }}
+                                    </dd>
+                                @endif
+                                
+                                @if($loan->isAuthorized())   
+                                    @if ($loan->getRegistrationFee()->isPositive())
+                                        <dt>Registration Fee</dt>
+                                        <dd>
+                                            {{ BootstrapForm::text('registrationFee', $loan->getRegistrationFee()->getAmount(), ['label' => false, 'style' => 'width: 180px;']) }}
+                                        </dd>
+                                    @endif
+                                        
+                                    <dt>Date Disbursed</dt>
+                                    <dd>
+                                        {{ BootstrapForm::datepicker('disbursedAt', null, ['label' => false, 'style' => 'width: 180px;']) }}
+                                        {{ BootstrapForm::submit('Confirm Disbursement') }}
+                                    </dd>
                                 @endif
                              </dl>
+                            {{ BootstrapForm::close() }}
 
                             <!-- Loan Notes -->
                            <hr/>
@@ -165,7 +171,7 @@
                                     @foreach($loanNotes[$loan->getId()] as $loanNote)
                                         <li>
                                             <span class="text-muted">
-                                                {{ $loanNote->getCreatedAt('M D, Y') }} by {{ $loanNote->getUser()->getUserName() }}
+                                                {{ $loanNote->getCreatedAt('M j, Y') }} by {{ $loanNote->getUser()->getUserName() }}
                                             </span>
                                             <p> {{ $loanNote->getNote() }} </p>
                                         </li>
@@ -186,6 +192,10 @@
             </tbody>
         </table>
     {{ BootstrapHtml::paginator($loans)->links() }}
+    @else
+        <p>
+            No pending disbursements.
+        </p>
     @endif
 
 

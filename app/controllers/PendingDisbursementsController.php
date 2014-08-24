@@ -130,11 +130,15 @@ class PendingDisbursementsController extends BaseController
         $loan = \Zidisha\Loan\LoanQuery::create()
             ->findOneById($loanId);
 
+        $authorizedAmount = Money::create(Input::get('authorizedAmount'), $loan->getCurrencyCode());
+
         if (!$loan) {
             App::abort(404, 'Loan not found');
         }
 
-        $loan->setAuthorizedAt($authorizedAt);
+        $loan
+            ->setAuthorizedAt($authorizedAt)
+            ->setAuthorizedAmount($authorizedAmount);
         $loan->save();
 
         return \Redirect::back();
@@ -148,16 +152,13 @@ class PendingDisbursementsController extends BaseController
         $loan = \Zidisha\Loan\LoanQuery::create()
             ->findOneById($loanId);
 
-        $principalAmount = Money::create(Input::get('principalAmount'), $loan->getCurrencyCode());
+        $disbursedAmount = Money::create(Input::get('disbursedAmount'), $loan->getCurrencyCode());
 
         if (!$loan) {
             App::abort(404, 'Loan not found');
         }
 
-        $loan->setDisbursedAt($disbursedAt);
-        $loan->save();
-
-        $this->loanService->disburseLoan($loan, $disbursedAt, $principalAmount);
+        $this->loanService->disburseLoan($loan, $disbursedAt, $disbursedAmount);
 
         return \Redirect::back();
     }
