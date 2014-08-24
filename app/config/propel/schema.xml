@@ -697,6 +697,7 @@
         <column name="borrower_id" type="INTEGER"/>
         <column name="amount" type="DECIMAL" size="10" scale="4" phpType="string"/>
         <column name="usdAmount" type="DECIMAL" size="10" scale="4" phpType="string"/>
+        <column name="acceptedForgiveness" type="BOOLEAN" required="false" />
         <column name="date" type="TIMESTAMP"/>
         <behavior name="timestampable"/>
         <foreign-key foreignTable="loans" phpName="Loan">
@@ -725,7 +726,7 @@
         <column name="loan_id" type="INTEGER" required="true" primaryKey="true"/>
         <column name="borrower_id" type="INTEGER"/>
         <column name="comment" type="LONGVARCHAR" required="false"/>
-        <column name="validation_code" type="VARCHAR" required="false" />
+        <column name="verification_code" type="VARCHAR" required="false" />
         <column name="is_reminder_sent" type="BOOLEAN" default="false" />
         <behavior name="timestampable"/>
         <foreign-key foreignTable="loans" phpName="Loan">
