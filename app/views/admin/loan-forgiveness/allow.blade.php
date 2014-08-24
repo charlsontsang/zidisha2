@@ -13,7 +13,7 @@ Allow loan forgiveness
 <hr/>
 
 <div>
-    {{ BootstrapForm::open(['route' => ['admin:loan-forgiveness:allow', $form->getCountry()->getId()]]) }}
+    {{ BootstrapForm::open(['route' => ['admin:loan-forgiveness:allow']]) }}
     
     {{ BootstrapForm::select('countryCode', $form->getCountries(), $form->getCountry()->getCountryCode(), ['label' => 'Select Country', 'id' => 'countrySelect']) }}
 
