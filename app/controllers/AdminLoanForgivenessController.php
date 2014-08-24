@@ -1,6 +1,6 @@
 <?php
 
-use Zidisha\Admin\Form\ForgiveLoanForm;
+use Zidisha\Admin\Form\AllowLoanForgivenessForm;
 use Zidisha\Country\CountryQuery;
 use Zidisha\Loan\ForgivenessLoanQuery;
 use Zidisha\Loan\Loan;
@@ -14,14 +14,14 @@ class AdminLoanForgivenessController extends BaseController
      */
     private $loanService;
     /**
-     * @var Zidisha\Admin\Form\ForgiveLoanForm
+     * @var Zidisha\Admin\Form\AllowLoanForgivenessForm
      */
-    private $forgiveLoanForm;
+    private $allowLoanForgivenessForm;
 
-    public function __construct(LoanService $loanService, ForgiveLoanForm $forgiveLoanForm)
+    public function __construct(LoanService $loanService, AllowLoanForgivenessForm $allowLoanForgivenessForm)
     {
         $this->loanService = $loanService;
-        $this->forgiveLoanForm = $forgiveLoanForm;
+        $this->allowLoanForgivenessForm = $allowLoanForgivenessForm;
     }
 
     public function getIndex($countryCode = 'KE')
@@ -41,10 +41,10 @@ class AdminLoanForgivenessController extends BaseController
 
         $forgivenessLoans = ForgivenessLoanQuery::create()
             ->useBorrowerQuery()
-            ->filterByCountry($country)
+                ->filterByCountry($country)
             ->endUse()
             ->orderByCreatedAt('DESC')
-            ->paginate($page, 10);
+            ->paginate($page, 20);
 
         return View::make(
             'admin.loan-forgiveness.index',
@@ -54,41 +54,14 @@ class AdminLoanForgivenessController extends BaseController
 
     public function getAllow()
     {
-        $countryCode = Input::get('countryCode', 'KE');
-
-        $country = CountryQuery::create()
-            ->findOneByCountryCode($countryCode);
-
-        if (!$country) {
-            \App::abort(404, 'wrong country code.');
-        }
-
-        $borrowerCountries = CountryQuery::create()
-            ->filterByBorrowerCountry(true)
-            ->find()
-            ->toKeyValue('countryCode', 'name');
-
-        $loans = LoanQuery::create()
-            ->useBorrowerQuery()
-            ->filterByCountry($country)
-            ->endUse()
-            ->filterByStatus(Loan::ACTIVE)
-            ->find()
-            ->toKeyValue('id', 'summary');
-
-        return View::make('admin.loan-forgiveness.allow', compact('borrowerCountries', 'country', 'loans'));
+        $form = $this->allowLoanForgivenessForm;
+        
+        return View::make('admin.loan-forgiveness.allow', compact('borrowerCountries', 'form'));
     }
 
-    public function postAllow($countryId)
+    public function postAllow()
     {
-        $country = CountryQuery::create()
-            ->findOneById($countryId);
-
-        if (!$country) {
-            \App::abort(404, 'wrong country code.');
-        }
-
-        $form = $this->forgiveLoanForm;
+        $form = $this->allowLoanForgivenessForm;
         $form->handleRequest(Request::instance());
 
         if ($form->isValid()) {

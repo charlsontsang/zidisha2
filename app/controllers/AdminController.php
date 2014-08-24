@@ -8,7 +8,7 @@ use Zidisha\Admin\Form\FeatureFeedbackForm;
 use Zidisha\Admin\Form\FilterBorrowers;
 use Zidisha\Admin\Form\FilterLenders;
 use Zidisha\Admin\Form\FilterLoans;
-use Zidisha\Admin\Form\ForgiveLoanForm;
+use Zidisha\Admin\Form\AllowLoanForgivenessForm;
 use Zidisha\Admin\Form\SettingsForm;
 use Zidisha\Admin\Form\WithdrawalRequestsForm;
 use Zidisha\Admin\Setting;
@@ -58,7 +58,7 @@ class AdminController extends BaseController
     private $importService;
     private $repaymentService;
     /**
-     * @var ForgiveLoanForm
+     * @var AllowLoanForgivenessForm
      */
     private $forgiveLoanForm;
 
@@ -83,7 +83,7 @@ class AdminController extends BaseController
         EnterRepaymentForm $enterRepaymentForm,
         ImportService$importService,
         RepaymentService $repaymentService,
-        ForgiveLoanForm $forgiveLoanForm
+        AllowLoanForgivenessForm $forgiveLoanForm
     ) {
         $this->lenderQuery = $lenderQuery;
         $this->$borrowerQuery = $borrowerQuery;

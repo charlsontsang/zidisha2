@@ -9,15 +9,15 @@ Allow loan forgiveness
     <h1>Allow Forgive Loans</h1>
 </div>
 
-<a href="{{route('admin:loan-forgiveness:index')}}?countryCode={{ $country->getCountryCode() }}">See Forgiven Loans</a>
+<a href="{{route('admin:loan-forgiveness:index'), $form->getCountry()->getCountryCode() }} }}">See Forgiven Loans</a>
 <hr/>
 
 <div>
-    {{ BootstrapForm::open(['route' => ['admin:loan-forgiveness:allow', $country->getId()]]) }}
+    {{ BootstrapForm::open(['route' => ['admin:loan-forgiveness:allow', $form->getCountry()->getId()]]) }}
     
-    {{ BootstrapForm::select('countryCode', $borrowerCountries, $country->getCountryCode(), ['label' => 'Select Country', 'id' => 'countrySelect']) }}
+    {{ BootstrapForm::select('countryCode', $form->getCountries(), $form->getCountry()->getCountryCode(), ['label' => 'Select Country', 'id' => 'countrySelect']) }}
 
-    {{ BootstrapForm::select('loanId', $loans, null,['label' => 'Select Loan']) }}
+    {{ BootstrapForm::select('loanId', $form->getLoans(), null, ['label' => 'Select Loan']) }}
 
     {{ BootstrapForm::textarea('comment', null, ['label' => 'Comment']) }}
 
