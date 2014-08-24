@@ -91,9 +91,16 @@ Statistics
         </p>
         <br/>
     @endif
+    @if ($lendingStatistics['forgiven_amount'])
+         <p>Principal that has been forgiven by lenders: <i class="fa fa-info-circle principalForgiven" data-toggle="tooltip"></i>
+         <br/>
+         USD {{ number_format($lendingStatistics['forgiven_amount'], 0, ".", ","); }}
+         ( {{ number_format($lendingStatistics['forgiven_rate'], 1, ".", ","); }}% of amount disbursed)
+         </p>
+         <br/>
+    @endif
+    
 
-    Principal that has been forgiven by lenders: <i class="fa fa-info-circle principalForgiven" data-toggle="tooltip"></i>
-    <br/>
     Principal that has been written off: <i class="fa fa-info-circle principalWrittenOff" data-toggle="tooltip"></i>
     <br/>
     Want to dive deeper? You can see the individual loan reports that provided the raw data for these statistics <a href="https://www.zidisha.org/index.php?p=114">here, TODO</a>.
