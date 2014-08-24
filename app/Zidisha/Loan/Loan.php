@@ -135,6 +135,23 @@ class Loan extends BaseLoan implements CommentReceiverInterface
     /**
      * @return Money
      */
+    public function getAuthorizedAmount()
+    {
+        return Money::create(parent::getAuthorizedAmount(), $this->getCurrencyCode());
+    }
+
+    /**
+     * @param Money $money
+     * @return $this|Loan
+     */
+    public function setAuthorizedAmount($money)
+    {
+        return parent::setAuthorizedAmount($money->getAmount());
+    }
+    
+    /**
+     * @return Money
+     */
     public function getDisbursedAmount()
     {
         return Money::create(parent::getDisbursedAmount(), $this->getCurrencyCode());

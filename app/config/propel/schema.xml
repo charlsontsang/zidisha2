@@ -92,6 +92,8 @@
         <column name="expired_at" type="TIMESTAMP"/>
         <column name="canceled_at" type="TIMESTAMP"/>
         <column name="repaid_at" type="TIMESTAMP"/>
+        <column name="authorized_at" type="TIMESTAMP" required="false"/>
+        <column name="authorized_amount" type="DECIMAL" size="10" scale="2" phpType="string" required="false"/>
         <column name="disbursed_at" type="TIMESTAMP" required="false"/>
         <column name="disbursed_amount" type="DECIMAL" size="10" scale="2" phpType="string"/>
         <column name="registration_fee" type="DECIMAL" size="10" scale="2" defaultValue="0.00" phpType="string"/>
@@ -105,7 +107,6 @@
         <column name="period" type="INTEGER"/>
         <column name="accept_bids_note" type="LONGVARCHAR" required="false"/>
         <column name="sift_science_score" type="DECIMAL" required="false"/>
-        <column name="authorized_at" type="TIMESTAMP" required="false"/>
         <column name="deleted_by_admin" type="BOOLEAN" required="true" default="false"/>
         <behavior name="timestampable"/>
         <foreign-key foreignTable="loan_categories" phpName="Category">
