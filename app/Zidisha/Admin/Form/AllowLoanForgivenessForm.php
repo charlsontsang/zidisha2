@@ -26,6 +26,18 @@ class AllowLoanForgivenessForm extends AbstractForm
         ];
     }
 
+    public function getDefaultDate()
+    {
+        return [
+            'countryCode' => $this->getCountry()->getCountryCode(),
+        ];
+    }
+
+    public function setCountry(Country $country)
+    {
+        $this->country = $country;
+    }
+
     public function getCountry()
     {
         if (!$this->country) {

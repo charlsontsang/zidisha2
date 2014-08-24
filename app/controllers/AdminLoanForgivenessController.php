@@ -52,9 +52,17 @@ class AdminLoanForgivenessController extends BaseController
         );
     }
 
-    public function getAllow()
+    public function getAllow($countryCode)
     {
+        $country = CountryQuery::create()
+            ->findOneByCountryCode($countryCode);
+
+        if (!$country) {
+            \App::abort(404, 'wrong country code.');
+        }
+        
         $form = $this->allowLoanForgivenessForm;
+        $form->setCountry($country);
         
         return View::make('admin.loan-forgiveness.allow', compact('borrowerCountries', 'form'));
     }
@@ -74,7 +82,9 @@ class AdminLoanForgivenessController extends BaseController
         }
 
         \Flash::error('Please enter valid inputs');
-        return Redirect::back();
+        $countryCode = \Input::get('countryCode', 'KE');
+        $countryCode = $form->isValidCountryCode($countryCode) ? $countryCode : 'KE';
+        return Redirect::route('admin:loan-forgiveness:allow', $countryCode)->withForm($form);
     }
 
     public function getLoans()

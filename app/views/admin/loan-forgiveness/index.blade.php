@@ -9,7 +9,7 @@ Forgiven Loans
     <h1>Loan Forgiveness</h1>
 </div>
 
-<a href="{{route('admin:loan-forgiveness:allow')}}">Allow Loan Forgiveness</a>
+<a href="{{route('admin:loan-forgiveness:allow', $countryCode)}}">Allow Loan Forgiveness</a>
 <hr/>
 
 <ul class="nav nav-tabs" role="tablist">

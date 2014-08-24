@@ -690,18 +690,18 @@ Route::group(
                 );
                 
                 Route::get(
-                    'loan-forgiveness/{countryId?}',
+                    'loan-forgiveness/{countryCode?}',
                     ['uses' => 'AdminLoanForgivenessController@getIndex', 'as' => 'admin:loan-forgiveness:index']
                 );
 
                 Route::get(
-                    'allow-loan-forgiveness',
+                    'allow-loan-forgiveness/{countryCode}',
                     ['uses' => 'AdminLoanForgivenessController@getAllow', 'as' => 'admin:loan-forgiveness:allow']
                 );
 
                 Route::post(
                     'allow-loan-forgiveness',
-                    ['uses' => 'AdminLoanForgivenessController@postAllow', 'as' => 'admin:loan-forgiveness:allow']
+                    ['uses' => 'AdminLoanForgivenessController@postAllow']
                 );
 
                 Route::get(
