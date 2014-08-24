@@ -9,9 +9,9 @@
     line-height: 31px;
   }
 }
-.home h1 {
+.home h1, .home h2, .home h3 {
   @media (max-width: @screen-xs-max) {
-    font-size: 28px;
+    font-size: 22px;
   }
 }
 .home h2 a {
@@ -30,6 +30,10 @@
   text-align: left !important;
 }
 .home img.press-logo {
+  @media (max-width: @screen-xs-max) {
+    display: none;
+  }
+  display: block;
   padding-top: 11px; 
   -webkit-filter: grayscale(1); 
   filter: grayscale(1);
@@ -50,7 +54,10 @@
   color: #fff;
 }
 .home-section {
-  padding: 50px 15px; 
+  padding: 30px 15px; 
+  @media (min-width: @screen-sm-min) {
+    padding: 50px 15px; 
+  }
 }
 .home-grey {
   background-color: #f9f9f9;

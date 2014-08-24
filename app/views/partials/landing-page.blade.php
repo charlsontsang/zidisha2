@@ -62,7 +62,7 @@
     <div class="col-sm-4">
       <p><i class="fa fa-fw fa-dollar"></i></p>
       <h3>Lower cost for borrowers</h3>
-      <p>Profits from the loans go to our borrowers and lenders, not to intermediaries.
+      <p>Profits from the loans go to the borrowers and their communities, not to intermediaries.
     </div>
 
     <div class="col-sm-4">

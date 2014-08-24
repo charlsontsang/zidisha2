@@ -34,7 +34,7 @@ class HomeController extends BaseController {
     {
         $secondaryCaption = 'and join the global <strong>person-to-person</strong> microlending movement.';
         $buttonText = 'Browse Projects';
-        $buttonTextBottom = 'Start exploring loan projects';
+        $buttonTextBottom = 'Start exploring projects';
         
         $conditions['status'] = Loan::OPEN;
         $conditions['categoryId'] = '18';

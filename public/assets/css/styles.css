@@ -8085,6 +8085,7 @@ body {
   margin-top: 0;
   font-size: 16px;
   line-height: 23px;
+  font-weight: 300;
 }
 @media (min-width: 768px) {
   .info-page p,
@@ -8092,7 +8093,6 @@ body {
   .info-page ol li {
     font-size: 18px;
     line-height: 28px;
-    font-weight: 300;
   }
 }
 .info-page p {
@@ -8453,8 +8453,10 @@ body {
   }
 }
 @media (max-width: 767px) {
-  .home h1 {
-    font-size: 28px;
+  .home h1,
+  .home h2,
+  .home h3 {
+    font-size: 22px;
   }
 }
 .home h2 a {
@@ -8473,9 +8475,15 @@ body {
   text-align: left !important;
 }
 .home img.press-logo {
+  display: block;
   padding-top: 11px;
   -webkit-filter: grayscale(1);
   filter: grayscale(1);
+}
+@media (max-width: 767px) {
+  .home img.press-logo {
+    display: none;
+  }
 }
 .btn-home {
   font-size: 20px;
@@ -8495,7 +8503,12 @@ body {
   color: #fff;
 }
 .home-section {
-  padding: 50px 15px;
+  padding: 30px 15px;
+}
+@media (min-width: 768px) {
+  .home-section {
+    padding: 50px 15px;
+  }
 }
 .home-grey {
   background-color: #f9f9f9;
