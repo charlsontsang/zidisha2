@@ -22,7 +22,7 @@ class AllowLoanForgivenessForm extends AbstractForm
         return [
             'countryCode' => 'required|exists:countries,country_code,borrower_country,1',
             'loanId'      => 'required|in:' . implode(',', array_keys($this->getLoans())),
-            'comment'     => ''
+            'comment'     => 'required'
         ];
     }
 
