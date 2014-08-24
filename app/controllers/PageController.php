@@ -118,7 +118,7 @@ class PageController extends BaseController {
         $countries = CountryQuery::create()
             ->filterByBorrowerCountry(true);
         $routeParams = [
-            'timePeriod' => 'all time',
+            'timePeriod' => 'year_ago',
             'country' => 'everywhere'
         ];
         $selectedTimePeriod = $timePeriod;
