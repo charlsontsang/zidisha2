@@ -123,4 +123,19 @@ class AdminLoanForgivenessController extends BaseController
 
         $this->loanService->forgiveLoanShare($loan, $lender);
     }
+
+    public function lenderRejectForgiveLoan($verificationCode)
+    {
+        $forgivenessLoan = ForgivenessLoanQuery::create()
+            ->findOneByValidationCode($verificationCode);
+
+        if (! $forgivenessLoan) {
+            \App::abort(404, 'Opps something went wrong.');
+        }
+
+        $loan = $forgivenessLoan->getLoan();
+        $lender = \Auth::user()->getLender();
+
+        $this->loanService->rejectForgiveLoanShare($loan, $lender);
+    }
 } 
