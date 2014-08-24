@@ -1131,4 +1131,22 @@
             <reference local="country_id" foreign="id"/>
         </foreign-key>
     </table>
+
+    <table name="loans_to_forgive" phpName="LoanToForgive" namespace="Loan">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="borrower_id" type="INTEGER" required="true"/>
+        <column name="loan_id" type="INTEGER" required="true"/>
+        <column name="comment" type="LONGVARCHAR" required="true"/>
+        <column name="lender_denied" type="LONGVARCHAR" required="true"/>
+        <column name="validation_code" type="VARCHAR" required="true"/>
+        <column name="reminder_sent" type="INTEGER" required="true"/>
+        <column name="date" type="TIMESTAMP"/>
+        <behavior name="timestampable"/>
+        <foreign-key foreignTable="loans" phpName="Loan">
+            <reference local="loan_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="borrowers" phpName="Borrower">
+            <reference local="borrower_id" foreign="id"/>
+        </foreign-key>
+    </table>
 </database>
