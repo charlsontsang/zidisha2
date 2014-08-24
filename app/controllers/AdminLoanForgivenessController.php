@@ -69,8 +69,8 @@ class AdminLoanForgivenessController extends BaseController
             $loan = LoanQuery::create()->findOneById($data['loanId']);
             $forgivenessLoan = $this->loanService->allowLoanForgiveness($loan, $data);
 
-            \Flash::success('Loan forgiven.');
-            return Redirect::route('admin:allow-forgive-loan');
+            \Flash::success('Allowed loan forgiveness.');
+            return Redirect::route('admin:loan-forgiveness:index', $form->getCountry()->getCountryCode());
         }
 
         \Flash::error('Please enter valid inputs');
