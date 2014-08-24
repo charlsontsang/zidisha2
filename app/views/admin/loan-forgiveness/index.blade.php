@@ -6,10 +6,10 @@ Forgiven Loans
 
 @section('content')
 <div class="page-header">
-    <h1>Forgiven Loans</h1>
+    <h1>Loan Forgiveness</h1>
 </div>
 
-<a href="{{route('admin:loan-forgiveness:allow')}}"> Allow Forgive Loan</a>
+<a href="{{route('admin:loan-forgiveness:allow')}}">Allow Loan Forgiveness</a>
 <hr/>
 
 <ul class="nav nav-tabs" role="tablist">
