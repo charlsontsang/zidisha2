@@ -17,7 +17,7 @@ return [
         'loan-confirmation'                     => 'You may modify your loan application by clicking the "Go Back and Edit" button. Once you click "Confirm and Publish", your application will be posted for funding by lenders.',
         'table'                                 => [
             'due-date'          => 'Due Date (Number Of months after disbursement Date)',
-            'repayment-due'     => 'Repayment Due (Country Currency Code)',
+            'repayment-due'     => 'Repayment Due (:currencyCode)',
             'balance-remaining' => 'Balance Remaining',
             'total-repayment'   => 'Total Repayment',
         ]

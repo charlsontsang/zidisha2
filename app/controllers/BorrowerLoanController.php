@@ -42,9 +42,14 @@ class BorrowerLoanController extends BaseController
             $acceptedBids = $bidsCalculator->getAcceptedBids($bids, $loan->getUsdAmount());
             $lenderInterestRate = $bidsCalculator->getLenderInterestRate($acceptedBids, $loan->getUsdAmount());
             $loan->setLenderInterestRate($lenderInterestRate);
+            $loan->setDisbursedAt(new \DateTime());
             
             $installmentCalculator = new InstallmentCalculator($loan);
+            $installments = $installmentCalculator->generateLoanInstallments();
+            unset($installments[0]);
+            
             $data['calculator'] = $installmentCalculator;
+            $data['installments'] = $installments;
         }
 
         return View::make('borrower.loan.loan-information' , $data);

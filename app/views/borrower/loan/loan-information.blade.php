@@ -76,7 +76,7 @@
                                     <strong>@lang('borrower.your-loans.total-interest-and-fees'):</strong>
                                 </td>
                                 <td>
-                                    {{ $calculator->totalInterest() }}
+                                    {{ $calculator->totalInterest()->round(2) }}
                                     ({{ Lang::get($loan->isWeeklyInstallment() ? 'borrower.your-loans.interest-rate-for-weeks' : 'borrower.your-loans.interest-rate-for-months', [
                                         'interestRate' => $loan->getLenderInterestRate() + $loan->getServiceFeeRate(),
                                         'period' => $loan->getPeriod(),
@@ -89,9 +89,45 @@
                                     <strong>@lang('borrower.your-loans.total-amount'):</strong>
                                 </td>
                                 <td>
-                                    {{ $calculator->totalAmount() }}
+                                    {{ $calculator->totalAmount()->round(2) }}
                                 </td>
                             </tr>
+                        </tbody>
+                    </table>
+
+                    <p>
+                        @lang('borrower.your-loans.accept-bids.schedule')
+                    </p>
+                    
+                    
+                    <table class="table table-striped table-bordered">
+                        <thead>
+                        <tr>
+                            <th>{{ \Lang::get('borrower.loan-application.publish-loan.table.due-date') }}</th>
+                            <th>{{ \Lang::get('borrower.loan-application.publish-loan.table.repayment-due', ['currencyCode' => $loan->getCurrencyCode()]) }}</th>
+                            <th>{{ \Lang::get('borrower.loan-application.publish-loan.table.balance-remaining') }}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php
+                        $i = 1;
+                        $remainingAmount = $calculator->totalAmount();
+                        ?>
+                        @foreach($installments as $installment)
+                        <tr>
+                            <td>{{ $i }}</td>
+                            <?php $remainingAmount = $remainingAmount->subtract($installment->getAmount()) ?>
+                            <td>{{ $installment->getAmount()->round(2)->getAmount() }}</td>
+                            <td>{{ $remainingAmount->round(2)->getAmount() }}</td>
+                            <?php $i++; ?>
+                        </tr>
+                        @endforeach
+
+                        <tr>
+                            <td> <strong>{{ \Lang::get('borrower.loan-application.publish-loan.table.total-repayment') }}</strong> </td>
+                            <td> <strong> {{  $calculator->totalAmount()->round(2)->getAmount() }} </strong> </td>
+                            <td></td>
+                        </tr>
                         </tbody>
                     </table>
                     
