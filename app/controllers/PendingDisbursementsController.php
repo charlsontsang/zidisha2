@@ -4,6 +4,7 @@ use Zidisha\Country\CountryQuery;
 use Zidisha\Currency\ExchangeRateQuery;
 use Zidisha\Currency\Money;
 use Zidisha\Loan\Loan;
+use Zidisha\Loan\LoanNoteQuery;
 use Zidisha\Loan\LoanService;
 
 class PendingDisbursementsController extends BaseController
@@ -17,16 +18,7 @@ class PendingDisbursementsController extends BaseController
     {
         $this->loanService = $loanService;
     }
-
-    public function getPendingDisbursements()
-    {
-        $countries = CountryQuery::create()
-            ->filterByBorrowerCountry(true)
-            ->find();
-
-        return View::make('admin.pending-disbursements.pending-disbursements-select-country', compact('countries'));
-    }
-
+    
     public function postPendingDisbursements()
     {
         if (!\Input::get('countryCode')) {
@@ -36,14 +28,16 @@ class PendingDisbursementsController extends BaseController
         $countryCode = \Input::get('countryCode');
 
         return Redirect::action(
-            'PendingDisbursementsController@getPendingDisbursementsByCountry',
+            'PendingDisbursementsController@getPendingDisbursements',
             ['countryCode' => $countryCode]
         );
     }
 
-    public function getPendingDisbursementsByCountry($countryCode)
+    public function getPendingDisbursements($countryCode = 'KE')
     {
         $page = Input::get('page', 1);
+        $orderBy = Input::get('orderBy', 'acceptedAt');
+        $orderDirection = Input::get('orderDirection', 'asc');
 
         $country = CountryQuery::create()
             ->findOneByCountryCode(strtoupper($countryCode));
@@ -57,19 +51,50 @@ class PendingDisbursementsController extends BaseController
             \App::abort(404, 'please select proper country');
         }
 
-        $loans = \Zidisha\Loan\LoanQuery::create()
+        $loansQuery = \Zidisha\Loan\LoanQuery::create()
+            ->joinWith('Borrower')
+            ->joinWith('Borrower.Profile')
             ->useBorrowerQuery()
                 ->filterByCountry($country)
             ->endUse()
-            ->filterByStatus(Loan::FUNDED)
-            ->orderByAcceptedAt('desc')
-            ->joinWith('Borrower')
-            ->joinWith('Borrower.Profile')
+            ->filterByStatus(Loan::FUNDED);
+        
+        if ($orderBy == 'borrowerName') {
+            $loansQuery->orderBy('Borrower.FirstName', $orderDirection);
+        } else {
+           $loansQuery->orderByAcceptedAt($orderDirection);
+        }
+        
+        $loans = $loansQuery
             ->paginate($page, 10);
 
         $loans->populateRelation('LoanNote');
 
-        return View::make('admin.pending-disbursements.pending-disbursements', compact('loans', 'exchangeRate', 'currency'));
+        $countries = CountryQuery::create()
+            ->filterByBorrowerCountry(true)
+            ->find();
+
+        $_loanNotes = LoanNoteQuery::create()
+            ->filterByLoanId($loans->toKeyValue('id', 'id'))
+            ->joinWith('User')
+            ->find();
+        
+        $loanNotes = [];
+        foreach ($_loanNotes as $loanNote) {
+            if (!isset($loanNotes[$loanNote->getLoanId()])) {
+                $loanNotes[$loanNote->getLoanId()] = [];
+            }
+            $loanNotes[$loanNote->getLoanId()][] = $loanNote;
+        }
+
+        return View::make(
+            'admin.pending-disbursements.pending-disbursements',
+            compact(
+                'loans', 'loanNotes', 'exchangeRate',
+                'currency', 'country', 'countries',
+                'orderBy', 'orderDirection'
+            )
+        );
     }
 
     public function postLoanNote()

@@ -618,20 +618,15 @@ Route::group(
                     'translation/{filename}/{languageCode}',
                     ['uses' => 'TranslationController@postTranslations', 'as' => 'admin:translation:post']
                 );
-
-                Route::get(
-                    'pending-disbursements',
-                    ['uses' => 'PendingDisbursementsController@getPendingDisbursements', 'as' => 'admin:pending-disbursements']
-                );
-
+                
                 Route::post(
                     'pending-disbursements',
                     ['uses' => 'PendingDisbursementsController@postPendingDisbursements', 'as' => 'admin:pending-disbursements']
                 );
 
                 Route::get(
-                    'pending-disbursements/{countryId}',
-                    ['uses' => 'PendingDisbursementsController@getPendingDisbursementsByCountry', 'as' => 'admin:pending-disbursements:country']
+                    'pending-disbursements/{countryId?}',
+                    ['uses' => 'PendingDisbursementsController@getPendingDisbursements', 'as' => 'admin:pending-disbursements']
                 );
 
                 Route::post(
