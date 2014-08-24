@@ -2,6 +2,7 @@
 
 namespace Zidisha\Admin\Form;
 
+use Propel\Runtime\ActiveQuery\Criteria;
 use Zidisha\Country\Country;
 use Zidisha\Country\CountryQuery;
 use Zidisha\Form\AbstractForm;
@@ -20,7 +21,7 @@ class AllowLoanForgivenessForm extends AbstractForm
     {
         return [
             'countryCode' => 'required|exists:countries,country_code,borrower_country,1',
-            'loanId'      => 'required|exists:loans,id',
+            'loanId'      => 'required|in:' . implode(',', array_keys($this->getLoans())),
             'comment'     => ''
         ];
     }
@@ -48,7 +49,10 @@ class AllowLoanForgivenessForm extends AbstractForm
     {
         $_loans = LoanQuery::create()
             ->useBorrowerQuery()
-            ->filterByCountry($this->getCountry())
+                ->filterByCountryId($this->getCountry()->getId())
+            ->endUse()
+            ->useForgivenessLoanQuery(null, Criteria::LEFT_JOIN)
+                ->filterByLoanId(null, Criteria::ISNULL)
             ->endUse()
             ->filterByStatus(Loan::ACTIVE)
             ->find();
