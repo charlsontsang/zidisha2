@@ -6,10 +6,10 @@ namespace Zidisha\Statistic;
 use Carbon\Carbon;
 use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Currency\ExchangeRateQuery;
-use Zidisha\Loan\ForgivenLoanQuery;
+use Zidisha\Loan\ForgivenessLoanQuery;
+use Zidisha\Loan\ForgivenessLoanShareQuery;
 use Zidisha\Loan\Loan;
 use Zidisha\Loan\LoanService;
-use Zidisha\Loan\LoanToForgiveQuery;
 use Zidisha\Repayment\InstallmentQuery;
 use Zidisha\Vendor\PropelDB;
 
@@ -210,7 +210,7 @@ class StatisticsService
                         $r = "SELECT id from installment_payments where loan_id = :loanId AND borrower_id = :borrowerId AND paid_date < :paidDate order by id desc";
                         $rid = PropelDB::fetchNumber($r, ['loanId' => $row['id'], 'borrowerId' => $row['borrower_id'], 'paidDate' => $date]);
 
-                        $t="SELECT sum(amount) from forgiven_loans where loan_id = :loanId AND borrower_id= :borrowerId AND date < :date";
+                        $t="SELECT sum(amount) from forgiveness_loan_shares where loan_id = :loanId AND borrower_id= :borrowerId AND date < :date";
                         $forgiveAmount = PropelDB::fetchNumber($t, ['loanId' => $row['id'], 'borrowerId' => $row['borrower_id'], 'date' => $date]);
 
                         $ratio = $this->loanService->getPrincipalRatio($row['id']);
@@ -274,11 +274,11 @@ class StatisticsService
                         $principalOutstandingUsd += $row['principleOutstanding'] / $exchangeRate;
                         break;
                     case Loan::REPAID:
-                        $isforgive = LoanToForgiveQuery::create()
+                        $isforgive = ForgivenessLoanQuery::create()
                             ->isLoanAlreadyInForgiveness($row['id']);
                         $repaid_amountUsd +=($row['disbursed_amount']/$exchangeRate);
                         if ($isforgive){
-                            $forgiveAmount = ForgivenLoanQuery::create()
+                            $forgiveAmount = ForgivenessLoanShareQuery::create()
                                 ->filterByLoanId($row['id'])
                                 ->filterByBorrowerId($row['borrower_id'])
                                 ->select('amount')
@@ -305,7 +305,7 @@ class StatisticsService
                             $defaultAmountUsd += ($defaultAmount/$exchangeRate);
                             $defaultpaidamount =($paidamount* $ratio);
                             $repaid_amountUsd += ($defaultpaidamount/$exchangeRate);
-                            $forgiveAmount = ForgivenLoanQuery::create()
+                            $forgiveAmount = ForgivenessLoanShareQuery::create()
                                 ->filterByLoanId($row['id'])
                                 ->filterByBorrowerId($row['borrower_id'])
                                 ->select('amount')

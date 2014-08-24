@@ -918,7 +918,7 @@ class LoanService
         if($date) {
             //TODO
         } else {
-            $s = "SELECT sum(amount) from forgiven_loans where loan_id = :loanId";
+            $s = "SELECT sum(amount) from forgiveness_loan_shares where loan_id = :loanId";
             $forgiveAmount = PropelDB::fetchNumber($s, ['loanId' => $loanId]);
         }
 
