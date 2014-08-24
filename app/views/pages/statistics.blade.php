@@ -67,6 +67,14 @@ Statistics
     <br/>
     {{ number_format($lendingStatistics['average_lender_interest'], 1, ".", ","); }}%</p>
     <br/>
+    @if ($lendingStatistics['repaid_amount'])
+        <p>Principal repaid: <i class="fa fa-info-circle principalRepaid" data-toggle="tooltip"></i>
+        <br/>
+        USD {{ number_format($lendingStatistics['repaid_amount'], 0, ".", ","); }}
+        ( {{ number_format($lendingStatistics['repaid_rate'], 1, ".", ","); }}% of amount disbursed)
+        </p>
+        <br/>
+    @endif
     
 
     Principal held by borrowers more than 30 days past due with scheduled repayments: <i class="fa fa-info-circle principalRepaidDue" data-toggle="tooltip"></i>
