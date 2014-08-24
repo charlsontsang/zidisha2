@@ -29,7 +29,7 @@ Forgiven Loans
             <th>Loan Id</th>
             <th>Comment</th>
             <th>Date</th>
-            <th>detail</th>
+            <th>Detail</th>
         </tr>
     </thead>
     <tbody>
