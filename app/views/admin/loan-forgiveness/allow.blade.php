@@ -9,11 +9,11 @@ Allow loan forgiveness
     <h1>Allow Forgive Loans</h1>
 </div>
 
-<a href="{{route('admin:forgiven-loan:index')}}?countryCode={{ $country->getCountryCode() }}">See Forgiven Loans</a>
+<a href="{{route('admin:loan-forgiveness:index')}}?countryCode={{ $country->getCountryCode() }}">See Forgiven Loans</a>
 <hr/>
 
 <div>
-    {{ BootstrapForm::open(['route' => ['admin:post:allow-forgive-loan', $country->getId()]]) }}
+    {{ BootstrapForm::open(['route' => ['admin:loan-forgiveness:allow', $country->getId()]]) }}
     
     {{ BootstrapForm::select('countryCode', $borrowerCountries, $country->getCountryCode(), ['label' => 'Select Country', 'id' => 'countrySelect']) }}
 
@@ -30,7 +30,7 @@ Allow loan forgiveness
 @section('script-footer')
 <script>
    $('#countrySelect').change(function(e){
-       window.location.href = '{{ route('admin:allow-forgive-loan').'?countryCode=' }}' +  $("#countrySelect option:selected").attr('value');
+       window.location.href = '{{ route('admin:loan-forgiveness:allow').'?countryCode=' }}' +  $("#countrySelect option:selected").attr('value');
    });
 </script>
 @stop
