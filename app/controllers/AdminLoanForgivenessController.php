@@ -3,6 +3,7 @@
 use Zidisha\Admin\Form\AllowLoanForgivenessForm;
 use Zidisha\Country\CountryQuery;
 use Zidisha\Loan\ForgivenessLoanQuery;
+use Zidisha\Loan\ForgivenessLoanShareQuery;
 use Zidisha\Loan\Loan;
 use Zidisha\Loan\LoanQuery;
 use Zidisha\Loan\LoanService;
@@ -106,5 +107,20 @@ class AdminLoanForgivenessController extends BaseController
         }
 
         return Response::json($options);
+    }
+
+    public function lenderAcceptForgiveLoan($verificationCode)
+    {
+        $forgivenessLoan = ForgivenessLoanQuery::create()
+            ->findOneByValidationCode($verificationCode);
+
+        if (!$forgivenessLoan) {
+            \App::abort(404, 'Opps something went wrong.');
+        }
+
+        $loan = $forgivenessLoan->getLoan();
+        $lender = \Auth::user()->getLender();
+
+        $this->loanService->forgiveLoanShare($loan, $lender);
     }
 } 
