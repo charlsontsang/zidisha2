@@ -17,7 +17,7 @@ Allow loan forgiveness
     
     {{ BootstrapForm::select('countryCode', $borrowerCountries, $country->getCountryCode(), ['label' => 'Select Country', 'id' => 'countrySelect']) }}
 
-    {{ BootstrapForm::select('loanId', $loans, null,['label' => 'Select Country']) }}
+    {{ BootstrapForm::select('loanId', $loans, null,['label' => 'Select Loan']) }}
 
     {{ BootstrapForm::textarea('comment', null, ['label' => 'Comment']) }}
 
