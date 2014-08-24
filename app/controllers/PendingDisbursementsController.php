@@ -136,10 +136,7 @@ class PendingDisbursementsController extends BaseController
             App::abort(404, 'Loan not found');
         }
 
-        $loan
-            ->setAuthorizedAt($authorizedAt)
-            ->setAuthorizedAmount($authorizedAmount);
-        $loan->save();
+        $this->loanService->authorizeLoan($loan, compact('authorizedAt', 'authorizedAmount'));
 
         return \Redirect::back();
     }

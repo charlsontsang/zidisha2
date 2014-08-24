@@ -650,6 +650,18 @@ class LoanService
         }
     }
 
+    public function authorizeLoan($loan, $data)
+    {
+        $data += [
+            'authorizedAt' => new \DateTime(),
+        ];
+
+        $loan
+            ->setAuthorizedAt($data['authorizedAt'])
+            ->setAuthorizedAmount($data['authorizedAmount']);
+        $loan->save();
+    }
+
     public function disburseLoan(Loan $loan, \DateTime $disbursedAt, Money $amount)
     {
         $isDisbursed = TransactionQuery::create()
