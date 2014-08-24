@@ -113,7 +113,7 @@ class PageController extends BaseController {
             'three_months_ago' => Carbon::now()->subMonths(3),
             'six_months_ago'   => Carbon::now()->subMonths(6),
             'year_ago'         => Carbon::now()->subYear(),
-            'all_time'         => null,
+            'all_time'         => Carbon::now()->subYears(300),
         );
         $countries = CountryQuery::create()
             ->filterByBorrowerCountry(true);
