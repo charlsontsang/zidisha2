@@ -321,17 +321,31 @@ class StatisticsService
             $offset += $limit;
         }
 
-        $statistics['repaid_amount']              = $repaid_amountUsd;
-        $statistics['repaid_rate']                = $repaid_amountUsd / $disb_amount * 100;
-        $statistics['outstanding_on_time_amount'] = $principalOutstandingOnTimeUsd;
-        $statistics['outstanding_on_time_rate']   = $principalOutstandingOnTimeUsd / $disb_amount * 100;
-        $statistics['outstanding_late_amount']    = $principalOutstandingLateUsd;
-        $statistics['outstanding_late_rate']      = $principalOutstandingLateUsd / $disb_amount * 100;
-        $statistics['forgiven_amount']            = $forgiveAmountUsd;
-        $statistics['forgiven_rate']              = $forgiveAmountUsd / $disb_amount * 100;
-        $statistics['written_off_amount']         = $defaultAmountUsd;
-        $statistics['written_off_rate']           = $defaultAmountUsd / $disb_amount * 100;
-        $statistics['disbursed_amount']           = $disb_amount;
+        if ($statistics['raised_count']) {
+            $statistics['repaid_amount']              = $repaid_amountUsd;
+            $statistics['repaid_rate']                = $repaid_amountUsd / $disb_amount * 100;
+            $statistics['outstanding_on_time_amount'] = $principalOutstandingOnTimeUsd;
+            $statistics['outstanding_on_time_rate']   = $principalOutstandingOnTimeUsd / $disb_amount * 100;
+            $statistics['outstanding_late_amount']    = $principalOutstandingLateUsd;
+            $statistics['outstanding_late_rate']      = $principalOutstandingLateUsd / $disb_amount * 100;
+            $statistics['forgiven_amount']            = $forgiveAmountUsd;
+            $statistics['forgiven_rate']              = $forgiveAmountUsd / $disb_amount * 100;
+            $statistics['written_off_amount']         = $defaultAmountUsd;
+            $statistics['written_off_rate']           = $defaultAmountUsd / $disb_amount * 100;
+            $statistics['disbursed_amount']           = $disb_amount;
+        } else {
+            $statistics['repaid_amount']              = 0;
+            $statistics['repaid_rate']                = 0;
+            $statistics['outstanding_on_time_amount'] = 0;
+            $statistics['outstanding_on_time_rate']   = 0;
+            $statistics['outstanding_late_amount']    = 0;
+            $statistics['outstanding_late_rate']      = 0;
+            $statistics['forgiven_amount']            = 0;
+            $statistics['forgiven_rate']              = 0;
+            $statistics['written_off_amount']         = 0;
+            $statistics['written_off_rate']           = 0;
+            $statistics['disbursed_amount']           = 0;
+        }
 
         return $statistics;
     }
