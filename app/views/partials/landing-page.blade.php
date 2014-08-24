@@ -19,7 +19,7 @@
           </h2>
         </div>
         @foreach($projects as $loan)
-        <div class="col-sm-6 col-md-4" style="padding:10px;">
+        <div class="col-sm-4" style="padding:10px;">
             <div class="result">
                 <div class="row">
                     <div class="col-xs-12">
