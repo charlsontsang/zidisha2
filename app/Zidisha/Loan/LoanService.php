@@ -662,8 +662,12 @@ class LoanService
         $loan->save();
     }
 
-    public function disburseLoan(Loan $loan, \DateTime $disbursedAt, Money $amount)
+    public function disburseLoan(Loan $loan, $data)
     {
+        $data += [
+           'disbursedAt' => new \DateTime(),
+        ];
+        
         $isDisbursed = TransactionQuery::create()
             ->filterByLoan($loan)
             ->filterDisbursement()
@@ -674,21 +678,23 @@ class LoanService
             return;
         }
 
-        PropelDB::transaction(function($con) use ($loan, $disbursedAt, $amount) {
-            $this->transactionService->addDisbursementTransaction($con, $amount, $loan);
+        PropelDB::transaction(function($con) use ($loan, $data) {
+            $disbursedAmount = $data['disbursedAmount'];
+            
+            $this->transactionService->addDisbursementTransaction($con, $disbursedAmount, $loan);
 
             $loans = LoanQuery::create()
                 ->filterByBorrower($loan->getBorrower())
                 ->count();
             if ($loans == 1) {
-                $this->transactionService->addFeeTransaction($con, $amount, $loan);
+                $this->transactionService->addFeeTransaction($con, $disbursedAmount, $loan);
             }
 
             $loan
                 ->setStatus(Loan::ACTIVE)
-                ->setDisbursedAmount($amount)
-                ->setDisbursedAt($disbursedAt)
-                ->calculateExtraDays($disbursedAt)
+                ->setDisbursedAmount($disbursedAmount)
+                ->setDisbursedAt($data['disbursedAt'])
+                ->calculateExtraDays($data['disbursedAt'])
                 ->setServiceFeeRate(Setting::get('loan.serviceFeeRate'));
 
             $calculator = new InstallmentCalculator($loan);

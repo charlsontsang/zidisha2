@@ -155,7 +155,7 @@ class PendingDisbursementsController extends BaseController
             App::abort(404, 'Loan not found');
         }
 
-        $this->loanService->disburseLoan($loan, $disbursedAt, $disbursedAmount);
+        $this->loanService->disburseLoan($loan, compact('disbursedAt', 'disbursedAmount'));
 
         return \Redirect::back();
     }
