@@ -105,8 +105,6 @@ Statistics
         USD {{ number_format($lendingStatistics['written_off_amount'], 0, ".", ","); }}
         ( {{ number_format($lendingStatistics['written_off_rate'], 1, ".", ","); }}% of amount disbursed)
     @endif
-
-
     Want to dive deeper? You can see the individual loan reports that provided the raw data for these statistics <a href="https://www.zidisha.org/index.php?p=114">here, TODO</a>.
     <br/><br/>
 </div>
