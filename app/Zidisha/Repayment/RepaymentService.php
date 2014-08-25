@@ -313,7 +313,7 @@ class RepaymentService
             ->getData();
 
         $zero = Money::create(0, $loan->getCurrency());
-        $currentPayment = next($installmentsPayments);
+        $currentPayment = reset($installmentsPayments);
         $currentAmount = $currentPayment ? $currentPayment->getPaidAmount() : $zero;
 
         foreach ($installments as $installment) {
