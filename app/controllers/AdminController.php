@@ -665,8 +665,26 @@ class AdminController extends BaseController
 
     public function getRepayments()
     {
+        $form = $this->enterRepaymentForm;
+        $filterForm = $this->borrowersForm;
         $paymentCounts = $this->repaymentService->getNumberOfPayments();
-        return View::make('admin.repayments', ['form' => $this->enterRepaymentForm,], compact('paymentCounts'));
+
+        $page = Request::query('page') ? : 1;
+
+        if ($filterForm->isFiltering()) {
+            $borrowers = $filterForm->getQuery()
+                ->joinWith('User')
+                ->joinWith('Profile')
+                ->orderById()
+                ->paginate($page, 10);  
+        } else {
+            $borrowers = null;
+        }
+        
+        return View::make(
+            'admin.repayments',
+            compact('paymentCounts', 'form', 'filterForm', 'borrowers')
+        );
     }
 
     public function postUploadRepayments()
