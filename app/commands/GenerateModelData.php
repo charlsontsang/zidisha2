@@ -1058,9 +1058,15 @@ class GenerateModelData extends Command
                     } else {
                         $installmentDate = $installment->getDueDate()->modify('+2 week');
                     }
-                    $this->repaymentService->addRepayment($loan, $installmentDate, $installmentAmount);
+                    $this->repaymentService->addRepayment($loan, [
+                        'date'   => $installmentDate,
+                        'amount' => $installmentAmount->getAmount(),
+                    ]);
                 } else {
-                    $this->repaymentService->addRepayment($loan, $installment->getDueDate(), $installmentAmount);
+                    $this->repaymentService->addRepayment($loan, [
+                        'date'   => $installment->getDueDate(),
+                        'amount' => $installmentAmount->getAmount(),
+                    ]);
                 }
                 $i += 1;
             }

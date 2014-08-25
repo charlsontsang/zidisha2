@@ -155,8 +155,14 @@ class RepaymentService
         return $calculator;
     }
     
-    public function addRepayment(Loan $loan, \Datetime $date, Money $amount, BorrowerPayment $borrowerPayment = null)
+    public function addRepayment(Loan $loan, $data, BorrowerPayment $borrowerPayment = null)
     {
+        $data += [
+            'date' => new \Datetime(),
+        ];
+        $date = $data['date'];
+        $amount = Money::create($data['amount'], $loan->getCurrencyCode());
+        
         $calculator = $this->getRepaymentCalculator($loan, $amount);
 
         if ($calculator->unpaidAmount()->isNegative()) {
