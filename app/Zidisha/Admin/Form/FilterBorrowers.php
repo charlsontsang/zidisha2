@@ -15,7 +15,7 @@ class FilterBorrowers extends AbstractForm
     {
         return [
             'country'      => '',
-            'email'         => '',
+            'searchInput'         => '',
             'status' => ''
         ];
     }
@@ -25,7 +25,7 @@ class FilterBorrowers extends AbstractForm
 
         return [
             'country'      => '',
-            'email'     => '',
+            'searchInput'     => '',
             'status' => ''
         ];
     }

@@ -11,8 +11,8 @@ Lenders
     {{ BootstrapForm::populate($form) }}
 
     {{ BootstrapForm::select('country', $form->getCountries(), Request::query('country')) }}
-    {{ BootstrapForm::text('email', Request::query('email')) }}
-    {{ BootstrapForm::submit('save') }}
+    {{ BootstrapForm::text('searchInput', Request::query('searchInput')) }}
+    {{ BootstrapForm::submit('Search') }}
 
     {{ BootstrapForm::close() }}
 </div>
@@ -39,5 +39,5 @@ Lenders
     @endforeach
     </tbody>
 </table>
-{{ BootstrapHtml::paginator($paginator)->links() }}
+{{ BootstrapHtml::paginator($paginator)->appends(['country' => Request::query('country'), 'searchInput' => Request::query('searchInput')])->links() }}
 @stop

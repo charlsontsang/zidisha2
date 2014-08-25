@@ -14,7 +14,7 @@ class FilterLenders extends AbstractForm
     {
         return [
             'country'      => '',
-            'email'         => 'email',
+            'searchInput'         => '',
         ];
     }
 
@@ -23,15 +23,17 @@ class FilterLenders extends AbstractForm
 
         return [
             'country'      => '',
-            'email'     => '',
+            'searchInput'     => '',
         ];
     }
 
     public function getCountries()
     {
-        return CountryQuery::create()
+        $countries =  CountryQuery::create()
             ->orderByName()
             ->find()
             ->toKeyValue('id', 'name');
+
+        return ['all_countries' => 'All Countries'] + $countries;
     }
 }

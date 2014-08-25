@@ -119,7 +119,7 @@ class AdminController extends BaseController
         $page = Request::query('page') ? : 1;
         $countryId = Request::query('country') ? : null;
         $status = Request::query('status') ? : null;
-        $searchInput = Request::query('email') ? : null;
+        $searchInput = Request::query('searchInput') ? : null;
 
         $query = BorrowerQuery::create();
 
@@ -220,17 +220,28 @@ class AdminController extends BaseController
     {
         $page = Request::query('page') ? : 1;
         $countryId = Request::query('country') ? : null;
-        $email = Request::query('email') ? : null;
+        $searchInput = Request::query('searchInput') ? : null;
 
         $query = LenderQuery::create();
 
-        if ($countryId) {
+        if ($countryId != 'all_countries' && $countryId) {
             $query->filterByCountryId($countryId);
         }
-        if ($email) {
+
+        if ($searchInput) {
             $query
+                ->where("lenders.last_name  || ' ' || lenders.first_name LIKE ?", '%' . $searchInput . '%')
+                ->_or()
+                ->where("lenders.first_name  || ' ' || lenders.last_name LIKE ?", '%' . $searchInput . '%')
+                ->_or()
+                ->useProfileQuery()
+                ->filterByCity('%' . $searchInput . '%', Criteria::LIKE)
+                ->endUse()
+                ->_or()
                 ->useUserQuery()
-                ->filterByEmail($email)
+                ->filterByEmail('%' . $searchInput . '%', Criteria::LIKE)
+                ->_or()
+                ->filterByUsername('%' . $searchInput . '%', Criteria::LIKE)
                 ->endUse();
         }
 
@@ -238,7 +249,7 @@ class AdminController extends BaseController
             ->orderById()
             ->paginate($page, 3);
 
-        return View::make('admin.lenders', compact('paginator'), ['form' => $this->borrowersForm,]);
+        return View::make('admin.lenders', compact('paginator'), ['form' => $this->lendersForm,]);
     }
 
     public function getLoans()
