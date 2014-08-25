@@ -38,9 +38,9 @@ Volunteers
         <td>{{ $lender->getUser()->getJoinedAt()->format('M j, Y') }}</td>
         <td>
             @if($lender->getUser()->getSubRole() == \Zidisha\User\User::SUB_ROLE_VOLUNTEER)
-                <a href="{{ route('admin:resend', $lender->getId()) }}">Remove Volunteer</a>
+                <a href="{{ route('admin:remove:volunteer', $lender->getId()) }}">Remove Volunteer</a>
             @else
-                <a href="{{ route('admin:resend', $lender->getId()) }}">Add Volunteer</a>
+                <a href="{{ route('admin:add:volunteer', $lender->getId()) }}">Add Volunteer</a>
             @endif
         </td>
     </tr>

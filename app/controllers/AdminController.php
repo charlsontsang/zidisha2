@@ -39,6 +39,7 @@ use Zidisha\Repayment\BorrowerRefundQuery;
 use Zidisha\Repayment\ImportService;
 use Zidisha\Repayment\RepaymentService;
 use Zidisha\User\User;
+use Zidisha\User\UserQuery;
 
 class AdminController extends BaseController
 {
@@ -565,6 +566,28 @@ class AdminController extends BaseController
 
         \Flash::success("Email successfully sent!");
         return Redirect::route('admin:get:gift-cards');
+    }
+
+    public function addVolunteer($id)
+    {
+        $user = UserQuery::create()
+            ->findOneById($id);
+        $user->setSubRole(User::SUB_ROLE_VOLUNTEER);
+        $user->save();
+
+        \Flash::success("Volunteer Added!");
+        return Redirect::route('admin:volunteers', compact(['country' => Request::query('country'), 'search' => Request::query('search')]));
+    }
+
+    public function removeVolunteer($id)
+    {
+        $user = UserQuery::create()
+            ->findOneById($id);
+        $user->setSubRole(null);
+        $user->save();
+
+        \Flash::success("Volunteer Removed!");
+        return Redirect::route('admin:volunteers');
     }
 
     public function getWithdrawalRequests()
