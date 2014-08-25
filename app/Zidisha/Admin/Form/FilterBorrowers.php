@@ -4,6 +4,7 @@
 namespace Zidisha\Admin\Form;
 
 
+use Zidisha\Borrower\Borrower;
 use Zidisha\Country\CountryQuery;
 use Zidisha\Form\AbstractForm;
 
@@ -14,7 +15,8 @@ class FilterBorrowers extends AbstractForm
     {
         return [
             'country'      => '',
-            'email'         => 'email',
+            'search'         => '',
+            'status' => ''
         ];
     }
 
@@ -23,15 +25,30 @@ class FilterBorrowers extends AbstractForm
 
         return [
             'country'      => '',
-            'email'     => '',
+            'search'     => '',
+            'status' => ''
         ];
     }
 
     public function getCountries()
     {
-        return CountryQuery::create()
+        $countries =  CountryQuery::create()
             ->orderByName()
+            ->filterByBorrowerCountry(true)
             ->find()
             ->toKeyValue('id', 'name');
+
+        return ['all_countries' => 'All Countries'] + $countries;
+    }
+
+    public function getStatus()
+    {
+        return [
+            'all' => 'All',
+            Borrower::ACTIVATION_INCOMPLETE => 'Pending Submission',
+            Borrower::ACTIVATION_PENDING => 'Pending Activation',
+            Borrower::ACTIVATION_DECLINED => 'Declined',
+            Borrower::ACTIVATION_APPROVED => 'Active'
+        ];
     }
 }

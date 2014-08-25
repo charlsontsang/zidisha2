@@ -118,18 +118,33 @@ class AdminController extends BaseController
     {
         $page = Request::query('page') ? : 1;
         $countryId = Request::query('country') ? : null;
-        $email = Request::query('email') ? : null;
+        $status = Request::query('status') ? : null;
+        $search = Request::query('search') ? : null;
 
         $query = BorrowerQuery::create();
 
-        if ($countryId) {
+        if ($countryId != 'all_countries' && $countryId) {
             $query->filterByCountryId($countryId);
         }
-        if ($email) {
+
+        if ($status != 'all' && $status) {
+            $query->filterByActivationStatus($status);
+        }
+
+        if ($search) {
             $query
+                ->where("borrowers.last_name  || ' ' || borrowers.first_name LIKE ?", '%' . $search . '%')
+                ->_or()
+                ->where("borrowers.first_name  || ' ' || borrowers.last_name LIKE ?", '%' . $search . '%')
+                ->_or()
+                ->useProfileQuery()
+                ->filterByPhoneNumber('%' . $search . '%', Criteria::LIKE)
+                ->endUse()
+                ->_or()
                 ->useUserQuery()
-                ->filterByEmail($email)
+                ->filterByEmail('%' . $search . '%', Criteria::LIKE)
                 ->endUse();
+            ;
         }
 
         $paginator = $query
@@ -205,17 +220,28 @@ class AdminController extends BaseController
     {
         $page = Request::query('page') ? : 1;
         $countryId = Request::query('country') ? : null;
-        $email = Request::query('email') ? : null;
+        $search = Request::query('search') ? : null;
 
         $query = LenderQuery::create();
 
-        if ($countryId) {
+        if ($countryId != 'all_countries' && $countryId) {
             $query->filterByCountryId($countryId);
         }
-        if ($email) {
+
+        if ($search) {
             $query
+                ->where("lenders.last_name  || ' ' || lenders.first_name LIKE ?", '%' . $search . '%')
+                ->_or()
+                ->where("lenders.first_name  || ' ' || lenders.last_name LIKE ?", '%' . $search . '%')
+                ->_or()
+                ->useProfileQuery()
+                ->filterByCity('%' . $search . '%', Criteria::LIKE)
+                ->endUse()
+                ->_or()
                 ->useUserQuery()
-                ->filterByEmail($email)
+                ->filterByEmail('%' . $search . '%', Criteria::LIKE)
+                ->_or()
+                ->filterByUsername('%' . $search . '%', Criteria::LIKE)
                 ->endUse();
         }
 
@@ -223,7 +249,7 @@ class AdminController extends BaseController
             ->orderById()
             ->paginate($page, 3);
 
-        return View::make('admin.lenders', compact('paginator'), ['form' => $this->borrowersForm,]);
+        return View::make('admin.lenders', compact('paginator'), ['form' => $this->lendersForm,]);
     }
 
     public function getLoans()

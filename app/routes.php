@@ -442,6 +442,14 @@ Route::group(
                     'borrowers/{borrowerId}',
                     array('uses' => 'AdminController@getBorrower', 'as' => 'admin:borrower')
                 );
+                Route::get(
+                    'borrowers/edit/{borrowerId}',
+                    array('uses' => 'AdminController@getBorrowerEdit', 'as' => 'admin:borrower:edit')
+                );
+                Route::post(
+                    'borrowers/edit/{borrowerId}',
+                    array('uses' => 'AdminController@postBorrowerEdit', 'as' => 'admin:borrower:edit:post', 'before' => 'csrf')
+                );
                 Route::get('lenders', array('uses' => 'AdminController@getLenders', 'as' => 'admin:lenders'));
                 Route::get('loans', array('uses' => 'AdminController@getLoans', 'as' => 'admin:loans'));
                 Route::get(

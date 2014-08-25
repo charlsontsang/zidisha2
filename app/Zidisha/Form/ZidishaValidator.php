@@ -5,6 +5,7 @@ namespace Zidisha\Form;
 
 use Illuminate\Validation\Validator;
 use Propel\Runtime\ActiveQuery\Criteria;
+use Zidisha\Borrower\ProfileQuery;
 use Zidisha\Comment\LoanFeedbackComment;
 use Zidisha\User\UserQuery;
 
