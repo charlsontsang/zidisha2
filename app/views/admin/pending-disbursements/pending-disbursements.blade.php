@@ -134,11 +134,32 @@
                                 
                                 <dt>Principal Amount</dt>
                                 <dd>
-                                    {{ BootstrapForm::text($loan->isAuthorized() ? 'disbursedAmount' : 'authorizedAmount', $principalAmount->getAmount(), ['label' => false, 'style' => 'width: 180px;']) }}
+                                    {{ BootstrapForm::text($loan->isAuthorized() ? 'disbursedAmount' : 'authorizedAmount', $principalAmount->getAmount(), [
+                                        'label' => false,
+                                        'style' => 'width: 180px;',
+                                        'data-principal-amount' => '',
+                                    ]) }}
                                 </dd>
 
+                                @if ($loan->getRegistrationFee()->isPositive())
+                                    <dt>Registration Fee</dt>
+                                    <dd>
+                                        @if($loan->isAuthorized())
+                                            {{ BootstrapForm::text('registrationFee', $loan->getRegistrationFee()->getAmount(), ['label' => false, 'style' => 'width: 180px;']) }}
+                                        @else
+                                            {{ $loan->getRegistrationFee() }}
+                                            {{ BootstrapForm::hidden('registrationFee', $loan->getRegistrationFee()->getAmount()) }}
+                                        @endif
+                                    </dd>
+
+                                    <dt>Net Amount to Pay</dt>
+                                    <dd data-net-amount="">
+                                        {{ $principalAmount->subtract($loan->getRegistrationFee()) }}
+                                    </dd>
+                                @endif
+                                
                                 @if(!$loan->isAuthorized())
-                                <dt>Date Authorized</dt>
+                                    <dt>Date Authorized</dt>
                                     <dd>
                                         {{ BootstrapForm::datepicker('authorizedAt', null, ['label' => false, 'style' => 'width: 180px;']) }}
                                         {{ BootstrapForm::submit('Confirm Authorization') }}
@@ -146,13 +167,6 @@
                                 @endif
                                 
                                 @if($loan->isAuthorized())   
-                                    @if ($loan->getRegistrationFee()->isPositive())
-                                        <dt>Registration Fee</dt>
-                                        <dd>
-                                            {{ BootstrapForm::text('registrationFee', $loan->getRegistrationFee()->getAmount(), ['label' => false, 'style' => 'width: 180px;']) }}
-                                        </dd>
-                                    @endif
-                                        
                                     <dt>Date Disbursed</dt>
                                     <dd>
                                         {{ BootstrapForm::datepicker('disbursedAt', null, ['label' => false, 'style' => 'width: 180px;']) }}
@@ -197,6 +211,19 @@
             No pending disbursements.
         </p>
     @endif
+@stop
 
-
+@section('script-footer')
+<script type="text/javascript">
+    $(function () {
+        $('[name=registrationFee], [data-principal-amount]').on('keyup', function() {
+            var $this = $(this),
+                $principalAmount = $(this).closest('tr').find('[data-principal-amount]'),
+                $registrationFee = $(this).closest('tr').find('[name=registrationFee]'),
+                $netAmount = $(this).closest('tr').find('[data-net-amount]');
+            
+            $netAmount.text($principalAmount.val() - $registrationFee.val());
+        });
+    });
+</script>
 @stop
