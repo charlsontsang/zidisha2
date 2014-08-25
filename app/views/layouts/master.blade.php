@@ -30,7 +30,6 @@
         @yield('content-top')
 
         <div class="container">
-            @include('partials/_flash')
             @yield('content')
         </div>
 
@@ -46,8 +45,10 @@
         <script src="{{ asset('assets/vendor/bootstrap/dist/js/bootstrap.min.js') }}"></script>
         <script src="{{ asset('assets/vendor/bootstrap-3-datepicker/js/bootstrap-datepicker.js') }}"></script>
         <script src="{{ asset('assets/js/zidisha.js') }}"></script>
+        <script src="{{ asset('assets/vendor/bootstrap-growl/jquery.bootstrap-growl.min.js') }}"></script>
         <script>$('.flash-modal').modal();</script>
         @yield('script-footer')
+        @include('partials/_flash')
         <!-- Mixpanel -->
         {{ \Zidisha\Vendor\Mixpanel::bodyScript() }}
     </body>
