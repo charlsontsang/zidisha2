@@ -139,7 +139,8 @@ class GenerateModelData extends Command
 
             $this->generateBase();
 
-            $this->call('fake', array('model' => 'Lender', 'size' => 50));
+            $this->call('fake', array('model' => 'Volunteer', 'size' => 20));
+            $this->call('fake', array('model' => 'Lender', 'size' => 100));
             $this->call('fake', array('model' => 'VolunteerMentor', 'size' => 20));
             $this->call('fake', array('model' => 'Borrower', 'size' => 80));
             
@@ -191,6 +192,10 @@ class GenerateModelData extends Command
             return $this->generateSpecialUsers();
         }
         
+        if ($model == "Volunteer") {
+            return $this->generateVolunteers($size);
+        }
+
         if ($model == "Lender") {
             return $this->generateLenders($size);
         }
@@ -621,6 +626,14 @@ class GenerateModelData extends Command
     {
         return \Zidisha\Generate\LenderGenerator::create()
             ->size($count)
+            ->generate();
+    }
+
+    protected function generateVolunteers($count)
+    {
+        return \Zidisha\Generate\LenderGenerator::create()
+            ->size($count)
+            ->volunteer(true)
             ->generate();
     }
 

@@ -5,6 +5,7 @@ namespace Zidisha\Generate;
 
 use Zidisha\Lender\LenderQuery;
 use Zidisha\Lender\LenderService;
+use Zidisha\User\User;
 
 class LenderGenerator extends Generator
 {
@@ -15,6 +16,7 @@ class LenderGenerator extends Generator
 
     protected $joinedAtStartDate = '- 16 months';
     protected $joinedAtEndDate = 'now';
+    protected $volunteer = false;
     
     protected $countryIds;
     protected $lenderCount;
@@ -29,6 +31,13 @@ class LenderGenerator extends Generator
         $this->joinedAtStartDate = $startDate;
         $this->joinedAtEndDate = $endDate;
         
+        return $this;
+    }
+
+    public function volunteer($enabled = false)
+    {
+        $this->volunteer = $enabled;
+
         return $this;
     }
 
@@ -53,6 +62,12 @@ class LenderGenerator extends Generator
         ];
 
         $lender = $this->lenderService->joinLender($data);
+
+        if ($this->volunteer) {
+            $user = $lender->getUser();
+            $user->setSubRole(User::SUB_ROLE_VOLUNTEER);
+            $user->save();
+        }
 
         return $lender;
     }
