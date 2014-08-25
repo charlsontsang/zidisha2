@@ -54,13 +54,15 @@ class FilterBorrowers extends AbstractForm
         ];
     }
 
-    public function getQuery()
+    public function getQuery($query = null)
     {
         $countryId = \Request::query('country');
         $status = \Request::query('status');
         $search = \Request::query('search');
 
-        $query = BorrowerQuery::create();
+        if (!$query) {
+            $query = BorrowerQuery::create();
+        }
 
         if ($countryId != 'all_countries' && $countryId) {
             $query->filterByCountryId($countryId);

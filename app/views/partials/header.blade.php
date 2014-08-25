@@ -85,6 +85,7 @@
 
                     <ul class="dropdown-menu">
                         <li><a href="{{ route('admin:borrowers') }}">Find Borrowers</a></li>
+                        <li><a href="{{ route('admin:volunteer-mentors') }}">Find Volunteer Mentors</a></li>
                         <li><a href="{{ route('admin:borrower-activation') }}">Pending Activation</a></li>
                         <li><a href="{{ route('admin:pending-disbursements') }}">Pending Disbursements</a></li>
                         <li><a href="{{ route('admin:loans') }}">Find Loans</a></li>
