@@ -9,6 +9,7 @@ use Zidisha\Lender\GiftCard;
 use Zidisha\Lender\Invite;
 use Zidisha\Lender\Lender;
 use Zidisha\Loan\Bid;
+use Zidisha\Loan\ForgivenessLoan;
 use Zidisha\Loan\LenderRefund;
 use Zidisha\Loan\Loan;
 use Zidisha\Loan\RefundLender;
@@ -236,13 +237,14 @@ class LenderMailer
         );                
     }
 
-    public function sendAllowLoanForgivenessMail(Loan $loan, Bid $bid)
-    {
+    public function sendAllowLoanForgivenessMail(Loan $loan, ForgivenessLoan $forgivenessLoan, Lender $lender)
+    {        
+        //TODO generate links for forgive and reject loan.
         $this->mailer->send(
             'emails.hero',
             [
-                'to'         => $bid->getLender()->getUser()->getEmail(),
-                'subject'    => 'Loan forgiveness mail',
+                'to'         => $lender->getUser()->getEmail(),
+                'subject'    => 'Borrower account notifications',
                 'templateId' => \Setting::get('sendwithus.lender-loan-forgiveness-mail-template-id'),
             ]
         );

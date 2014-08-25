@@ -492,4 +492,9 @@ class TransactionService
 
         $transaction->save($con);
     }
+
+    public function lenderLoanForgivenessTransaction(ConnectionInterface $con, Lender $lender, Money $amount)
+    {
+        //TODO: lender loan forgiveness transactions
+    }
 }
