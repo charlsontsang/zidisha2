@@ -13,8 +13,14 @@ use Zidisha\Loan\Loan;
 class RepaymentSchedule implements \IteratorAggregate
 {
 
+    protected $totalAmountDue;
+    protected $totalAmountPaid;
     private $installments = [];
-    private $paidInstallmentCount, $missedInstallmentCount, $paidOnTimeInstallmentCount, $todayInstallmentCount, $loanPaymentStatus;
+    private $paidInstallmentCount;
+    private $missedInstallmentCount;
+    private $paidOnTimeInstallmentCount;
+    private $todayInstallmentCount;
+    private $loanPaymentStatus;
     private $loan;
 
     public function __construct(Loan $loan, $installments)
@@ -36,6 +42,7 @@ class RepaymentSchedule implements \IteratorAggregate
 
     protected function calculateInstallmentsCounts()
     {
+        $zero = Money::create(0, $this->loan->getCurrency());
         $today = new Carbon();
         $repaymentThreshold = \Config::get('constants.repaymentThreshold');
         $repaymentThresholdAmount = Money::create(\Config::get('constants.repaymentAmountThreshold'), 'USD');
@@ -44,11 +51,12 @@ class RepaymentSchedule implements \IteratorAggregate
         $missedInstallmentCount = 0;
         $paidOnTimeInstallmentCount = 0;
         $todayInstallmentCount = 0;
+        $totalAmountDue = $zero;
+        $totalAmountPaid = $zero;
         $paymentStatus = 'on-time';
         $dueDateThreshold = $isActiveLoan ? $repaymentThreshold : 0;
         $endedAt = $this->loan->getEndedAt();
         $maximumDueDate = $endedAt ? $endedAt : $today->subDays($dueDateThreshold);
-        $zero = Money::create(0, $this->loan->getCurrency());
 
         /** @var RepaymentScheduleInstallment $repaymentScheduleInstallment */
         foreach ($this as $repaymentScheduleInstallment) {
@@ -59,6 +67,7 @@ class RepaymentSchedule implements \IteratorAggregate
             $dueInstallmentAmount = $repaymentScheduleInstallment->getInstallment()->getAmount();
             $dueInstallmentDate = Carbon::instance($repaymentScheduleInstallment->getInstallment()->getDueDate());
             $isTodayInstallment = $dueInstallmentDate <= $maximumDueDate;
+            $totalAmountDue = $totalAmountDue->add($dueInstallmentAmount);
 
             /** @var RepaymentScheduleInstallmentPayment $repaymentScheduleInstallmentPayment */
             foreach ($repaymentScheduleInstallment->getPayments() as $repaymentScheduleInstallmentPayment) {
@@ -78,6 +87,7 @@ class RepaymentSchedule implements \IteratorAggregate
                     $missedInstallmentAmount = $missedInstallmentAmount->add($installmentPaymentPaidAmount);
                 }
                 $totalPaidInstallmentAmount = $totalPaidInstallmentAmount->add($installmentPaymentPaidAmount);
+                $totalAmountPaid = $totalAmountPaid->add($installmentPaymentPaidAmount);
             }
             $isInstallmentPaid = $totalPaidInstallmentAmount && ($dueInstallmentAmount->subtract(
                     $totalPaidInstallmentAmount
@@ -118,6 +128,8 @@ class RepaymentSchedule implements \IteratorAggregate
         $this->paidInstallmentCount = $paidInstallmentCount;
         $this->missedInstallmentCount = $missedInstallmentCount;
         $this->paidOnTimeInstallmentCount = $paidOnTimeInstallmentCount;
+        $this->totalAmountDue = $totalAmountDue;
+        $this->totalAmountPaid = $totalAmountPaid;
     }
 
     public function getPaidInstallmentCount()
@@ -143,6 +155,22 @@ class RepaymentSchedule implements \IteratorAggregate
     public function getLoanPaymentStatus()
     {
         return $this->loanPaymentStatus;
+    }
+
+    /**
+     * @return Money
+     */
+    public function getTotalAmountDue()
+    {
+        return $this->totalAmountDue;
+    }
+
+    /**
+     * @return Money
+     */
+    public function getTotalAmountPaid()
+    {
+        return $this->totalAmountPaid;
     }
 
 }
