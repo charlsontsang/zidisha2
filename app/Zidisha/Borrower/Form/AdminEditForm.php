@@ -22,6 +22,8 @@ class AdminEditForm extends AbstractForm
      */
     protected $country;
 
+    protected $validatorClass = 'Zidisha\Borrower\Form\Validator\NumberValidator';
+
     public function __construct(Borrower $borrower)
     {
         $this->borrower = $borrower;

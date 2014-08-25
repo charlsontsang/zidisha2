@@ -1,12 +1,12 @@
 <?php
 namespace Zidisha\Borrower\Form\Validator;
 
-use Illuminate\Validation\Validator;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Zidisha\Borrower\ProfileQuery;
+use Zidisha\Form\ZidishaValidator;
 use Zidisha\User\UserQuery;
 
-class NumberValidator extends Validator
+class NumberValidator extends ZidishaValidator
 {
     public function validateUniqueNumber($attribute, $value, $parameters)
     {
