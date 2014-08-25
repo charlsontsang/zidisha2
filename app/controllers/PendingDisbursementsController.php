@@ -129,7 +129,7 @@ class PendingDisbursementsController extends BaseController
         $loan = \Zidisha\Loan\LoanQuery::create()
             ->findOneById($loanId);
 
-        if (!$loan) {
+        if (!$loan || $loan->isAuthorized() || $loan->getStatus() != Loan::FUNDED) {
             App::abort(404, 'Loan not found');
         }
         
@@ -158,7 +158,7 @@ class PendingDisbursementsController extends BaseController
         $loan = \Zidisha\Loan\LoanQuery::create()
             ->findOneById($loanId);
 
-        if (!$loan) {
+        if (!$loan || !$loan->isAuthorized() || $loan->getStatus() != Loan::FUNDED) {
             App::abort(404, 'Loan not found');
         }
 
