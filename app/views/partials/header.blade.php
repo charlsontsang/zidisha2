@@ -99,6 +99,7 @@
 
                     <ul class="dropdown-menu">
                         <li><a href="{{ route('admin:lenders') }}">Find Lenders</a></li>
+                        <li><a href="{{ route('admin:volunteers') }}">Find Volunteers</a></li>
                         <li><a href="{{ route('admin:get:gift-cards') }}">Gift Cards</a></li>
                         <li><a href="{{ route('admin:get:withdrawal-requests') }}">Withdraw Requests</a></li>
                     </ul>
