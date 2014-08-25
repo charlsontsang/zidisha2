@@ -108,23 +108,4 @@ class ZidishaValidator extends Validator
     {
         return $attribute . ' is not correct';
     }
-
-    public function validateUniqueNumber($attribute, $value, $parameters)
-    {
-        $id = $parameters[0];
-
-        $phoneNumberCount = ProfileQuery::create()
-            ->filterByBorrowerId($id, Criteria::NOT_EQUAL)
-            ->filterByPhoneNumber($value)
-            ->_or()
-            ->filterByAlternatePhoneNumber($value)
-            ->count();
-
-        return $phoneNumberCount == 0 ? true : false;
-    }
-
-    protected function replaceUniqueNumber($message, $attribute, $rule, $parameters)
-    {
-        return $attribute . ' already exits in the database.';
-    }
 }
