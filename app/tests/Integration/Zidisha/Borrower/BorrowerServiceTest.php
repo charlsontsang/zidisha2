@@ -122,11 +122,15 @@ class BorrowerServiceTest extends \IntegrationTestCase
     {
         $method = new ReflectionMethod($this->borrowerService, 'getCurrentCreditLimit');
         $method->setAccessible(true);
+        $this->borrower = BorrowerGenerator::create()
+            ->size(1)
+            ->generate();
+
         /** @var $loan Loan */
         $loan = LoanGenerator::create()
             ->amount(50)
             ->generateOne();
-
+        
         $exchangeRate = ExchangeRateQuery::create()
             ->findCurrent($this->borrower->getCountry()->getCurrency());
         $firstLoanValue = Money::create(Setting::get('loan.firstLoanValue'), 'USD');
