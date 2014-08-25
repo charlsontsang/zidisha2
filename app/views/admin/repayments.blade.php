@@ -69,7 +69,7 @@ Exchange rates
         </td>
         <td>
             @if($borrower->getActiveLoanId())
-            <a href="{{ ''//route('admin:repayment-schedule') }}">View Repayment Schedule</a>
+            <a href="{{ route('admin:repayment-schedule', $borrower->getId()) }}">View Repayment Schedule</a>
             @else
             No active loan
             @endif

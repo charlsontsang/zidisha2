@@ -771,4 +771,41 @@ class AdminController extends BaseController
         Flash::error('error occured.');
         return Redirect::route('admin:repayments-refunds');
     }
+
+    public function getRepaymentSchedule($borrowerId, $loanId = null)
+    {
+        $borrower = BorrowerQuery::create()
+            ->filterById($borrowerId)
+            ->findOne();
+
+        if (!$borrower) {
+            App::abort(404);
+        }
+
+        if ($loanId) {
+            $loan = LoanQuery::create()
+                ->filterById($loanId)
+                ->filterByBorrower($borrower)
+                ->findOne();
+
+            if (!$borrower) {
+                App::abort(404);
+            }
+        } else {
+            $loan = $borrower->getActiveLoan();
+        }
+        
+        if ($loan->isActivated()) {
+            $repaymentSchedule = $this->repaymentService->getRepaymentSchedule($loan);
+        } else {
+            $repaymentSchedule = null;
+        }
+        
+        $allowPayment = $loan && $loan->isActive();
+
+        return View::make(
+            'admin.repayment-schedule',
+            compact('borrower', 'loan', 'repaymentSchedule', 'allowPayment')
+        );
+    }
 }

@@ -535,6 +535,13 @@ Route::group(
                     )
                 );
                 Route::get(
+                    '/repayments/schedule/{borrowerId}/{loanId?}',
+                    array(
+                        'uses' => 'AdminController@getRepaymentSchedule',
+                        'as'   => 'admin:repayment-schedule'
+                    )
+                );
+                Route::get(
                     'borrower-activation',
                     array('uses' => 'BorrowerActivationController@getIndex', 'as' => 'admin:borrower-activation')
                 );

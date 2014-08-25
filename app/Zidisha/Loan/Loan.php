@@ -323,4 +323,9 @@ class Loan extends BaseLoan implements CommentReceiverInterface
     {
         return $this->getStatus() >= Loan::ACTIVE;
     }
+
+    public function isActivated()
+    {
+        return in_array($this->getStatus(), [Loan::ACTIVE, Loan::REPAID, Loan::DEFAULTED]);
+    }
 }
