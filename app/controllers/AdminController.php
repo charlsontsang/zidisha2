@@ -2,6 +2,7 @@
 
 use Carbon\Carbon;
 use Propel\Runtime\ActiveQuery\Criteria;
+use Zidisha\Admin\Form\EnterRepaymentForm;
 use Zidisha\Admin\Form\UploadRepaymentsForm;
 use Zidisha\Admin\Form\ExchangeRateForm;
 use Zidisha\Admin\Form\FeatureFeedbackForm;
@@ -801,10 +802,47 @@ class AdminController extends BaseController
         }
         
         $allowPayment = $loan && $loan->isActive();
+        $form = new EnterRepaymentForm();
 
         return View::make(
             'admin.repayment-schedule',
-            compact('borrower', 'loan', 'repaymentSchedule', 'allowPayment')
+            compact('borrower', 'loan', 'repaymentSchedule', 'allowPayment', 'form')
         );
+    }
+
+    public function postEnterRepayment($loanId)
+    {
+        $loan = LoanQuery::create()
+            ->filterById($loanId)
+            ->findOne();
+
+        if (!$loan || !$loan->isActive()) {
+            App::abort(404);
+        }
+
+        $borrower = $loan->getBorrower();
+
+        $redirect = Redirect::route(
+            'admin:repayment-schedule',
+            ['borrowerId' => $borrower->getId(), 'loanId' => $loanId]
+        );
+
+        $form = new EnterRepaymentForm();
+        $form->handleRequest(Request::instance());
+
+        if ($form->isValid()) {
+            $data = $form->getData();
+            $this->repaymentService->addRepayment($loan, [
+                'date'   => Carbon::createFromFormat('m/d/Y', $data['date']),
+                'amount' => $data['amount'],
+            ]);
+            
+            \Flash::success('Successfully made repayment.');
+        } else {
+            \Flash::error('Invalid input values.');
+            $redirect->withForm($form);
+        }
+
+        return $redirect;
     }
 }

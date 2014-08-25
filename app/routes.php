@@ -541,6 +541,13 @@ Route::group(
                         'as'   => 'admin:repayment-schedule'
                     )
                 );
+                Route::post(
+                    '/repayments/enter-repayment/{loanId?}',
+                    array(
+                        'uses' => 'AdminController@postEnterRepayment',
+                        'as'   => 'admin:enter-repayment'
+                    )
+                );
                 Route::get(
                     'borrower-activation',
                     array('uses' => 'BorrowerActivationController@getIndex', 'as' => 'admin:borrower-activation')

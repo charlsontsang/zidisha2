@@ -16,7 +16,12 @@ Repayment schedule
     Loan: <a href="{{ route('loan:index', $loan->getId()) }}">{{ $loan->getId() }}</a>
 
     @if($allowPayment)
-    {{ BootstrapForm::open(array('route' => 'admin:repayment-schedule', 'class' => 'form-inline', 'id' => 'enter-repayment-form')) }}
+    {{ BootstrapForm::open([
+        'route' => ['admin:enter-repayment', $loan->getId()],
+        'class' => 'form-inline',
+        'id' => 'enter-repayment-form',
+    ]) }}
+    {{ BootstrapForm::populate($form) }}
     
     {{ BootstrapForm::datepicker('date', null, ['label' => false, 'placeholder' => 'Date paid']) }}
     {{ BootstrapForm::text('amount', null, ['label' => false, 'placeholder' => 'Amount paid']) }}
