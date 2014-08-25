@@ -15,7 +15,7 @@ class FilterBorrowers extends AbstractForm
     {
         return [
             'country'      => '',
-            'email'         => 'email',
+            'email'         => '',
             'status' => ''
         ];
     }
@@ -34,6 +34,7 @@ class FilterBorrowers extends AbstractForm
     {
         $countries =  CountryQuery::create()
             ->orderByName()
+            ->filterByBorrowerCountry(true)
             ->find()
             ->toKeyValue('id', 'name');
 
