@@ -192,42 +192,19 @@ class AdminController extends BaseController
 
     public function getLenders()
     {
+        $form = $this->lendersForm;
         $page = Request::query('page') ? : 1;
-        $countryId = Request::query('country') ? : null;
-        $search = Request::query('search') ? : null;
 
-        $query = LenderQuery::create();
-
-        if ($countryId != 'all_countries' && $countryId) {
-            $query->filterByCountryId($countryId);
-        }
-
-        if ($search) {
-            $query
-                ->where("lenders.last_name  || ' ' || lenders.first_name LIKE ?", '%' . $search . '%')
-                ->_or()
-                ->where("lenders.first_name  || ' ' || lenders.last_name LIKE ?", '%' . $search . '%')
-                ->_or()
-                ->useProfileQuery()
-                ->filterByCity('%' . $search . '%', Criteria::LIKE)
-                ->endUse()
-                ->_or()
-                ->useUserQuery()
-                ->filterByEmail('%' . $search . '%', Criteria::LIKE)
-                ->_or()
-                ->filterByUsername('%' . $search . '%', Criteria::LIKE)
-                ->endUse();
-        }
-
-        $paginator = $query
+        $paginator = $form->getQuery()
             ->orderById()
             ->paginate($page, 3);
 
-        return View::make('admin.lenders', compact('paginator'), ['form' => $this->lendersForm,]);
+        return View::make('admin.lenders', compact('paginator', 'form'));
     }
 
     public function getVolunteers()
     {
+        $form = $this->lendersForm;
         $page = Request::query('page') ? : 1;
         $countryId = Request::query('country') ? : null;
         $search = Request::query('search') ? : null;
@@ -240,11 +217,11 @@ class AdminController extends BaseController
                 ->endUse();
         }
 
-        $paginator = $query
+        $paginator = $form->getQuery($query)
             ->orderById()
             ->paginate($page, 3);
 
-        return View::make('admin.volunteers', compact('paginator'), ['form' => $this->lendersForm,]);
+        return View::make('admin.volunteers', compact('paginator', 'form'));
     }
 
     public function getVolunteerMentors()
