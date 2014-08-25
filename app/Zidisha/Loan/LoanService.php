@@ -668,6 +668,8 @@ class LoanService
            'disbursedAt' => new \DateTime(),
         ];
         
+        // TODO registration fee
+        
         $isDisbursed = TransactionQuery::create()
             ->filterByLoan($loan)
             ->filterDisbursement()

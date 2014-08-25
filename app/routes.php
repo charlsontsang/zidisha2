@@ -640,7 +640,7 @@ Route::group(
                 );
 
                 Route::post(
-                    'pending-disbursements/disbursed',
+                    'pending-disbursements/disburse/{loanId}',
                     ['uses' => 'PendingDisbursementsController@postDisburse']
                 );
 
