@@ -3,10 +3,9 @@
 namespace Zidisha\Admin\Form;
 
 
-use Zidisha\Country\CountryQuery;
 use Zidisha\Form\AbstractForm;
 
-class EnterRepaymentForm extends AbstractForm
+class UploadRepaymentsForm extends AbstractForm
 {
 
     public function getRules($data)

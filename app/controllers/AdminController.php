@@ -2,7 +2,7 @@
 
 use Carbon\Carbon;
 use Propel\Runtime\ActiveQuery\Criteria;
-use Zidisha\Admin\Form\EnterRepaymentForm;
+use Zidisha\Admin\Form\UploadRepaymentsForm;
 use Zidisha\Admin\Form\ExchangeRateForm;
 use Zidisha\Admin\Form\FeatureFeedbackForm;
 use Zidisha\Admin\Form\FilterBorrowers;
@@ -19,7 +19,6 @@ use Zidisha\Balance\WithdrawalRequestQuery;
 use Zidisha\Borrower\Borrower;
 use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Borrower\BorrowerService;
-use Zidisha\Borrower\FeedbackMessageQuery;
 use Zidisha\Comment\BorrowerCommentQuery;
 use Zidisha\Comment\CommentQuery;
 use Zidisha\Borrower\Form\AdminEditForm;
@@ -56,7 +55,7 @@ class AdminController extends BaseController
     private $lenderMailer;
     private $withdrawalRequestsForm;
     private $payPalService;
-    private $enterRepaymentForm;
+    private $uploadRepaymentsForm;
     private $importService;
     private $repaymentService;
     /**
@@ -82,7 +81,7 @@ class AdminController extends BaseController
         LenderMailer $lenderMailer,
         WithdrawalRequestsForm $withdrawalRequestsForm,
         PayPalService $payPalService,
-        EnterRepaymentForm $enterRepaymentForm,
+        UploadRepaymentsForm $uploadRepaymentsForm,
         ImportService$importService,
         RepaymentService $repaymentService,
         AllowLoanForgivenessForm $forgiveLoanForm
@@ -104,7 +103,7 @@ class AdminController extends BaseController
         $this->lenderMailer = $lenderMailer;
         $this->withdrawalRequestsForm = $withdrawalRequestsForm;
         $this->payPalService = $payPalService;
-        $this->enterRepaymentForm = $enterRepaymentForm;
+        $this->uploadRepaymentsForm = $uploadRepaymentsForm;
         $this->importService = $importService;
         $this->repaymentService = $repaymentService;
         $this->forgiveLoanForm = $forgiveLoanForm;
@@ -665,7 +664,7 @@ class AdminController extends BaseController
 
     public function getRepayments()
     {
-        $form = $this->enterRepaymentForm;
+        $form = $this->uploadRepaymentsForm;
         $filterForm = $this->borrowersForm;
         $paymentCounts = $this->repaymentService->getNumberOfPayments();
 
@@ -689,7 +688,7 @@ class AdminController extends BaseController
 
     public function postUploadRepayments()
     {
-        $form = $this->enterRepaymentForm;
+        $form = $this->uploadRepaymentsForm;
         $form->handleRequest(Request::instance());
 
         if ($form->isValid()) {
