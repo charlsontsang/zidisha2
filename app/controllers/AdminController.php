@@ -119,7 +119,7 @@ class AdminController extends BaseController
         $page = Request::query('page') ? : 1;
         $countryId = Request::query('country') ? : null;
         $status = Request::query('status') ? : null;
-        $searchInput = Request::query('searchInput') ? : null;
+        $search = Request::query('search') ? : null;
 
         $query = BorrowerQuery::create();
 
@@ -131,18 +131,18 @@ class AdminController extends BaseController
             $query->filterByActivationStatus($status);
         }
 
-        if ($searchInput) {
+        if ($search) {
             $query
-                ->where("borrowers.last_name  || ' ' || borrowers.first_name LIKE ?", '%' . $searchInput . '%')
+                ->where("borrowers.last_name  || ' ' || borrowers.first_name LIKE ?", '%' . $search . '%')
                 ->_or()
-                ->where("borrowers.first_name  || ' ' || borrowers.last_name LIKE ?", '%' . $searchInput . '%')
+                ->where("borrowers.first_name  || ' ' || borrowers.last_name LIKE ?", '%' . $search . '%')
                 ->_or()
                 ->useProfileQuery()
-                ->filterByPhoneNumber('%' . $searchInput . '%', Criteria::LIKE)
+                ->filterByPhoneNumber('%' . $search . '%', Criteria::LIKE)
                 ->endUse()
                 ->_or()
                 ->useUserQuery()
-                ->filterByEmail('%' . $searchInput . '%', Criteria::LIKE)
+                ->filterByEmail('%' . $search . '%', Criteria::LIKE)
                 ->endUse();
             ;
         }
@@ -220,7 +220,7 @@ class AdminController extends BaseController
     {
         $page = Request::query('page') ? : 1;
         $countryId = Request::query('country') ? : null;
-        $searchInput = Request::query('searchInput') ? : null;
+        $search = Request::query('search') ? : null;
 
         $query = LenderQuery::create();
 
@@ -228,20 +228,20 @@ class AdminController extends BaseController
             $query->filterByCountryId($countryId);
         }
 
-        if ($searchInput) {
+        if ($search) {
             $query
-                ->where("lenders.last_name  || ' ' || lenders.first_name LIKE ?", '%' . $searchInput . '%')
+                ->where("lenders.last_name  || ' ' || lenders.first_name LIKE ?", '%' . $search . '%')
                 ->_or()
-                ->where("lenders.first_name  || ' ' || lenders.last_name LIKE ?", '%' . $searchInput . '%')
+                ->where("lenders.first_name  || ' ' || lenders.last_name LIKE ?", '%' . $search . '%')
                 ->_or()
                 ->useProfileQuery()
-                ->filterByCity('%' . $searchInput . '%', Criteria::LIKE)
+                ->filterByCity('%' . $search . '%', Criteria::LIKE)
                 ->endUse()
                 ->_or()
                 ->useUserQuery()
-                ->filterByEmail('%' . $searchInput . '%', Criteria::LIKE)
+                ->filterByEmail('%' . $search . '%', Criteria::LIKE)
                 ->_or()
-                ->filterByUsername('%' . $searchInput . '%', Criteria::LIKE)
+                ->filterByUsername('%' . $search . '%', Criteria::LIKE)
                 ->endUse();
         }
 

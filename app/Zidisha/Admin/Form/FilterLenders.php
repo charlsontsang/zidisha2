@@ -14,7 +14,7 @@ class FilterLenders extends AbstractForm
     {
         return [
             'country'      => '',
-            'searchInput'         => '',
+            'search'         => '',
         ];
     }
 
@@ -23,7 +23,7 @@ class FilterLenders extends AbstractForm
 
         return [
             'country'      => '',
-            'searchInput'     => '',
+            'search'     => '',
         ];
     }
 
