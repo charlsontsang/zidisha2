@@ -38,6 +38,8 @@ use Zidisha\Repayment\BorrowerPaymentQuery;
 use Zidisha\Repayment\BorrowerRefundQuery;
 use Zidisha\Repayment\ImportService;
 use Zidisha\Repayment\RepaymentService;
+use Zidisha\User\User;
+use Zidisha\User\UserQuery;
 
 class AdminController extends BaseController
 {
@@ -250,6 +252,48 @@ class AdminController extends BaseController
             ->paginate($page, 3);
 
         return View::make('admin.lenders', compact('paginator'), ['form' => $this->lendersForm,]);
+    }
+
+    public function getVolunteers()
+    {
+        $page = Request::query('page') ? : 1;
+        $countryId = Request::query('country') ? : null;
+        $search = Request::query('search') ? : null;
+
+        $query = LenderQuery::create();
+
+        if (($countryId == 'all_countries' || !$countryId) && !$search) {
+            $query->useUserQuery()
+                ->filterBySubRole(User::SUB_ROLE_VOLUNTEER)
+                ->endUse();
+        }
+
+        if ($countryId != 'all_countries' && $countryId) {
+            $query->filterByCountryId($countryId);
+        }
+
+        if ($search) {
+            $query
+                ->where("lenders.last_name  || ' ' || lenders.first_name LIKE ?", '%' . $search . '%')
+                ->_or()
+                ->where("lenders.first_name  || ' ' || lenders.last_name LIKE ?", '%' . $search . '%')
+                ->_or()
+                ->useProfileQuery()
+                ->filterByCity('%' . $search . '%', Criteria::LIKE)
+                ->endUse()
+                ->_or()
+                ->useUserQuery()
+                ->filterByEmail('%' . $search . '%', Criteria::LIKE)
+                ->_or()
+                ->filterByUsername('%' . $search . '%', Criteria::LIKE)
+                ->endUse();
+        }
+
+        $paginator = $query
+            ->orderById()
+            ->paginate($page, 3);
+
+        return View::make('admin.volunteers', compact('paginator'), ['form' => $this->lendersForm,]);
     }
 
     public function getLoans()
@@ -522,6 +566,28 @@ class AdminController extends BaseController
 
         \Flash::success("Email successfully sent!");
         return Redirect::route('admin:get:gift-cards');
+    }
+
+    public function addVolunteer($id)
+    {
+        $user = UserQuery::create()
+            ->findOneById($id);
+        $user->setSubRole(User::SUB_ROLE_VOLUNTEER);
+        $user->save();
+
+        \Flash::success("Volunteer Added!");
+        return Redirect::back();
+    }
+
+    public function removeVolunteer($id)
+    {
+        $user = UserQuery::create()
+            ->findOneById($id);
+        $user->setSubRole(null);
+        $user->save();
+
+        \Flash::success("Volunteer Removed!");
+        return Redirect::back();
     }
 
     public function getWithdrawalRequests()

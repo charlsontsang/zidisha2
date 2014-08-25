@@ -441,6 +441,15 @@ Route::group(
             array('prefix' => 'admin', 'before' => 'auth|hasRole:admin'),
             function () {
                 Route::get('dashboard', array('uses' => 'AdminController@getDashboard', 'as' => 'admin:dashboard'));
+                Route::get('volunteers', array('uses' => 'AdminController@getVolunteers', 'as' => 'admin:volunteers'));
+                Route::get(
+                    'volunteers/add/{id}',
+                    array('uses' => 'AdminController@addVolunteer', 'as' => 'admin:add:volunteer')
+                );
+                Route::get(
+                    'volunteers/remove/{id}',
+                    array('uses' => 'AdminController@removeVolunteer', 'as' => 'admin:remove:volunteer')
+                );
                 Route::get('borrowers', array('uses' => 'AdminController@getBorrowers', 'as' => 'admin:borrowers'));
                 Route::get(
                     'borrowers/{borrowerId}',
