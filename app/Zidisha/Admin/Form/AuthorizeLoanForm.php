@@ -11,7 +11,7 @@ class AuthorizeLoanForm extends AbstractForm
     {
         return [
             'authorizedAt'     => 'required|date_format:m/d/Y',
-            'authorizedAmount' => 'required|numeric',
+            'authorizedAmount' => 'required|numeric|greaterThan:0',
         ];
     }
 }

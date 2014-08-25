@@ -22,7 +22,7 @@ class DisburseLoanForm extends AbstractForm
     {
         $rules =  [
             'disbursedAt'     => 'required|date_format:m/d/Y',
-            'disbursedAmount' => 'required|numeric',
+            'disbursedAmount' => 'required|numeric|greaterThan:0',
         ];
         
         if ($this->loan->getRegistrationFee()->isPositive()) {
