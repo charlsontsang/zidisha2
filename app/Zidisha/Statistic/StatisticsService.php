@@ -261,7 +261,11 @@ class StatisticsService
                                 }
                             }
                         }
-                        $time = strtotime($duedate['due_date']);
+                        if (is_array($duedate)) {
+                            $time = strtotime($duedate['due_date']);
+                        } else {
+                            $time = strtotime($duedate);
+                        }
                         $carbonDate = Carbon::createFromTimestamp($time);
                         $fullDays = $date->diffInDays($carbonDate);
 

@@ -130,7 +130,7 @@ class BorrowerServiceTest extends \IntegrationTestCase
         $loan = LoanGenerator::create()
             ->amount(50)
             ->generateOne();
-        
+
         $exchangeRate = ExchangeRateQuery::create()
             ->findCurrent($this->borrower->getCountry()->getCurrency());
         $firstLoanValue = Money::create(Setting::get('loan.firstLoanValue'), 'USD');
