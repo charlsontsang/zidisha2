@@ -5,6 +5,7 @@ namespace Zidisha\Form;
 
 use Illuminate\Validation\Validator;
 use Propel\Runtime\ActiveQuery\Criteria;
+use Zidisha\Borrower\ProfileQuery;
 use Zidisha\Comment\LoanFeedbackComment;
 use Zidisha\User\UserQuery;
 
@@ -106,5 +107,24 @@ class ZidishaValidator extends Validator
     protected function replaceCheckInterestRate($message, $attribute, $rule, $parameters)
     {
         return $attribute . ' is not correct';
+    }
+
+    public function validateUniqueNumber($attribute, $value, $parameters)
+    {
+        $id = $parameters[0];
+
+        $phoneNumberCount = ProfileQuery::create()
+            ->filterByBorrowerId($id, Criteria::NOT_EQUAL)
+            ->filterByPhoneNumber($value)
+            ->_or()
+            ->filterByAlternatePhoneNumber($value)
+            ->count();
+
+        return $phoneNumberCount == 0 ? true : false;
+    }
+
+    protected function replaceUniqueNumber($message, $attribute, $rule, $parameters)
+    {
+        return $attribute . ' already exits in the database.';
     }
 }
