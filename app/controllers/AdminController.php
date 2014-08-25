@@ -118,42 +118,14 @@ class AdminController extends BaseController
 
     public function getBorrowers()
     {
+        $form = $this->borrowersForm;
         $page = Request::query('page') ? : 1;
-        $countryId = Request::query('country') ? : null;
-        $status = Request::query('status') ? : null;
-        $search = Request::query('search') ? : null;
 
-        $query = BorrowerQuery::create();
-
-        if ($countryId != 'all_countries' && $countryId) {
-            $query->filterByCountryId($countryId);
-        }
-
-        if ($status != 'all' && $status) {
-            $query->filterByActivationStatus($status);
-        }
-
-        if ($search) {
-            $query
-                ->where("borrowers.last_name  || ' ' || borrowers.first_name LIKE ?", '%' . $search . '%')
-                ->_or()
-                ->where("borrowers.first_name  || ' ' || borrowers.last_name LIKE ?", '%' . $search . '%')
-                ->_or()
-                ->useProfileQuery()
-                ->filterByPhoneNumber('%' . $search . '%', Criteria::LIKE)
-                ->endUse()
-                ->_or()
-                ->useUserQuery()
-                ->filterByEmail('%' . $search . '%', Criteria::LIKE)
-                ->endUse();
-            ;
-        }
-
-        $paginator = $query
+        $paginator = $form->getQuery()
             ->orderById()
             ->paginate($page, 3);
 
-        return View::make('admin.borrowers', compact('paginator'), ['form' => $this->borrowersForm,]);
+        return View::make('admin.borrowers', compact('paginator', 'form'));
     }
 
     public function getBorrower($borrowerId)
