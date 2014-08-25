@@ -1,3 +1,7 @@
 <script>
-        $.bootstrapGrowl('{{{ $message }}}', { type: '{{ $level  }}' });
+    $.growl('{{{ $message }}}', { 
+        type: '{{ $level  }}',
+        allow_dismiss: true,
+        delay: 0
+    });
 </script>
