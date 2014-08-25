@@ -109,10 +109,10 @@ class AdminLoanForgivenessController extends BaseController
         return Response::json($options);
     }
 
-    public function lenderAcceptForgiveLoan($verificationCode)
+    public function lenderAcceptLoanForgiveness($verificationCode)
     {
         $forgivenessLoan = ForgivenessLoanQuery::create()
-            ->findOneByValidationCode($verificationCode);
+            ->findOneByVerificationCode($verificationCode);
 
         if (!$forgivenessLoan) {
             \App::abort(404, 'Opps something went wrong.');
@@ -124,7 +124,7 @@ class AdminLoanForgivenessController extends BaseController
         $this->loanService->forgiveLoanShare($loan, $lender);
     }
 
-    public function lenderRejectForgiveLoan($verificationCode)
+    public function lenderRejectLoanForgiveness($verificationCode)
     {
         $forgivenessLoan = ForgivenessLoanQuery::create()
             ->findOneByValidationCode($verificationCode);

@@ -917,7 +917,7 @@ class LoanService
         $forgivenessLoan
             ->setLoan($loan)
             ->setComment($data['comment'])
-            ->setValidationCode($validationCode)
+            ->setVerificationCode($validationCode)
             ->setBorrowerId ($loan->getBorrowerId())
             ->save();
 
@@ -981,24 +981,29 @@ class LoanService
             ->find();
 
         $bidCalculator = new BidsCalculator();
-        $lenderTotalAmount = $bidCalculator->getLenderInterestRate($acceptedBids, $loan->getUsdAmount());
+        $lenderInterestAmount = $bidCalculator->getLenderInterestRate($acceptedBids, $loan->getUsdAmount());
         
-        $loanPaidShare = new RepaymentCalculator($loan);
-        $lenderRepaymentAmount = $loanPaidShare->repaymentAmountForLenders();
         
-        PropelDB::transaction(function () use ($loan, $lender, $lenderTotalAmount) {
+        $repaymentCalculator = new RepaymentCalculator($loan);
+        $lenderRepaymentAmount = $repaymentCalculator->repaymentAmountForLenders();
+        
+        $totalAmountForRepayment = $lenderRepaymentAmount->add($lenderInterestAmount, 'USD');
+        
+        PropelDB::transaction(function () use ($loan, $lender, $totalAmountForRepayment) {
                 $forgiveLoanShare = new ForgivenessLoanShare();
-                $forgiveLoanShare->setLoan($loan);
-                $forgiveLoanShare->setBorrower($loan->getBorrower());
-                $forgiveLoanShare->setLender($lender);
-                $forgiveLoanShare->setAmount($lenderTotalAmount);
-                $forgiveLoanShare->setUsdAmount($lenderTotalAmount);
-                $forgiveLoanShare->setAcceptedforgiveness(true);
+                
+                $forgiveLoanShare->setLoan($loan)
+                    ->setBorrower($loan->getBorrower())
+                    ->setLender($lender)
+                    ->setAmount($totalAmountForRepayment)
+                    ->setUsdAmount($totalAmountForRepayment)
+                    ->setIsAccepted(true);
+                
                 $forgiveLoanShare->save();
         });
         
         $con = PropelDB::getConnection();
-        $this->transactionService->lenderLoanForgivenessTransaction($con, $lender, Money::create($lenderTotalAmount, 'USD'));
+        $this->transactionService->lenderLoanForgivenessTransaction($con, $lender, Money::create($lenderInterestAmount, 'USD'));
         
         //TODO: updateScheduleAfterForgive
         
@@ -1030,20 +1035,42 @@ class LoanService
 
     public function rejectForgiveLoanShare(Loan $loan, Lender $lender)
     {
+        $forgivenLoanShareCount = ForgivenessLoanShareQuery::create()
+            ->filterByLender($lender)
+            ->filterByLoan($loan)
+            ->count();
+
+        if ($forgivenLoanShareCount) {
+            return true;
+        }
+        
+        $acceptedBids = BidQuery::create()
+            ->filterByLender($lender)
+            ->filterByLoan($loan)
+            ->filterByActive(true)
+            ->find();
+
+        $bidCalculator = new BidsCalculator();
+        $lenderTotalAmount = $bidCalculator->getLenderInterestRate($acceptedBids, $loan->getUsdAmount());
+        
         PropelDB::transaction(function () use ($loan, $lender, $lenderTotalAmount) {
                 $forgiveLoanShare = new ForgivenessLoanShare();
-                $forgiveLoanShare->setLoan($loan);
-                $forgiveLoanShare->setBorrower($loan->getBorrower());
-                $forgiveLoanShare->setLender($lender);
-                $forgiveLoanShare->setAmount($lenderTotalAmount);
-                $forgiveLoanShare->setUsdAmount($lenderTotalAmount);
-                $forgiveLoanShare->setAcceptedforgiveness(false);
+                $forgiveLoanShare->setLoan($loan)
+                    ->setBorrower($loan->getBorrower())
+                    ->setLender($lender)
+                    ->setAmount($lenderTotalAmount)
+                    ->setUsdAmount($lenderTotalAmount)
+                    ->setIsAccepted(false);
+                
                 $forgiveLoanShare->save();
             });
     }
 
     private function checkAllLenderForgiven(Loan $loan)
     {
+        
+        //TODO: fix this method.
+        
         $bids = BidQuery::create()
             ->filterByLoan($loan)
             ->find();

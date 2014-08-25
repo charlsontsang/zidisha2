@@ -240,12 +240,12 @@ class LenderMailer
     public function sendAllowLoanForgivenessMail(Loan $loan, ForgivenessLoan $forgivenessLoan, Lender $lender)
     {        
         //TODO generate links for forgive and reject loan.
-        
         $this->mailer->send(
-            'emails.lender.loan.loan-forgiveness-mail',
+            'emails.hero',
             [
                 'to'         => $lender->getUser()->getEmail(),
-                'subject'    => 'Loan forgiveness mail',
+                'subject'    => 'Borrower account notifications',
+                'templateId' => \Setting::get('sendwithus.lender-loan-forgiveness-mail-template-id'),
             ]
         );
     }

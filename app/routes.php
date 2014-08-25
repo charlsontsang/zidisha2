@@ -309,8 +309,8 @@ Route::group(
                 Route::post('/auto-lending/{lenderId}', array('uses' => 'LenderPreferencesController@postAutoLending', 'as' => 'lender:post:auto-lending'));
 
 
-                Route::get('lender-accept-forgive-loan/{verificationCode}', [ 'uses' => 'AdminLoanForgivenessController@lenderAcceptForgiveLoan', 'as'   => 'lender:accept:forgive:loan']);
-                Route::get('lender-reject-forgive-loan/{verificationCode}', [ 'uses' => 'AdminLoanForgivenessController@lenderRejectForgiveLoan', 'as'   => 'lender:reject:forgive:loan']);                
+                Route::get('lender-accept-forgive-loan/{verificationCode}', [ 'uses' => 'AdminLoanForgivenessController@lenderAcceptLoanForgiveness', 'as'   => 'lender:loan-forgiveness:accept']);
+                Route::get('lender-reject-forgive-loan/{verificationCode}', [ 'uses' => 'AdminLoanForgivenessController@lenderRejectLoanForgiveness', 'as'   => 'lender:loan-forgiveness:reject']);                
             }
         );
 
