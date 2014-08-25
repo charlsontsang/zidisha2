@@ -450,6 +450,15 @@ Route::group(
                     'volunteers/remove/{id}',
                     array('uses' => 'AdminController@removeVolunteer', 'as' => 'admin:remove:volunteer')
                 );
+                Route::get('volunteer-mentors', array('uses' => 'AdminController@getVolunteerMentors', 'as' => 'admin:volunteer-mentors'));
+                Route::get(
+                    'volunteer-mentors/add/{id}',
+                    array('uses' => 'AdminController@addVolunteerMentor', 'as' => 'admin:add:volunteer-mentor')
+                );
+                Route::get(
+                    'volunteer-mentors/remove/{id}',
+                    array('uses' => 'AdminController@removeVolunteerMentor', 'as' => 'admin:remove:volunteer-mentor')
+                );
                 Route::get('borrowers', array('uses' => 'AdminController@getBorrowers', 'as' => 'admin:borrowers'));
                 Route::get(
                     'borrowers/{borrowerId}',
