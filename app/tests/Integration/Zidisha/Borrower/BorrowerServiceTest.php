@@ -122,6 +122,10 @@ class BorrowerServiceTest extends \IntegrationTestCase
     {
         $method = new ReflectionMethod($this->borrowerService, 'getCurrentCreditLimit');
         $method->setAccessible(true);
+        $this->borrower = BorrowerGenerator::create()
+            ->size(1)
+            ->generate();
+
         /** @var $loan Loan */
         $loan = LoanGenerator::create()
             ->amount(50)
