@@ -127,9 +127,9 @@ class AdminController extends BaseController
         }
         if ($searchInput) {
             $query
-                ->where('CONCAT(borrowers.last_name , borrowers.first_name) LIKE ?', '%' . $searchInput . '%')
+                ->where("borrowers.last_name  || ' ' || borrowers.first_name LIKE ?", '%' . $searchInput . '%')
                 ->_or()
-                ->where('CONCAT(borrowers.first_name, borrowers.last_name) LIKE ?', '%' . $searchInput . '%')
+                ->where("borrowers.first_name  || ' ' || borrowers.last_name LIKE ?", '%' . $searchInput . '%')
                 ->_or()
                 ->useProfileQuery()
                 ->filterByPhoneNumber('%' . $searchInput . '%', Criteria::LIKE)
