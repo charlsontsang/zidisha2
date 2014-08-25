@@ -438,6 +438,7 @@ Route::group(
             function () {
                 Route::get('dashboard', array('uses' => 'AdminController@getDashboard', 'as' => 'admin:dashboard'));
                 Route::get('borrowers', array('uses' => 'AdminController@getBorrowers', 'as' => 'admin:borrowers'));
+                Route::get('volunteers', array('uses' => 'AdminController@getVolunteers', 'as' => 'admin:volunteers'));
                 Route::get(
                     'borrowers/{borrowerId}',
                     array('uses' => 'AdminController@getBorrower', 'as' => 'admin:borrower')
