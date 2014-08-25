@@ -120,8 +120,18 @@ You're invited!
 
 @include('partials.landing-page')
 
-<p class="text-center">
-    <a class="btn btn-home btn-lg" href="{{ route('lend:index') }}">{{ $buttonText }}</a>
-</p>
+<div class="container">
+  <div class="row home-section info-page home text-center">
+
+    <div class="col-md-8 col-md-offset-2">
+      <h2 class="lead">Enjoy connecting with remarkable people around the world and helping them reach their goals.</h2>
+
+      <p>
+          <a class="btn btn-home btn-lg" href="{{ route('join') }}">{{ $buttonTextBottom }}</a>
+      </p>
+
+    </div>
+  </div>
+</div>
 
 @stop

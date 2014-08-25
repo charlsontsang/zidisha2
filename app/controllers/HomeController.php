@@ -3,6 +3,7 @@
 use Zidisha\Country\CountryQuery;
 use Zidisha\User\User;
 use Zidisha\Utility\Utility;
+use Zidisha\Loan\Loan;
 use Zidisha\Admin\Setting;
 use Zidisha\Currency\ExchangeRateQuery;
 use Zidisha\Currency\Money;
@@ -10,6 +11,12 @@ use Zidisha\Currency\Converter;
 
 class HomeController extends BaseController {
 
+    public function  __construct(
+        \Zidisha\Loan\LoanService $loanService
+    )
+    {
+        $this->loanService = $loanService;
+    }
 
     public function getHome()
     {
@@ -27,9 +34,13 @@ class HomeController extends BaseController {
     {
         $secondaryCaption = 'and join the global <strong>person-to-person</strong> microlending movement.';
         $buttonText = 'Browse Projects';
-        $buttonTextBottom = 'Start exploring loan projects';
+        $buttonTextBottom = 'Start exploring projects';
+        
+        $conditions['status'] = Loan::OPEN;
+        $conditions['categoryId'] = '18';
+        $projects = $this->loanService->searchLoans($conditions)->take(3);
 
-        return View::make('lender-home', compact('secondaryCaption','buttonText', 'buttonTextBottom'));
+        return View::make('lender-home', compact('secondaryCaption','buttonText', 'buttonTextBottom', 'projects'));
     }
 
     private function getBorrowerHome($country)
