@@ -118,13 +118,19 @@ class AdminController extends BaseController
     {
         $page = Request::query('page') ? : 1;
         $countryId = Request::query('country') ? : null;
+        $status = Request::query('status') ? : null;
         $searchInput = Request::query('email') ? : null;
 
         $query = BorrowerQuery::create();
 
-        if ($countryId) {
+        if ($countryId != 'all_countries' && $countryId) {
             $query->filterByCountryId($countryId);
         }
+
+        if ($status != 'all' && $status) {
+            $query->filterByActivationStatus($status);
+        }
+
         if ($searchInput) {
             $query
                 ->where("borrowers.last_name  || ' ' || borrowers.first_name LIKE ?", '%' . $searchInput . '%')
