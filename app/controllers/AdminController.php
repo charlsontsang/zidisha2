@@ -240,27 +240,6 @@ class AdminController extends BaseController
                 ->endUse();
         }
 
-        if ($countryId != 'all_countries' && $countryId) {
-            $query->filterByCountryId($countryId);
-        }
-
-        if ($search) {
-            $query
-                ->where("lenders.last_name  || ' ' || lenders.first_name LIKE ?", '%' . $search . '%')
-                ->_or()
-                ->where("lenders.first_name  || ' ' || lenders.last_name LIKE ?", '%' . $search . '%')
-                ->_or()
-                ->useProfileQuery()
-                ->filterByCity('%' . $search . '%', Criteria::LIKE)
-                ->endUse()
-                ->_or()
-                ->useUserQuery()
-                ->filterByEmail('%' . $search . '%', Criteria::LIKE)
-                ->_or()
-                ->filterByUsername('%' . $search . '%', Criteria::LIKE)
-                ->endUse();
-        }
-
         $paginator = $query
             ->orderById()
             ->paginate($page, 3);
@@ -270,6 +249,7 @@ class AdminController extends BaseController
 
     public function getVolunteerMentors()
     {
+        $form = $this->borrowersForm;
         $page = Request::query('page') ? : 1;
         $countryId = Request::query('country') ? : null;
         $search = Request::query('search') ? : null;
@@ -282,32 +262,11 @@ class AdminController extends BaseController
                 ->endUse();
         }
 
-        if ($countryId != 'all_countries' && $countryId) {
-            $query->filterByCountryId($countryId);
-        }
-
-        if ($search) {
-            $query
-                ->where("lenders.last_name  || ' ' || lenders.first_name LIKE ?", '%' . $search . '%')
-                ->_or()
-                ->where("lenders.first_name  || ' ' || lenders.last_name LIKE ?", '%' . $search . '%')
-                ->_or()
-                ->useProfileQuery()
-                ->filterByCity('%' . $search . '%', Criteria::LIKE)
-                ->endUse()
-                ->_or()
-                ->useUserQuery()
-                ->filterByEmail('%' . $search . '%', Criteria::LIKE)
-                ->_or()
-                ->filterByUsername('%' . $search . '%', Criteria::LIKE)
-                ->endUse();
-        }
-
-        $paginator = $query
+        $paginator = $form->getQuery($query)
             ->orderById()
             ->paginate($page, 3);
 
-        return View::make('admin.volunteer-mentors', compact('paginator'), ['form' => $this->borrowersForm,]);
+        return View::make('admin.volunteer-mentors', compact('paginator', 'form'));
     }
 
     public function getLoans()
