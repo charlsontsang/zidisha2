@@ -6,6 +6,6 @@
     "jquery": "~1",
     "font-awesome": "~4",
     "bootstrap-3-datepicker": "~1.3.0",
-    "bootstrap-growl" : "~1"
+    "remarkable-bootstrap-growl" : "~2"
   }
 }
