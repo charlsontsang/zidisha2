@@ -118,18 +118,27 @@ class AdminController extends BaseController
     {
         $page = Request::query('page') ? : 1;
         $countryId = Request::query('country') ? : null;
-        $email = Request::query('email') ? : null;
+        $searchInput = Request::query('email') ? : null;
 
         $query = BorrowerQuery::create();
 
         if ($countryId) {
             $query->filterByCountryId($countryId);
         }
-        if ($email) {
+        if ($searchInput) {
             $query
+                ->where('CONCAT(borrowers.last_name , borrowers.first_name) LIKE ?', '%' . $searchInput . '%')
+                ->_or()
+                ->where('CONCAT(borrowers.first_name, borrowers.last_name) LIKE ?', '%' . $searchInput . '%')
+                ->_or()
+                ->useProfileQuery()
+                ->filterByPhoneNumber('%' . $searchInput . '%', Criteria::LIKE)
+                ->endUse()
+                ->_or()
                 ->useUserQuery()
-                ->filterByEmail($email)
+                ->filterByEmail('%' . $searchInput . '%', Criteria::LIKE)
                 ->endUse();
+            ;
         }
 
         $paginator = $query

@@ -12,7 +12,7 @@ Borrowers
 
     {{ BootstrapForm::select('country', $form->getCountries(), Request::query('country')) }}
     {{ BootstrapForm::text('email', Request::query('email')) }}
-    {{ BootstrapForm::submit('save') }}
+    {{ BootstrapForm::submit('Search') }}
 
     {{ BootstrapForm::close() }}
 </div>
