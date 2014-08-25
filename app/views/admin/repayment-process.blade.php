@@ -19,7 +19,7 @@ Repayment Process
     <a href="{{ route('admin:repayment-process', \Zidisha\Borrower\Borrower::PAYMENT_COMPLETE) }}"> Show ready to process payments </a><br/>
     <a href="{{ route('admin:repayment-process', \Zidisha\Borrower\Borrower::PAYMENT_INCOMPLETE) }}"> Show incomplete payments </a><br/>
 @endif
-<a href="{{ route('admin:enter-repayment') }}"> Back To Enter Repayments </a><br/>
+<a href="{{ route('admin:repayments') }}"> Back To Enter Repayments </a><br/>
 <p>  </p>
 
 <br>

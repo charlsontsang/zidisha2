@@ -628,7 +628,7 @@ class AdminController extends BaseController
     public function getEnterRepayment()
     {
         $paymentCounts = $this->repaymentService->getNumberOfPayments();
-        return View::make('admin.enter-repayments', ['form' => $this->enterRepaymentForm,], compact('paymentCounts'));
+        return View::make('admin.repayments', ['form' => $this->enterRepaymentForm,], compact('paymentCounts'));
     }
 
     public function postEnterRepayment()
@@ -644,15 +644,15 @@ class AdminController extends BaseController
                 $importPayments =  $this->importService->importBorrowerPayments($data['countryCode'], $file);
                 if ( !$importPayments) {
                     Flash::error('Import error.');
-                    return Redirect::route('admin:enter-repayment')->withForm($form);
+                    return Redirect::route('admin:repayments')->withForm($form);
                 }
                 Flash::success('Repayments Added.');
-                return Redirect::route('admin:enter-repayment');
+                return Redirect::route('admin:repayments');
             }
         }
 
         Flash::error('Please submit correct data.');
-        return Redirect::route('admin:enter-repayment')->withForm($form);
+        return Redirect::route('admin:repayments')->withForm($form);
     }
 
     public function getRepaymentProcess($status = null)

@@ -468,29 +468,29 @@ Route::group(
                     )
                 );
                 Route::get(
-                    '/settings/enter-repayment',
+                    '/repayments',
                     array(
                         'uses' => 'AdminController@getEnterRepayment',
-                        'as'   => 'admin:enter-repayment'
+                        'as'   => 'admin:repayments'
                     )
                 );
                 Route::post(
-                    '/settings/enter-repayment',
+                    '/repayments',
                     array(
                         'uses'   => 'AdminController@postEnterRepayment',
-                        'as'     => 'admin:post-enter-repayment',
+                        'as'     => 'admin:post-repayments',
                         'before' => 'csrf'
                     )
                 );
                 Route::get(
-                    '/settings/enter-repayment/process/{name?}',
+                    '/repayments/process/{name?}',
                     array(
                         'uses' => 'AdminController@getRepaymentProcess',
                         'as'   => 'admin:repayment-process'
                     )
                 );
                 Route::post(
-                    '/settings/enter-repayment/process/{name?}',
+                    '/repayments/process/{name?}',
                     array(
                         'uses'   => 'AdminController@postRepaymentProcess',
                         'as'     => 'admin:post-repayment-process',
@@ -498,14 +498,14 @@ Route::group(
                     )
                 );
                 Route::get(
-                    '/settings/enter-repayment/refunds',
+                    '/repayments/refunds',
                     array(
                         'uses' => 'AdminController@getRepaymentRefund',
                         'as'   => 'admin:repayments-refunds'
                     )
                 );
                 Route::post(
-                    '/settings/enter-repayment/refunds',
+                    '/repayments/refunds',
                     array(
                         'uses'   => 'AdminController@postRepaymentRefund',
                         'as'     => 'admin:post-repayments-refunds',
