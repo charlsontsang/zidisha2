@@ -576,7 +576,7 @@ class AdminController extends BaseController
         $user->save();
 
         \Flash::success("Volunteer Added!");
-        return Redirect::route('admin:volunteers', compact(['country' => Request::query('country'), 'search' => Request::query('search')]));
+        return Redirect::back();
     }
 
     public function removeVolunteer($id)
@@ -587,7 +587,7 @@ class AdminController extends BaseController
         $user->save();
 
         \Flash::success("Volunteer Removed!");
-        return Redirect::route('admin:volunteers');
+        return Redirect::back();
     }
 
     public function getWithdrawalRequests()
