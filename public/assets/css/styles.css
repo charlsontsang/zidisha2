@@ -8482,9 +8482,7 @@ body {
 }
 .home img.press-logo {
   display: block;
-  padding-top: 11px;
-  -webkit-filter: grayscale(1);
-  filter: grayscale(1);
+  padding-top: 16px;
 }
 @media (max-width: 767px) {
   .home img.press-logo {
