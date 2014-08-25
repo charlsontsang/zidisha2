@@ -88,6 +88,7 @@
                         <li><a href="{{ route('admin:borrower-activation') }}">Pending Activation</a></li>
                         <li><a href="{{ route('admin:pending-disbursements') }}">Pending Disbursements</a></li>
                         <li><a href="{{ route('admin:loans') }}">Find Loans</a></li>
+                        <li><a href="{{ route('admin:repayments') }}">Repayments</a></li>
                         <li><a href="{{ route('admin:loan-forgiveness:index') }}">Loan Forgiveness</a></li>
                         <li><a href="{{ route('admin:get:translation-feed') }}">Translation Feed</a></li>
                     </ul>
