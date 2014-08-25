@@ -2,6 +2,7 @@
 
 namespace Integration\Zidisha\Loan;
 
+use Carbon\Carbon;
 use ReflectionMethod;
 use Zidisha\Admin\Setting;
 use Zidisha\Balance\Transaction;
@@ -13,10 +14,9 @@ use Zidisha\Generate\LenderGenerator;
 use Zidisha\Generate\LoanGenerator;
 use Zidisha\Lender\Lender;
 use Zidisha\Loan\AcceptedBid;
-use Zidisha\Loan\Bid;
-use Zidisha\Loan\BidQuery;
 use Zidisha\Loan\LenderRefund;
 use Zidisha\Loan\Loan;
+use Zidisha\Repayment\InstallmentQuery;
 
 class LoanServiceTest extends \IntegrationTestCase
 {
@@ -353,5 +353,58 @@ class LoanServiceTest extends \IntegrationTestCase
         $this->assertEquals(100, $this->loan->getRaisedPercentage());
         $this->assertEquals(Money::create(50), $this->loan->getRaisedUsdAmount());
         $this->assertEquals($lenderInterestRate,  $this->loan->getLenderInterestRate());
+    }
+
+    public function testDisburseLoan()
+    {
+        BidGenerator::create()
+            ->setLoan($this->loan)
+            ->fullyFund($this->lenders);
+
+        $this->loanService->acceptBids($this->loan);
+
+        $this->loanService->authorizeLoan($this->loan, [
+            'authorizedAmount' => $this->loan->getAmount(),
+        ]);
+        
+        $this->loan->setRegistrationFee(Money::create(100, $this->loan->getCurrencyCode()));
+
+        $disbursedAt = Carbon::createFromDate(2014, 12, 4);
+        $disbursedAmount = $this->loan->getAmount()->add(Money::create(20, $this->loan->getCurrencyCode()));
+        $registrationFee = Money::create(120, $this->loan->getCurrencyCode());
+
+        $this->loanService->disburseLoan($this->loan, [
+            'disbursedAt'     => $disbursedAt,
+            'disbursedAmount' => $disbursedAmount,
+            'registrationFee' => $registrationFee,
+        ]);
+
+        $this->assertEquals($disbursedAt, $this->loan->getDisbursedAt());
+        $this->assertEquals($disbursedAmount, $this->loan->getDisbursedAmount());
+        $this->assertEquals($registrationFee, $this->loan->getRegistrationFee());
+        
+        $installments = InstallmentQuery::create()
+            ->filterByLoan($this->loan)
+            ->orderById()
+            ->find();
+        
+        $this->assertNotEmpty($installments->count());
+        
+        $zero = Money::create(0, $this->loan->getCurrencyCode());
+        $totalAmount = $zero;
+        $previousAmount = $zero;
+        foreach ($installments as $i => $installment) {
+            $totalAmount = $totalAmount->add($installment->getAmount());
+            if ($i == 0) {
+                $this->assertEquals($zero, $installment->getAmount());
+            } elseif ($i == count($installments) - 1) {
+                
+            } elseif ($i > 1) {
+                $this->assertEquals($previousAmount, $installment->getAmount());
+            }
+            $previousAmount = $installment->getAmount();
+        }
+        
+        $this->assertEquals($totalAmount, $this->loan->getTotalAmount());
     }
 }

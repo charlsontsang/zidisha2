@@ -668,8 +668,6 @@ class LoanService
            'disbursedAt' => new \DateTime(),
         ];
         
-        // TODO registration fee
-        
         $isDisbursed = TransactionQuery::create()
             ->filterByLoan($loan)
             ->filterDisbursement()
@@ -699,6 +697,10 @@ class LoanService
                 ->calculateExtraDays($data['disbursedAt'])
                 ->setServiceFeeRate(Setting::get('loan.serviceFeeRate'));
 
+            if ($loan->getRegistrationFee()->isPositive()) {
+                $loan->setRegistrationFee($data['registrationFee']);
+            }
+
             $calculator = new InstallmentCalculator($loan);
             $installments = $calculator->generateLoanInstallments($loan);
 
@@ -706,7 +708,6 @@ class LoanService
             /** @var Installment $installment */
             foreach ($installments as $installment) {
                 $totalAmount = $totalAmount->add($installment->getAmount());
-                $installment->save($con);
             }
 
             $loan->setTotalAmount($totalAmount);
