@@ -268,6 +268,48 @@ class AdminController extends BaseController
         return View::make('admin.volunteers', compact('paginator'), ['form' => $this->lendersForm,]);
     }
 
+    public function getVolunteerMentors()
+    {
+        $page = Request::query('page') ? : 1;
+        $countryId = Request::query('country') ? : null;
+        $search = Request::query('search') ? : null;
+
+        $query = BorrowerQuery::create();
+
+        if (($countryId == 'all_countries' || !$countryId) && !$search) {
+            $query->useUserQuery()
+                ->filterBySubRole(User::SUB_ROLE_VOLUNTEER_MENTOR)
+                ->endUse();
+        }
+
+        if ($countryId != 'all_countries' && $countryId) {
+            $query->filterByCountryId($countryId);
+        }
+
+        if ($search) {
+            $query
+                ->where("lenders.last_name  || ' ' || lenders.first_name LIKE ?", '%' . $search . '%')
+                ->_or()
+                ->where("lenders.first_name  || ' ' || lenders.last_name LIKE ?", '%' . $search . '%')
+                ->_or()
+                ->useProfileQuery()
+                ->filterByCity('%' . $search . '%', Criteria::LIKE)
+                ->endUse()
+                ->_or()
+                ->useUserQuery()
+                ->filterByEmail('%' . $search . '%', Criteria::LIKE)
+                ->_or()
+                ->filterByUsername('%' . $search . '%', Criteria::LIKE)
+                ->endUse();
+        }
+
+        $paginator = $query
+            ->orderById()
+            ->paginate($page, 3);
+
+        return View::make('admin.volunteer-mentors', compact('paginator'), ['form' => $this->borrowersForm,]);
+    }
+
     public function getLoans()
     {
         $page = Request::query('page') ? : 1;
@@ -552,6 +594,28 @@ class AdminController extends BaseController
     }
 
     public function removeVolunteer($id)
+    {
+        $user = UserQuery::create()
+            ->findOneById($id);
+        $user->setSubRole(null);
+        $user->save();
+
+        \Flash::success("Volunteer Removed!");
+        return Redirect::back();
+    }
+
+    public function addVolunteerMentor($id)
+    {
+        $user = UserQuery::create()
+            ->findOneById($id);
+        $user->setSubRole(User::SUB_ROLE_VOLUNTEER_MENTOR);
+        $user->save();
+
+        \Flash::success("Volunteer Added!");
+        return Redirect::back();
+    }
+
+    public function removeVolunteerMentor($id)
     {
         $user = UserQuery::create()
             ->findOneById($id);
