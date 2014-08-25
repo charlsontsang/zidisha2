@@ -61,7 +61,7 @@
                     $siftScienceProfile = "https://siftscience.com/console/users/" . $loan->getBorrowerId();
                 ?>
 
-                <tr>
+                <tr id="loan-id-{{ $loan->getId() }}">
                     <td>
                         <div class="row">
                             <div class="col-xs-12">
@@ -110,7 +110,7 @@
 
                         </div>
                         <div class="col-sm-6">
-                            {{ BootstrapForm::open(['action' => 'PendingDisbursementsController@post' . ($loan->isAuthorized() ? 'Disburse' : 'Authorize')]) }}
+                            {{ BootstrapForm::open(['action' => ['PendingDisbursementsController@post' . ($loan->isAuthorized() ? 'Disburse' : 'Authorize'), $loan->getId()]]) }}
 
                             {{ BootstrapForm::hidden('loanId', $loan->getId()) }}
 

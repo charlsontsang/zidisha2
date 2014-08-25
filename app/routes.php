@@ -635,7 +635,7 @@ Route::group(
                 );
 
                 Route::post(
-                    'pending-disbursements/authorize',
+                    'pending-disbursements/authorize/{loanId}',
                     ['uses' => 'PendingDisbursementsController@postAuthorize']
                 );
 

@@ -1,5 +1,6 @@
 <?php
 
+use Zidisha\Admin\Form\AuthorizeLoanForm;
 use Zidisha\Country\CountryQuery;
 use Zidisha\Currency\ExchangeRateQuery;
 use Zidisha\Currency\Money;
@@ -122,23 +123,33 @@ class PendingDisbursementsController extends BaseController
         return \Redirect::back();
     }
 
-    public function postAuthorize()
+    public function postAuthorize($loanId)
     {
-        $loanId = Input::get('loanId');
-        $authorizedAt = \DateTime::createFromFormat('m/d/Y', Input::get('authorizedAt'));
-
         $loan = \Zidisha\Loan\LoanQuery::create()
             ->findOneById($loanId);
-
-        $authorizedAmount = Money::create(Input::get('authorizedAmount'), $loan->getCurrencyCode());
 
         if (!$loan) {
             App::abort(404, 'Loan not found');
         }
-
-        $this->loanService->authorizeLoan($loan, compact('authorizedAt', 'authorizedAmount'));
-
-        return \Redirect::back();
+        
+        $form = new AuthorizeLoanForm();
+        $form->handleRequest(Request::instance());
+        
+        if ($form->isValid()) {
+            $data = $form->getData();
+            $this->loanService->authorizeLoan($loan, [
+                'authorizedAt'     => \DateTime::createFromFormat('m/d/Y', $data['authorizedAt']),
+                'authorizedAmount' => Money::create($data['authorizedAmount'], $loan->getCurrencyCode()),
+            ]);
+            
+            \Flash::success('Successfully authorized loan.');
+        } else {
+            foreach ($form->getMessageBag()->all() as $error) {
+                \Flash::error($error);
+            }   
+        }
+        
+        return \Redirect::backAppend("#loan-id-$loanId");
     }
 
     public function postDisburse()
