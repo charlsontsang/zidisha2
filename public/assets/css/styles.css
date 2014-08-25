@@ -8378,23 +8378,31 @@ body {
 .carousel-inner > .item > img {
   width: 100%;
 }
+.carousel-gradient {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 50%;
+  background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.0001) 100%);
+  background-image: -o-linear-gradient(left, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.0001) 100%);
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.01) 100%);
+}
 .carousel-caption {
   display: none;
 }
 @media (min-width: 768px) {
   .carousel-caption {
-    top: 120px;
-    z-index: 5;
     display: inline-block;
-    left: 15%;
-    right: 15%;
+    z-index: 5;
+    top: 90px;
+    left: 12%;
+    width: 40%;
   }
 }
 @media (min-width: 992px) {
   .carousel-caption {
-    top: 180px;
-    left: 20%;
-    right: 20%;
+    top: 110px;
   }
 }
 .carousel-control,
@@ -8406,6 +8414,9 @@ body {
   .carousel-indicators {
     display: inline-block;
   }
+}
+.carousel-caption {
+  text-align: left;
 }
 .carousel-inner h3 {
   font-size: 36px;
