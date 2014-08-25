@@ -894,7 +894,7 @@ class LoanService
         $forgivenessLoan
             ->setLoan($loan)
             ->setComment($data['comment'])
-            ->setBorrowerId ($loan->getBorrowerId())
+            ->setBorrowerId($loan->getBorrowerId())
             ->save();
 
         // TODO lenders instead of bids
@@ -906,7 +906,28 @@ class LoanService
         foreach ($bids as $bid) {
             $this->lenderMailer->sendAllowLoanForgivenessMail($loan, $bid);
         }
-        
+
         return $forgivenessLoan;
+    }
+
+    public function getPrincipalRatio($loanId, $date=0)
+    {
+        $sql = "SELECT sum(amount) amt from installments where loan_id = $loanId";
+        $all = PropelDB::fetchNumber($sql);
+        $forgiveAmount = 0;
+        if($date) {
+            //TODO
+        } else {
+            $s = "SELECT sum(amount) from forgiveness_loan_shares where loan_id = :loanId";
+            $forgiveAmount = PropelDB::fetchNumber($s, ['loanId' => $loanId]);
+        }
+
+        if($forgiveAmount) {
+            $all += $forgiveAmount;
+        }
+        $q="SELECT disbursed_amount from loans where id = $loanId ";
+        $disbursedAmount = PropelDB::fetchNumber($q);
+        $ratio = $disbursedAmount/$all;
+        return round($ratio, 4);
     }
 }

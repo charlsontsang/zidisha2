@@ -71,12 +71,12 @@ class BorrowerGenerator extends Generator
             ->select(['BorrowerId', 'CountryId'])
             ->find()
             ->getData();
-        
+
         $this->volunteerMentorIdsByCountryId = [];
         foreach ($this->countryIds as $countryId) {
             $this->volunteerMentorIdsByCountryId[$countryId] = [];
         }
-        
+
         foreach ($volunteerMentors as $volunteerMentor) {
             $this->volunteerMentorIdsByCountryId[$volunteerMentor['CountryId']][] = $volunteerMentor['BorrowerId'];
         }
@@ -129,6 +129,7 @@ class BorrowerGenerator extends Generator
             // JoinLog
             'ipAddress'                => $this->faker->ipv4,
         ];
+
 
         $borrower = $this->borrowerService->joinBorrower($data);
         // TODO

@@ -1,17 +1,24 @@
 <?php
 
+use Carbon\Carbon;
 use Zidisha\Borrower\BorrowerService;
 use Zidisha\Comment\BorrowerComment;
 use Zidisha\Comment\BorrowerCommentQuery;
+use Zidisha\Country\CountryQuery;
+use Zidisha\Statistic\StatisticsService;
 
 class PageController extends BaseController {
 
     private $borrowerService;
+    private $statisticsService;
+    private $countryQuery;
 
-    public function __construct(BorrowerService $borrowerService)
+    public function __construct(BorrowerService $borrowerService, StatisticsService $statisticsService, CountryQuery $countryQuery)
     {
 
         $this->borrowerService = $borrowerService;
+        $this->statisticsService = $statisticsService;
+        $this->countryQuery = $countryQuery;
     }
 
 	public function getOurStory() {
@@ -90,5 +97,68 @@ class PageController extends BaseController {
     public function getTeam()
     {
         return View::make('pages.team');
+    }
+
+    public function getStatistics($timePeriod = null, $country = null)
+    {
+        $timePeriods = array(
+            'one_month_ago'    => 'Past 1 month',
+            'three_months_ago' => 'Past 3 months',
+            'six_months_ago'   => 'Past 6 months',
+            'year_ago'         => 'Past year',
+            'all_time'         => 'All time',
+        );
+        $start_date_values = array(
+            'one_month_ago'    => Carbon::now()->subMonths(1),
+            'three_months_ago' => Carbon::now()->subMonths(3),
+            'six_months_ago'   => Carbon::now()->subMonths(6),
+            'year_ago'         => Carbon::now()->subYear(),
+            'all_time'         => Carbon::now()->subYears(300),
+        );
+        $countries = CountryQuery::create()
+            ->filterByBorrowerCountry(true);
+        $routeParams = [
+            'timePeriod' => 'year_ago',
+            'country' => 'everywhere'
+        ];
+        $selectedTimePeriod = $timePeriod;
+        if (!$timePeriod) {
+            $selectedTimePeriod = 'year_ago';
+        } else {
+            $routeParams['timePeriod'] = $timePeriod;
+        }
+        $selectedStartDate = array_get($start_date_values, $selectedTimePeriod);
+        $selectedCountry = $this->countryQuery->findOneBySlug($country);
+        if ($country) {
+            $totalStats = $this->statisticsService->getStatistics('totalStatistics', $selectedStartDate, null);
+            if ($selectedCountry) {
+                $routeParams['country'] = $selectedCountry->getSlug();
+                $lendingStats = $this->statisticsService->getStatistics('lendingStatistics-' . $timePeriod, $selectedStartDate, $selectedCountry->getId());
+            } else {
+                $lendingStats = $this->statisticsService->getStatistics('lendingStatistics-' . $timePeriod, $selectedStartDate, null);
+            }
+        }
+
+        if(!empty($totalStats)){
+            $totalStatistics = unserialize($totalStats);
+        }else{
+            $totalStatistics = $this->statisticsService->getTotalStatistics();
+//            $database->setStatistics('totalStatistics', serialize($totalStatistics), '');
+        }
+
+        if(!empty($lendingStats)){
+            $lendingStatistics = unserialize($lendingStats);
+        }else{
+            if ($selectedCountry) {
+                $lendingStatistics = $this->statisticsService->getLendingStatistics($selectedStartDate, $selectedCountry->getId());
+            } else {
+                $lendingStatistics = $this->statisticsService->getLendingStatistics($selectedStartDate, null);
+            }
+//            $database->setStatistics('lendingStatistics-' . $selected_start_date, serialize($lendingStatistics), $c);
+        }
+
+        return View::make('pages.statistics',
+            compact('totalStatistics', 'lendingStatistics', 'time', 'countries', 'selectedCountry', 'timePeriods', 'selectedTimePeriod', 'routeParams')
+        );
     }
 }

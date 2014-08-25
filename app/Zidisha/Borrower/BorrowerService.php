@@ -77,7 +77,7 @@ class BorrowerService
                 ->setBirthDate($facebookData['birthday'])
                 ->setFriendsCount($this->facebookService->getFriendCount())
                 ->setFirstPostDate($this->facebookService->getFirstPostDate());
-            $facebookUser->save();   
+            $facebookUser->save();
         }
 
         $borrower = new Borrower();
