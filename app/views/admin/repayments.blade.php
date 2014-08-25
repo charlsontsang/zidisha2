@@ -11,7 +11,7 @@ Exchange rates
 
 <h3>Upload Repayments</h3>
 
-{{ BootstrapForm::open(array('controller' => 'AdminController@postEnterRepayment', 'translationDomain' => 'repayments', 'files' => true)) }}
+{{ BootstrapForm::open(array('route' => 'admin:upload-repayments', 'translationDomain' => 'repayments', 'files' => true)) }}
 {{ BootstrapForm::populate($form) }}
 
 {{ BootstrapForm::select('countryCode', $form->getCountrySlug()) }}

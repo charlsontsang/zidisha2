@@ -483,15 +483,15 @@ Route::group(
                 Route::get(
                     '/repayments',
                     array(
-                        'uses' => 'AdminController@getEnterRepayment',
+                        'uses' => 'AdminController@getRepayments',
                         'as'   => 'admin:repayments'
                     )
                 );
                 Route::post(
-                    '/repayments',
+                    '/upload-repayments',
                     array(
-                        'uses'   => 'AdminController@postEnterRepayment',
-                        'as'     => 'admin:post-repayments',
+                        'uses'   => 'AdminController@postUploadRepayments',
+                        'as'     => 'admin:upload-repayments',
                         'before' => 'csrf'
                     )
                 );

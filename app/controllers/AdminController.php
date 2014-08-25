@@ -691,13 +691,13 @@ class AdminController extends BaseController
         return Redirect::back();
     }
 
-    public function getEnterRepayment()
+    public function getRepayments()
     {
         $paymentCounts = $this->repaymentService->getNumberOfPayments();
         return View::make('admin.repayments', ['form' => $this->enterRepaymentForm,], compact('paymentCounts'));
     }
 
-    public function postEnterRepayment()
+    public function postUploadRepayments()
     {
         $form = $this->enterRepaymentForm;
         $form->handleRequest(Request::instance());
