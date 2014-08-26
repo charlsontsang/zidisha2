@@ -121,28 +121,7 @@ class LoanService
         $registrationFee = $isFirstLoan ? $borrower->getCountry()->getRegistrationFee() : Money::create(0, $currencyCode);
         
         $loan = new Loan();
-        $loan
-            ->setSummary($data['summary'])
-            ->setProposal($data['proposal'])
-            ->setCurrencyCode($currencyCode)
-            ->setAmount(Money::create($data['amount'], $currencyCode))
-            ->setUsdAmount(Money::create($data['usdAmount'], 'USD'))
-            ->setInstallmentPeriod($borrower->getCountry()->getInstallmentPeriod())
-            ->setMaxInterestRate(Setting::get('loan.maximumLenderInterestRate') + Setting::get('loan.transactionFeeRate'))
-            ->setServiceFeeRate(Setting::get('loan.transactionFeeRate'))
-            ->setInstallmentDay($data['installmentDay'])
-            ->setAppliedAt($data['date'])
-            ->setCategoryId($data['categoryId'])
-            ->setBorrower($borrower)
-            ->setRegistrationFee($registrationFee)
-            ->setStatus(Loan::OPEN)
-            ->setSiftScienceScore($siftScienceScore);
-
-        $calculator = new InstallmentCalculator($loan);
-        $installmentAmount = Money::create($data['installmentAmount'], $currencyCode);
-        $period = $calculator->period($installmentAmount);
-        
-        $loan->setPeriod($period);
+        $loan = $this->setLoanDetails($borrower, $loan, $data, $currencyCode, $registrationFee, $siftScienceScore);
         
         return $loan;
     }
@@ -1090,6 +1069,46 @@ class LoanService
 
     public function updateLoanApplication(Borrower $borrower,Loan $loan, $data)
     {
+        $loan = $this->setLoanDetails($borrower, $loan, $data);
+        $loan->save();
         
+        return $loan;
+    }
+
+    protected function setLoanDetails(
+        Borrower $borrower,
+        Loan $loan,
+        $data,
+        $currencyCode = null,
+        $registrationFee = null,
+        $siftScienceScore = null
+    ) {
+        $loan
+            ->setSummary($data['summary'])
+            ->setProposal($data['proposal'])
+            ->setAmount(Money::create($data['amount'], $currencyCode))
+            ->setUsdAmount(Money::create($data['usdAmount'], 'USD'))
+            ->setInstallmentPeriod($borrower->getCountry()->getInstallmentPeriod())
+            ->setMaxInterestRate(Setting::get('loan.maximumLenderInterestRate') + Setting::get('loan.transactionFeeRate'))
+            ->setServiceFeeRate(Setting::get('loan.transactionFeeRate'))
+            ->setInstallmentDay($data['installmentDay'])
+            ->setCategoryId($data['categoryId'])
+            ->setBorrower($borrower);
+
+        if ($registrationFee != null) {
+            $loan->setRegistrationFee($registrationFee)
+                ->setAppliedAt($data['date'])
+                ->setCurrencyCode($currencyCode)
+                ->setStatus(Loan::OPEN)
+                ->setSiftScienceScore($siftScienceScore);
+        }
+
+        $calculator = new InstallmentCalculator($loan);
+        $installmentAmount = Money::create($data['installmentAmount'], $currencyCode);
+        $period = $calculator->period($installmentAmount);
+
+        $loan->setPeriod($period);
+
+        return $loan;
     }
 }

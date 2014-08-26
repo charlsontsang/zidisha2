@@ -42,6 +42,17 @@ class LoanApplicationController extends BaseController
 
     public function getInstructions()
     {
+        $borrower = \Auth::user()->getBorrower();
+
+        $activeLoan = LoanQuery::create()
+            ->filterByStatus(Loan::OPEN)
+            ->filterByBorrower($borrower)
+            ->findOne();
+
+        if ($activeLoan) {
+            Session::put('borrower.openLoan', $activeLoan->getId());
+        }
+        
         return $this->stepView('instructions');
     }
 
@@ -126,8 +137,15 @@ class LoanApplicationController extends BaseController
 
         $borrower = Auth::user()->getBorrower();
 
-        $this->loanService->applyForLoan($borrower, $data);
-
+        if (Session::has('borrower.openLoan')) {
+            $loan = LoanQuery::create()
+                ->findOneById(Session::get('borrower.openLoan'));
+            
+            $this->loanService->updateLoanApplication($borrower, $loan, $data);            
+        } else {
+            $this->loanService->applyForLoan($borrower, $data);
+        }
+        
         $this->setCurrentStep('confirmation');
 
         return Redirect::action('LoanApplicationController@getConfirmation');
