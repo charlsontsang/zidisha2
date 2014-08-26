@@ -144,8 +144,8 @@ class GenerateModelData extends Command
             $this->call('fake', array('model' => 'VolunteerMentor', 'size' => 20));
             $this->call('fake', array('model' => 'Borrower', 'size' => 80));
             
-            $this->call('fake', array('model' => 'LenderGroup', 'size' => 50));
-            $this->call('fake', array('model' => 'LenderGroupMember', 'size' => 200));
+            $this->call('fake', array('model' => 'LendingGroup', 'size' => 50));
+            $this->call('fake', array('model' => 'LendingGroupMember', 'size' => 200));
 
             $this->call('fake', array('model' => 'Transaction', 'size' => 200));
 
@@ -709,10 +709,13 @@ class GenerateModelData extends Command
                 continue;
             }
 
+            $group = LendingGroupQuery::create()
+                ->findOneById($lendingGroupId);
+
             $groupMember = new LendingGroupMember();
             $groupMember
-                ->setMember($memberId)
-                ->setLendingGroup($lendingGroupId);
+                ->setMemberId($memberId)
+                ->setLendingGroup($group);
             $groupMember->save();
             
             $return["$memberId-$lendingGroupId"] = $groupMember;
