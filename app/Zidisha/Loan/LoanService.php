@@ -233,7 +233,7 @@ class LoanService
             return;
         }
 
-        list($loanType, $loanDocument) = $this->createIndexDocument($loan);
+        list($loanType, $loanDocument) = $this->createLoanDocument($loan);
         
         $loanType->addDocument($loanDocument);
         $loanType->getIndex()->refresh();
@@ -245,7 +245,7 @@ class LoanService
             return;
         }
 
-        list($loanType, $loanDocument) = $this->createIndexDocument($loan);
+        list($loanType, $loanDocument) = $this->createLoanDocument($loan);
         $loanDocument->setDocAsUpsert(true);
         
         $loanType->updateDocument($loanDocument);
@@ -1137,7 +1137,7 @@ class LoanService
      * @return array
      * @throws \Propel\Runtime\Exception\PropelException
      */
-    protected function createIndexDocument(Loan $loan)
+    protected function createLoanDocument(Loan $loan)
     {
         $loanIndex = $this->getLoanIndex();
 
