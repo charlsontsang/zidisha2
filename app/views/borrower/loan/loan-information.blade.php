@@ -17,11 +17,6 @@
                         @lang('borrower.your-loans.accept-bids.instructions')
                     </div>
 
-                    <style>
-                        .table.table-2-col td {
-                            width: 50%;
-                        }
-                    </style>
                     <table class="table table-2-col">
                         <tbody>
                             <tr>
