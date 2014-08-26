@@ -409,6 +409,15 @@ Route::group(
                 );
                 Route::get('invites/{id?}', array('uses' => 'BorrowerInviteController@getInvites', 'as' => 'borrower:invites'));
                 Route::get('currentCredit', [ 'uses' => 'BorrowerController@getCurrentCredit', 'as' => 'borrower:credit']);
+
+                Route::get(
+                    'reschedule-loan',
+                    array('uses' => 'BorrowerLoanController@getRescheduleLoan', 'as' => 'borrower:reschedule-loan')
+                );
+                Route::post(
+                    'reschedule-loan',
+                    array('uses' => 'BorrowerLoanController@postRescheduleLoan', 'as' => 'borrower:post-reschedule-loan')
+                );
             }
         );
 

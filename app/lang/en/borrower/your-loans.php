@@ -8,7 +8,9 @@ return [
         'submit'       => 'Accept Bids',
     ],
     'requested-amount'           => 'Amount Requested',
+    'disbursed-amount'           => 'Loan Principal Disbursed',
     'repayment-period'           => 'Repayment Period',
+    'original-repayment-period'  => 'Original Repayment Period',
     'final-lender-interest-rate' => 'Final Interest Rate Bid By Lenders',
     'service-fee-rate'           => 'Service Fee',
     'registration-fee'           => 'One-Time Registration Fee',
@@ -16,4 +18,15 @@ return [
     'interest-rate-for-months'   => ':interestRate % annual rate for :period months',
     'interest-rate-for-weeks'    => ':interestRate % annual rate for :period weeks',
     'total-amount'               => 'Total Amount (Including Interest and Transaction Fee) to be Repaid',
+    'total-amount-due'           => 'Total Repayment Due',
+    
+    'reschedule' => [
+        'description'                    => 'This page allows you to propose a change to your repayment schedule. If you choose to lengthen your repayment period, you will be asked to pay interest for the additional time the loan will be held, at the same annual interest rate as is applied to your current loan repayment schedule. If you shorten your repayment period, the interest you will be asked to pay will be reduced.',
+        'installment-amount'             => 'New Installment Amount',
+        'installment-amount-description' => 'Please enter the new amount you wish to pay each month. As the loan must be fully repaid within :maxPeriod months, the minimum monthly installment is :minInstallmentAmount.',
+        'reason'                         => 'Reason',
+        'reason-description'             => 'Please explain here the reason for the change in the repayment schedule (as much as you are comfortable sharing). This will be posted on your public loan profile page.',
+        'note'                           => '<strong>Please note</strong>: You will have the chance to review your new repayment schedule before finalizing the change.',
+        'submit'                         => 'Submit',
+    ]
 ];
