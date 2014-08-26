@@ -121,28 +121,7 @@ class LoanService
         $registrationFee = $isFirstLoan ? $borrower->getCountry()->getRegistrationFee() : Money::create(0, $currencyCode);
         
         $loan = new Loan();
-        $loan
-            ->setSummary($data['summary'])
-            ->setProposal($data['proposal'])
-            ->setCurrencyCode($currencyCode)
-            ->setAmount(Money::create($data['amount'], $currencyCode))
-            ->setUsdAmount(Money::create($data['usdAmount'], 'USD'))
-            ->setInstallmentPeriod($borrower->getCountry()->getInstallmentPeriod())
-            ->setMaxInterestRate(Setting::get('loan.maximumLenderInterestRate') + Setting::get('loan.transactionFeeRate'))
-            ->setServiceFeeRate(Setting::get('loan.transactionFeeRate'))
-            ->setInstallmentDay($data['installmentDay'])
-            ->setAppliedAt($data['date'])
-            ->setCategoryId($data['categoryId'])
-            ->setBorrower($borrower)
-            ->setRegistrationFee($registrationFee)
-            ->setStatus(Loan::OPEN)
-            ->setSiftScienceScore($siftScienceScore);
-
-        $calculator = new InstallmentCalculator($loan);
-        $installmentAmount = Money::create($data['installmentAmount'], $currencyCode);
-        $period = $calculator->period($installmentAmount);
-        
-        $loan->setPeriod($period);
+        $loan = $this->setLoanDetails($borrower, $loan, $data, $currencyCode, $registrationFee, $siftScienceScore);
         
         return $loan;
     }
@@ -329,18 +308,8 @@ class LoanService
             }
         }
         
-        // Fully Funded notifications
-        if ($loan->isFullyFunded()) {
-            $bids = BidQuery::create()
-                ->filterByLoan($loan)
-                ->joinWith('Lender')
-                ->joinWith('Lender.User')
-                ->find();
+        $this->sendLoanFullyFundedNotification($loan);
 
-            foreach ($bids as $_bid) {
-                $this->lenderMailer->sendLoanFullyFundedMail($_bid);
-            }
-        }
 
         //Todo: refresh elastic search index.
 
@@ -1086,5 +1055,82 @@ class LoanService
         }
         
         return true;        
+    }
+
+    public function updateLoanApplication(Borrower $borrower,Loan $loan, $data)
+    {
+        $data['exchangeRate'] = ExchangeRateQuery::create()->findCurrent($borrower->getCountry()->getCurrency());
+        $exchangeRate = $data['exchangeRate'];
+        $data['usdAmount'] = Converter::toUSD(Money::create($data['amount'], $loan->getCurrencyCode()),$exchangeRate)->getAmount();
+
+        $loan = $this->setLoanDetails($borrower, $loan, $data);
+        $loan->save();
+        
+        $this->sendLoanFullyFundedNotification($loan);
+        //TODO: update the index
+        
+        return $loan;
+    }
+
+    protected function setLoanDetails(
+        Borrower $borrower,
+        Loan $loan,
+        $data,
+        $currencyCode = null,
+        $registrationFee = null,
+        $siftScienceScore = null
+    ) {
+        $loan
+            ->setSummary($data['summary'])
+            ->setProposal($data['proposal'])
+            ->setUsdAmount(Money::create($data['usdAmount'], 'USD'))
+            ->setInstallmentPeriod($borrower->getCountry()->getInstallmentPeriod())
+            ->setMaxInterestRate(Setting::get('loan.maximumLenderInterestRate') + Setting::get('loan.transactionFeeRate'))
+            ->setServiceFeeRate(Setting::get('loan.transactionFeeRate'))
+            ->setInstallmentDay($data['installmentDay'])
+            ->setCategoryId($data['categoryId'])
+            ->setBorrower($borrower);
+
+        if ($registrationFee != null) {
+            $loan->setRegistrationFee($registrationFee)
+                ->setAppliedAt($data['date'])
+                ->setCurrencyCode($currencyCode)
+                ->setStatus(Loan::OPEN)
+                ->setSiftScienceScore($siftScienceScore)
+                ->setAmount(Money::create($data['amount'], $currencyCode));
+            $installmentAmount = Money::create($data['installmentAmount'], $currencyCode);
+        }else {
+            $loan
+                ->setAmount(Money::create($data['amount'], $loan->getCurrencyCode()));
+            $installmentAmount = Money::create($data['installmentAmount'], $loan->getCurrencyCode());
+
+        }
+
+        $calculator = new InstallmentCalculator($loan);
+        $period = $calculator->period($installmentAmount);
+
+        $loan->setPeriod($period);
+
+        return $loan;
+    }
+
+    /**
+     * @param Loan $loan
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    protected function sendLoanFullyFundedNotification(Loan $loan)
+    {
+        // Fully Funded notifications
+        if ($loan->isFullyFunded()) {
+            $bids = BidQuery::create()
+                ->filterByLoan($loan)
+                ->joinWith('Lender')
+                ->joinWith('Lender.User')
+                ->find();
+
+            foreach ($bids as $bid) {
+                $this->lenderMailer->sendLoanFullyFundedMail($bid);
+            }
+        }
     }
 }

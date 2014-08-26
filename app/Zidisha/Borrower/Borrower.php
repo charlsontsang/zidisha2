@@ -147,7 +147,7 @@ class Borrower extends BaseBorrower implements CommentReceiverInterface
     {
         return in_array(
             $this->getLoanStatus(),
-            [Loan::CANCELED, Loan::REPAID, Loan::EXPIRED, Loan::NO_LOAN]
+            [Loan::OPEN, Loan::CANCELED, Loan::REPAID, Loan::EXPIRED, Loan::NO_LOAN]
         );
     }
 }
