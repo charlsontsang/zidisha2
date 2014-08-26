@@ -38,11 +38,12 @@
             </div>
             <div class="item">
                 <img src="assets/images/carousel/mary.jpg">
-                <div class="carousel-caption">
+                <div class="carousel-caption caption-right">
                     <h3>Lend <span class="text-primary">Mary</span> $50 for a delivery wagon</h3>
                     <p>{{ $secondaryCaption }}</p>
                     <a href="{{ route('lend:index') }}" class="btn btn-primary btn-lg">{{ $buttonText }}</a>
                 </div>
+                <div class="carousel-gradient-right"></div>
             </div>
             <div class="item">
                 <img src="assets/images/carousel/melita.jpg">
