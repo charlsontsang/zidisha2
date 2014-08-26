@@ -6,6 +6,7 @@ use Zidisha\Borrower\Borrower;
 use Zidisha\Currency\ExchangeRateQuery;
 use Zidisha\Currency\Money;
 use Zidisha\Form\AbstractForm;
+use Zidisha\Loan\Calculator\InstallmentCalculator;
 use Zidisha\Loan\Calculator\LoanCalculator;
 use Zidisha\Loan\CategoryQuery;
 use Zidisha\Loan\CategoryTranslationQuery;
@@ -33,8 +34,9 @@ class ApplicationForm extends AbstractForm
      */
     protected $exchangeRate;
 
-    public function __construct(Borrower $borrower)
+    public function __construct(Borrower $borrower,Loan $loan = null)
     {
+        $this->loan = $loan;
         $this->borrower = $borrower;
         $this->currency = $this->borrower->getCountry()->getCurrency();
         $this->exchangeRate = ExchangeRateQuery::create()->findCurrent($this->currency);
@@ -137,7 +139,21 @@ class ApplicationForm extends AbstractForm
 
     public function getDefaultData()
     {
-        return \Session::get('loan_data', []);
+        if ($this->loan) {
+            $installmentCalculator = new InstallmentCalculator($this->loan);
+            $installmentCalculator->amount();
+            
+            return [
+                'summary'           => $this->loan->getSummary(),
+                'proposal'          => $this->loan->getProposal(),
+                'categoryId'        => $this->loan->getCategoryId(),
+                'amount'            => $this->loan->getAmount()->getAmount(),
+                'installmentAmount' => $installmentCalculator->amount(),
+                'installmentDay'    => $this->loan->getInstallmentDay()
+            ];
+        } else {
+            return \Session::get('loan_data', []);
+        }
     }
 
     protected function getAmount()

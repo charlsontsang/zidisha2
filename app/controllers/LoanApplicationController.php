@@ -94,7 +94,18 @@ class LoanApplicationController extends BaseController
 
     public function getApplication()
     {
-        return $this->stepView('application', ['form' => $this->applicationForm,]);
+        $borrower = Auth::user()->getBorrower();
+
+        if (! Session::has('borrower.openLoan')) {
+            return $this->stepView('application', ['form' => $this->applicationForm,]);
+        }
+        
+        $loan = LoanQuery::create()
+            ->findOneById(Session::get('borrower.openLoan'));
+
+        $applicationForm = new ApplicationForm($borrower, $loan);
+        return $this->stepView('application', ['form' => $applicationForm,]);
+
     }
 
     public function postApplication()
