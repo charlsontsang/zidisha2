@@ -489,6 +489,7 @@ Route::group(
                     array('uses' => 'AdminController@removeVolunteer', 'as' => 'admin:remove:volunteer')
                 );
                 Route::get('volunteer-mentors', array('uses' => 'AdminController@getVolunteerMentors', 'as' => 'admin:volunteer-mentors'));
+                Route::get('add-volunteer-mentors', array('uses' => 'AdminController@getAddVolunteerMentors', 'as' => 'admin:add:volunteer-mentors'));
                 Route::get(
                     'volunteer-mentors/add/{id}',
                     array('uses' => 'AdminController@addVolunteerMentor', 'as' => 'admin:add:volunteer-mentor')
