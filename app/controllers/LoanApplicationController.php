@@ -27,8 +27,8 @@ class LoanApplicationController extends BaseController
     {
         $this->beforeFilter('@stepsBeforeFilter');
         $this->loanService = $loanService;
-        $this->isNewLoanAllowedFilter();
-        $this->validateOpenLoanFilter();
+        $this->beforeFilter($this->isNewLoanAllowedFilter());
+        $this->beforeFilter($this->validateOpenLoanFilter());
     }
 
     public function isNewLoanAllowedFilter()
@@ -67,8 +67,6 @@ class LoanApplicationController extends BaseController
 
     public function getInstructions()
     {
-        $this->isNewLoanAllowedFilter();
-        
         /** @var Borrower $borrower */
         $borrower = \Auth::user()->getBorrower();
 
