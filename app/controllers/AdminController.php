@@ -360,22 +360,34 @@ class AdminController extends BaseController
     {
         $form = $this->borrowersForm;
         $page = Request::query('page') ? : 1;
-        $countryId = Request::query('country') ? : null;
-        $search = Request::query('search') ? : null;
 
-        $query = BorrowerQuery::create();
-
-        if (($countryId == 'all_countries' || !$countryId) && !$search) {
-            $query->useUserQuery()
-                ->filterBySubRole(User::SUB_ROLE_VOLUNTEER_MENTOR)
-                ->endUse();
-        }
+        $query = BorrowerQuery::create()
+            ->useUserQuery()
+            ->filterBySubRole(User::SUB_ROLE_VOLUNTEER_MENTOR)
+            ->endUse();
 
         $paginator = $form->getQuery($query)
             ->orderById()
             ->paginate($page, 3);
 
         return View::make('admin.volunteer-mentors', compact('paginator', 'form'));
+    }
+
+    public function getAddVolunteerMentors()
+    {
+        $form = $this->borrowersForm;
+        $page = Request::query('page') ? : 1;
+
+        $query = BorrowerQuery::create()
+            ->useUserQuery()
+            ->filterBySubRole(null)
+            ->endUse();
+
+        $paginator = $form->getQuery($query)
+            ->orderById()
+            ->paginate($page, 3);
+
+        return View::make('admin.add-volunteer-mentors', compact('paginator', 'form'));
     }
 
     public function getLoans()
