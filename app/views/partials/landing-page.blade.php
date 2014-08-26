@@ -87,7 +87,7 @@
   <div class="container">
     <div class="row">
       <div class="col-sm-2 col-sm-offset-1">
-        <p><a href="http://paulbuchheit.blogspot.com/2014/03/help-me-distribute-100000-to-new.html" target="_blank"><img src="assets/images/pages/press/yc_logo.png" width="100%" class="press-logo" /></a></p>
+        <p><a href="http://paulbuchheit.blogspot.com/2014/03/help-me-distribute-100000-to-new.html" target="_blank"><img src="assets/images/pages/press/yc_logo.png" width="115%" class="press-logo" /></a></p>
       </div>
       <div class="col-sm-8">
           
@@ -110,7 +110,7 @@
           </blockquote> 
       </div>    
       <div class="col-sm-2 col-sm-offset-1">
-        <p><a href="http://techcrunch.com/2014/01/23/zidisha-launches-a-kickstarter-style-micro-lending-platform-for-low-income-entrepreneurs-in-developing-countries/" target="_blank"><img src="assets/images/pages/press/tc_logo.png" width="100%" class="press-logo" /></a></p>
+        <p><a href="http://techcrunch.com/2014/01/23/zidisha-launches-a-kickstarter-style-micro-lending-platform-for-low-income-entrepreneurs-in-developing-countries/" target="_blank"><img src="assets/images/pages/press/tc_logo.png" width="80%" class="press-logo" /></a></p>
       </div>
       <div class="col-sm-8">
           <blockquote>

@@ -10,10 +10,14 @@
         <ol class="carousel-indicators">
             <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
             <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+            <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+            <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+            <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+            <li data-target="#carousel-example-generic" data-slide-to="1"></li>
         </ol>
     
         <!-- Wrapper for slides -->
-        <div class="carousel-inner">
+        <div class="carousel-inner" id="esther">
             <div class="item active">
                 <img src="assets/images/carousel/esther.jpg">
                 <div class="carousel-caption">
@@ -34,22 +38,6 @@
                 <img src="assets/images/carousel/mary.jpg">
                 <div class="carousel-caption">
                     <h3>Lend <span class="text-primary">Mary</span> $50 for a delivery wagon</h3>
-                    <p>{{ $secondaryCaption }}</p>
-                    <a href="{{ route('lend:index') }}" class="btn btn-primary btn-lg">{{ $buttonText }}</a>
-                </div>
-            </div>
-            <div class="item">
-                <img src="assets/images/carousel/aloysius.jpg">
-                <div class="carousel-caption">
-                    <h3>Lend <span class="text-primary">Aloysius</span> $50 to make batik fabric</h3>
-                    <p>{{ $secondaryCaption }}</p>
-                    <a href="{{ route('lend:index') }}" class="btn btn-primary btn-lg">{{ $buttonText }}</a>
-                </div>
-            </div>
-            <div class="item">
-                <img src="assets/images/carousel/pherister.jpg">
-                <div class="carousel-caption">
-                    <h3>Lend <span class="text-primary">Pherister</span> $40 for schoolbooks</h3>
                     <p>{{ $secondaryCaption }}</p>
                     <a href="{{ route('lend:index') }}" class="btn btn-primary btn-lg">{{ $buttonText }}</a>
                 </div>
@@ -78,14 +66,8 @@
                     <a href="{{ route('lend:index') }}" class="btn btn-primary btn-lg">{{ $buttonText }}</a>
                 </div>
             </div>
-            <div class="item">
-                <img src="assets/images/carousel/thilor.jpg">
-                <div class="carousel-caption">
-                    <h3>Lend <span class="text-primary">Thilor</span> $60 to make dresses</h3>
-                    <p>{{ $secondaryCaption }}</p>
-                    <a href="{{ route('lend:index') }}" class="btn btn-primary btn-lg">{{ $buttonText }}</a>
-                </div>
-            </div>
+        </div>
+        <div class="carousel-gradient">
         </div>
     
         <!-- Controls -->
