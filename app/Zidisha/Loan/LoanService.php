@@ -1087,4 +1087,9 @@ class LoanService
         
         return true;        
     }
+
+    public function updateLoanApplication(Borrower $borrower,Loan $loan, $data)
+    {
+        
+    }
 }
