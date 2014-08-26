@@ -8493,7 +8493,7 @@ body {
     font-size: 22px;
   }
 }
-.home h2 a {
+#see-all {
   font-size: 16px;
   font-weight: bold;
 }
@@ -8523,12 +8523,14 @@ body {
   color: #2e9df7;
   border: 2px solid #2e9df7;
   font-weight: bold;
-  margin-bottom: -50px;
 }
 @media (min-width: 768px) {
   .btn-home {
     font-size: 24px;
   }
+}
+.btn-home-bottom {
+  margin-bottom: -50px;
 }
 .btn-home:hover {
   background-color: #2e9df7;

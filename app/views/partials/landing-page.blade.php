@@ -1,21 +1,10 @@
-  <div class="row home-section info-page home text-center">
-    <div class="col-md-10 col-md-offset-1">
-      <h2 class="alpha">Direct loans that make dramatic impact</h2>
-
-      <p class="lead">Zidisha is the first online microlending community that directly connects lenders and borrowers — no matter the distance or disparity between them.</p>
-      <p class="lead"><a href="#"><strong>More than 14,000 people worldwide</strong></a> have started using Zidisha.</p>
-    
-    </div>
-  </div>
-</div>
-
 <div class="container-fluid home-section home-grey home">
   <div class="container">
     <div class="row">
         <div class="col-sm-12">
           <h2 class="alpha">
             <span>Trending Projects</span>
-            <span class="pull-right"><a href="{{ route('lend:index') }}">See All</a></span>
+            <span class="pull-right"><a href="{{ route('lend:index') }}" id="see-all">See All</a></span>
           </h2>
         </div>
         @foreach($projects as $loan)
@@ -87,7 +76,7 @@
   <div class="container">
     <div class="row">
       <div class="col-sm-3">
-        <p><a href="http://blogs.wsj.com/venturecapital/2014/08/25/y-combinator-nonprofit-zidisha-changes-microfinance-equation/" target="_blank"><img src="assets/images/pages/press/wsj_logo.png" width="110%" class="press-logo" /></a></p>
+        <p><a href="http://blogs.wsj.com/venturecapital/2014/08/25/y-combinator-nonprofit-zidisha-changes-microfinance-equation/" target="_blank"><img src="/assets/images/pages/press/wsj_logo.png" width="110%" class="press-logo" /></a></p>
       </div>
       <div class="col-sm-9">
           
@@ -99,7 +88,7 @@
           </blockquote>   
       </div>
       <div class="col-sm-3">
-        <p><a href="http://venturebeat.com/2014/03/25/meet-the-tech-for-good-startups-at-y-combinators-demo-day/" target="_blank"><img src="assets/images/pages/press/VB_logo.png" width="80%" class="press-logo" /></a></p>
+        <p><a href="http://venturebeat.com/2014/03/25/meet-the-tech-for-good-startups-at-y-combinators-demo-day/" target="_blank"><img src="/assets/images/pages/press/VB_logo.png" width="80%" class="press-logo" /></a></p>
       </div>
       <div class="col-sm-9">
           <blockquote>
@@ -110,7 +99,7 @@
           </blockquote> 
       </div>    
       <div class="col-sm-3">
-        <p><a href="http://techcrunch.com/2014/01/23/zidisha-launches-a-kickstarter-style-micro-lending-platform-for-low-income-entrepreneurs-in-developing-countries/" target="_blank"><img src="assets/images/pages/press/tc_logo.png" width="60%" class="press-logo" /></a></p>
+        <p><a href="http://techcrunch.com/2014/01/23/zidisha-launches-a-kickstarter-style-micro-lending-platform-for-low-income-entrepreneurs-in-developing-countries/" target="_blank"><img src="/assets/images/pages/press/tc_logo.png" width="60%" class="press-logo" /></a></p>
       </div>
       <div class="col-sm-9">
           <blockquote>
