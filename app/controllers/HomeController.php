@@ -32,15 +32,22 @@ class HomeController extends BaseController {
     
     public function getLenderHome()
     {
+        $estherCaption = 'Lend <span class="text-primary">Esther</span> $50 to open a grocery shop';
+        $fatouCaption = 'Lend <span class="text-primary">Fatou</span> $100 to open a beauty salon';
+        $melitaCaption = 'Lend <span class="text-primary">Melita</span> $100 for a dairy cow';
+        $binetaCaption = 'Lend <span class="text-primary">Bineta</span> $60 for a sewing machine';
+        $maryCaption = 'Lend <span class="text-primary">Mary</span> $50 for a delivery wagon';
+        
         $secondaryCaption = 'and join the global <strong>person-to-person</strong> microlending movement.';
         $buttonText = 'Browse Projects';
         $buttonTextBottom = 'Start exploring projects';
+        $buttonLink = route('lend:index');
         
         $conditions['status'] = Loan::OPEN;
         $conditions['categoryId'] = '18';
         $projects = $this->loanService->searchLoans($conditions)->take(3);
 
-        return View::make('lender-home', compact('secondaryCaption','buttonText', 'buttonTextBottom', 'projects'));
+        return View::make('lender-home', compact('estherCaption', 'fatouCaption', 'melitaCaption', 'binetaCaption', 'maryCaption', 'secondaryCaption','buttonText', 'buttonTextBottom', 'buttonLink', 'projects'));
     }
 
     private function getBorrowerHome($country)

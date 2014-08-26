@@ -7,6 +7,7 @@ use Zidisha\Lender\InviteQuery;
 use Zidisha\Lender\InviteVisitQuery;
 use Zidisha\Lender\LenderQuery;
 use Zidisha\Lender\LenderService;
+use Zidisha\Loan\Loan;
 
 class LenderInviteController extends BaseController
 {
@@ -16,11 +17,13 @@ class LenderInviteController extends BaseController
 
     public function __construct(
         Invite $inviteForm,
-        LenderService $lenderService
+        LenderService $lenderService,
+        \Zidisha\Loan\LoanService $loanService
     ) {
 
         $this->inviteForm = $inviteForm;
         $this->lenderService = $lenderService;
+        $this->loanService = $loanService;
     }
 
     public function getInvite()
@@ -160,12 +163,17 @@ class LenderInviteController extends BaseController
             }
         }
 
-        $carouselHeading = 'Send $25 to an entrepreneur for free';
+        $inviteeCaption = 'Send $25 to an entrepreneur for free';
         $buttonText = 'Sign up to redeem your credit';
+        $buttonLink = route('join');
+        
+        $conditions['status'] = Loan::OPEN;
+        $conditions['categoryId'] = '18';
+        $projects = $this->loanService->searchLoans($conditions)->take(3);
 
         return View::make(
             'lender.invitee',
-            compact('lender','carouselHeading','buttonText')
+            compact('lender','inviteeCaption','buttonText','buttonLink','projects')
         );
     }
 }

@@ -8385,7 +8385,7 @@ body {
 .carousel-inner > .item > img {
   width: 100%;
 }
-.carousel-gradient {
+.carousel-gradient-left {
   position: absolute;
   top: 0;
   left: 0;
@@ -8393,7 +8393,17 @@ body {
   width: 50%;
   background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.0001) 100%);
   background-image: -o-linear-gradient(left, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.0001) 100%);
-  background-image: linear-gradient(to right, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.01) 100%);
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.0001) 100%);
+}
+.carousel-gradient-right {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 50%;
+  background-image: -webkit-linear-gradient(right, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.0001) 100%);
+  background-image: -o-linear-gradient(right, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.0001) 100%);
+  background-image: linear-gradient(to left, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.0001) 100%);
 }
 .carousel-caption {
   display: none;
@@ -8403,7 +8413,6 @@ body {
     display: inline-block;
     z-index: 5;
     top: 90px;
-    left: 12%;
     width: 40%;
   }
 }
@@ -8411,6 +8420,14 @@ body {
   .carousel-caption {
     top: 110px;
   }
+}
+.caption-left {
+  left: 12%;
+}
+.caption-right {
+  left: 48%;
+  right: 12%;
+  text-align: right !important;
 }
 .carousel-control,
 .carousel-indicators {
@@ -8483,7 +8500,7 @@ body {
     font-size: 22px;
   }
 }
-.home h2 a {
+#see-all {
   font-size: 16px;
   font-weight: bold;
 }
@@ -8500,7 +8517,7 @@ body {
 }
 .home img.press-logo {
   display: block;
-  padding-top: 16px;
+  padding: 18px 0 0 25px;
 }
 @media (max-width: 767px) {
   .home img.press-logo {
@@ -8513,12 +8530,14 @@ body {
   color: #2e9df7;
   border: 2px solid #2e9df7;
   font-weight: bold;
-  margin-bottom: -50px;
 }
 @media (min-width: 768px) {
   .btn-home {
     font-size: 24px;
   }
+}
+.btn-home-bottom {
+  margin-bottom: -50px;
 }
 .btn-home:hover {
   background-color: #2e9df7;

@@ -1,21 +1,10 @@
-  <div class="row home-section info-page home text-center">
-    <div class="col-md-10 col-md-offset-1">
-      <h2 class="alpha">Direct loans that make dramatic impact</h2>
-
-      <p class="lead">Zidisha is the first online microlending community that directly connects lenders and borrowers — no matter the distance or disparity between them.</p>
-      <p class="lead"><a href="#"><strong>More than 14,000 people worldwide</strong></a> have started using Zidisha.</p>
-    
-    </div>
-  </div>
-</div>
-
 <div class="container-fluid home-section home-grey home">
   <div class="container">
     <div class="row">
         <div class="col-sm-12">
           <h2 class="alpha">
             <span>Trending Projects</span>
-            <span class="pull-right"><a href="{{ route('lend:index') }}">See All</a></span>
+            <span class="pull-right"><a href="{{ route('lend:index') }}" id="see-all">See All</a></span>
           </h2>
         </div>
         @foreach($projects as $loan)
@@ -86,22 +75,22 @@
 <div class="container-fluid home-section home-grey info-page home">
   <div class="container">
     <div class="row">
-      <div class="col-sm-2 col-sm-offset-1">
-        <p><a href="http://paulbuchheit.blogspot.com/2014/03/help-me-distribute-100000-to-new.html" target="_blank"><img src="assets/images/pages/press/yc_logo.png" width="115%" class="press-logo" /></a></p>
+      <div class="col-sm-3">
+        <p><a href="http://blogs.wsj.com/venturecapital/2014/08/25/y-combinator-nonprofit-zidisha-changes-microfinance-equation/" target="_blank"><img src="/assets/images/pages/press/wsj_logo.png" width="110%" class="press-logo" /></a></p>
       </div>
-      <div class="col-sm-8">
+      <div class="col-sm-9">
           
           <blockquote>
-              <p>"Zidisha connects lenders directly to borrowers, providing not only an affordable loan, but also a personal connection."</p>
+              <p>"This type of lending is possible in Africa now because many people have access to the internet."</p>
               <footer>
-                  <cite><a href="http://paulbuchheit.blogspot.com/2014/03/help-me-distribute-100000-to-new.html" target="_blank">Gmail Creator Paul Buchheit</a></cite>
+                  <cite><a href="http://blogs.wsj.com/venturecapital/2014/08/25/y-combinator-nonprofit-zidisha-changes-microfinance-equation/" target="_blank">The Wall Street Journal</a></cite>
               </footer>
           </blockquote>   
       </div>
-      <div class="col-sm-2 col-sm-offset-1">
-        <p><a href="http://venturebeat.com/2014/03/25/meet-the-tech-for-good-startups-at-y-combinators-demo-day/" target="_blank"><img src="assets/images/pages/press/VB_logo.png" width="100%" class="press-logo" /></a></p>
+      <div class="col-sm-3">
+        <p><a href="http://venturebeat.com/2014/03/25/meet-the-tech-for-good-startups-at-y-combinators-demo-day/" target="_blank"><img src="/assets/images/pages/press/VB_logo.png" width="80%" class="press-logo" /></a></p>
       </div>
-      <div class="col-sm-8">
+      <div class="col-sm-9">
           <blockquote>
               <p>"Zidisha is cutting out the middlemen to enable direct lending to the entrepreneurs, and only needs 10 percent in fees to cover its cost (that’s versus the 30-80 percent Kiva requires)."</p>
               <footer>
@@ -109,10 +98,10 @@
               </footer>
           </blockquote> 
       </div>    
-      <div class="col-sm-2 col-sm-offset-1">
-        <p><a href="http://techcrunch.com/2014/01/23/zidisha-launches-a-kickstarter-style-micro-lending-platform-for-low-income-entrepreneurs-in-developing-countries/" target="_blank"><img src="assets/images/pages/press/tc_logo.png" width="80%" class="press-logo" /></a></p>
+      <div class="col-sm-3">
+        <p><a href="http://techcrunch.com/2014/01/23/zidisha-launches-a-kickstarter-style-micro-lending-platform-for-low-income-entrepreneurs-in-developing-countries/" target="_blank"><img src="/assets/images/pages/press/tc_logo.png" width="60%" class="press-logo" /></a></p>
       </div>
-      <div class="col-sm-8">
+      <div class="col-sm-9">
           <blockquote>
               <p>"By enabling the efficient flow of capital across international boundaries and wealth divisions, peer-to-peer microlending has the ability to have an enormous impact — on a global scale."</p>
               <footer>
