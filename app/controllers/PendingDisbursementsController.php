@@ -1,5 +1,6 @@
 <?php
 
+use Zidisha\Admin\AdminNote;
 use Zidisha\Admin\AdminNoteQuery;
 use Zidisha\Admin\Form\AuthorizeLoanForm;
 use Zidisha\Admin\Form\DisburseLoanForm;
@@ -113,7 +114,7 @@ class PendingDisbursementsController extends BaseController
             App::abort(404, 'Loan not found');
         }
 
-        $loanNote = new \Zidisha\Loan\LoanNote();
+        $loanNote = new AdminNote();
         $loanNote
             ->setUser($user)
             ->setLoanId($loanId)
