@@ -5,7 +5,9 @@ Borrowers
 @stop
 
 @section('content')
-
+<div class="page-header">
+    <h1>Borrowers</h1>
+</div>
 <div>
     {{ BootstrapForm::open(array('route' => 'admin:borrowers', 'translationDomain' => 'borrowers', 'method' => 'get')) }}
     {{ BootstrapForm::populate($form) }}

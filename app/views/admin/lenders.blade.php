@@ -5,7 +5,6 @@ Lenders
 @stop
 
 @section('content')
-
 <h2>Lender Statistics</h2>
 <div>
     Total lenders : {{ $totalLenders }}
@@ -19,7 +18,10 @@ Lenders
     Total lender credit available : {{ $totalLenderCredit }}
 </div>
 
-
+<div class="page-header">
+    <h1>Lenders</h1>
+</div>
+>>>>>>> add headers in search pages of admin
 <div>
     {{ BootstrapForm::open(array('route' => 'admin:lenders', 'translationDomain' => 'lenders', 'method' => 'get')) }}
     {{ BootstrapForm::populate($form) }}
