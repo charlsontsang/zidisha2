@@ -55,18 +55,17 @@ class LendingGroupController extends BaseController
     public function getCreateSuccess($id)
     {
         $group = LendingGroupQuery::create()
-            ->filterById($id)
-            ->findOne();
-
+            ->findOneById($id);
         if (!$group) {
             App::abort(404);
         }
 
         $groupUrl = route('lender:group', $id);
+        $groupName = $group->getName();
 
         $twitterParams = array(
             "url" => $groupUrl,
-            "text" => "Just made a group  via @ZidishaInc",
+            "text" => "Just made a group $groupName via @ZidishaInc",
         );
         $twitterUrl = "http://twitter.com/share?" . http_build_query($twitterParams);
 
