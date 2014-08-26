@@ -21,19 +21,41 @@ class LoanApplicationController extends BaseController
         'confirmation',
     ];
 
-    private $editForm, $applicationForm;
-    /**
-     * @var Zidisha\Loan\LoanService
-     */
     private $loanService;
 
-    public function __construct(ProfileForm $form, LoanService $loanService)
+    public function __construct(LoanService $loanService)
     {
         $this->beforeFilter('@stepsBeforeFilter');
-        $this->beforeFilter('@isNewLoanAllowedFilter');
-        $this->editForm = $form;
-        $this->applicationForm = new ApplicationForm(\Auth::user()->getBorrower());
         $this->loanService = $loanService;
+    }
+
+    public function isNewLoanAllowedFilter()
+    {
+        $borrower = \Auth::user()->getBorrower();
+
+        if (!$borrower->isNewLoanAllowed()) {
+            \Flash::error('You are not allowed to make new loan right now.');
+            return Redirect::route('borrower:dashboard');
+        }
+    }
+
+    public function openLoanValidationFilter()
+    {
+        /** @var Borrower $borrower */
+        $borrower = \Auth::user()->getBorrower();
+        
+        if (Session::has('borrower.openLoanId')) {
+            $loan = $borrower->getActiveLoan();
+            
+            if (! $loan->getStatus() == Loan::OPEN) {
+             //if validation fails, remove this from the session, flash an error and redirect to first step   
+                Session::forget('borrower.openLoanId');
+                
+                \Flash::error('The loan is not valid.');
+                return Redirect::action('LoanApplicationController@getInstructions');
+            }
+            
+        }
     }
 
     protected function stepView($step, $params = array())
@@ -43,13 +65,15 @@ class LoanApplicationController extends BaseController
 
     public function getInstructions()
     {
+        $this->isNewLoanAllowedFilter();
+        
         /** @var Borrower $borrower */
         $borrower = \Auth::user()->getBorrower();
 
         $activeLoan = $borrower->getActiveLoan();
         
         if ($activeLoan && $activeLoan->getStatus() == Loan::OPEN) {
-            Session::put('borrower.openLoan', $activeLoan->getId());
+            Session::put('borrower.openLoanId', $activeLoan->getId());
         }
         
         return $this->stepView('instructions');
@@ -57,6 +81,7 @@ class LoanApplicationController extends BaseController
 
     public function postInstructions()
     {
+        $this->openLoanValidationFilter();
         $this->setCurrentStep('profile');
 
         return Redirect::action('LoanApplicationController@getProfile');
@@ -64,12 +89,15 @@ class LoanApplicationController extends BaseController
 
     public function getProfile()
     {
-        return $this->stepView('profile', ['form' => $this->editForm,]);
+        $this->openLoanValidationFilter();
+        $form = new ProfileForm();
+        return $this->stepView('profile', ['form' => $form,]);
     }
 
     public function postProfile()
     {
-        $form = $this->editForm;
+        $this->openLoanValidationFilter();
+        $form = new ProfileForm();
         $form->handleRequest(Request::instance());
 
         if ($form->isValid()) {
@@ -93,23 +121,28 @@ class LoanApplicationController extends BaseController
 
     public function getApplication()
     {
+        $this->openLoanValidationFilter();
+
+        /** @var Borrower $borrower */
         $borrower = Auth::user()->getBorrower();
 
-        if (! Session::has('borrower.openLoan')) {
-            return $this->stepView('application', ['form' => $this->applicationForm,]);
+        if (Session::has('borrower.openLoanId')) {
+            $loan = LoanQuery::create()
+                ->findOneById(Session::get('borrower.openLoanId'));
+
+            $form = new ApplicationForm($borrower, $loan);
+        } else {
+            $form  = new ApplicationForm(\Auth::user()->getBorrower());
         }
         
-        $loan = LoanQuery::create()
-            ->findOneById(Session::get('borrower.openLoan'));
-
-        $applicationForm = new ApplicationForm($borrower, $loan);
-        return $this->stepView('application', ['form' => $applicationForm,]);
-
+        return $this->stepView('application', ['form' => $form,]);
     }
 
     public function postApplication()
     {
-        $form = $this->applicationForm;
+        $this->openLoanValidationFilter();
+
+        $form  = new ApplicationForm(\Auth::user()->getBorrower());
         $form->handleRequest(Request::instance());
 
         if ($form->isValid()) {
@@ -127,6 +160,8 @@ class LoanApplicationController extends BaseController
 
     public function getPublish()
     {
+        $this->openLoanValidationFilter();
+
         $data = Session::get('loan_data');
         $borrower = Auth::user()->getBorrower();
 
@@ -143,13 +178,15 @@ class LoanApplicationController extends BaseController
 
     public function postPublish()
     {
+        $this->openLoanValidationFilter();
+
         $data = Session::get('loan_data');
 
         $borrower = Auth::user()->getBorrower();
 
-        if (Session::has('borrower.openLoan')) {
+        if (Session::has('borrower.openLoanId')) {
             $loan = LoanQuery::create()
-                ->findOneById(Session::get('borrower.openLoan'));
+                ->findOneById(Session::get('borrower.openLoanId'));
             
             $this->loanService->updateLoanApplication($borrower, $loan, $data);            
         } else {
@@ -163,12 +200,15 @@ class LoanApplicationController extends BaseController
 
     public function getConfirmation()
     {
+        $this->openLoanValidationFilter();
+
         return $this->stepView('confirmation');
     }
 
     public function getInstallmentAmountRange()
     {
-        $form = $this->applicationForm;
+        $form  = new ApplicationForm(\Auth::user()->getBorrower());
+
         $amount = Input::get('amount');
         
         if (!$form->isValidAmount($amount)) {
