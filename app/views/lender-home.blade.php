@@ -20,19 +20,21 @@
         <div class="carousel-inner" id="esther">
             <div class="item active">
                 <img src="assets/images/carousel/esther.jpg">
-                <div class="carousel-caption">
+                <div class="carousel-caption caption-left">
                     <h3>Lend <span class="text-primary">Esther</span> $50 to open a grocery shop</h3>
                     <p>{{ $secondaryCaption }}</p>
                     <a href="{{ route('lend:index') }}" class="btn btn-primary btn-lg">{{ $buttonText }}</a>
                 </div>
+                <div class="carousel-gradient-left"></div>
             </div>
             <div class="item">
                 <img src="assets/images/carousel/bineta.jpg">
-                <div class="carousel-caption">
+                <div class="carousel-caption caption-right">
                     <h3>Lend <span class="text-primary">Bineta</span> $60 for a sewing machine</h3>
                     <p>{{ $secondaryCaption }}</p>
                     <a href="{{ route('lend:index') }}" class="btn btn-primary btn-lg">{{ $buttonText }}</a>
                 </div>
+                <div class="carousel-gradient-right"></div>
             </div>
             <div class="item">
                 <img src="assets/images/carousel/mary.jpg">
@@ -66,8 +68,6 @@
                     <a href="{{ route('lend:index') }}" class="btn btn-primary btn-lg">{{ $buttonText }}</a>
                 </div>
             </div>
-        </div>
-        <div class="carousel-gradient">
         </div>
     
         <!-- Controls -->
