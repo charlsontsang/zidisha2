@@ -1,12 +1,12 @@
 <?php
 
+use Zidisha\Admin\AdminNoteQuery;
 use Zidisha\Admin\Form\AuthorizeLoanForm;
 use Zidisha\Admin\Form\DisburseLoanForm;
 use Zidisha\Country\CountryQuery;
 use Zidisha\Currency\ExchangeRateQuery;
 use Zidisha\Currency\Money;
 use Zidisha\Loan\Loan;
-use Zidisha\Loan\LoanNoteQuery;
 use Zidisha\Loan\LoanService;
 
 class PendingDisbursementsController extends BaseController
@@ -76,7 +76,7 @@ class PendingDisbursementsController extends BaseController
             ->filterByBorrowerCountry(true)
             ->find();
 
-        $_loanNotes = LoanNoteQuery::create()
+        $_loanNotes = AdminNoteQuery::create()
             ->filterByLoanId($loans->toKeyValue('id', 'id'))
             ->joinWith('User')
             ->find();
