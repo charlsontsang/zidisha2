@@ -901,7 +901,7 @@ class LoanService
 
         // TODO lenders instead of bids
         $bids = BidQuery::create()
-            ->joinWith('Lenders')
+            ->joinWith('Lender')
             ->filterByLoan($loan)
             ->filterByActive(true)
             ->find();
