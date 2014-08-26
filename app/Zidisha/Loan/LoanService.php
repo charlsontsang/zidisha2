@@ -1059,6 +1059,10 @@ class LoanService
 
     public function updateLoanApplication(Borrower $borrower,Loan $loan, $data)
     {
+        $data['exchangeRate'] = ExchangeRateQuery::create()->findCurrent($borrower->getCountry()->getCurrency());
+        $exchangeRate = $data['exchangeRate'];
+        $data['usdAmount'] = Converter::toUSD(Money::create($data['amount'], $loan->getCurrencyCode()),$exchangeRate)->getAmount();
+
         $loan = $this->setLoanDetails($borrower, $loan, $data);
         $loan->save();
         
@@ -1079,7 +1083,6 @@ class LoanService
         $loan
             ->setSummary($data['summary'])
             ->setProposal($data['proposal'])
-            ->setAmount(Money::create($data['amount'], $currencyCode))
             ->setUsdAmount(Money::create($data['usdAmount'], 'USD'))
             ->setInstallmentPeriod($borrower->getCountry()->getInstallmentPeriod())
             ->setMaxInterestRate(Setting::get('loan.maximumLenderInterestRate') + Setting::get('loan.transactionFeeRate'))
@@ -1093,11 +1096,17 @@ class LoanService
                 ->setAppliedAt($data['date'])
                 ->setCurrencyCode($currencyCode)
                 ->setStatus(Loan::OPEN)
-                ->setSiftScienceScore($siftScienceScore);
+                ->setSiftScienceScore($siftScienceScore)
+                ->setAmount(Money::create($data['amount'], $currencyCode));
+            $installmentAmount = Money::create($data['installmentAmount'], $currencyCode);
+        }else {
+            $loan
+                ->setAmount(Money::create($data['amount'], $loan->getCurrencyCode()));
+            $installmentAmount = Money::create($data['installmentAmount'], $loan->getCurrencyCode());
+
         }
 
         $calculator = new InstallmentCalculator($loan);
-        $installmentAmount = Money::create($data['installmentAmount'], $currencyCode);
         $period = $calculator->period($installmentAmount);
 
         $loan->setPeriod($period);

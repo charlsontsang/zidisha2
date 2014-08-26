@@ -148,7 +148,7 @@ class ApplicationForm extends AbstractForm
                 'proposal'          => $this->loan->getProposal(),
                 'categoryId'        => $this->loan->getCategoryId(),
                 'amount'            => $this->loan->getAmount()->getAmount(),
-                'installmentAmount' => $installmentCalculator->amount(),
+                'installmentAmount' => $installmentCalculator->amount()->getAmount(),
                 'installmentDay'    => $this->loan->getInstallmentDay()
             ];
         } else {
@@ -165,6 +165,10 @@ class ApplicationForm extends AbstractForm
             $amount = Money::create(\Session::get('loan_data.amount'), $this->currency);
         } else {
             $amount = $this->loanCalculator->maximumAmount();
+        }
+
+        if ($this->loan) {
+            $amount = $this->loan->getAmount();
         }
         
         return $amount;
