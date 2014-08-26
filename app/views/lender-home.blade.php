@@ -13,7 +13,6 @@
             <li data-target="#carousel-example-generic" data-slide-to="1"></li>
             <li data-target="#carousel-example-generic" data-slide-to="1"></li>
             <li data-target="#carousel-example-generic" data-slide-to="1"></li>
-            <li data-target="#carousel-example-generic" data-slide-to="1"></li>
         </ol>
     
         <!-- Wrapper for slides -->
@@ -61,14 +60,6 @@
                     <a href="{{ route('lend:index') }}" class="btn btn-primary btn-lg">{{ $buttonText }}</a>
                 </div>
                 <div class="carousel-gradient-left"></div>
-            </div>
-            <div class="item">
-                <img src="assets/images/carousel/elizabeth.jpg">
-                <div class="carousel-caption">
-                    <h3>Lend <span class="text-primary">Elizabeth</span> $75 for a mobile phone shop</h3>
-                    <p>{{ $secondaryCaption }}</p>
-                    <a href="{{ route('lend:index') }}" class="btn btn-primary btn-lg">{{ $buttonText }}</a>
-                </div>
             </div>
         </div>
     
