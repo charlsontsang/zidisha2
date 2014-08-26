@@ -668,8 +668,11 @@ class AdminController extends BaseController
         if (!$user) {
             App::abort(404);
         }
-
-        \Flash::success("Volunteer Removed!");
+        if ($this->borrowerService->removeVolunteerMentor($user)) {
+            \Flash::success("Volunteer Removed!");
+            return Redirect::back();
+        }
+        \Flash::success("Error occurred!");
         return Redirect::back();
     }
 

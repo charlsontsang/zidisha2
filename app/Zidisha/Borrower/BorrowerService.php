@@ -854,4 +854,19 @@ class BorrowerService
             $newVM->save();
         }
     }
+
+    public function removeVolunteerMentor(User $user)
+    {
+        $user->setSubRole(null);
+        $user->save();
+        $volunteerMentor = VolunteerMentorQuery::create()
+            ->findOneByBorrowerId($user->getBorrower()->getId());
+        if ($volunteerMentor) {
+            $volunteerMentor->setActive(false);
+            $volunteerMentor->save();
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
