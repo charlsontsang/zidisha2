@@ -147,10 +147,11 @@
         </foreign-key>
     </table>
 
-    <table name="loan_notes" phpName="LoanNote" namespace="Loan">
+    <table name="admin_notes" phpName="AdminNote" namespace="Admin">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="user_id" type="INTEGER" required="true" phpType="string"/>
-        <column name="loan_id" type="INTEGER" required="true" phpType="string"/>
+        <column name="loan_id" type="INTEGER" phpType="string"/>
+        <column name="borrower_id" type="INTEGER" phpType="string"/>
         <column name="note" type="LONGVARCHAR" required="true" />
         <column name="type" type="ENUM" valueSet="disbursement" required="true"/>
         <foreign-key foreignTable="users">
