@@ -238,7 +238,7 @@ Route::group(
                     )
                 );
                 Route::get(
-                    'group-success/{id}',
+                    'group-create/success/{id}',
                     array(
                         'uses' => 'LendingGroupController@getCreateSuccess',
                         'as' => 'lender:group:create:success'
