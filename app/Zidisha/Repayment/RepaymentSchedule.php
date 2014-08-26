@@ -173,4 +173,11 @@ class RepaymentSchedule implements \IteratorAggregate
         return $this->totalAmountPaid;
     }
 
+    public function getRemainingAmountDue()
+    {
+        return $this->getTotalAmountDue()
+            ->subtract($this->getTotalAmountPaid())
+            ->max(Money::create(0, $this->loan->getCurrencyCode()));
+    }
+
 }
