@@ -1128,8 +1128,8 @@ class LoanService
                 ->joinWith('Lender.User')
                 ->find();
 
-            foreach ($bids as $_bid) {
-                $this->lenderMailer->sendLoanFullyFundedMail($_bid);
+            foreach ($bids as $bid) {
+                $this->lenderMailer->sendLoanFullyFundedMail($bid);
             }
         }
     }
