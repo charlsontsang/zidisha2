@@ -1,4 +1,5 @@
 <?php
+use Zidisha\Borrower\Borrower;
 use Zidisha\Borrower\Form\Loan\ApplicationForm;
 use Zidisha\Borrower\Form\Loan\ProfileForm;
 use Zidisha\Currency\Money;
@@ -42,14 +43,12 @@ class LoanApplicationController extends BaseController
 
     public function getInstructions()
     {
+        /** @var Borrower $borrower */
         $borrower = \Auth::user()->getBorrower();
 
-        $activeLoan = LoanQuery::create()
-            ->filterByStatus(Loan::OPEN)
-            ->filterByBorrower($borrower)
-            ->findOne();
-
-        if ($activeLoan) {
+        $activeLoan = $borrower->getActiveLoan();
+        
+        if ($activeLoan && $activeLoan->getStatus() == Loan::OPEN) {
             Session::put('borrower.openLoan', $activeLoan->getId());
         }
         
