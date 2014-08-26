@@ -27,6 +27,8 @@ class LoanApplicationController extends BaseController
     {
         $this->beforeFilter('@stepsBeforeFilter');
         $this->loanService = $loanService;
+        $this->isNewLoanAllowedFilter();
+        $this->validateOpenLoanFilter();
     }
 
     public function isNewLoanAllowedFilter()
@@ -39,7 +41,7 @@ class LoanApplicationController extends BaseController
         }
     }
 
-    public function openLoanValidationFilter()
+    public function validateOpenLoanFilter()
     {
         /** @var Borrower $borrower */
         $borrower = \Auth::user()->getBorrower();
@@ -81,7 +83,6 @@ class LoanApplicationController extends BaseController
 
     public function postInstructions()
     {
-        $this->openLoanValidationFilter();
         $this->setCurrentStep('profile');
 
         return Redirect::action('LoanApplicationController@getProfile');
@@ -89,14 +90,12 @@ class LoanApplicationController extends BaseController
 
     public function getProfile()
     {
-        $this->openLoanValidationFilter();
         $form = new ProfileForm();
         return $this->stepView('profile', ['form' => $form,]);
     }
 
     public function postProfile()
     {
-        $this->openLoanValidationFilter();
         $form = new ProfileForm();
         $form->handleRequest(Request::instance());
 
@@ -121,7 +120,6 @@ class LoanApplicationController extends BaseController
 
     public function getApplication()
     {
-        $this->openLoanValidationFilter();
 
         /** @var Borrower $borrower */
         $borrower = Auth::user()->getBorrower();
@@ -140,8 +138,6 @@ class LoanApplicationController extends BaseController
 
     public function postApplication()
     {
-        $this->openLoanValidationFilter();
-
         $form  = new ApplicationForm(\Auth::user()->getBorrower());
         $form->handleRequest(Request::instance());
 
@@ -160,8 +156,6 @@ class LoanApplicationController extends BaseController
 
     public function getPublish()
     {
-        $this->openLoanValidationFilter();
-
         $data = Session::get('loan_data');
         $borrower = Auth::user()->getBorrower();
 
@@ -178,8 +172,6 @@ class LoanApplicationController extends BaseController
 
     public function postPublish()
     {
-        $this->openLoanValidationFilter();
-
         $data = Session::get('loan_data');
 
         $borrower = Auth::user()->getBorrower();
@@ -200,8 +192,6 @@ class LoanApplicationController extends BaseController
 
     public function getConfirmation()
     {
-        $this->openLoanValidationFilter();
-
         return $this->stepView('confirmation');
     }
 
