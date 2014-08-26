@@ -237,6 +237,13 @@ Route::group(
                         'as'   => 'lender:groups:post-create'
                     )
                 );
+                Route::get(
+                    'group-success/{id}',
+                    array(
+                        'uses' => 'LendingGroupController@getCreateSuccess',
+                        'as' => 'lender:group:create:success'
+                    )
+                );
                 Route::get('groups/{id}/join', array(
                         'uses' => 'LendingGroupController@joinGroup',
                         'as'   => 'lender:group:join'
