@@ -233,26 +233,23 @@ class LoanService
             return;
         }
 
-        $loanIndex = $this->getLoanIndex();
-
-        $loanType = $loanIndex->getType('loan');
-
-        $data = array(
-            'id'                => $loan->getId(),
-            'category'          => $loan->getCategory()->getName(),
-            'categoryId'        => $loan->getCategory()->getId(),
-            'countryId'         => $loan->getBorrower()->getCountry()->getId(),
-            'country_code'      => $loan->getBorrower()->getCountry()->getCountryCode(),
-            'summary'           => $loan->getSummary(),
-            'proposal'          => $loan->getProposal(),
-            'status'            => $loan->getStatus(),
-            'created_at'        => $loan->getCreatedAt()->getTimestamp(),
-            'raised_percentage' => $loan->getRaisedPercentage(),
-        );
-
-        $loanDocument = new \Elastica\Document($loan->getId(), $data);
+        list($loanType, $loanDocument) = $this->createIndexDocument($loan);
+        
         $loanType->addDocument($loanDocument);
         $loanType->getIndex()->refresh();
+    }
+
+    public function updateLoanIndex(Loan $loan)
+    {
+        if (\App::environment("testing")) {
+            return;
+        }
+
+        list($loanType, $loanDocument) = $this->createIndexDocument($loan);
+        $loanDocument->setDocAsUpsert(true);
+        
+        $loanType->updateDocument($loanDocument);
+        $loanType->getIndex()->refresh();   
     }
 
     public function placeBid(Loan $loan, Lender $lender, $data)
@@ -1068,6 +1065,7 @@ class LoanService
         
         $this->sendLoanFullyFundedNotification($loan);
         //TODO: update the index
+        $this->updateLoanIndex($loan);
         
         return $loan;
     }
@@ -1132,5 +1130,33 @@ class LoanService
                 $this->lenderMailer->sendLoanFullyFundedMail($bid);
             }
         }
+    }
+
+    /**
+     * @param Loan $loan
+     * @return array
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    protected function createIndexDocument(Loan $loan)
+    {
+        $loanIndex = $this->getLoanIndex();
+
+        $loanType = $loanIndex->getType('loan');
+
+        $data = array(
+            'id'                => $loan->getId(),
+            'category'          => $loan->getCategory()->getName(),
+            'categoryId'        => $loan->getCategory()->getId(),
+            'countryId'         => $loan->getBorrower()->getCountry()->getId(),
+            'country_code'      => $loan->getBorrower()->getCountry()->getCountryCode(),
+            'summary'           => $loan->getSummary(),
+            'proposal'          => $loan->getProposal(),
+            'status'            => $loan->getStatus(),
+            'created_at'        => $loan->getCreatedAt()->getTimestamp(),
+            'raised_percentage' => $loan->getRaisedPercentage(),
+        );
+
+        $loanDocument = new \Elastica\Document($loan->getId(), $data);
+        return array($loanType, $loanDocument);
     }
 }
