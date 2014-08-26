@@ -151,7 +151,6 @@ class BorrowerGenerator extends Generator
             $mentor
                 ->setBorrowerVolunteer($borrower)
                 ->setCountryId($borrower->getCountryId())
-                ->setStatus(1) // TODO ??
                 ->setGrantDate(new \DateTime()); // TODO rename
             $mentor->save();
         }

@@ -771,7 +771,7 @@
         <column name="country_id" type="INTEGER" required="true"/>
         <column name="grant_date" type="TIMESTAMP" required="true"/>
         <column name="note" type="LONGVARCHAR"/>
-        <column name="status" type="ENUM" defaultValue="0" valueSet="-2, -1, 0, 1, 2"/>
+        <column name="active" type="BOOLEAN" defaultValue="1"/>
         <behavior name="timestampable"/>
         <foreign-key foreignTable="borrowers" phpName="BorrowerVolunteer">
             <reference local="borrower_id" foreign="id"/>

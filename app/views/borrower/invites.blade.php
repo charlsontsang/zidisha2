@@ -58,19 +58,19 @@ Invites
                         <?php $flag=0; ?>
                     @endif
                 @endif
-                <?php $volunteerMentor = $invite->getInvitee()->getVolunteerMentor() ?>
+                <?php $volunteerMentorStatus = $invite->getInvitee()->getActivationStatus() ?>
                 {{-- $BorrowerReports = //TODO; --}}
                 <?php $borrowerGuest = \Zidisha\Borrower\BorrowerGuestQuery::create()->filterByEmail($invite->getEmail())->findOne(); ?>
                 @if($borrowerGuest && $flag == 1)
                     <?php $status =  \Lang::get('borrower.invite.application-not-submitted'); ?>
-                @elseif($volunteerMentor->getStatus() == \Zidisha\Borrower\VolunteerMentor::STATUS_PENDING_VERIFICATION)
+                @elseif($volunteerMentorStatus == \Zidisha\Borrower\Borrower::ACTIVATION_REVIEWED)
                     <?php $status =  \Lang::get('borrower.invite.application-pending-verification'); ?>
-                @elseif($volunteerMentor->getStatus() == \Zidisha\Borrower\VolunteerMentor::STATUS_ASSIGNED_TO && $volunteerMentor)
+                @elseif($volunteerMentorStatus == \Zidisha\Borrower\Borrower::ACTIVATION_APPROVED )
                     {{-- //TODO --}}
                     {{-- //TODO one more elseif --}}
-                @elseif($volunteerMentor->getStatus() == \Zidisha\Borrower\VolunteerMentor::STATUS_DECLINED)
+                @elseif( $volunteerMentorStatus == \Zidisha\Borrower\Borrower::ACTIVATION_DECLINED)
                     <?php $status =  \Lang::get('borrower.invite.application-decline'); ?>
-                @elseif($volunteerMentor->getStatus() == \Zidisha\Borrower\VolunteerMentor::STATUS_PENDING_REVIEW)
+                @elseif($volunteerMentorStatus == \Zidisha\Borrower\Borrower::ACTIVATION_PENDING)
                     <?php $status =  \Lang::get('borrower.invite.application-pending-review'); ?>
                 @else
                     <?php $status =  \Lang::get('borrower.invite.no-loan'); ?>
