@@ -665,8 +665,9 @@ class AdminController extends BaseController
     {
         $user = UserQuery::create()
             ->findOneById($id);
-        $user->setSubRole(null);
-        $user->save();
+        if (!$user) {
+            App::abort(404);
+        }
 
         \Flash::success("Volunteer Removed!");
         return Redirect::back();
@@ -676,8 +677,11 @@ class AdminController extends BaseController
     {
         $user = UserQuery::create()
             ->findOneById($id);
-        $user->setSubRole(User::SUB_ROLE_VOLUNTEER_MENTOR);
-        $user->save();
+        if (!$user) {
+            App::abort(404);
+        }
+
+        $this->borrowerService->addVolunteerMentor($user);
 
         \Flash::success("Volunteer Added!");
         return Redirect::back();

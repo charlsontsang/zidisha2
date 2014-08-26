@@ -833,4 +833,25 @@ class BorrowerService
         }
         return $previousLoanAmount;
     }
+
+    public function addVolunteerMentor(User $user)
+    {
+        $time=time();
+        $user->setSubRole(User::SUB_ROLE_VOLUNTEER_MENTOR);
+        $user->save();
+        $borrower = $user->getBorrower();
+        $volunteerMentor = VolunteerMentorQuery::create()
+            ->findOneByBorrowerId($borrower->getId());
+        if ($volunteerMentor) {
+            $volunteerMentor->setActive(true);
+            $volunteerMentor->save();
+        } else {
+            $newVM = new VolunteerMentor();
+            $newVM
+                ->setBorrowerVolunteer($borrower)
+                ->setCountry($borrower->getCountry())
+                ->setGrantDate($time);
+            $newVM->save();
+        }
+    }
 }
