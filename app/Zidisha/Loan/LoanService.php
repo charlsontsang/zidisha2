@@ -308,18 +308,8 @@ class LoanService
             }
         }
         
-        // Fully Funded notifications
-        if ($loan->isFullyFunded()) {
-            $bids = BidQuery::create()
-                ->filterByLoan($loan)
-                ->joinWith('Lender')
-                ->joinWith('Lender.User')
-                ->find();
+        $this->sendLoanFullyFundedNotification($loan);
 
-            foreach ($bids as $_bid) {
-                $this->lenderMailer->sendLoanFullyFundedMail($_bid);
-            }
-        }
 
         //Todo: refresh elastic search index.
 
@@ -1072,6 +1062,9 @@ class LoanService
         $loan = $this->setLoanDetails($borrower, $loan, $data);
         $loan->save();
         
+        $this->sendLoanFullyFundedNotification($loan);
+        //TODO: update the index
+        
         return $loan;
     }
 
@@ -1110,5 +1103,25 @@ class LoanService
         $loan->setPeriod($period);
 
         return $loan;
+    }
+
+    /**
+     * @param Loan $loan
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    protected function sendLoanFullyFundedNotification(Loan $loan)
+    {
+        // Fully Funded notifications
+        if ($loan->isFullyFunded()) {
+            $bids = BidQuery::create()
+                ->filterByLoan($loan)
+                ->joinWith('Lender')
+                ->joinWith('Lender.User')
+                ->find();
+
+            foreach ($bids as $_bid) {
+                $this->lenderMailer->sendLoanFullyFundedMail($_bid);
+            }
+        }
     }
 }
