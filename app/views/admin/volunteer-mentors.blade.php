@@ -39,11 +39,7 @@ Volunteer Mentors
         <td>{{ $borrower->getCountry()->getName() }}</td>
         <td>{{ $borrower->getUser()->getJoinedAt()->format('M j, Y') }}</td>
         <td>
-            @if($borrower->getUser()->getSubRole() == \Zidisha\User\User::SUB_ROLE_VOLUNTEER_MENTOR)
-                <a href="{{ route('admin:remove:volunteer-mentor', $borrower->getId()) }}">Remove Volunteer Mentor</a>
-            @else
-                <a href="{{ route('admin:add:volunteer-mentor', $borrower->getId()) }}">Add Volunteer Mentor</a>
-            @endif
+            <a href="{{ route('admin:remove:volunteer-mentor', $borrower->getId()) }}">Remove Volunteer Mentor</a>
         </td>
     </tr>
     @endforeach
