@@ -85,7 +85,7 @@
 
                     <ul class="dropdown-menu">
                         <li><a href="{{ route('admin:borrowers') }}">Find Borrowers</a></li>
-                        <li><a href="{{ route('admin:volunteer-mentors') }}">Find Volunteer Mentors</a></li>
+                        <li><a href="{{ route('admin:volunteer-mentors') }}">Volunteer Mentors</a></li>
                         <li><a href="{{ route('admin:borrower-activation') }}">Pending Activation</a></li>
                         <li><a href="{{ route('admin:pending-disbursements') }}">Pending Disbursements</a></li>
                         <li><a href="{{ route('admin:loans') }}">Find Loans</a></li>
@@ -101,7 +101,7 @@
 
                     <ul class="dropdown-menu">
                         <li><a href="{{ route('admin:lenders') }}">Find Lenders</a></li>
-                        <li><a href="{{ route('admin:volunteers') }}">Find Volunteers</a></li>
+                        <li><a href="{{ route('admin:volunteers') }}">Volunteers</a></li>
                         <li><a href="{{ route('admin:get:gift-cards') }}">Gift Cards</a></li>
                         <li><a href="{{ route('admin:get:withdrawal-requests') }}">Withdraw Requests</a></li>
                     </ul>
