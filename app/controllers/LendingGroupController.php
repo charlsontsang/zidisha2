@@ -47,9 +47,35 @@ class LendingGroupController extends BaseController
             $group =  $this->lendingGroupService->addLendingGroup($creator, $data, $image);
 
             \Flash::success("Group created!");
-            return Redirect::route('lender:group', $group->getId());
+            return Redirect::route('lender:group:create:success', $group->getId());
         }
         return Redirect::route('lender:groups:create')->withForm($form);
+    }
+
+    public function getCreateSuccess($id)
+    {
+        $group = LendingGroupQuery::create()
+            ->filterById($id)
+            ->findOne();
+
+        if (!$group) {
+            App::abort(404);
+        }
+
+        $groupUrl = route('lender:group', $id);
+
+        $twitterParams = array(
+            "url" => $groupUrl,
+            "text" => "Just made a group  via @ZidishaInc",
+        );
+        $twitterUrl = "http://twitter.com/share?" . http_build_query($twitterParams);
+
+        $relativeInviteUrl = str_replace("https://www.", "", $groupUrl);
+        $relativeInviteUrl = str_replace("http://www.", "", $relativeInviteUrl);
+        $facebookUrl = "http://www.facebook.com/sharer.php?s=100&p[url]=" . urlencode($relativeInviteUrl);
+        $mailUrl = "mailto:?body=%0D%0A%0D%0A%0D%0A".$groupUrl;
+
+        return View::make('lender.lending-group-create-success', compact('group', 'twitterUrl', 'facebookUrl', 'mailUrl'));
     }
 
     public function getGroups()
