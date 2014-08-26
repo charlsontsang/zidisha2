@@ -889,13 +889,13 @@ class LoanService
 
     public function allowLoanForgiveness(Loan $loan, $data)
     {
-        $validationCode = md5(mt_rand(0, 32).time());
+        $verificationCode = md5(mt_rand(0, 32).time());
         
         $forgivenessLoan = new ForgivenessLoan();
         $forgivenessLoan
             ->setLoan($loan)
             ->setComment($data['comment'])
-            ->setVerificationCode($validationCode)
+            ->setVerificationCode($verificationCode)
             ->setBorrowerId ($loan->getBorrowerId())
             ->save();
 
@@ -940,9 +940,8 @@ class LoanService
 
     }
     
-    public function forgiveLoanShare(Loan $loan,Lender $lender)
+    public function forgiveLoanShare(Loan $loan, Lender $lender)
     {
-        
         $forgivenLoanShareCount = ForgivenessLoanShareQuery::create()
             ->filterByLender($lender)
             ->filterByLoan($loan)
