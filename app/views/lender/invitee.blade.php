@@ -10,71 +10,50 @@ You're invited!
         <ol class="carousel-indicators">
             <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
             <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+            <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+            <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+            <li data-target="#carousel-example-generic" data-slide-to="1"></li>
         </ol>
     
         <!-- Wrapper for slides -->
-        <div class="carousel-inner">
+        <div class="carousel-inner" id="esther">
             <div class="item active">
-                <img src="/assets/images/carousel/esther.jpg">
-                <div class="carousel-caption">
+                <img src="assets/images/carousel/esther.jpg">
+                <div class="carousel-caption caption-left">
                     <h3>{{ $carouselHeading }}</h3>
-                    <a href="{{ route('join') }}" class="btn btn-primary btn-lg">{{ $buttonText }}</a>
+                    <a href="{{ route('lend:index') }}" class="btn btn-primary btn-lg">{{ $buttonText }}</a>
                 </div>
+                <div class="carousel-gradient-left"></div>
             </div>
             <div class="item">
-                <img src="/assets/images/carousel/bineta.jpg">
-                <div class="carousel-caption">
+                <img src="assets/images/carousel/fatou.jpg">
+                <div class="carousel-caption caption-left">
                     <h3>{{ $carouselHeading }}</h3>
-                    <a href="{{ route('join') }}" class="btn btn-primary btn-lg">{{ $buttonText }}</a>
+                    <a href="{{ route('lend:index') }}" class="btn btn-primary btn-lg">{{ $buttonText }}</a>
                 </div>
+                <div class="carousel-gradient-left"></div>
             </div>
             <div class="item">
-                <img src="/assets/images/carousel/mary.jpg">
-                <div class="carousel-caption">
+                <img src="assets/images/carousel/melita.jpg">
+                <div class="carousel-caption caption-right">
                     <h3>{{ $carouselHeading }}</h3>
-                    <a href="{{ route('join') }}" class="btn btn-primary btn-lg">{{ $buttonText }}</a>
+                    <a href="{{ route('lend:index') }}" class="btn btn-primary btn-lg">{{ $buttonText }}</a>
                 </div>
+                <div class="carousel-gradient-right"></div>
             </div>
             <div class="item">
-                <img src="/assets/images/carousel/aloysius.jpg">
-                <div class="carousel-caption">
+                <img src="assets/images/carousel/bineta.jpg">
+                <div class="carousel-caption caption-right">
                     <h3>{{ $carouselHeading }}</h3>
-                    <a href="{{ route('join') }}" class="btn btn-primary btn-lg">{{ $buttonText }}</a>
+                    <a href="{{ route('lend:index') }}" class="btn btn-primary btn-lg">{{ $buttonText }}</a>
                 </div>
+                <div class="carousel-gradient-right"></div>
             </div>
             <div class="item">
-                <img src="/assets/images/carousel/pherister.jpg">
-                <div class="carousel-caption">
+                <img src="assets/images/carousel/mary.jpg">
+                <div class="carousel-caption caption-right">
                     <h3>{{ $carouselHeading }}</h3>
-                    <a href="{{ route('join') }}" class="btn btn-primary btn-lg">{{ $buttonText }}</a>
-                </div>
-            </div>
-            <div class="item">
-                <img src="/assets/images/carousel/melita.jpg">
-                <div class="carousel-caption">
-                    <h3>{{ $carouselHeading }}</h3>
-                    <a href="{{ route('join') }}" class="btn btn-primary btn-lg">{{ $buttonText }}</a>
-                </div>
-            </div>
-            <div class="item">
-                <img src="/assets/images/carousel/fatou.jpg">
-                <div class="carousel-caption">
-                    <h3>{{ $carouselHeading }}</h3>
-                    <a href="{{ route('join') }}" class="btn btn-primary btn-lg">{{ $buttonText }}</a>
-                </div>
-            </div>
-            <div class="item">
-                <img src="/assets/images/carousel/elizabeth.jpg">
-                <div class="carousel-caption">
-                    <h3>{{ $carouselHeading }}</h3>
-                    <a href="{{ route('join') }}" class="btn btn-primary btn-lg">{{ $buttonText }}</a>
-                </div>
-            </div>
-            <div class="item">
-                <img src="/assets/images/carousel/thilor.jpg">
-                <div class="carousel-caption">
-                    <h3>{{ $carouselHeading }}</h3>
-                    <a href="{{ route('join') }}" class="btn btn-primary btn-lg">{{ $buttonText }}</a>
+                    <a href="{{ route('lend:index') }}" class="btn btn-primary btn-lg">{{ $buttonText }}</a>
                 </div>
             </div>
         </div>

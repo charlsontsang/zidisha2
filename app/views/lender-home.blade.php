@@ -27,6 +27,24 @@
                 <div class="carousel-gradient-left"></div>
             </div>
             <div class="item">
+                <img src="assets/images/carousel/fatou.jpg">
+                <div class="carousel-caption caption-left">
+                    <h3>Lend <span class="text-primary">Fatou</span> $100 to open a beauty salon</h3>
+                    <p>{{ $secondaryCaption }}</p>
+                    <a href="{{ route('lend:index') }}" class="btn btn-primary btn-lg">{{ $buttonText }}</a>
+                </div>
+                <div class="carousel-gradient-left"></div>
+            </div>
+            <div class="item">
+                <img src="assets/images/carousel/melita.jpg">
+                <div class="carousel-caption caption-right">
+                    <h3>Lend <span class="text-primary">Melita</span> $100 for a dairy cow</h3>
+                    <p>{{ $secondaryCaption }}</p>
+                    <a href="{{ route('lend:index') }}" class="btn btn-primary btn-lg">{{ $buttonText }}</a>
+                </div>
+                <div class="carousel-gradient-right"></div>
+            </div>
+            <div class="item">
                 <img src="assets/images/carousel/bineta.jpg">
                 <div class="carousel-caption caption-right">
                     <h3>Lend <span class="text-primary">Bineta</span> $60 for a sewing machine</h3>
@@ -42,24 +60,6 @@
                     <p>{{ $secondaryCaption }}</p>
                     <a href="{{ route('lend:index') }}" class="btn btn-primary btn-lg">{{ $buttonText }}</a>
                 </div>
-            </div>
-            <div class="item">
-                <img src="assets/images/carousel/melita.jpg">
-                <div class="carousel-caption caption-right">
-                    <h3>Lend <span class="text-primary">Melita</span> $100 for a dairy cow</h3>
-                    <p>{{ $secondaryCaption }}</p>
-                    <a href="{{ route('lend:index') }}" class="btn btn-primary btn-lg">{{ $buttonText }}</a>
-                </div>
-                <div class="carousel-gradient-right"></div>
-            </div>
-            <div class="item">
-                <img src="assets/images/carousel/fatou.jpg">
-                <div class="carousel-caption caption-left">
-                    <h3>Lend <span class="text-primary">Fatou</span> $100 to open a beauty salon</h3>
-                    <p>{{ $secondaryCaption }}</p>
-                    <a href="{{ route('lend:index') }}" class="btn btn-primary btn-lg">{{ $buttonText }}</a>
-                </div>
-                <div class="carousel-gradient-left"></div>
             </div>
         </div>
     
