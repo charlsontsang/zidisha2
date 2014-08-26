@@ -168,7 +168,7 @@ Meet the Team
 			    <img src="/assets/images/pages/team/taylor.png" width="100%" />
 			    <span class="text-content"><span>
 			    	<strong>Taylor Hanna</strong><br/>
-			    	BA in Sociology.  Developed an interest in innovative development initiatives while working as an intern with Awamaki, a community development organization in Peru. Now works with Facebook’s ads integrity team and spends her spare time reading, running and eating tacos.
+			    	BA in Sociology.  Developed an interest in community development while working with Awamaki, a community development organization in Peru. Now works with Facebook’s ads integrity team and spends her spare time reading, running and eating tacos.
 			    </span></span>
 			  </li>
 			</ul>
