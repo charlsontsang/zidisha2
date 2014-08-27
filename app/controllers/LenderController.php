@@ -194,6 +194,10 @@ class LenderController extends BaseController
 
     public function getTransactionHistory()
     {
+        if (Auth::check() && Auth::user()->isAdmin() && !Request::query('lenderId')) {
+            \App::abort(404, 'Please enter a propel lenderId');
+        }
+        
         if (Auth::check() && Auth::user()->isAdmin() && Request::query('lenderId')) {
             $userId = Request::query('lenderId');
         } else {
