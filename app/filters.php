@@ -96,7 +96,8 @@ Route::filter('csrf', function()
 Route::filter(
     'hasRole',
     function ($route, $request, $role) {
-        $isAllowed = Auth::getUser()->getRole() == $role;
+        $roles = explode(':', $role);
+        $isAllowed = in_array(Auth::getUser()->getRole(), $roles);
         if (!$isAllowed) {
             Flash::error("You do not have proper permission to view this page");
             return Redirect::route('login');
