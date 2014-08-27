@@ -195,7 +195,7 @@ class LenderController extends BaseController
     public function getTransactionHistory()
     {
         if (Auth::check() && Auth::user()->isAdmin() && !Request::query('lenderId')) {
-            \App::abort(404, 'Please enter a propel lenderId');
+            \App::abort(404, 'Please enter a proper lenderId');
         }
         
         if (Auth::check() && Auth::user()->isAdmin() && Request::query('lenderId')) {
@@ -285,7 +285,7 @@ class LenderController extends BaseController
     public function getMyStats()
     {
         if (Auth::check() && Auth::user()->isAdmin() && !Request::query('lenderId')) {
-            \App::abort(404, 'Please enter a propel lenderId');
+            \App::abort(404, 'Please enter a proper lenderId');
         }
 
         if (Auth::check() && Auth::user()->isAdmin() && Request::query('lenderId')) {
