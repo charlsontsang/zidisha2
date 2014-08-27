@@ -22,7 +22,7 @@ Lend
                     </div>
                     <span class="text">sorted by</span>
                     <div class="btn btn-default btn-filter" target="#filter-sortings">
-                        Recently Added
+                       {{ $sortBy ? $sortConditions[$sortBy] : 'Repayment Rate' }}
                         <i class="fa fa-fw fa-caret-down"></i>
                     </div>
                 </div>
@@ -147,7 +147,7 @@ Lend
 
 <div class="row">
     <div class="col-xs-12">
-        {{ $paginator->appends(['search' => $searchQuery])->links() }}
+        {{ $paginator->appends(['search' => $searchQuery, 'sortBy' => $routeParams['sortBy']])->links() }}
     </div>
 </div>
 
@@ -189,6 +189,21 @@ Lend
             @else
             <a href="{{ route('lend:index', ['country' => $country->getSlug()] + $routeParams) }}"> {{
                 $country->getName()}} </a>
+            @endif
+        </li>
+        @endforeach
+    </ul>
+</div>
+
+<div id="filter-sortings" class="hide">
+    <ul class="list-unstyled">
+        @foreach($sortConditions as $key=>$sortCondition)
+        <li>
+            @if($sortBy == $key)
+            <strong>{{ $sortCondition }}</strong>
+            @else
+            <a href="{{ route('lend:index', ['sortBy' => $key] + $routeParams) }}"> {{
+                $sortCondition }} </a>
             @endif
         </li>
         @endforeach

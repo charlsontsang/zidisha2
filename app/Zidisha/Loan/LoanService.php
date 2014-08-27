@@ -4,6 +4,7 @@ namespace Zidisha\Loan;
 
 use Carbon\Carbon;
 use Faker\Provider\DateTime;
+use Propel\Generator\Behavior\Sortable\SortableBehavior;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Zidisha\Admin\Setting;
 use Zidisha\Analytics\MixpanelService;
@@ -166,15 +167,25 @@ class LoanService
 
     public function searchLoans($conditions = array(), $page = 1, $limit = 18)
     {
-        $conditions += ['search' => false];
+        $conditions += ['search' => false, 'sortBy' => 'id', 'sortByOrder' => 'asc'];
         $search = $conditions['search'];
+        $sortBy = $conditions['sortBy'];
+        $sortByOrder = $conditions['sortByOrder'];
         unset($conditions['search']);
+        unset($conditions['sortBy']);
+        unset($conditions['sortByOrder']);
 
         $queryString = new \Elastica\Query\QueryString();
 
         $loanIndex = $this->getLoanIndex();
 
         $query = new \Elastica\Query();
+        $sorting = [
+            $sortBy => [
+                'order' => $sortByOrder
+            ]
+        ];
+        $query->setSort($sorting);
 
         if ($search) {
             $queryString->setDefaultOperator('AND');
@@ -1154,6 +1165,7 @@ class LoanService
             'status'            => $loan->getStatus(),
             'created_at'        => $loan->getCreatedAt()->getTimestamp(),
             'raised_percentage' => $loan->getRaisedPercentage(),
+            'applied_at'        => $loan->getAppliedAt()->getTimestamp()
         );
 
         $loanDocument = new \Elastica\Document($loan->getId(), $data);
