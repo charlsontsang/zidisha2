@@ -503,6 +503,13 @@ Route::group(
                     array('uses' => 'AdminController@postBorrowerEdit', 'as' => 'admin:borrower:edit:post', 'before' => 'csrf')
                 );
                 Route::get('lenders', array('uses' => 'AdminController@getLenders', 'as' => 'admin:lenders'));
+                
+                Route::post('lender/delete/{lenderId}', array('uses' => 'AdminController@postDeleteLender', 'as' => 'admin:delete:lender'));
+                Route::post('lender/deactivate/{lenderId}', array('uses' => 'AdminController@postDeactivateLender', 'as' => 'admin:deactivate:lender'));
+                Route::post('lender/activate/{lenderId}', array('uses' => 'AdminController@postActivateLender', 'as' => 'admin:activate:lender'));
+                
+                Route::post('lender/last-check-in-email/{lenderId}', array('uses' => 'AdminController@postLastCheckInEmail', 'as' => 'admin:last-check-in-email:lender'));
+                
                 Route::get('loans', array('uses' => 'AdminController@getLoans', 'as' => 'admin:loans'));
                 Route::get(
                     '/settings/exchange-rates/{countryName?}',
