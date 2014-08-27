@@ -147,6 +147,11 @@ Route::group(
                     'history',
                     array('uses' => 'LenderController@getTransactionHistory', 'as' => 'lender:history')
                 );
+
+                Route::get(
+                    '/my-stats',
+                    array('uses' => 'LenderController@getMyStats', 'as' => 'lender:my-stats')
+                );
             }
         );
         
@@ -319,12 +324,6 @@ Route::group(
                         'uses' => 'FollowController@postUpdateFollower',
                         'as'   => 'lender:update-follower'
                     )
-                );
-
-
-                Route::get(
-                    '/my-stats',
-                    array('uses' => 'LenderController@getMyStats', 'as' => 'lender:my-stats')
                 );
                 
                 Route::get('/auto-lending', array('uses' => 'LenderPreferencesController@getAutoLending', 'as' => 'lender:auto-lending'));

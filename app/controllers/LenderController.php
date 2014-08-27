@@ -284,8 +284,18 @@ class LenderController extends BaseController
 
     public function getMyStats()
     {
-        $lender = \Auth::user()->getLender();
-        $userId = \Auth::user()->getId();
+        if (Auth::check() && Auth::user()->isAdmin() && !Request::query('lenderId')) {
+            \App::abort(404, 'Please enter a propel lenderId');
+        }
+
+        if (Auth::check() && Auth::user()->isAdmin() && Request::query('lenderId')) {
+            $userId = Request::query('lenderId');
+            $lender = $this->validateLenderId($userId);
+        } else {
+            $userId = Auth::getUser()->getId();
+            $lender = \Auth::user()->getLender();
+        }
+        
         if (!$lender) {
             \Illuminate\Support\Facades\App::abort(404);
         }
