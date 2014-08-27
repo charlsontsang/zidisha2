@@ -71,7 +71,7 @@ class PendingDisbursementsController extends BaseController
         $loans = $loansQuery
             ->paginate($page, 10);
 
-        $loans->populateRelation('LoanNote');
+        $loans->populateRelation('AdminNote');
 
         $countries = CountryQuery::create()
             ->filterByBorrowerCountry(true)
