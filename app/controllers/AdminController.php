@@ -397,11 +397,11 @@ class AdminController extends BaseController
             ->find();
 
         $adminNotes = [];
-        foreach ($_adminNotes as $loanNote) {
-            if (!isset($adminNotes[$loanNote->getLoanId()])) {
-                $adminNotes[$loanNote->getLoanId()] = [];
+        foreach ($_adminNotes as $VmNote) {
+            if (!isset($adminNotes[$VmNote->getLoanId()])) {
+                $adminNotes[$VmNote->getLoanId()] = [];
             }
-            $adminNotes[$loanNote->getLoanId()][] = $loanNote;
+            $adminNotes[$VmNote->getLoanId()][] = $VmNote;
         }
 
         return View::make('admin.volunteer-mentors', compact('paginator', 'form', 'menteeCounts', 'assignedMembers', 'adminNotes', 'orderBy', 'orderDirection', 'borrowerService'));
