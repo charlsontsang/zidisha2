@@ -21,7 +21,7 @@ class RescheduleLoanForm extends AbstractForm
     {
         return [
             'installmentAmount' => 'required|numeric|min:' . $this->rescheduleCalculator->minInstallmentAmount()->getAmount(),
-            'reason'            => 'required|size:500',
+            'reason'            => 'required|min:500',
         ];
     }
 }
