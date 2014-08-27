@@ -117,6 +117,7 @@
                         <li><a href="{{ route('admin:sms:test-sms') }}">Test sms</a></li>
                         <li><a href="{{ route('admin:countries') }}">Countries</a></li>
                         <li><a href="{{ route('admin:settings') }}">Other Settings</a></li>
+                        <li><a href="{{ route('logout') }}">Log Out</a></li>
                     </ul>
                 </li>
                 @endif
