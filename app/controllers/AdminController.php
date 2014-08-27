@@ -2,6 +2,7 @@
 
 use Carbon\Carbon;
 use Propel\Runtime\ActiveQuery\Criteria;
+use Zidisha\Admin\AdminNoteQuery;
 use Zidisha\Admin\Form\EnterRepaymentForm;
 use Zidisha\Admin\Form\UploadRepaymentsForm;
 use Zidisha\Admin\Form\ExchangeRateForm;
@@ -371,39 +372,31 @@ class AdminController extends BaseController
             ->orderById()
             ->paginate($page, 3);
 
-//        $paginator->populateRelation('assignedMember');
+        $paginator->populateRelation('AdminNote');
 
         $assignedMembers = BorrowerQuery::create()
             ->filterByVolunteerMentorId($paginator->toKeyValue('id', 'id'))
             ->find();
-        
+
         $menteeCounts = VolunteerMentorQuery::create()
             ->filterByBorrowerId($paginator->toKeyValue('id', 'id'))
             ->find()
             ->toKeyValue('borrowerId', 'menteeCount');
 
-//        $assignedMembers = [];
-//        foreach ($_assignedMembers as $assignedMember) {
-//            if (!isset($_assignedMembers[$assignedMember->getId()])) {
-//                $assignedMembers[$assignedMember->getId()] = [];
-//            }
-//            $assignedMembers[$assignedMember->getId()][] = $assignedMember;
-//        }
+        $_adminNotes = AdminNoteQuery::create()
+            ->filterByBorrowerId($paginator->toKeyValue('id', 'id'))
+            ->joinWith('User')
+            ->find();
 
-//        $_loanNotes = AdminNoteQuery::create()
-//            ->filterByLoanId($loans->toKeyValue('id', 'id'))
-//            ->joinWith('User')
-//            ->find();
-//
-//        $loanNotes = [];
-//        foreach ($_loanNotes as $loanNote) {
-//            if (!isset($loanNotes[$loanNote->getLoanId()])) {
-//                $loanNotes[$loanNote->getLoanId()] = [];
-//            }
-//            $loanNotes[$loanNote->getLoanId()][] = $loanNote;
-//        }
+        $adminNotes = [];
+        foreach ($_adminNotes as $loanNote) {
+            if (!isset($adminNotes[$loanNote->getLoanId()])) {
+                $adminNotes[$loanNote->getLoanId()] = [];
+            }
+            $adminNotes[$loanNote->getLoanId()][] = $loanNote;
+        }
 
-        return View::make('admin.volunteer-mentors', compact('paginator', 'form', 'menteeCounts', 'assignedMembers'));
+        return View::make('admin.volunteer-mentors', compact('paginator', 'form', 'menteeCounts', 'assignedMembers', 'adminNotes'));
     }
 
     public function getAddVolunteerMentors()
