@@ -193,13 +193,132 @@ class AdminController extends BaseController
     public function getLenders()
     {
         $form = $this->lendersForm;
-        $page = Request::query('page') ? : 1;
+        $page = Request::query('page') ?: 1;
 
         $paginator = $form->getQuery()
             ->orderById()
             ->paginate($page, 3);
 
-        return View::make('admin.lenders', compact('paginator', 'form'));
+        $totalLenders = LenderQuery::create()
+            ->count();
+        
+        $activeLenders = LenderQuery::create()
+            ->useUserQuery()
+                ->filterByActive(true)
+            ->endUse()
+            ->count();
+        
+        $activeLendersInPastTwoMonths = LenderQuery::create()
+            ->useUserQuery()
+                ->filterByLastLoginAt(Carbon::now()->subMonths(2), Criteria::GREATER_THAN)
+            ->endUse()
+            ->count();
+        
+        
+        $lenderUsingAutomatedLending = LenderQuery::create()
+            ->useAutoLendingSettingQuery()
+                ->filterByActive(true)
+            ->endUse()
+            ->count();
+        
+        $totalLenderCredit  = DB::select(
+            'SELECT SUM(amount) AS total
+             FROM transactions
+             WHERE user_id IN (SELECT id FROM users WHERE users.sub_role = 0)'
+        );
+        $totalLenderCredit = $totalLenderCredit[0]->total;
+        
+        return View::make(
+            'admin.lenders',
+            compact(
+                'paginator',
+                'form',
+                'totalLenders',
+                'activeLenders',
+                'activeLendersInPastTwoMonths',
+                'lenderUsingAutomatedLending',
+                'totalLenderCredit'
+            )
+        );
+    }
+
+    public function postLastCheckInEmail($lenderId)
+    {
+        $lender = LenderQuery::create()
+            ->findOneById($lenderId);
+
+        if(!$lender) {
+            App::abort(404, 'Lender with this ID not found.');
+        }
+        
+        if (!Input::has('lastCheckInEmail')){
+            App::abort(404, 'Please select a proper date');            
+        }        
+        
+        $lastCheckInEmailDate = Input::get('lastCheckInEmail');
+        $lender->setLastCheckInEmail($lastCheckInEmailDate);
+        $lender->save();
+        
+        \Flash::success('Last check in email date added.');
+        return Redirect::back();
+    }
+    
+    public function postDeleteLender($lenderId)
+    {
+        $lender = LenderQuery::create()
+            ->findOneById($lenderId);
+        
+        if(!$lender) {
+            App::abort(404, 'Lender with this ID not found.');
+        }
+
+        $user = $lender->getUser();
+        $lender->delete();
+        $user->delete();
+
+        \Flash::success('Lender Deleted');
+        return Redirect::back();
+    }
+
+
+    public function postDeactivateLender($lenderId)
+    {
+        $lender = LenderQuery::create()
+            ->findOneById($lenderId);
+
+        if(!$lender) {
+            App::abort(404, 'Lender with this ID not found.');
+        }
+        
+        $user = $lender->getUser();
+        $user->setActive(false);
+        $user->save();
+        
+        $lender->setActive(false);
+        $lender->save();
+        
+        \Flash::success('Lender Deactivated');
+        return Redirect::back();
+    }
+
+    public function postActivateLender($lenderId)
+    {
+        $lender = LenderQuery::create()
+            ->findOneById($lenderId);
+
+        if(!$lender) {
+            App::abort(404, 'Lender with this ID not found.');
+        }
+
+        $user = $lender->getUser();
+        $user->setActive(true);
+        $user->save();
+
+        $lender->setActive(true);
+        $lender->save();
+
+        \Flash::success('Lender Activated');
+        return Redirect::back();
     }
 
     public function getVolunteers()

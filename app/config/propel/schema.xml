@@ -179,6 +179,7 @@
         <column name="last_name" type="VARCHAR" size="50" required="false"/>
         <column name="admin_donate" type="BOOLEAN" defaultValue="false"/>
         <column name="active" type="BOOLEAN" defaultValue="true"/>
+        <column name="last_check_in_email" type="DATE" required="false"/>
         <behavior name="timestampable"/>
         <foreign-key foreignTable="users">
             <reference local="id" foreign="id"/>
@@ -248,7 +249,7 @@
         <column name="city" type="VARCHAR" size="100"/>
         <column name="about_me" type="LONGVARCHAR"/>
         <behavior name="timestampable"/>
-        <foreign-key foreignTable="lenders">
+        <foreign-key foreignTable="lenders" onDelete="CASCADE">
             <reference local="lender_id" foreign="id"/>
         </foreign-key>
     </table>
