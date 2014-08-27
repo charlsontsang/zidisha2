@@ -35,23 +35,35 @@ Volunteer Mentors
     @foreach($paginator as $borrower)
     <tr>
         <td><a href="{{ route('lender:public-profile', $borrower->getUser()->getUserName()) }}">{{
-                $borrower->getFirstName() }} {{ $borrower->getLastName() }}</a>
+                $borrower->getName() }}</a>
             <p>{{ $borrower->getProfile()->getPhoneNumber() }}</p>
             <p>{{ $borrower->getUser()->getEmail() }}</p>
         </td>
         <td>{{ $borrower->getProfile()->getCity() }}</td>
         <td>{{ $menteeCounts[$borrower->getId()] }}</td>
         <td>
-            @foreach($assignedMembers as $assignedMember)
-                <ul>
-                    @if($assignedMember->getVolunteerMentorId() == $borrower->getId())
-                        <li>
-                            <p> {{ $assignedMember->getName() }} </p>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Assigned Member Name</th>
+                    <th>Assigned Member Status</th>
+                    <th>Assigned Member Comment Posted</th>
+                </tr>
+                </thead>
+                <tbody>
+                    @foreach($assignedMembers as $assignedMember)
+                        @if($assignedMember->getVolunteerMentorId() == $borrower->getId())
+                            <tr>
+                                <td><a href="{{ route('lender:public-profile', $assignedMember->getUser()->getUserName()) }}">{{
+                                                    $assignedMember->getName() }}</a></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
                             <?php unset($assignedMember) ?>
-                        </li>
-                    @endif
-                </ul>
+                        @endif
             @endforeach
+            </tbody>
+            </table>
         </td>
         <td> TODO </td>
         <td>
