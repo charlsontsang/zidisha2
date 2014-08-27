@@ -44,31 +44,31 @@ Lend
 
 @section('content')
 <div class="row">
-    <div class="col-sm-6 col-md-4">
-        <p>
-            We found 
-            <strong>{{ $countResults }} {{ $selectedLoanCategory ? $selectedLoanCategory->getName() : '' }} projects</strong>@if($selectedCountry) in {{ $selectedCountry->getName(); }}@endif.
-    </div>
-    @if($countAll > $countResults)
-    <div class="col-sm-6 col-md-3">
-            <a href="{{ route('lend:index', ['category' => 'all'] + ['country' => 'everywhere'] + $routeParams) }}">View all {{ $countAll }} projects</a>
-    </div>
-    @endif
-
-    @if ($selectedLoanCategory)
-    <div class="col-sm-12 col-md-5">
-            <a href="#" id="about-category" data-toggle="collapse" data-target="#toggle-aboutCategory" data-toggle-text="Hide description">
-                <i class="fa fa-info-circle" style="color: inherit;"></i> Learn more about {{ $selectedLoanCategory->getName() }} projects
-            </a>
-    </div>
-    @endif
-        </p>
-</div>
-<div class="row">
     <div class="col-sm-12">
+        <p>
+            <span class="results-desc">
+                We found 
+                <strong>{{ $countResults }} {{ $selectedLoanCategory ? $selectedLoanCategory->getName() : '' }} projects</strong>@if($selectedCountry) in {{ $selectedCountry->getName(); }}@endif.
+            </span>
+    
+            @if($countAll > $countResults)
+                <span class="results-desc">
+                    <a href="{{ route('lend:index', ['category' => 'all'] + ['country' => 'everywhere'] + $routeParams) }}">View all {{ $countAll }} projects</a>
+                </span>
+            @endif
+
+            @if($selectedLoanCategory->getHowDescription())
+                <span>
+                <a href="#" id="about-category" data-toggle="collapse" data-target="#toggle-aboutCategory" data-toggle-text="Hide description">
+                    <i class="fa fa-info-circle" style="color: inherit;"></i> Learn more about {{ $selectedLoanCategory->getName() }} projects
+                </a>
+                </span>
+            @endif
+        </p>
+
         <hr/>
 
-        @if($selectedLoanCategory)
+        @if($selectedLoanCategory->getHowDescription())
 
         <div id="toggle-aboutCategory" class="collapse">            
         
