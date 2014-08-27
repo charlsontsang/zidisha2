@@ -157,6 +157,7 @@ Route::group(
                     )
                 );
                 Route::get('dashboard', array('uses' => 'LenderController@getDashboard', 'as' => 'lender:dashboard'));
+                Route::get('welcome', array('uses' => 'LenderController@getWelcome', 'as' => 'lender:welcome'));
                 Route::get(
                     'history',
                     array('uses' => 'LenderController@getTransactionHistory', 'as' => 'lender:history')
