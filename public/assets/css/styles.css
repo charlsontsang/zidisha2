@@ -8699,7 +8699,7 @@ body {
 .loan #country {
   display: inline-block;
   font-size: 12px;
-  font-weight: bolder;
+  font-weight: normal;
   text-transform: uppercase;
 }
 @media (min-width: 768px) {
