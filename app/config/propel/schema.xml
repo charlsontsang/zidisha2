@@ -1003,7 +1003,7 @@
         <column name="notify_invite_accepted" type="BOOLEAN" defaultValue="true"/>
         <column name="notify_loan_repayment" type="ENUM" valueSet="0, 1, 10, 25, 50, 100" defaultValue="1"/>
         <behavior name="timestampable"/>
-        <foreign-key foreignTable="lenders">
+        <foreign-key foreignTable="lenders" onDelete="CASCADE">
             <reference local="lender_id" foreign="id"/>
         </foreign-key>
     </table>
