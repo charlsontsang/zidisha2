@@ -123,6 +123,12 @@ Lend
                             @endif
                         </div>
                     @endif
+
+                    <div id="funding-tag" class="home-grey">
+                        <span><strong>${{ ceil($loan->getStillNeededUsdAmount()->getAmount()) }}</strong></span>
+                        <br/>
+                        <span class="text-light">Needed</span>
+                    </div>
                     
                     <div class="lend-title">
                         <h2 class="alpha">
@@ -130,10 +136,10 @@ Lend
                                 {{ $loan->getSummary() }}
                             </a>
                         </h2>
-                        <p id="country" class="text-light">
+                        <span id="country" class="text-light">
                             {{ $loan->getBorrower()->getProfile()->getCity() }},
                             {{ $loan->getBorrower()->getCountry()->getName() }}
-                        </p>
+                        </span>
                     </div>
                     
                     <p class="text-light">
