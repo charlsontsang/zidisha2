@@ -201,7 +201,7 @@ class LenderController extends BaseController
         if (Auth::check() && Auth::user()->isAdmin() && Request::query('lenderId')) {
             $userId = Request::query('lenderId');
             
-            $this->validateLenderId($userId);
+            $this->getLenderById($userId);
             
         } else {
             $userId = Auth::getUser()->getId();
@@ -290,7 +290,7 @@ class LenderController extends BaseController
 
         if (Auth::check() && Auth::user()->isAdmin() && Request::query('lenderId')) {
             $userId = Request::query('lenderId');
-            $lender = $this->validateLenderId($userId);
+            $lender = $this->getLenderById($userId);
         } else {
             $userId = Auth::getUser()->getId();
             $lender = \Auth::user()->getLender();
@@ -430,7 +430,7 @@ class LenderController extends BaseController
      * @param $userId
      * @return \Zidisha\Lender\Lender
      */
-    protected function validateLenderId($userId)
+    protected function getLenderById($userId)
     {
         $lender = LenderQuery::create()
             ->findOneById($userId);
