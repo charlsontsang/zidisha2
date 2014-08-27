@@ -200,6 +200,9 @@ class LenderController extends BaseController
         
         if (Auth::check() && Auth::user()->isAdmin() && Request::query('lenderId')) {
             $userId = Request::query('lenderId');
+            
+            $this->validateLenderId($userId);
+            
         } else {
             $userId = Auth::getUser()->getId();
         }
@@ -411,5 +414,21 @@ class LenderController extends BaseController
                 'totalActiveLoansTotalOutstandingAmount', 'totalCompletedLoansRepaidAmount',
                 'netChangeCompletedBid', 'totalNetChangeCompletedBid'
             ));
+    }
+
+    /**
+     * @param $userId
+     * @return \Zidisha\Lender\Lender
+     */
+    protected function validateLenderId($userId)
+    {
+        $lender = LenderQuery::create()
+            ->findOneById($userId);
+
+        if (!$lender) {
+            \App::abort(404, 'Invalid Lender id');
+        }
+        
+        return $lender;
     }
 }
