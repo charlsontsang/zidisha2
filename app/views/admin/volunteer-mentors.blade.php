@@ -53,6 +53,21 @@ Volunteer Mentors
                 </ul>
             @endforeach
         </td>
+        <td> TODO </td>
+        <td>
+            @if(isset($adminNotes[$borrower->getId()]))
+                <ul>
+                    @foreach($adminNotes[$borrower->getId()] as $adminNote)
+                        <li>
+                            <span class="text-muted">
+                                {{ $adminNote->getCreatedAt('M j, Y') }} by {{ $adminNote->getUser()->getUserName() }}
+                            </span>
+                            <p> {{ $adminNote->getNote() }} </p>
+                        </li>
+                    @endforeach
+                </ul>
+            @endif
+        </td>
         <td>
             <a href="{{ route('admin:remove:volunteer-mentor', $borrower->getId()) }}">Remove Volunteer Mentor</a>
         </td>
