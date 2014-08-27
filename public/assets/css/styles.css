@@ -8689,7 +8689,7 @@ body {
   line-height: 1em;
   background-color: #f9f9f9;
   border: 3px solid #fff;
-  box-shadow: inset 2px 2px 2px #e5e5e5, inset -2px -2px 2px #e5e5e5;
+  box-shadow: inset 1px 1px 2px #e5e5e5, inset -1px -1px 2px #e5e5e5;
 }
 @media (min-width: 768px) {
   .loan #funding-tag {
