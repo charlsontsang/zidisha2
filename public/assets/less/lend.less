@@ -28,7 +28,7 @@
 }
 .loan .lend-title {
     @media (max-width: @screen-xs-max) {
-        margin: 15px 15px -5px 15px;
+        margin: 5px 15px -5px 15px;
         height: auto;
     }
     @media (min-width: @screen-sm-min) {
@@ -66,16 +66,22 @@
     margin-top: -40px;
     float: right;
     margin-right: 15px;
-    padding-top: 16px;
+    padding-top: 14px;
     border-radius: 50%;
     text-align: center;
     line-height: 1em;
+    background-color: #f9f9f9;
+    border: 3px solid #fff;
+    box-shadow: inset 2px 2px 2px #e5e5e5, inset -2px -2px 2px #e5e5e5;
     @media (min-width: @screen-sm-min){
         display: none;
     }
 }
 .loan #country {
     display: inline-block;
+    font-size: 12px;
+    font-weight: bolder;
+    text-transform: uppercase;
     @media (min-width: @screen-sm-min){
         display: none;
     }

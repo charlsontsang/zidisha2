@@ -124,22 +124,21 @@ Lend
                         </div>
                     @endif
 
-                    <div id="funding-tag" class="home-grey">
+                    <div id="funding-tag">
                         <span><strong>${{ ceil($loan->getStillNeededUsdAmount()->getAmount()) }}</strong></span>
                         <br/>
                         <span class="text-light">Needed</span>
                     </div>
                     
                     <div class="lend-title">
+                        <span id="country" class="text-light">
+                            {{ $loan->getBorrower()->getCountry()->getName() }}
+                        </span>
                         <h2 class="alpha">
                             <a href="{{ route('loan:index', $loan->getId()) }}">
                                 {{ $loan->getSummary() }}
                             </a>
                         </h2>
-                        <span id="country" class="text-light">
-                            {{ $loan->getBorrower()->getProfile()->getCity() }},
-                            {{ $loan->getBorrower()->getCountry()->getName() }}
-                        </span>
                     </div>
                     
                     <p class="text-light">
