@@ -38,16 +38,25 @@ class LendController extends BaseController
 
         //for loans
         $conditions = [];
+        $sortConditions = array(
+            'repaymentRate'  => 'Repayment Rate',
+            'recentlyAdded'  => 'Recently Added',
+            'expiringSoon'   => 'Expiring Soon',
+            'almostFunded'   => 'Almost Funded',
+            'mostDiscussed' => 'Most Discussed',
+        );
 
         $loanCategoryName = $category;
         $stageName = $stage;
+        $sortBy = Request::query('sortBy') ? : null;
         $selectedLoanCategory = $this->loanCategoryQuery
             ->findOneBySlug($loanCategoryName);
 
         $routeParams = [
             'category' => 'all',
             'stage' => 'fund-raising',
-            'country' => 'everywhere'
+            'country' => 'everywhere',
+            'sortBy' => 'repaymentRate'
         ];
 
         if ($stageName == 'completed') {
@@ -59,6 +68,30 @@ class LendController extends BaseController
         } else {
             $routeParams['stage'] = 'fund-raising';
             $conditions['status'] = Loan::OPEN;
+        }
+
+        if ($sortBy == 'recentlyAdded') {
+            $routeParams['sortBy'] = 'recentlyAdded';
+            $conditions['sortBy'] = 'applied_at';
+            $conditions['sortByOrder'] = 'asc';
+        } elseif ($sortBy == 'expiringSoon') {
+            $routeParams['sortBy'] = 'expiringSoon';
+            $conditions['sortBy'] = 'applied_at';
+            $conditions['sortByOrder'] = 'desc';
+        } elseif ($sortBy == 'almostFunded') {
+            $routeParams['sortBy'] = 'almostFunded';
+            $conditions['sortBy'] = 'raised_percentage';
+            $conditions['sortByOrder'] = 'desc';
+        } elseif ($sortBy == 'mostDiscussed') {
+            $routeParams['sortBy'] = 'mostDiscussed';
+            //TODO sorting by mostDiscussed
+            $conditions['sortBy'] = 'id';
+            $conditions['sortByOrder'] = 'asc';
+        } else {
+            $routeParams['sortBy'] = 'repaymentRate';
+            //TODO sorting by repaymentRate
+            $conditions['sortBy'] = 'id';
+            $conditions['sortByOrder'] = 'asc';
         }
 
         if ($selectedLoanCategory) {
@@ -92,7 +125,8 @@ class LendController extends BaseController
             compact(
                 'countries', 'selectedCountry', 'loanCategories',
                 'selectedLoanCategory', 'paginator', 'routeParams',
-                'searchQuery', 'searchRouteParams', 'countResults', 'countAll'
+                'searchQuery', 'searchRouteParams', 'countResults', 'countAll',
+                'sortConditions', 'sortBy'
             )
         );
 

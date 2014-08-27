@@ -253,13 +253,13 @@ class BorrowerController extends BaseController
         /** @var $borrower Borrower */
         $borrower = \Auth::user()->getBorrower();
 
-        $lastRepaidLoan = LoanQuery::create()
-            ->getLastRepaidLoan($borrower);
+        $lastEndedLoan = LoanQuery::create()
+            ->getLastEndedLoan($borrower);
         $activeLoan = $borrower->getActiveLoan();
         $exchangeRate = ExchangeRateQuery::create()
             ->findCurrent($borrower->getCountry()->getCurrency());
-        if(empty($activeLoan) && $lastRepaidLoan) {
-            $activeLoan = $lastRepaidLoan;
+        if(empty($activeLoan) && $lastEndedLoan) {
+            $activeLoan = $lastEndedLoan;
         }
         $loanCounts = LoanQuery::create()
             ->filterByBorrower($borrower)
@@ -286,13 +286,13 @@ class BorrowerController extends BaseController
         $raisedUsdAmount = $activeLoan->getRaisedUsdAmount();
         $raisedAmount = Converter::fromUSD($raisedUsdAmount, $currency, $exchangeRate);
 
-        if ($loanStatus == Loan::OPEN || $loanStatus == Loan::ACTIVE || $lastRepaidLoan || empty($activeLoan)) {
+        if ($loanStatus == Loan::OPEN || $loanStatus == Loan::ACTIVE || $lastEndedLoan || empty($activeLoan)) {
             $borrowerAllRepaidLoans = LoanQuery::create()
                 ->getAllRepaidLoansForBorrower($borrower);
             $borrowerAllRepaidLoansCount = $borrowerAllRepaidLoans->count();
             $k = 2;
             $params['nxtLoanvalue'] = '';
-            if (!empty($lastRepaidLoan) && $lastRepaidLoan->getStatus() == Loan::DEFAULTED) {
+            if (!empty($lastEndedLoan) && $lastEndedLoan->getStatus() == Loan::DEFAULTED) {
                 $params['nxtLoanvalue'] = '';
                 $params['firstLoanVal'] = '';
             } else {
@@ -317,7 +317,7 @@ class BorrowerController extends BaseController
                     $params['firstLoanVal'] = '1.'." ".Converter::fromUSD($firstLoanValue, $currency, $exchangeRate);
                 }
 
-                if (!empty($activeLoan) && $activeLoan != $lastRepaidLoan) {
+                if (!empty($activeLoan) && $activeLoan != $lastEndedLoan) {
                     $repaidPercent = $activeLoan->getPaidPercentage();
                     $loanProfileUrl = route('loan:index', $activeLoan->getId());
 
@@ -422,8 +422,8 @@ class BorrowerController extends BaseController
 
             if ($isFirstFundedLoan) {
                 $note = \Lang::get('borrower.loan-application.current-credit.first-loan');
-            } elseif (empty($activeLoan) && $lastRepaidLoan) {
-                $ontime = $this->loanService->isRepaidOnTime($borrower, $lastRepaidLoan);
+            } elseif (empty($activeLoan) && $lastEndedLoan) {
+                $ontime = $this->loanService->isRepaidOnTime($borrower, $lastEndedLoan);
                 if (!$ontime) {
                     $note = \Lang::get('borrower.loan-application.current-credit.repaid-late', array('minimumRepaymentRate' => $minimumRepaymentRate) );
                 }
