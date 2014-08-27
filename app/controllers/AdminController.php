@@ -15,6 +15,7 @@ use Zidisha\Admin\Form\WithdrawalRequestsForm;
 use Zidisha\Admin\Setting;
 use Zidisha\Admin\Form\TranslateForm;
 use Zidisha\Admin\Form\TranslationFeedForm;
+use Zidisha\Balance\InviteTransactionQuery;
 use Zidisha\Balance\TransactionQuery;
 use Zidisha\Balance\WithdrawalRequestQuery;
 use Zidisha\Borrower\Borrower;
@@ -26,7 +27,6 @@ use Zidisha\Borrower\Form\AdminEditForm;
 use Zidisha\Country\CountryQuery;
 use Zidisha\Currency\CurrencyService;
 use Zidisha\Lender\GiftCardQuery;
-use Zidisha\Lender\InviteQuery;
 use Zidisha\Lender\LenderQuery;
 use Zidisha\Loan\Form\AdminCategoryForm;
 use Zidisha\Loan\LoanQuery;
@@ -279,11 +279,11 @@ class AdminController extends BaseController
             ->filterByUser($user)
             ->count();
         
-        $lenderInviteCount = InviteQuery::create()
+        $lenderInviteTransactionCount = InviteTransactionQuery::create()
             ->filterByLender($lender)
             ->count();
 
-        if ($userTransactionCount > 0 || $lenderInviteCount > 0) {
+        if ($userTransactionCount > 0 || $lenderInviteTransactionCount > 0) {
             \Flash::error('can\'t delete Lender has invite or has done transactions');
         }else {
             $user->delete();
