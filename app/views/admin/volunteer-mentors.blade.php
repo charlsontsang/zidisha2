@@ -19,6 +19,31 @@ Volunteer Mentors
     {{ BootstrapForm::close() }}
 </div>
 
+<div>
+    {{ BootstrapForm::open([
+        'action' => ['AdminController@getVolunteerMentors', 'country' => Request::query('country'), 'search' => Request::query('search')],
+        'method' => 'get',
+        'class' => 'form-inline',
+    ]) }}
+
+    {{ BootstrapForm::select(
+        'orderBy',
+        ['numberOfAssignedMembers' => 'Number of Assigned Members', 'repaymentStatus' => 'Repayment Status'],
+        $orderBy,
+        ['label' => false]
+    ) }}
+    {{ BootstrapForm::select(
+        'orderDirection',
+        ['asc' => 'ascending', 'desc' => 'descending'],
+        $orderDirection,
+        ['label' => false]
+    ) }}
+
+    {{ BootstrapForm::submit('Sort') }}
+
+    {{ BootstrapForm::close() }}
+</div>
+
 <table class="table table-striped">
     <thead>
     <tr>
