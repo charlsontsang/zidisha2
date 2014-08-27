@@ -194,9 +194,21 @@ class LenderController extends BaseController
 
     public function getTransactionHistory()
     {
+        if (Auth::check() && Auth::user()->isAdmin() && !Request::query('lenderId')) {
+            \App::abort(404, 'Please enter a proper lenderId');
+        }
+        
+        if (Auth::check() && Auth::user()->isAdmin() && Request::query('lenderId')) {
+            $userId = Request::query('lenderId');
+            
+            $this->getLenderById($userId);
+            
+        } else {
+            $userId = Auth::getUser()->getId();
+        }
 
         $currentBalance = TransactionQuery::create()
-            ->getCurrentBalance(Auth::getUser()->getId());
+            ->getCurrentBalance($userId);
 
         $page = Request::query('page') ? : 1;
 
@@ -207,7 +219,7 @@ class LenderController extends BaseController
                           FROM transactions WHERE user_id = ?
                           ORDER BY transaction_date DESC, transactions.id DESC
                           OFFSET ?)',
-            array(Auth::getUser()->getId(), ($page - 1) * 50)
+            array($userId, ($page - 1) * 50)
         );
 
         $currentBalancePage = Money::create($currentBalancePageObj[0]->total);
@@ -215,7 +227,7 @@ class LenderController extends BaseController
         $paginator = $this->transactionQuery->create()
             ->orderByTransactionDate('desc')
             ->orderById('desc')
-            ->filterByUserId(Auth::getUser()->getId())
+            ->filterByUserId($userId)
             ->paginate($page, 50);
 
         return View::make('lender.history', compact('paginator', 'currentBalance', 'currentBalancePage'));
@@ -272,8 +284,18 @@ class LenderController extends BaseController
 
     public function getMyStats()
     {
-        $lender = \Auth::user()->getLender();
-        $userId = \Auth::user()->getId();
+        if (Auth::check() && Auth::user()->isAdmin() && !Request::query('lenderId')) {
+            \App::abort(404, 'Please enter a proper lenderId');
+        }
+
+        if (Auth::check() && Auth::user()->isAdmin() && Request::query('lenderId')) {
+            $userId = Request::query('lenderId');
+            $lender = $this->getLenderById($userId);
+        } else {
+            $userId = Auth::getUser()->getId();
+            $lender = \Auth::user()->getLender();
+        }
+        
         if (!$lender) {
             \Illuminate\Support\Facades\App::abort(404);
         }
@@ -402,5 +424,21 @@ class LenderController extends BaseController
                 'totalActiveLoansTotalOutstandingAmount', 'totalCompletedLoansRepaidAmount',
                 'netChangeCompletedBid', 'totalNetChangeCompletedBid'
             ));
+    }
+
+    /**
+     * @param $userId
+     * @return \Zidisha\Lender\Lender
+     */
+    protected function getLenderById($userId)
+    {
+        $lender = LenderQuery::create()
+            ->findOneById($userId);
+
+        if (!$lender) {
+            \App::abort(404, 'Invalid Lender id');
+        }
+        
+        return $lender;
     }
 }
