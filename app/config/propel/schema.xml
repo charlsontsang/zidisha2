@@ -153,7 +153,7 @@
         <column name="loan_id" type="INTEGER" phpType="string"/>
         <column name="borrower_id" type="INTEGER" phpType="string"/>
         <column name="note" type="LONGVARCHAR" required="true" />
-        <column name="type" type="ENUM" valueSet="disbursement" required="true"/>
+        <column name="type" type="ENUM" valueSet="disbursement, VMNote" required="true"/>
         <foreign-key foreignTable="users">
             <reference local="user_id" foreign="id"/>
         </foreign-key>

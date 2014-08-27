@@ -82,7 +82,10 @@ Volunteer Mentors
                             <tr>
                                 <td><a href="{{ route('admin:borrower', $assignedMember->getId()) }}">{{
                                                     $assignedMember->getName() }}</a></td>
-                                <td>{{ $borrowerService->printLoanInArrears($assignedMember) }}</td>
+                                <td>
+                                TODO (Activate date)
+                                {{ $borrowerService->printLoanInArrears($assignedMember) }}
+                                </td>
                                 <td>
                                     @if($borrowerService->hasVMComment($borrower, $assignedMember))
                                         <a href="{{ route('borrower:public-profile', $assignedMember->getUser()->getUsername()) }}">View Comment</a>
@@ -111,6 +114,12 @@ Volunteer Mentors
                     @endforeach
                 </ul>
             @endif
+            <br/>
+            {{ BootstrapForm::open(array('action' => 'AdminController@postVmNote')) }}
+                {{ BootstrapForm::textarea('note', null, ['rows' => '5', 'label' => false]) }}
+                {{ BootstrapForm::hidden('borrowerId', $borrower->getId()) }}
+                {{ BootstrapForm::submit('Submit') }}
+            {{ BootstrapForm::close() }}
         </td>
         <td>
             <a href="{{ route('admin:remove:volunteer-mentor', $borrower->getId()) }}">Remove Volunteer Mentor</a>

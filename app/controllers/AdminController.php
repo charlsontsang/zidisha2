@@ -2,6 +2,7 @@
 
 use Carbon\Carbon;
 use Propel\Runtime\ActiveQuery\Criteria;
+use Zidisha\Admin\AdminNote;
 use Zidisha\Admin\AdminNoteQuery;
 use Zidisha\Admin\Form\EnterRepaymentForm;
 use Zidisha\Admin\Form\UploadRepaymentsForm;
@@ -371,8 +372,8 @@ class AdminController extends BaseController
             ->filterBySubRole(User::SUB_ROLE_VOLUNTEER_MENTOR)
             ->endUse();
 
+        //TODO sorting
         if ($orderBy == 'repaymentStatus') {
-            //TODO
         } else {
         }
 
@@ -398,10 +399,10 @@ class AdminController extends BaseController
 
         $adminNotes = [];
         foreach ($_adminNotes as $VmNote) {
-            if (!isset($adminNotes[$VmNote->getLoanId()])) {
-                $adminNotes[$VmNote->getLoanId()] = [];
+            if (!isset($adminNotes[$VmNote->getBorrowerId()])) {
+                $adminNotes[$VmNote->getBorrowerId()] = [];
             }
-            $adminNotes[$VmNote->getLoanId()][] = $VmNote;
+            $adminNotes[$VmNote->getBorrowerId()][] = $VmNote;
         }
 
         return View::make('admin.volunteer-mentors', compact('paginator', 'form', 'menteeCounts', 'assignedMembers', 'adminNotes', 'orderBy', 'orderDirection', 'borrowerService'));
@@ -1030,4 +1031,30 @@ class AdminController extends BaseController
 
         return $redirect;
     }
+
+    public function postVmNote()
+    {
+        $borrowerId = Input::get('borrowerId');
+        $note = Input::get('note');
+
+        $user = \Auth::user();
+
+        $borrower = BorrowerQuery::create()
+            ->findOneById($borrowerId);
+
+        if (!$borrower) {
+            App::abort(404, 'VM not found');
+        }
+
+        $loanNote = new AdminNote();
+        $loanNote
+            ->setUser($user)
+            ->setBorrower($borrower)
+            ->setType('VMNote')
+            ->setNote($note);
+        $loanNote->save();
+
+        return \Redirect::back();
+    }
+
 }

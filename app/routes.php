@@ -725,6 +725,11 @@ Route::group(
                 );
 
                 Route::post(
+                    'volunteer-mentors/VmNote',
+                    ['uses' => 'AdminController@postVmNote']
+                );
+
+                Route::post(
                     'pending-disbursements/authorize/{loanId}',
                     ['uses' => 'PendingDisbursementsController@postAuthorize']
                 );
