@@ -180,4 +180,49 @@ class RepaymentSchedule implements \IteratorAggregate
             ->max(Money::create(0, $this->loan->getCurrencyCode()));
     }
 
+    public function getLastDueDate()
+    {
+        /** @var RepaymentScheduleInstallment $repaymentScheduleInstallment */
+        $repaymentScheduleInstallment = $this->installments[count($this->installments) - 1];
+        
+        return $repaymentScheduleInstallment->getInstallment()->getDueDate();
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getNextDueDate()
+    {
+        $now = new \DateTime();
+        
+        /** @var RepaymentScheduleInstallment $repaymentScheduleInstallment */
+        foreach ($this as $repaymentScheduleInstallment) {
+            $installment = $repaymentScheduleInstallment->getInstallment();
+            if ($installment->getDueDate() > $now && 
+                $installment->getPaidAmount()->isZero() &&
+                $installment->getAmount()->isPositive()
+            ) {
+               return $installment->getDueDate(); 
+            }
+        }
+        
+        return null;
+    }
+
+    public function remainingPeriod()
+    {
+        $now = new \DateTime();
+        $i = 0;
+
+        /** @var RepaymentScheduleInstallment $repaymentScheduleInstallment */
+        foreach ($this as $repaymentScheduleInstallment) {
+            $installment = $repaymentScheduleInstallment->getInstallment();
+            if ($installment->getDueDate() > $now) {
+                $i += 1;
+            }
+        }
+
+        return $i;
+    }
+
 }
