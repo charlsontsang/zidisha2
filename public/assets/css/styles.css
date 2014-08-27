@@ -8606,6 +8606,16 @@ body {
 .filter-bar .input-group {
   width: 100%;
 }
+.results-desc:after {
+  content: '\A';
+  white-space: pre;
+}
+@media (min-width: 992px) {
+  .results-desc:after {
+    content: "";
+    margin-right: 50px;
+  }
+}
 @media (min-width: 992px) {
   #about-category {
     float: right !important;

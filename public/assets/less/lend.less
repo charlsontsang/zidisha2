@@ -1,3 +1,11 @@
+.results-desc:after {
+    content: '\A';
+    white-space: pre;
+    @media (min-width: @screen-md-min) {
+        content: "";
+        margin-right: 50px;
+    }
+}
 #about-category {
     @media (min-width: @screen-md-min) {
         float: right !important;
