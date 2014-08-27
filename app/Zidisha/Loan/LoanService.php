@@ -291,6 +291,7 @@ class LoanService
             
             $loan->setRaisedUsdAmount($totalBidAmount);
             $loan->save();
+            $this->updateLoanIndex($loan);
             
             return [$bid, $changedBids];
         });
