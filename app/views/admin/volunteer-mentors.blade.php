@@ -97,7 +97,7 @@ Volunteer Mentors
             </tbody>
             </table>
         </td>
-        <td> TODO </td>
+        <td> {{ $borrowerService->printLoanInArrears($borrower) }} </td>
         <td>
             @if(isset($adminNotes[$borrower->getId()]))
                 <ul>
