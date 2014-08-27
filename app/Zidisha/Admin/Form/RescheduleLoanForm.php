@@ -4,24 +4,23 @@ namespace Zidisha\Admin\Form;
 
 
 use Zidisha\Form\AbstractForm;
-use Zidisha\Loan\Loan;
+use Zidisha\Loan\Calculator\RescheduleCalculator;
 
 class RescheduleLoanForm extends AbstractForm
 {
-
     /**
-     * @var \Zidisha\Loan\Loan
+     * @var \Zidisha\Loan\Calculator\RescheduleCalculator
      */
-    private $loan;
+    private $rescheduleCalculator;
 
-    public function __construct(Loan $loan) {
-        $this->loan = $loan;
+    public function __construct(RescheduleCalculator $rescheduleCalculator) {
+        $this->rescheduleCalculator = $rescheduleCalculator;
     }
 
     public function getRules($data)
     {
         return [
-            'installmentAmount' => 'required|numeric|greaterThan:0',
+            'installmentAmount' => 'required|numeric|min:' . $this->rescheduleCalculator->minInstallmentAmount()->getAmount(),
             'reason'            => 'required',
         ];
     }

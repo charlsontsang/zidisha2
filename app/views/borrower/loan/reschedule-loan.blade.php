@@ -42,7 +42,7 @@
                     <strong>@lang('borrower.your-loans.total-interest-and-fees'):</strong>
                 </td>
                 <td>
-                    {{ $calculator->totalInterest()->round(2) }}
+                    {{ $loan->getTotalInterest()->round(2) }}
                     ({{ Lang::get($loan->isWeeklyInstallment() ? 'borrower.your-loans.interest-rate-for-weeks' : 'borrower.your-loans.interest-rate-for-months', [
                     'interestRate' => $loan->getLenderInterestRate() + $loan->getServiceFeeRate(),
                     'period' => $loan->getPeriod(),
@@ -55,7 +55,7 @@
                     <strong>@lang('borrower.your-loans.total-amount-due'):</strong>
                 </td>
                 <td>
-                    {{ $calculator->totalAmount()->round(2) }}
+                    {{ $loan->getTotalAmount()->round(2) }}
                 </td>
             </tr>
             </tbody>
@@ -75,8 +75,8 @@
 
 {{ BootstrapForm::text('installmentAmount', null, [
     'description' => Lang::get('borrower.your-loans.reschedule.installment-amount-description', [
-                        'minInstallmentAmount' => 1243,
-                        'maxPeriod'            => 56,
+                        'minInstallmentAmount' => $minInstallmentAmount,
+                        'maxPeriod'            => Setting::get('loan.maxExtraPeriodRescheduledLoan'),
                      ]),
     'prepend'     => $loan->getCurrencyCode(),
 ]) }}

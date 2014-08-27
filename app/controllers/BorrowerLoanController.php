@@ -5,6 +5,7 @@ use Zidisha\Borrower\Borrower;
 use Zidisha\Loan\BidQuery;
 use Zidisha\Loan\Calculator\BidsCalculator;
 use Zidisha\Loan\Calculator\InstallmentCalculator;
+use Zidisha\Loan\Calculator\RescheduleCalculator;
 use Zidisha\Loan\Loan;
 use Zidisha\Loan\LoanQuery;
 use Zidisha\Loan\LoanService;
@@ -103,12 +104,14 @@ class BorrowerLoanController extends BaseController
 
         $repaymentSchedule = $this->repaymentService->getRepaymentSchedule($loan);
 
-        $form = new RescheduleLoanForm($loan);
-        $calculator = new InstallmentCalculator($loan);
+        $rescheduleCalculator = new RescheduleCalculator($loan, $repaymentSchedule);
+        $minInstallmentAmount = $rescheduleCalculator->minInstallmentAmount();
+
+        $form = new RescheduleLoanForm($rescheduleCalculator);
 
         return View::make(
             'borrower.loan.reschedule-loan',
-            compact('borrower', 'loan', 'repaymentSchedule', 'form', 'calculator')
+            compact('borrower', 'loan', 'repaymentSchedule', 'form', 'minInstallmentAmount')
         );
     }
 
@@ -123,24 +126,20 @@ class BorrowerLoanController extends BaseController
 
         $loan = $borrower->getActiveLoan();
 
-        $redirect = Redirect::route('borrower:reschedule-loan');
-
-        $form = new RescheduleLoanForm($loan);
+        $repaymentSchedule = $this->repaymentService->getRepaymentSchedule($loan);
+        $rescheduleCalculator = new RescheduleCalculator($loan, $repaymentSchedule);
+        $form = new RescheduleLoanForm($rescheduleCalculator);
         $form->handleRequest(Request::instance());
 
         if ($form->isValid()) {
             $data = $form->getData();
-            $this->repaymentService->addRepayment($loan, [
-                'date'   => Carbon::createFromFormat('m/d/Y', $data['date']),
-                'amount' => $data['amount'],
-            ]);
 
-            \Flash::success('Successfully made repayment.');
-        } else {
-            \Flash::error('Invalid input values.');
-            $redirect->withForm($form);
+            \Flash::success('Successfully rescheduled your loan.');
+            return Redirect::route('borrower:loan-information', $loan->getId());
         }
         
-        return $redirect;
+        \Flash::error('Invalid input values.');
+        
+        return Redirect::route('borrower:reschedule-loan')->withForm($form);
     }
 } 
