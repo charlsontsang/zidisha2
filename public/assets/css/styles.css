@@ -8661,6 +8661,14 @@ a.link-dark {
 .result .profile-image {
   height: 200px;
 }
+@media (max-width: 767px) {
+  .result .col-xs-12 {
+    margin-right: auto;
+    margin-left: auto;
+    margin-left: -15px;
+    margin-right: -15px;
+  }
+}
 .loan-body {
   padding-right: 15px;
 }
