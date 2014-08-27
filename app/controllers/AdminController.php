@@ -371,22 +371,24 @@ class AdminController extends BaseController
             ->orderById()
             ->paginate($page, 3);
 
-        $_assignedMembers = BorrowerQuery::create()
+//        $paginator->populateRelation('assignedMember');
+
+        $assignedMembers = BorrowerQuery::create()
             ->filterByVolunteerMentorId($paginator->toKeyValue('id', 'id'))
             ->find();
-
+        
         $menteeCounts = VolunteerMentorQuery::create()
             ->filterByBorrowerId($paginator->toKeyValue('id', 'id'))
             ->find()
             ->toKeyValue('borrowerId', 'menteeCount');
 
-        $assignedMembers = [];
-        foreach ($_assignedMembers as $assignedMember) {
-            if (!isset($_assignedMembers[$assignedMember->getId()])) {
-                $assignedMembers[$assignedMember->getId()] = [];
-            }
-            $assignedMembers[$assignedMember->getId()][] = $assignedMember;
-        }
+//        $assignedMembers = [];
+//        foreach ($_assignedMembers as $assignedMember) {
+//            if (!isset($_assignedMembers[$assignedMember->getId()])) {
+//                $assignedMembers[$assignedMember->getId()] = [];
+//            }
+//            $assignedMembers[$assignedMember->getId()][] = $assignedMember;
+//        }
 
 //        $_loanNotes = AdminNoteQuery::create()
 //            ->filterByLoanId($loans->toKeyValue('id', 'id'))

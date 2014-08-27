@@ -42,6 +42,18 @@ Volunteer Mentors
         <td>{{ $borrower->getProfile()->getCity() }}</td>
         <td>{{ $menteeCounts[$borrower->getId()] }}</td>
         <td>
+            @foreach($assignedMembers as $assignedMember)
+                <ul>
+                    @if($assignedMember->getVolunteerMentorId() == $borrower->getId())
+                        <li>
+                            <p> {{ $assignedMember->getName() }} </p>
+                            <?php unset($assignedMember) ?>
+                        </li>
+                    @endif
+                </ul>
+            @endforeach
+        </td>
+        <td>
             <a href="{{ route('admin:remove:volunteer-mentor', $borrower->getId()) }}">Remove Volunteer Mentor</a>
         </td>
     </tr>
