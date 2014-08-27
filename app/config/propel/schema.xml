@@ -160,6 +160,9 @@
         <foreign-key foreignTable="loans">
             <reference local="loan_id" foreign="id"/>
         </foreign-key>
+        <foreign-key foreignTable="borrowers">
+            <reference local="borrower_id" foreign="id"/>
+        </foreign-key>
         <behavior name="timestampable"/>
     </table>
 
