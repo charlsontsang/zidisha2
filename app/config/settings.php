@@ -137,6 +137,11 @@ return [
             'default' => '15',
             'rule' => 'numeric'
         ],
+        'loan.maxExtraPeriodRescheduledLoan' => [
+            'label' => 'Maximum repayment period for rescheduled loans (from the date of rescheduling).',
+            'default' => '60',
+            'rule' => 'numeric'
+        ],
     ],
     'Borrower' => [
         'invite.maxInviteesWithoutPayment' => [
