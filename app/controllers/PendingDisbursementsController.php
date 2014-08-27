@@ -77,23 +77,23 @@ class PendingDisbursementsController extends BaseController
             ->filterByBorrowerCountry(true)
             ->find();
 
-        $_loanNotes = AdminNoteQuery::create()
+        $_adminNotes = AdminNoteQuery::create()
             ->filterByLoanId($loans->toKeyValue('id', 'id'))
             ->joinWith('User')
             ->find();
         
-        $loanNotes = [];
-        foreach ($_loanNotes as $loanNote) {
-            if (!isset($loanNotes[$loanNote->getLoanId()])) {
-                $loanNotes[$loanNote->getLoanId()] = [];
+        $adminNotes = [];
+        foreach ($_adminNotes as $loanNote) {
+            if (!isset($adminNotes[$loanNote->getLoanId()])) {
+                $adminNotes[$loanNote->getLoanId()] = [];
             }
-            $loanNotes[$loanNote->getLoanId()][] = $loanNote;
+            $adminNotes[$loanNote->getLoanId()][] = $loanNote;
         }
 
         return View::make(
             'admin.pending-disbursements.pending-disbursements',
             compact(
-                'loans', 'loanNotes', 'exchangeRate',
+                'loans', 'adminNotes', 'exchangeRate',
                 'currency', 'country', 'countries',
                 'orderBy', 'orderDirection'
             )
