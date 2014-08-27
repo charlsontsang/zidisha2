@@ -154,7 +154,7 @@ class LenderJoinController extends BaseController
             Flash::success('comments.flash.welcome');
         }
 
-        return Redirect::route('lender:dashboard');
+        return Redirect::route('lender:welcome');
     }
 
     public function getGoogleJoin()
