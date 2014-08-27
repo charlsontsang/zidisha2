@@ -141,7 +141,7 @@ Route::group(
         );
 
         Route::group(
-            array('prefix' => 'lender', 'before' => 'auth|hasRole:admin,lender'),
+            array('prefix' => 'lender', 'before' => 'auth|hasRole:admin:lender'),
             function () {
                 Route::get(
                     'history',
