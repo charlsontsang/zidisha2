@@ -34,7 +34,7 @@ Volunteer Mentors
     <tbody>
     @foreach($paginator as $borrower)
     <tr>
-        <td><a href="{{ route('lender:public-profile', $borrower->getUser()->getUserName()) }}">{{
+        <td><a href="{{ route('admin:borrower', $borrower->getId()) }}">{{
                 $borrower->getName() }}</a>
             <p>{{ $borrower->getProfile()->getPhoneNumber() }}</p>
             <p>{{ $borrower->getUser()->getEmail() }}</p>
@@ -54,7 +54,7 @@ Volunteer Mentors
                     @foreach($assignedMembers as $assignedMember)
                         @if($assignedMember->getVolunteerMentorId() == $borrower->getId())
                             <tr>
-                                <td><a href="{{ route('lender:public-profile', $assignedMember->getUser()->getUserName()) }}">{{
+                                <td><a href="{{ route('admin:borrower', $assignedMember->getId()) }}">{{
                                                     $assignedMember->getName() }}</a></td>
                                 <td></td>
                                 <td></td>
