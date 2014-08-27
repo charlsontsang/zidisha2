@@ -89,7 +89,7 @@ class LoanQuery extends BaseLoanQuery
             ->findOne();
     }
 
-    public function getLastRepaidLoan(Borrower $borrower)
+    public function getLastEndedLoan(Borrower $borrower)
     {
         return $this
             ->filterByBorrower($borrower)
