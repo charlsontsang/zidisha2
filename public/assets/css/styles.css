@@ -8606,13 +8606,51 @@ body {
 .filter-bar .input-group {
   width: 100%;
 }
-.results-desc:after {
-  content: '\A';
-  white-space: pre;
+@media (min-width: 992px) {
+  #toggle-moreProjects.collapse {
+    display: block !important;
+  }
+}
+@media (max-width: 767px) {
+  .page-section-filter {
+    margin-bottom: -25px;
+  }
+}
+#results-info {
+  background-color: #f9f9f9;
+  margin-top: 5px;
+  margin-bottom: -10px;
 }
 @media (min-width: 992px) {
-  .results-desc:after {
-    content: "";
+  #results-info {
+    background-color: #fff;
+    margin: 0;
+  }
+}
+#mobile-results-desc {
+  background-color: #f9f9f9;
+  padding: 20px;
+  margin-bottom: -25px;
+}
+@media (min-width: 992px) {
+  #mobile-results-desc {
+    display: none;
+  }
+}
+#mobile-results-desc p {
+  margin-bottom: 5px;
+}
+#mobile-results-desc p a {
+  float: right;
+}
+#results-desc,
+#view-all {
+  display: none;
+}
+@media (min-width: 992px) {
+  #results-desc,
+  #view-all {
+    display: inline;
     margin-right: 50px;
   }
 }

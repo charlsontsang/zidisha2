@@ -5,7 +5,20 @@ Lend
 @stop
 
 @section('content-top')
-<div class="page-section page-section-filter">
+<div id="mobile-results-desc">
+    <p>
+        {{ $countResults }} {{ $selectedLoanCategory ? $selectedLoanCategory->getName() : '' }} Projects
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="#" id="more-projects" data-toggle="collapse" data-target="#toggle-moreProjects" data-toggle-text="Hide Filter">
+            @if($countAll > $countResults)
+                View More
+            @else
+                Filter Results
+            @endif
+        </a>
+    </p>
+</div>
+<div id="toggle-moreProjects" class="page-section page-section-filter collapse">
     <div class="container">
         <div class="row">
             <div class="col-md-10">
@@ -43,16 +56,16 @@ Lend
 @stop
 
 @section('content')
-<div class="row">
+<div id="results-info" class="row">
     <div class="col-sm-12">
         <p>
-            <span class="results-desc">
+            <span id="results-desc">
                 We found 
                 <strong>{{ $countResults }} {{ $selectedLoanCategory ? $selectedLoanCategory->getName() : '' }} projects</strong>@if($selectedCountry) in {{ $selectedCountry->getName(); }}@endif.
             </span>
     
             @if($countAll > $countResults)
-                <span class="results-desc">
+                <span id="view-all">
                     <a href="{{ route('lend:index', ['category' => 'all'] + ['country' => 'everywhere'] + $routeParams) }}">View all {{ $countAll }} projects</a>
                 </span>
             @endif
@@ -97,9 +110,9 @@ Lend
     </div>
 </div>
 
-<div class="row" style="padding:5px;">
+<div class="row" style="padding-right: 5px; padding-left: 5px;">
     @foreach($paginator as $loan)
-    <div class="col-sm-6 col-md-4" style="padding:10px;">
+    <div class="col-sm-6 col-md-4" style="padding: 10px;">
         <div class="result">
             <div class="row">
                 <div class="col-xs-12">
@@ -225,8 +238,13 @@ Lend
 @section('script-footer')
 <script type="text/javascript">
     $(document).ready(function () {
+        $('.moreProjects').click(function () {
+            $("#toggle-moreProjects").collapse('toggle');
+            return false;
+        });
         $('.aboutCategory').click(function () {
             $("#toggle-aboutCategory").collapse('toggle');
+            return false;
         });
     });
 </script>
