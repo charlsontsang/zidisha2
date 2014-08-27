@@ -94,6 +94,11 @@ class LenderController extends BaseController
         );
     }
 
+    public function getWelcome()
+    {        
+        return View::make('lender.welcome');        
+    }
+    
     public function getEditProfile()
     {
         $lender = \Auth::user()->getLender();
