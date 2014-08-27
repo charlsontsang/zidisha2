@@ -21,6 +21,7 @@ use Zidisha\Balance\WithdrawalRequestQuery;
 use Zidisha\Borrower\Borrower;
 use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Borrower\BorrowerService;
+use Zidisha\Borrower\VolunteerMentorQuery;
 use Zidisha\Comment\BorrowerCommentQuery;
 use Zidisha\Comment\CommentQuery;
 use Zidisha\Borrower\Form\AdminEditForm;
@@ -370,7 +371,37 @@ class AdminController extends BaseController
             ->orderById()
             ->paginate($page, 3);
 
-        return View::make('admin.volunteer-mentors', compact('paginator', 'form'));
+        $_assignedMembers = BorrowerQuery::create()
+            ->filterByVolunteerMentorId($paginator->toKeyValue('id', 'id'))
+            ->find();
+
+        $menteeCounts = VolunteerMentorQuery::create()
+            ->filterByBorrowerId($paginator->toKeyValue('id', 'id'))
+            ->find()
+            ->toKeyValue('borrowerId', 'menteeCount');
+
+        $assignedMembers = [];
+        foreach ($_assignedMembers as $assignedMember) {
+            if (!isset($_assignedMembers[$assignedMember->getId()])) {
+                $assignedMembers[$assignedMember->getId()] = [];
+            }
+            $assignedMembers[$assignedMember->getId()][] = $assignedMember;
+        }
+
+//        $_loanNotes = AdminNoteQuery::create()
+//            ->filterByLoanId($loans->toKeyValue('id', 'id'))
+//            ->joinWith('User')
+//            ->find();
+//
+//        $loanNotes = [];
+//        foreach ($_loanNotes as $loanNote) {
+//            if (!isset($loanNotes[$loanNote->getLoanId()])) {
+//                $loanNotes[$loanNote->getLoanId()] = [];
+//            }
+//            $loanNotes[$loanNote->getLoanId()][] = $loanNote;
+//        }
+
+        return View::make('admin.volunteer-mentors', compact('paginator', 'form', 'menteeCounts', 'assignedMembers'));
     }
 
     public function getAddVolunteerMentors()

@@ -40,7 +40,7 @@ Volunteer Mentors
             <p>{{ $borrower->getUser()->getEmail() }}</p>
         </td>
         <td>{{ $borrower->getProfile()->getCity() }}</td>
-        <td>{{ $borrower->getUser()->getJoinedAt()->format('M j, Y') }}</td>
+        <td>{{ $menteeCounts[$borrower->getId()] }}</td>
         <td>
             <a href="{{ route('admin:remove:volunteer-mentor', $borrower->getId()) }}">Remove Volunteer Mentor</a>
         </td>
