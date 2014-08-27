@@ -30,6 +30,8 @@ use Zidisha\Lender\LendingGroupMember;
 use Zidisha\Lender\LendingGroupQuery;
 use Zidisha\Lender\Invite;
 use Zidisha\Lender\LenderQuery;
+use Zidisha\Lender\Preferences;
+use Zidisha\Lender\Profile;
 use Zidisha\Loan\Bid;
 use Zidisha\Loan\Calculator\InstallmentCalculator;
 use Zidisha\Loan\Category;
@@ -47,6 +49,7 @@ use Zidisha\Repayment\InstallmentQuery;
 use Zidisha\Repayment\RepaymentService;
 use Zidisha\Currency\CurrencyService;
 use Zidisha\Loan\Stage;
+use Zidisha\User\User;
 use Zidisha\Vendor\PropelDB;
 
 class GenerateModelData extends Command
@@ -184,6 +187,46 @@ class GenerateModelData extends Command
             return $this->generateCountries();
         }
 
+        if ($model == "newLender") {
+            $data = [
+                'googleId'      => null,
+                'googlePicture' => null,
+                'firstName'     => null,
+                'lastName'      => null,
+                'aboutMe'       => null,
+                'facebookId'    => null,
+                'password'      => null,
+                'joinedAt'      => new DateTime(),
+            ];
+
+            $user = new User();
+            $user
+                ->setJoinedAt($data['joinedAt'])
+                ->setPassword('1234')
+                ->setEmail('lenderfake@fake.com')
+                ->setUsername('fakelender')
+                ->setRole('lender')
+                ->setGoogleId($data['googleId'])
+                ->setFacebookId($data['facebookId'])
+                ->setGooglePicture($data['googlePicture']);
+
+            $lender = new Lender();
+            $lender
+                ->setUser($user)
+                ->setCountryId(1)
+                ->setFirstName('lender first name')
+                ->setLastName('lender last name');
+
+            $profile = new Profile();
+            $profile->setAboutMe('about me');
+            $lender->setProfile($profile);
+
+            $preferences = new Preferences();
+            $lender->setPreferences($preferences);
+
+            $lender->save();
+    }
+        
         if ($model == "ExchangeRate") {
             return $this->generateExchangeRates();
         }
