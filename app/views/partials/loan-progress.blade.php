@@ -1,4 +1,4 @@
-<div>
+<div class="progress-group">
     <div class="progress">
         <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="{{ $loan->getRaisedPercentage() }}" aria-valuemin="0"
              aria-valuemax="100"

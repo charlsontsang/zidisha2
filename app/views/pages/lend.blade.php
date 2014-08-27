@@ -106,9 +106,9 @@ Lend
             <div class="row">
                 <div class="col-xs-12">
                     <a class="pull-left profile-image" href="{{ route('loan:index', $loan->getId()) }}"
-                        style="background-image:url(/assets/images/test-photos/esther.JPG)" width="100%" height="200px">
+                        style="background-image:url(/assets/images/test-photos/esther.JPG)">
                 <!--
-                        <img src="{{ $loan->getBorrower()->getUser()->getProfilePictureUrl() }}" width="100%">
+                        <img src="{{ $loan->getBorrower()->getUser()->getProfilePictureUrl() }}">
                     -->
                     </a>
                 </div>
@@ -125,11 +125,15 @@ Lend
                     @endif
                     
                     <div class="lend-title">
-                        <h2 class="alpha" style="height:2em;">
+                        <h2 class="alpha">
                             <a href="{{ route('loan:index', $loan->getId()) }}">
                                 {{ $loan->getSummary() }}
                             </a>
                         </h2>
+                        <p id="country" class="text-light">
+                            {{ $loan->getBorrower()->getProfile()->getCity() }},
+                            {{ $loan->getBorrower()->getCountry()->getName() }}
+                        </p>
                     </div>
                     
                     <p class="text-light">
