@@ -96,6 +96,7 @@
         <column name="authorized_amount" type="DECIMAL" size="10" scale="2" phpType="string" required="false"/>
         <column name="disbursed_at" type="TIMESTAMP" required="false"/>
         <column name="disbursed_amount" type="DECIMAL" size="10" scale="2" phpType="string"/>
+        <column name="forgiven_amount" type="DECIMAL" size="10" scale="2" phpType="string"/>
         <column name="registration_fee" type="DECIMAL" size="10" scale="2" defaultValue="0.00" phpType="string"/>
         <column name="raised_usd_amount" type="DECIMAL" size="10" scale="2" phpType="string" default="0"/>
         <column name="raised_percentage" type="INTEGER" size="3" required="false" default="0"/>

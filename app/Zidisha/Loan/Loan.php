@@ -169,6 +169,23 @@ class Loan extends BaseLoan implements CommentReceiverInterface
     /**
      * @return Money
      */
+    public function getForgivenAmount()
+    {
+        return Money::create(parent::getForgivenAmount(), $this->getCurrencyCode());
+    }
+
+    /**
+     * @param Money $money
+     * @return $this|Loan
+     */
+    public function setForgivenAmount($money)
+    {
+        return parent::setForgivenAmount($money->getAmount());
+    }
+
+    /**
+     * @return Money
+     */
     public function getTotalAmount()
     {
         return Money::create(parent::getTotalAmount(), $this->getCurrencyCode());
@@ -181,6 +198,11 @@ class Loan extends BaseLoan implements CommentReceiverInterface
     public function setTotalAmount($money)
     {
         return parent::setTotalAmount($money->getAmount());
+    }
+
+    public function getPrincipalRatio()
+    {
+        return $this->getDisbursedAmount()->ratio($this->getTotalAmount()->add($this->getForgivenAmount()));
     }
 
     /**
@@ -327,5 +349,23 @@ class Loan extends BaseLoan implements CommentReceiverInterface
     public function isActivated()
     {
         return in_array($this->getStatus(), [Loan::ACTIVE, Loan::REPAID, Loan::DEFAULTED]);
+    }
+
+    public function getRemainingDueAmount()
+    {
+        return $this->getTotalAmount()
+            ->subtract($this->getPaidAmount())
+            ->max(Money::create(0, $this->getCurrencyCode()));
+    }
+
+    public function getTotalInterestRate()
+    {
+        return bcadd($this->getServiceFeeRate(), $this->getLenderInterestRate());
+    }
+
+    public function getTotalInterest()
+    {
+        return $this->getTotalAmount()->add($this->getForgivenAmount())
+            ->subtract($this->getDisbursedAmount());
     }
 }
