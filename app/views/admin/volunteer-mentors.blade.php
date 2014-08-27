@@ -44,6 +44,7 @@ Volunteer Mentors
     {{ BootstrapForm::close() }}
 </div>
 
+@if($paginator)
 <table class="table table-striped">
     <thead>
     <tr>
@@ -81,8 +82,14 @@ Volunteer Mentors
                             <tr>
                                 <td><a href="{{ route('admin:borrower', $assignedMember->getId()) }}">{{
                                                     $assignedMember->getName() }}</a></td>
-                                <td></td>
-                                <td></td>
+                                <td>{{ $borrowerService->printLoanInArrears($assignedMember) }}</td>
+                                <td>
+                                    @if($borrowerService->hasVMComment($borrower, $assignedMember))
+                                        <a href="{{ route('borrower:public-profile', $assignedMember->getUser()->getUsername()) }}">View Comment</a>
+                                    @else
+                                        No Comment
+                                    @endif
+                                </td>
                             </tr>
                             <?php unset($assignedMember) ?>
                         @endif
@@ -112,5 +119,6 @@ Volunteer Mentors
     @endforeach
     </tbody>
 </table>
+@endif
 {{ BootstrapHtml::paginator($paginator)->appends(['country' => Request::query('country'), 'search' => Request::query('search')])->links() }}
 @stop

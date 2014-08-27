@@ -21,6 +21,7 @@ class RepaymentSchedule implements \IteratorAggregate
     private $paidOnTimeInstallmentCount;
     private $todayInstallmentCount;
     private $loanPaymentStatus;
+    private $overDueInstallmentCount;
     private $loan;
 
     public function __construct(Loan $loan, $installments)
@@ -48,6 +49,7 @@ class RepaymentSchedule implements \IteratorAggregate
         $repaymentThresholdAmount = Money::create(\Config::get('constants.repaymentAmountThreshold'), 'USD');
         $isActiveLoan = $this->loan->getStatus() == Loan::ACTIVE;
         $paidInstallmentCount = 0;
+        $overDueInstallmentCount = 0;
         $missedInstallmentCount = 0;
         $paidOnTimeInstallmentCount = 0;
         $todayInstallmentCount = 0;
@@ -121,6 +123,11 @@ class RepaymentSchedule implements \IteratorAggregate
             } elseif ($isInstallmentPaidEarly) {
                 $paymentStatus = 'early';
             }
+            $currentTime = Carbon::now();
+
+            if(!$repaymentScheduleInstallment->getPayments() && $dueInstallmentDate->isPast() &&$dueInstallmentAmount->isPositive()) {
+                $overDueInstallmentCount++;
+            }
         }
 
         $this->loanPaymentStatus = $paymentStatus;
@@ -130,6 +137,7 @@ class RepaymentSchedule implements \IteratorAggregate
         $this->paidOnTimeInstallmentCount = $paidOnTimeInstallmentCount;
         $this->totalAmountDue = $totalAmountDue;
         $this->totalAmountPaid = $totalAmountPaid;
+        $this->overDueInstallmentCount = $overDueInstallmentCount;
     }
 
     public function getPaidInstallmentCount()
@@ -243,4 +251,8 @@ class RepaymentSchedule implements \IteratorAggregate
         return count($this->installments);
     }
 
+    public function getOverDueInstallmentCount()
+    {
+        return $this->overDueInstallmentCount;
+    }
 }

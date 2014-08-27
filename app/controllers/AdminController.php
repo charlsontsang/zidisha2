@@ -364,6 +364,7 @@ class AdminController extends BaseController
         $page = Request::query('page') ? : 1;
         $orderBy = Input::get('orderBy', 'numberOfAssignedMembers');
         $orderDirection = Input::get('orderDirection', 'asc');
+        $borrowerService = $this->borrowerService;
 
         $query = BorrowerQuery::create()
             ->useUserQuery()
@@ -403,7 +404,7 @@ class AdminController extends BaseController
             $adminNotes[$loanNote->getLoanId()][] = $loanNote;
         }
 
-        return View::make('admin.volunteer-mentors', compact('paginator', 'form', 'menteeCounts', 'assignedMembers', 'adminNotes', 'orderBy', 'orderDirection'));
+        return View::make('admin.volunteer-mentors', compact('paginator', 'form', 'menteeCounts', 'assignedMembers', 'adminNotes', 'orderBy', 'orderDirection', 'borrowerService'));
     }
 
     public function getAddVolunteerMentors()
