@@ -194,9 +194,14 @@ class LenderController extends BaseController
 
     public function getTransactionHistory()
     {
+        if (Auth::check() && Auth::user()->isAdmin() && Request::query('lenderId')) {
+            $userId = Request::query('lenderId');
+        } else {
+            $userId = Auth::getUser()->getId();
+        }
 
         $currentBalance = TransactionQuery::create()
-            ->getCurrentBalance(Auth::getUser()->getId());
+            ->getCurrentBalance($userId);
 
         $page = Request::query('page') ? : 1;
 
@@ -207,7 +212,7 @@ class LenderController extends BaseController
                           FROM transactions WHERE user_id = ?
                           ORDER BY transaction_date DESC, transactions.id DESC
                           OFFSET ?)',
-            array(Auth::getUser()->getId(), ($page - 1) * 50)
+            array($userId, ($page - 1) * 50)
         );
 
         $currentBalancePage = Money::create($currentBalancePageObj[0]->total);
@@ -215,7 +220,7 @@ class LenderController extends BaseController
         $paginator = $this->transactionQuery->create()
             ->orderByTransactionDate('desc')
             ->orderById('desc')
-            ->filterByUserId(Auth::getUser()->getId())
+            ->filterByUserId($userId)
             ->paginate($page, 50);
 
         return View::make('lender.history', compact('paginator', 'currentBalance', 'currentBalancePage'));

@@ -141,6 +141,16 @@ Route::group(
         );
 
         Route::group(
+            array('prefix' => 'lender', 'before' => 'auth|hasRole:admin,lender'),
+            function () {
+                Route::get(
+                    'history',
+                    array('uses' => 'LenderController@getTransactionHistory', 'as' => 'lender:history')
+                );
+            }
+        );
+        
+        Route::group(
             array('prefix' => 'lender', 'before' => 'auth|hasRole:lender'),
             function () {
 
@@ -158,10 +168,7 @@ Route::group(
                 );
                 Route::get('dashboard', array('uses' => 'LenderController@getDashboard', 'as' => 'lender:dashboard'));
                 Route::get('welcome', array('uses' => 'LenderController@getWelcome', 'as' => 'lender:welcome'));
-                Route::get(
-                    'history',
-                    array('uses' => 'LenderController@getTransactionHistory', 'as' => 'lender:history')
-                );
+                
                 Route::get('funds', array('uses' => 'LenderController@getFunds', 'as' => 'lender:funds'));
                 Route::post(
                     'funds',
