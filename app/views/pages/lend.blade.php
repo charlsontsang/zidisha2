@@ -57,39 +57,43 @@ Lend
                 </span>
             @endif
 
-            @if($selectedLoanCategory->getHowDescription())
-                <span>
-                <a href="#" id="about-category" data-toggle="collapse" data-target="#toggle-aboutCategory" data-toggle-text="Hide description">
-                    <i class="fa fa-info-circle" style="color: inherit;"></i> Learn more about {{ $selectedLoanCategory->getName() }} projects
-                </a>
-                </span>
+            @if($selectedLoanCategory)
+                @if($selectedLoanCategory->getHowDescription())
+                    <span>
+                    <a href="#" id="about-category" data-toggle="collapse" data-target="#toggle-aboutCategory" data-toggle-text="Hide description">
+                        <i class="fa fa-info-circle" style="color: inherit;"></i> Learn more about {{ $selectedLoanCategory->getName() }} projects
+                    </a>
+                    </span>
+                @endif
             @endif
         </p>
 
         <hr/>
 
-        @if($selectedLoanCategory->getHowDescription())
+        @if($selectedLoanCategory)
+            @if($selectedLoanCategory->getHowDescription())
 
-        <div id="toggle-aboutCategory" class="collapse">            
-        
-            <div class="page-header">
-                <h3>{{ $selectedLoanCategory->getName(); }}</h3>
-            </div>
-
-            <div class="row">
-
-                <div class="col-md-6">
-                    <p><strong>How it works: </strong> {{ $selectedLoanCategory->getHowDescription() }} </p>
+            <div id="toggle-aboutCategory" class="collapse">            
+            
+                <div class="page-header">
+                    <h3>{{ $selectedLoanCategory->getName(); }}</h3>
                 </div>
-                <div class="col-md-6">
-                    <p><strong>Why it's important: </strong> {{ $selectedLoanCategory->getWhyDescription() }} </p>
 
-                    <p><strong>What your loan can do: </strong> {{ $selectedLoanCategory->getWhatDescription() }}
-                    </p>
+                <div class="row">
+
+                    <div class="col-md-6">
+                        <p><strong>How it works: </strong> {{ $selectedLoanCategory->getHowDescription() }} </p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Why it's important: </strong> {{ $selectedLoanCategory->getWhyDescription() }} </p>
+
+                        <p><strong>What your loan can do: </strong> {{ $selectedLoanCategory->getWhatDescription() }}
+                        </p>
+                    </div>
                 </div>
+                <hr/>
             </div>
-            <hr/>
-        </div>
+            @endif
         @endif
 
     </div>
