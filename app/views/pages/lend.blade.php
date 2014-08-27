@@ -68,8 +68,6 @@ Lend
             @endif
         </p>
 
-        <hr/>
-
         @if($selectedLoanCategory)
             @if($selectedLoanCategory->getHowDescription())
 
