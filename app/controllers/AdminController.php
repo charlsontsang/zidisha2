@@ -26,6 +26,7 @@ use Zidisha\Borrower\Form\AdminEditForm;
 use Zidisha\Country\CountryQuery;
 use Zidisha\Currency\CurrencyService;
 use Zidisha\Lender\GiftCardQuery;
+use Zidisha\Lender\InviteQuery;
 use Zidisha\Lender\LenderQuery;
 use Zidisha\Loan\Form\AdminCategoryForm;
 use Zidisha\Loan\LoanQuery;
@@ -271,12 +272,24 @@ class AdminController extends BaseController
         if(!$lender) {
             App::abort(404, 'Lender with this ID not found.');
         }
-
+        
         $user = $lender->getUser();
-        $lender->delete();
-        $user->delete();
+        
+        $userTransactionCount = TransactionQuery::create()
+            ->filterByUser($user)
+            ->count();
+        
+        $lenderInviteCount = InviteQuery::create()
+            ->filterByLender($lender)
+            ->count();
 
-        \Flash::success('Lender Deleted');
+        if ($userTransactionCount > 0 || $lenderInviteCount > 0) {
+            \Flash::error('can\'t delete Lender has invite or has done transactions');
+        }else {
+            $user->delete();
+            \Flash::success('Lender Deleted');
+        }
+        
         return Redirect::back();
     }
 
