@@ -71,7 +71,6 @@
         'sr-only' => \Lang::get('lender.join.form.country-id'),
     ]) }}
 
-    {{ BootstrapForm::checkbox('termsOfUse') }}
     I agree to Zidisha's <a target="_blank" href="#">Terms of Use</a>
     and <a target="_blank" href="http://www.iubenda.com/privacy-policy/629677/legal">Privacy Policy</a>.
 
