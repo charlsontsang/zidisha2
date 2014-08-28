@@ -253,12 +253,12 @@ class LenderMailer
     public function sendNewLoanNotificationMail(Loan $loan, Lender $lender)
     {
         $data = [
-            'borrowerName' => $loan->getBorrower()->getName(),
-            'loanUrl'      => route('loan:index', ['loanId' => $loan->getId()]),
-            'repayDate'    => $loan->getInstallmentDay(), //TODO: confirm
+            'parameters' => [
+                'borrowerName' => $loan->getBorrower()->getName(),
+                'loanUrl'      => route('loan:index', ['loanId' => $loan->getId()]),
+                'repayDate'    => $loan->getInstallmentDay(), //TODO: confirm  
+            ],
         ];
-
-        //TODO: send follower mail
         
         $subject = \Lang::get('lender.mails.new-loan-notification.subject', ['borrowerName' => $loan->getBorrower()->getName()]);
         
@@ -266,9 +266,30 @@ class LenderMailer
             'emails.lender.new-loan-notification',
             $data + [
                 'to'         => $lender->getUser()->getEmail(),
+                'label'      => 'lender.mails.new-loan-notification.lender-body',
+                'subject'    => $subject
+            ]
+        );
+    }
+
+    public function sendFollowerNewLoanNotificationMail(Loan $loan, Lender $lender)
+    {
+        $data = [
+            'parameters' => [
+                'borrowerName' => $loan->getBorrower()->getName(),
+                'loanUrl'      => route('loan:index', ['loanId' => $loan->getId()]),
+            ]
+        ];
+
+        $subject = \Lang::get('lender.mails.follower-new-loan-notification.subject', ['borrowerName' => $loan->getBorrower()->getName()]);
+
+        $this->mailer->send(
+            'emails.lender.new-loan-notification.follower-body',
+            $data + [
+                'to'         => $lender->getUser()->getEmail(),
                 'label'      => 'lenders.mails.new-loan-notification.body',
                 'subject'    => $subject
             ]
-        );                                
+        );
     }
 }
