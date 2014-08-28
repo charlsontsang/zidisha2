@@ -60,42 +60,66 @@ class DatabaseMigration extends Command {
             for ($offset; $offset < $count; $offset = ($offset + $limit)) {
                 $users = $this->con->table('users')
                     ->join('lenders', 'users.userid', '=', 'lenders.userid')
+                    ->join('borrowers', 'users.userid', '=', 'borrowers.userid')
                     ->where($offset)->take($limit)->get();
 
                 $insertArray = [];
 
                 foreach ($users as $user) {
                     $newUser = [
-                        'id' => $user['users.userid'],
-                        'username' => $user['users.username'],
-                        'email' => $user['lenders.Email'],
-                        'password' => $user['users.password'],
+                        'id'                 => $user['users.userid'],
+                        'username'           => $user['users.username'],
+                        'email'              => $user['lenders.Email'] ? $user['lenders.Email'] : $user['borrowers.Email'],
+                        'password'           => $user['users.password'],
                         'profile_picture_id' => 'TODO',
-                        'facebook_id' => $user['users.facebook_id'],
-                        'google_id' => null, // since google login is now added
-                        'google_picture' => null,
-                        'remember_token' =>  'TODO',
-                        'role' => null, //TODO , once i know how it's in old db
-                        'sub_role' => null, //TODO , once i know how it's in old db
-                        'joined_at' => $user['users.regdate'],
-                        'last_login_at' => $user['users.last_login']
+                        'facebook_id'        => $user['users.facebook_id'],
+                        'google_id'          => null, // since google login is now added
+                        'google_picture'     => null,
+                        'remember_token'     => 'TODO',
+                        'role'               => null, //TODO , once i know how it's in old db
+                        'sub_role'           => null, //TODO , once i know how it's in old db
+                        'joined_at'          => $user['users.regdate'],
+                        'last_login_at'      => $user['users.last_login'],
+                        'active'             => $user['lenders.Active'] ? $user['lenders.Active'] : $user['borrowers.Active']
                     ];
-
-                        //TODO
-//                      `salt`              VARCHAR(100)         DEFAULT NULL,
-//                      `userlevel`         INT(1)      NOT NULL DEFAULT '0',
-//                      `tnc`               TINYINT(1)  NOT NULL DEFAULT '0',
-//                      `lang`              VARCHAR(10)          DEFAULT 'en',
-//                      `emailVerified`     INT(1)      NOT NULL DEFAULT '0',
-//                      `accountExpiedMail` TINYINT(4)  NOT NULL DEFAULT '0',
-//                      `sublevel`          INT(11)              DEFAULT NULL,
-//                      `fb_post`           VARCHAR(100)         DEFAULT NULL,
 
                     array_push($insertArray, $newUser);
                 }
                 DB::table('users')->insert($insertArray);
             }
         }
+
+        if ($table == 'lenders') {
+            $this->line('Migrate lenders table');
+
+            $count = $this->con->table('lenders')->count();
+            $offset = 0;
+            $limit = 500;
+            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+
+                $lenders = $this->con->table('lenders')
+                    ->join('users', 'lenders.userid', '=', 'users.userid')
+                    ->join('countries', 'lenders.Country', '=', 'countries.code')
+                    ->where($offset)->take($limit)->get();
+                $insertArray = [];
+
+                foreach ($lenders as $lender) {
+                    $newLender = [
+                        'id'                  => $lender['users.userid'],
+                        'country_id'          => $lender['countries.id'],
+                        'first_name'          => $lender['lenders.FirstName'],
+                        'last_name'           => $lender['lenders.LastName'],
+                        'admin_donate'        => $lender['lenders.admin_donate'], //TODO check that only boolean values are there in old data
+                        'active'              => $lender['lenders.Active'],
+                        'last_check_in_email' => $lender['lenders.last_check_in_email']
+                    ];
+
+                    array_push($insertArray, $newLender);
+                }
+                DB::table('users')->insert($insertArray);
+            }
+        }
+
 	}
 
 	/**
