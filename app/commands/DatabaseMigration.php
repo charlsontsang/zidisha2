@@ -49,6 +49,7 @@ class DatabaseMigration extends Command {
 
             $this->call('migrateDB', array('table' => 'users'));
             $this->call('migrateDB', array('table' => 'lenders'));
+            $this->call('migrateDB', array('table' => 'borrowers'));
         }
 
         if ($table == 'users') {
@@ -134,6 +135,40 @@ class DatabaseMigration extends Command {
                 DB::table('lenders')->insert($insertArray);
                 DB::table('lender_profiles')->insert($profileArray);
                 DB::table('lender_preferences')->insert($preferenceArray);
+            }
+        }
+
+        if ($table == 'borrowers') {
+            $this->line('Migrate borrowers table');
+
+            $count = $this->con->table('borrowers')->count();
+            $offset = 0;
+            $limit = 500;
+            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+                $borrowers = $this->con->table('borrowers')
+                    ->join('users', 'borrowers.userid', '=', 'users.userid')
+                    ->join('countries', 'borrowers.Country', '=', 'countries.code')
+                    ->where($offset)->take($limit)->get();
+                $insertArray = [];
+
+                foreach ($borrowers as $borrower) {
+                    $newBorrower = [
+                        'id'=> $borrower['users.userid'],
+                        'country_id'=> $borrower['countries.id'],
+                        'first_name' => $borrower['borrowers.FirstName'],
+                        'last_name' => $borrower['borrowers.LastName'],
+                        'active_loan_id' => $borrower['borrowers.activeLoanID'],
+                        'loan_status'=> $borrower['borrowers.ActiveLoan'],
+                        'active' => $borrower['borrowers.Active'],
+                        'volunteer_mentor_id' => $borrower['borrowers.Assigned_to'],
+                        'referrer_id' => $borrower['borrowers.refer_member_name'], //TODO cross check
+                        'verified' => 'TODO', // TODO
+                        'activation_status' => null, // TODO
+                    ];
+
+                    array_push($insertArray, $newBorrower);
+                }
+                DB::table('borrowers')->insert($insertArray);
             }
         }
 
