@@ -83,6 +83,6 @@ class MailTesterController extends BaseController
             }
         }
 
-        return Redirect::route('admin:mail:test-mails');
+        return Redirect::route('admin:mail:test-mails')->withInput();
     }
 }
