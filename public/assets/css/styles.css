@@ -8228,6 +8228,11 @@ body {
     display: inline-block;
   }
 }
+@media (max-width: 767px) {
+  li.dropdown {
+    display: block;
+  }
+}
 .navbar-default .navbar-text {
   color: #777777;
 }
@@ -8636,7 +8641,7 @@ body {
 }
 #mobile-results-desc {
   background-color: #f9f9f9;
-  padding: 20px;
+  padding: 20px 15px;
   margin-bottom: -20px;
 }
 @media (min-width: 992px) {
