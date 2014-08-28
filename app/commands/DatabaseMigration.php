@@ -53,6 +53,7 @@ class DatabaseMigration extends Command {
             $this->call('migrateDB', array('table' => 'loan_categories'));
             $this->call('migrateDB', array('table' => 'countries'));
             $this->call('migrateDB', array('table' => 'loans'));
+            $this->call('migrateDB', array('table' => 'loan_bids'));
         }
 
         if ($table == 'users') {
@@ -316,7 +317,7 @@ class DatabaseMigration extends Command {
         if ($table == 'loans') {
             $this->line('Migrate loans table');
 
-            $count = $this->con->table('borrowers')->count();
+            $count = $this->con->table('loanapplic')->count();
             $offset = 0;
             $limit = 500;
             for ($offset; $offset < $count; $offset = ($offset + $limit)) {
@@ -371,8 +372,41 @@ class DatabaseMigration extends Command {
                 }
                 DB::table('loans')->insert($loanArray);
             }
+        }
 
+        if ($table == 'loan_bids') {
+            $this->line('Migrate loan_bids table');
 
+            $count = $this->con->table('loanbids')->count();
+            $offset = 0;
+            $limit = 500;
+
+            for ($offset; $offset < $limit; $offset = ($offset + $limit)) {
+                $bids = $this->con->table('loanbids')
+                    ->join('loanapplic', 'loanbids.loanid', '=', 'loanapplic.loanid')
+                    ->get();
+                $bidArray = [];
+
+                foreach ($bids as $bid) {
+                    $newBid = [
+                        'id'                      => $bid['loanbids.bidid'],
+                        'loan_id'                 => $bid['loanbids.loanid'],
+                        'lender_id'               => $bid['loanbids.lenderid'],
+                        'borrower_id'             => $bid['loanapplic.borrowerid'],
+                        'bid_amount'              => $bid['loanbids.bidamount'],
+                        'interest_rate'           => '', //TODO
+                        'active'                  => $bid['loanbids.active'],
+                        'accepted_amount'         => $bid['loanbids.givenamount'],
+                        'bid_at'                  => $bid['loanbids.biddate'],
+                        'is_lender_invite_credit' => $bid['loanbids.use_lender_invite_credit'],
+                        'is_automated_lending'    => null, //TODO
+                        'updated_at'              => $bid['loanbids.modified'] //TODO is necessary?
+                    ];
+
+                    array_push($bidArray, $newBid);
+                }
+                DB::table('loan_bids')->insert($bidArray);
+            }
         }
 
 
