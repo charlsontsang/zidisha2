@@ -260,10 +260,10 @@ class LenderMailer
 
         //TODO: send follower mail
         
-        $subject = \Lang::get('lenders.mails.new-loan-notification.subject', ['borrowerName' => $loan->getBorrower()->getName()]);
+        $subject = \Lang::get('lender.mails.new-loan-notification.subject', ['borrowerName' => $loan->getBorrower()->getName()]);
         
         $this->mailer->send(
-            'emails.lenders.new-loan-notification',
+            'emails.lender.new-loan-notification',
             $data + [
                 'to'         => $lender->getUser()->getEmail(),
                 'label'      => 'lenders.mails.new-loan-notification.body',
