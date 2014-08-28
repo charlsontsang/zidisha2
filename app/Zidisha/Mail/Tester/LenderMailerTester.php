@@ -126,4 +126,29 @@ class LenderMailerTester
             
         $this->lenderMailer->sendAllowLoanForgivenessMail($loan, $bid);
     }
+
+    public function sendNewLoanNotificationMail()
+    {
+        $lenderUser = new User();
+        $lenderUser->setRole('lender');
+        $lenderUser->setEmail('lender@test.com');
+
+        $lender = new Lender();
+        $lender->setUser($lenderUser);
+
+        $borrowerUser = new User();
+        $borrowerUser->setRole('borrower');
+        $borrowerUser->setEmail('lender@test.com');
+
+        $borrower = new Borrower();
+        $borrower->setUser($borrowerUser);
+        $borrower->setFirstName('First Name');
+        $borrower->setLastName('Last Name');
+
+        $loan = new Loan();
+        $loan->setBorrower($borrower);
+        $loan->setInstallmentDay('12');
+        
+        $this->lenderMailer->sendNewLoanNotificationMail($loan, $lender);
+    }
 }
