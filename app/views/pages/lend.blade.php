@@ -74,7 +74,7 @@ Lend
                 @if($selectedLoanCategory->getHowDescription())
                     <span>
                     <a href="#" id="about-category" data-toggle="collapse" data-target="#toggle-aboutCategory" data-toggle-text="Hide description">
-                        <i class="fa fa-info-circle" style="color: inherit;"></i> Learn more about {{ $selectedLoanCategory->getName() }} projects
+                        <i class="fa fa-info-circle" style="color: inherit;"></i> Learn more about {{ $selectedLoanCategory->getName() }}
                     </a>
                     </span>
                 @endif

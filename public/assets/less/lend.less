@@ -1,5 +1,5 @@
 #toggle-moreProjects.collapse {
-    @media (min-width: @screen-md-min) {
+    @media (min-width: @screen-sm-min) {
         display: block !important;
     }
 }
@@ -12,7 +12,7 @@
     background-color: #f9f9f9;
     margin-top: 5px;
     margin-bottom: -10px;
-    @media (min-width: @screen-md-min) {
+    @media (min-width: @screen-sm-min) {
         background-color: #fff;
         margin: 0;
     }
@@ -21,7 +21,7 @@
     background-color: #f9f9f9;
     padding: 20px 15px;
     margin-bottom: -20px;
-    @media (min-width: @screen-md-min) {
+    @media (min-width: @screen-sm-min) {
         display: none;
     }
 }
@@ -33,14 +33,18 @@
 }
 #results-desc, #view-all {
     display: none;
-    @media (min-width: @screen-md-min) {
+    @media (min-width: @screen-sm-min) {
         display: inline;
         margin-right: 50px;
     }
 }
 #about-category {
+    display: block;
+    margin-top: 10px;
     @media (min-width: @screen-md-min) {
+        display: inline;
         float: right !important;
+        margin-top: 0;
     }
 }
 .result {
