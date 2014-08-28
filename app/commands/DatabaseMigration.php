@@ -51,6 +51,7 @@ class DatabaseMigration extends Command {
             $this->call('migrateDB', array('table' => 'lenders'));
             $this->call('migrateDB', array('table' => 'borrowers'));
             $this->call('migrateDB', array('table' => 'loan_categories'));
+            $this->call('migrateDB', array('table' => 'countries'));
         }
 
         if ($table == 'users') {
@@ -254,7 +255,7 @@ class DatabaseMigration extends Command {
             }
         }
 
-        if ($table == 'loan_categories'){
+        if ($table == 'loan_categories') {
             $this->line('Migration loan_categories table');
 
             $categories = $this->con->table('loan_categories')->get();
@@ -275,6 +276,42 @@ class DatabaseMigration extends Command {
             }
             DB::table('loan_categories')->insert($categoryArray);
         }
+
+        if ($table == 'countries') {
+            $this->line('Migrate countries table');
+
+            $countries = $this->con->table('currency')
+                ->join('countries', 'currency.country_code.' , '=', 'countries.code')
+                ->join('registration_fee', 'currency.currency_name' , '=', 'registration_fee.currency_name')
+                ->join('repayment_instructions', 'currency.country_code' , '=', 'repayment_instructions.country_code')
+                ->get();
+            $countryArray = [];
+
+            foreach ($countries as $country) {
+                $newCountry = [
+                    'name'                    => $country['countries.name'],
+                    'slug'                    => '', //TODO
+                    'capital'                 => $country['currency.capital'],
+                    'continent_code'          => $country['countries.loc'], //TODO cross check
+                    'country_code'            => $country['countries.code'],
+                    'dialing_code'            => $country['countries.phone'] ? $country['countries.phone'] : '',
+                    'phone_number_length'     => '', //TODO
+                    'currency_code'           => $country['currency.Currency'],
+                    'borrower_country'        => $country['currency.active'],
+                    'registration_fee'        => $country['registration_fee.Amount'],
+                    'installment_period'      => null, //TODO
+                    'installment_amount_step' => '', //TODO
+                    'loan_amount_step'        => '', //TODO
+                    'repayment_instructions'  => $country['repayment_instructions.description'] ? $country['repayment_instructions.description'] : null,
+                    'accept_bids_note'        => null, //TODO
+                    'language_code'           => null, //TODO no foreign key
+                ];
+
+                array_push($countryArray, $newCountry);
+            }
+            DB:table('countries')->insert($countryArray);
+        }
+
 
 	}
 
