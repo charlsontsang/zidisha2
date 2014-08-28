@@ -252,12 +252,22 @@ class LenderMailer
 
     public function sendNewLoanNotificationMail(Loan $loan, Lender $lender)
     {
+        $data = [
+            'borrowerName' => $loan->getBorrower()->getName(),
+            'loanUrl'      => route('loan:index', ['loanId' => $loan->getId()]),
+            'repayDate'    => $loan->getInstallmentDay(), //TODO: confirm
+        ];
+
+        //TODO: send follower mail
+        
+        $subject = \Lang::get('lenders.mails.new-loan-notification.subject', ['borrowerName' => $loan->getBorrower()->getName()]);
+        
         $this->mailer->send(
-            'emails.hero',
-            [
+            'emails.lenders.new-loan-notification',
+            $data + [
                 'to'         => $lender->getUser()->getEmail(),
-                'subject'    => 'Borrower account notifications',
-                'templateId' => \Setting::get('sendwithus.lender-new-loan-notification-mail-template-id'),
+                'label'      => 'lenders.mails.new-loan-notification.body',
+                'subject'    => $subject
             ]
         );                                
     }
