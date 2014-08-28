@@ -72,3 +72,17 @@
 
     {{ BootstrapForm::close() }}
 </div>
+
+<hr/>
+
+Already a member?  <strong><a href="{{ route('login') }}" data-toggle="modal" data-target="#login-modal" data-dismiss="modal">Log In</a></strong>
+
+@section('script-footer')
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#join-lend').on('click', function() {
+            $.get("{{ route('lender:join') }}");
+        });
+    });
+</script>
+@stop
