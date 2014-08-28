@@ -72,7 +72,3 @@
 
     {{ BootstrapForm::close() }}
 </div>
-
-<hr/>
-
-Already a member?  <strong>{{ link_to_route('login', 'Log in' ) }}</strong>
