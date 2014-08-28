@@ -92,6 +92,7 @@ class DatabaseMigration extends Command {
         if ($table == 'lenders') {
             $this->line('Migrate lenders table');
             $this->line('Migrate lender_profiles table');
+            $this->line('Migrate lender_preferences table');
 
             $count = $this->con->table('lenders')->count();
             $offset = 0;
@@ -104,6 +105,7 @@ class DatabaseMigration extends Command {
                     ->where($offset)->take($limit)->get();
                 $insertArray = [];
                 $profileArray = [];
+                $preferenceArray = [];
 
                 foreach ($lenders as $lender) {
                     $newLender = [
@@ -121,12 +123,17 @@ class DatabaseMigration extends Command {
                         'city'      => $lender['lenders.City'],
                         'about_me'  => $lender['lenders.About']
                     ];
+                    $preference = [
+                        'lender_id' => $lender['users.userid'],
+                    ];
 
                     array_push($insertArray, $newLender);
                     array_push($profileArray, $profile);
+                    array_push($preferenceArray, $preference);
                 }
                 DB::table('lenders')->insert($insertArray);
                 DB::table('lender_profiles')->insert($profileArray);
+                DB::table('lender_preferences')->insert($preferenceArray);
             }
         }
 
