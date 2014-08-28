@@ -17,17 +17,3 @@
     'scrollable' => true
 ])
 @stop
-
-@section('script-footer')
-<script type="text/javascript">
-$(function() {
-    $('#joinForm').submit(function() {
-        if (!$('[name=termsOfUse]').is(':checked')) {
-            alert('Please confirm acceptance of the Terms of Use. Thanks!');
-            return false;
-        }
-    });
-});
-</script>
-
-@stop
