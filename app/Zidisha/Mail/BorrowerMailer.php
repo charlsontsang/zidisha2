@@ -102,12 +102,15 @@ class BorrowerMailer{
         $subject = \Lang::get('borrower.mails.loan-confirmation.subject');
         
         $data = [
-            'borrowerName'  => $borrower->getName(),
-            'loanApplicationLink' => route('loan:index', ['loanId' => $loan->getId()]),
-            'loanApplicationDeadLine' => 14, //Todo : loan application deadline
+            'parameters' => [
+                'borrowerName'  => $borrower->getName(),
+                'loanApplicationLink' => route('loan:index', ['loanId' => $loan->getId()]),
+                'loanApplicationDeadLine' => \Setting::get('loan.deadline'),
+            ],
             'to'        => $borrower->getUser()->getEmail(),
             'from'      => 'noreply@zidisha.org',
             'subject'   => $subject,
+            'label'     => 'borrower.mails.loan-confirmation.body'
         ];
 
         $this->mailer->send('emails.borrower.loan-confirmation', $data);
