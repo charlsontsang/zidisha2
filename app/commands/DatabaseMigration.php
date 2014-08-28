@@ -103,6 +103,7 @@ class DatabaseMigration extends Command {
                     ->join('countries', 'lenders.Country', '=', 'countries.code')
                     ->where($offset)->take($limit)->get();
                 $insertArray = [];
+                $profileArray = [];
 
                 foreach ($lenders as $lender) {
                     $newLender = [
@@ -115,9 +116,17 @@ class DatabaseMigration extends Command {
                         'last_check_in_email' => $lender['lenders.last_check_in_email']
                     ];
 
+                    $profile = [
+                        'lender_id' => $lender['users.userid'],
+                        'city'      => $lender['lenders.City'],
+                        'about_me'  => $lender['lenders.About']
+                    ];
+
                     array_push($insertArray, $newLender);
+                    array_push($profileArray, $profile);
                 }
                 DB::table('lenders')->insert($insertArray);
+                DB::table('lender_profiles')->insert($profileArray);
             }
         }
 
