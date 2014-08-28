@@ -9014,11 +9014,16 @@ a.link-dark {
 }
 .loan-body .profile-image {
   margin-bottom: 15px;
-  height: 225px;
+  margin-left: -15px;
+  width: 110%;
+  height: 250px;
 }
 @media (min-width: 768px) {
   .loan-body .profile-image {
     margin-top: 15px;
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
     height: 450px;
   }
 }
