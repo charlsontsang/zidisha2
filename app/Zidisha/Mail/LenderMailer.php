@@ -249,4 +249,16 @@ class LenderMailer
             ]
         );
     }
+
+    public function sendNewLoanNotificationMail(Loan $loan, Lender $lender)
+    {
+        $this->mailer->send(
+            'emails.hero',
+            [
+                'to'         => $lender->getUser()->getEmail(),
+                'subject'    => 'Borrower account notifications',
+                'templateId' => \Setting::get('sendwithus.lender-new-loan-notification-mail-template-id'),
+            ]
+        );                                
+    }
 }
