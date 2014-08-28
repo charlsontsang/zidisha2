@@ -24,7 +24,7 @@
             <unique-column name="username"/>
         </unique>
         <unique>
-            <unique-column name="email"></unique-column>
+            <unique-column name="email"/>
         </unique>
     </table>
 
@@ -229,7 +229,7 @@
         <column name="borrower_id" type="INTEGER" primaryKey="true"/>
         <column name="about_me" type="LONGVARCHAR" required="false"/>
         <column name="about_me_translation" type="LONGVARCHAR" required="false"/>
-        <column name="about_business " type="LONGVARCHAR" required="false"/>
+        <column name="about_business" type="LONGVARCHAR" required="false"/>
         <column name="about_business_translation" type="LONGVARCHAR" required="false"/>
         <column name="address" type="LONGVARCHAR" required="true"/>
         <column name="address_instructions" type="LONGVARCHAR" required="true"/>

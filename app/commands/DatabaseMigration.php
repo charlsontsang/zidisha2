@@ -241,6 +241,8 @@ class DatabaseMigration extends Command {
                         array_push($contactArray, $neighbor);
                     }
 
+                    //TODO JoinLog migration
+
                     array_push($insertArray, $newBorrower);
                     array_push($profileArray, $profile);
                     array_push($contactArray, $communityLeader);
