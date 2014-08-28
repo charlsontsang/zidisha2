@@ -50,6 +50,7 @@ class DatabaseMigration extends Command {
             $this->call('migrateDB', array('table' => 'users'));
             $this->call('migrateDB', array('table' => 'lenders'));
             $this->call('migrateDB', array('table' => 'borrowers'));
+            $this->call('migrateDB', array('table' => 'loan_categories'));
         }
 
         if ($table == 'users') {
@@ -64,7 +65,7 @@ class DatabaseMigration extends Command {
                     ->join('borrowers', 'users.userid', '=', 'borrowers.userid')
                     ->where($offset)->take($limit)->get();
 
-                $insertArray = [];
+                $userArray = [];
 
                 foreach ($users as $user) {
                     $newUser = [
@@ -84,9 +85,9 @@ class DatabaseMigration extends Command {
                         'active'             => $user['lenders.Active'] ? $user['lenders.Active'] : $user['borrowers.Active']
                     ];
 
-                    array_push($insertArray, $newUser);
+                    array_push($userArray, $newUser);
                 }
-                DB::table('users')->insert($insertArray);
+                DB::table('users')->insert($userArray);
             }
         }
 
@@ -104,7 +105,7 @@ class DatabaseMigration extends Command {
                     ->join('users', 'lenders.userid', '=', 'users.userid')
                     ->join('countries', 'lenders.Country', '=', 'countries.code')
                     ->where($offset)->take($limit)->get();
-                $insertArray = [];
+                $lenderArray = [];
                 $profileArray = [];
                 $preferenceArray = [];
 
@@ -128,11 +129,11 @@ class DatabaseMigration extends Command {
                         'lender_id' => $lender['users.userid'],
                     ];
 
-                    array_push($insertArray, $newLender);
+                    array_push($lenderArray, $newLender);
                     array_push($profileArray, $profile);
                     array_push($preferenceArray, $preference);
                 }
-                DB::table('lenders')->insert($insertArray);
+                DB::table('lenders')->insert($lenderArray);
                 DB::table('lender_profiles')->insert($profileArray);
                 DB::table('lender_preferences')->insert($preferenceArray);
             }
@@ -152,7 +153,7 @@ class DatabaseMigration extends Command {
                     ->join('countries', 'borrowers.Country', '=', 'countries.code')
                     ->join('borrowers_extn', 'borrowers.userid', '=', 'borrowers_extn.userid')
                     ->where($offset)->take($limit)->get();
-                $insertArray = [];
+                $borrowerArray = [];
                 $profileArray = [];
                 $contactArray = [];
 
@@ -243,14 +244,36 @@ class DatabaseMigration extends Command {
 
                     //TODO JoinLog migration
 
-                    array_push($insertArray, $newBorrower);
+                    array_push($borrowerArray, $newBorrower);
                     array_push($profileArray, $profile);
                     array_push($contactArray, $communityLeader);
                 }
-                DB::table('borrowers')->insert($insertArray);
+                DB::table('borrowers')->insert($borrowerArray);
                 DB::table('borrowers')->insert($profileArray);
                 DB::table('borrower_contacts')->insert($contactArray);
             }
+        }
+
+        if ($table == 'loan_categories'){
+            $this->line('Migration loan_categories table');
+
+            $categories = $this->con->table('loan_categories')->get();
+            $categoryArray = [];
+
+            foreach ($categories as $category) {
+                $newCategory = [
+                    'name'             => $category['name'],
+                    'slug'             => '', // TODO
+                    'what_description' => $category['what'],
+                    'why_description'  => $category['why'],
+                    'how_description'  => $category['lend'], //TODO cross check
+                    'admin_only'       => $category['admin'],
+                    ''
+                ];
+
+                array_push($categoryArray, $newCategory);
+            }
+            DB::table('loan_categories')->insert($categoryArray);
         }
 
 	}
