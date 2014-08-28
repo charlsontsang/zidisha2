@@ -54,6 +54,11 @@ class DatabaseMigration extends Command {
             $this->call('migrateDB', array('table' => 'countries'));
             $this->call('migrateDB', array('table' => 'loans'));
             $this->call('migrateDB', array('table' => 'loan_bids'));
+            //TODO after pull request got merged
+            $this->call('migrateDB', array('table' => 'admin_notes'));
+            //TODO
+            $this->call('migrateDB', array('table' => 'password_reminders'));
+            $this->call('migrateDB', array('table' => 'loan_stages'));
         }
 
         if ($table == 'users') {
@@ -381,7 +386,7 @@ class DatabaseMigration extends Command {
             $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $limit; $offset = ($offset + $limit)) {
+            for ($offset; $offset < $limit; $count = ($offset + $limit)) {
                 $bids = $this->con->table('loanbids')
                     ->join('loanapplic', 'loanbids.loanid', '=', 'loanapplic.loanid')
                     ->get();
@@ -409,6 +414,34 @@ class DatabaseMigration extends Command {
             }
         }
 
+        if ($table == 'loan_stages') {
+            $this->line('Migrate loan_stages table');
+
+            $count = $this->con->table('loanstage')->count();
+            $offset = 0;
+            $limit = 500;
+
+            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+                $stages = $this->con->table('loanstage')
+                    ->get();
+                $stageArray = [];
+
+                foreach ($stages as $stage) {
+                    $newStage = [
+                        'loan_id'     => $stage['loanid'],
+                        'borrower_id' => $stage['borrowerid'],
+                        'status'      => $stage['status'],
+                        'start_date'  => $stage['startdate'],
+                        'end_date'    => $stage['enddate'],
+                        'created_at'  => $stage['created'],
+                        'updated_at'  => $stage['modified']
+                    ];
+
+                    array_push($stageArray, $newStage);
+                }
+                DB::table('loan_stages')->insert($stageArray);
+            }
+        }
 
 	}
 
