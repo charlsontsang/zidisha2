@@ -47,6 +47,8 @@ class Mailer
 
         if (array_get($data, 'templateId') && $this->useSendWithUs) {
             $this->sendwithusDriver->send($view, $data);
+        } elseif (array_get($data, 'label')) {
+            $this->laravelMailerDriver->send('emails.label-template', $data);
         } else {
             $this->laravelMailerDriver->send($view, $data);
         }
