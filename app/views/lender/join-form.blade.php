@@ -59,19 +59,12 @@
         'feedback-icon' => 'fa-lock',
     ]) }}
 
-    {{ BootstrapForm::password('password_confirmation', [
-        'label'         => false,
-        'placeholder'   => \Lang::get('lender.join.form.password-confirmation'),
-        'sr-only'       => \Lang::get('lender.join.form.password-confirmation'),
-        'feedback-icon' => 'fa-lock',
-    ]) }}
-
     {{ BootstrapForm::select('countryId', $form->getCountries()->toKeyValue('id', 'name'), $country['id'], [
         'label' => false,
         'sr-only' => \Lang::get('lender.join.form.country-id'),
     ]) }}
 
-    <p>I agree to Zidisha's <a target="_blank" href="{{ route('page:terms-of-use') }}">Terms of Use
+    <p>By signing up, I agree to Zidisha's <a target="_blank" href="{{ route('page:terms-of-use') }}">Terms of Use
     and Privacy Policy</a>.</p>
 
 
