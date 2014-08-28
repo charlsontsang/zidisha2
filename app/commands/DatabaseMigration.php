@@ -52,6 +52,7 @@ class DatabaseMigration extends Command {
             $this->call('migrateDB', array('table' => 'borrowers'));
             $this->call('migrateDB', array('table' => 'loan_categories'));
             $this->call('migrateDB', array('table' => 'countries'));
+            $this->call('migrateDB', array('table' => 'loans'));
         }
 
         if ($table == 'users') {
@@ -310,6 +311,68 @@ class DatabaseMigration extends Command {
                 array_push($countryArray, $newCountry);
             }
             DB:table('countries')->insert($countryArray);
+        }
+
+        if ($table == 'loans') {
+            $this->line('Migrate loans table');
+
+            $count = $this->con->table('borrowers')->count();
+            $offset = 0;
+            $limit = 500;
+            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+                $loans = $this->con->table('loanapplic')
+                    ->get();
+                $loanArray = [];
+
+                //TODO check most amount things and fill  unfilled values
+                foreach ($loans as $loan) {
+                    $newLoan = [
+                        'id'                    => $loan['loanid'],
+                        'borrower_id'           => $loan['borrowerid'],
+                        'summary'               => $loan['summary'],
+                        'summary_translation'   => $loan['tr_summary'],
+                        'proposal'              => $loan['loanuse'],
+                        'proposal_translation'  => $loan['tr_loanuse'],
+                        'amount'                => $loan['Amount'],
+                        'total_amount'          => '',
+                        'paid_amount'           => '',
+                        'usd_amount'            => '',
+                        'installment_day'       => $loan['installment_day'],
+                        'max_interest_rate'     => $loan['finalrate'],
+                        'lender_interest_rate'  => '',
+                        'category_id'           => $loan['loan_category_id'],
+                        'secondary_category_id' => $loan['secondary_loan_category_id'],
+                        'status'                => $loan['active'],
+                        'applied_at'            => $loan['applydate'],
+                        'accepted_at'           => $loan['AcceptDate'],
+                        'expired_at'            => $loan['expires'],
+                        'canceled_at'           => '',
+                        'repaid_at'             => $loan['RepaidDate'],
+                        'authorized_at'         => $loan['auth_date'],
+                        'authorized_amount'     => '',
+                        'disbursed_at'          => '',
+                        'disbursed_amount'      => $loan['AmountGot'],
+                        'forgiven_amount'       => '',
+                        'registration_fee'      => '',
+                        'raised_usd_amount'     => '',
+                        'raised_percentage'     => '',
+                        'paid_percentage'       => '',
+                        'service_fee_rate'      => $loan['WebFee'],
+                        'extra_days'            => $loan['extra_days'],
+                        'currency_code'         => '',
+                        'installment_period'    => $loan['weekly_inst'] ? 'weekly' : 'monthly',
+                        'period'                => '',
+                        'accept_bids_note'      => $loan['accept_bid_note'],
+                        'sift_science_score'    => '',
+                        'deleted_by_admin'      => $loan['adminDelete'],
+                    ];
+
+                    array_push($loanArray, $newLoan);
+                }
+                DB::table('loans')->insert($loanArray);
+            }
+
+
         }
 
 
