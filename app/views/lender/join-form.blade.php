@@ -71,8 +71,8 @@
         'sr-only' => \Lang::get('lender.join.form.country-id'),
     ]) }}
 
-    I agree to Zidisha's <a target="_blank" href="#">Terms of Use</a>
-    and <a target="_blank" href="http://www.iubenda.com/privacy-policy/629677/legal">Privacy Policy</a>.
+    <p>I agree to Zidisha's <a target="_blank" href="{{ route('page:terms-of-use') }}">Terms of Use
+    and Privacy Policy</a>.</p>
 
 
     {{ BootstrapForm::submit('submit', ['class' => 'btn btn-primary btn-block']) }}
