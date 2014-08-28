@@ -5,6 +5,10 @@
 @stop
 
 @section('content')
+    {{ BootstrapForm::open(array('route' => 'admin:mail:post:mail')) }}
+
+    {{ BootstrapForm::text('email') }}
+
     <div class="row">
         <div class="col-xs-6">
             <h1>Lender Mails</h1>
@@ -27,11 +31,7 @@
                                     {{ $method }}
                                 </td>
                                 <td>
-                                    {{ BootstrapForm::open(array('route' => 'admin:mail:post:mail')) }}
-                                    {{ BootstrapForm::hidden('mailer', 'lender') }}
-                                    {{ BootstrapForm::hidden('method', $method) }}
-                                    {{ BootstrapForm::submit('Send') }}
-                                    {{ BootstrapForm::close() }}
+                                    <button name="method" type="submit" value="lender#{{ $method }}">Send</button>
                                 </td>
                             </tr>
                         @endif
@@ -60,11 +60,7 @@
                         {{ $method }}
                     </td>
                     <td>
-                        {{ BootstrapForm::open(array('route' => 'admin:mail:post:mail')) }}
-                        {{ BootstrapForm::hidden('mailer', 'borrower') }}
-                        {{ BootstrapForm::hidden('method', $method) }}
-                        {{ BootstrapForm::submit('Send') }}
-                        {{ BootstrapForm::close() }}
+                        <button name="method" type="submit" value="borrower#{{ $method }}">Send</button>
                     </td>
                 </tr>
                 @endif
@@ -97,11 +93,7 @@
                     {{ $method }}
                 </td>
                 <td>
-                    {{ BootstrapForm::open(array('route' => 'admin:mail:post:mail')) }}
-                    {{ BootstrapForm::hidden('mailer', 'admin') }}
-                    {{ BootstrapForm::hidden('method', $method) }}
-                    {{ BootstrapForm::submit('Send') }}
-                    {{ BootstrapForm::close() }}
+                    <button name="method" type="submit" value="admin#{{ $method }}">Send</button>
                 </td>
             </tr>
             @endif
@@ -130,11 +122,7 @@
                     {{ $method }}
                 </td>
                 <td>
-                    {{ BootstrapForm::open(array('route' => 'admin:mail:post:mail')) }}
-                    {{ BootstrapForm::hidden('mailer', 'user') }}
-                    {{ BootstrapForm::hidden('method', $method) }}
-                    {{ BootstrapForm::submit('Send') }}
-                    {{ BootstrapForm::close() }}
+                    <button name="method" type="submit" value="user#{{ $method }}">Send</button>
                 </td>
             </tr>
             @endif
@@ -142,6 +130,7 @@
             </tbody>
         </table>
     </div>
+    {{ BootstrapForm::close() }}
 </div>
 
 @stop
