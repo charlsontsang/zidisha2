@@ -185,17 +185,69 @@ class DatabaseMigration extends Command {
                         'national_id_number'         => $borrower['borrowers.nationId'],
                         'phone_number'               => $borrower['borrowers.TelMobile'],
                         'alternate_phone_number'     => $borrower['borrowers.AlternateTelMobile'], //TODO, though column in both new/old database are required=true, the database sample you gave have value null
-                        'business_category_id'       => null, // TODO, all four are required true
-                        'business_years'             => null,
-                        'loan_usage'                 => null,
-                        'birth_date'                 => null,
+                        'business_category_id'       => '',
+                        'business_years'             => '',
+                        'loan_usage'                 => '',
+                        'birth_date'                 => '',
                     ];
+
+                    //TODO, though all values are required in both tables, many are null in sample data
+                    $communityLeader = [
+                        'borrower_id'  => $borrower['users.userid'],
+                        'first_name'   => $borrower['borrowers_extn.community_leader_first_name'],
+                        'last_name'    => $borrower['borrowers_extn.community_leader_last_name'],
+                        'phone_number' => $borrower['borrowers_extn.community_leader_mobile_phone'],
+                        'description'  => $borrower['borrowers_extn.community_leader_organization_title'],
+                        'type'         => 'communityLeader'
+                    ];
+
+                    for ($i = 1; $i <= 3; $i++) {
+                        $stringFirstName = 'borrowers_extn.family_member'. $i. '_first_name';
+                        $stringLastName = 'borrowers_extn.family_member'. $i. '_last_name';
+                        $stringPhoneNumber = 'borrowers_extn.family_member'. $i. '_mobile_phone';
+                        $stringDescription = 'borrowers_extn.family_member'. $i. '_relationship';
+
+                        if (!$borrower[$stringFirstName] && !$borrower[$stringLastName] && !$borrower[$stringPhoneNumber]){
+                            continue;
+                        }
+                        $familyMember = [
+                            'borrower_id'  => $borrower['users.userid'],
+                            'first_name'   => $borrower[$stringFirstName] ? $borrower[$stringFirstName] : '',
+                            'last_name'    => $borrower[$stringLastName] ? $borrower[$stringLastName] : '',
+                            'phone_number' => $borrower[$stringPhoneNumber] ? $borrower[$stringPhoneNumber] : '',
+                            'description'  => $borrower[$stringDescription] ? $borrower[$stringDescription] : '',
+                            'type'         => 'familyMember'
+                        ];
+                        array_push($contactArray, $familyMember);
+                    }
+
+                    for ($i = 1; $i <= 3; $i++) {
+                        $stringFirstName = 'borrowers_extn.neighbor'. $i. '_first_name';
+                        $stringLastName = 'borrowers_extn.neighbor'. $i. '_last_name';
+                        $stringPhoneNumber = 'borrowers_extn.neighbor'. $i. '_mobile_phone';
+                        $stringDescription = 'borrowers_extn.neighbor'. $i. '_relationship';
+
+                        if (!$borrower[$stringFirstName] && !$borrower[$stringLastName] && !$borrower[$stringPhoneNumber] && !$stringDescription){
+                            continue;
+                        }
+                        $neighbor = [
+                            'borrower_id'  => $borrower['users.userid'],
+                            'first_name'   => $borrower[$stringFirstName] ? $borrower[$stringFirstName] : '',
+                            'last_name'    => $borrower[$stringLastName] ? $borrower[$stringLastName] : '',
+                            'phone_number' => $borrower[$stringPhoneNumber] ? $borrower[$stringPhoneNumber] : '',
+                            'description'  => $borrower[$stringDescription] ? $borrower[$stringDescription] : '',
+                            'type'         => 'neighbor'
+                        ];
+                        array_push($contactArray, $neighbor);
+                    }
 
                     array_push($insertArray, $newBorrower);
                     array_push($profileArray, $profile);
+                    array_push($contactArray, $communityLeader);
                 }
                 DB::table('borrowers')->insert($insertArray);
                 DB::table('borrowers')->insert($profileArray);
+                DB::table('borrower_contacts')->insert($contactArray);
             }
         }
 
