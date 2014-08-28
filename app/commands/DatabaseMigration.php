@@ -59,6 +59,7 @@ class DatabaseMigration extends Command {
             //TODO
             $this->call('migrateDB', array('table' => 'password_reminders'));
             $this->call('migrateDB', array('table' => 'loan_stages'));
+            $this->call('migrateDB', array('table' => 'transactions'));
         }
 
         if ($table == 'users') {
@@ -440,6 +441,18 @@ class DatabaseMigration extends Command {
                     array_push($stageArray, $newStage);
                 }
                 DB::table('loan_stages')->insert($stageArray);
+            }
+        }
+
+        if ($table == 'transactions') {
+            $this->line('Migrate transactions table');
+
+            $count = $this->con->table('')->count();
+            $offset = 0;
+            $limit = 500;
+
+            for ($offset; $offset < $limit; $offset = ($offset + $limit)) {
+
             }
         }
 
