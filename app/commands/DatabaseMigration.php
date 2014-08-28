@@ -140,6 +140,8 @@ class DatabaseMigration extends Command {
 
         if ($table == 'borrowers') {
             $this->line('Migrate borrowers table');
+            $this->line('Migrate borrower_profiles table');
+            $this->line('Migrate borrower_contacts table');
 
             $count = $this->con->table('borrowers')->count();
             $offset = 0;
@@ -148,27 +150,52 @@ class DatabaseMigration extends Command {
                 $borrowers = $this->con->table('borrowers')
                     ->join('users', 'borrowers.userid', '=', 'users.userid')
                     ->join('countries', 'borrowers.Country', '=', 'countries.code')
+                    ->join('borrowers_extn', 'borrowers.userid', '=', 'borrowers_extn.userid')
                     ->where($offset)->take($limit)->get();
                 $insertArray = [];
+                $profileArray = [];
+                $contactArray = [];
 
                 foreach ($borrowers as $borrower) {
                     $newBorrower = [
-                        'id'=> $borrower['users.userid'],
-                        'country_id'=> $borrower['countries.id'],
-                        'first_name' => $borrower['borrowers.FirstName'],
-                        'last_name' => $borrower['borrowers.LastName'],
-                        'active_loan_id' => $borrower['borrowers.activeLoanID'],
-                        'loan_status'=> $borrower['borrowers.ActiveLoan'],
-                        'active' => $borrower['borrowers.Active'],
+                        'id'                  => $borrower['users.userid'],
+                        'country_id'          => $borrower['countries.id'],
+                        'first_name'          => $borrower['borrowers.FirstName'],
+                        'last_name'           => $borrower['borrowers.LastName'],
+                        'active_loan_id'      => $borrower['borrowers.activeLoanID'],
+                        'loan_status'         => $borrower['borrowers.ActiveLoan'],
+                        'active'              => $borrower['borrowers.Active'],
                         'volunteer_mentor_id' => $borrower['borrowers.Assigned_to'],
-                        'referrer_id' => $borrower['borrowers.refer_member_name'], //TODO cross check
-                        'verified' => 'TODO', // TODO
-                        'activation_status' => null, // TODO
+                        'referrer_id'         => $borrower['borrowers.refer_member_name'], //TODO cross check
+                        'verified'            => 'TODO', // TODO
+                        'activation_status'   => null, // TODO
+                    ];
+
+                    //TODO facebook_users migration
+
+                    $profile = [
+                        'borrower_id'                => $borrower['users.userid'],
+                        'about_me'                   => $borrower['borrowers.About'],
+                        'about_me_translation'       => $borrower['borrowers.tr_About'],
+                        'about_business'             => $borrower['borrowers.BizDesc'],
+                        'about_business_translation' => $borrower['borrowers.tr_BizDesc'],
+                        'address'                    => $borrower['borrowers.PAddress'],
+                        'address_instructions'       => 'TODO',// TODO
+                        'city'                       => $borrower['borrowers.City'],
+                        'national_id_number'         => $borrower['borrowers.nationId'],
+                        'phone_number'               => $borrower['borrowers.TelMobile'],
+                        'alternate_phone_number'     => $borrower['borrowers.AlternateTelMobile'], //TODO, though column in both new/old database are required=true, the database sample you gave have value null
+                        'business_category_id'       => null, // TODO, all four are required true
+                        'business_years'             => null,
+                        'loan_usage'                 => null,
+                        'birth_date'                 => null,
                     ];
 
                     array_push($insertArray, $newBorrower);
+                    array_push($profileArray, $profile);
                 }
                 DB::table('borrowers')->insert($insertArray);
+                DB::table('borrowers')->insert($profileArray);
             }
         }
 
