@@ -91,6 +91,7 @@ class DatabaseMigration extends Command {
 
         if ($table == 'lenders') {
             $this->line('Migrate lenders table');
+            $this->line('Migrate lender_profiles table');
 
             $count = $this->con->table('lenders')->count();
             $offset = 0;
@@ -116,7 +117,7 @@ class DatabaseMigration extends Command {
 
                     array_push($insertArray, $newLender);
                 }
-                DB::table('users')->insert($insertArray);
+                DB::table('lenders')->insert($insertArray);
             }
         }
 
