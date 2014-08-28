@@ -8613,7 +8613,7 @@ body {
 }
 @media (max-width: 767px) {
   .page-section-filter {
-    margin-bottom: -25px;
+    margin-bottom: -15px;
   }
 }
 #results-info {
@@ -8630,7 +8630,7 @@ body {
 #mobile-results-desc {
   background-color: #f9f9f9;
   padding: 20px;
-  margin-bottom: -25px;
+  margin-bottom: -20px;
 }
 @media (min-width: 992px) {
   #mobile-results-desc {
@@ -8789,6 +8789,10 @@ a.link-dark {
 }
 .lend-details .table tbody > tr > td {
   vertical-align: middle;
+}
+.loan-titlebar {
+  padding: 15px;
+  background-color: #f9f9f9;
 }
 @media (min-width: 768px) {
   .loan-titlebar {

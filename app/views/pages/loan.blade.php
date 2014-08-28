@@ -5,28 +5,14 @@
 @stop
 
 @section('content-top')
-    <div class="container page-section loan-titlebar" style="padding-bottom: 5px;">
-        <div class="row">
-            <div class="col-xs-12">
-                <div class="loan-side">
-                    <div class="loan-title">
-                        <h3>
+    <div class="loan-titlebar">
+                        <span id="country" class="text-light">
+                            {{ $loan->getBorrower()->getCountry()->getName() }}
+                        </span>
+                        <p class="alpha">
                             {{ $loan->getSummary() }}
-                        </h3>
+                        </p>
                     </div>
-                    
-                    <p class="text-light">
-                        <i class="fa fa-fw fa-user"></i>
-                        {{ $loan->getBorrower()->getName() }}
-                        <br/>
-                        <i class="fa fa-fw fa-map-marker"></i>
-                        {{ $loan->getBorrower()->getProfile()->getCity() }},
-                        {{ $loan->getBorrower()->getCountry()->getName() }}
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
 @stop
 
 @section('content')
