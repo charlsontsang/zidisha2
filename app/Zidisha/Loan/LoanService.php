@@ -3,8 +3,6 @@
 namespace Zidisha\Loan;
 
 use Carbon\Carbon;
-use Faker\Provider\DateTime;
-use Propel\Generator\Behavior\Sortable\SortableBehavior;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Zidisha\Admin\Setting;
 use Zidisha\Analytics\MixpanelService;
@@ -16,16 +14,18 @@ use Zidisha\Currency\Converter;
 use Zidisha\Currency\ExchangeRate;
 use Zidisha\Currency\ExchangeRateQuery;
 use Zidisha\Currency\Money;
-use Zidisha\Generate\LoanGenerator;
 use Zidisha\Lender\Lender;
 use Zidisha\Loan\Base\BidQuery;
 use Zidisha\Loan\Calculator\BidsCalculator;
 use Zidisha\Loan\Calculator\InstallmentCalculator;
 use Zidisha\Loan\Calculator\RepaymentCalculator;
+use Zidisha\Loan\Calculator\RescheduleCalculator;
 use Zidisha\Mail\BorrowerMailer;
 use Zidisha\Mail\LenderMailer;
 use Zidisha\Repayment\Installment;
 use Zidisha\Repayment\InstallmentQuery;
+use Zidisha\Repayment\RepaymentSchedule;
+use Zidisha\Repayment\RepaymentScheduleInstallment;
 use Zidisha\Repayment\RepaymentService;
 use Zidisha\Vendor\PropelDB;
 use Zidisha\Vendor\SiftScience\SiftScienceService;
@@ -1170,5 +1170,63 @@ class LoanService
 
         $loanDocument = new \Elastica\Document($loan->getId(), $data);
         return array($loanType, $loanDocument);
+    }
+
+    public function rescheduleLoan(Loan $loan, array $data, $simulate = false)
+    {
+        $data += [
+            'rescheduledAt' => new \Datetime(),
+        ];
+        
+        $oldRepaymentSchedule = $this->repaymentService->getRepaymentSchedule($loan);
+        $rescheduleCalculator = new RescheduleCalculator($loan, $oldRepaymentSchedule);
+
+        $repaymentScheduleInstallments = $rescheduleCalculator->repaymentScheduleInstallments(
+            Money::create($data['installmentAmount'], $loan->getCurrencyCode()),
+            $data['rescheduledAt']
+        );
+        
+        $repaymentSchedule = new RepaymentSchedule($loan, $repaymentScheduleInstallments['new']);
+        
+        if ($simulate) {
+            return $repaymentSchedule;
+        }
+        
+        $deleteIds = [];
+        /** @var RepaymentScheduleInstallment $repaymentScheduleInstallment */
+        foreach ($repaymentScheduleInstallments['delete'] as $repaymentScheduleInstallment) {
+            $deleteIds[] = $repaymentScheduleInstallment->getInstallment()->getId();
+        }
+        
+        PropelDB::transaction(function($con) use ($loan, $data, $repaymentSchedule, $deleteIds) {
+            $deletedInstallmentCount = InstallmentQuery::create()
+                ->filterById($deleteIds)
+                ->delete($con);
+
+            $loan->clearInstallments();
+            /** @var RepaymentScheduleInstallment $repaymentScheduleInstallment */
+            foreach($repaymentSchedule as $repaymentScheduleInstallment) {
+                $repaymentScheduleInstallment->getInstallment()->save();
+            }
+
+            $reschedule = new Reschedule();
+            $reschedule
+                ->setLoan($loan)
+                ->setBorrower($loan->getBorrower())
+                ->setPeriod($repaymentSchedule->getPeriod())
+                ->setReason($data['reason']);
+
+            $loan
+                ->setTotalAmount($repaymentSchedule->getTotalAmountDue())
+                //->setOriginalPeriod($loan->getPeriod())
+                ->setPeriod($repaymentSchedule->getPeriod());
+
+            $loan->clearInstallments();
+            $loan->save($con);
+        });
+        
+        // TODO email, comment
+        
+        return $repaymentSchedule;
     }
 }
