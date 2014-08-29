@@ -5,33 +5,20 @@ Dashboard
 @stop
 
 @section('content')
-	<div class="page-header">
-	    <h1><div style="text-align: center;">
-	    Welcome
-	    </div></h1>
-	</div>
+<div class="row lender-welcome">
+    <div class="col-sm-6 col-sm-offset-1 info-page">
 
-<div class="row">
-   <p>
-    Thanks for joining us, and welcome!
-   </p> 
-    
-    <p>
-    Go to our  <a href="{{ route('lend:index') }}">Fundraising Loans</a> page to browse open loan applications and choose an entrepreneur to fund. 
-    </p>
-    
-    <p>
-    Please don't hesitate to <a href="{{ route('page:contact') }}">let us know</a> if you would like help getting started. We look forward to hearing from you. 
-    </p>
-    
-    <p>
-    Best wishes,
-    </p>
-    
-    <p>
-    Zidisha Team
-    </p>
-    
+        <h1>Welcome to Zidisha!</h1>
+        
+        <p>
+            Ready to make a mega difference with your microloan?  Start exploring available projects, find one (or more!) that you’d like to fund, and make a bid for any portion of the loan.
+        </p>
+        
+    </div>
+
+    <div class="col-sm-5">
+          <a class="btn btn-home btn-lg" href="{{ route('lend:index') }}">Browse Projects >></a>
+    </div>
 </div>
 
 @stop

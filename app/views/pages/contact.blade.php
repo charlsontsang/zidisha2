@@ -12,7 +12,7 @@ Contact Us
 	        <h1>Contact Us</h1>
 	    </div>
 
-		<p><p>Questions? Comments? Constructive criticism? We’ll happily take it all — because we love hearing from the Zidisha community. Please feel free to share your ideas and inquiries using any of the means below.</p>
+		<p>Questions? Comments? Constructive criticism? We’ll happily take it all — because we love hearing from the Zidisha community. Please feel free to share your ideas and inquiries using any of the means below.</p>
 		<p>P.S. Words of encouragement are always welcome, too! (That brightens our volunteers' day like nothing else.)</p>
 		<ul>
 			<li>For a speedy response to any comment or question, post it on our <a href="https://www.zidisha.org/forum/">Member Forum</a>.</li>

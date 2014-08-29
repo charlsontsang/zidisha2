@@ -60,4 +60,14 @@
 
 <input class="btn btn-primary btn-block" type="submit" value="Log in"/>
 {{ Form::close() }}
-@lang('borrower.login.not-a-member')  <strong><a href="{{ route('join') }}">@lang('borrower.login.join')</a></strong>
+@lang('borrower.login.not-a-member')  <strong><a href="{{ route('join') }}" data-toggle="modal" data-target="#join-modal" data-dismiss="modal">@lang('borrower.login.join')</a></strong>
+
+@section('script-footer')
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#join-lend').on('click', function() {
+            $.get("{{ route('lender:join') }}");
+        });
+    });
+</script>
+@stop

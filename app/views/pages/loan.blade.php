@@ -563,15 +563,6 @@
     </div>
 </div>
 
-<div class="modal fade" id="join-modal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-
-        </div>
-    </div>
-</div>
-
-
 <div class="row">
     <button id="mobile-lend-btn" type="button" class="btn btn-primary btn-block">Lend</button>
 </div>

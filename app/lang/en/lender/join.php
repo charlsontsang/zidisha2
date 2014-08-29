@@ -2,12 +2,11 @@
 
 return [
     'form' => [
-        'username'              => 'Create a display name',
+        'username'              => 'Create display name',
         'email'                 => 'Your email',
-        'password'              => 'Password',
-        'password-confirmation' => 'Confirm Password',
+        'password'              => 'Create password',
         'submit'                => 'Join',
-        'country-id'            => 'Country'
+        'country-id'            => 'Your country'
     ],
 
     'validation' => [

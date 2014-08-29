@@ -59,21 +59,13 @@
         'feedback-icon' => 'fa-lock',
     ]) }}
 
-    {{ BootstrapForm::password('password_confirmation', [
-        'label'         => false,
-        'placeholder'   => \Lang::get('lender.join.form.password-confirmation'),
-        'sr-only'       => \Lang::get('lender.join.form.password-confirmation'),
-        'feedback-icon' => 'fa-lock',
-    ]) }}
-
     {{ BootstrapForm::select('countryId', $form->getCountries()->toKeyValue('id', 'name'), $country['id'], [
         'label' => false,
         'sr-only' => \Lang::get('lender.join.form.country-id'),
     ]) }}
 
-    {{ BootstrapForm::checkbox('termsOfUse') }}
-    I agree to Zidisha's <a target="_blank" href="#">Terms of Use</a>
-    and <a target="_blank" href="http://www.iubenda.com/privacy-policy/629677/legal">Privacy Policy</a>.
+    <p>By signing up, I agree to Zidisha's <a target="_blank" href="{{ route('page:terms-of-use') }}">Terms of Use
+    and Privacy Policy</a>.</p>
 
 
     {{ BootstrapForm::submit('submit', ['class' => 'btn btn-primary btn-block']) }}
@@ -83,4 +75,14 @@
 
 <hr/>
 
-Already a member?  <strong>{{ link_to_route('login', 'Log in' ) }}</strong>
+Already a member?  <strong><a href="{{ route('login') }}" data-toggle="modal" data-target="#login-modal" data-dismiss="modal">Log In</a></strong>
+
+@section('script-footer')
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#join-lend').on('click', function() {
+            $.get("{{ route('lender:join') }}");
+        });
+    });
+</script>
+@stop
