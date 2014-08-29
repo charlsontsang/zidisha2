@@ -14,6 +14,17 @@ Press
         <p>We’re super honored to have received great press from publications big and small, far and wide. Here are a few of our favorite shout outs.</p>
         
         <br/><br/>
+
+        <p><a href="http://blogs.wsj.com/venturecapital/2014/08/25/y-combinator-nonprofit-zidisha-changes-microfinance-equation/" target="_blank"><img src="{{ asset('assets/images/pages/press/wsj_logo.png'); }}" width="50%" /></a></p>
+        <br/>
+        <blockquote>
+            <p>"This type of lending is possible in Africa now because many people have access to the internet."</p>
+            <footer>
+                <cite><a href="http://blogs.wsj.com/venturecapital/2014/08/25/y-combinator-nonprofit-zidisha-changes-microfinance-equation/" target="_blank">The Wall Street Journal</a></cite>
+            </footer>
+        </blockquote>     
+            
+        <hr/>
         
         <p><a href="http://techcrunch.com/2014/01/23/zidisha-launches-a-kickstarter-style-micro-lending-platform-for-low-income-entrepreneurs-in-developing-countries/" target="_blank"><img src="{{ asset('assets/images/pages/press/tc_logo.png'); }}" /></a></p>
         <br/>

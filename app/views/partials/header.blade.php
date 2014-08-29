@@ -130,7 +130,7 @@
                 </li>
             </ul>
             @if(Auth::check() && Auth::getUser()->isLender())
-                <p class="navbar-text">Lending Credit: $XX.XX</p>
+                <p id="lending-credit" class="navbar-text">Lending Credit: $XX.XX</p>
             @endif
         </div>
     </div>

@@ -5,12 +5,25 @@ Lend
 @stop
 
 @section('content-top')
-<div class="page-section page-section-filter">
+<div id="mobile-results-desc">
+    <p>
+        {{ $countResults }} {{ $selectedLoanCategory ? $selectedLoanCategory->getName() : '' }} Projects
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="#" id="more-projects" data-toggle="collapse" data-target="#toggle-moreProjects" data-toggle-text="Hide Filter">
+            @if($countAll > $countResults)
+                View More
+            @else
+                Filter Results
+            @endif
+        </a>
+    </p>
+</div>
+<div id="toggle-moreProjects" class="page-section page-section-filter collapse">
     <div class="container">
         <div class="row">
             <div class="col-md-10">
                 <div class="filter-bar">
-                    <span class="text" style="padding-left: 0;">Show</span>
+                    <span class="text" id="show">Show</span>
                     <div class="btn btn-default btn-filter" target="#filter-categories">
                         {{ $selectedLoanCategory ? $selectedLoanCategory->getName() : 'All' }}
                         <i class="fa fa-fw fa-caret-down"></i>
@@ -28,7 +41,7 @@ Lend
                 </div>
             </div>
             <div class="col-md-2">
-                <form role="search" action="{{ route('lend:index', $searchRouteParams) }}" method="get">
+                <form role="search" id="search" action="{{ route('lend:index', $searchRouteParams) }}" method="get">
                     <div class="input-group">
                         <input type="text" class="form-control" placeholder="Search" name="search" value="{{{ $searchQuery }}}">
                         <div class="input-group-btn">
@@ -43,68 +56,70 @@ Lend
 @stop
 
 @section('content')
-<div class="row">
-    <div class="col-sm-6 col-md-4">
-        <p>
-            We found 
-            <strong>{{ $countResults }} {{ $selectedLoanCategory ? $selectedLoanCategory->getName() : '' }} projects</strong>@if($selectedCountry) in {{ $selectedCountry->getName(); }}@endif.
-    </div>
-    @if($countAll > $countResults)
-    <div class="col-sm-6 col-md-3">
-            <a href="{{ route('lend:index', ['category' => 'all'] + ['country' => 'everywhere'] + $routeParams) }}">View all {{ $countAll }} projects</a>
-    </div>
-    @endif
-
-    @if ($selectedLoanCategory)
-    <div class="col-sm-12 col-md-5">
-            <a href="#" id="about-category" data-toggle="collapse" data-target="#toggle-aboutCategory" data-toggle-text="Hide description">
-                <i class="fa fa-info-circle" style="color: inherit;"></i> Learn more about {{ $selectedLoanCategory->getName() }} projects
-            </a>
-    </div>
-    @endif
-        </p>
-</div>
-<div class="row">
+<div id="results-info" class="row">
     <div class="col-sm-12">
-        <hr/>
+        <p>
+            <span id="results-desc">
+                We found 
+                <strong>{{ $countResults }} {{ $selectedLoanCategory ? $selectedLoanCategory->getName() : '' }} projects</strong>@if($selectedCountry) in {{ $selectedCountry->getName(); }}@endif.
+            </span>
+    
+            @if($countAll > $countResults)
+                <span id="view-all">
+                    <a href="{{ route('lend:index', ['category' => 'all'] + ['country' => 'everywhere'] + $routeParams) }}">View all {{ $countAll }} projects</a>
+                </span>
+            @endif
+
+            @if($selectedLoanCategory)
+                @if($selectedLoanCategory->getHowDescription())
+                    <span>
+                    <a href="#" id="about-category" data-toggle="collapse" data-target="#toggle-aboutCategory" data-toggle-text="Hide description">
+                        <i class="fa fa-info-circle" style="color: inherit;"></i> Learn more about {{ $selectedLoanCategory->getName() }}
+                    </a>
+                    </span>
+                @endif
+            @endif
+        </p>
 
         @if($selectedLoanCategory)
+            @if($selectedLoanCategory->getHowDescription())
 
-        <div id="toggle-aboutCategory" class="collapse">            
-        
-            <div class="page-header">
-                <h3>{{ $selectedLoanCategory->getName(); }}</h3>
-            </div>
-
-            <div class="row">
-
-                <div class="col-md-6">
-                    <p><strong>How it works: </strong> {{ $selectedLoanCategory->getHowDescription() }} </p>
+            <div id="toggle-aboutCategory" class="collapse">            
+            
+                <div class="page-header">
+                    <h3>{{ $selectedLoanCategory->getName(); }}</h3>
                 </div>
-                <div class="col-md-6">
-                    <p><strong>Why it's important: </strong> {{ $selectedLoanCategory->getWhyDescription() }} </p>
 
-                    <p><strong>What your loan can do: </strong> {{ $selectedLoanCategory->getWhatDescription() }}
-                    </p>
+                <div class="row">
+
+                    <div class="col-md-6">
+                        <p><strong>How it works: </strong> {{ $selectedLoanCategory->getHowDescription() }} </p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Why it's important: </strong> {{ $selectedLoanCategory->getWhyDescription() }} </p>
+
+                        <p><strong>What your loan can do: </strong> {{ $selectedLoanCategory->getWhatDescription() }}
+                        </p>
+                    </div>
                 </div>
+                <hr/>
             </div>
-            <hr/>
-        </div>
+            @endif
         @endif
 
     </div>
 </div>
 
-<div class="row" style="padding:5px;">
+<div class="row" style="padding-right: 5px; padding-left: 5px;">
     @foreach($paginator as $loan)
-    <div class="col-sm-6 col-md-4" style="padding:10px;">
+    <div class="col-sm-6 col-md-4" style="padding: 10px;">
         <div class="result">
             <div class="row">
                 <div class="col-xs-12">
                     <a class="pull-left profile-image" href="{{ route('loan:index', $loan->getId()) }}"
-                        style="background-image:url(/assets/images/test-photos/esther.JPG)" width="100%" height="200px">
+                        style="background-image:url(/assets/images/test-photos/esther.JPG)">
                 <!--
-                        <img src="{{ $loan->getBorrower()->getUser()->getProfilePictureUrl() }}" width="100%">
+                        <img src="{{ $loan->getBorrower()->getUser()->getProfilePictureUrl() }}">
                     -->
                     </a>
                 </div>
@@ -119,9 +134,18 @@ Lend
                             @endif
                         </div>
                     @endif
+
+                    <div id="funding-tag">
+                        <span><strong>${{ ceil($loan->getStillNeededUsdAmount()->getAmount()) }}</strong></span>
+                        <br/>
+                        <span class="text-light">Needed</span>
+                    </div>
                     
                     <div class="lend-title">
-                        <h2 class="alpha" style="height:2em;">
+                        <span id="country" class="text-light">
+                            {{ $loan->getBorrower()->getCountry()->getName() }}
+                        </span>
+                        <h2 class="alpha">
                             <a href="{{ route('loan:index', $loan->getId()) }}">
                                 {{ $loan->getSummary() }}
                             </a>
@@ -214,8 +238,13 @@ Lend
 @section('script-footer')
 <script type="text/javascript">
     $(document).ready(function () {
+        $('.moreProjects').click(function () {
+            $("#toggle-moreProjects").collapse('toggle');
+            return false;
+        });
         $('.aboutCategory').click(function () {
             $("#toggle-aboutCategory").collapse('toggle');
+            return false;
         });
     });
 </script>
