@@ -69,6 +69,9 @@ class DatabaseMigration extends Command {
             $this->call('migrateDB', array('table' => 'lender_invite_visits'));
             $this->call('migrateDB', array('table' => 'lender_invite_transactions'));
             $this->call('migrateDB', array('table' => 'paypal_ipn_log'));
+            // TODO from paypal_transactions to payments
+            $this->call('migrateDB', array('table' => 'gift_cards'));
+
         }
 
         if ($table == 'users') {
@@ -741,6 +744,46 @@ class DatabaseMigration extends Command {
             }
         }
 
+        if ($table == 'gift_cards') {
+            $this->line('Migrate gift_cards table');
+
+            $count = $this->con->table('gift_cards')->count();
+            $offset = 0;
+            $limit = 500;
+
+            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+                $giftCards = $this->con->table('gift_cards')
+                    ->join('gift_transaction', 'gift_cards.txn_id', '=', 'gift_transaction.txn_id') // TODO croos check(is it txn_id or id)
+                    ->where($offset)->limit($limit)->get();
+                $giftCardArray = [];
+
+                foreach ($giftCards as $giftCard) {
+                    $newGiftCard = [
+                        'id'                       => $giftCard['gift_cards.id'],
+                        'lender_id'                => $giftCard['gift_transaction.userid'],
+                        'template'                 => $giftCard['gift_cards.template'], // TODO make sure old and new template ids are same
+                        'order_type'               => $giftCard['gift_cards.order_type'], // TODO check both string are smame
+                        'card_amount'              => $giftCard['gift_cards.card_amount'],
+                        'recipient_email'          => $giftCard['gift_cards.recipient_email'],
+                        'confirmation_email'       => $giftCard['gift_cards.sender'],
+                        'recipient_name'           => $giftCard['gift_cards.to_name'],
+                        'from_name'                => $giftCard['gift_cards.from_name'],
+                        'message'                  => $giftCard['gift_cards.message'],
+                        'date'                     => date("Y-m-d H:i:s", $giftCard['gift_cards.date']),
+                        'expire_date'              => date("Y-m-d H:i:s", $giftCard['gift_cards.exp_date']),
+                        'card_code'                => $giftCard['gift_cards.card_code'],
+                        'status'                   => $giftCard['gift_cards.status'],
+                        'claimed'                  => $giftCard['gift_cards.claimed'],
+                        'recipient_id'             => $giftCard['gift_cards.claimed_by'],
+                        'donated'                  => $giftCard['gift_cards.donated'],
+                        'gift_card_transaction_id' => $giftCard['gift_cards.txn_id'] // TODO cross check
+                    ];
+
+                    array_push($giftCardArray, $newGiftCard);
+                }
+                DB::table('gift_cards')->insert($giftCardArray);
+            }
+        }
 
 
 
