@@ -18,7 +18,7 @@ Lend
         </a>
     </p>
 </div>
-<div id="toggle-moreProjects" class="page-section page-section-filter collapse">
+<div id="toggle-moreProjects" class="page-section-filter collapse">
     <div class="container">
         <div class="row">
             <div class="col-md-10">
@@ -56,6 +56,9 @@ Lend
 @stop
 
 @section('content')
+</div> <!-- /container -->
+<div class="container-fluid lend">
+    <div class="container">
 <div id="results-info" class="row">
     <div class="col-sm-12">
         <p>
@@ -233,6 +236,7 @@ Lend
         @endforeach
     </ul>
 </div>
+</div> <!-- /container -->
 @stop
 
 @section('script-footer')

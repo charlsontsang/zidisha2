@@ -8615,11 +8615,14 @@ body {
   padding: 0 12px;
 }
 .page-section-filter {
+  background-color: #f9f9f9;
+  border-bottom: 1px solid #e0e0e0;
   padding: 12px 0;
 }
 @media (min-width: 768px) {
   .page-section-filter {
     padding: 33px 0;
+    background-color: #fff;
   }
 }
 .filter-bar .text {
@@ -8684,6 +8687,7 @@ form#search {
 }
 .lend {
   background-color: #f9f9f9;
+  padding-top: 22px;
 }
 #mobile-results-desc {
   background-color: #f9f9f9;
@@ -8709,6 +8713,7 @@ form#search {
   #results-desc,
   #view-all {
     display: inline;
+    margin-left: -15px;
     margin-right: 50px;
   }
 }
@@ -8723,8 +8728,12 @@ form#search {
     margin-top: 0;
   }
 }
+.result {
+  background-color: #f9f9f9;
+}
 @media (min-width: 768px) {
   .result {
+    background-color: #fff;
     border: 1px solid #e5e5e5;
     box-shadow: 1px 1px 2px #e5e5e5;
     padding: 10px;
