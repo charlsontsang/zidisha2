@@ -273,6 +273,7 @@ class DatabaseMigration extends Command {
 
             foreach ($categories as $category) {
                 $newCategory = [
+                    'id'               => $category['id'],
                     'name'             => $category['name'],
                     'slug'             => '', // TODO
                     'what_description' => $category['what'],
@@ -431,6 +432,7 @@ class DatabaseMigration extends Command {
 
                 foreach ($stages as $stage) {
                     $newStage = [
+                        'id'          => $stage['id'],
                         'loan_id'     => $stage['loanid'],
                         'borrower_id' => $stage['borrowerid'],
                         'status'      => $stage['status'],
@@ -460,6 +462,7 @@ class DatabaseMigration extends Command {
 
                 foreach ($transactions as $transaction) {
                     $newTransaction = [
+                        'id'               => $transaction['id'],
                         'user_id'          => $transaction['userid'],
                         'amount'           => $transaction['amount'],
                         'description'      => $transaction['txn_desc'],
