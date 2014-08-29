@@ -73,6 +73,7 @@ class DatabaseMigration extends Command {
             $this->call('migrateDB', array('table' => 'gift_cards'));
             $this->call('migrateDB', array('table' => 'gift_card_transaction'));
             $this->call('migrateDB', array('table' => 'forgiveness_loan_shares'));
+            $this->call('migrateDB', array('table' => 'forgiveness_loans'));
 
         }
 
@@ -849,7 +850,32 @@ class DatabaseMigration extends Command {
             }
         }
 
+        if ($table == 'forgiveness_loans') {
+            $this->line('Migrate forgiveness_loans table');
 
+            $count = $this->con->table('loans_to_forgive')->count();
+            $offset = 0;
+            $limit = 500;
+
+            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+                $forgivenessLoans = $this->con->table('loans_to_forgive')
+                    ->where($offset)->limit($limit)->get();
+                $forgivenessLoanArray = [];
+
+                foreach ($forgivenessLoans as $forgivenessLoan) {
+                    $newForgivenessLoan = [
+                        'loan_id'           => $forgivenessLoan['loanid'],
+                        'borrower_id'       => $forgivenessLoan['borrowerid'],
+                        'comment'           => $forgivenessLoan['comment'],
+                        'verification_code' => $forgivenessLoan['validation_code'],
+                        'is_reminder_sent'  => $forgivenessLoan['reminder_sent']
+                    ];
+
+                    array_push($forgivenessLoanArray, $newForgivenessLoan);
+                }
+                DB::table('forgiveness_loans')->insert($forgivenessLoanArray);
+            }
+        }
 
 
 	}
