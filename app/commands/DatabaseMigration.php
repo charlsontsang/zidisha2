@@ -74,6 +74,7 @@ class DatabaseMigration extends Command {
             $this->call('migrateDB', array('table' => 'gift_card_transaction'));
             $this->call('migrateDB', array('table' => 'forgiveness_loan_shares'));
             $this->call('migrateDB', array('table' => 'forgiveness_loans'));
+            $this->call('migrateDB', array('table' => 'borrower_refunds'));
 
         }
 
@@ -874,6 +875,35 @@ class DatabaseMigration extends Command {
                     array_push($forgivenessLoanArray, $newForgivenessLoan);
                 }
                 DB::table('forgiveness_loans')->insert($forgivenessLoanArray);
+            }
+        }
+
+        if ($table == 'borrower_refunds') {
+            $this->line('Migrate borrower_refunds table');
+
+            $count = $this->con->table('borrower_refunds')->count();
+            $offset = 0;
+            $limit = 500;
+
+            for ($offset; $offset <$count; $offset = ($offset + $limit)) {
+                $borrowerRefunds = $this->con->table('borrower_refunds')
+                    ->where($offset)->limit($limit)->get();
+                $borrowerRefundArray = [];
+
+                foreach ($borrowerRefunds as $borrowerRefund) {
+                    $newBorrowerRefund = [
+                        'id'                  => $borrowerRefund['id'],
+                        'amount'              => $borrowerRefund['amount'],
+                        'borrower_id'         => $borrowerRefund['borrower_id'],
+                        'loan_id'             => $borrowerRefund['loan_id'],
+                        'borrower_payment_id' => $borrowerRefund['borrower_payment_id'],
+                        'refunded'            => $borrowerRefund['refunded'],
+                        'created_at'          => $borrowerRefund['created'] // because it's already DateTime in old DB
+                    ];
+
+                    array_push($borrowerRefundArray, $newBorrowerRefund);
+                }
+                DB::table('borrower_refunds')->insert($borrowerRefundArray);
             }
         }
 
