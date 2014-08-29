@@ -1,5 +1,6 @@
 <?php
 
+use Zidisha\Mail\Mailer;
 use Zidisha\Mail\Tester\AdminMailerTester;
 use Zidisha\Mail\Tester\BorrowerMailerTester;
 use Zidisha\Mail\Tester\LenderMailerTester;
@@ -56,6 +57,7 @@ class MailTesterController extends BaseController
             return Redirect::back()->withErrors($validator);
         }
         $email = trim(Input::get('email'));
+        Mailer::enableTestMode($email);
 
         if ($mailer == 'lender') {
             if (method_exists($this->lenderMailerTester, $method)){

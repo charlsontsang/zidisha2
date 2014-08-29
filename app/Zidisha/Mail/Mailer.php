@@ -23,6 +23,8 @@ class Mailer
     private $sendwithusDriver;
 
     protected $useSendWithUs;
+    
+    protected static $testEmail;
 
     public function __construct(LaravelMailerDriver $laravelMailerDriver, SendwithusDriver $sendwithusDriver)
     {
@@ -32,11 +34,21 @@ class Mailer
         $this->laravelMailerDriver = $laravelMailerDriver;
         $this->sendwithusDriver = $sendwithusDriver;
     }
+    
+    public static function enableTestMode($email)
+    {
+        static::$testEmail = $email;
+    }
 
     public function send($view, $data)
     {
         if (!$this->enabled) {
             return;
+        }
+        
+        if (static::$testEmail) {
+            $data['subject'] = $data['subject'] . ' (' . $data['to'] . ')';
+            $data['to'] = static::$testEmail;
         }
 
         $data += [
