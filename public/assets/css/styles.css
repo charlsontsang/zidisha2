@@ -8658,6 +8658,9 @@ body {
 #search {
   max-width: 300px;
 }
+#search .btn {
+  height: 36px;
+}
 #show {
   padding-left: 0;
   display: none;
@@ -8668,15 +8671,16 @@ body {
   }
 }
 #results-info {
-  background-color: #f9f9f9;
   margin-top: 5px;
   margin-bottom: -10px;
 }
 @media (min-width: 768px) {
   #results-info {
-    background-color: #fff;
     margin: 0;
   }
+}
+.lend {
+  background-color: #f9f9f9;
 }
 #mobile-results-desc {
   background-color: #f9f9f9;
