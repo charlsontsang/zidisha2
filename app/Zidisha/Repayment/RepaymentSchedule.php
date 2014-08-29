@@ -173,11 +173,24 @@ class RepaymentSchedule implements \IteratorAggregate
         return $this->totalAmountPaid;
     }
 
+    /**
+     * @return Money
+     */
+    public function getRemainingDueAmount()
+    {
+        return $this->getTotalAmountDue()->subtract($this->getTotalAmountPaid());
+    }
+
     public function getRemainingAmountDue()
     {
         return $this->getTotalAmountDue()
             ->subtract($this->getTotalAmountPaid())
             ->max(Money::create(0, $this->loan->getCurrencyCode()));
+    }
+
+    public function getTotalInterest()
+    {
+        return $this->getTotalAmountDue()->subtract($this->loan->getDisbursedAmount());
     }
 
     public function getLastDueDate()
@@ -223,6 +236,11 @@ class RepaymentSchedule implements \IteratorAggregate
         }
 
         return $i;
+    }
+
+    public function getPeriod()
+    {
+        return count($this->installments);
     }
 
 }
