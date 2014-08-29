@@ -68,7 +68,7 @@
 <hr/>
 
 {{ BootstrapForm::open([
-    'route' => ['borrower:post-reschedule-loan', $loan->getId()],
+    'route' => ['borrower:post-reschedule-loan'],
     'translationDomain' => 'borrower.your-loans.reschedule'
 ]) }}
 {{ BootstrapForm::populate($form) }}
