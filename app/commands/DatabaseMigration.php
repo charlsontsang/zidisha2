@@ -75,6 +75,7 @@ class DatabaseMigration extends Command {
             $this->call('migrateDB', array('table' => 'forgiveness_loan_shares'));
             $this->call('migrateDB', array('table' => 'forgiveness_loans'));
             $this->call('migrateDB', array('table' => 'borrower_refunds'));
+            $this->call('migrateDB', array('table' => 'volunteer_mentors'));
 
         }
 
@@ -904,6 +905,34 @@ class DatabaseMigration extends Command {
                     array_push($borrowerRefundArray, $newBorrowerRefund);
                 }
                 DB::table('borrower_refunds')->insert($borrowerRefundArray);
+            }
+        }
+
+        if ($table == 'volunteer_mentors') {
+            $this->line('Migrate volunteer_mentors table');
+
+            $count = $this->con->table('community_organizers')->count();
+            $offset = 0;
+            $limit = 500;
+
+            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+                $volunteerMentors = $this->con->table('community_organizers')
+                    ->where($offset)->limit($limit)->get();
+                $volunteerMentorArray = [];
+
+                foreach ($volunteerMentors as $volunteerMentor) {
+                    $newVolunteerMentor = [
+                        'borrower_id' => $volunteerMentor['user_id'],
+                        'country_id'  => $volunteerMentor['country'],
+                        'grant_date'  => date("Y-m-d H:i:s", $volunteerMentor['grant_date']),
+                        'note'        => $volunteerMentor['note'],
+                        'status'      => $volunteerMentor['status']
+                    ];
+                    //TODO, will mentee_count get calculated here?
+
+                    array_push($volunteerMentorArray, $newVolunteerMentor);
+                }
+                DB::table('volunteer_mentors')->insert($volunteerMentorArray);
             }
         }
 
