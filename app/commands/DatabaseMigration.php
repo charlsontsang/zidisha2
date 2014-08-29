@@ -79,6 +79,7 @@ class DatabaseMigration extends Command {
             // TODO for borrower_join_logs if any
             // TODO for borrower_guests if any
             $this->call('migrateDB', array('table' => 'borrower_feedback_messages'));
+            $this->call('migrateDB', array('table' => 'borrower_reviews'));
 
 
         }
@@ -969,6 +970,40 @@ class DatabaseMigration extends Command {
                     array_push($feedbackMessageArray, $newFeedbackMessage);
                 }
                 DB::table('borrower_feedback_messages')->insert($feedbackMessageArray);
+            }
+        }
+
+        if ($table == 'borrower_reviews') {
+            $this->line('Migrate borrower_reviews table');
+
+            $count = $this->con->table('borrower_review')->count();
+            $offset = 0;
+            $limit = 500;
+
+            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+                $borrowerReviews = $this->con->table('borrower_review')
+                    ->where($offset)->limit($limit)->get();
+                $borrowerReviewArray = [];
+
+                foreach ($borrowerReviews as $borrowerReview) {
+                    $newBorrowerReview = [
+                        'borrower_id'               => $borrowerReview['borrower_id'],
+                        'is_photo_clear'            => $borrowerReview['is_photo_clear'],
+                        'is_desc_clear'             => $borrowerReview['is_desc_clear'],
+                        'is_address_locatable'      => $borrowerReview['is_addr_locatable'],
+                        'is_address_locatable_note' => '', //TODO
+                        'is_number_provided'        => $borrowerReview['is_number_provided'],
+                        'is_nat_id_uploaded'        => $borrowerReview['is_nat_id_uploaded'],
+                        'is_rec_form_uploaded'      => $borrowerReview['is_rec_form_uploaded'],
+                        'is_rec_form_offcr_name'    => $borrowerReview['is_rec_form_offcr_name'],
+                        'is_pending_mediation'      => $borrowerReview['is_pending_mediation'],
+                        'created_by'                => $borrowerReview['created_by'],
+                        'modified_by'               => $borrowerReview['modified_by']
+                    ];
+
+                    array_push($borrowerReviewArray, $newBorrowerReview);
+                }
+                DB::table('borrower_reviews')->insert($borrowerReviewArray);
             }
         }
 
