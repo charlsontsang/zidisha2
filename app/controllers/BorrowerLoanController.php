@@ -5,10 +5,10 @@ use Zidisha\Borrower\Borrower;
 use Zidisha\Loan\BidQuery;
 use Zidisha\Loan\Calculator\BidsCalculator;
 use Zidisha\Loan\Calculator\InstallmentCalculator;
-use Zidisha\Loan\Calculator\RescheduleCalculator;
 use Zidisha\Loan\Loan;
 use Zidisha\Loan\LoanQuery;
 use Zidisha\Loan\LoanService;
+use Zidisha\Repayment\RepaymentSchedule;
 use Zidisha\Repayment\RepaymentService;
 
 class BorrowerLoanController extends BaseController
@@ -97,17 +97,14 @@ class BorrowerLoanController extends BaseController
         $borrower = \Auth::user()->getBorrower();
         $loan = $borrower->getActiveLoan();
 
-        $repaymentSchedule = $this->repaymentService->getRepaymentSchedule($loan);
-
-        $rescheduleCalculator = new RescheduleCalculator($loan, $repaymentSchedule);
-        $minInstallmentAmount = $rescheduleCalculator->minInstallmentAmount();
         $this->validateReschedule($loan);
 
-        $form = new RescheduleLoanForm($rescheduleCalculator);
+        $repaymentSchedule = $this->repaymentService->getRepaymentSchedule($loan);
+        $form = new RescheduleLoanForm($loan, $repaymentSchedule);
 
         return View::make(
             'borrower.loan.reschedule-loan',
-            compact('borrower', 'loan', 'repaymentSchedule', 'form', 'minInstallmentAmount')
+            compact('borrower', 'loan', 'repaymentSchedule', 'form')
         );
     }
 
@@ -120,12 +117,11 @@ class BorrowerLoanController extends BaseController
         $this->validateReschedule($loan);
 
         $repaymentSchedule = $this->repaymentService->getRepaymentSchedule($loan);
-        $rescheduleCalculator = new RescheduleCalculator($loan, $repaymentSchedule);
-        $form = new RescheduleLoanForm($rescheduleCalculator);
+        $form = new RescheduleLoanForm($loan, $repaymentSchedule);
         $form->handleRequest(Request::instance());
 
         if ($form->isValid()) {
-            $data = $form->getData();
+            \Session::put('reschedule', $form->getData());
 
             \Flash::success('Successfully rescheduled your loan.');
             return Redirect::route('borrower:loan-information', $loan->getId());

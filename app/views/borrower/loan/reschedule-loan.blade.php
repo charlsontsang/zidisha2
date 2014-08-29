@@ -44,8 +44,8 @@
                 <td>
                     {{ $loan->getTotalInterest()->round(2) }}
                     ({{ Lang::get($loan->isWeeklyInstallment() ? 'borrower.your-loans.interest-rate-for-weeks' : 'borrower.your-loans.interest-rate-for-months', [
-                    'interestRate' => $loan->getLenderInterestRate() + $loan->getServiceFeeRate(),
-                    'period' => $loan->getPeriod(),
+                        'interestRate' => $loan->getTotalInterestRate(),
+                        'period' => $loan->getPeriod(),
                     ]) }})
                 </td>
             </tr>
@@ -75,7 +75,7 @@
 
 {{ BootstrapForm::text('installmentAmount', null, [
     'description' => Lang::get('borrower.your-loans.reschedule.installment-amount-description', [
-                        'minInstallmentAmount' => $minInstallmentAmount,
+                        'minInstallmentAmount' => $form->getMinInstallmentAmount(),
                         'maxPeriod'            => Setting::get('loan.maxExtraPeriodRescheduledLoan'),
                      ]),
     'prepend'     => $loan->getCurrencyCode(),
