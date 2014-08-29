@@ -64,6 +64,7 @@ class DatabaseMigration extends Command {
             $this->call('migrateDB', array('table' => 'exchange_rates'));
             $this->call('migrateDB', array('table' => 'installments'));
             $this->call('migrateDB', array('table' => 'installment_payments'));
+            $this->call('migrateDB', array('table' => 'borrower_payments'));
         }
 
         if ($table == 'users') {
@@ -590,6 +591,39 @@ class DatabaseMigration extends Command {
                 DB::table('installment_payments')->insert($paymentArray);
             }
         }
+
+        if ($table == 'borrower_payments') {
+            $this->line('Migrate borrower_payments table');
+
+            $count = $this->con->table('borrower_payments')->count();
+            $offset = 0;
+            $limit = 500;
+
+            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+                $borrowerPayments = $this->con->table('borrower_payments')
+                    ->where($offset)->limit($limit)->get();
+                $borrowerPaymentArray = [];
+
+                foreach ($borrowerPayments as $borrowerPayment) {
+                    $newBorrowerPayment = [
+                        'id'           => $borrowerPayment['id'],
+                        'country_code' => $borrowerPayment['country_code'],
+                        'receipt'      => $borrowerPayment['receipt'],
+                        'date'         => date("Y-m-d H:i:s", $borrowerPayment['date']),
+                        'amount'       => $borrowerPayment['amount'],
+                        'borrower_id'  => $borrowerPayment['borrower_id'],
+                        'status'       => $borrowerPayment['status'],
+                        'phone'        => $borrowerPayment['phone'],
+                        'details'      => $borrowerPayment['details'],
+                        'error'        => $borrowerPayment['error']
+                    ];
+
+                    array_push($borrowerPaymentArray, $newBorrowerPayment);
+                }
+                DB::table('borrower_payments')->insert($borrowerPaymentArray);
+            }
+        }
+
 
 
 	}
