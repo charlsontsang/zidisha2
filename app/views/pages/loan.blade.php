@@ -505,13 +505,6 @@
                                         <td>Loan for {{ $loan->getBorrower()->getFirstName() }}</td>
                                         <td>$<span id="amount-display"></span></td> 
                                     </tr>
-                                    <tr style="display: none;">
-                                        <td>
-                                            Credit card fee
-                                            <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="bottom" title="Covers credit card charges"></i>
-                                        </td>
-                                        <td>$<span id="fee-amount-display"></span></td>
-                                    </tr>
                                     <tr>
                                         <td>
                                             Donation to Zidisha
@@ -524,6 +517,13 @@
                                                 ]) }}
                                         <!-- TO DO: make the default 15% of the loan amount -->
                                         </td>
+                                    </tr>
+                                    <tr style="display: none;">
+                                        <td>
+                                            Credit card fee
+                                            <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="bottom" title="Covers credit card charges"></i>
+                                        </td>
+                                        <td>$<span id="fee-amount-display"></span></td>
                                     </tr>
                                     <tr>
                                         <td><strong>Total</strong></td>

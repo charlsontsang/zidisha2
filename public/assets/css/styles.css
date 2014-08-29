@@ -8902,6 +8902,9 @@ a.link-dark {
 .lend-details .table .form-control {
   width: 70%;
 }
+.lend-details .table .form-control#donation-amount {
+  height: 25px;
+}
 .lend-details .table tbody > tr > td {
   vertical-align: middle;
 }
