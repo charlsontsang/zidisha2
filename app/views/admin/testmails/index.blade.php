@@ -7,7 +7,12 @@
 @section('content')
     {{ BootstrapForm::open(array('route' => 'admin:mail:post:mail')) }}
 
-    {{ BootstrapForm::text('email') }}
+    <br/>
+    <div class="row">
+        <div class="col-md-4">
+            {{ BootstrapForm::text('email', null, ['label' => 'Send emails to']) }}
+        </div>
+    </div>
 
     <div class="row">
         <div class="col-xs-6">
@@ -31,7 +36,7 @@
                                     {{ $method }}
                                 </td>
                                 <td>
-                                    <button name="method" type="submit" value="lender#{{ $method }}">Send</button>
+                                    <button class="btn btn-primary" name="method" type="submit" value="lender#{{ $method }}">Send</button>
                                 </td>
                             </tr>
                         @endif
@@ -60,7 +65,7 @@
                         {{ $method }}
                     </td>
                     <td>
-                        <button name="method" type="submit" value="borrower#{{ $method }}">Send</button>
+                        <button class="btn btn-primary" name="method" type="submit" value="borrower#{{ $method }}">Send</button>
                     </td>
                 </tr>
                 @endif
@@ -93,7 +98,7 @@
                     {{ $method }}
                 </td>
                 <td>
-                    <button name="method" type="submit" value="admin#{{ $method }}">Send</button>
+                    <button class="btn btn-primary" name="method" type="submit" value="admin#{{ $method }}">Send</button>
                 </td>
             </tr>
             @endif
@@ -122,7 +127,7 @@
                     {{ $method }}
                 </td>
                 <td>
-                    <button name="method" type="submit" value="user#{{ $method }}">Send</button>
+                    <button class="btn btn-primary" name="method" type="submit" value="user#{{ $method }}">Send</button>
                 </td>
             </tr>
             @endif
