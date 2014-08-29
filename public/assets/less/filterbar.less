@@ -52,7 +52,10 @@
     max-width: 300px;
 }
 form#search {
-    margin-bottom: 0;
+    margin-bottom: 20px;
+    @media (min-width: @screen-sm-min) {
+      margin-bottom: 0;
+    }
 }
 #search .btn {
     height: 36px;
