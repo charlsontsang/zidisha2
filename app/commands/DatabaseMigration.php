@@ -71,6 +71,7 @@ class DatabaseMigration extends Command {
             $this->call('migrateDB', array('table' => 'paypal_ipn_log'));
             // TODO from paypal_transactions to payments
             $this->call('migrateDB', array('table' => 'gift_cards'));
+            $this->call('migrateDB', array('table' => 'gift_card_transaction'));
 
         }
 
@@ -753,7 +754,7 @@ class DatabaseMigration extends Command {
 
             for ($offset; $offset < $count; $offset = ($offset + $limit)) {
                 $giftCards = $this->con->table('gift_cards')
-                    ->join('gift_transaction', 'gift_cards.txn_id', '=', 'gift_transaction.txn_id') // TODO croos check(is it txn_id or id)
+                    ->join('gift_transaction', 'gift_cards.txn_id', '=', 'gift_transaction.txn_id') // TODO cross check(is it gift_transaction.txn_id or gift_transaction.id)
                     ->where($offset)->limit($limit)->get();
                 $giftCardArray = [];
 
@@ -776,12 +777,44 @@ class DatabaseMigration extends Command {
                         'claimed'                  => $giftCard['gift_cards.claimed'],
                         'recipient_id'             => $giftCard['gift_cards.claimed_by'],
                         'donated'                  => $giftCard['gift_cards.donated'],
-                        'gift_card_transaction_id' => $giftCard['gift_cards.txn_id'] // TODO cross check
+                        'gift_card_transaction_id' => $giftCard['gift_transaction.id'] // TODO cross check
                     ];
 
                     array_push($giftCardArray, $newGiftCard);
                 }
                 DB::table('gift_cards')->insert($giftCardArray);
+            }
+        }
+
+        if ($table == 'gift_card_transaction') {
+            $this->line('Migrate gift_card_transaction table');
+
+            $count = $this->con->table('gift_transaction')->count();
+            $offset = 0;
+            $limit = 500;
+
+            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+                $giftCardTransactions = $this->con->table('gift_transaction')
+                    ->where($offset)->limit($limit)->get();
+                $giftCardTransactionArray = [];
+
+                foreach ($giftCardTransactions as $giftCardTransaction) {
+                    $newGiftCardTransaction = [
+                        'id'               => $giftCardTransaction['id'],
+                        'transaction_id'   => $giftCardTransaction['txn_id'],
+                        'transaction_type' => $giftCardTransaction['txn_type'],
+                        'lender_id'        => $giftCardTransaction['userid'],
+                        'invoice_id'       => $giftCardTransaction['invoiceid'],
+                        'status'           => $giftCardTransaction['status'],
+                        'total_cards'      => $giftCardTransaction['total_cards'],
+                        'amount'           => $giftCardTransaction['amount'],
+                        'donation'         => $giftCardTransaction['donation'],
+                        'date'             => date("Y-m-d H:i:s", $giftCardTransaction['date']),
+                    ];
+
+                    array_push($giftCardTransactionArray, $newGiftCardTransaction);
+                }
+                DB::table('gift_card_transaction')->insert($giftCardTransactionArray);
             }
         }
 
