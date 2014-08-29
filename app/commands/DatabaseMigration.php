@@ -61,6 +61,7 @@ class DatabaseMigration extends Command {
             $this->call('migrateDB', array('table' => 'loan_stages'));
             $this->call('migrateDB', array('table' => 'transactions'));
             $this->call('migrateDB', array('table' => 'comments'));
+            $this->call('migrateDB', array('table' => 'exchange_rates'));
         }
 
         if ($table == 'users') {
@@ -476,7 +477,7 @@ class DatabaseMigration extends Command {
             }
         }
 
-        // TODO all type of comments table
+        // TODO all type of comments table , till borrower_uploads table
         if ($table == 'comments') {
             $this->line('Migrate comments table');
 
@@ -498,6 +499,35 @@ class DatabaseMigration extends Command {
                 }
             }
         }
+
+        if ($table == 'exchange_rates') {
+            $this->line('Migrate exchange_rates table');
+
+            $count = $this->con->table('excrate')->count();
+            $offset = 0;
+            $limit = 500;
+
+            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+                $rates = $this->con->table('excrate')
+                    ->join('currency', 'excrate.currency', '=', 'currency.id')
+                    ->where($offset)->limit($limit)->get();
+                $rateArray = [];
+
+                foreach ($rates as $rate) {
+                    $newRate = [
+                        'id'            => $rate['excrate.id'],
+                        'rate'          => $rate['excrate.rate'],
+                        'start_date'    => date("Y-m-d H:i:s", $rate['excrate.start']),
+                        'end_date'      => date("Y-m-d H:i:s", $rate['excrate.stop']),
+                        'currency_code' => $rate['currency.Currency']
+                    ];
+
+                    array_push($rateArray, $newRate);
+                }
+                DB::table('exchange_rates')->insert($rateArray);
+            }
+        }
+
 	}
 
 	/**
