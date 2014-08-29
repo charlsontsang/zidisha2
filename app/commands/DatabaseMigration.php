@@ -328,7 +328,7 @@ class DatabaseMigration extends Command {
             $limit = 500;
             for ($offset; $offset < $count; $offset = ($offset + $limit)) {
                 $loans = $this->con->table('loanapplic')
-                    ->get();
+                    ->where($offset)->take($limit)->get();
                 $loanArray = [];
 
                 //TODO check most amount things and fill  unfilled values
@@ -390,7 +390,7 @@ class DatabaseMigration extends Command {
             for ($offset; $offset < $limit; $count = ($offset + $limit)) {
                 $bids = $this->con->table('loanbids')
                     ->join('loanapplic', 'loanbids.loanid', '=', 'loanapplic.loanid')
-                    ->get();
+                    ->where($offset)->take($limit)->get();
                 $bidArray = [];
 
                 foreach ($bids as $bid) {
@@ -424,7 +424,7 @@ class DatabaseMigration extends Command {
 
             for ($offset; $offset < $count; $offset = ($offset + $limit)) {
                 $stages = $this->con->table('loanstage')
-                    ->get();
+                    ->where($offset)->take($limit)->get();
                 $stageArray = [];
 
                 foreach ($stages as $stage) {
@@ -447,12 +447,31 @@ class DatabaseMigration extends Command {
         if ($table == 'transactions') {
             $this->line('Migrate transactions table');
 
-            $count = $this->con->table('')->count();
+            $count = $this->con->table('transactions')->count();
             $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $limit; $offset = ($offset + $limit)) {
+            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+                $transactions = $this->con->table('transactions')
+                    ->where($offset)->take($limit)->get();
+                $transactionArray = [];
 
+                foreach ($transactions as $transaction) {
+                    $newTransaction = [
+                        'user_id' => $transaction['userid'],
+                        'amount' => $transaction['amount'],
+                        'description' => $transaction['txn_desc'],
+                        'loan_id' => $transaction['loanid'],
+                        'transaction_date' => $transaction['TrDate'],
+                        'exchange_rate' => $transaction['conversionrate'],
+                        'type' => $transaction['txn_type'],
+                        'sub_type' => $transaction['txn_sub_type'],
+                        'loan_bid_id' => $transaction['loanbid_id']
+                    ];
+
+                    array_push($transactionArray, $newTransaction);
+                }
+                DB::table('transactions')->insert($transactionArray);
             }
         }
 
