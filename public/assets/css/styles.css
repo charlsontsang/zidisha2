@@ -8628,6 +8628,15 @@ body {
     margin-bottom: -15px;
   }
 }
+#show {
+  padding-left: 0;
+  display: none;
+}
+@media (min-width: 992px) {
+  #show {
+    display: inline;
+  }
+}
 #results-info {
   background-color: #f9f9f9;
   margin-top: 5px;

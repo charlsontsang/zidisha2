@@ -23,7 +23,7 @@ Lend
         <div class="row">
             <div class="col-md-10">
                 <div class="filter-bar">
-                    <span class="text" style="padding-left: 0;">Show</span>
+                    <span class="text" id="show">Show</span>
                     <div class="btn btn-default btn-filter" target="#filter-categories">
                         {{ $selectedLoanCategory ? $selectedLoanCategory->getName() : 'All' }}
                         <i class="fa fa-fw fa-caret-down"></i>
