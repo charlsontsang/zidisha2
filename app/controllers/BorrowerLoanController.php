@@ -95,17 +95,13 @@ class BorrowerLoanController extends BaseController
     {
         /** @var Borrower $borrower */
         $borrower = \Auth::user()->getBorrower();
-
-        if (!$borrower->getActiveLoanId()) {
-            App::abort('404');
-        }
-        
         $loan = $borrower->getActiveLoan();
 
         $repaymentSchedule = $this->repaymentService->getRepaymentSchedule($loan);
 
         $rescheduleCalculator = new RescheduleCalculator($loan, $repaymentSchedule);
         $minInstallmentAmount = $rescheduleCalculator->minInstallmentAmount();
+        $this->validateReschedule($loan);
 
         $form = new RescheduleLoanForm($rescheduleCalculator);
 
@@ -119,12 +115,9 @@ class BorrowerLoanController extends BaseController
     {
         /** @var Borrower $borrower */
         $borrower = \Auth::user()->getBorrower();
-
-        if (!$borrower->getActiveLoanId()) {
-            App::abort('404');
-        }
-
         $loan = $borrower->getActiveLoan();
+
+        $this->validateReschedule($loan);
 
         $repaymentSchedule = $this->repaymentService->getRepaymentSchedule($loan);
         $rescheduleCalculator = new RescheduleCalculator($loan, $repaymentSchedule);
@@ -141,5 +134,13 @@ class BorrowerLoanController extends BaseController
         \Flash::error('Invalid input values.');
         
         return Redirect::route('borrower:reschedule-loan')->withForm($form);
+    }
+
+    protected function validateReschedule(Loan $loan)
+    {
+        // TODO check if reschedule is allowed
+        if (!$loan || !$loan->isActive()) {
+            App::abort('404');
+        }
     }
 } 
