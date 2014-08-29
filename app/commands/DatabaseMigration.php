@@ -63,6 +63,7 @@ class DatabaseMigration extends Command {
             $this->call('migrateDB', array('table' => 'comments'));
             $this->call('migrateDB', array('table' => 'exchange_rates'));
             $this->call('migrateDB', array('table' => 'installments'));
+            $this->call('migrateDB', array('table' => 'installment_payments'));
         }
 
         if ($table == 'users') {
@@ -560,6 +561,36 @@ class DatabaseMigration extends Command {
                 DB::table('installments')->insert($installmentArray);
             }
         }
+
+        if ($table == 'installment_payments') {
+            $this->line('Migrate installment_payments table');
+
+            $count = $this->con->table('repaymentschedule_actual')->count();
+            $offset = 0;
+            $limit = 500;
+
+            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+                $payments = $this->con->table('repaymentschedule_actual')
+                    ->where($offset)->limit($limit)->get();
+                $paymentArray = [];
+
+                foreach ($payments as $payment) {
+                    $newPayment = [
+                        'id'               => $payment['id'],
+                        'installment_id'   => $payment['rid'],
+                        'borrower_id'      => $payment['userid'],
+                        'loan_id'          => $payment['loanid'],
+                        'paid_date'        => date("Y-m-d H:i:s", $payment['paiddate']),
+                        'paid_amount'      => $payment['paidamt'],
+                        'exchange_rate_id' => 0, //TODO
+                    ];
+
+                    array_push($paymentArray, $newPayment);
+                }
+                DB::table('installment_payments')->insert($paymentArray);
+            }
+        }
+
 
 	}
 
