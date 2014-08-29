@@ -72,6 +72,7 @@ class DatabaseMigration extends Command {
             // TODO from paypal_transactions to payments
             $this->call('migrateDB', array('table' => 'gift_cards'));
             $this->call('migrateDB', array('table' => 'gift_card_transaction'));
+            $this->call('migrateDB', array('table' => 'forgiveness_loan_shares'));
 
         }
 
@@ -817,6 +818,37 @@ class DatabaseMigration extends Command {
                 DB::table('gift_card_transaction')->insert($giftCardTransactionArray);
             }
         }
+
+        if ($table == 'forgiveness_loan_shares') {
+            $this->line('Migrate forgiveness_loan_shares table');
+
+            $count = $this->con->table('forgiven_loans')->count();
+            $offset = 0;
+            $limit = 500;
+
+            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+                $forgivenessLoanShares = $this->con->table('forgiven_loans')
+                    ->where($offset)->limit($limit)->get();
+                $forgivenessLoanShareArray = [];
+
+                foreach ($forgivenessLoanShares as $forgivenessLoanShare) {
+                    $newForgivenessLoanShare = [
+                        'id'          => $forgivenessLoanShare['id'],
+                        'loan_id'     => $forgivenessLoanShare['loan_id'],
+                        'lender_id'   => $forgivenessLoanShare['lender_id'],
+                        'borrower_id' => $forgivenessLoanShare['borrower_id'],
+                        'amount'      => $forgivenessLoanShare['amount'],
+                        'usdAmount'   => $forgivenessLoanShare['damount'],
+                        'is_accepted' => $forgivenessLoanShare['tnc'],
+                        'date'        => date("Y-m-d H:i:s", $forgivenessLoanShare['date'])
+                    ];
+
+                    array_push($forgivenessLoanShareArray, $newForgivenessLoanShare);
+                }
+                DB::table('forgiveness_loan_shares')->insert($forgivenessLoanShareArray);
+            }
+        }
+
 
 
 
