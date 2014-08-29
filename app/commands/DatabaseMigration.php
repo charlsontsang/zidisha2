@@ -91,8 +91,8 @@ class DatabaseMigration extends Command {
                         'remember_token'     => 'TODO',
                         'role'               => null, //TODO , once i know how it's in old db
                         'sub_role'           => null, //TODO , once i know how it's in old db
-                        'joined_at'          => $user['users.regdate'],
-                        'last_login_at'      => $user['users.last_login'],
+                        'joined_at'          => date("Y-m-d H:i:s", $user['users.regdate']),
+                        'last_login_at'      => date("Y-m-d H:i:s", $user['users.last_login']),
                         'active'             => $user['lenders.Active'] ? $user['lenders.Active'] : $user['borrowers.Active']
                     ];
 
@@ -200,7 +200,7 @@ class DatabaseMigration extends Command {
                         'business_category_id'       => '',
                         'business_years'             => '',
                         'loan_usage'                 => '',
-                        'birth_date'                 => '',
+                        'birth_date'                 => null,
                     ];
 
                     //TODO, though all values are required in both tables, many are null in sample data
@@ -353,12 +353,12 @@ class DatabaseMigration extends Command {
                         'category_id'           => $loan['loan_category_id'],
                         'secondary_category_id' => $loan['secondary_loan_category_id'],
                         'status'                => $loan['active'],
-                        'applied_at'            => $loan['applydate'],
-                        'accepted_at'           => $loan['AcceptDate'],
-                        'expired_at'            => $loan['expires'],
+                        'applied_at'            => date("Y-m-d H:i:s", $loan['applydate']),
+                        'accepted_at'           => date("Y-m-d H:i:s", $loan['AcceptDate']),
+                        'expired_at'            => date("Y-m-d H:i:s", $loan['expires']),
                         'canceled_at'           => '',
-                        'repaid_at'             => $loan['RepaidDate'],
-                        'authorized_at'         => $loan['auth_date'],
+                        'repaid_at'             => date("Y-m-d H:i:s", $loan['RepaidDate']),
+                        'authorized_at'         => date("Y-m-d H:i:s", $loan['auth_date']),
                         'authorized_amount'     => '',
                         'disbursed_at'          => '',
                         'disbursed_amount'      => $loan['AmountGot'],
@@ -406,10 +406,10 @@ class DatabaseMigration extends Command {
                         'interest_rate'           => '', //TODO
                         'active'                  => $bid['loanbids.active'],
                         'accepted_amount'         => $bid['loanbids.givenamount'],
-                        'bid_at'                  => $bid['loanbids.biddate'],
+                        'bid_at'                  => date("Y-m-d H:i:s", $bid['loanbids.biddate']),
                         'is_lender_invite_credit' => $bid['loanbids.use_lender_invite_credit'],
                         'is_automated_lending'    => null, //TODO
-                        'updated_at'              => $bid['loanbids.modified'] //TODO is necessary?
+                        'updated_at'              => date("Y-m-d H:i:s", $bid['loanbids.modified']), //TODO is necessary?
                     ];
 
                     array_push($bidArray, $newBid);
@@ -436,10 +436,10 @@ class DatabaseMigration extends Command {
                         'loan_id'     => $stage['loanid'],
                         'borrower_id' => $stage['borrowerid'],
                         'status'      => $stage['status'],
-                        'start_date'  => $stage['startdate'],
-                        'end_date'    => $stage['enddate'],
-                        'created_at'  => $stage['created'],
-                        'updated_at'  => $stage['modified']
+                        'start_date'  => date("Y-m-d H:i:s", $stage['startdate']),
+                        'end_date'    => date("Y-m-d H:i:s", $stage['enddate']),
+                        'created_at'  => date("Y-m-d H:i:s", $stage['created']),
+                        'updated_at'  => date("Y-m-d H:i:s", $stage['modified']),
                     ];
 
                     array_push($stageArray, $newStage);
@@ -467,7 +467,7 @@ class DatabaseMigration extends Command {
                         'amount'           => $transaction['amount'],
                         'description'      => $transaction['txn_desc'],
                         'loan_id'          => $transaction['loanid'],
-                        'transaction_date' => $transaction['TrDate'],
+                        'transaction_date' => date("Y-m-d H:i:s", $transaction['TrDate']),
                         'exchange_rate'    => $transaction['conversionrate'],
                         'type'             => $transaction['txn_type'],
                         'sub_type'         => $transaction['txn_sub_type'],
