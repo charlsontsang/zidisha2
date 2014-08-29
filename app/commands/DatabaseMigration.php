@@ -60,6 +60,7 @@ class DatabaseMigration extends Command {
             $this->call('migrateDB', array('table' => 'password_reminders'));
             $this->call('migrateDB', array('table' => 'loan_stages'));
             $this->call('migrateDB', array('table' => 'transactions'));
+            $this->call('migrateDB', array('table' => 'comments'));
         }
 
         if ($table == 'users') {
@@ -458,15 +459,15 @@ class DatabaseMigration extends Command {
 
                 foreach ($transactions as $transaction) {
                     $newTransaction = [
-                        'user_id' => $transaction['userid'],
-                        'amount' => $transaction['amount'],
-                        'description' => $transaction['txn_desc'],
-                        'loan_id' => $transaction['loanid'],
+                        'user_id'          => $transaction['userid'],
+                        'amount'           => $transaction['amount'],
+                        'description'      => $transaction['txn_desc'],
+                        'loan_id'          => $transaction['loanid'],
                         'transaction_date' => $transaction['TrDate'],
-                        'exchange_rate' => $transaction['conversionrate'],
-                        'type' => $transaction['txn_type'],
-                        'sub_type' => $transaction['txn_sub_type'],
-                        'loan_bid_id' => $transaction['loanbid_id']
+                        'exchange_rate'    => $transaction['conversionrate'],
+                        'type'             => $transaction['txn_type'],
+                        'sub_type'         => $transaction['txn_sub_type'],
+                        'loan_bid_id'      => $transaction['loanbid_id']
                     ];
 
                     array_push($transactionArray, $newTransaction);
@@ -475,6 +476,28 @@ class DatabaseMigration extends Command {
             }
         }
 
+        // TODO all type of comments table
+        if ($table == 'comments') {
+            $this->line('Migrate comments table');
+
+            $count = $this->con->table('comments')->count();
+            $offset = 0;
+            $limit = 500;
+
+            for ($offset; $offset < $count ; $offset = ($offset + $limit)) {
+                $comments = $this->con->table('comments')
+                    ->where($offset)->limit($limit)->get();
+                $commentArray = [];
+
+                foreach ($comments as $comment) {
+                    $newComment = [
+                        'id'      => $comment['id'],
+                        'user_id' => $comment['userid'],
+                        'message' => ''
+                    ];
+                }
+            }
+        }
 	}
 
 	/**
