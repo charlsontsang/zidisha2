@@ -8251,10 +8251,6 @@ body {
 .navbar-default .navbar-text {
   color: #777777;
 }
-.navbar-default .navbar-nav > li > a {
-  font-size: 14px;
-  text-transform: uppercase;
-}
 .navbar-default .navbar-nav > li > a:hover,
 .navbar-default .navbar-nav > li > a:focus {
   color: #2e9df7;
