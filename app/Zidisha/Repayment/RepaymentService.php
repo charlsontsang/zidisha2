@@ -323,9 +323,6 @@ class RepaymentService
         $currentAmount = $currentPayment ? $currentPayment->getPaidAmount() : $zero;
 
         foreach ($installments as $installment) {
-            if (!$installment->getAmount()->isPositive()) {
-                continue;
-            }
             $openAmount = $installment->getAmount();
             $payments = [];
 
