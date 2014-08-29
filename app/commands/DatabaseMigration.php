@@ -66,6 +66,7 @@ class DatabaseMigration extends Command {
             $this->call('migrateDB', array('table' => 'installment_payments'));
             $this->call('migrateDB', array('table' => 'borrower_payments'));
             $this->call('migrateDB', array('table' => 'lender_invites'));
+            $this->call('migrateDB', array('table' => 'lender_invite_visits'));
         }
 
         if ($table == 'users') {
@@ -653,6 +654,37 @@ class DatabaseMigration extends Command {
                 DB::table('lender_invites')->insert($lenderInviteArray);
             }
         }
+
+        if ($table == 'lender_invite_visits') {
+            $this->line('Migrate lender_invite_visits table');
+
+            $count = $this->con->table('lender_invite_visits')->count();
+            $offset = 0;
+            $limit = 500;
+
+            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+                $inviteVisits = $this->con->table('lender_invite_visits')
+                    ->where($offset)->limit($limit)->get();
+                $inviteVisitArray = [];
+
+                foreach ($inviteVisits as $inviteVisit) {
+                    $newInviteVisit = [
+                        'id'               => $inviteVisit['id'],
+                        'lender_id'        => $inviteVisit['lender_id'],
+                        'lender_invite_id' => $inviteVisit['lender_invite_id'],
+                        'share_type'       => $inviteVisit['share_type'],
+                        'http_referer'     => $inviteVisit['http_referer'],
+                        'ip_address'       => $inviteVisit['ip_address'],
+                        'created_at'       => $inviteVisit['created'] // because it's already DateTime in old DB
+                    ];
+
+                    array_push($inviteVisitArray, $newInviteVisit);
+                }
+                DB::table('lender_invite_visits')->insert($inviteVisitArray);
+            }
+        }
+
+
 
 	}
 
