@@ -65,6 +65,7 @@ class DatabaseMigration extends Command {
             $this->call('migrateDB', array('table' => 'installments'));
             $this->call('migrateDB', array('table' => 'installment_payments'));
             $this->call('migrateDB', array('table' => 'borrower_payments'));
+            $this->call('migrateDB', array('table' => 'lender_invites'));
         }
 
         if ($table == 'users') {
@@ -624,7 +625,34 @@ class DatabaseMigration extends Command {
             }
         }
 
+        if ($table == 'lender_invites') {
+            $this->line('Migrate lender_invites table');
 
+            $count = $this->con->table('lender_invites')->count();
+            $offset = 0;
+            $limit = 500;
+
+            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+                $lenderInvites = $this->con->table('lender_invites')
+                    ->where($offset)->limit($limit)->get();
+                $lenderInviteArray = [];
+
+                foreach ($lenderInvites as $lenderInvite) {
+                    $newLenderInvite = [
+                        'id'         => $lenderInvite['id'],
+                        'lender_id'  => $lenderInvite['lender_id'],
+                        'email'      => $lenderInvite['email'],
+                        'invited'    => $lenderInvite['invited'],
+                        'hash'       => $lenderInvite['hash'],
+                        'invitee_id' => $lenderInvite['invitee_id'],
+                        'created_at' => $lenderInvite['created'] // because it's already DateTime in old DB
+                    ];
+
+                    array_push($lenderInviteArray, $newLenderInvite);
+                }
+                DB::table('lender_invites')->insert($lenderInviteArray);
+            }
+        }
 
 	}
 
