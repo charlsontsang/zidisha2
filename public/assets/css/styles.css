@@ -8864,11 +8864,17 @@ a.link-dark {
 .loan-body {
   padding-right: 15px;
 }
-.loan-body .nav-tabs {
-  margin-bottom: 22px;
+@media (max-width: 767px) {
+  .loan-body {
+    margin-right: -15px;
+    margin-left: -15px;
+    margin-bottom: -60px;
+  }
 }
-.loan-body .nav-tabs {
-  margin-bottom: 0;
+@media (max-width: 767px) {
+  .loan-body .nav-tabs {
+    margin-bottom: -5px;
+  }
 }
 .loan-body .tab-content {
   background-color: #fff;
@@ -8876,6 +8882,11 @@ a.link-dark {
   border-left: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
   padding: 22px 15px 15px 15px;
+}
+@media (max-width: 767px) {
+  .loan-body .tab-content {
+    border-top: 1px solid #ddd;
+  }
 }
 .lend-details .table tr:first-child td {
   border-top: 0;
