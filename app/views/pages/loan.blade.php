@@ -72,7 +72,7 @@
                                         <strong>@choice('lender.follow.count', $followersCount)</strong>
                                         <br/>
 
-                                        <a id="follow-link" href="#">Follow {{{ $loan->getBorrower()->getFirstName() }}}</a>
+                                        <a id="follow-link" href="#">Follow {{{ $loan->getBorrower()->getFirstName() }}}<br/></a>
 
                                         Feedback Rating:<i class="fa fa-info-circle rating" data-toggle="tooltip"></i>
                                         <strong>TODO</strong>

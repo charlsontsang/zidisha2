@@ -8243,6 +8243,11 @@ body {
     display: inline-block;
   }
 }
+@media (min-width: 768px) {
+  .nav > li > a:last-child {
+    padding-right: 0;
+  }
+}
 @media (max-width: 767px) {
   li.dropdown {
     display: block;

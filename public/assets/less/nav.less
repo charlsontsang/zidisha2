@@ -9,6 +9,11 @@
 		display: inline-block;
 	}
 }
+.nav > li > a:last-child {
+	@media (min-width: @screen-sm-min) {
+		padding-right: 0;
+	}
+}
 li.dropdown {
 	@media (max-width: @screen-xs-max) {
 		display: block;
