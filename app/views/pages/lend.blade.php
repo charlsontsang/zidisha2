@@ -41,7 +41,7 @@ Lend
                 </div>
             </div>
             <div class="col-md-2">
-                <form role="search" action="{{ route('lend:index', $searchRouteParams) }}" method="get">
+                <form role="search" id="search" action="{{ route('lend:index', $searchRouteParams) }}" method="get">
                     <div class="input-group">
                         <input type="text" class="form-control" placeholder="Search" name="search" value="{{{ $searchQuery }}}">
                         <div class="input-group-btn">
