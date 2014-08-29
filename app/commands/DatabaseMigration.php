@@ -76,6 +76,10 @@ class DatabaseMigration extends Command {
             $this->call('migrateDB', array('table' => 'forgiveness_loans'));
             $this->call('migrateDB', array('table' => 'borrower_refunds'));
             $this->call('migrateDB', array('table' => 'volunteer_mentors'));
+            // TODO for borrower_join_logs if any
+            // TODO for borrower_guests if any
+            $this->call('migrateDB', array('table' => 'borrower_feedback_messages'));
+
 
         }
 
@@ -933,6 +937,38 @@ class DatabaseMigration extends Command {
                     array_push($volunteerMentorArray, $newVolunteerMentor);
                 }
                 DB::table('volunteer_mentors')->insert($volunteerMentorArray);
+            }
+        }
+
+        if ($table == 'borrower_feedback_messages') {
+            $this->line('Migrate borrower_feedback_messages table');
+
+            $count = $this->con->table('borrower_reports')->count();
+            $offset = 0;
+            $limit = 500;
+
+            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+                $feedbackMessages = $this->con->table('borrower_reports')
+                    ->where($offset)->limit($limit)->get();
+                $feedbackMessageArray = [];
+
+                foreach ($feedbackMessages as $feedbackMessage) {
+                    $newFeedbackMessage = [
+                        'borrower_id'    => $feedbackMessage['borrower_id'],
+                        'type'           => null, //TODO
+                        'borrower_email' => '', //TODO
+                        'cc'             => $feedbackMessage['cc'],
+                        'reply_to'       => $feedbackMessage['replyto'],
+                        'subject'        => $feedbackMessage['subject'],
+                        'message'        => $feedbackMessage['message'],
+                        'sent_at'        => date("Y-m-d H:i:s", $feedbackMessage['sent_on']),
+                        'sender_name'    => '', //TODO
+                        'loan_id'        => $feedbackMessage['loanid']
+                    ];
+
+                    array_push($feedbackMessageArray, $newFeedbackMessage);
+                }
+                DB::table('borrower_feedback_messages')->insert($feedbackMessageArray);
             }
         }
 
