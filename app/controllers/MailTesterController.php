@@ -49,7 +49,13 @@ class MailTesterController extends BaseController
         $mailerAndMethodArray = explode('#', $mailerAndMethod);
         $mailer = $mailerAndMethodArray[0];
         $method = $mailerAndMethodArray[1];
-        $email = Input::get('email');
+
+        $validator = Validator::make(Input::all(), ['email' => 'required|email']);
+
+        if ($validator->fails()) {
+            return Redirect::back()->withErrors($validator);
+        }
+        $email = trim(Input::get('email'));
 
         if ($mailer == 'lender') {
             if (method_exists($this->lenderMailerTester, $method)){
