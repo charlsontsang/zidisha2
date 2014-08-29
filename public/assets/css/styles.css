@@ -8248,6 +8248,9 @@ body {
     padding-right: 0;
   }
 }
+#lending-credit {
+  margin-right: 0;
+}
 @media (max-width: 767px) {
   li.dropdown {
     display: block;
