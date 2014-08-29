@@ -68,6 +68,7 @@ class DatabaseMigration extends Command {
             $this->call('migrateDB', array('table' => 'lender_invites'));
             $this->call('migrateDB', array('table' => 'lender_invite_visits'));
             $this->call('migrateDB', array('table' => 'lender_invite_transactions'));
+            $this->call('migrateDB', array('table' => 'paypal_ipn_log'));
         }
 
         if ($table == 'users') {
@@ -703,7 +704,7 @@ class DatabaseMigration extends Command {
                         'lender_id'        => $inviteTransaction['lender_id'],
                         'amount'           => $inviteTransaction['amount'],
                         'description'      => $inviteTransaction['txn_desc'],
-                        'transaction_date' => $inviteTransaction['created'],
+                        'transaction_date' => $inviteTransaction['created'], // because it's already DateTime in old DB
                         'type'             => $inviteTransaction['txn_type'],
                         'loan_id'          => $inviteTransaction['loan_id'],
                         'loan_bid_id'      => $inviteTransaction['loanbid_id']
@@ -712,6 +713,31 @@ class DatabaseMigration extends Command {
                     array_push($inviteTransactionArray, $newInviteTransaction);
                 }
                 DB::table('lender_invite_transactions')->insert($inviteTransactionArray);
+            }
+        }
+
+        if ($table == 'paypal_ipn_log') {
+            $this->line('Migrate paypal_ipn_log table');
+
+            $count = $this->con->table('paypal_ipn_raw_log')->count();
+            $offset = 0;
+            $limit = 500;
+
+            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+                $paypalIpnLogs = $this->con->table('paypal_ipn_raw_log')
+                    ->where($offset)->limit($limit)->get();
+                $paypalIpnLogArray = [];
+
+                foreach ($paypalIpnLogs as $paypalIpnLog) {
+                    $newPaypalIpnLog = [
+                        'id'         => $paypalIpnLog['id'],
+                        'log'        => $paypalIpnLog['ipn_data_serialized'],
+                        'created_at' => date("Y-m-d H:i:s", $paypalIpnLog['created_timestamp'])
+                    ];
+
+                    array_push($paypalIpnLogArray, $newPaypalIpnLog);
+                }
+                DB::table('paypal_ipn_log')->insert($paypalIpnLogArray);
             }
         }
 
