@@ -106,6 +106,7 @@
         <column name="currency_code" type="VARCHAR" size="3" required="true"/>
         <column name="installment_period" type="ENUM" valueSet="monthly, weekly"/>
         <column name="period" type="INTEGER"/>
+        <column name="original_period" type="INTEGER"/>
         <column name="accept_bids_note" type="LONGVARCHAR" required="false"/>
         <column name="sift_science_score" type="DECIMAL" required="false"/>
         <column name="deleted_by_admin" type="BOOLEAN" required="true" default="false"/>
