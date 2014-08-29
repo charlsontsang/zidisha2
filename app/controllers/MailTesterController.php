@@ -44,8 +44,12 @@ class MailTesterController extends BaseController
 
     public function postMail()
     {
-        $method = Input::get('method');
-        $mailer = Input::get('mailer');
+        $mailerAndMethod = Input::get('method');
+
+        $mailerAndMethodArray = explode('#', $mailerAndMethod);
+        $mailer = $mailerAndMethodArray[0];
+        $method = $mailerAndMethodArray[1];
+        $email = Input::get('email');
 
         if ($mailer == 'lender') {
             if (method_exists($this->lenderMailerTester, $method)){
