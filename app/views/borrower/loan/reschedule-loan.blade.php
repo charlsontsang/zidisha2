@@ -1,13 +1,13 @@
 @extends('layouts.master')
 
 @section('page-title')
-    Reschedule loan
+    @lang('borrower.your-loans.reschedule.title')
 @stop
 
 @section('content')
 <div class="page-header">
     <h1>
-        Reschedule Loan
+        @lang('borrower.your-loans.reschedule.title')
     </h1>
 </div>
 

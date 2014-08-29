@@ -425,6 +425,14 @@ Route::group(
                     'reschedule-loan',
                     array('uses' => 'BorrowerLoanController@postRescheduleLoan', 'as' => 'borrower:post-reschedule-loan')
                 );
+                Route::get(
+                    'reschedule-loan-confirmation',
+                    array('uses' => 'BorrowerLoanController@getRescheduleLoanConfirmation', 'as' => 'borrower:reschedule-loan-confirmation')
+                );
+                Route::post(
+                    'reschedule-loan-confirmation',
+                    array('uses' => 'BorrowerLoanController@postRescheduleLoanConfirmation', 'as' => 'borrower:post-reschedule-loan-confirmation')
+                );
             }
         );
 

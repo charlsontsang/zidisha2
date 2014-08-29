@@ -120,16 +120,73 @@ class BorrowerLoanController extends BaseController
         $form = new RescheduleLoanForm($loan, $repaymentSchedule);
         $form->handleRequest(Request::instance());
 
+        \Session::forget('reschedule');
+        
         if ($form->isValid()) {
             \Session::put('reschedule', $form->getData());
 
-            \Flash::success('Successfully rescheduled your loan.');
-            return Redirect::route('borrower:loan-information', $loan->getId());
+            return Redirect::route('borrower:reschedule-loan-confirmation');
         }
         
         \Flash::error('Invalid input values.');
         
         return Redirect::route('borrower:reschedule-loan')->withForm($form);
+    }
+
+    public function getRescheduleLoanConfirmation()
+    {
+        /** @var Borrower $borrower */
+        $borrower = \Auth::user()->getBorrower();
+        $loan = $borrower->getActiveLoan();
+
+        $this->validateReschedule($loan);
+        $this->validateRescheduleConfirmation();
+
+        $repaymentSchedule = $this->loanService->rescheduleLoan(
+            $loan,
+            Session::get('reschedule'),
+            true
+        );
+        
+        \Session::put('rescheduleDetails', $this->extractRescheduleDetails($repaymentSchedule));
+
+        return View::make(
+            'borrower.loan.reschedule-loan-confirmation',
+            compact('borrower', 'loan', 'repaymentSchedule')
+        );
+    }
+
+    public function postRescheduleLoanConfirmation()
+    {
+        /** @var Borrower $borrower */
+        $borrower = \Auth::user()->getBorrower();
+        $loan = $borrower->getActiveLoan();
+
+        $this->validateReschedule($loan);
+        $this->validateRescheduleConfirmation();
+
+        $rescheduleDetailsSession = \Session::get('rescheduleDetails');
+        \Session::forget('rescheduleDetails');
+
+        $repaymentSchedule = $this->loanService->rescheduleLoan(
+            $loan,
+            \Session::get('reschedule'),
+            true
+        );
+        
+        $rescheduleDetails = $this->extractRescheduleDetails($repaymentSchedule);
+
+        if ($rescheduleDetails != $rescheduleDetailsSession) {
+            Flash::error('Session is expired.');
+            return Redirect::route('borrower:reschedule-loan');
+        }
+        
+        $this->loanService->rescheduleLoan($loan, \Session::get('reschedule'));
+
+        \Session::forget('reschedule');
+
+        Flash::success('Successfully rescheduled loan');
+        return Redirect::route('borrower:loan-information', $loan->getId());
     }
 
     protected function validateReschedule(Loan $loan)
@@ -138,5 +195,21 @@ class BorrowerLoanController extends BaseController
         if (!$loan || !$loan->isActive()) {
             App::abort('404');
         }
+    }
+    
+    protected function validateRescheduleConfirmation()
+    {        
+        if (!\Session::has('reschedule.installmentAmount') || !\Session::has('reschedule.reason')) {
+            App::abort('404');
+        }
+    }
+
+    protected function extractRescheduleDetails(RepaymentSchedule $repaymentSchedule)
+    {
+        return [
+            'period' => $repaymentSchedule->getPeriod(),
+            'totalInterest' => $repaymentSchedule->getTotalInterest()->getAmount(),
+            'totalAmountDue' => $repaymentSchedule->getTotalAmountDue()->getAmount(),
+        ];
     }
 } 
