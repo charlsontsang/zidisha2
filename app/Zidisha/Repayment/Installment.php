@@ -57,5 +57,29 @@ class Installment extends BaseInstallment
         
         return $this;
     }
-    
+
+    /**
+     * @see Installment::copy
+     * @return Installment
+     */
+    public function copyUpdate()
+    {
+        $copyObj = new Installment();
+        $copyObj->setId($this->getId());
+        $copyObj->setBorrowerId($this->getBorrowerId());
+        $copyObj->setLoanId($this->getLoanId());
+        $copyObj->setDueDate($this->getDueDate());
+        $copyObj->setAmount($this->getAmount());
+        $copyObj->setPaidDate($this->getPaidDate());
+        // Otherwise it will set PaidAmount to O instead of null
+        if ($this->getPaidAmount()->isPositive()) {
+            $copyObj->setPaidAmount($this->getPaidAmount());
+        }
+        $copyObj->setCreatedAt($this->getCreatedAt());
+        $copyObj->setUpdatedAt($this->getUpdatedAt());
+        $copyObj->setNew(false);
+        
+        return $copyObj;
+    }
+
 }

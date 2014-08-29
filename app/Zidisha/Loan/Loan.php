@@ -368,4 +368,9 @@ class Loan extends BaseLoan implements CommentReceiverInterface
         return $this->getTotalAmount()->add($this->getForgivenAmount())
             ->subtract($this->getDisbursedAmount());
     }
+
+    public function getInstallmentPeriodsPerYear()
+    {
+        return $this->isWeeklyInstallment() ? 52 : 12;
+    }
 }
