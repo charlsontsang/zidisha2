@@ -67,6 +67,7 @@ class DatabaseMigration extends Command {
             $this->call('migrateDB', array('table' => 'borrower_payments'));
             $this->call('migrateDB', array('table' => 'lender_invites'));
             $this->call('migrateDB', array('table' => 'lender_invite_visits'));
+            $this->call('migrateDB', array('table' => 'lender_invite_transactions'));
         }
 
         if ($table == 'users') {
@@ -683,6 +684,37 @@ class DatabaseMigration extends Command {
                 DB::table('lender_invite_visits')->insert($inviteVisitArray);
             }
         }
+
+        if ($table == 'lender_invite_transactions') {
+            $this->line('Migrate lender_invite_transactions table');
+
+            $count = $this->con->table('lender_invite_transactions')->count();
+            $offset = 0;
+            $limit = 500;
+
+            for ($offset; $offset < $count; $$offset = ($offset + $limit)) {
+                $inviteTransactions = $this->con->table('lender_invite_transactions')
+                    ->where($offset)->limit($limit)->get();
+                $inviteTransactionArray = [];
+
+                foreach ($inviteTransactions as $inviteTransaction) {
+                    $newInviteTransaction = [
+                        'id'               => $inviteTransaction['id'],
+                        'lender_id'        => $inviteTransaction['lender_id'],
+                        'amount'           => $inviteTransaction['amount'],
+                        'description'      => $inviteTransaction['txn_desc'],
+                        'transaction_date' => $inviteTransaction['created'],
+                        'type'             => $inviteTransaction['txn_type'],
+                        'loan_id'          => $inviteTransaction['loan_id'],
+                        'loan_bid_id'      => $inviteTransaction['loanbid_id']
+                    ];
+
+                    array_push($inviteTransactionArray, $newInviteTransaction);
+                }
+                DB::table('lender_invite_transactions')->insert($inviteTransactionArray);
+            }
+        }
+
 
 
 
