@@ -8658,6 +8658,9 @@ body {
 #search {
   max-width: 300px;
 }
+form#search {
+  margin-bottom: 0;
+}
 #search .btn {
   height: 36px;
 }
