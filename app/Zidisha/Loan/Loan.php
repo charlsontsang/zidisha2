@@ -360,7 +360,7 @@ class Loan extends BaseLoan implements CommentReceiverInterface
 
     public function getTotalInterestRate()
     {
-        return bcadd($this->getServiceFeeRate(), $this->getLenderInterestRate());
+        return bcadd($this->getServiceFeeRate(), $this->getLenderInterestRate(), 2);
     }
 
     public function getTotalInterest()
