@@ -88,6 +88,7 @@ class DatabaseMigration extends Command {
             $this->call('migrateDB', array('table' => 'notifications'));
             $this->call('migrateDB', array('table' => 'withdrawal_requests'));
             $this->call('migrateDB', array('table' => 'followers'));
+            $this->call('migrateDB', array('table' => 'borrower_invites'));
 
 
         }
@@ -1208,6 +1209,36 @@ class DatabaseMigration extends Command {
                 DB::table('followers')->insert($followerArray);
             }
         }
+
+        if ($table == 'borrower_invites') {
+            $this->line('Migrate borrower_invites table');
+
+            $count = $this->con->table('invites')->count();
+            $offset = 0;
+            $limit = 500;
+
+            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+                $borrowerInvites = $this->con->table('invites')
+                    ->where($offset)->limit($limit)->get();
+                $borrowerInviteArray = [];
+
+                foreach ( $borrowerInvites as $borrowerInvite) {
+                    $newBorrowerInvite =  [
+                        'id'          => $borrowerInvite['id'],
+                        'borrower_id' => $borrowerInvite['userid'],
+                        'email'       => $borrowerInvite['email'],
+                        'invited'     => $borrowerInvite['visited'], // TODO cross check
+                        'hash'        => $borrowerInvite['cookie_value'],
+                        'invitee_id'  => $borrowerInvite['invitee_id']
+                    ];
+
+                    array_push($borrowerInviteArray, $newBorrowerInvite);
+                }
+                DB::table('borrower_invites')->insert($borrowerInviteArray);
+            }
+        }
+
+
 
 	}
 
