@@ -86,6 +86,7 @@ class DatabaseMigration extends Command {
             $this->call('migrateDB', array('table' => 'lending_group_members'));
             // TODO translation_labels if any!
             $this->call('migrateDB', array('table' => 'notifications'));
+            $this->call('migrateDB', array('table' => 'withdrawal_requests'));
 
 
         }
@@ -1139,6 +1140,34 @@ class DatabaseMigration extends Command {
                 DB::table('notifications')->insert($notificationArray);
             }
         }
+
+        if ($table == 'withdrawal_requests') {
+            $this->line('Migrate withdrawal_requests table');
+
+            $count = $this->con->table('withdraw')->count();
+            $offset = 0;
+            $limit = 500;
+
+            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+                $withdrawalRequests = $this->con->table('withdraw')
+                    ->where($offset)->limit($limit)->get();
+                $withdrawalRequestArray = [];
+
+                foreach ($withdrawalRequests as $withdrawalRequest) {
+                    $newWithdrawalRequest = [
+                        'id'           => $withdrawalRequest['id'],
+                        'lender_id'    => $withdrawalRequest['userid'],
+                        'amount'       => $withdrawalRequest['amount'],
+                        'paid'         => $withdrawalRequest['paid'],
+                        'paypal_email' => $withdrawalRequest['paypalemail']
+                    ];
+
+                    array_push($withdrawalRequestArray, $newWithdrawalRequest);
+                }
+                DB::table('withdrawal_requests')->insert($withdrawalRequestArray);
+            }
+        }
+
 
 	}
 
