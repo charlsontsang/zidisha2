@@ -105,15 +105,12 @@ class LenderMailer
         $email = $lender_invite->getEmail();
 
         $data = array();
-        $data['lender_name'] = $lender->getName();
         $data['header'] = \Lang::get('lender.mails.lender-unused-fund.header');
         $data['footer'] = \Lang::get('lender.mails.lender-unused-fund.footer');
 
         $data['button_text'] = "View Projects";
         
-        //Todo: button url
-        //$params['button_url'] = SITE_URL . 'i/' . $lender['username'] . '?h=' . $lender_invite['hash'];
-
+        $params['button_url'] = route('lender:invite');
         $profilePicture = $lender->getUser()->getProfilePictureUrl();
 
         $table = '<table cellspacing="0" cellpadding="10" border="0">';
@@ -126,12 +123,11 @@ class LenderMailer
 
         $subject = \Lang::get('lender.mails.subject', ['lenderName' => $lender->getName()]);
         $message = \Lang::get('lender.mails.body', ['lenderName' => $lender->getName(), 'customMessage' => $customMessage]);
-
-        //TODO: set proper variables
+        $data['content'] = $message;
         
         $this->mailer->send(
             'emails.lender.loan.loan-fully-funded',
-            [
+            $data + [
                 'to'      => $email,
                 'from'    => 'service@zidisha.com',
                 'subject' => $subject
