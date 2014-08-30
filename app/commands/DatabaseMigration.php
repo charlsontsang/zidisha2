@@ -81,6 +81,7 @@ class DatabaseMigration extends Command {
             $this->call('migrateDB', array('table' => 'borrower_feedback_messages'));
             $this->call('migrateDB', array('table' => 'borrower_reviews'));
             $this->call('migrateDB', array('table' => 'languages'));
+            $this->call('migrateDB', array('table' => 'lending_groups'));
 
 
         }
@@ -288,15 +289,17 @@ class DatabaseMigration extends Command {
 
         if ($table == 'loan_categories') {
             $this->line('Migration loan_categories table');
+            $this->line('Adding raw data loan_category_translations table');
 
             $categories = $this->con->table('loan_categories')->get();
             $categoryArray = [];
+            $categoryTranslationArray = [];
 
             foreach ($categories as $category) {
                 $newCategory = [
                     'id'               => $category['id'],
                     'name'             => $category['name'],
-                    'slug'             => '', // TODO
+                    'slug'             => \Illuminate\Support\Str::slug($category['name']),
                     'what_description' => $category['what'],
                     'why_description'  => $category['why'],
                     'how_description'  => $category['lend'], //TODO cross check
@@ -305,8 +308,22 @@ class DatabaseMigration extends Command {
                 ];
 
                 array_push($categoryArray, $newCategory);
+
+                $categoryTranslationFR = [
+                    'category_id'   => $category['id'],
+                    'language_code' => 'fr',
+                    'translation'   => $category['name'],
+                ];
+                $categoryTranslationID = [
+                    'category_id'   => $category['id'],
+                    'language_code' => 'id', //TODO, in old DB it seems it's 'in'
+                    'translation'   => $category['name'],
+                ];
+                array_push($categoryTranslationArray, $categoryTranslationFR);
+                array_push($categoryTranslationArray, $categoryTranslationID);
             }
             DB::table('loan_categories')->insert($categoryArray);
+            DB::table('loan_category_translations')->insert($categoryTranslationArray);
         }
 
         if ($table == 'countries') {
@@ -323,7 +340,7 @@ class DatabaseMigration extends Command {
             foreach ($countries as $country) {
                 $newCountry = [
                     'name'                    => $country['countries.name'],
-                    'slug'                    => '', //TODO
+                    'slug'                    => \Illuminate\Support\Str::slug($country['countries.name']),
                     'capital'                 => $country['currency.capital'],
                     'continent_code'          => $country['countries.loc'], //TODO cross check
                     'country_code'            => $country['countries.code'],
@@ -1033,6 +1050,7 @@ class DatabaseMigration extends Command {
                 DB::table('languages')->insert($languageArray);
             }
         }
+
 
 	}
 
