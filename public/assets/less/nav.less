@@ -9,6 +9,14 @@
 		display: inline-block;
 	}
 }
+.nav > li > a:last-child {
+	@media (min-width: @screen-sm-min) {
+		padding-right: 0;
+	}
+}
+#lending-credit {
+	margin-right: 0;
+}
 li.dropdown {
 	@media (max-width: @screen-xs-max) {
 		display: block;
@@ -16,10 +24,6 @@ li.dropdown {
 }
 .navbar-default .navbar-text {
 	color: #777777;
-}
-.navbar-default .navbar-nav > li > a {
-  font-size: 14px;
-  text-transform: uppercase;
 }
 .navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li > a:focus {
 	color: @brand-primary;

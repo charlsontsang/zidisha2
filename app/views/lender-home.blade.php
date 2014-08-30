@@ -16,7 +16,7 @@
       <h2 class="alpha">Direct loans that make dramatic impact</h2>
 
       <p class="lead">Zidisha is the first online microlending community that directly connects lenders and borrowers — no matter the distance or disparity between them.</p>
-      <p class="lead"><a href="#"><strong>More than 14,000 people worldwide</strong></a> have started using Zidisha.</p>
+      <p class="lead"><a href="{{ route('page:statistics') }}"><strong>More than 15,000 people worldwide</strong></a> have started using Zidisha.</p>
     
     </div>
   </div>

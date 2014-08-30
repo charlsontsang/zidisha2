@@ -1,8 +1,25 @@
 .loan-body {
   padding-right: 15px;
+  @media (max-width: @screen-xs-max) {
+    margin-right: -15px;
+    margin-left: -15px;
+    margin-bottom: -60px;
+  }
 }
 .loan-body .nav-tabs {
-  margin-bottom: 22px;
+  @media (max-width: @screen-xs-max) {
+    margin-bottom: -5px;
+  }
+}
+.loan-body .tab-content {
+  background-color: #fff;
+  border-right: 1px solid #ddd;
+  border-left: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;  
+  @media (max-width: @screen-xs-max) {
+    border-top: 1px solid #ddd; 
+  }
+  padding: 22px 15px 15px 15px;
 }
 .lend-details {
   .table tr:first-child td {
@@ -13,6 +30,9 @@
   }
   .table .form-control {
     width: 70%;
+  }
+  .table .form-control#donation-amount {
+    height: 25px;
   }
   .table tbody > tr > td {
     vertical-align: middle;
