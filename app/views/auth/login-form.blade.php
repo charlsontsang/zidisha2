@@ -1,5 +1,9 @@
-{{ Form::open(array('action' => 'AuthController@postLogin')) }}
-<a href="{{ $facebookLoginUrl }}" class="btn btn-facebook btn-block btn-icon">
+<?php $loginForm = App::make('\Zidisha\Auth\Form\LoginForm') ?>
+
+{{ BootstrapForm::open(array('action' => 'AuthController@postLogin')) }}
+{{ BootstrapForm::populate($loginForm) }}
+
+<a href="{{ $loginForm->getFacebookLoginUrl() }}" class="btn btn-facebook btn-block btn-icon">
     <span class="icon-container">
         <span class="fa fa-facebook fa-lg fa-fw"></span>
     </span>
@@ -8,7 +12,7 @@
     </span>
 </a>
 
-<a href="{{$googleLoginUrl}}" class="btn btn-default btn-google btn-block btn-icon">
+<a href="{{ $loginForm->getGoogleLoginUrl() }}" class="btn btn-default btn-google btn-block btn-icon">
     <span class="icon-container">
         <span class="fa fa-google-plus fa-lg fa-fw"></span>
     </span>
@@ -24,18 +28,20 @@
 
 <div class="form-group has-feedback">
     <div class="sr-only">@lang('borrower.login.form.username')</div>
-    {{ Form::text('username', null, [
-    'class'       => 'form-control',
-    'placeholder' => Lang::get('borrower.login.form.username')
+    {{ BootstrapForm::text('username', null, [
+        'class'       => 'form-control',
+        'placeholder' => Lang::get('borrower.login.form.username'),
+        'label' => false,
     ]) }}
     <span class="fa-lg form-control-feedback text-muted" style="top: 0;">@</span>
 </div>
 
 <div class="form-group has-feedback">
     <div class="sr-only">@lang('borrower.login.form.password')</div>
-    {{ Form::password('password', [
-    'class'       => 'form-control',
-    'placeholder' => Lang::get('borrower.login.form.password')
+    {{ BootstrapForm::password('password', [
+        'class'       => 'form-control',
+        'placeholder' => Lang::get('borrower.login.form.password'),
+        'label' => false,
     ]) }}
     <span class="fa fa-lock fa-lg form-control-feedback text-muted" style="top: 0;"></span>
 </div>
@@ -59,5 +65,5 @@
 </div>
 
 <input class="btn btn-primary btn-block" type="submit" value="Log in"/>
-{{ Form::close() }}
+{{ BootstrapForm::close() }}
 @lang('borrower.login.not-a-member')  <strong><a href="{{ route('join') }}" data-toggle="modal" data-target="#join-modal" data-dismiss="modal">@lang('borrower.login.join')</a></strong>

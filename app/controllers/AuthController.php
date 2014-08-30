@@ -2,6 +2,7 @@
 
 use Zidisha\Analytics\MixpanelService;
 use Zidisha\Auth\AuthService;
+use Zidisha\Auth\Form\LoginForm;
 use Zidisha\Borrower\BorrowerGuestQuery;
 use Zidisha\Borrower\BorrowerService;
 use Zidisha\Borrower\JoinLogQuery;
@@ -51,28 +52,25 @@ class AuthController extends BaseController
 
     public function getLogin()
     {
-        return View::make(
-            Request::ajax() ? 'auth.login-modal' : 'auth.login',
-            [
-                'facebookLoginUrl' => $this->facebookService->getLoginUrl('facebook:login'),
-                'googleLoginUrl'   => $this->googleService->getLoginUrl('google:login'),
-            ]
-        );
+        return View::make(Request::ajax() ? 'auth.login-modal' : 'auth.login');
     }
 
     public function postLogin()
     {
         $rememberMe = Input::has('remember_me');
         $credentials = Input::only('username', 'password');
+        
+        $form = new LoginForm($this->facebookService, $this->googleService);
+        $form->handleRequest(Request::instance());
 
-        if ($this->authService->attempt($credentials, $rememberMe)) {
+        if ($form->isValid() && $this->authService->attempt($credentials, $rememberMe)) {
             return $this->login();
         }
 
         $this->siftScienceService->sendInvalidLoginEvent();
 
         Flash::error('borrower.login.flash.login-error');
-        return Redirect::route('login');
+        return Redirect::route('login')->withForm($form);
     }
 
     public function getLogout()
