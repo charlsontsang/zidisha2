@@ -2,6 +2,7 @@
 namespace Zidisha\Mail\Tester;
 
 
+use Carbon\Carbon;
 use Zidisha\Borrower\Borrower;
 use Zidisha\Currency\Money;
 use Zidisha\Lender\Lender;
@@ -56,11 +57,13 @@ class LenderMailerTester
         $borrowerUser = new User();
         $borrowerUser->setRole('borrower');
         $borrowerUser->setEmail('lender@test.com');
+        $borrowerUser->setUsername('borrowerUsername');
 
         $borrower = new Borrower();
         $borrower->setUser($borrowerUser);
         $borrower->setFirstName('First Name');
         $borrower->setLastName('Last Name');
+        $borrower->setActiveLoanId('12');
 
         $loan = new Loan();
         $loan->setBorrower($borrower);
@@ -73,6 +76,18 @@ class LenderMailerTester
 
         $changedBid['bid'] = $bid;
 
+        $this->lenderMailer->sendOutbidMail($changedBid);
+
+        $changedBid['acceptedAmount'] = Money::create('0');
+        $changedBid['changedAmount'] = Money::create('20');
+        
+        $bid = new Bid();
+        $bid->setLender($lender);
+        $bid->setBidAmount(Money::create('20'));
+        $bid->setInterestRate('15');
+        $bid->setLoan($loan);
+
+        $changedBid['bid'] = $bid;
         $this->lenderMailer->sendOutbidMail($changedBid);
     }
 
@@ -149,7 +164,9 @@ class LenderMailerTester
 
         $loan = new Loan();
         $loan
+            ->setId(1)
             ->setBorrower($borrower)
+            ->setRepaidAt(Carbon::now()->subMonth())
             ->setInstallmentDay('12');
         
         $this->lenderMailer->sendNewLoanNotificationMail($loan, $lender);
