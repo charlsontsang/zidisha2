@@ -292,4 +292,59 @@ class LenderMailer
             ]
         );
     }
+
+    public function getFeaturedLoansForMail()
+    {
+        $conditions = [
+            'status'     => Loan::OPEN,
+            'categoryId' => '18',
+            'sortBy'     => 'raised_percentage',
+        ];
+        
+        /** @var LoanService $loanService */
+        $loanService = \App::make('Zidisha\Loan\LoanService');
+        
+        $featuredLoans = $loanService->searchLoans($conditions);
+
+        $loans = $loansExtra = array();
+        /** @var Loan $loan */
+        foreach ($featuredLoans as $loan) {
+            if ($loan->getRaisedPercentage() < 75) {
+                $loans[] = $loan;
+            } else {
+                $loansExtra[] = $loan;
+            }
+        }
+
+        shuffle($loans);
+        $loans = array_slice($loans, 0, 3);
+        $count = count($loans);
+        if ($count < 3) return false;
+
+
+        $data = array();
+        $i = 1;
+        foreach ($loans as $loan) {
+            $n = $i > 1 ? $i : '';
+            
+            if ($loan->getSummaryTranslation()) {
+                $data["content$n"] = $loan->getSummaryTranslation();
+            } else {
+                $data["content$n"] = $loan->getSummary();
+            }
+            
+            $data["heading$n"] = $loan->getBorrower()->getCountry()->getName();
+            $data["title$n"] = $loan->getBorrower()->getName();
+            $data["percent$n"] = $loan->getRaisedPercentage() . '%';
+            $data["image_src$n"] = $loan->getBorrower()->getUser()->getProfilePictureUrl();
+            $data["link$n"] = [
+                "text$n" => route('loan:index', [ 'loanId' => $loan->getId() ]),
+                "url$n"  => route('loan:index', [ 'loanId' => $loan->getId() ])
+            ];
+            
+            $i += 1;
+        }
+
+        return $data;
+    }
 }
