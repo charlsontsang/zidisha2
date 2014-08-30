@@ -87,6 +87,7 @@ class DatabaseMigration extends Command {
             // TODO translation_labels if any!
             $this->call('migrateDB', array('table' => 'notifications'));
             $this->call('migrateDB', array('table' => 'withdrawal_requests'));
+            $this->call('migrateDB', array('table' => 'followers'));
 
 
         }
@@ -1078,7 +1079,7 @@ class DatabaseMigration extends Command {
                         'creator_id'               => $lendingGroup['created_by'],
                         'leader_id'                => $lendingGroup['grp_leader'],
                         'created_at'               => $lendingGroup['created'],
-                        'modified_at'              => $lendingGroup['modified']
+                        'updated_at'              => $lendingGroup['modified']
                     ];
 
                     array_push($lendingGroupArray, $newLendingGroup);
@@ -1106,7 +1107,7 @@ class DatabaseMigration extends Command {
                         'member_id'   => $groupMember['member_id'],
                         'leaved'      => $groupMember['leaved'],
                         'created_at'  => $groupMember['created'],
-                        'modified_at' => $groupMember['modified']
+                        'updated_at' => $groupMember['modified']
                     ];
 
                     array_push($groupMemberArray, $newGroupMember);
@@ -1168,6 +1169,35 @@ class DatabaseMigration extends Command {
             }
         }
 
+        if ($table == 'followers') {
+            $this->line('Migrate followers table');
+
+            $count = $this->con->table('followers')->count();
+            $offset = 0;
+            $limit = 500;
+
+            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+                $followers = $this->con->table('followers')
+                    ->where($offset)->limit($limit)->get();
+                $followerArray = [];
+
+                foreach ($followers as $follower) {
+                    $newFollower = [
+                        'id'                      => $follower['id'],
+                        'lender_id'               => $follower['lender_id'],
+                        'borrower_id'             => $follower['borrower_id'],
+                        'active'                  => !$follower['deleted'],
+                        'notify_comment'          => $follower['comment_notify'], // TODO cross check, if !$value
+                        'notify_loan_application' => $follower['new_loan_notify'], // TODO cross check, if !$value
+                        'created_at'              => $follower['created'],
+                        'updated_at'              => $follower['modified']
+                    ];
+
+                    array_push($followerArray, $newFollower);
+                }
+                DB::table('followers')->insert($followerArray);
+            }
+        }
 
 	}
 
