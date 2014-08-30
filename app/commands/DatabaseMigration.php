@@ -80,6 +80,7 @@ class DatabaseMigration extends Command {
             // TODO for borrower_guests if any
             $this->call('migrateDB', array('table' => 'borrower_feedback_messages'));
             $this->call('migrateDB', array('table' => 'borrower_reviews'));
+            $this->call('migrateDB', array('table' => 'languages'));
 
 
         }
@@ -313,6 +314,7 @@ class DatabaseMigration extends Command {
 
             $countries = $this->con->table('currency')
                 ->join('countries', 'currency.country_code.' , '=', 'countries.code')
+                ->join('country_lang', 'currency.country_code.' , '=', 'country_lang.country_code')
                 ->join('registration_fee', 'currency.currency_name' , '=', 'registration_fee.currency_name')
                 ->join('repayment_instructions', 'currency.country_code' , '=', 'repayment_instructions.country_code')
                 ->get();
@@ -335,7 +337,7 @@ class DatabaseMigration extends Command {
                     'loan_amount_step'        => '', //TODO
                     'repayment_instructions'  => $country['repayment_instructions.description'] ? $country['repayment_instructions.description'] : null,
                     'accept_bids_note'        => null, //TODO
-                    'language_code'           => null, //TODO no foreign key
+                    'language_code'           => $country['country_lang.lang_code'],
                 ];
 
                 array_push($countryArray, $newCountry);
@@ -1007,6 +1009,30 @@ class DatabaseMigration extends Command {
             }
         }
 
+        if ($table == 'languages') {
+            $this->line('Migrate languages table');
+
+            $count = $this->con->table('language')->get();
+            $offset = 0;
+            $limit = 500;
+
+            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+                $languages = $this->con->table('language')
+                    ->where($offset)->limit($limit)->get();
+                $languageArray = [];
+
+                foreach ($languages as $language) {
+                    $newLanguage = [
+                        'language_code' => $language['langcode`'],
+                        'name'          => $language['lang'],
+                        'active'        => $language['is_active_for_country'] // TODO, active or is_active_for_country
+                    ];
+
+                    array_push($languageArray, $newLanguage);
+                }
+                DB::table('languages')->insert($languageArray);
+            }
+        }
 
 	}
 
