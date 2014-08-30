@@ -93,6 +93,7 @@ class DatabaseMigration extends Command {
             $this->call('migrateDB', array('table' => 'credits_earned'));
             // TODO scheduled_jobs & scheduled_jobs_logs
             $this->call('migrateDB', array('table' => 'bulk_emails'));
+            $this->call('migrateDB', array('table' => 'bulk_email_recipients'));
 
 
         }
@@ -1316,17 +1317,17 @@ class DatabaseMigration extends Command {
 
                 foreach ($bulkEmails as $bulkEmail) {
                     $newBulkEmail = [
-                        'id' => $bulkEmail['id'],
+                        'id'           => $bulkEmail['id'],
                         'sender_email' => $bulkEmail['sender'],
-                        'subject' => $bulkEmail['subject'],
-                        'header' => $bulkEmail['header'],
-                        'message' => $bulkEmail['message'],
-                        'template' => $bulkEmail['template'],
-                        'html' => $bulkEmail['html'],
-                        'tag' => $bulkEmail['tag'],
-                        'params' => $bulkEmail['params'],
+                        'subject'      => $bulkEmail['subject'],
+                        'header'       => $bulkEmail['header'],
+                        'message'      => $bulkEmail['message'],
+                        'template'     => $bulkEmail['template'],
+                        'html'         => $bulkEmail['html'],
+                        'tag'          => $bulkEmail['tag'],
+                        'params'       => $bulkEmail['params'],
                         'processed_at' => $bulkEmail['processed'],
-                        'created_at'  => $bulkEmail['created']
+                        'created_at'   => $bulkEmail['created']
                     ];
 
                     array_push($bulkEmailArray, $newBulkEmail);
@@ -1335,7 +1336,35 @@ class DatabaseMigration extends Command {
             }
         }
 
-	}
+        if ($table == 'bulk_email_recipients') {
+            $this->line('Migrate bulk_email_recipients table');
+
+            $count = $this->con->table('bulk_email_recipients')->count();
+            $offset = 0;
+            $limit = 500;
+
+            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+                $bulkEmailRecipients = $this->con->table('bulk_email_recipients')
+                    ->where($offset)->limit($limit)->get();
+                $bulkEmailRecipientArray = [];
+
+                foreach ($bulkEmailRecipients as $bulkEmailRecipient ) {
+                    $newBulkEmailRecipient = [
+                        'id'            => $bulkEmailRecipient['id'],
+                        'bulk_email_id' => $bulkEmailRecipient['bulk_email_id'],
+                        'email'         => $bulkEmailRecipient['email'],
+                        'processed_at'  => $bulkEmailRecipient['processed']
+                    ];
+
+                    array_push($bulkEmailRecipientArray, $newBulkEmailRecipient);
+                }
+                DB::table('bulk_email_recipients')->insert($bulkEmailRecipientArray);
+            }
+        }
+
+
+
+    }
 
 	/**
 	 * Get the console command arguments.
