@@ -93,6 +93,7 @@ class DatabaseMigration extends Command {
             $this->call('migrateDB', array('table' => 'credits_earned'));
             // TODO scheduled_jobs & scheduled_jobs_logs
             $this->call('migrateDB', array('table' => 'auto_lending_settings'));
+            $this->call('migrateDB', array('table' => 'statistics'));
 
 
             $this->call('migrateDB', array('table' => 'bulk_emails'));
@@ -1398,6 +1399,33 @@ class DatabaseMigration extends Command {
             }
         }
 
+        if ($table == 'statistics') {
+            $this->line('Migrate statistics table');
+
+            $count = $this->con->table('statistics')->count();
+            $offset = 0;
+            $limit = 500;
+
+            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+                $statistics =$this->con->table('statistics')
+                    ->where($offset)->limit($limit)->get();
+                $statisticArray = [];
+
+                foreach ($statistics as $statistic) {
+                    $newStatistics = [
+                        'id'         => $statistic['id'],
+                        'name'       => $statistic['Name'],
+                        'value'      => $statistic['value'],
+                        //TODO croos check for foreign key bcz some country values in old DB are '' (empty string)
+                        'country_id' => $statistic['country'],
+                        'date'       => date("Y-m-d H:i:s", $statistic['date'])
+                    ];
+
+                    array_push($statisticArray, $newStatistics);
+                }
+                DB::table('statistics')->insert($statisticArray);
+            }
+        }
 
     }
 
