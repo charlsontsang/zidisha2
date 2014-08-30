@@ -104,7 +104,8 @@ class BorrowerMailer{
         $data = [
             'parameters' => [
                 'borrowerName'  => $borrower->getName(),
-                'loanApplicationLink' => route('loan:index', ['loanId' => $loan->getId()]),
+                'loanApplicationPage' => route('loan:index', $loan->getId()), //TODO: confirm
+                'loanApplicationLink' => route('borrower:loan-application'),
                 'loanApplicationDeadLine' => \Setting::get('loan.deadline'),
             ],
             'to'        => $borrower->getUser()->getEmail(),
