@@ -55,8 +55,6 @@ class DatabaseMigration extends Command {
             $this->call('migrateDB', array('table' => 'loans'));
             $this->call('migrateDB', array('table' => 'loan_bids'));
             $this->call('migrateDB', array('table' => 'admin_notes'));
-            //TODO
-            $this->call('migrateDB', array('table' => 'password_reminders'));
             $this->call('migrateDB', array('table' => 'loan_stages'));
             $this->call('migrateDB', array('table' => 'transactions'));
             $this->call('migrateDB', array('table' => 'comments'));
@@ -68,7 +66,7 @@ class DatabaseMigration extends Command {
             $this->call('migrateDB', array('table' => 'lender_invite_visits'));
             $this->call('migrateDB', array('table' => 'lender_invite_transactions'));
             $this->call('migrateDB', array('table' => 'paypal_ipn_log'));
-            // TODO from paypal_transactions to payments
+            $this->call('migrateDB', array('table' => 'paypal_transactions'));
             $this->call('migrateDB', array('table' => 'gift_cards'));
             $this->call('migrateDB', array('table' => 'gift_card_transaction'));
             $this->call('migrateDB', array('table' => 'forgiveness_loan_shares'));
@@ -822,6 +820,40 @@ class DatabaseMigration extends Command {
                     array_push($paypalIpnLogArray, $newPaypalIpnLog);
                 }
                 DB::table('paypal_ipn_log')->insert($paypalIpnLogArray);
+            }
+        }
+
+        if ($table == 'paypal_transactions') {
+            $this->line('Migrate paypal_transactions table');
+
+            $count = $this->con->table('paypal_txns')->count();
+            $offset = 0;
+            $limit = 500;
+
+            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+                $paypalTransactions = $this->con->table('paypal_txns')
+                    ->where($offset)->limit($limit)->get();
+                $paypalTransactionArray = [];
+
+                foreach ($paypalTransactions as $paypalTransaction) {
+                    $newPaypalTransaction = [
+                        'id'                     => $paypalTransaction['invoiceid'],
+                        'transaction_id'         => $paypalTransaction['txnid'],
+                        'transaction_type'       => $paypalTransaction['txn_type'],
+                        'amount'                 => $paypalTransaction['amount'],
+                        'donation_amount'        => $paypalTransaction['donation'],
+                        'paypal_transaction_fee' => $paypalTransaction['paypal_tran_fee'],
+                        'total_amount'           => $paypalTransaction['total_amount'],
+                        'status'                 => $paypalTransaction['status'],
+                        'custom'                 => $paypalTransaction['custom'],
+                        'token'                  => $paypalTransaction['paypaldata'],
+                        // TODO check if necessary and if yes then viable with created_at new then updated_at
+                        'updated_at'             => date("Y-m-d H:i:s", $paypalTransaction['updateddate'])
+                    ];
+
+                    array_push($paypalTransactionArray, $newPaypalTransaction);
+                }
+                DB::table('paypal_transactions')->insert($paypalTransactionArray);
             }
         }
 
