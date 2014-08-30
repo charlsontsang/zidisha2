@@ -90,6 +90,7 @@ class DatabaseMigration extends Command {
             $this->call('migrateDB', array('table' => 'followers'));
             $this->call('migrateDB', array('table' => 'borrower_invites'));
             $this->call('migrateDB', array('table' => 'credit_settings'));
+            $this->call('migrateDB', array('table' => 'credits_earned'));
 
 
         }
@@ -1266,6 +1267,36 @@ class DatabaseMigration extends Command {
                     array_push($creditSettingArray, $newCreditSetting);
                 }
                 DB::table('credit_settings')->insert($creditSettingArray);
+            }
+        }
+
+        if ($table == 'credits_earned') {
+            $this->line('Migrate credits_earned table');
+
+            $count = $this->con->table('credits_earned')->count();
+            $offset = 0;
+            $limit = 500;
+
+            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+                $creditsEarned = $this->con->table('credits_earned')
+                    ->where($offset)->limit($limit)->get();
+                $creditEarnedArray = [];
+
+                foreach ($creditsEarned as $creditEarned) {
+                    $newCreditEarned = [
+                        'id'          => $creditEarned['id'],
+                        'borrower_id' => $creditEarned['borrower_id'],
+                        'loan_id'     => $creditEarned['loan_id'],
+                        'credit_type' => $creditEarned['credit_type'], // TODO, add valueSet in table?
+                        'ref_id'      => $creditEarned['ref_id'],
+                        'credit'      => $creditEarned['credit'],
+                        'created_at'  => date("Y-m-d H:i:s", $creditEarned['created']),
+                        'updated_at'  => date("Y-m-d H:i:s", $creditEarned['modified'])
+                    ];
+
+                    array_push($creditEarnedArray, $newCreditEarned);
+                }
+                DB::table('credits_earned')->insert($creditEarnedArray);
             }
         }
 
