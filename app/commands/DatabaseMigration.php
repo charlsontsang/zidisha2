@@ -84,6 +84,7 @@ class DatabaseMigration extends Command {
             $this->call('migrateDB', array('table' => 'borrower_invites'));
             $this->call('migrateDB', array('table' => 'credit_settings'));
             $this->call('migrateDB', array('table' => 'credits_earned'));
+            $this->call('migrateDB', array('table' => 'facebook_users'));
             $this->call('migrateDB', array('table' => 'auto_lending_settings'));
             $this->call('migrateDB', array('table' => 'statistics'));
             $this->call('migrateDB', array('table' => 'reschedule'));
@@ -216,7 +217,7 @@ class DatabaseMigration extends Command {
                     ->join('users', 'borrowers.userid', '=', 'users.userid')
                     ->join('countries', 'borrowers.Country', '=', 'countries.code')
                     ->join('borrowers_extn', 'borrowers.userid', '=', 'borrowers_extn.userid')
-                    ->leftjoin('facebook_info', 'borrowers.userid', '=', 'facebook_info.userid')
+                    ->join('facebook_info', 'borrowers.userid', '=', 'facebook_info.userid')
                     ->where($offset)->take($limit)->get();
                 $borrowerArray = [];
                 $profileArray = [];
@@ -237,8 +238,6 @@ class DatabaseMigration extends Command {
                         'verified'            => 'TODO', // TODO
                         'activation_status'   => null, // TODO
                     ];
-
-                    //TODO facebook_users migration
 
                     $profile = [
                         'borrower_id'                => $borrower['users.userid'],
@@ -1444,6 +1443,37 @@ class DatabaseMigration extends Command {
                     array_push($bulkEmailRecipientArray, $newBulkEmailRecipient);
                 }
                 DB::table('bulk_email_recipients')->insert($bulkEmailRecipientArray);
+            }
+        }
+
+        if ($table == 'facebook_users') {
+            $this->line('Migrate facebook_users table');
+
+            $count = $this->con->table('facebook_info')->count();
+            $offset = 0;
+            $limit = 500;
+
+            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+                $facebookUsers = $this->con->table('facebook_info')
+                    ->where($offset)->limit($limit)->get();
+                $facebookUserArray = [];
+
+                foreach ($facebookUsers as $facebookUser) {
+                    $facebookData = unserialize($facebookUser['facebook_data']);
+                    $newFacebookUser = [
+                        'id'              => $facebookUser['id'],
+                        'user_id'         => $facebookUser['userid'],
+                        'account_name'    => $facebookData['user_profile']['name'],
+                        'email'           => $facebookData['user_profile']['email'],
+                        'birth_date'      => $facebookData['user_profile']['birthday'],
+                        'city'            => $facebookData['user_profile']['hometown'],
+                        'first_post_date' => $facebookData['posts'][1]['created_time'],
+                        'friends_count'   => $facebookData['user_friends']
+                    ];
+
+                    array_push($facebookUserArray, $newFacebookUser);
+                }
+                DB::table('facebook_users')->insert($facebookUserArray);
             }
         }
 
