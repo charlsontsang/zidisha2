@@ -91,7 +91,6 @@ class DatabaseMigration extends Command {
             $this->call('migrateDB', array('table' => 'bulk_emails'));
             $this->call('migrateDB', array('table' => 'bulk_email_recipients'));
 
-
         }
 
         if ($table == 'users') {
