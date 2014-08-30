@@ -91,6 +91,8 @@ class DatabaseMigration extends Command {
             $this->call('migrateDB', array('table' => 'borrower_invites'));
             $this->call('migrateDB', array('table' => 'credit_settings'));
             $this->call('migrateDB', array('table' => 'credits_earned'));
+            // TODO scheduled_jobs & scheduled_jobs_logs
+            $this->call('migrateDB', array('table' => 'bulk_emails'));
 
 
         }
@@ -1300,8 +1302,38 @@ class DatabaseMigration extends Command {
             }
         }
 
+        if ($table == 'bulk_emails') {
+            $this->line('Migrate bulk_emails table');
 
+            $count = $this->con->table('bulk_emails')->count();
+            $offset = 0;
+            $limit = 500;
 
+            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+                $bulkEmails = $this->con->table('bulk_emails')
+                    ->where($offset)->limit($limit)->get();
+                $bulkEmailArray = [];
+
+                foreach ($bulkEmails as $bulkEmail) {
+                    $newBulkEmail = [
+                        'id' => $bulkEmail['id'],
+                        'sender_email' => $bulkEmail['sender'],
+                        'subject' => $bulkEmail['subject'],
+                        'header' => $bulkEmail['header'],
+                        'message' => $bulkEmail['message'],
+                        'template' => $bulkEmail['template'],
+                        'html' => $bulkEmail['html'],
+                        'tag' => $bulkEmail['tag'],
+                        'params' => $bulkEmail['params'],
+                        'processed_at' => $bulkEmail['processed'],
+                        'created_at'  => $bulkEmail['created']
+                    ];
+
+                    array_push($bulkEmailArray, $newBulkEmail);
+                }
+                DB::table('bulk_emails')->insert($bulkEmailArray);
+            }
+        }
 
 	}
 
