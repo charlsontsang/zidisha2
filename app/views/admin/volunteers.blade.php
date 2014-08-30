@@ -5,7 +5,9 @@ Volunteers
 @stop
 
 @section('content')
-
+<div class="page-header">
+    <h1>Volunteers</h1>
+</div>
 <div>
     {{ BootstrapForm::open(array('route' => 'admin:volunteers', 'translationDomain' => 'volunteers', 'method' => 'get')) }}
     {{ BootstrapForm::populate($form) }}

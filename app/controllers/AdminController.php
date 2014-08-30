@@ -2,6 +2,8 @@
 
 use Carbon\Carbon;
 use Propel\Runtime\ActiveQuery\Criteria;
+use Zidisha\Admin\AdminNote;
+use Zidisha\Admin\AdminNoteQuery;
 use Zidisha\Admin\Form\EnterRepaymentForm;
 use Zidisha\Admin\Form\UploadRepaymentsForm;
 use Zidisha\Admin\Form\ExchangeRateForm;
@@ -21,6 +23,7 @@ use Zidisha\Balance\WithdrawalRequestQuery;
 use Zidisha\Borrower\Borrower;
 use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Borrower\BorrowerService;
+use Zidisha\Borrower\VolunteerMentorQuery;
 use Zidisha\Comment\BorrowerCommentQuery;
 use Zidisha\Comment\CommentQuery;
 use Zidisha\Borrower\Form\AdminEditForm;
@@ -360,22 +363,66 @@ class AdminController extends BaseController
     {
         $form = $this->borrowersForm;
         $page = Request::query('page') ? : 1;
-        $countryId = Request::query('country') ? : null;
-        $search = Request::query('search') ? : null;
+        $orderBy = Input::get('orderBy', 'numberOfAssignedMembers');
+        $orderDirection = Input::get('orderDirection', 'asc');
+        $borrowerService = $this->borrowerService;
 
-        $query = BorrowerQuery::create();
+        $query = BorrowerQuery::create()
+            ->useUserQuery()
+            ->filterBySubRole(User::SUB_ROLE_VOLUNTEER_MENTOR)
+            ->endUse();
 
-        if (($countryId == 'all_countries' || !$countryId) && !$search) {
-            $query->useUserQuery()
-                ->filterBySubRole(User::SUB_ROLE_VOLUNTEER_MENTOR)
-                ->endUse();
+        //TODO sorting
+        if ($orderBy == 'repaymentStatus') {
+        } else {
         }
 
         $paginator = $form->getQuery($query)
             ->orderById()
             ->paginate($page, 3);
 
-        return View::make('admin.volunteer-mentors', compact('paginator', 'form'));
+        $paginator->populateRelation('AdminNote');
+
+        $assignedMembers = BorrowerQuery::create()
+            ->filterByVolunteerMentorId($paginator->toKeyValue('id', 'id'))
+            ->find();
+
+        $menteeCounts = VolunteerMentorQuery::create()
+            ->filterByBorrowerId($paginator->toKeyValue('id', 'id'))
+            ->find()
+            ->toKeyValue('borrowerId', 'menteeCount');
+
+        $_adminNotes = AdminNoteQuery::create()
+            ->filterByBorrowerId($paginator->toKeyValue('id', 'id'))
+            ->joinWith('User')
+            ->find();
+
+        $adminNotes = [];
+        foreach ($_adminNotes as $VmNote) {
+            if (!isset($adminNotes[$VmNote->getBorrowerId()])) {
+                $adminNotes[$VmNote->getBorrowerId()] = [];
+            }
+            $adminNotes[$VmNote->getBorrowerId()][] = $VmNote;
+        }
+
+        return View::make('admin.volunteer-mentors', compact('paginator', 'form', 'menteeCounts', 'assignedMembers', 'adminNotes', 'orderBy', 'orderDirection', 'borrowerService'));
+    }
+
+    public function getAddVolunteerMentors()
+    {
+        $form = $this->borrowersForm;
+        $page = Request::query('page') ? : 1;
+
+        $query = BorrowerQuery::create()
+            ->useUserQuery()
+            ->filterBySubRole(null)
+            ->endUse();
+
+        $paginator = $form->getQuery($query)
+            ->orderById()
+            ->paginate($page, 3);
+
+        return View::make('admin.add-volunteer-mentors', compact('paginator', 'form'));
     }
 
     public function getLoans()
@@ -665,10 +712,14 @@ class AdminController extends BaseController
     {
         $user = UserQuery::create()
             ->findOneById($id);
-        $user->setSubRole(null);
-        $user->save();
-
-        \Flash::success("Volunteer Removed!");
+        if (!$user) {
+            App::abort(404);
+        }
+        if ($this->borrowerService->removeVolunteerMentor($user)) {
+            \Flash::success("Volunteer Removed!");
+            return Redirect::back();
+        }
+        \Flash::success("Error occurred!");
         return Redirect::back();
     }
 
@@ -676,8 +727,11 @@ class AdminController extends BaseController
     {
         $user = UserQuery::create()
             ->findOneById($id);
-        $user->setSubRole(User::SUB_ROLE_VOLUNTEER_MENTOR);
-        $user->save();
+        if (!$user) {
+            App::abort(404);
+        }
+
+        $this->borrowerService->addVolunteerMentor($user);
 
         \Flash::success("Volunteer Added!");
         return Redirect::back();
@@ -977,4 +1031,30 @@ class AdminController extends BaseController
 
         return $redirect;
     }
+
+    public function postVmNote()
+    {
+        $borrowerId = Input::get('borrowerId');
+        $note = Input::get('note');
+
+        $user = \Auth::user();
+
+        $borrower = BorrowerQuery::create()
+            ->findOneById($borrowerId);
+
+        if (!$borrower) {
+            App::abort(404, 'VM not found');
+        }
+
+        $loanNote = new AdminNote();
+        $loanNote
+            ->setUser($user)
+            ->setBorrower($borrower)
+            ->setType('VMNote')
+            ->setNote($note);
+        $loanNote->save();
+
+        return \Redirect::back();
+    }
+
 }

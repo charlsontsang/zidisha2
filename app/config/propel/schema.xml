@@ -147,17 +147,21 @@
         </foreign-key>
     </table>
 
-    <table name="loan_notes" phpName="LoanNote" namespace="Loan">
+    <table name="admin_notes" phpName="AdminNote" namespace="Admin">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="user_id" type="INTEGER" required="true" phpType="string"/>
-        <column name="loan_id" type="INTEGER" required="true" phpType="string"/>
+        <column name="loan_id" type="INTEGER" phpType="string"/>
+        <column name="borrower_id" type="INTEGER" phpType="string"/>
         <column name="note" type="LONGVARCHAR" required="true" />
-        <column name="type" type="ENUM" valueSet="disbursement" required="true"/>
+        <column name="type" type="ENUM" valueSet="disbursement, VMNote" required="true"/>
         <foreign-key foreignTable="users">
             <reference local="user_id" foreign="id"/>
         </foreign-key>
         <foreign-key foreignTable="loans">
             <reference local="loan_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="borrowers">
+            <reference local="borrower_id" foreign="id"/>
         </foreign-key>
         <behavior name="timestampable"/>
     </table>
@@ -771,7 +775,7 @@
         <column name="country_id" type="INTEGER" required="true"/>
         <column name="grant_date" type="TIMESTAMP" required="true"/>
         <column name="note" type="LONGVARCHAR"/>
-        <column name="status" type="ENUM" defaultValue="0" valueSet="-2, -1, 0, 1, 2"/>
+        <column name="active" type="BOOLEAN" defaultValue="1"/>
         <behavior name="timestampable"/>
         <foreign-key foreignTable="borrowers" phpName="BorrowerVolunteer">
             <reference local="borrower_id" foreign="id"/>

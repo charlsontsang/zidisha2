@@ -180,14 +180,14 @@
                            <hr/>
                             <strong>Notes</strong>
                             <br/>
-                            @if(isset($loanNotes[$loan->getId()]))
+                            @if(isset($adminNotes[$loan->getId()]))
                                 <ul>
-                                    @foreach($loanNotes[$loan->getId()] as $loanNote)
+                                    @foreach($adminNotes[$loan->getId()] as $adminNote)
                                         <li>
                                             <span class="text-muted">
-                                                {{ $loanNote->getCreatedAt('M j, Y') }} by {{ $loanNote->getUser()->getUserName() }}
+                                                {{ $adminNote->getCreatedAt('M j, Y') }} by {{ $adminNote->getUser()->getUserName() }}
                                             </span>
-                                            <p> {{ $loanNote->getNote() }} </p>
+                                            <p> {{ $adminNote->getNote() }} </p>
                                         </li>
                                     @endforeach
                                 </ul>

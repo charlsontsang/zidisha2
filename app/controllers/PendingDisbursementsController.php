@@ -1,12 +1,13 @@
 <?php
 
+use Zidisha\Admin\AdminNote;
+use Zidisha\Admin\AdminNoteQuery;
 use Zidisha\Admin\Form\AuthorizeLoanForm;
 use Zidisha\Admin\Form\DisburseLoanForm;
 use Zidisha\Country\CountryQuery;
 use Zidisha\Currency\ExchangeRateQuery;
 use Zidisha\Currency\Money;
 use Zidisha\Loan\Loan;
-use Zidisha\Loan\LoanNoteQuery;
 use Zidisha\Loan\LoanService;
 
 class PendingDisbursementsController extends BaseController
@@ -70,29 +71,29 @@ class PendingDisbursementsController extends BaseController
         $loans = $loansQuery
             ->paginate($page, 10);
 
-        $loans->populateRelation('LoanNote');
+        $loans->populateRelation('AdminNote');
 
         $countries = CountryQuery::create()
             ->filterByBorrowerCountry(true)
             ->find();
 
-        $_loanNotes = LoanNoteQuery::create()
+        $_adminNotes = AdminNoteQuery::create()
             ->filterByLoanId($loans->toKeyValue('id', 'id'))
             ->joinWith('User')
             ->find();
         
-        $loanNotes = [];
-        foreach ($_loanNotes as $loanNote) {
-            if (!isset($loanNotes[$loanNote->getLoanId()])) {
-                $loanNotes[$loanNote->getLoanId()] = [];
+        $adminNotes = [];
+        foreach ($_adminNotes as $loanNote) {
+            if (!isset($adminNotes[$loanNote->getLoanId()])) {
+                $adminNotes[$loanNote->getLoanId()] = [];
             }
-            $loanNotes[$loanNote->getLoanId()][] = $loanNote;
+            $adminNotes[$loanNote->getLoanId()][] = $loanNote;
         }
 
         return View::make(
             'admin.pending-disbursements.pending-disbursements',
             compact(
-                'loans', 'loanNotes', 'exchangeRate',
+                'loans', 'adminNotes', 'exchangeRate',
                 'currency', 'country', 'countries',
                 'orderBy', 'orderDirection'
             )
@@ -113,7 +114,7 @@ class PendingDisbursementsController extends BaseController
             App::abort(404, 'Loan not found');
         }
 
-        $loanNote = new \Zidisha\Loan\LoanNote();
+        $loanNote = new AdminNote();
         $loanNote
             ->setUser($user)
             ->setLoanId($loanId)

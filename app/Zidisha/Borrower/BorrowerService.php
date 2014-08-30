@@ -5,6 +5,7 @@ use Carbon\Carbon;
 use DateTime;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Zidisha\Admin\Setting;
+use Zidisha\Comment\BorrowerCommentQuery;
 use Zidisha\Credit\CreditsEarnedQuery;
 use Zidisha\Credit\CreditSetting;
 use Zidisha\Credit\CreditSettingQuery;
@@ -19,6 +20,7 @@ use Zidisha\Loan\LoanService;
 use Zidisha\Mail\BorrowerMailer;
 use Zidisha\Repayment\InstallmentQuery;
 use Zidisha\Repayment\RepaymentSchedule;
+use Zidisha\Repayment\RepaymentService;
 use Zidisha\Sms\BorrowerSmsService;
 use Zidisha\Upload\Upload;
 use Zidisha\User\FacebookUser;
@@ -35,15 +37,17 @@ class BorrowerService
     private $borrowerMailer;
     private $borrowerSmsService;
     private $loanService;
+    private $repaymentService;
 
     public function __construct(FacebookService $facebookService, UserQuery $userQuery, BorrowerMailer $borrowerMailer,
-        BorrowerSmsService $borrowerSmsService, LoanService $loanService)
+        BorrowerSmsService $borrowerSmsService, LoanService $loanService, RepaymentService $repaymentService)
     {
         $this->facebookService = $facebookService;
         $this->userQuery = $userQuery;
         $this->borrowerMailer = $borrowerMailer;
         $this->borrowerSmsService = $borrowerSmsService;
         $this->loanService = $loanService;
+        $this->repaymentService = $repaymentService;
     }
 
     public function joinBorrower($data)
@@ -832,5 +836,70 @@ class BorrowerService
             }
         }
         return $previousLoanAmount;
+    }
+
+    public function addVolunteerMentor(User $user)
+    {
+        $time=time();
+        $user->setSubRole(User::SUB_ROLE_VOLUNTEER_MENTOR);
+        $user->save();
+        $borrower = $user->getBorrower();
+        $volunteerMentor = VolunteerMentorQuery::create()
+            ->findOneByBorrowerId($borrower->getId());
+        if ($volunteerMentor) {
+            $volunteerMentor->setActive(true);
+            $volunteerMentor->save();
+        } else {
+            $newVM = new VolunteerMentor();
+            $newVM
+                ->setBorrowerVolunteer($borrower)
+                ->setCountry($borrower->getCountry())
+                ->setGrantDate($time);
+            $newVM->save();
+        }
+    }
+
+    public function removeVolunteerMentor(User $user)
+    {
+        $user->setSubRole(null);
+        $user->save();
+        $volunteerMentor = VolunteerMentorQuery::create()
+            ->findOneByBorrowerId($user->getBorrower()->getId());
+        if ($volunteerMentor) {
+            $volunteerMentor->setActive(false);
+            $volunteerMentor->save();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function printLoanInArrears(Borrower $borrower)
+    {
+        $activeLoan =  $borrower->getActiveLoan();
+
+        $isAnyLoanDefaulted = LoanQuery::create()
+            ->filterByBorrowerId($borrower->getId())
+            ->filterByDeletedByAdmin(false)
+            ->filterByStatus(Loan::DEFAULTED)
+            ->findOne();
+        if ($isAnyLoanDefaulted) {
+            return 'Loan in Arrears';
+        }
+        if ($activeLoan) {
+            $repaymentSchedule = $this->repaymentService->getRepaymentSchedule($activeLoan);
+            if ($repaymentSchedule->getOverDueInstallmentCount() > 1) {
+                return 'Loan in Arrears';
+            }
+        }
+        return 'Not in Arrears';
+    }
+
+    public function hasVMComment(Borrower $volunteerMentor, Borrower $borrower)
+    {
+        return BorrowerCommentQuery::create()
+            ->filterByReceiverId($borrower->getId())
+            ->filterByBorrowerId($volunteerMentor->getId())
+            ->count();
     }
 }
