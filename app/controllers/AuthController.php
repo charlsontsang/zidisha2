@@ -140,6 +140,11 @@ class AuthController extends BaseController
         $this->mixpanel->trackLoggedIn();
         $this->siftScienceService->sendLoginEvent($user);
 
+        if (Session::get('lenderJoin')) {
+            $params = Session::get('lenderJoin');
+            Session::forget('lenderJoin');
+            return Redirect::route('loan:index', $params);
+        }
         if ($user->isLender()) {
             return Redirect::route('lender:dashboard');
         } elseif ($user->isBorrower()) {

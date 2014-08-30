@@ -654,7 +654,10 @@
         });
         $('#join-lend').on('click', function() {
             var data = $(this).closest('form').serialize();
-            $.post("{{ route('lender:join-lend') }}", data);
+            // https://github.com/laravel/framework/issues/4576
+            setTimeout(function() {
+                $.post("{{ route('lender:join-lend') }}", data);                
+            }, 1000);
         });
 
         var hash = document.location.hash;
