@@ -1051,6 +1051,36 @@ class DatabaseMigration extends Command {
             }
         }
 
+        if ($table == 'lending_groups') {
+            $this->line('Migrate lending_groups table');
+
+            $count = $this->con->table('lender_groups')->count();
+            $offset = 0;
+            $limit = 500;
+
+            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+                $lendingGroups = $this->con->table('lender_groups')
+                    ->where($offset)->limit($limit)->get();
+                $lendingGroupArray = [];
+
+                foreach ($lendingGroups as $lendingGroup) {
+                    $newLendingGroup = [
+                        'id'                       => $lendingGroup['id'],
+                        'name'                     => $lendingGroup['name'],
+                        'website'                  => $lendingGroup['website'],
+                        'group_profile_picture_id' => $lendingGroup['image'], //TODO with upload things
+                        'about'                    => $lendingGroup['about_grp'],
+                        'creator_id'               => $lendingGroup['created_by'],
+                        'leader_id'                => $lendingGroup['grp_leader'],
+                        'created_at'               => $lendingGroup['created'],
+                        'modified_at'              => $lendingGroup['modified']
+                    ];
+
+                    array_push($lendingGroupArray, $newLendingGroup);
+                }
+                DB::table('lending_groups')->insert($lendingGroupArray);
+            }
+        }
 
 	}
 
