@@ -2,7 +2,7 @@
 
 namespace Zidisha\Mail;
 
-use Zidisha\Mail\Base\BulkEmailsQuery as BaseBulkEmailsQuery;
+use Zidisha\Mail\Base\BulkEmailQuery as BaseBulkEmailQuery;
 
 
 /**
@@ -15,7 +15,7 @@ use Zidisha\Mail\Base\BulkEmailsQuery as BaseBulkEmailsQuery;
  * long as it does not already exist in the output directory.
  *
  */
-class BulkEmailsQuery extends BaseBulkEmailsQuery
+class BulkEmailQuery extends BaseBulkEmailQuery
 {
 
-} // BulkEmailsQuery
+} // BulkEmailQuery
