@@ -47,7 +47,11 @@
         <script src="{{ asset('assets/vendor/bootstrap-3-datepicker/js/bootstrap-datepicker.js') }}"></script>
         <script src="{{ asset('assets/js/zidisha.js') }}"></script>
         <script src="{{ asset('assets/vendor/remarkable-bootstrap-growl/bootstrap-growl.min.js') }}"></script>
-        <script>$('.flash-modal').modal();</script>
+        <script>
+            $(function(
+                $('.flash-modal').modal();                
+            ));
+        </script>
         @yield('script-footer')
         @include('partials/_flash')
         <!-- Mixpanel -->
