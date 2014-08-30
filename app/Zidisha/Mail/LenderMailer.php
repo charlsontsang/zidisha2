@@ -3,6 +3,7 @@ namespace Zidisha\Mail;
 
 
 use Carbon\Carbon;
+use Zidisha\Balance\TransactionQuery;
 use Zidisha\Comment\Comment;
 use Zidisha\Currency\Money;
 use Zidisha\Lender\GiftCard;
@@ -12,6 +13,7 @@ use Zidisha\Loan\Bid;
 use Zidisha\Loan\ForgivenessLoan;
 use Zidisha\Loan\LenderRefund;
 use Zidisha\Loan\Loan;
+use Zidisha\Loan\LoanService;
 use Zidisha\Loan\RefundLender;
 use Zidisha\User\User;
 
@@ -41,13 +43,15 @@ class LenderMailer
     public function sendFirstBidConfirmationMail(Bid $bid)
     {
         $email = $bid->getLender()->getUser()->getEmail();
-
+        $username = $bid->getLender()->getName();
         $this->mailer->send(
             'emails.lender.loan.first-bid-confirmation',
             [
                 'to'      => $email,
                 'from'    => 'service@zidisha.com',
-                'subject' => 'Congratulations you have made your first Bid on Zidisha.'
+                'subject' => 'Congratulations you have made your first Bid on Zidisha.',
+                'templateId' => \Setting::get('sendwithus.lender-loan-first-bid-confirmation-template-id'),
+                'username' => $username
             ]
         );
     }
@@ -74,6 +78,7 @@ class LenderMailer
                 'acceptedAmount'  => $acceptedAmount->round(2)->getAmount(),
                 'borrowerLink'    => $bid->getLoan()->getBorrower()->getUser()->getProfileUrl(),
                 'borrowerName'    => $bid->getLoan()->getBorrower()->getName(),
+                'loanLink'        => route('loan:index', ['loanId' => $bid->getLoan()->getBorrower()->getActiveLoanId()]),
             ]
         );
     }
@@ -95,10 +100,44 @@ class LenderMailer
         );
     }
 
-    public function sendLenderInvite(Lender $lender, Invite $lender_invite, $subject, $custom_message)
+    public function sendLenderInvite(Lender $lender, Invite $lender_invite, $subject, $customMessage)
     {
         $email = $lender_invite->getEmail();
-        //TODO send invite email
+
+        $data = array();
+        $data['lender_name'] = $lender->getName();
+        $data['header'] = \Lang::get('lender.mails.lender-unused-fund.header');
+        $data['footer'] = \Lang::get('lender.mails.lender-unused-fund.footer');
+
+        $data['button_text'] = "View Projects";
+        
+        //Todo: button url
+        //$params['button_url'] = SITE_URL . 'i/' . $lender['username'] . '?h=' . $lender_invite['hash'];
+
+        $profilePicture = $lender->getUser()->getProfilePictureUrl();
+
+        $table = '<table cellspacing="0" cellpadding="10" border="0">';
+        $table .= "<tr>";
+        $table = $profilePicture ? $table . '<td width="50"><img width="50" style="width:50px;" src="' . $profilePicture . '" /></td>' : $table . "<td><b>Note</b>:</td>";
+        $table .= '<td>' . $customMessage . '</td>';
+        $table .= "</tr>";
+        $table .= "</table>";
+        $customMessage = $table;
+
+        $subject = \Lang::get('lender.mails.subject', ['lenderName' => $lender->getName()]);
+        $message = \Lang::get('lender.mails.body', ['lenderName' => $lender->getName(), 'customMessage' => $customMessage]);
+
+        //TODO: set proper variables
+        
+        $this->mailer->send(
+            'emails.lender.loan.loan-fully-funded',
+            [
+                'to'      => $email,
+                'from'    => 'service@zidisha.com',
+                'subject' => $subject
+            ]
+        );
+
     }
 
     public function sendLenderInviteCredit(Invite $invite)
@@ -215,14 +254,30 @@ class LenderMailer
 
     public function sendUnusedFundsNotification(Lender $lender)
     {
+        $currentBalance = TransactionQuery::create()
+            ->getCurrentBalance($lender->getId());
+        
+        $data['footer'] = \Lang::get('lender.mails.lender-unused-fund.footer');
+        
+        $data['extra'] = \Lang::get(
+            'lender.mails.lender-unused-fund.body',
+            ['automaticLendingLink' => route('lender:auto-lending')]
+        );
+
+        $subject = \Lang::get('lender.mails.lender-unused-fund.subject');
+
+        $message = \Lang::get('lender.mails.lender-unused-fund.body', ['lenderBalance' => $currentBalance->getAmount()]);
+
         $this->mailer->send(
             'emails.hero',
-            [
+            $data + [
                 'to'         => $lender->getUser()->getEmail(),
-                'subject'    => 'Unused Funds Notification',
+                'subject'    => $subject,
                 'templateId' => \Setting::get('sendwithus.lender-unused-funds-template-id'),
             ]
         );
+        
+        //TODO: get featured loans and use it.
     }
 
     public function sendLoanAboutToExpireMail(Lender $lender)
@@ -256,7 +311,7 @@ class LenderMailer
             'parameters' => [
                 'borrowerName' => $loan->getBorrower()->getName(),
                 'loanUrl'      => route('loan:index', ['loanId' => $loan->getId()]),
-                'repayDate'    => $loan->getInstallmentDay(), //TODO: confirm  
+                'repayDate'    => $loan->getRepaidAt()->format('F j, Y')
             ],
         ];
         

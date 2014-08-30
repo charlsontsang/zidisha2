@@ -233,6 +233,9 @@ return [
         ],
         'sendwithus.lender-loan-forgiveness-mail-template-id' => [
             'label' => 'Lender loan forgiveness template id'
+        ],
+        'sendwithus.lender-loan-first-bid-confirmation-template-id' => [
+            'label' => 'Lender loan first bid confirmation template id'
         ]
     ]
 ];
