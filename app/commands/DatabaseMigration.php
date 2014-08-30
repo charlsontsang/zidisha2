@@ -42,7 +42,7 @@ class DatabaseMigration extends Command {
 	public function fire()
 	{
         $table = $this->argument('table');
-//        $this->con = DB::connection('zidisha1');
+        $this->con = DB::connection('zidisha1');
 
         if ($table == 'all') {
             $this->line('Migrate all tables');
@@ -54,7 +54,6 @@ class DatabaseMigration extends Command {
             $this->call('migrateDB', array('table' => 'countries'));
             $this->call('migrateDB', array('table' => 'loans'));
             $this->call('migrateDB', array('table' => 'loan_bids'));
-            //TODO after pull request got merged
             $this->call('migrateDB', array('table' => 'admin_notes'));
             //TODO
             $this->call('migrateDB', array('table' => 'password_reminders'));
@@ -479,6 +478,34 @@ class DatabaseMigration extends Command {
                     array_push($bidArray, $newBid);
                 }
                 DB::table('loan_bids')->insert($bidArray);
+            }
+        }
+
+        if ($table = 'admin_notes') {
+            $this->line('Migrate admin_notes table');
+
+            $count = $this->con->table('loan_notes')->count();
+            $offset = 0;
+            $limit = 500;
+
+            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+                $adminNotes = $this->con->table('loan_notes')
+                    ->where($offset)->limit($limit)->get();
+                $adminNoteArray = [];
+
+                foreach ($adminNotes as $adminNote) {
+                    $newAdminNote = [
+                        'id'          => $adminNote['id'],
+                        'user_id'     => $adminNote['userid'],
+                        'loan_id'     => $adminNote['loanid'],
+                        'borrower_id' => null,
+                        'note'        => $adminNote['disbursement_notes'],
+                        'type'        => 'disbursement'
+                    ];
+
+                    array_push($adminNoteArray, $newAdminNote);
+                }
+                DB::table('admin_notes')->insert($adminNoteArray);
             }
         }
 
