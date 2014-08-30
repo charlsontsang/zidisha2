@@ -82,6 +82,8 @@ class DatabaseMigration extends Command {
             $this->call('migrateDB', array('table' => 'borrower_reviews'));
             $this->call('migrateDB', array('table' => 'languages'));
             $this->call('migrateDB', array('table' => 'lending_groups'));
+            // TODO lending_group_notifications
+            $this->call('migrateDB', array('table' => 'lending_group_members'));
 
 
         }
@@ -1079,6 +1081,34 @@ class DatabaseMigration extends Command {
                     array_push($lendingGroupArray, $newLendingGroup);
                 }
                 DB::table('lending_groups')->insert($lendingGroupArray);
+            }
+        }
+
+        if ($table == 'lending_group_members') {
+            $this->line('Migrate lending_group_members table');
+
+            $count = $this->con->table('lending_group_members')->count();
+            $offset = 0;
+            $limit = 500;
+
+            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+                $groupMembers = $this->con->table('lending_group_members')
+                    ->where($offset)->limit($limit)->get();
+                $groupMemberArray = [];
+
+                foreach ($groupMembers as $groupMember) {
+                    $newGroupMember = [
+                        'id'          => $groupMember['id'],
+                        'group_id'    => $groupMember['group_id'],
+                        'member_id'   => $groupMember['member_id'],
+                        'leaved'      => $groupMember['leaved'],
+                        'created_at'  => $groupMember['created'],
+                        'modified_at' => $groupMember['modified']
+                    ];
+
+                    array_push($groupMemberArray, $newGroupMember);
+                }
+                DB::table('lending_group_members')->insert($groupMemberArray);
             }
         }
 
