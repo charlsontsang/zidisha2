@@ -165,7 +165,17 @@ class DatabaseMigration extends Command {
                         'about_me'  => $lender['lenders.About']
                     ];
                     $preference = [
-                        'lender_id' => $lender['users.userid'],
+                        'lender_id'                   => $lender['users.userid'],
+                        'hide_lending_activity'       => $lender['lenders.hide_Amount'],
+                        'hide_karma'                  => $lender['lenders.hide_karma'], // TODO do default false in new DB?
+                        'notify_loan_fully_funded'    => $lender['lenders.loan_fully_funded_notify'],
+                        'notify_loan_about_to_expire' => $lender['lenders.loan_about_to_expire_notify'],
+                        'notify_loan_expired'         => $lender['lenders.loan_expired_notify'],
+                        'notify_loan_disbursed'       => $lender['lenders.loan_disbursed_notify'],
+                        'notify_comment'              => $lender['lenders.emailcomment'], // TODO cross check
+                        'notify_loan_application'     => $lender['lenders.loan_app_notify'],
+                        'notify_invite_accepted'      => $lender['lenders.invite_notify'],
+                        'notify_loan_repayment'       => $lender['lenders.email_loan_repayment'],
                     ];
 
                     array_push($lenderArray, $newLender);
