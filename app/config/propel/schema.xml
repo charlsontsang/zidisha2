@@ -24,7 +24,7 @@
             <unique-column name="username"/>
         </unique>
         <unique>
-            <unique-column name="email"></unique-column>
+            <unique-column name="email"/>
         </unique>
     </table>
 
@@ -229,7 +229,7 @@
         <column name="borrower_id" type="INTEGER" primaryKey="true"/>
         <column name="about_me" type="LONGVARCHAR" required="false"/>
         <column name="about_me_translation" type="LONGVARCHAR" required="false"/>
-        <column name="about_business " type="LONGVARCHAR" required="false"/>
+        <column name="about_business" type="LONGVARCHAR" required="false"/>
         <column name="about_business_translation" type="LONGVARCHAR" required="false"/>
         <column name="address" type="LONGVARCHAR" required="true"/>
         <column name="address_instructions" type="LONGVARCHAR" required="true"/>
@@ -1134,14 +1134,14 @@
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="name" type="VARCHAR" required="true"/>
         <column name="value" type="LONGVARCHAR" required="true"/>
-        <column name="country_id" type="INTEGER" required="true"/>
+        <column name="country_id" type="INTEGER" required="true" defaultValue="null"/>
         <column name="date" type="TIMESTAMP" required="true"/>
         <foreign-key foreignTable="countries">
             <reference local="country_id" foreign="id"/>
         </foreign-key>
     </table>
 
-    <table name="reschedule" phpName="Reschedule" namespace="Loan">
+    <table name="reschedules" phpName="Reschedule" namespace="Loan">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="loan_id" type="INTEGER" required="true"/>
         <column name="borrower_id" type="INTEGER" required="true"/>
@@ -1153,6 +1153,31 @@
         </foreign-key>
         <foreign-key foreignTable="borrowers" phpName="Borrower">
             <reference local="borrower_id" foreign="id"/>
+        </foreign-key>
+    </table>
+
+    <table name="bulk_emails" phpName="BulkEmail" namespace="Mail">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="sender_email" type="VARCHAR" size="100" required="true"/>
+        <column name="subject" type="VARCHAR" required="true"/>
+        <column name="header" type="VARCHAR" required="true"/>
+        <column name="message" type="LONGVARCHAR" required="true"/>
+        <column name="template" type="VARCHAR" required="true"/>
+        <column name="html" type="INTEGER" required="true"/>
+        <column name="tag" type="VARCHAR" required="true"/>
+        <column name="params" type="LONGVARCHAR" required="true"/>
+        <column name="processed_at" type="TIMESTAMP"/>
+        <behavior name="timestampable"/>
+    </table>
+
+    <table name="bulk_email_recipients" phpName="BulkEmailRecipient" namespace="Mail">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="bulk_email_id" type="INTEGER" required="true"/>
+        <column name="email" type="VARCHAR" size="100" required="true"/>
+        <column name="processed_at" type="TIMESTAMP"/>
+        <behavior name="timestampable"/>
+        <foreign-key foreignTable="bulk_emails">
+            <reference local="bulk_email_id" foreign="id"/>
         </foreign-key>
     </table>
 </database>

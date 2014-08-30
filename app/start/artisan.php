@@ -20,3 +20,4 @@ Artisan::add(new ExpireLoans(App::make('Zidisha\Loan\LoanService')));
 Artisan::add(new ScheduledJobs);
 Artisan::add(new EnqueueScheduledJobs);
 Artisan::add(new AutomatedLending);
+Artisan::add(new DatabaseMigration);
