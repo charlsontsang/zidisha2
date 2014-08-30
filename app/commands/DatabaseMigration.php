@@ -74,21 +74,17 @@ class DatabaseMigration extends Command {
             $this->call('migrateDB', array('table' => 'borrower_refunds'));
             $this->call('migrateDB', array('table' => 'volunteer_mentors'));
             // TODO for borrower_join_logs if any
-            // TODO for borrower_guests if any
             $this->call('migrateDB', array('table' => 'borrower_feedback_messages'));
             $this->call('migrateDB', array('table' => 'borrower_reviews'));
             $this->call('migrateDB', array('table' => 'languages'));
             $this->call('migrateDB', array('table' => 'lending_groups'));
-            // TODO lending_group_notifications
             $this->call('migrateDB', array('table' => 'lending_group_members'));
-            // TODO translation_labels if any!
             $this->call('migrateDB', array('table' => 'notifications'));
             $this->call('migrateDB', array('table' => 'withdrawal_requests'));
             $this->call('migrateDB', array('table' => 'followers'));
             $this->call('migrateDB', array('table' => 'borrower_invites'));
             $this->call('migrateDB', array('table' => 'credit_settings'));
             $this->call('migrateDB', array('table' => 'credits_earned'));
-            // TODO scheduled_jobs & scheduled_jobs_logs
             $this->call('migrateDB', array('table' => 'auto_lending_settings'));
             $this->call('migrateDB', array('table' => 'statistics'));
             $this->call('migrateDB', array('table' => 'reschedule'));
@@ -140,6 +136,7 @@ class DatabaseMigration extends Command {
             $this->line('Migrate lenders table');
             $this->line('Migrate lender_profiles table');
             $this->line('Migrate lender_preferences table');
+            $this->line('Migrate lending_group_notifications table');
 
             $count = $this->con->table('lenders')->count();
             $offset = 0;
@@ -153,6 +150,7 @@ class DatabaseMigration extends Command {
                 $lenderArray = [];
                 $profileArray = [];
                 $preferenceArray = [];
+                $lendingGroupNotificationArray = [];
 
                 foreach ($lenders as $lender) {
                     $newLender = [
@@ -187,10 +185,21 @@ class DatabaseMigration extends Command {
                     array_push($lenderArray, $newLender);
                     array_push($profileArray, $profile);
                     array_push($preferenceArray, $preference);
+
+                    $groupIds = explode(',',$lender['lenders.groupmsg_notify']);
+                    foreach ($groupIds as $groupId) {
+                        $newGroupNotification = [
+                            'lending_group_id' => $groupId,
+                            'user_id'          => $lender['users.userid']
+                        ];
+
+                        array_push($lendingGroupNotificationArray, $newGroupNotification);
+                    }
                 }
                 DB::table('lenders')->insert($lenderArray);
                 DB::table('lender_profiles')->insert($profileArray);
                 DB::table('lender_preferences')->insert($preferenceArray);
+                DB::table('lending_group_notifications')->insert($lendingGroupNotificationArray);
             }
         }
 
