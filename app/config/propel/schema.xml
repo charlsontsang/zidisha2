@@ -1141,7 +1141,7 @@
         </foreign-key>
     </table>
 
-    <table name="reschedule" phpName="Reschedule" namespace="Loan">
+    <table name="reschedules" phpName="Reschedule" namespace="Loan">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="loan_id" type="INTEGER" required="true"/>
         <column name="borrower_id" type="INTEGER" required="true"/>
