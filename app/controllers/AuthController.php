@@ -70,6 +70,12 @@ class AuthController extends BaseController
         $this->siftScienceService->sendInvalidLoginEvent();
 
         Flash::error('borrower.login.flash.login-error');
+        
+        if (Input::get('modal', false)) {
+            Session::flash('showLoginModal', true);
+            return Redirect::back()->withForm($form);
+        }
+        
         return Redirect::route('login')->withForm($form);
     }
 
