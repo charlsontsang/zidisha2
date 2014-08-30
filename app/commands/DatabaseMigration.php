@@ -84,6 +84,8 @@ class DatabaseMigration extends Command {
             $this->call('migrateDB', array('table' => 'lending_groups'));
             // TODO lending_group_notifications
             $this->call('migrateDB', array('table' => 'lending_group_members'));
+            // TODO translation_labels if any!
+            $this->call('migrateDB', array('table' => 'notifications'));
 
 
         }
@@ -1109,6 +1111,32 @@ class DatabaseMigration extends Command {
                     array_push($groupMemberArray, $newGroupMember);
                 }
                 DB::table('lending_group_members')->insert($groupMemberArray);
+            }
+        }
+
+        if ($table == 'notifications') {
+            $this->line('Migrate notifications table');
+
+            $count = $this->con->table('notification_history')->count();
+            $offset = 0;
+            $limit = 500;
+
+            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+                $notifications = $this->con->table('notification_history')
+                    ->where($offset)->limit($limit)->get();
+                $notificationArray = [];
+
+                foreach ($notifications as $notification) {
+                    $newNotification = [
+                        'id'         => $notification['id'],
+                        'type'       => $notification['type'],
+                        'user_id'    => $notification['userid'],
+                        'created_at' => $notification['created']
+                    ];
+
+                    array_push($notificationArray, $newNotification);
+                }
+                DB::table('notifications')->insert($notificationArray);
             }
         }
 
