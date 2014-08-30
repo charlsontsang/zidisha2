@@ -73,7 +73,6 @@ class DatabaseMigration extends Command {
             $this->call('migrateDB', array('table' => 'forgiveness_loans'));
             $this->call('migrateDB', array('table' => 'borrower_refunds'));
             $this->call('migrateDB', array('table' => 'volunteer_mentors'));
-            // TODO for borrower_join_logs if any
             $this->call('migrateDB', array('table' => 'borrower_feedback_messages'));
             $this->call('migrateDB', array('table' => 'borrower_reviews'));
             $this->call('migrateDB', array('table' => 'languages'));
@@ -207,6 +206,7 @@ class DatabaseMigration extends Command {
             $this->line('Migrate borrowers table');
             $this->line('Migrate borrower_profiles table');
             $this->line('Migrate borrower_contacts table');
+            $this->line('Migrate borrower_join_logs table');
 
             $count = $this->con->table('borrowers')->count();
             $offset = 0;
@@ -216,10 +216,12 @@ class DatabaseMigration extends Command {
                     ->join('users', 'borrowers.userid', '=', 'users.userid')
                     ->join('countries', 'borrowers.Country', '=', 'countries.code')
                     ->join('borrowers_extn', 'borrowers.userid', '=', 'borrowers_extn.userid')
+                    ->leftjoin('facebook_info', 'borrowers.userid', '=', 'facebook_info.userid')
                     ->where($offset)->take($limit)->get();
                 $borrowerArray = [];
                 $profileArray = [];
                 $contactArray = [];
+                $borrowerJoinLogArray = [];
 
                 foreach ($borrowers as $borrower) {
                     $newBorrower = [
@@ -306,15 +308,27 @@ class DatabaseMigration extends Command {
                         array_push($contactArray, $neighbor);
                     }
 
-                    //TODO JoinLog migration
+                    $newJoinLog = [
+                        'borrower_id' => $borrower['users.userid'],
+                        'ip_address' => $borrower['facebook_info.ip_address'] ? $borrower['facebook_info.ip_address'] : '',
+                        'preferred_loan_amount' => '',
+                        'preferred_interest_rate' => '',
+                        'preferred_repayment_amount' => '',
+                    ];
+
+                    if (!$borrower['users.emailVerified']) {
+                        $newJoinLog = $newJoinLog + ['verification_code' => md5($borrower['users.password'].$borrower['users.salt'])];
+                    }
 
                     array_push($borrowerArray, $newBorrower);
                     array_push($profileArray, $profile);
                     array_push($contactArray, $communityLeader);
+                    array_push($borrowerJoinLogArray, $newJoinLog);
                 }
                 DB::table('borrowers')->insert($borrowerArray);
                 DB::table('borrowers')->insert($profileArray);
                 DB::table('borrower_contacts')->insert($contactArray);
+                DB::table('borrower_join_logs')->insert($borrowerJoinLogArray);
             }
         }
 
