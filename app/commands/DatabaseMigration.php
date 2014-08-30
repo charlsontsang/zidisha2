@@ -1453,7 +1453,6 @@ class DatabaseMigration extends Command {
                 DB::table('reschedules')->insert($rescheduleArray);
             }
         }
-
     }
 
 	/**
