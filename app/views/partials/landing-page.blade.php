@@ -95,15 +95,15 @@
           </blockquote>   
       </div>
       <div class="col-sm-3">
-        <p><a href="http://venturebeat.com/2014/03/25/meet-the-tech-for-good-startups-at-y-combinators-demo-day/" target="_blank"><img src="/assets/images/pages/press/VB_logo.png" width="80%" class="press-logo" /></a></p>
+        <p><a href="http://paulbuchheit.blogspot.com/2014/03/help-me-distribute-100000-to-new.html" target="_blank"><img src="/assets/images/pages/press/yc_logo.png" width="100%" class="press-logo" /></a></p>
       </div>
       <div class="col-sm-9">
           <blockquote>
-              <p>"Zidisha is cutting out the middlemen to enable direct lending to the entrepreneurs, and only needs 10 percent in fees to cover its cost (that’s versus the 30-80 percent Kiva requires)."</p>
+              <p>"Zidisha connects lenders directly to borrowers, providing not only an affordable loan, but also a personal connection."</p>
               <footer>
-                  <cite><a href="http://venturebeat.com/2014/03/25/meet-the-tech-for-good-startups-at-y-combinators-demo-day/" target="_blank">Venture Beat</a></cite>
+                  <cite><a href="http://paulbuchheit.blogspot.com/2014/03/help-me-distribute-100000-to-new.html" target="_blank">Gmail Creator Paul Buchheit</a></cite>
               </footer>
-          </blockquote> 
+          </blockquote>
       </div>    
       <div class="col-sm-3">
         <p><a href="http://techcrunch.com/2014/01/23/zidisha-launches-a-kickstarter-style-micro-lending-platform-for-low-income-entrepreneurs-in-developing-countries/" target="_blank"><img src="/assets/images/pages/press/tc_logo.png" width="60%" class="press-logo" /></a></p>
