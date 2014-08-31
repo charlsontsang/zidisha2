@@ -28,11 +28,12 @@ class BidQuery extends BaseBidQuery
      */
     public function getTotalBidAmount()
     {
-        $total = $this->select(array('total'))
+        $total = $this
+            ->select(array('total'))
             ->withColumn('SUM(bid_amount)', 'total')
             ->findOne();
 
-        return Money::valueOf($total, Currency::valueOf('USD'));
+        return Money::create($total, 'USD');
     }
 
     public function getTotalAcceptedAmount()
@@ -62,18 +63,6 @@ class BidQuery extends BaseBidQuery
             ->where("Bid.lender_id NOT IN (SELECT lender_id from forgiveness_loan_shares where loan_id = $loanId)");
     }
 
-    public function getTotalActiveBidAmount(Lender $lender)
-    {
-        $total =  $this
-            ->filterByLender($lender)
-            ->filterByActive(true)
-            ->select(array('total'))
-            ->withColumn('SUM(bid_amount)', 'total')
-            ->findOne();
-
-        return Money::valueOf($total, Currency::valueOf('USD'));
-    }
-
     public function getTotalOpenLoanBidAmount(Lender $lender)
     {
         $sql = 'SELECT SUM(t.amount)
@@ -99,6 +88,13 @@ class BidQuery extends BaseBidQuery
             ->useLoanQuery()
                 ->filterFundRaising()
             ->endUse();
+    }
+
+    public function getTotalActiveBidAmount(Lender $lender)
+    {
+        return $this
+            ->filterActiveBids($lender)
+            ->getTotalBidAmount();
     }
 
     public function getActiveLoansBids(Lender $lender, $page2)
