@@ -295,6 +295,8 @@ class LenderMailer
         $currentBalance = TransactionQuery::create()
             ->getCurrentBalance($lender->getId());
         
+        $data = $this->getFeaturedLoansForMail();
+        
         $data['footer'] = \Lang::get('lender.mails.lender-unused-fund.footer');
         
         $data['extra'] = \Lang::get(
@@ -314,8 +316,6 @@ class LenderMailer
                 'templateId' => \Setting::get('sendwithus.lender-unused-funds-template-id'),
             ]
         );
-        
-        //TODO: get featured loans and use it.
     }
 
     public function sendLoanAboutToExpireMail(Lender $lender)
