@@ -338,15 +338,21 @@ class LenderController extends BaseController
             ->paginate($page , 10);
         $totalBidAmount = BidQuery::create()
             ->getTotalActiveBidAmount($lender);
-        $numberOfFundRaisingBids = $activeBids->getNbResults();
-        $numberOfFundRaisingProjects = \Lang::choice('lender.flash.preferences.stats-projects', $numberOfFundRaisingBids, array('count' => $numberOfFundRaisingBids));
+        $numberOfFundRaisingProjects = \Lang::choice(
+            'lender.flash.preferences.stats-projects',
+            $activeBids->getNbResults(),
+            ['count' => $activeBids->getNbResults()]
+        );
 
         $activeLoansBids = BidQuery::create()
             ->getActiveLoansBids($lender, $page2);
         $totalActiveLoansBidsAmount = BidQuery::create()
             ->getTotalActiveLoansBidsAmount($lender);
-        $numberOfActiveBids = $activeLoansBids->getNbResults();
-        $numberOfActiveProjects = \Lang::choice('lender.flash.preferences.stats-projects', $numberOfActiveBids, array('count' => $numberOfActiveBids));
+        $numberOfActiveProjects = \Lang::choice(
+            'lender.flash.preferences.stats-projects',
+            $activeLoansBids->getNbResults(),
+            ['count' => $activeLoansBids->getNbResults()]
+        );
 
         $activeLoansIds = [];
         /** @var $activeLoansBid Bid */
