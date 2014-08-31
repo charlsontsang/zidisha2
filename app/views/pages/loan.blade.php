@@ -592,6 +592,12 @@
         $amount.on('change', function() {
             $('#amount-display').text(formatMoney(parseMoney($amount.val()), 2));
         });
+        $amount.on('keyup keypress', function(e) {
+            if (e.which  == 13) {
+                e.preventDefault();
+                return false;
+            }
+        });
     });
 </script>
 @endif
