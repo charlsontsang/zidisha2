@@ -106,7 +106,7 @@
           </blockquote>
       </div>    
       <div class="col-sm-3">
-        <p><a href="http://techcrunch.com/2014/01/23/zidisha-launches-a-kickstarter-style-micro-lending-platform-for-low-income-entrepreneurs-in-developing-countries/" target="_blank"><img src="/assets/images/pages/press/tc_logo.png" width="60%" class="press-logo" /></a></p>
+        <p><a href="http://techcrunch.com/2014/01/23/zidisha-launches-a-kickstarter-style-micro-lending-platform-for-low-income-entrepreneurs-in-developing-countries/" target="_blank"><img src="/assets/images/pages/press/tc_logo.png" width="60%" id="tc_logo" class="press-logo" /></a></p>
       </div>
       <div class="col-sm-9">
           <blockquote>

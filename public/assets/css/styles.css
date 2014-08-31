@@ -8567,6 +8567,9 @@ body {
     display: none;
   }
 }
+#tc_logo {
+  margin-top: 10px;
+}
 .btn-home {
   font-size: 20px;
   background-color: #fff;
