@@ -1,13 +1,13 @@
 @extends('layouts.master')
 
 @section('page-title')
-    {{ $loan->getBorrower()->getName() }}
+    {{ $borrower->getName() }}
 @stop
 
 @section('content-top')
     <div class="loan-titlebar">
         <span id="country" class="text-light">
-            {{ $loan->getBorrower()->getCountry()->getName() }}
+            {{ $borrower->getCountry()->getName() }}
         </span>
         <p class="alpha">
             {{ $loan->getSummary() }}
@@ -26,7 +26,7 @@
                     style="background-image:url(/assets/images/test-photos/esther.JPG)" width="100%" height="450px">
                 </div>
                 <!--
-                <img src="{{ $loan->getBorrower()->getUser()->getProfilePictureUrl('large-profile-picture') }}" width="100%">
+                <img src="{{ $borrower->getUser()->getProfilePictureUrl('large-profile-picture') }}" width="100%">
                 -->
 
                 <br/>
@@ -54,11 +54,11 @@
                             <div class="loan-section-content">
                                 <div class="row">
                                     <div class="col-sm-6">
-                                        <strong>{{{ $loan->getBorrower()->getName() }}}</strong>
+                                        <strong>{{{ $borrower->getName() }}}</strong>
                                         <br/>
                                         <strong>
-                                            <a href="https://www.google.com/maps/place/{{ $loan->getBorrower()->getProfile()->getCity() }},+{{ $loan->getBorrower()->getCountry()->getName() }}/" target="_blank">{{ $loan->getBorrower()->getProfile()->getCity() }}</a>
-                                            {{ $loan->getBorrower()->getCountry()->getName() }}
+                                            <a href="https://www.google.com/maps/place/{{ $borrower->getProfile()->getCity() }},+{{ $borrower->getCountry()->getName() }}/" target="_blank">{{ $borrower->getProfile()->getCity() }}</a>
+                                            {{ $borrower->getCountry()->getName() }}
                                         </strong>
                                         <br/>
                                         Invited By:
@@ -72,7 +72,7 @@
                                         <strong>@choice('lender.follow.count', $followersCount)</strong>
                                         <br/>
 
-                                        <a id="follow-link" href="#">Follow {{{ $loan->getBorrower()->getFirstName() }}}<br/></a>
+                                        <a id="follow-link" href="#">Follow {{{ $borrower->getFirstName() }}}<br/></a>
 
                                         Feedback Rating:<i class="fa fa-info-circle rating" data-toggle="tooltip"></i>
                                         <strong>TODO</strong>
@@ -187,13 +187,13 @@
                             <div class="loan-section-content">
                                 <h5 class="alpha">About Me</h5>
 
-                                <p>{{ $loan->getBorrower()->getProfile()->getAboutMe() }}</p>
+                                <p>{{ $borrower->getProfile()->getAboutMe() }}</p>
                                 
                                 @if(Auth::check() && Auth::getUser()->isAdmin())
                                     <a href="{{ route('admin:get-translate', $loan->getId()) }}#about-me">Edit translation</a>
                                 @endif
 
-                                @if($loan->getBorrower()->getProfile()->getAboutMeTranslation())
+                                @if($borrower->getProfile()->getAboutMeTranslation())
                                 <div>
                                     <p class="text-right">
                                         <a href="#" data-toggle="collapse" data-target="#toggle-aboutMe" data-toggle-text="Hide original language">
@@ -203,7 +203,7 @@
 
                                     <div id="toggle-aboutMe" class="collapse">
                                         <p>
-                                            {{ $loan->getBorrower()->getProfile()->getAboutMeTranslation() }}
+                                            {{ $borrower->getProfile()->getAboutMeTranslation() }}
                                         </p>
                                     </div>
                                 </div>
@@ -211,13 +211,13 @@
 
                                 <h5>My Business</h5>
 
-                                <p>{{ $loan->getBorrower()->getProfile()->getAboutBusiness() }}</p>
+                                <p>{{ $borrower->getProfile()->getAboutBusiness() }}</p>
                                 
                                 @if(Auth::check() && Auth::getUser()->isAdmin())
                                     <a href="{{ route('admin:get-translate', $loan->getId()) }}#about-business">Edit translation</a>
                                 @endif
 
-                                @if($loan->getBorrower()->getProfile()->getAboutBusinessTranslation())
+                                @if($borrower->getProfile()->getAboutBusinessTranslation())
                                 <div>
                                     <p class="text-right">
                                         <a  href="#" data-toggle="collapse" data-target="#toggle-aboutBusiness" data-toggle-text="Hide original language">
@@ -227,7 +227,7 @@
 
                                     <div id="toggle-aboutBusiness" class="collapse">
                                         <p>
-                                            {{ $loan->getBorrower()->getProfile()->getAboutBusinessTranslation() }}
+                                            {{ $borrower->getProfile()->getAboutBusinessTranslation() }}
                                         </p>
                                     </div>
                                 </div>
@@ -337,7 +337,7 @@
                             
                             <div class="loan-section-content">
                                 <span class="text-light">
-                                    Ask {{ $loan->getBorrower()->getFirstName() }} a question about this loan project, share news and photos of your own, or send a simple note of thanks or inspiration.
+                                    Ask {{ $borrower->getFirstName() }} a question about this loan project, share news and photos of your own, or send a simple note of thanks or inspiration.
                                     <br/><br/>
                                 </span>
                             </div>
@@ -406,11 +406,11 @@
                     
                     <p class="text-light">
                         <i class="fa fa-fw fa-user"></i>
-                        {{ $loan->getBorrower()->getName() }}
+                        {{ $borrower->getName() }}
                         <br/>
                         <i class="fa fa-fw fa-map-marker"></i>
-                        {{ $loan->getBorrower()->getProfile()->getCity() }},
-                        {{ $loan->getBorrower()->getCountry()->getName() }}
+                        {{ $borrower->getProfile()->getCity() }},
+                        {{ $borrower->getCountry()->getName() }}
                     </p>
 
                     @if($loan->isActive())
@@ -502,7 +502,7 @@
                                     </tr>
                                     @endif
                                     <tr>
-                                        <td>Loan for {{ $loan->getBorrower()->getFirstName() }}</td>
+                                        <td>Loan for {{ $borrower->getFirstName() }}</td>
                                         <td>$<span id="amount-display"></span></td> 
                                     </tr>
                                     <tr>
