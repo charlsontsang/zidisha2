@@ -165,7 +165,13 @@ class LoanService
         return $loanIndex;
     }
 
-    public function searchLoans($conditions = array(), $page = 1, $limit = 18)
+    /**
+     * @param $conditions
+     * @param $page
+     * @param $limit
+     * @return \Elastica\Query
+     */
+    protected function createSearchQuery($conditions, $page, $limit)
     {
         $conditions += ['search' => false, 'sortBy' => 'id', 'sortByOrder' => 'asc'];
         $search = $conditions['search'];
@@ -176,8 +182,6 @@ class LoanService
         unset($conditions['sortByOrder']);
 
         $queryString = new \Elastica\Query\QueryString();
-
-        $loanIndex = $this->getLoanIndex();
 
         $query = new \Elastica\Query();
         $sorting = [
@@ -207,6 +211,14 @@ class LoanService
         $query->setFrom(($page - 1) * $limit);
         $query->setSize($page * $limit);
 
+        return $query;
+    }
+    
+    public function searchLoans($conditions = array(), $page = 1, $limit = 18)
+    {
+        $query = $this->createSearchQuery($conditions, $page, $limit);
+
+        $loanIndex = $this->getLoanIndex();
         $results = $loanIndex->search($query);
 
         $ids = [];
@@ -236,6 +248,15 @@ class LoanService
             $results->getTotalHits(),
             $limit
         );
+    }
+
+    public function countLoans($conditions = array(), $page = 1, $limit = 18)
+    {
+        $query = $this->createSearchQuery($conditions, $page, $limit);
+
+        $loanIndex = $this->getLoanIndex();
+        
+        return $loanIndex->count($query);
     }
 
     public function addToLoanIndex(Loan $loan)
