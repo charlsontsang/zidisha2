@@ -61,17 +61,15 @@ My Stats
                 <p>{{ $currentBalance }}</p>
             </div>
 
+            @if ($lenderInviteCredit)
             <div class="col-sm-7">
-                @if ($newMemberInviteCredit)
-                    <p>New member invite credit:</p>
-                @endif
+                <p>New member invite credit:</p>
             </div>
 
             <div class="col-sm-5">
-                @if ($newMemberInviteCredit)
-                    <p>{{ $newMemberInviteCredit }}</p>
-                @endif
+                <p>{{ $lenderInviteCredit }}</p>
             </div>
+            @endif
         </div>
     </div>
 </div>

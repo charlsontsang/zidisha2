@@ -315,7 +315,7 @@ class LenderController extends BaseController
         $currentBalance = TransactionQuery::create()
             ->getCurrentBalance($userId);
 
-        $newMemberInviteCredit = InviteTransactionQuery::create()
+        $lenderInviteCredit = InviteTransactionQuery::create()
             ->getTotalInviteCreditAmount($lender);
 
         $principleOutstanding = BidQuery::create()
@@ -417,7 +417,7 @@ class LenderController extends BaseController
        return View::make('lender.loans', compact('currentBalance', 'totalFundsUpload', 'numberOfLoans', 
                 'totalLentAmount', 'myImpact', 'totalImpact' , 'loans', 'activeBids', 'totalBidAmount',
                 'activeLoansBids', 'totalActiveLoansBidsAmount', 'completedLoansBids', 'totalCompletedLoansBidsAmount',
-                'numberOfFundRaisingProjects', 'newMemberInviteCredit',
+                'numberOfFundRaisingProjects', 'lenderInviteCredit',
                 'numberOfActiveProjects', 'numberOfCompletedProjects', 'principleOutstanding',
                 'activeLoansBidPaymentStatus', 'completedLoansBidAmountRepaid', 'activeLoansBidAmountRepaid',
                 'activeLoansBidPrincipleOutstanding', 'totalActiveLoansRepaidAmount',
