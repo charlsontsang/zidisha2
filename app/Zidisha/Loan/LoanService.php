@@ -503,6 +503,8 @@ class LoanService
             $loan->getBorrower()->setActiveLoan($loan);
             $loan->save($con);
         });
+
+        $this->updateLoanIndex($loan);
         
         //TODO send emails
 
