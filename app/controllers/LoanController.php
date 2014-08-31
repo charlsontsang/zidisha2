@@ -115,6 +115,12 @@ class LoanController extends BaseController
             $serviceFee = $calculator->serviceFee();
         }
         $previousLoans = $this->borrowerService->getPreviousLoans($borrower, $loan);
+        
+        $invite = \Zidisha\Borrower\InviteQuery::create()
+            ->filterByInviteeId($borrower->getId())
+            ->joinBorrower()
+            ->findOne();
+        $invitedBy = $invite ? $invite->getBorrower() : null;
 
         $placeBidForm = new PlaceBidForm($loan);
 
@@ -136,6 +142,8 @@ class LoanController extends BaseController
         } else {
             $tag = 'h3';
         }
+
+        $categoryForm = $this->adminCategoryForm;
         
         return View::make(
             'pages.loan',
@@ -157,9 +165,11 @@ class LoanController extends BaseController
                 'repaymentScore',
                 'loanFeedbackComments',
                 'displayFeedbackComments',
-                'tag'
-            ),
-            ['placeBidForm' => $placeBidForm, 'categoryForm' => $this->adminCategoryForm]
+                'tag',
+                'placeBidForm',
+                'categoryForm',
+                'invitedBy'
+            )
         );
     }
 

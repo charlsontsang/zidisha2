@@ -60,9 +60,13 @@
                                             <a href="https://www.google.com/maps/place/{{ $borrower->getProfile()->getCity() }},+{{ $borrower->getCountry()->getName() }}/" target="_blank">{{ $borrower->getProfile()->getCity() }}</a>
                                             {{ $borrower->getCountry()->getName() }}
                                         </strong>
+                                        
+                                        @if($invitedBy)
                                         <br/>
                                         Invited By:
-                                        <a href="#">TO DO</a>
+                                        <a href="{{ route('borrower:public-profile', $invitedBy->getId()) }}">{{ $invitedBy->getName() }}</a>
+                                        @endif
+                                        
                                         <br/>
                                         Volunteer Mentor:
                                         <a href="#">TO DO</a>
