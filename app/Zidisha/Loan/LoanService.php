@@ -342,10 +342,11 @@ class LoanService
             
             $loan->setRaisedUsdAmount($totalBidAmount);
             $loan->save();
-            $this->updateLoanIndex($loan);
             
             return [$bid, $changedBids];
         });
+
+        $this->updateLoanIndex($loan);
 
         // Mixpanel
         // TODO not working for automatic lending
@@ -369,9 +370,6 @@ class LoanService
         }
         
         $this->sendLoanFullyFundedNotification($loan);
-
-
-        //Todo: refresh elastic search index.
 
         return $bid;
     }
@@ -1192,6 +1190,8 @@ class LoanService
                 $this->lenderMailer->sendLoanFullyFundedMail($bid);
             }
         }
+        
+        // TODO send email to borrower
     }
 
     public function rescheduleLoan(Loan $loan, array $data, $simulate = false)
