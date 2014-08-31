@@ -282,7 +282,7 @@ class LenderController extends BaseController
         return Redirect::route('lender:funds')->withForm($form);
     }
 
-    public function getMyStats()
+    public function getLoans()
     {
         if (Auth::check() && Auth::user()->isAdmin() && !Request::query('lenderId')) {
             \App::abort(404, 'Please enter a proper lenderId');
@@ -414,7 +414,7 @@ class LenderController extends BaseController
             $totalNetChangeCompletedBid= $totalNetChangeCompletedBid->add($netChangeCompletedBid[$completedLoansBid->getId()]);
         }
 
-       return View::make('lender.my-stats', compact('currentBalance', 'totalFundsUpload', 'numberOfLoans', 
+       return View::make('lender.loans', compact('currentBalance', 'totalFundsUpload', 'numberOfLoans', 
                 'totalLentAmount', 'myImpact', 'totalImpact' , 'loans', 'activeBids', 'totalBidAmount',
                 'activeLoansBids', 'totalActiveLoansBidsAmount', 'completedLoansBids', 'totalCompletedLoansBidsAmount',
                 'numberOfFundRaisingProjects', 'newMemberInviteCredit',

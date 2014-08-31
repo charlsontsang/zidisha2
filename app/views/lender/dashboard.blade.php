@@ -13,7 +13,7 @@ Dashboard
 	</div>
 	<div class="col-sm-4">
 		<h3>Quick Links</h3>
-        <p><a href="{{ route('lender:my-stats') }}">Your Loans</a></p>
+        <p><a href="{{ route('lender:loans') }}">Your Loans</a></p>
         <p><a href="{{ route('lender:public-profile', Auth::getUser()->getUsername()) }}">View Profile</a></p>
         <p><a href="{{ route('lender:edit-profile') }}">Edit Profile</a></p>
         <p><a href="{{ route('lender:preference') }}">Account Preferences</a></p>

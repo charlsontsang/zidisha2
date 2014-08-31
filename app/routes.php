@@ -149,8 +149,8 @@ Route::group(
                 );
 
                 Route::get(
-                    '/my-stats',
-                    array('uses' => 'LenderController@getMyStats', 'as' => 'lender:my-stats')
+                    '/loans',
+                    array('uses' => 'LenderController@getLoans', 'as' => 'lender:loans')
                 );
             }
         );
