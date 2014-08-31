@@ -79,7 +79,8 @@ class LenderController extends BaseController
             ->getTotalFundraisingLoanBidAmount($lender);
 
         $activeLoansBids = BidQuery::create()
-            ->getActiveLoanBids($lender, $page2);
+            ->filterActiveLoanBids($lender)
+            ->paginate($page2, 10);
         $totalActiveLoansBidsAmount = BidQuery::create()
             ->getTotalActiveLoanBidsAmount($lender);
 
@@ -345,7 +346,8 @@ class LenderController extends BaseController
         );
 
         $activeLoanBids = BidQuery::create()
-            ->getactiveLoanBids($lender, $page2);
+            ->filterActiveLoanBids($lender)
+            ->paginate($page2, 10);
         $totalActiveLoanBidsAmount = BidQuery::create()
             ->getTotalactiveLoanBidsAmount($lender);
         $numberOfActiveProjects = \Lang::choice(

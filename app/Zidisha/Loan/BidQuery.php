@@ -97,15 +97,14 @@ class BidQuery extends BaseBidQuery
             ->getTotalBidAmount();
     }
 
-    public function getActiveLoanBids(Lender $lender, $page2)
+    public function filterActiveLoanBids(Lender $lender)
     {
         return $this
             ->filterByLender($lender)
             ->filterByAcceptedAmount('0', Criteria::NOT_EQUAL)
             ->useLoanQuery()
                 ->filterActive()
-            ->endUse()
-            ->paginate($page2, 2);
+            ->endUse();
     }
 
     public function getTotalActiveLoanBidsAmount(Lender $lender)
