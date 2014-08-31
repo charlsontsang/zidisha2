@@ -20,28 +20,24 @@ Lend
 </div>
 <div id="toggle-moreProjects" class="page-section-filter collapse">
     <div class="container">
-        <div class="row">
-            <div class="col-md-10">
-                <div class="filter-bar">
-                    <span class="text" id="show">Show</span>
-                    <div class="btn btn-default btn-filter" target="#filter-categories">
-                        {{ $selectedLoanCategory ? $selectedLoanCategory->getName() : 'All' }}
-                        <i class="fa fa-fw fa-caret-down"></i>
-                    </div>
-                    <span class="text">projects in</span>
-                    <div class="btn btn-default btn-filter" target="#filter-countries">
-                        {{ $selectedCountry ? $selectedCountry->getName() : 'All Countries' }}
-                        <i class="fa fa-fw fa-caret-down"></i>
-                    </div>
-                    <span class="text">sorted by</span>
-                    <div class="btn btn-default btn-filter" target="#filter-sortings">
-                       {{ $sortBy ? $sortConditions[$sortBy] : 'Repayment Rate' }}
-                        <i class="fa fa-fw fa-caret-down"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-2">
-                <form role="search" id="search" action="{{ route('lend:index', $searchRouteParams) }}" method="get">
+        <ul class="filter-bar">
+            <li class="text" id="show">Show</li>
+            <li class="btn btn-default btn-filter" target="#filter-categories">
+                {{ $selectedLoanCategory ? $selectedLoanCategory->getName() : 'All' }}
+                <i class="fa fa-fw fa-caret-down"></i>
+            </li>
+            <li class="text">projects in</li>
+            <li class="btn btn-default btn-filter" target="#filter-countries">
+                {{ $selectedCountry ? $selectedCountry->getName() : 'All Countries' }}
+                <i class="fa fa-fw fa-caret-down"></i>
+            </li>
+            <li class="text">sorted by</li>
+            <li class="btn btn-default btn-filter" target="#filter-sortings">
+               {{ $sortBy ? $sortConditions[$sortBy] : 'Repayment Rate' }}
+                <i class="fa fa-fw fa-caret-down"></i>
+            </li>
+            <li>
+                <form role="search" action="{{ route('lend:index', $searchRouteParams) }}" method="get">
                     <div class="input-group">
                         <input type="text" class="form-control" placeholder="Search" name="search" value="{{{ $searchQuery }}}">
                         <div class="input-group-btn">
@@ -49,8 +45,8 @@ Lend
                         </div>
                     </div>
                 </form>
-            </div>
-        </div>
+            </li>
+        </ul>
     </div>
 </div>
 @stop
