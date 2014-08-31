@@ -562,6 +562,8 @@ class LoanService
             return $lenderRefunds;
         });
 
+        $this->updateLoanIndex($loan);
+
         foreach ($lenderRefunds as $refundLender) {
             $this->lenderMailer->sendExpiredLoanMail($loan, $refundLender);
         }
@@ -596,6 +598,8 @@ class LoanService
             
             return $lenderRefunds;
         });
+
+        $this->updateLoanIndex($loan);
         
         // TODO emails to refunded lenders
 
@@ -764,6 +768,8 @@ class LoanService
             $this->changeLoanStage($con, $loan, Loan::FUNDED, Loan::ACTIVE);
         });
 
+        $this->updateLoanIndex($loan);
+
         //TODO Send email / sift sience event
     }
 
@@ -912,6 +918,8 @@ class LoanService
             $loan->save($con);
             $this->changeLoanStage($con, $loan, Loan::ACTIVE, Loan::DEFAULTED);
         });
+
+        $this->updateLoanIndex($loan);
 
         $lenders = [];
         // TODO
@@ -1145,7 +1153,7 @@ class LoanService
         $loan->save();
         
         $this->sendLoanFullyFundedNotification($loan);
-        //TODO: update the index
+        
         $this->updateLoanIndex($loan);
         
         return $loan;
