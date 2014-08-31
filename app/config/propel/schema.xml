@@ -631,7 +631,7 @@
         <column name="lender_id" type="INTEGER" required="true"/>
         <column name="loan_id" type="INTEGER" required="false"/>
         <column name="interest_rate" type="DECIMAL" required="false" size="5" scale="2" phpType="string"/>
-        <column name="use_lender_invite_credit" type="BOOLEAN" required="false"/>
+        <column name="is_lender_invite_credit" type="BOOLEAN" required="false"/>
         <column name="gift_card_transaction_id" type="INTEGER" size="10"/>
         <behavior name="timestampable"/>
         <foreign-key foreignTable="lenders">
