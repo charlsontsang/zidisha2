@@ -64,8 +64,7 @@ Lend
                 <p>
                     <span id="results-desc">
                         We found 
-                        <strong>{{ $countResults }} {{ $selectedLoanCategory ? $selectedLoanCategory->getName() : '' }} project{{ $countResults > 1 ? 's' : '' }}</strong>
-                        @if($selectedCountry) in {{ $selectedCountry->getName(); }}@endif.
+                        <strong>{{ $countResults }} {{ $selectedLoanCategory ? $selectedLoanCategory->getName() : '' }} project{{ $countResults > 1 ? 's' : '' }}.</strong>
                     </span>
             
                     @if($countAll > $countResults)
