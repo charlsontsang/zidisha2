@@ -20,20 +20,20 @@ Cheers,
 The Zidisha Team'
     ],
     'loan-fully-funded' => [
-        'subject' => 'Loan funding confirmation email',
-        'body'    => 'Dear :borrowerName, 
-                    <br/><br/>
-                    Congratulations!  Your loan application is fully funded.
-                    <br/><br/>
-                    You may accept the loan bids and receive the loan disbursement at any time before your application expires on :applicationExpiryDate. 
-                    <br/><br/>
-                    To accept the bids, please go to your <a href=":loanApplicationLink">loan application page</a> and log in to your member account.Then click on the "Accept Bids" button in your loan profile page.
-                    <br/><br/>
-                    Please do not hesitate to contact us at service@zidisha.org if you desire assistance.
-                    <br/><br/>
-                    Best wishes,
-                    <br/><br/>
-                    The Zidisha Team'
+        'subject' => ':borrowerName is fully funded!',
+        'body'    => '',
+        'accept-message-1' => 'New opportunities are opening up for :borrowerName',
+        'accept-message-2' => '
+Hooray!  You made it happen: <a href=":borrowerProfileLink">:borrowerName</a>\'s loan is now fully funded.
+<br/><br/>
+Our volunteer team is transferring your loan to :borrowerName now.  In the meantime, feel free to shoot questions, comments and kudos to us at <a href="http://www.facebook.com/ZidishaInc">Facebook</a>, <a href="https://twitter.com/ZidishaInc">Twitter</a> or by email to service@zidisha.org.
+<br/><br/>
+Love,
+<br/><br/>
+The Zidisha Team
+<br/><br/>
+PS:  Join a <a href=":lendingGroupLink">Lending Group</a> to meet other lenders who share your interests!
+'
     ],
     'lender-invite' => [
         'subject' => ':lenderName has sent you $25 to lend to a Zidisha entrepreneur',
@@ -58,7 +58,39 @@ You can communicate with your chosen entrepreneur via the Zidisha website as his
                             <br/><br/>
                             PS:  Use our automated lending tool to continuously reinvest your repayments in new loans!  Set it up <a href=":automaticLendingLink">here</a>.',
         'header' => 'You\'re invited!',
-        'footer' => 'Use your credit to fund a loan project here:'
+        'footer' => 'View more fundraising loan projects here!'
+    ],
+    'lender-account-abandoned' => [
+        'body' => 'Dear :lenderName,
+<br/><br/>
+We noticed that you have not logged into your account at Zidisha.org for over one year.  
+We\'re sorry that lending with Zidisha did not work out for you, and would sincerely welcome any feedback you would care to share regarding why you have not come back.
+<br/><br/>
+Should you desire to maintain access to your lender credit balance, simply log in to your member account at <a href=":siteLink">Zidisha.org</a> at any time within the next month. 
+If you do not wish to keep your account open, you need not do anything: we will close your account and convert any remaining lender credit to a donation on :expiryDate.
+<br/><br/>
+Thanks so much for having participated in our lending community, and for helping to extend life-changing opportunities to some of the world\'s most marginalized entrepreneurs.
+<br/><br/>
+Best regards,<br/><br/>
+The Zidisha Team'
+    ],
+    'lender-invite-credit' => [
+        'subject' => 'Your invite is accepted!',
+        'body' => '
+Greetings,
+<br/><br/>
+You’ve done something wonderful.  The invite you sent to :inviteeMail has just been accepted. Zidisha has a new member thanks to you!
+<br/><br/>
+To express our appreciation, we\'ve added to your account a matching USD 25 lending credit.
+You may use this credit to fund a loan of your choice <a href=":lendingPage">here</a>.
+<br/><br/>
+Don\'t forget to welcome :inviteeMail to Zidisha - and watch your combined impact grow with each new opportunity that opens up because you made this connection.
+<br/><br/>
+Best wishes,
+<br/><br/>
+The Zidisha Team',
+        'footer' => 'Redeem your credit by making a loan here:',
+        'button-text' => 'Make A Loan'
     ],
     'sendwithusdefaults' => [
         'footer' => 'Don\’t miss our latest loan projects:',
