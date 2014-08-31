@@ -8229,6 +8229,19 @@ body {
 .hide-label label {
   display: none;
 }
+@media (max-width: 767px) {
+  .modal-dialog {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
+@media (max-width: 767px) {
+  .modal-content {
+    width: 100%;
+    height: 100%;
+  }
+}
 .navbar-brand {
   padding: 15px 10px 15px 15px;
 }
