@@ -438,7 +438,7 @@
                     @if($loan->isOpen())
 
                     <div class="lend-form">
-                        <div id="lend-form-initial">
+                        <div id="lend-form-initial" style="{{ \Auth::check() && \Auth::user()->isLender() && \Request::query('amount') ? 'display:none' : '' }}">
                             @include('partials/loan-progress', [ 'loan' => $loan ])
                             
                             {{ BootstrapForm::open(array('route' => ['loan:place-bid', $loan->getId()], 'translationDomain' => 'bid', 'id' => 'funds-upload')) }}
@@ -468,18 +468,16 @@
                             </div>
                             @endif
                             
-                            @if (!Request::query('amount'))
-                                @if (\Auth::check())
-                                    @if (\Auth::user()->isLender())
-                                        <button id="lend-action" type="button" class="btn btn-primary btn-block">Lend</button>
-                                    @endif
-                                @else
-                                    <a href="{{ route('lender:join') }}" id="join-lend" class="btn btn-primary btn-block" data-toggle="modal" data-target="#join-modal">Lend</a>
+                            @if (\Auth::check())
+                                @if (\Auth::user()->isLender() && !Request::query('amount'))
+                                    <button id="lend-action" type="button" class="btn btn-primary btn-block">Lend</button>
                                 @endif
+                            @else
+                                <a href="{{ route('lender:join') }}" id="join-lend" class="btn btn-primary btn-block" data-toggle="modal" data-target="#join-modal">Lend</a>
                             @endif
                         </div> <!-- /lend-form-initial -->
                         
-                        <div id="lend-details" class="lend-details" {{ Request::query('amount') ? '' : 'style="display:none;"' }}>
+                        <div id="lend-details" class="lend-details" style="{{ \Auth::check() && \Auth::user()->isLender() && \Request::query('amount') ? '' : 'display:none' }}">
                             {{ BootstrapForm::hidden('creditAmount', null, ['id' => 'credit-amount']) }}
                             
                             {{ BootstrapForm::hidden('donationCreditAmount', null, ['id' => 'donation-credit-amount']) }}
