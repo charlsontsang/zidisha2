@@ -8,6 +8,7 @@ class LaravelMailerDriver implements MailDriverInterface
 {
     public function send($view, $data)
     {
+        $data['message'] = Utility::clearPost($data['message']);
         \Mail::send(
             $view,
             $data + compact('data'),
