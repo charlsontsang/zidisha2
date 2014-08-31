@@ -48,9 +48,9 @@
         <script src="{{ asset('assets/js/zidisha.js') }}"></script>
         <script src="{{ asset('assets/vendor/remarkable-bootstrap-growl/bootstrap-growl.min.js') }}"></script>
         <script>
-            $(function(
-                $('.flash-modal').modal();                
-            ));
+            $(function() {
+                $('.flash-modal').modal();
+            });
         </script>
         @yield('script-footer')
         @include('partials/_flash')
