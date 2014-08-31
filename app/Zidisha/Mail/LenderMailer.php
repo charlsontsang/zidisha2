@@ -90,12 +90,29 @@ class LenderMailer
     {
         $email = $bid->getLender()->getUser()->getEmail();
 
-        $this->mailer->send(
-            'emails.lender.loan.loan-fully-funded',
+        $subject = \Lang::get('lender.mails.loan-fully-funded.subject', ['borrowerName' => $bid->getBorrower()->getName()]);
+        $data['header'] = \Lang::get('lender.mails.loan-fully-funded.accept-message-1', ['borrowerName' => $bid->getBorrower()->getName()]);
+        
+        //TODO: confirm 
+        $message = \Lang::get(
+            'lender.mails.loan-fully-funded.accept-message-2',
             [
+                'borrowerName' => $bid->getBorrower()->getName(),
+                'borrowerProfileLink' => route(
+                    'borrower:public-profile',
+                    ['username' => $bid->getBorrower()->getUser()->getUsername()]
+                ),
+                'lendingGroupLink' => route('lender:groups')
+            ]
+        );
+        
+        $this->mailer->send(
+            'emails.hero',
+            $data + [
                 'to'      => $email,
                 'from'    => 'service@zidisha.com',
-                'subject' => 'The loan is fully funded.'
+                'subject' => $subject,
+                'templateId' => \Setting::get('sendwithus.lender-loan-fully-funded-template-id'),
             ]
         );
     }
@@ -105,8 +122,8 @@ class LenderMailer
         $email = $lender_invite->getEmail();
 
         $data = array();
-        $data['header'] = \Lang::get('lender.mails.lender-unused-fund.header');
-        $data['footer'] = \Lang::get('lender.mails.lender-unused-fund.footer');
+        $data['header'] = \Lang::get('lender.mails.lender-invite.header');
+        $data['footer'] = \Lang::get('lender.mails.lender-invite.footer');
 
         $data['button_text'] = "View Projects";
         
@@ -121,16 +138,17 @@ class LenderMailer
         $table .= "</table>";
         $customMessage = $table;
 
-        $subject = \Lang::get('lender.mails.subject', ['lenderName' => $lender->getName()]);
-        $message = \Lang::get('lender.mails.body', ['lenderName' => $lender->getName(), 'customMessage' => $customMessage]);
+        $subject = \Lang::get('lender.mails.lender-invite.subject', ['lenderName' => $lender->getName()]);
+        $message = \Lang::get('lender.mails.lender-invite.body', ['lenderName' => $lender->getName(), 'customMessage' => $customMessage]);
         $data['content'] = $message;
         
         $this->mailer->send(
-            'emails.lender.loan.loan-fully-funded',
+            'emails.hero',
             $data + [
                 'to'      => $email,
                 'from'    => 'service@zidisha.com',
-                'subject' => $subject
+                'subject' => $subject,
+                'templateId' => \Setting::get('sendwithus.lender-invite-template-id')
             ]
         );
 
@@ -138,7 +156,26 @@ class LenderMailer
 
     public function sendLenderInviteCredit(Invite $invite)
     {
-        //TODO
+        $email = $invite->getLender()->getUser()->getEmail();
+        $inviteeEmail = $invite->getEmail();
+        
+        $subject = \Lang::get('lender.mails.lender-invite-credit.subject');
+        $message = \Lang::get('lender.mails.lender-invite-credit.body', ['inviteeMail' => $inviteeEmail, 'lendingPage' => route('loan:index')]);
+        $data['content'] = $message;
+
+        $data['footer'] = \Lang::get('lender.mails.lender-invite-credit.footer');
+        $data['button_text'] = \Lang::get('lender.mails.lender-invite-credit.button-text');
+        $data['button_url'] = route('loan:index');
+        
+        $this->mailer->send(
+            'emails.hero',
+            $data + [
+                'to'      => $email,
+                'from'    => 'service@zidisha.com',
+                'subject' => $subject,
+                'templateId' => \Setting::get('sendwithus.lender-invite-credit-template-id')
+            ]
+        );
     }
 
     public function sendWelcomeMail(Lender $lender)
@@ -199,12 +236,17 @@ class LenderMailer
 
     public function sendAbandonedMail(Lender $lender)
     {
+        $subject = \Lang::get('lender.mails.lender-account-abandoned.subject');
+        $message = \Lang::get('lender.mails.lender-account-abandoned.body', ['lenderName' => $lender->getName(), 'siteLink' => \URL::to('/'), 'expiryDate' => Carbon::now()->addMonth()->format('F j, Y')]);
+        $data['header'] = $message;
+
         $this->mailer->send(
             'emails.lender.abandoned',
             [
-                'to'      => $lender->getUser()->getEmail(),
-                'from'    => 'service@zidisha.com',
-                'subject' => 'Login to Zidisha'
+                'to'         => $lender->getUser()->getEmail(),
+                'from'       => 'service@zidisha.com',
+                'subject'    => $subject,
+                'templateId' => \setting::get('sendwithus.lender-account-abandoned-template-id')
             ]
         );
     }
