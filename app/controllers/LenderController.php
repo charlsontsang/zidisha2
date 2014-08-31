@@ -6,6 +6,7 @@ use Zidisha\Admin\Setting;
 use Zidisha\Balance\InviteTransactionQuery;
 use Zidisha\Balance\Transaction;
 use Zidisha\Balance\TransactionQuery;
+use Zidisha\Loan\Paginator\FundraisingLoanBids;
 use Zidisha\Currency\Currency;
 use Zidisha\Currency\Money;
 use Zidisha\Lender\Form\EditProfile;
@@ -334,16 +335,7 @@ class LenderController extends BaseController
         $myImpact = $this->lenderService->getMyImpact($lender);
         $totalImpact = $myImpact->add($totalLentAmount);
 
-        $fundraisingLoanBids = BidQuery::create()
-            ->filterFundraisingLoanBids($lender, $page)
-            ->paginate($page , 10);
-        $totalFundraisingLoanBidAmount = BidQuery::create()
-            ->getTotalFundraisingLoanBidAmount($lender);
-        $numberOfFundRaisingProjects = \Lang::choice(
-            'lender.flash.preferences.stats-projects',
-            $fundraisingLoanBids->getNbResults(),
-            ['count' => $fundraisingLoanBids->getNbResults()]
-        );
+        $fundraisingLoanBids = new FundRaisingLoanBids($lender, $page);
 
         $activeLoanBids = BidQuery::create()
             ->filterActiveLoanBids($lender)
@@ -431,7 +423,6 @@ class LenderController extends BaseController
            'totalImpact',
            'loans',
            'fundraisingLoanBids',
-           'totalFundraisingLoanBidAmount',
            'activeLoanBids',
            'totalActiveLoanBidsAmount',
            'completedLoansBids',

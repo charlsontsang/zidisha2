@@ -74,7 +74,7 @@ My Stats
     </div>
 </div>
 
-@if (count($fundraisingLoanBids)>0)
+@if ($fundraisingLoanBids->count())
 
 <div class="page-header">
     <h3><strong>Fundraising Loans</strong></h3>
@@ -114,12 +114,17 @@ My Stats
     <tfoot>
         <tr>
             <td colspan="3"><strong>Total</strong></td>
-            <td>{{ $numberOfFundRaisingProjects }}</td>
-            <td>{{ $totalFundraisingLoanBidAmount->getAmount() }} Lent</td>
+            <td>{{ \Lang::choice(
+                       'lender.flash.preferences.stats-projects',
+                       $fundraisingLoanBids->getTotal(),
+                       ['count' => $fundraisingLoanBids->getTotal()]
+                ) }}
+            </td>
+            <td>{{ $fundraisingLoanBids->getTotalBidAmount()->round(2)->getAmount() }} Lent</td>
         </tr>
     </tfoot>
 </table>
-{{ BootstrapHtml::paginator($fundraisingLoanBids)->links() }}
+{{ $fundraisingLoanBids->getPaginator()->links() }}
 @endif
 
 @if (count($activeLoanBids)>0)
