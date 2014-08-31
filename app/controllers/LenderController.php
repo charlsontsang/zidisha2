@@ -356,19 +356,15 @@ class LenderController extends BaseController
             ['count' => $activeLoanBids->getNbResults()]
         );
 
-        $activeLoansIds = [];
-        /** @var $activeLoanBid Bid */
-        foreach ($activeLoanBids as $activeLoanBid) {
-            $activeLoansIds[] = $activeLoanBid->getLoanId();
-        }
+        $activeLoanIds = $activeLoanBids->toKeyValue('loanId', 'loanId');
 
         $activeLoansRepaidAmounts = TransactionQuery::create()
-            ->getActiveLoansRepaidAmounts($userId, $activeLoansIds);
+            ->getActiveLoansRepaidAmounts($userId, $activeLoanIds);
         $totalActiveLoansRepaidAmount = TransactionQuery::create()
             ->getTotalActiveLoansRepaidAmount($userId);
 
         $activeLoansTotalOutstandingAmounts = BidQuery::create()
-            ->getActiveLoansTotalOutstandingAmounts($lender, $activeLoansIds);
+            ->getActiveLoansTotalOutstandingAmounts($lender, $activeLoanIds);
 
         $totalActiveLoansTotalOutstandingAmount = BidQuery::create()
             ->getTotalActiveLoansTotalOutstandingAmount($lender);
