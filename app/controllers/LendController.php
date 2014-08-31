@@ -1,7 +1,6 @@
 <?php
 
 use Zidisha\Loan\Loan;
-use Zidisha\Utility\Utility;
 
 class LendController extends BaseController
 {
@@ -117,8 +116,8 @@ class LendController extends BaseController
 
         $page = Request::query('page') ? : 1;
         $paginator = $this->loanService->searchLoans($conditions, $page);
-        $countResults = $paginator->count();
-        $countAll = $this->loanService->searchLoans()->count();
+        $countResults = $paginator->getTotal();
+        $countAll = $this->loanService->countLoans();
 
         return View::make(
             'pages.lend',
