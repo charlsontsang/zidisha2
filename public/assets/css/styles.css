@@ -8628,11 +8628,6 @@ body {
 }
 @media (min-width: 768px) {
   ul.filter-bar {
-    margin-bottom: 16px;
-  }
-}
-@media (min-width: 992px) {
-  ul.filter-bar {
     margin-bottom: 0;
     padding: 0;
     display: -webkit-flex;
@@ -8648,16 +8643,22 @@ body {
   margin-left: 0 !important;
 }
 .filter-bar > li:last-child {
-  margin-left: 40px;
+  margin-left: 10px;
+  margin-right: -10px;
+}
+@media (min-width: 992px) {
+  .filter-bar > li:last-child {
+    margin-left: 40px;
+  }
 }
 .filter-bar .text {
   display: none;
 }
-@media (min-width: 768px) {
+@media (min-width: 992px) {
   .filter-bar .text {
     display: inline-block;
     white-space: nowrap;
-    margin: 6px 30px 6px 10px;
+    margin: 6px 24px 6px 0;
   }
 }
 .filter-bar .btn {
@@ -8668,6 +8669,7 @@ body {
 @media (min-width: 768px) {
   .filter-bar .btn {
     margin-bottom: 0;
+    margin-right: 10px;
     width: auto;
     text-align: center;
   }

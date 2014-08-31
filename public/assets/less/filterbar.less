@@ -19,9 +19,6 @@
 }
 ul.filter-bar {
   	@media (min-width: @screen-sm-min) {
-  		margin-bottom: @padding-large-horizontal;
-  	}
-  	@media (min-width: @screen-md-min) {
   		margin-bottom: 0;
       padding: 0;
       display: -webkit-flex;
@@ -37,14 +34,18 @@ ul.filter-bar {
   margin-left: 0 !important;
 }
 .filter-bar > li:last-child {
-  margin-left: 40px;
+  margin-left: 10px;
+  margin-right: -10px;
+  @media (min-width: @screen-md-min) {
+    margin-left: 40px;
+  }
 }
 .filter-bar .text {
   display: none;
-    @media (min-width: @screen-sm-min) {
+    @media (min-width: @screen-md-min) {
     display: inline-block;
     white-space: nowrap;
-    margin: 6px 30px 6px 10px;
+    margin: 6px 24px 6px 0;
   }
 }
 .filter-bar .btn {
@@ -53,6 +54,7 @@ ul.filter-bar {
   text-align: left;
   @media (min-width: @screen-sm-min) {
     margin-bottom: 0;
+    margin-right: 10px;
     width: auto;
     text-align: center;
   }
