@@ -38,6 +38,11 @@ class LenderJoinController extends BaseController
         $form->handleRequest(Request::instance());
 
         if (!$form->isValid()) {
+            if (Input::get('modal', false)) {
+                Session::flash('showJoinModal', true);
+                return Redirect::back()->withForm($form);
+            }
+            
             Flash::error('lender.join.flash.oops');
             return Redirect::route('lender:join')->withForm($form);
         }

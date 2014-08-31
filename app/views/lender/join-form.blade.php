@@ -69,6 +69,9 @@
     <p>By signing up, I agree to Zidisha's <a target="_blank" href="{{ route('page:terms-of-use') }}">Terms of Use
     and Privacy Policy</a>.</p>
 
+    @if(isset($modal) && $modal)
+        {{ BootstrapForm::hidden('modal', 1) }}
+    @endif
 
     {{ BootstrapForm::submit('submit', ['class' => 'btn btn-primary btn-block']) }}
 
