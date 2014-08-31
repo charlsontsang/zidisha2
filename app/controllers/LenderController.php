@@ -299,6 +299,11 @@ class LenderController extends BaseController
         if (!$lender) {
             \App::abort(404);
         }
+
+        $page = Request::query('page') ? : 1;
+        $page2 = Request::query('page2') ? : 1;
+        $page3 = Request::query('page3') ? : 1;
+        
         $activeLoansBidPaymentStatus = [];
         $completedLoansBidAmountRepaid = [];
         $netChangeCompletedBid = [];
@@ -326,9 +331,6 @@ class LenderController extends BaseController
 
         $myImpact = $this->lenderService->getMyImpact($lender);
         $totalImpact = $myImpact->add($totalLentAmount);
-        $page = Request::query('page') ? : 1;
-        $page2 = Request::query('page2') ? : 1;
-        $page3 = Request::query('page3') ? : 1;
 
         $activeBids = BidQuery::create()
             ->getActiveBids($lender, $page);
