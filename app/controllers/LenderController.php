@@ -79,9 +79,9 @@ class LenderController extends BaseController
             ->getTotalFundraisingLoanBidAmount($lender);
 
         $activeLoansBids = BidQuery::create()
-            ->getActiveLoansBids($lender, $page2);
+            ->getActiveLoanBids($lender, $page2);
         $totalActiveLoansBidsAmount = BidQuery::create()
-            ->getTotalActiveLoansBidsAmount($lender);
+            ->getTotalActiveLoanBidsAmount($lender);
 
         $completedLoansBids = BidQuery::create()
             ->getCompletedLoansBids($lender, $page3);
@@ -305,12 +305,12 @@ class LenderController extends BaseController
         $page2 = Request::query('page2') ? : 1;
         $page3 = Request::query('page3') ? : 1;
         
-        $activeLoansBidPaymentStatus = [];
+        $activeLoanBidPaymentStatus = [];
         $completedLoansBidAmountRepaid = [];
         $netChangeCompletedBid = [];
         $totalNetChangeCompletedBid = Money::create(0, 'USD');
-        $activeLoansBidAmountRepaid = [];
-        $activeLoansBidPrincipleOutstanding = [];
+        $activeLoanBidAmountRepaid = [];
+        $activeLoanBidPrincipleOutstanding = [];
 
         $totalFundsUpload = TransactionQuery::create()
             ->getTotalFundsUpload($userId);
@@ -344,20 +344,20 @@ class LenderController extends BaseController
             ['count' => $fundraisingLoanBids->getNbResults()]
         );
 
-        $activeLoansBids = BidQuery::create()
-            ->getActiveLoansBids($lender, $page2);
-        $totalActiveLoansBidsAmount = BidQuery::create()
-            ->getTotalActiveLoansBidsAmount($lender);
+        $activeLoanBids = BidQuery::create()
+            ->getactiveLoanBids($lender, $page2);
+        $totalActiveLoanBidsAmount = BidQuery::create()
+            ->getTotalactiveLoanBidsAmount($lender);
         $numberOfActiveProjects = \Lang::choice(
             'lender.flash.preferences.stats-projects',
-            $activeLoansBids->getNbResults(),
-            ['count' => $activeLoansBids->getNbResults()]
+            $activeLoanBids->getNbResults(),
+            ['count' => $activeLoanBids->getNbResults()]
         );
 
         $activeLoansIds = [];
-        /** @var $activeLoansBid Bid */
-        foreach ($activeLoansBids as $activeLoansBid) {
-            $activeLoansIds[] = $activeLoansBid->getLoanId();
+        /** @var $activeLoanBid Bid */
+        foreach ($activeLoanBids as $activeLoanBid) {
+            $activeLoansIds[] = $activeLoanBid->getLoanId();
         }
 
         $activeLoansRepaidAmounts = TransactionQuery::create()
@@ -371,25 +371,25 @@ class LenderController extends BaseController
         $totalActiveLoansTotalOutstandingAmount = BidQuery::create()
             ->getTotalActiveLoansTotalOutstandingAmount($lender);
 
-        /** @var $activeLoansBid Bid */
-        foreach ($activeLoansBids as $activeLoansBid) {
+        /** @var $activeLoanBid Bid */
+        foreach ($activeLoanBids as $activeLoanBid) {
             foreach ($activeLoansRepaidAmounts as $activeLoansRepaidAmount) {
-                if ($activeLoansRepaidAmount['loan_id'] == $activeLoansBid->getLoanId()) {
-                    $activeLoansBidAmountRepaid[$activeLoansBid->getId()] = Money::create($activeLoansRepaidAmount['totals'], 'USD');
+                if ($activeLoansRepaidAmount['loan_id'] == $activeLoanBid->getLoanId()) {
+                    $activeLoanBidAmountRepaid[$activeLoanBid->getId()] = Money::create($activeLoansRepaidAmount['totals'], 'USD');
                     continue;
                 }
-                $activeLoansBidAmountRepaid[$activeLoansBid->getId()] = Money::create(0, 'USD');
+                $activeLoanBidAmountRepaid[$activeLoanBid->getId()] = Money::create(0, 'USD');
             }
             foreach ($activeLoansTotalOutstandingAmounts as $activeLoansTotalOutstandingAmount) {
-                if ($activeLoansTotalOutstandingAmount['loan_id'] == $activeLoansBid->getLoanId()) {
-                    $activeLoansBidPrincipleOutstanding[$activeLoansBid->getId()] = Money::create($activeLoansTotalOutstandingAmount['total'], 'USD');
+                if ($activeLoansTotalOutstandingAmount['loan_id'] == $activeLoanBid->getLoanId()) {
+                    $activeLoanBidPrincipleOutstanding[$activeLoanBid->getId()] = Money::create($activeLoansTotalOutstandingAmount['total'], 'USD');
                     continue;
                 }
-                $activeLoansBidPrincipleOutstanding[$activeLoansBid->getId()] = Money::create(0, 'USD');
+                $activeLoanBidPrincipleOutstanding[$activeLoanBid->getId()] = Money::create(0, 'USD');
             }
 
-            $repaymentSchedule = $this->repaymentService->getRepaymentSchedule($activeLoansBid->getLoan());
-            $activeLoansBidPaymentStatus[$activeLoansBid->getId()] = $repaymentSchedule->getLoanPaymentStatus();
+            $repaymentSchedule = $this->repaymentService->getRepaymentSchedule($activeLoanBid->getLoan());
+            $activeLoanBidPaymentStatus[$activeLoanBid->getId()] = $repaymentSchedule->getLoanPaymentStatus();
         }
 
         $completedLoansBids = BidQuery::create()
@@ -434,8 +434,8 @@ class LenderController extends BaseController
            'loans',
            'fundraisingLoanBids',
            'totalFundraisingLoanBidAmount',
-           'activeLoansBids',
-           'totalActiveLoansBidsAmount',
+           'activeLoanBids',
+           'totalActiveLoanBidsAmount',
            'completedLoansBids',
            'totalCompletedLoansBidsAmount',
            'numberOfFundRaisingProjects',
@@ -443,10 +443,10 @@ class LenderController extends BaseController
            'numberOfActiveProjects',
            'numberOfCompletedProjects',
            'principleOutstanding',
-           'activeLoansBidPaymentStatus',
+           'activeLoanBidPaymentStatus',
            'completedLoansBidAmountRepaid',
-           'activeLoansBidAmountRepaid',
-           'activeLoansBidPrincipleOutstanding',
+           'activeLoanBidAmountRepaid',
+           'activeLoanBidPrincipleOutstanding',
            'totalActiveLoansRepaidAmount',
            'totalActiveLoansTotalOutstandingAmount',
            'totalCompletedLoansRepaidAmount',

@@ -97,7 +97,7 @@ class BidQuery extends BaseBidQuery
             ->getTotalBidAmount();
     }
 
-    public function getActiveLoansBids(Lender $lender, $page2)
+    public function getActiveLoanBids(Lender $lender, $page2)
     {
         return $this
             ->filterByLender($lender)
@@ -108,7 +108,7 @@ class BidQuery extends BaseBidQuery
             ->paginate($page2, 2);
     }
 
-    public function getTotalActiveLoansBidsAmount(Lender $lender)
+    public function getTotalActiveLoanBidsAmount(Lender $lender)
     {
         $total = $this
             ->filterByLender($lender)

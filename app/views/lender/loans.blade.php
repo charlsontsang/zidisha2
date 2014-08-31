@@ -122,7 +122,7 @@ My Stats
 {{ BootstrapHtml::paginator($fundraisingLoanBids)->links() }}
 @endif
 
-@if (count($activeLoansBids)>0)
+@if (count($activeLoanBids)>0)
 <div class="page-header">
     <h3><strong>Active Loans</strong></h3>
 </div>
@@ -138,37 +138,37 @@ My Stats
     </tr>
     </thead>
     <tbody>
-    @foreach($activeLoansBids as $activeLoansBid)
+    @foreach($activeLoanBids as $activeLoanBid)
     <tr>
         <td data-title="Project">
-            <a class="pull-left" href="{{ route('loan:index', $activeLoansBid->getLoanId()) }}">
-                <img src="{{ $activeLoansBid->getBorrower()->getUser()->getProfilePictureUrl('small-profile-picture') }}" width="100%">
+            <a class="pull-left" href="{{ route('loan:index', $activeLoanBid->getLoanId()) }}">
+                <img src="{{ $activeLoanBid->getBorrower()->getUser()->getProfilePictureUrl('small-profile-picture') }}" width="100%">
             </a>
         </td>
         <td>
-            {{ $activeLoansBid->getBorrower()->getName() }}
+            {{ $activeLoanBid->getBorrower()->getName() }}
             <br/><br/>
-            {{ $activeLoansBid->getBorrower()->getProfile()->getCity() }},
-            {{ $activeLoansBid->getBorrower()->getCountry()->getName() }}
+            {{ $activeLoanBid->getBorrower()->getProfile()->getCity() }},
+            {{ $activeLoanBid->getBorrower()->getCountry()->getName() }}
         </td>
-        <td><a href="{{ route('loan:index', $activeLoansBid->getLoanId()) }}">{{ $activeLoansBid->getLoan()->getSummary() }}</a></td>
+        <td><a href="{{ route('loan:index', $activeLoanBid->getLoanId()) }}">{{ $activeLoanBid->getLoan()->getSummary() }}</a></td>
         <td data-title="Date Funded">
-        @if($activeLoansBid->getLoan()->getStatus() == Zidisha\Loan\Loan::ACTIVE)
-            {{ $activeLoansBid->getLoan()->getDisbursedAt()->format('M j, Y') }}
+        @if($activeLoanBid->getLoan()->getStatus() == Zidisha\Loan\Loan::ACTIVE)
+            {{ $activeLoanBid->getLoan()->getDisbursedAt()->format('M j, Y') }}
         @else
-            {{ $activeLoansBid->getLoan()->getAcceptedAt()->format('M j, Y') }}
+            {{ $activeLoanBid->getLoan()->getAcceptedAt()->format('M j, Y') }}
         @endif
         </td>
-        <td data-title="Amount Lent">{{ $activeLoansBid->getAcceptedAmount()->getAmount() }}</td>
-        <td data-title="Amount Repaid">{{ $activeLoansBidAmountRepaid[$activeLoansBid->getId()]->getAmount() }}</td>
+        <td data-title="Amount Lent">{{ $activeLoanBid->getAcceptedAmount()->getAmount() }}</td>
+        <td data-title="Amount Repaid">{{ $activeLoanBidAmountRepaid[$activeLoanBid->getId()]->getAmount() }}</td>
         <td data-title="Outstanding">
-            {{ $activeLoansBidPrincipleOutstanding[$activeLoansBid->getId()]->getAmount() }}
+            {{ $activeLoanBidPrincipleOutstanding[$activeLoanBid->getId()]->getAmount() }}
             <br/><br/>
-            @if($activeLoansBidPaymentStatus[$activeLoansBid->getId()] == 'on-time')
+            @if($activeLoanBidPaymentStatus[$activeLoanBid->getId()] == 'on-time')
                     <span class="label label-success">Repaying on Time</span>
-            @elseif($activeLoansBidPaymentStatus[$activeLoansBid->getId()] == 'late')
+            @elseif($activeLoanBidPaymentStatus[$activeLoanBid->getId()] == 'late')
                     <span class="label label-default">Repaying Late</span>
-            @elseif($activeLoansBidPaymentStatus[$activeLoansBid->getId()] == 'early')
+            @elseif($activeLoanBidPaymentStatus[$activeLoanBid->getId()] == 'early')
                     <span class="label label-success">Repaying Early</span>
             @endif
         </td>
@@ -179,13 +179,13 @@ My Stats
         <tr>
             <td colspan="3"><strong>Total</strong></td>
             <td>{{ $numberOfActiveProjects }}</td>
-            <td>{{ $totalActiveLoansBidsAmount->getAmount() }} Lent</td>
+            <td>{{ $totalActiveLoanBidsAmount->getAmount() }} Lent</td>
             <td>{{ $totalActiveLoansRepaidAmount->getAmount() }} Repaid</td>
             <td>{{ $totalActiveLoansTotalOutstandingAmount->getAmount() }} Outstanding</td>
         </tr>
     </tfoot>
 </table>
-{{ BootstrapHtml::paginator($activeLoansBids, 'page2')->links() }}
+{{ BootstrapHtml::paginator($activeLoanBids, 'page2')->links() }}
 @endif
 
 @if (count($completedLoansBids)>0)
