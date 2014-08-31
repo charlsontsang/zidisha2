@@ -8242,6 +8242,10 @@ body {
     height: 100%;
   }
 }
+#join-modal,
+#login-modal {
+  z-index: 2000;
+}
 .navbar-brand {
   padding: 15px 10px 15px 15px;
 }
@@ -9062,9 +9066,11 @@ a.link-dark {
     padding: 0 15px;
   }
 }
-.loan-title {
-  height: 100px;
-  overflow: hidden;
+@media (min-width: 768px) {
+  .loan-title {
+    height: 100px;
+    overflow: hidden;
+  }
 }
 .loan-side h2,
 .loan-side h3,
@@ -9100,6 +9106,10 @@ a.link-dark {
     display: none;
   }
 }
+.modal .panel {
+  border: none;
+  padding: 0;
+}
 .progress {
   margin-bottom: 8px;
   margin-top: 30px;
@@ -9120,12 +9130,6 @@ a.link-dark {
 @media (min-width: 992px) {
   .lend-form .text-large {
     font-size: 22px;
-  }
-}
-@media (max-width: 480px) {
-  .lend-form .text-light,
-  .lend-form .text-large {
-    float: left;
   }
 }
 .lend-form .form-group {

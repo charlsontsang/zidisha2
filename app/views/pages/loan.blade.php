@@ -675,7 +675,7 @@
     });
     $('#mobile-lend-btn').on('click', function() {
         var $modal = $($('#modal-template').html()),
-            $form = $('.lend-form');
+            $form = $('.bid-form');
         
         $modal.find('.modal-body').append($form);
         $modal.modal();

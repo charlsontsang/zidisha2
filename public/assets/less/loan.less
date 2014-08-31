@@ -114,8 +114,10 @@
   }
 }
 .loan-title {
-  height: 100px;
-  overflow: hidden;
+  @media (min-width: @screen-sm-min) {
+    height: 100px;
+    overflow: hidden;
+  }
 }
 .loan-side h2, .loan-side h3, .loan-side p {
   margin-top: 0;
@@ -143,6 +145,10 @@
     display: none;
   }
 }
+.modal .panel {
+  border: none;
+  padding: 0;
+}
 .progress {
   margin-bottom: 8px;
   margin-top: 30px;
@@ -159,11 +165,6 @@
   font-size: 16px;
   @media (min-width: @screen-md-min) {
     font-size: 22px;
-  }
-}
-.lend-form .text-light, .lend-form .text-large {
-  @media (max-width: @screen-xs-min) {
-    float: left;
   }
 }
 .lend-form .form-group {
