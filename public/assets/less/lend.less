@@ -107,7 +107,7 @@
     width: 70px;
     margin-top: -40px;
     float: right;
-    margin-right: 15px;
+    margin-right: 10px;
     padding-top: 14px;
     border-radius: 50%;
     text-align: center;
@@ -115,6 +115,12 @@
     background-color: #f9f9f9;
     border: 3px solid #fff;
     box-shadow: inset 1px 1px 2px #e5e5e5, inset -1px -1px 2px #e5e5e5;
+    @media (min-width: @screen-sm-min){
+        display: none;
+    }
+}
+.loan #funding-tag {
+    display: inline-block;
     @media (min-width: @screen-sm-min){
         display: none;
     }

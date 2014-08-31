@@ -22,6 +22,13 @@
                 </div>
                 <div class="row">   
                     <div class="col-xs-12 loan" >
+
+                        <div id="funding-tag">
+                            <span><strong>${{ ceil($loan->getStillNeededUsdAmount()->getAmount()) }}</strong></span>
+                            <br/>
+                            <span class="text-light">Needed</span>
+                        </div>
+
                         <div class="loan-category">
                           {{ $loan->getBorrower()->getCountry()->getName() }}
                         </div>
