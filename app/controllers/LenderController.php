@@ -144,7 +144,7 @@ class LenderController extends BaseController
     }
 
     public function getDashboard()
-   {
+    {
         $lender = \Auth::user()->getLender();
         $userId = \Auth::user()->getId();
         if (!$lender) {
@@ -424,16 +424,35 @@ class LenderController extends BaseController
             $totalNetChangeCompletedBid= $totalNetChangeCompletedBid->add($netChangeCompletedBid[$completedLoansBid->getId()]);
         }
 
-       return View::make('lender.loans', compact('currentBalance', 'totalFundsUpload', 'numberOfLoans', 
-                'totalLentAmount', 'myImpact', 'totalImpact' , 'loans', 'fundraisingBids', 'totalBidAmount',
-                'activeLoansBids', 'totalActiveLoansBidsAmount', 'completedLoansBids', 'totalCompletedLoansBidsAmount',
-                'numberOfFundRaisingProjects', 'lenderInviteCredit',
-                'numberOfActiveProjects', 'numberOfCompletedProjects', 'principleOutstanding',
-                'activeLoansBidPaymentStatus', 'completedLoansBidAmountRepaid', 'activeLoansBidAmountRepaid',
-                'activeLoansBidPrincipleOutstanding', 'totalActiveLoansRepaidAmount',
-                'totalActiveLoansTotalOutstandingAmount', 'totalCompletedLoansRepaidAmount',
-                'netChangeCompletedBid', 'totalNetChangeCompletedBid'
-            ));
+       return View::make('lender.loans', compact(
+           'currentBalance',
+           'totalFundsUpload',
+           'numberOfLoans',
+           'totalLentAmount',
+           'myImpact',
+           'totalImpact',
+           'loans',
+           'fundraisingBids',
+           'totalBidAmount',
+           'activeLoansBids',
+           'totalActiveLoansBidsAmount',
+           'completedLoansBids',
+           'totalCompletedLoansBidsAmount',
+           'numberOfFundRaisingProjects',
+           'lenderInviteCredit',
+           'numberOfActiveProjects',
+           'numberOfCompletedProjects',
+           'principleOutstanding',
+           'activeLoansBidPaymentStatus',
+           'completedLoansBidAmountRepaid',
+           'activeLoansBidAmountRepaid',
+           'activeLoansBidPrincipleOutstanding',
+           'totalActiveLoansRepaidAmount',
+           'totalActiveLoansTotalOutstandingAmount',
+           'totalCompletedLoansRepaidAmount',
+           'netChangeCompletedBid',
+           'totalNetChangeCompletedBid'
+        ));
     }
 
     /**
