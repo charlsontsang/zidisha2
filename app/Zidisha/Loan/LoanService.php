@@ -259,6 +259,36 @@ class LoanService
         return $loanIndex->count($query);
     }
 
+    /**
+     * @param Loan $loan
+     * @return array
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
+    protected function createLoanDocument(Loan $loan)
+    {
+        $loanIndex = $this->getLoanIndex();
+
+        $loanType = $loanIndex->getType('loan');
+
+        $data = [
+            'id'                => $loan->getId(),
+            'category'          => $loan->getCategory()->getName(),
+            'categoryId'        => $loan->getCategory()->getId(),
+            'countryId'         => $loan->getBorrower()->getCountry()->getId(),
+            'country_code'      => $loan->getBorrower()->getCountry()->getCountryCode(),
+            'summary'           => $loan->getSummary(),
+            'proposal'          => $loan->getProposal(),
+            'status'            => $loan->getStatus(),
+            'created_at'        => $loan->getCreatedAt()->getTimestamp(),
+            'raised_percentage' => $loan->getRaisedPercentage(),
+            'applied_at'        => $loan->getAppliedAt()->getTimestamp()
+        ];
+
+        $loanDocument = new \Elastica\Document($loan->getId(), $data);
+        
+        return [$loanType, $loanDocument];
+    }
+
     public function addToLoanIndex(Loan $loan)
     {
         if (\App::environment("testing")) {
@@ -1162,35 +1192,6 @@ class LoanService
                 $this->lenderMailer->sendLoanFullyFundedMail($bid);
             }
         }
-    }
-
-    /**
-     * @param Loan $loan
-     * @return array
-     * @throws \Propel\Runtime\Exception\PropelException
-     */
-    protected function createLoanDocument(Loan $loan)
-    {
-        $loanIndex = $this->getLoanIndex();
-
-        $loanType = $loanIndex->getType('loan');
-
-        $data = array(
-            'id'                => $loan->getId(),
-            'category'          => $loan->getCategory()->getName(),
-            'categoryId'        => $loan->getCategory()->getId(),
-            'countryId'         => $loan->getBorrower()->getCountry()->getId(),
-            'country_code'      => $loan->getBorrower()->getCountry()->getCountryCode(),
-            'summary'           => $loan->getSummary(),
-            'proposal'          => $loan->getProposal(),
-            'status'            => $loan->getStatus(),
-            'created_at'        => $loan->getCreatedAt()->getTimestamp(),
-            'raised_percentage' => $loan->getRaisedPercentage(),
-            'applied_at'        => $loan->getAppliedAt()->getTimestamp()
-        );
-
-        $loanDocument = new \Elastica\Document($loan->getId(), $data);
-        return array($loanType, $loanDocument);
     }
 
     public function rescheduleLoan(Loan $loan, array $data, $simulate = false)
