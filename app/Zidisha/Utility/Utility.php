@@ -201,4 +201,59 @@ class Utility {
 
         return $result;
     }
+    
+    public static function clearPost($post_val) // remove email header injects
+    {
+        $injection_strings = array(
+            "'apparently-to' i",
+            "'bcc:' i",
+            "'cc:' i",
+            "'to:' i",
+            "'boundary=' i",
+            "'charset:' i",
+            "'content-disposition' i",
+            "'content-type' i",
+            "'content-transfer-encoding' i",
+            "'errors-to' i",
+            "'in-reply-to' i",
+            "'message-id' i",
+            "'mime-version' i",
+            "'multipart/mixed' i",
+            "'multipart/alternative' i",
+            "'multipart/related' i",
+            "'reply-to:' i",
+            "'x-mailer' i",
+            "'x-sender' i",
+            "'x-uidl' i"
+        );
+
+        $replace_strings = array(
+            "apparently_to",
+            "bcc_:",
+            "cc_:",
+            "to_:",
+            "boundary_=",
+            "charset_:",
+            "content_disposition",
+            "content_type",
+            "content_transfer_encoding",
+            "errors_to",
+            "in_reply_to",
+            "message_id",
+            "mime_version",
+            "multipart_mixed",
+            "multipart_alternative",
+            "multipart_related",
+            "reply_to:",
+            "x_mailer",
+            "x_sender",
+            "x_uidl"
+        );
+
+
+        $post_val = preg_replace($injection_strings, $replace_strings, $post_val);
+
+
+        return $post_val;
+    }
 }

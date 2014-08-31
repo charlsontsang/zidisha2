@@ -27,6 +27,20 @@ class SendwithusDriver implements MailDriverInterface
         $templateId = $data['templateId'];
         unset($data['templateId']);
 
+        $data = $data + [
+                'footer'      => \Lang::get('lender.mails.sendwithus-defaults.footer'),
+                'button_url'  => route('loan:index'),
+                'button_text' => \Lang::get('lender.mails.sendwithus-defaults.button_text'),
+            ];
+
+        $data['button'] = [
+            'url' => $data['button_url'],
+            'text' => $data['button_text'],
+        ];
+        
+        unset($data['button_url']);
+        unset($data['button_text']);
+        
         $response = $this->api->send(
             $templateId,
             [

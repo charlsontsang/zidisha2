@@ -3,6 +3,7 @@ namespace Zidisha\Mail;
 
 
 use Carbon\Carbon;
+use Zidisha\Balance\TransactionQuery;
 use Zidisha\Comment\Comment;
 use Zidisha\Currency\Money;
 use Zidisha\Lender\GiftCard;
@@ -12,6 +13,7 @@ use Zidisha\Loan\Bid;
 use Zidisha\Loan\ForgivenessLoan;
 use Zidisha\Loan\LenderRefund;
 use Zidisha\Loan\Loan;
+use Zidisha\Loan\LoanService;
 use Zidisha\Loan\RefundLender;
 use Zidisha\User\User;
 
@@ -41,13 +43,15 @@ class LenderMailer
     public function sendFirstBidConfirmationMail(Bid $bid)
     {
         $email = $bid->getLender()->getUser()->getEmail();
-
+        $username = $bid->getLender()->getName();
         $this->mailer->send(
             'emails.lender.loan.first-bid-confirmation',
             [
                 'to'      => $email,
                 'from'    => 'service@zidisha.com',
-                'subject' => 'Congratulations you have made your first Bid on Zidisha.'
+                'subject' => 'Congratulations you have made your first Bid on Zidisha.',
+                'templateId' => \Setting::get('sendwithus.lender-loan-first-bid-confirmation-template-id'),
+                'username' => $username
             ]
         );
     }
@@ -74,6 +78,7 @@ class LenderMailer
                 'acceptedAmount'  => $acceptedAmount->round(2)->getAmount(),
                 'borrowerLink'    => $bid->getLoan()->getBorrower()->getUser()->getProfileUrl(),
                 'borrowerName'    => $bid->getLoan()->getBorrower()->getName(),
+                'loanLink'        => route('loan:index', ['loanId' => $bid->getLoan()->getBorrower()->getActiveLoanId()]),
             ]
         );
     }
@@ -85,25 +90,92 @@ class LenderMailer
     {
         $email = $bid->getLender()->getUser()->getEmail();
 
-        $this->mailer->send(
-            'emails.lender.loan.loan-fully-funded',
+        $subject = \Lang::get('lender.mails.loan-fully-funded.subject', ['borrowerName' => $bid->getBorrower()->getName()]);
+        $data['header'] = \Lang::get('lender.mails.loan-fully-funded.accept-message-1', ['borrowerName' => $bid->getBorrower()->getName()]);
+        
+        //TODO: confirm 
+        $message = \Lang::get(
+            'lender.mails.loan-fully-funded.accept-message-2',
             [
+                'borrowerName' => $bid->getBorrower()->getName(),
+                'borrowerProfileLink' => route(
+                    'borrower:public-profile',
+                    ['username' => $bid->getBorrower()->getUser()->getUsername()]
+                ),
+                'lendingGroupLink' => route('lender:groups')
+            ]
+        );
+        
+        $this->mailer->send(
+            'emails.hero',
+            $data + [
                 'to'      => $email,
                 'from'    => 'service@zidisha.com',
-                'subject' => 'The loan is fully funded.'
+                'subject' => $subject,
+                'templateId' => \Setting::get('sendwithus.lender-loan-fully-funded-template-id'),
             ]
         );
     }
 
-    public function sendLenderInvite(Lender $lender, Invite $lender_invite, $subject, $custom_message)
+    public function sendLenderInvite(Lender $lender, Invite $lender_invite, $subject, $customMessage)
     {
         $email = $lender_invite->getEmail();
-        //TODO send invite email
+
+        $data = array();
+        $data['header'] = \Lang::get('lender.mails.lender-invite.header');
+        $data['footer'] = \Lang::get('lender.mails.lender-invite.footer');
+
+        $data['button_text'] = "View Projects";
+        
+        $params['button_url'] = route('lender:invite');
+        $profilePicture = $lender->getUser()->getProfilePictureUrl();
+
+        $table = '<table cellspacing="0" cellpadding="10" border="0">';
+        $table .= "<tr>";
+        $table = $profilePicture ? $table . '<td width="50"><img width="50" style="width:50px;" src="' . $profilePicture . '" /></td>' : $table . "<td><b>Note</b>:</td>";
+        $table .= '<td>' . $customMessage . '</td>';
+        $table .= "</tr>";
+        $table .= "</table>";
+        $customMessage = $table;
+
+        $subject = \Lang::get('lender.mails.lender-invite.subject', ['lenderName' => $lender->getName()]);
+        $message = \Lang::get('lender.mails.lender-invite.body', ['lenderName' => $lender->getName(), 'customMessage' => $customMessage]);
+        $data['content'] = $message;
+        
+        $this->mailer->send(
+            'emails.hero',
+            $data + [
+                'to'      => $email,
+                'from'    => 'service@zidisha.com',
+                'subject' => $subject,
+                'templateId' => \Setting::get('sendwithus.lender-invite-template-id')
+            ]
+        );
+
     }
 
     public function sendLenderInviteCredit(Invite $invite)
     {
-        //TODO
+        $email = $invite->getLender()->getUser()->getEmail();
+        $inviteeEmail = $invite->getEmail();
+        
+        $subject = \Lang::get('lender.mails.lender-invite-credit.subject');
+        $message = \Lang::get('lender.mails.lender-invite-credit.body', ['inviteeMail' => $inviteeEmail, 'lendingPage' => route('loan:index')]);
+        $data['content'] = $message;
+
+        $data['footer'] = \Lang::get('lender.mails.lender-invite-credit.footer');
+        $data['button_text'] = \Lang::get('lender.mails.lender-invite-credit.button-text');
+        $data['button_url'] = route('loan:index');
+        
+        $this->mailer->send(
+            'emails.hero',
+            $data + [
+                'to'      => $email,
+                'from'    => 'service@zidisha.com',
+                'subject' => $subject,
+                'templateId' => \Setting::get('sendwithus.lender-invite-credit-template-id')
+            ]
+        );
     }
 
     public function sendWelcomeMail(Lender $lender)
@@ -164,12 +236,17 @@ class LenderMailer
 
     public function sendAbandonedMail(Lender $lender)
     {
+        $subject = \Lang::get('lender.mails.lender-account-abandoned.subject');
+        $message = \Lang::get('lender.mails.lender-account-abandoned.body', ['lenderName' => $lender->getName(), 'siteLink' => \URL::to('/'), 'expiryDate' => Carbon::now()->addMonth()->format('F j, Y')]);
+        $data['header'] = $message;
+
         $this->mailer->send(
             'emails.lender.abandoned',
             [
-                'to'      => $lender->getUser()->getEmail(),
-                'from'    => 'service@zidisha.com',
-                'subject' => 'Login to Zidisha'
+                'to'         => $lender->getUser()->getEmail(),
+                'from'       => 'service@zidisha.com',
+                'subject'    => $subject,
+                'templateId' => \setting::get('sendwithus.lender-account-abandoned-template-id')
             ]
         );
     }
@@ -215,11 +292,27 @@ class LenderMailer
 
     public function sendUnusedFundsNotification(Lender $lender)
     {
+        $currentBalance = TransactionQuery::create()
+            ->getCurrentBalance($lender->getId());
+        
+        $data = $this->getFeaturedLoansForMail();
+        
+        $data['footer'] = \Lang::get('lender.mails.lender-unused-fund.footer');
+        
+        $data['extra'] = \Lang::get(
+            'lender.mails.lender-unused-fund.body',
+            ['automaticLendingLink' => route('lender:auto-lending')]
+        );
+
+        $subject = \Lang::get('lender.mails.lender-unused-fund.subject');
+
+        $message = \Lang::get('lender.mails.lender-unused-fund.body', ['lenderBalance' => $currentBalance->getAmount()]);
+
         $this->mailer->send(
             'emails.hero',
-            [
+            $data + [
                 'to'         => $lender->getUser()->getEmail(),
-                'subject'    => 'Unused Funds Notification',
+                'subject'    => $subject,
                 'templateId' => \Setting::get('sendwithus.lender-unused-funds-template-id'),
             ]
         );
@@ -256,7 +349,7 @@ class LenderMailer
             'parameters' => [
                 'borrowerName' => $loan->getBorrower()->getName(),
                 'loanUrl'      => route('loan:index', ['loanId' => $loan->getId()]),
-                'repayDate'    => $loan->getInstallmentDay(), //TODO: confirm  
+                'repayDate'    => $loan->getRepaidAt()->format('F j, Y')
             ],
         ];
         
@@ -291,5 +384,60 @@ class LenderMailer
                 'subject'    => $subject
             ]
         );
+    }
+
+    public function getFeaturedLoansForMail()
+    {
+        $conditions = [
+            'status'     => Loan::OPEN,
+            'categoryId' => '18',
+            'sortBy'     => 'raised_percentage',
+        ];
+        
+        /** @var LoanService $loanService */
+        $loanService = \App::make('Zidisha\Loan\LoanService');
+        
+        $featuredLoans = $loanService->searchLoans($conditions);
+
+        $loans = $loansExtra = array();
+        /** @var Loan $loan */
+        foreach ($featuredLoans as $loan) {
+            if ($loan->getRaisedPercentage() < 75) {
+                $loans[] = $loan;
+            } else {
+                $loansExtra[] = $loan;
+            }
+        }
+
+        shuffle($loans);
+        $loans = array_slice($loans, 0, 3);
+        $count = count($loans);
+        if ($count < 3) return false;
+
+
+        $data = array();
+        $i = 1;
+        foreach ($loans as $loan) {
+            $n = $i > 1 ? $i : '';
+            
+            if ($loan->getSummaryTranslation()) {
+                $data["content$n"] = $loan->getSummaryTranslation();
+            } else {
+                $data["content$n"] = $loan->getSummary();
+            }
+            
+            $data["heading$n"] = $loan->getBorrower()->getCountry()->getName();
+            $data["title$n"] = $loan->getBorrower()->getName();
+            $data["percent$n"] = $loan->getRaisedPercentage() . '%';
+            $data["image_src$n"] = $loan->getBorrower()->getUser()->getProfilePictureUrl();
+            $data["link$n"] = [
+                "text$n" => route('loan:index', [ 'loanId' => $loan->getId() ]),
+                "url$n"  => route('loan:index', [ 'loanId' => $loan->getId() ])
+            ];
+            
+            $i += 1;
+        }
+
+        return $data;
     }
 }
