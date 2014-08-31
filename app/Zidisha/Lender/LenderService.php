@@ -371,11 +371,11 @@ class LenderService
                                           WHERE recipient_id != :lenderId
                                           AND lender_id = :lenderId)';
 
-        $totalAmount = ( PropelDB::fetchNumber($sql, [
-                'loanBid' => Transaction::LOAN_BID,
-                'loanOutbid' => Transaction::LOAN_OUTBID,
-                'lenderId' => $lender->getId(),
-            ]));
+        $totalAmount = PropelDB::fetchNumber($sql, [
+            'loanBid' => Transaction::LOAN_BID,
+            'loanOutbid' => Transaction::LOAN_OUTBID,
+            'lenderId' => $lender->getId(),
+        ]);
         
         return Money::create($totalAmount, 'USD')->multiply(-1);
     }
