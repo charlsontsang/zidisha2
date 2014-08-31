@@ -131,7 +131,17 @@
                 </li>
             </ul>
             @if(Auth::check() && Auth::getUser()->isLender())
-                <p id="lending-credit" class="navbar-text">Lending Credit: $XX.XX</p>
+            <?php
+            // TODO, refactor this
+            $currentBalance = \Zidisha\Balance\TransactionQuery::create()
+                ->getCurrentBalance(\Auth::id());
+            $inviteCredit = \Zidisha\Balance\InviteTransactionQuery::create()
+                ->getTotalInviteCreditAmount(\Auth::user()->getLender());
+            $lendingCredit = $currentBalance->add($inviteCredit);
+            ?>
+                <p id="lending-credit" class="navbar-text">
+                    Lending Credit: ${{ $lendingCredit->round(2)->getAmount() }}
+                </p>
             @endif
         </div>
     </div>
