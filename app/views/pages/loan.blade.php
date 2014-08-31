@@ -67,9 +67,11 @@
                                         <a href="{{ route('borrower:public-profile', $invitedBy->getId()) }}">{{ $invitedBy->getName() }}</a>
                                         @endif
                                         
+                                        @if($volunteerMentor)
                                         <br/>
                                         Volunteer Mentor:
-                                        <a href="#">TO DO</a>
+                                        <a href="{{ route('borrower:public-profile', $volunteerMentor->getId()) }}">{{ $volunteerMentor->getName() }}</a>
+                                        @endif
                                     </div>
                                     <div class="col-sm-6">
                                         Followers: 

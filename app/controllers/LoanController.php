@@ -63,6 +63,7 @@ class LoanController extends BaseController
         //for loan
         $loan = $this->loanQuery
             ->filterById($loanId)
+            ->joinBorrower()
             ->findOne();
 
         if (!$loan) {
@@ -121,6 +122,8 @@ class LoanController extends BaseController
             ->joinBorrower()
             ->findOne();
         $invitedBy = $invite ? $invite->getBorrower() : null;
+        
+        $volunteerMentor = $borrower->getVolunteerMentor() ? $borrower->getVolunteerMentor()->getBorrowerVolunteer() : null;
 
         $placeBidForm = new PlaceBidForm($loan);
 
@@ -168,7 +171,8 @@ class LoanController extends BaseController
                 'tag',
                 'placeBidForm',
                 'categoryForm',
-                'invitedBy'
+                'invitedBy',
+                'volunteerMentor'
             )
         );
     }
