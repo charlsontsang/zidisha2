@@ -42,7 +42,7 @@ class BidQuery extends BaseBidQuery
             ->withColumn('SUM(accepted_amount)', 'total')
             ->findOne();
 
-        return Money::valueOf($total, Currency::valueOf('USD'));
+        return Money::create($total, 'USD');
     }
 
     public function getOrderedBids(Loan $loan)
@@ -109,16 +109,9 @@ class BidQuery extends BaseBidQuery
 
     public function getTotalActiveLoanBidsAmount(Lender $lender)
     {
-        $total = $this
-            ->filterByLender($lender)
-            ->filterByAcceptedAmount('0', Criteria::NOT_EQUAL)
-            ->useLoanQuery()
-            ->filterActive()
-            ->endUse()
-            ->select(array('total'))
-            ->withColumn('SUM(accepted_amount)', 'total')
-            ->findOne();
-        return Money::valueOf($total, Currency::valueOf('USD'));
+        return $this
+            ->filterActiveLoanBids($lender)
+            ->getTotalAcceptedAmount();
     }
 
     public function getCompletedLoansBids(Lender $lender, $page3)
