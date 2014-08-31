@@ -300,6 +300,11 @@ class Loan extends BaseLoan implements CommentReceiverInterface
         }
     }
 
+    public function getExpiresAt()
+    {
+        return Carbon::instance($this->getAppliedAt())->addDays(15);
+    }
+
     public function getCommentReceiverId()
     {
         return $this->getId();

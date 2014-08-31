@@ -153,13 +153,13 @@
                                             </strong>
                                         @else
                                             Amount requested:
-                                            <strong>{{{ $loan->getUsdAmount() }}}</strong>
+                                            <strong>${{{ $loan->getUsdAmount()->getAmount() }}}</strong>
                                             <br/>
                                             Still needed:
-                                            <strong>TO DO</strong>
+                                            <strong>${{{ $loan->getStillNeededUsdAmount()->getAmount() }}}</strong>
                                             <br/>
                                             Application expires:
-                                            <strong>TO DO</strong>
+                                            <strong>{{{ $loan->getExpiresAt()->format('M j, Y') }}}</strong>
                                         @endif
                                     </div>
                                     @if($loan->isDisbursed())
