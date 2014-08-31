@@ -6,6 +6,7 @@ use Zidisha\Admin\Setting;
 use Zidisha\Balance\InviteTransactionQuery;
 use Zidisha\Balance\Transaction;
 use Zidisha\Balance\TransactionQuery;
+use Zidisha\Loan\Paginator\ActiveLoanBids;
 use Zidisha\Loan\Paginator\FundraisingLoanBids;
 use Zidisha\Currency\Currency;
 use Zidisha\Currency\Money;
@@ -336,51 +337,7 @@ class LenderController extends BaseController
         $totalImpact = $myImpact->add($totalLentAmount);
 
         $fundraisingLoanBids = new FundRaisingLoanBids($lender, $page);
-
-        $activeLoanBids = BidQuery::create()
-            ->filterActiveLoanBids($lender)
-            ->paginate($page2, 10);
-        $totalActiveLoanBidsAmount = BidQuery::create()
-            ->getTotalActiveLoanBidsAmount($lender);
-        $numberOfActiveProjects = \Lang::choice(
-            'lender.flash.preferences.stats-projects',
-            $activeLoanBids->getNbResults(),
-            ['count' => $activeLoanBids->getNbResults()]
-        );
-
-        $activeLoanIds = $activeLoanBids->toKeyValue('loanId', 'loanId');
-
-        $activeLoansRepaidAmounts = TransactionQuery::create()
-            ->getActiveLoansRepaidAmounts($userId, $activeLoanIds);
-        $totalActiveLoansRepaidAmount = TransactionQuery::create()
-            ->getTotalActiveLoansRepaidAmount($userId);
-
-        $activeLoansTotalOutstandingAmounts = BidQuery::create()
-            ->getActiveLoansTotalOutstandingAmounts($lender, $activeLoanIds);
-
-        $totalActiveLoansTotalOutstandingAmount = BidQuery::create()
-            ->getTotalActiveLoansTotalOutstandingAmount($lender);
-
-        /** @var $activeLoanBid Bid */
-        foreach ($activeLoanBids as $activeLoanBid) {
-            foreach ($activeLoansRepaidAmounts as $activeLoansRepaidAmount) {
-                if ($activeLoansRepaidAmount['loan_id'] == $activeLoanBid->getLoanId()) {
-                    $activeLoanBidAmountRepaid[$activeLoanBid->getId()] = Money::create($activeLoansRepaidAmount['totals'], 'USD');
-                    continue;
-                }
-                $activeLoanBidAmountRepaid[$activeLoanBid->getId()] = Money::create(0, 'USD');
-            }
-            foreach ($activeLoansTotalOutstandingAmounts as $activeLoansTotalOutstandingAmount) {
-                if ($activeLoansTotalOutstandingAmount['loan_id'] == $activeLoanBid->getLoanId()) {
-                    $activeLoanBidPrincipleOutstanding[$activeLoanBid->getId()] = Money::create($activeLoansTotalOutstandingAmount['total'], 'USD');
-                    continue;
-                }
-                $activeLoanBidPrincipleOutstanding[$activeLoanBid->getId()] = Money::create(0, 'USD');
-            }
-
-            $repaymentSchedule = $this->repaymentService->getRepaymentSchedule($activeLoanBid->getLoan());
-            $activeLoanBidPaymentStatus[$activeLoanBid->getId()] = $repaymentSchedule->getLoanPaymentStatus();
-        }
+        $activeLoanBids = new ActiveLoanBids($lender, $page2);
 
         $completedLoansBids = BidQuery::create()
             ->getCompletedLoansBids($lender, $page3);
@@ -424,20 +381,13 @@ class LenderController extends BaseController
            'loans',
            'fundraisingLoanBids',
            'activeLoanBids',
-           'totalActiveLoanBidsAmount',
            'completedLoansBids',
            'totalCompletedLoansBidsAmount',
            'numberOfFundRaisingProjects',
            'lenderInviteCredit',
-           'numberOfActiveProjects',
            'numberOfCompletedProjects',
            'principleOutstanding',
-           'activeLoanBidPaymentStatus',
            'completedLoansBidAmountRepaid',
-           'activeLoanBidAmountRepaid',
-           'activeLoanBidPrincipleOutstanding',
-           'totalActiveLoansRepaidAmount',
-           'totalActiveLoansTotalOutstandingAmount',
            'totalCompletedLoansRepaidAmount',
            'netChangeCompletedBid',
            'totalNetChangeCompletedBid'

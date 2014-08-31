@@ -2,10 +2,14 @@
 
 namespace Zidisha\Loan\Paginator;
 
+use Zidisha\Currency\Money;
 use Zidisha\Loan\BidQuery;
 
 class FundraisingLoanBids extends AbstractBids
 {
+    /**
+     * @var Money
+     */
     protected $totalBidAmount;
 
     protected function getResults()

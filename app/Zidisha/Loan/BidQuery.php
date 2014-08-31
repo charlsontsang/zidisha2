@@ -168,10 +168,11 @@ class BidQuery extends BaseBidQuery
             ->withColumn('SUM(accepted_amount * (100 - paid_percentage)/100)', 'total')
             ->withColumn('loan_id', 'loan_id')
             ->groupByLoanId()
-            ->find();
+            ->find()
+            ->toKeyValue('loan_id', 'total');
     }
 
-    public function getTotalActiveLoansTotalOutstandingAmount(Lender $lender)
+    public function getTotalActiveLoanOutstandingAmount(Lender $lender)
     {
         $total = $this
             ->filterByActive(true)

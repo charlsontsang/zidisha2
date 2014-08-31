@@ -127,7 +127,7 @@ My Stats
 {{ $fundraisingLoanBids->getPaginator()->links() }}
 @endif
 
-@if (count($activeLoanBids)>0)
+@if ($activeLoanBids->count())
 <div class="page-header">
     <h3><strong>Active Loans</strong></h3>
 </div>
@@ -158,23 +158,19 @@ My Stats
         </td>
         <td><a href="{{ route('loan:index', $activeLoanBid->getLoanId()) }}">{{ $activeLoanBid->getLoan()->getSummary() }}</a></td>
         <td data-title="Date Funded">
-        @if($activeLoanBid->getLoan()->getStatus() == Zidisha\Loan\Loan::ACTIVE)
-            {{ $activeLoanBid->getLoan()->getDisbursedAt()->format('M j, Y') }}
-        @else
-            {{ $activeLoanBid->getLoan()->getAcceptedAt()->format('M j, Y') }}
-        @endif
+            {{ $activeLoanBid->getFundedAt()->format('M j, Y') }}
         </td>
-        <td data-title="Amount Lent">{{ $activeLoanBid->getAcceptedAmount()->getAmount() }}</td>
-        <td data-title="Amount Repaid">{{ $activeLoanBidAmountRepaid[$activeLoanBid->getId()]->getAmount() }}</td>
+        <td data-title="Amount Lent">{{ $activeLoanBid->getLentAmount()->getAmount() }}</td>
+        <td data-title="Amount Repaid">{{ $activeLoanBid->getRepaidAmount()->getAmount() }}</td>
         <td data-title="Outstanding">
-            {{ $activeLoanBidPrincipleOutstanding[$activeLoanBid->getId()]->getAmount() }}
+            {{ $activeLoanBid->getOutstandingAmount()->getAmount() }}
             <br/><br/>
-            @if($activeLoanBidPaymentStatus[$activeLoanBid->getId()] == 'on-time')
-                    <span class="label label-success">Repaying on Time</span>
-            @elseif($activeLoanBidPaymentStatus[$activeLoanBid->getId()] == 'late')
-                    <span class="label label-default">Repaying Late</span>
-            @elseif($activeLoanBidPaymentStatus[$activeLoanBid->getId()] == 'early')
-                    <span class="label label-success">Repaying Early</span>
+            @if($activeLoanBid->getLoanPaymentStatus() == 'on-time')
+                <span class="label label-success">Repaying on Time</span>
+            @elseif($activeLoanBid->getLoanPaymentStatus() == 'late')
+                <span class="label label-default">Repaying Late</span>
+            @elseif($activeLoanBid->getLoanPaymentStatus() == 'early')
+                <span class="label label-success">Repaying Early</span>
             @endif
         </td>
     </tr>
@@ -183,14 +179,19 @@ My Stats
     <tfoot>
         <tr>
             <td colspan="3"><strong>Total</strong></td>
-            <td>{{ $numberOfActiveProjects }}</td>
-            <td>{{ $totalActiveLoanBidsAmount->getAmount() }} Lent</td>
-            <td>{{ $totalActiveLoansRepaidAmount->getAmount() }} Repaid</td>
-            <td>{{ $totalActiveLoansTotalOutstandingAmount->getAmount() }} Outstanding</td>
+            <td>{{ \Lang::choice(
+                       'lender.flash.preferences.stats-projects',
+                       $activeLoanBids->getTotal(),
+                       ['count' => $activeLoanBids->getTotal()]
+                ) }}
+            </td>
+            <td>{{ $activeLoanBids->getTotalLentAmount() }} Lent</td>
+            <td>{{ $activeLoanBids->getTotalRepaidAmount() }} Repaid</td>
+            <td>{{ $activeLoanBids->getTotalOutstandingAmount() }} Outstanding</td>
         </tr>
     </tfoot>
 </table>
-{{ BootstrapHtml::paginator($activeLoanBids, 'page2')->links() }}
+{{ $activeLoanBids->getPaginator('page2')->links() }}
 @endif
 
 @if (count($completedLoansBids)>0)

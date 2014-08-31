@@ -159,12 +159,13 @@ class TransactionQuery extends BaseTransactionQuery
         return $this
             ->filterByUserId($userId)
             ->filterRepaidToLender()
-            ->select('totals', 'loan_id')
-            ->withColumn('SUM(amount)', 'totals')
+            ->select('total', 'loan_id')
+            ->withColumn('SUM(amount)', 'total')
             ->withColumn('loan_id', 'loan_id')
             ->filterByLoanId($activeLoansIds, Criteria::IN)
             ->groupByLoanId()
-            ->find();
+            ->find()
+            ->toKeyValue('loan_id', 'total');
     }
 
     public function getTotalActiveLoansRepaidAmount($userId)
