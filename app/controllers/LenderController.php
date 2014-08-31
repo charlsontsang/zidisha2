@@ -349,7 +349,7 @@ class LenderController extends BaseController
             ->filterActiveLoanBids($lender)
             ->paginate($page2, 10);
         $totalActiveLoanBidsAmount = BidQuery::create()
-            ->getTotalactiveLoanBidsAmount($lender);
+            ->getTotalActiveLoanBidsAmount($lender);
         $numberOfActiveProjects = \Lang::choice(
             'lender.flash.preferences.stats-projects',
             $activeLoanBids->getNbResults(),
