@@ -122,7 +122,7 @@ Route::group(
          * Routes for lend page
          */
         Route::get(
-            'lend/{stage?}/{category?}/{country?}',
+            'lend/{category?}/{country?}',
             array('uses' => 'LendController@getIndex', 'as' => 'lend:index')
         );
 

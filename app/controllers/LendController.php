@@ -23,7 +23,7 @@ class LendController extends BaseController
         $this->loanService = $loanService;
     }
 
-    public function getIndex($stage = null, $category = 'null', $country = null)
+    public function getIndex($category = 'null', $country = null)
     {
         // for categories
         $loanCategories = $this->loanCategoryQuery
@@ -46,28 +46,18 @@ class LendController extends BaseController
         );
 
         $loanCategoryName = $category;
-        $stageName = $stage;
         $sortBy = Request::query('sortBy') ? : null;
         $selectedLoanCategory = $this->loanCategoryQuery
             ->findOneBySlug($loanCategoryName);
 
         $routeParams = [
             'category' => 'all',
-            'stage' => 'fund-raising',
             'country' => 'everywhere',
             'sortBy' => 'repaymentRate'
         ];
 
-        if ($stageName == 'completed') {
-            $routeParams['stage'] = 'completed';
-            $conditions['status'] = [Loan::DEFAULTED, Loan::REPAID];
-        } elseif ($stageName == 'active') {
-            $routeParams['stage'] = 'active';
-            $conditions['status'] = [Loan::ACTIVE, Loan::FUNDED];
-        } else {
-            $routeParams['stage'] = 'fund-raising';
-            $conditions['status'] = Loan::OPEN;
-        }
+
+        $conditions['status'] = Loan::OPEN;
 
         if ($sortBy == 'recentlyAdded') {
             $routeParams['sortBy'] = 'recentlyAdded';
@@ -117,7 +107,7 @@ class LendController extends BaseController
         $page = Request::query('page') ? : 1;
         $paginator = $this->loanService->searchLoans($conditions, $page);
         $countResults = $paginator->getTotal();
-        $countAll = $this->loanService->countLoans();
+        $countAll = $this->loanService->countLoans(['status' => Loan::OPEN]);
 
         return View::make(
             'pages.lend',
