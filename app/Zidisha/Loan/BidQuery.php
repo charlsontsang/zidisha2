@@ -80,7 +80,7 @@ class BidQuery extends BaseBidQuery
 
     }
 
-    public function filterFundraisingBids(Lender $lender)
+    public function filterFundraisingLoanBids(Lender $lender)
     {
         return $this
             ->filterByLender($lender)
@@ -90,10 +90,10 @@ class BidQuery extends BaseBidQuery
             ->endUse();
     }
 
-    public function getTotalFundraisingBidAmount(Lender $lender)
+    public function getTotalFundraisingLoanBidAmount(Lender $lender)
     {
         return $this
-            ->filterFundraisingBids($lender)
+            ->filterFundraisingLoanBids($lender)
             ->getTotalBidAmount();
     }
 

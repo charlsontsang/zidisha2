@@ -73,10 +73,10 @@ class LenderController extends BaseController
         $page3 = Request::query('page3') ? : 1;
 
         $activeBids = BidQuery::create()
-            ->filterFundraisingBids($lender)
+            ->filterFundraisingLoanBids($lender)
             ->paginate($page , 10);
         $totalBidAmount = BidQuery::create()
-            ->getTotalFundraisingBidAmount($lender);
+            ->getTotalFundraisingLoanBidAmount($lender);
 
         $activeLoansBids = BidQuery::create()
             ->getActiveLoansBids($lender, $page2);
@@ -333,15 +333,15 @@ class LenderController extends BaseController
         $myImpact = $this->lenderService->getMyImpact($lender);
         $totalImpact = $myImpact->add($totalLentAmount);
 
-        $fundraisingBids = BidQuery::create()
-            ->filterFundraisingBids($lender, $page)
+        $fundraisingLoanBids = BidQuery::create()
+            ->filterFundraisingLoanBids($lender, $page)
             ->paginate($page , 10);
-        $totalFundraisingBidAmount = BidQuery::create()
-            ->getTotalFundraisingBidAmount($lender);
+        $totalFundraisingLoanBidAmount = BidQuery::create()
+            ->getTotalFundraisingLoanBidAmount($lender);
         $numberOfFundRaisingProjects = \Lang::choice(
             'lender.flash.preferences.stats-projects',
-            $fundraisingBids->getNbResults(),
-            ['count' => $fundraisingBids->getNbResults()]
+            $fundraisingLoanBids->getNbResults(),
+            ['count' => $fundraisingLoanBids->getNbResults()]
         );
 
         $activeLoansBids = BidQuery::create()
@@ -432,8 +432,8 @@ class LenderController extends BaseController
            'myImpact',
            'totalImpact',
            'loans',
-           'fundraisingBids',
-           'totalFundraisingBidAmount',
+           'fundraisingLoanBids',
+           'totalFundraisingLoanBidAmount',
            'activeLoansBids',
            'totalActiveLoansBidsAmount',
            'completedLoansBids',

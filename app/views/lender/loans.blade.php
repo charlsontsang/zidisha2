@@ -74,7 +74,7 @@ My Stats
     </div>
 </div>
 
-@if (count($fundraisingBids)>0)
+@if (count($fundraisingLoanBids)>0)
 
 <div class="page-header">
     <h3><strong>Fundraising Loans</strong></h3>
@@ -89,25 +89,25 @@ My Stats
     </tr>
     </thead>
     <tbody>
-    @foreach($fundraisingBids as $fundRaisingBid)
+    @foreach($fundraisingLoanBids as $fundraisingLoanBid)
     <tr>
         <td data-title="Project">
-            <a class="pull-left" href="{{ route('loan:index', $fundRaisingBid->getLoanId()) }}">
-                <img src="{{ $fundRaisingBid->getBorrower()->getUser()->getProfilePictureUrl('small-profile-picture') }}" width="100%">
+            <a class="pull-left" href="{{ route('loan:index', $fundraisingLoanBid->getLoanId()) }}">
+                <img src="{{ $fundraisingLoanBid->getBorrower()->getUser()->getProfilePictureUrl('small-profile-picture') }}" width="100%">
             </a>
         </td>
         <td>
-            {{ $fundRaisingBid->getBorrower()->getName() }}
+            {{ $fundraisingLoanBid->getBorrower()->getName() }}
             <br/><br/>
-            {{ $fundRaisingBid->getBorrower()->getProfile()->getCity() }},
-            {{ $fundRaisingBid->getBorrower()->getCountry()->getName() }}
+            {{ $fundraisingLoanBid->getBorrower()->getProfile()->getCity() }},
+            {{ $fundraisingLoanBid->getBorrower()->getCountry()->getName() }}
         </td>
         <td>
-            <a href="{{ route('loan:index', $fundRaisingBid->getLoanId()) }}">{{ $fundRaisingBid->getLoan()->getSummary() }}</a>
+            <a href="{{ route('loan:index', $fundraisingLoanBid->getLoanId()) }}">{{ $fundraisingLoanBid->getLoan()->getSummary() }}</a>
         </td>
-        <td data-title="Date Funded">{{ $fundRaisingBid->getBidAt()->format('M j, Y') }}</td>
-        <td data-title="Amount Lent">{{ $fundRaisingBid->getBidAmount()->getAmount() }}</td>
-        <td data-title="Progress"> @include('partials/loan-progress', [ 'loan' => $fundRaisingBid->getLoan() ]) </td>
+        <td data-title="Date Funded">{{ $fundraisingLoanBid->getBidAt()->format('M j, Y') }}</td>
+        <td data-title="Amount Lent">{{ $fundraisingLoanBid->getBidAmount()->getAmount() }}</td>
+        <td data-title="Progress"> @include('partials/loan-progress', [ 'loan' => $fundraisingLoanBid->getLoan() ]) </td>
     </tr>
     @endforeach
     </tbody>
@@ -115,11 +115,11 @@ My Stats
         <tr>
             <td colspan="3"><strong>Total</strong></td>
             <td>{{ $numberOfFundRaisingProjects }}</td>
-            <td>{{ $totalFundraisingBidAmount->getAmount() }} Lent</td>
+            <td>{{ $totalFundraisingLoanBidAmount->getAmount() }} Lent</td>
         </tr>
     </tfoot>
 </table>
-{{ BootstrapHtml::paginator($fundraisingBids)->links() }}
+{{ BootstrapHtml::paginator($fundraisingLoanBids)->links() }}
 @endif
 
 @if (count($activeLoansBids)>0)
