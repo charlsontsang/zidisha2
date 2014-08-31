@@ -195,7 +195,7 @@ class LoanController extends BaseController
         }
 
         // TODO error message
-        Flash::error("Please enter the amount as a number.");
+        Flash::error("Something went wrong");
         return Redirect::route('loan:index', $loanId)->withForm($form);
     }
 

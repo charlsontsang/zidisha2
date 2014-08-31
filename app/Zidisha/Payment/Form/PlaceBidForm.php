@@ -79,7 +79,7 @@ class PlaceBidForm extends AbstractPaymentForm
         $defaults = [
             'interestRate' => 3,
             'amount' => min($max, max(10, $this->loan->getStillNeededUsdAmount()->getAmount())),
-            'useLenderInviteCredit' => $this->getLenderInviteCredit()->isPositive(),
+            'isLenderInviteCredit' => $this->getLenderInviteCredit()->isPositive() ? '1' : '0',
         ];
         
         return  $defaults + parent::getDefaultData();
