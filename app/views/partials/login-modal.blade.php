@@ -16,7 +16,6 @@
     @section('script-footer')
     <script type="text/javascript">
         $(function() {
-            console.log('pol');
             $('#login-modal').modal();
         });
     </script>
