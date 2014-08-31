@@ -198,6 +198,23 @@ class LoanService
         }
 
         $filterAnd = new \Elastica\Filter\BoolAnd();
+
+        if (isset($conditions['categoryId'])) {
+            $filterOr = new \Elastica\Filter\BoolOr();
+            
+            $termFilter = new \Elastica\Filter\Term();
+            $termFilter->setTerm('categoryId', $conditions['categoryId']);
+            $filterOr->addFilter($termFilter);
+
+            $termFilter = new \Elastica\Filter\Term();
+            $termFilter->setTerm('secondaryCategoryId', $conditions['categoryId']);
+            $filterOr->addFilter($termFilter);
+            
+            $filterAnd->addFilter($filterOr);
+            
+            unset($conditions['categoryId']);
+        }
+
         foreach ($conditions as $field => $value) {
             $termFilter = new \Elastica\Filter\Term();
             $termFilter->setTerm($field, $value);
@@ -271,17 +288,19 @@ class LoanService
         $loanType = $loanIndex->getType('loan');
 
         $data = [
-            'id'                => $loan->getId(),
-            'category'          => $loan->getCategory()->getName(),
-            'categoryId'        => $loan->getCategory()->getId(),
-            'countryId'         => $loan->getBorrower()->getCountry()->getId(),
-            'country_code'      => $loan->getBorrower()->getCountry()->getCountryCode(),
-            'summary'           => $loan->getSummary(),
-            'proposal'          => $loan->getProposal(),
-            'status'            => $loan->getStatus(),
-            'created_at'        => $loan->getCreatedAt()->getTimestamp(),
-            'raised_percentage' => $loan->getRaisedPercentage(),
-            'applied_at'        => $loan->getAppliedAt()->getTimestamp()
+            'id'                  => $loan->getId(),
+            'category'            => $loan->getCategory()->getName(),
+            'categoryId'          => $loan->getCategory()->getId(),
+            'secondaryCategoryId' => $loan->getSecondaryCategory()->getId(),
+            'secondaryCategory'   => $loan->getSecondaryCategory()->getName(),
+            'countryId'           => $loan->getBorrower()->getCountry()->getId(),
+            'country_code'        => $loan->getBorrower()->getCountry()->getCountryCode(),
+            'summary'             => $loan->getSummary(),
+            'proposal'            => $loan->getProposal(),
+            'status'              => $loan->getStatus(),
+            'created_at'          => $loan->getCreatedAt()->getTimestamp(),
+            'raised_percentage'   => $loan->getRaisedPercentage(),
+            'applied_at'          => $loan->getAppliedAt()->getTimestamp()
         ];
 
         $loanDocument = new \Elastica\Document($loan->getId(), $data);
