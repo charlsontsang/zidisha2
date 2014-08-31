@@ -57,7 +57,7 @@
                                         <strong>{{{ $loan->getBorrower()->getName() }}}</strong>
                                         <br/>
                                         <strong>
-                                            <a href="https://www.google.com/maps/place/{{ $loan->getBorrower()->getProfile()->getCity() }},+{{ $loan->getBorrower()->getCountry()->getName() }}/">{{ $loan->getBorrower()->getProfile()->getCity() }}</a>,
+                                            <a href="https://www.google.com/maps/place/{{ $loan->getBorrower()->getProfile()->getCity() }},+{{ $loan->getBorrower()->getCountry()->getName() }}/" target="_blank">{{ $loan->getBorrower()->getProfile()->getCity() }}</a>
                                             {{ $loan->getBorrower()->getCountry()->getName() }}
                                         </strong>
                                         <br/>
