@@ -236,6 +236,18 @@ return [
         ],
         'sendwithus.lender-loan-first-bid-confirmation-template-id' => [
             'label' => 'Lender loan first bid confirmation template id'
+        ],
+        'sendwithus.lender-account-abandoned-template-id' => [
+            'label' => 'Lender account abandoned template id'
+        ],
+        'sendwithus.lender-invite-credit-template-id' => [
+            'label' => 'Lender invite credit template id'            
+        ],
+        'sendwithus.lender-invite-template-id' => [
+            'label' => 'Lender invite template id'
+        ],
+        'sendwithus.lender-loan-fully-funded-template-id' => [
+            'label' => 'Lender loan fully funded template id'            
         ]
     ]
 ];
