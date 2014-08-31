@@ -64,7 +64,7 @@ class LenderController extends BaseController
             ->endUse()
             ->findOne();
         if (!$lender) {
-            \Illuminate\Support\Facades\App::abort(404);
+            \App::abort(404);
         }
 
         $karma = $this->lenderService->getKarma($lender);
@@ -103,7 +103,7 @@ class LenderController extends BaseController
     {
         $lender = \Auth::user()->getLender();
         if (!$lender) {
-            \Illuminate\Support\Facades\App::abort(404);
+            \App::abort(404);
         }
 
         $form = new EditProfile($lender);
@@ -118,7 +118,7 @@ class LenderController extends BaseController
     {
         $lender = \Auth::user()->getLender();
         if (!$lender) {
-            \Illuminate\Support\Facades\App::abort(404);
+            \App::abort(404);
         }
 
         $form = new EditProfile($lender);
@@ -147,7 +147,7 @@ class LenderController extends BaseController
         $lender = \Auth::user()->getLender();
         $userId = \Auth::user()->getId();
         if (!$lender) {
-            \Illuminate\Support\Facades\App::abort(404);
+            \App::abort(404);
         }
 
         $totalFundsUpload = TransactionQuery::create()
@@ -297,7 +297,7 @@ class LenderController extends BaseController
         }
         
         if (!$lender) {
-            \Illuminate\Support\Facades\App::abort(404);
+            \App::abort(404);
         }
         $activeLoansBidPaymentStatus = [];
         $completedLoansBidAmountRepaid = [];
