@@ -12,7 +12,7 @@ class Utility {
     public static function getCountryCodeByIP(){
         $country['code'] = '';
         $country['name'] = '';
-       $country['id'] = '';
+        $country['id'] = '';
         $ip = \Request::getClientIp();
         if(!empty($ip)) {
             $reader = new Reader( app_path() . '/storage/external/GeoLite2-Country.mmdb');

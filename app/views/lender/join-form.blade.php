@@ -1,4 +1,6 @@
-<a href="{{ $facebookJoinUrl }}" class="btn btn-facebook btn-block btn-icon">
+<?php $joinForm = App::make('\Zidisha\Lender\Form\JoinForm') ?>
+
+<a href="{{ $joinForm->getFacebookJoinUrl() }}" class="btn btn-facebook btn-block btn-icon">
     <span class="icon-container">
         <span class="fa fa-facebook fa-lg fa-fw"></span>
     </span>
@@ -7,7 +9,7 @@
     </span>
 </a>
 
-<a href="{{ $googleJoinUrl }}" class="btn btn-default btn-google btn-block btn-icon">
+<a href="{{ $joinForm->getGoogleJoinUrl() }}" class="btn btn-default btn-google btn-block btn-icon">
     <span class="icon-container">
         <span class="fa fa-google-plus fa-lg fa-fw"></span>
     </span>
@@ -36,7 +38,7 @@
         'translationDomain' => 'lender.join.form',
         'id' => 'joinForm']
     ) }}
-    {{ BootstrapForm::populate($form) }}
+    {{ BootstrapForm::populate($joinForm) }}
 
     {{ BootstrapForm::text('username', null, [
         'label'         => false,
@@ -59,7 +61,7 @@
         'feedback-icon' => 'fa-lock',
     ]) }}
 
-    {{ BootstrapForm::select('countryId', $form->getCountries()->toKeyValue('id', 'name'), $country['id'], [
+    {{ BootstrapForm::select('countryId', $joinForm->getCountries()->toKeyValue('id', 'name'), null, [
         'label' => false,
         'sr-only' => \Lang::get('lender.join.form.country-id'),
     ]) }}

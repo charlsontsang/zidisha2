@@ -29,17 +29,7 @@ class LenderJoinController extends BaseController
 
     public function getJoin()
     {
-        $country = Utility::getCountryCodeByIP();
-
-        return View::make(
-            Request::ajax() ? 'lender.join-modal' : 'lender.join',
-            compact('country'),
-            [
-                'form'            => $this->joinForm,
-                'facebookJoinUrl' => $this->facebookService->getLoginUrl('lender:facebook-join'),
-                'googleJoinUrl'   => $this->googleService->getLoginUrl('lender:google-join') . '&max_auth_age=0',
-            ]
-        );
+        return View::make(Request::ajax() ? 'lender.join-modal' : 'lender.join');
     }
 
     public function postJoin()
