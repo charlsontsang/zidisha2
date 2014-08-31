@@ -7,7 +7,7 @@ Lend
 @section('content-top')
 <div id="mobile-results-desc">
     <p>
-        {{ $countResults }} {{ $selectedLoanCategory ? $selectedLoanCategory->getName() : '' }} Projects
+        {{ $countResults }} {{ $selectedLoanCategory ? $selectedLoanCategory->getName() : '' }} Project{{ $countResults > 1 ? 's' : '' }}
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <a href="#" id="more-projects" data-toggle="collapse" data-target="#toggle-moreProjects" data-toggle-text="Hide Filter">
             @if($countAll > $countResults)
@@ -64,7 +64,8 @@ Lend
                 <p>
                     <span id="results-desc">
                         We found 
-                        <strong>{{ $countResults }} {{ $selectedLoanCategory ? $selectedLoanCategory->getName() : '' }} projects</strong>@if($selectedCountry) in {{ $selectedCountry->getName(); }}@endif.
+                        <strong>{{ $countResults }} {{ $selectedLoanCategory ? $selectedLoanCategory->getName() : '' }} project{{ $countResults > 1 ? 's' : '' }}</strong>
+                        @if($selectedCountry) in {{ $selectedCountry->getName(); }}@endif.
                     </span>
             
                     @if($countAll > $countResults)
