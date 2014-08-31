@@ -8626,10 +8626,12 @@ body {
     background-color: #fff;
   }
 }
+ul.filter-bar {
+  margin-bottom: 0;
+  padding: 0;
+}
 @media (min-width: 768px) {
   ul.filter-bar {
-    margin-bottom: 0;
-    padding: 0;
     display: -webkit-flex;
     -webkit-justify-content: space-between;
   }
@@ -8642,9 +8644,11 @@ body {
   margin-right: 20px !important;
   margin-left: 0 !important;
 }
-.filter-bar > li:last-child {
-  margin-left: 10px;
-  margin-right: -10px;
+@media (min-width: 768px) {
+  .filter-bar > li:last-child {
+    margin-left: 10px;
+    margin-right: -10px;
+  }
 }
 @media (min-width: 992px) {
   .filter-bar > li:last-child {
@@ -8662,7 +8666,6 @@ body {
   }
 }
 .filter-bar .btn {
-  margin-bottom: 12px;
   width: 100%;
   text-align: left;
 }
@@ -8674,13 +8677,15 @@ body {
     text-align: center;
   }
 }
+.filter-bar .btn-filter {
+  margin-bottom: 5px;
+}
 .filter-bar .btn > .fa {
   margin-right: 50px !important;
 }
 .filter-bar .input-group {
   width: 100%;
   max-width: 300px;
-  margin-bottom: 20px;
 }
 @media (min-width: 768px) {
   .filter-bar .input-group {
