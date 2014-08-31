@@ -73,7 +73,8 @@ class LenderController extends BaseController
         $page3 = Request::query('page3') ? : 1;
 
         $activeBids = BidQuery::create()
-            ->getActiveBids($lender, $page);
+            ->filterActiveBids($lender)
+            ->paginate($page , 10);
         $totalBidAmount = BidQuery::create()
             ->getTotalActiveBidAmount($lender);
 
@@ -333,7 +334,8 @@ class LenderController extends BaseController
         $totalImpact = $myImpact->add($totalLentAmount);
 
         $activeBids = BidQuery::create()
-            ->getActiveBids($lender, $page);
+            ->filterActiveBids($lender, $page)
+            ->paginate($page , 10);
         $totalBidAmount = BidQuery::create()
             ->getTotalActiveBidAmount($lender);
         $numberOfFundRaisingBids = $activeBids->getNbResults();
