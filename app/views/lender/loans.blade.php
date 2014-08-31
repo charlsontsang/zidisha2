@@ -121,6 +121,7 @@ My Stats
                 ) }}
             </td>
             <td>{{ $fundraisingLoanBids->getTotalBidAmount()->round(2)->getAmount() }} Lent</td>
+            <td></td>
         </tr>
     </tfoot>
 </table>
