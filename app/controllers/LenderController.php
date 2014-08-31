@@ -73,10 +73,10 @@ class LenderController extends BaseController
         $page3 = Request::query('page3') ? : 1;
 
         $activeBids = BidQuery::create()
-            ->filterActiveBids($lender)
+            ->filterFundraisingBids($lender)
             ->paginate($page , 10);
         $totalBidAmount = BidQuery::create()
-            ->getTotalActiveBidAmount($lender);
+            ->getTotalFundraisingBidAmount($lender);
 
         $activeLoansBids = BidQuery::create()
             ->getActiveLoansBids($lender, $page2);
@@ -333,15 +333,15 @@ class LenderController extends BaseController
         $myImpact = $this->lenderService->getMyImpact($lender);
         $totalImpact = $myImpact->add($totalLentAmount);
 
-        $activeBids = BidQuery::create()
-            ->filterActiveBids($lender, $page)
+        $fundraisingBids = BidQuery::create()
+            ->filterFundraisingBids($lender, $page)
             ->paginate($page , 10);
         $totalBidAmount = BidQuery::create()
-            ->getTotalActiveBidAmount($lender);
+            ->getTotalFundraisingBidAmount($lender);
         $numberOfFundRaisingProjects = \Lang::choice(
             'lender.flash.preferences.stats-projects',
-            $activeBids->getNbResults(),
-            ['count' => $activeBids->getNbResults()]
+            $fundraisingBids->getNbResults(),
+            ['count' => $fundraisingBids->getNbResults()]
         );
 
         $activeLoansBids = BidQuery::create()
@@ -425,7 +425,7 @@ class LenderController extends BaseController
         }
 
        return View::make('lender.loans', compact('currentBalance', 'totalFundsUpload', 'numberOfLoans', 
-                'totalLentAmount', 'myImpact', 'totalImpact' , 'loans', 'activeBids', 'totalBidAmount',
+                'totalLentAmount', 'myImpact', 'totalImpact' , 'loans', 'fundraisingBids', 'totalBidAmount',
                 'activeLoansBids', 'totalActiveLoansBidsAmount', 'completedLoansBids', 'totalCompletedLoansBidsAmount',
                 'numberOfFundRaisingProjects', 'lenderInviteCredit',
                 'numberOfActiveProjects', 'numberOfCompletedProjects', 'principleOutstanding',

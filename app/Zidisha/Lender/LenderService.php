@@ -498,7 +498,7 @@ class LenderService
         if ($invitesCount > 0) {
             foreach ($invites as $invite) {
                 $totalBidAmount = $bidQuery
-                    ->getTotalActiveBidAmount($invite->getInvitee());
+                    ->getTotalFundraisingBidAmount($invite->getInvitee());
 
                 $totalOpenLoanBidAmount = $bidQuery
                     ->getTotalOpenLoanBidAmount($invite->getInvitee());
@@ -510,7 +510,7 @@ class LenderService
         if ($giftCardsCount > 0) {
             foreach ($giftCards as $giftCard) {
                 $totalBidAmount = $bidQuery
-                    ->getTotalActiveBidAmount($giftCard->getRecipient());
+                    ->getTotalFundraisingBidAmount($giftCard->getRecipient());
 
                 $totalOpenLoanBidAmount = $bidQuery
                     ->getTotalOpenLoanBidAmount($giftCard->getRecipient());
@@ -519,7 +519,7 @@ class LenderService
             }
         }
         //total amount this lender has lent for loans already funded
-        $totalInvested = $bidQuery->getTotalActiveBidAmount($lender);
+        $totalInvested = $bidQuery->getTotalFundraisingBidAmount($lender);
         $totalActiveLoanBidAmount = $bidQuery->getTotalOpenLoanBidAmount($lender); //total amount in not yet funded bids
         $totalImpact = intval($totalInvested->getAmount()) + $totalActiveLoanBidAmount + $inviteImpact + $giftCardImpact;
         return $totalImpact;
