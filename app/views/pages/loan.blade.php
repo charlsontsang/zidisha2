@@ -400,7 +400,7 @@
 
             <div class="col-sm-4 loan-side" style="padding-left:0;">
                 @if($loan->isOpen())       
-                <div class="panel panel-default panel-body sidenav">
+                <div class="panel panel-default panel-body sidenav bid-form">
                 @else
                 <div class="panel panel-default panel-body">
                 @endif
@@ -670,8 +670,29 @@
         }
     });
     $('.nav-tabs a').click(function (e) {
-        e.preventDefault()
-        $(this).tab('show')
-    })
+        e.preventDefault();
+        $(this).tab('show');
+    });
+    $('#mobile-lend-btn').on('click', function() {
+        var $modal = $($('#modal-template').html()),
+            $form = $('.lend-form');
+        
+        $modal.find('.modal-body').append($form);
+        $modal.modal();
+        
+        $modal.on('hidden.bs.modal', function (e) {
+            $('.bid-form').append($form);
+        })
+    });
+</script>
+<script type="text/html" id="modal-template">
+    <div class="modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                </div>
+            </div>
+        </div>
+    </div>
 </script>
 @stop
