@@ -115,7 +115,7 @@ My Stats
         <tr>
             <td colspan="3"><strong>Total</strong></td>
             <td>{{ $numberOfFundRaisingProjects }}</td>
-            <td>{{ $totalBidAmount->getAmount() }} Lent</td>
+            <td>{{ $totalFundraisingBidAmount->getAmount() }} Lent</td>
         </tr>
     </tfoot>
 </table>

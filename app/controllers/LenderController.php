@@ -336,7 +336,7 @@ class LenderController extends BaseController
         $fundraisingBids = BidQuery::create()
             ->filterFundraisingBids($lender, $page)
             ->paginate($page , 10);
-        $totalBidAmount = BidQuery::create()
+        $totalFundraisingBidAmount = BidQuery::create()
             ->getTotalFundraisingBidAmount($lender);
         $numberOfFundRaisingProjects = \Lang::choice(
             'lender.flash.preferences.stats-projects',
@@ -433,7 +433,7 @@ class LenderController extends BaseController
            'totalImpact',
            'loans',
            'fundraisingBids',
-           'totalBidAmount',
+           'totalFundraisingBidAmount',
            'activeLoansBids',
            'totalActiveLoansBidsAmount',
            'completedLoansBids',
