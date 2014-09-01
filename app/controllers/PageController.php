@@ -83,7 +83,7 @@ class PageController extends BaseController {
             ->filterByPublished(true)
             ->orderByCreatedAt('desc')
             ->joinWith('User')
-            ->paginateWithUploads($page, 10);
+            ->paginateWithUploads($page, 20);
 
         return View::make('pages.project-updates', compact('comments'));
     }
