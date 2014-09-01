@@ -52,7 +52,7 @@
 <div class="container">
   <div class="row home-section info-page home text-center">
     <div class="col-sm-12">
-      <h2 class="alpha">What makes Zidisha different?</h2>
+      <h2>What makes Zidisha different?</h2>
     </div>
 
     <div class="col-sm-4">
@@ -81,7 +81,7 @@
 </div>
 <div class="container-fluid home-section home-grey info-page home">
   <div class="container">
-    <div class="row">
+    <div class="row press">
       <div class="col-sm-3">
         <p><a href="http://blogs.wsj.com/venturecapital/2014/08/25/y-combinator-nonprofit-zidisha-changes-microfinance-equation/" target="_blank"><img src="/assets/images/pages/press/wsj_logo.png" width="110%" class="press-logo" /></a></p>
       </div>

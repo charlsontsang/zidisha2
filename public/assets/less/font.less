@@ -2,13 +2,20 @@
   font-weight: 300;
 }
 .text-large {
-  font-size: 22px !important;
+  @media (min-width: @screen-sm-min) {
+    font-size: 22px !important;
+  }
+}
+.lead {
+  @media (max-width: @screen-xs-max) {
+    font-weight: 400;
+  }  
 }
 .alpha {
-  margin-top: 0;
+  margin-top: 0 !important;
 }
 .omega {
-  margin-bottom: 0;
+  margin-bottom: 0 !important;
 }
 h5 {
   margin-top: 1.5em;
