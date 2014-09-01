@@ -15,6 +15,7 @@ use Zidisha\Currency\ExchangeRate;
 use Zidisha\Currency\ExchangeRateQuery;
 use Zidisha\Currency\Money;
 use Zidisha\Lender\Lender;
+use Zidisha\Lender\LenderQuery;
 use Zidisha\Loan\Base\BidQuery;
 use Zidisha\Loan\Calculator\BidsCalculator;
 use Zidisha\Loan\Calculator\InstallmentCalculator;
@@ -90,7 +91,11 @@ class LoanService
         });
 
         $this->borrowerMailer->sendLoanConfirmationMail($borrower, $loan);
-        // TODO send mail to previous lenders
+        
+        $lenders = $this->getLendersForNewLoanNotificationMail($loan);
+        foreach($lenders as $lender) {
+            $this->lenderMailer->sendNewLoanNotificationMail($loan, $lender);
+        }
         
         $this->addToLoanIndex($loan);
         
@@ -183,6 +188,17 @@ class LoanService
         $this->updateLoanIndex($loan);
 
         return $loan;
+    }
+
+    protected function getLendersForNewLoanNotificationMail(Loan $loan)
+    {
+        // TODO see $database->getLendersEmailForLoanApp
+        $lenderIds = [];
+        $lenders = LenderQuery::create()
+            ->filterById($lenderIds)
+            ->find();
+
+        return $lenders;
     }
 
     protected function getLoanIndex()
