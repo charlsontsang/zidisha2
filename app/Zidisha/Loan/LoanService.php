@@ -127,6 +127,64 @@ class LoanService
         return $loan;
     }
 
+    protected function setLoanDetails(
+        Borrower $borrower,
+        Loan $loan,
+        $data,
+        $currencyCode = null,
+        $registrationFee = null,
+        $siftScienceScore = null
+    ) {
+        $loan
+            ->setSummary($data['summary'])
+            ->setProposal($data['proposal'])
+            ->setUsdAmount(Money::create($data['usdAmount'], 'USD'))
+            ->setInstallmentPeriod($borrower->getCountry()->getInstallmentPeriod())
+            ->setMaxInterestRate(Setting::get('loan.maximumLenderInterestRate') + Setting::get('loan.transactionFeeRate'))
+            ->setServiceFeeRate(Setting::get('loan.transactionFeeRate'))
+            ->setInstallmentDay($data['installmentDay'])
+            ->setCategoryId($data['categoryId'])
+            ->setBorrower($borrower);
+
+        if ($registrationFee != null) {
+            $loan->setRegistrationFee($registrationFee)
+                ->setAppliedAt($data['date'])
+                ->setCurrencyCode($currencyCode)
+                ->setStatus(Loan::OPEN)
+                ->setSiftScienceScore($siftScienceScore)
+                ->setAmount(Money::create($data['amount'], $currencyCode));
+            $installmentAmount = Money::create($data['installmentAmount'], $currencyCode);
+        }else {
+            $loan
+                ->setAmount(Money::create($data['amount'], $loan->getCurrencyCode()));
+            $installmentAmount = Money::create($data['installmentAmount'], $loan->getCurrencyCode());
+
+        }
+
+        $calculator = new InstallmentCalculator($loan);
+        $period = $calculator->period($installmentAmount);
+
+        $loan->setPeriod($period);
+
+        return $loan;
+    }
+
+    public function updateLoanApplication(Borrower $borrower,Loan $loan, $data)
+    {
+        $data['exchangeRate'] = ExchangeRateQuery::create()->findCurrent($borrower->getCountry()->getCurrency());
+        $exchangeRate = $data['exchangeRate'];
+        $data['usdAmount'] = Converter::toUSD(Money::create($data['amount'], $loan->getCurrencyCode()),$exchangeRate)->getAmount();
+
+        $loan = $this->setLoanDetails($borrower, $loan, $data);
+        $loan->save();
+
+        $this->sendLoanFullyFundedNotification($loan);
+
+        $this->updateLoanIndex($loan);
+
+        return $loan;
+    }
+
     protected function getLoanIndex()
     {
         if ($this->loanIndex) {
@@ -1141,64 +1199,6 @@ class LoanService
         }
         
         return true;        
-    }
-
-    public function updateLoanApplication(Borrower $borrower,Loan $loan, $data)
-    {
-        $data['exchangeRate'] = ExchangeRateQuery::create()->findCurrent($borrower->getCountry()->getCurrency());
-        $exchangeRate = $data['exchangeRate'];
-        $data['usdAmount'] = Converter::toUSD(Money::create($data['amount'], $loan->getCurrencyCode()),$exchangeRate)->getAmount();
-
-        $loan = $this->setLoanDetails($borrower, $loan, $data);
-        $loan->save();
-        
-        $this->sendLoanFullyFundedNotification($loan);
-        
-        $this->updateLoanIndex($loan);
-        
-        return $loan;
-    }
-
-    protected function setLoanDetails(
-        Borrower $borrower,
-        Loan $loan,
-        $data,
-        $currencyCode = null,
-        $registrationFee = null,
-        $siftScienceScore = null
-    ) {
-        $loan
-            ->setSummary($data['summary'])
-            ->setProposal($data['proposal'])
-            ->setUsdAmount(Money::create($data['usdAmount'], 'USD'))
-            ->setInstallmentPeriod($borrower->getCountry()->getInstallmentPeriod())
-            ->setMaxInterestRate(Setting::get('loan.maximumLenderInterestRate') + Setting::get('loan.transactionFeeRate'))
-            ->setServiceFeeRate(Setting::get('loan.transactionFeeRate'))
-            ->setInstallmentDay($data['installmentDay'])
-            ->setCategoryId($data['categoryId'])
-            ->setBorrower($borrower);
-
-        if ($registrationFee != null) {
-            $loan->setRegistrationFee($registrationFee)
-                ->setAppliedAt($data['date'])
-                ->setCurrencyCode($currencyCode)
-                ->setStatus(Loan::OPEN)
-                ->setSiftScienceScore($siftScienceScore)
-                ->setAmount(Money::create($data['amount'], $currencyCode));
-            $installmentAmount = Money::create($data['installmentAmount'], $currencyCode);
-        }else {
-            $loan
-                ->setAmount(Money::create($data['amount'], $loan->getCurrencyCode()));
-            $installmentAmount = Money::create($data['installmentAmount'], $loan->getCurrencyCode());
-
-        }
-
-        $calculator = new InstallmentCalculator($loan);
-        $period = $calculator->period($installmentAmount);
-
-        $loan->setPeriod($period);
-
-        return $loan;
     }
 
     /**
