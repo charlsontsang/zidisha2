@@ -1,15 +1,41 @@
-.home p.lead {
+.home-section {
+  padding: 30px 15px; 
   @media (min-width: @screen-sm-min) {
-    line-height: 31px;
+    padding: 50px 15px; 
   }
 }
-.home h2.lead {
-  font-weight: 600 !important;
+.home-grey {
+  background-color: #f8f8f8;
+  border: 1px solid #e0e0e0; 
+}
+.home .result {
+  height: 300px;
+  background-color: #fff;
 }
 .home h1, .home h2, .home h3 {
   @media (max-width: @screen-xs-max) {
     font-size: 22px;
   }
+}
+.home h2 {
+  @media (min-width: @screen-sm-min) {
+    margin-bottom: 22px;
+  }
+}
+.home p.lead {
+  @media (min-width: @screen-sm-min) {
+    line-height: 31px;
+  }
+}
+.home .lend-title h2 {
+  font-weight: normal;
+}
+.home .fa {
+  font-size: 50px;  
+  margin-bottom: 0;
+}
+.home blockquote {
+  text-align: left !important;
 }
 #see-all {
   font-size: 16px;
@@ -17,17 +43,6 @@
 }
 .home #funding-tag {
     display: inline-block !important;
-}
-.home h3 {
-  margin-top: 0;
-}
-.home .fa {
-  font-size: 50px; 
-  margin-top: 30px; 
-  margin-bottom: 0;
-}
-.home blockquote {
-  text-align: left !important;
 }
 .home img.press-logo {
   @media (max-width: @screen-xs-max) {
@@ -55,21 +70,4 @@
 .btn-home:hover {
   background-color: @brand-primary;
   color: #fff;
-}
-.home-section {
-  padding: 30px 15px; 
-  @media (min-width: @screen-sm-min) {
-    padding: 50px 15px; 
-  }
-}
-.home-grey {
-  background-color: #f8f8f8;
-  border: 1px solid #e0e0e0; 
-}
-.home .result {
-  height: 300px;
-  background-color: #fff;
-}
-.home .lend-title h2 {
-  font-weight: normal;
 }

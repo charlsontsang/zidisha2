@@ -56,19 +56,19 @@
     </div>
 
     <div class="col-sm-4">
-      <h3><i class="fa fa-fw fa-dollar"></i></h3>
+      <h3 class="alpha"><i class="fa fa-fw fa-dollar"></i></h3>
       <h4>Lower cost for borrowers</h4>
       <p>Profits from the loans go to the borrowers and their communities, not to intermediaries.</p>
     </div>
 
     <div class="col-sm-4">
-      <h3><i class="fa fa-fw fa-sun-o"></i></h3>
+      <h3 class="alpha"><i class="fa fa-fw fa-sun-o"></i></h3>
       <h4>Transparency for lenders</h4>
       <p>We display the full cost of the loan and let lenders choose the interest rate.</p>
     </div>
 
     <div class="col-sm-4">
-      <h3><i class="fa fa-fw fa-comments"></i></h3>
+      <h3 class="alpha"><i class="fa fa-fw fa-comments"></i></h3>
       <h4>Direct communication</h4>
       <p>Borrowers post their own loan proposals, answer questions and share updates with you directly.</p>
     </div>
