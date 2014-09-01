@@ -1,0 +1,85 @@
+.text-light {
+  font-weight: 300;
+}
+.text-large {
+  font-size: 22px !important;
+}
+.alpha {
+  margin-top: 0;
+}
+.omega {
+  margin-bottom: 0;
+}
+h5 {
+  margin-top: 1.5em;
+  margin-bottom: .5em;
+}
+h5.alpha {
+  display: inline-block;
+}
+a.inverted {
+  color: @text-color;
+}
+a.inverted:hover {
+  color: @link-color;
+}
+hr {
+  border-top: 1px solid @gray-lighter;
+}
+.hr-text {
+  position: relative;
+  color: @gray;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.hr-text hr {
+  background-color: #cdcdcd;
+  height: 1px;
+  margin-top: 0px !important;
+  margin-bottom: 0px !important;
+}
+.hr-text span {
+  display: block;
+  position: absolute;
+  left: 50%;
+  top: -2px;
+  margin-left: -25px;
+  background-color: #fff;
+  width: 50px;
+  text-align: center;
+}
+.info-page h3 {
+  font-size: 1.5em;
+  line-height: 1em;
+  margin-top: 1.25em;
+  @media (min-width: @screen-sm-min) {
+    font-size: 24px;
+    line-height: 24px;
+  }
+}
+.info-page p, .info-page ul li, .info-page ol li {
+  margin-top: 0;
+  font-size: 16px;
+  line-height: 23px;
+  @media (min-width: @screen-sm-min) {
+    line-height: 25px;
+  }
+  @media (min-width: @screen-sm-min) {
+    font-size: 18px;
+    font-weight: 300;
+    line-height: 28px;
+  }
+}
+.info-page p, {
+  margin-bottom: 1em;
+}
+.info-page hr {
+  margin: 3em 0;
+}
+.lender-welcome h1 {
+  @media (min-width: @screen-sm-min) {
+    margin-top: 50px;
+  }
+}
