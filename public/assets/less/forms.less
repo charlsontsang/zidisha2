@@ -4,15 +4,14 @@
 .form-control {
 	.box-shadow(none);
 }
-.modal-body .btn {
- 	margin-bottom: 11px;
- }
-.modal-body .btn-primary {
-	margin-top: 11px;
- }
- .hide-label label {
+.hide-label label {
 	display: none;
- }
+}
+@modal-sm: 340px;
+.modal-sm { 
+  width: @modal-sm;
+  margin: 30px auto;
+}
 .modal-dialog {
 	@media (max-width: @screen-xs-max) {
 		margin: 0;
@@ -29,3 +28,9 @@
 #join-modal, #login-modal {
 	z-index: 2000;
 }
+.modal-body .btn {
+ 	margin-bottom: 11px;
+ }
+.modal-body .btn-primary {
+	margin-top: 11px;
+ }

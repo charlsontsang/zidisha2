@@ -1,35 +1,6 @@
-.text-light {
-  font-weight: 300;
-}
-.text-large {
-  font-size: 22px !important;
-}
-.gutter-xs {
-  padding-left: 2px;
-  padding-right: 2px;
-}
-.alpha {
-  margin-top: 0;
-}
-h5 {
-  margin-top: 1.5em;
-  margin-bottom: .5em;
-}
-h5.alpha {
-  display: inline-block;
-}
-.omega {
-  margin-bottom: 0;
-}
-a.inverted {
-  color: @text-color;
-}
-a.inverted:hover {
-  color: @link-color;
-}
-hr {
-  border-top: 1px solid @gray-lighter;
-}
+/* page sections */
+
+/* prevent floating footer */
 body {
   padding-bottom: 0 !important;
 }
@@ -58,6 +29,61 @@ body {
 .page-section-inverted a {
   color: #e6e6e6;
 }
+.gutter-xs {
+  padding-left: 2px;
+  padding-right: 2px;
+}
+.mobile-padding {
+  @media (max-width: @screen-xs-max) {
+    padding-bottom: 15px !important;
+  }
+}
+.profile-image {
+    width: 100%;
+    min-height: 200px;
+    /* lt ie8 */
+    -ms-background-position-x: center;
+    -ms-background-position-y: center;
+    background-position: center top;
+
+    /* scale bg image proportionately */
+    background-size: cover;
+    
+    /* ie8 workaround - http://louisremi.github.io/background-size-polyfill/ */
+    -ms-behavior: url(/backgroundsize.min.htc);
+}
+
+
+/* font styles */
+
+.text-light {
+  font-weight: 300;
+}
+.text-large {
+  font-size: 22px !important;
+}
+.alpha {
+  margin-top: 0;
+}
+.omega {
+  margin-bottom: 0;
+}
+h5 {
+  margin-top: 1.5em;
+  margin-bottom: .5em;
+}
+h5.alpha {
+  display: inline-block;
+}
+a.inverted {
+  color: @text-color;
+}
+a.inverted:hover {
+  color: @link-color;
+}
+hr {
+  border-top: 1px solid @gray-lighter;
+}
 .hr-text {
   position: relative;
   color: @gray;
@@ -82,11 +108,43 @@ body {
   width: 50px;
   text-align: center;
 }
-@modal-sm: 340px;
-.modal-sm { 
-  width: @modal-sm;
-  margin: 30px auto;
+.info-page h3 {
+  font-size: 1.5em;
+  line-height: 1em;
+  margin-top: 1.25em;
+  @media (min-width: @screen-sm-min) {
+    font-size: 24px;
+    line-height: 24px;
+  }
 }
+.info-page p, .info-page ul li, .info-page ol li {
+  margin-top: 0;
+  font-size: 16px;
+  line-height: 23px;
+  @media (min-width: @screen-sm-min) {
+    line-height: 25px;
+  }
+  @media (min-width: @screen-sm-min) {
+    font-size: 18px;
+    font-weight: 300;
+    line-height: 28px;
+  }
+}
+.info-page p, {
+  margin-bottom: 1em;
+}
+.info-page hr {
+  margin: 3em 0;
+}
+.lender-welcome h1 {
+  @media (min-width: @screen-sm-min) {
+    margin-top: 50px;
+  }
+}
+
+
+/* components */
+
 .badge-danger {
   background-color: @brand-danger;
 }
@@ -100,6 +158,23 @@ body {
   color: @gray-light;
   margin-left: 2px;
 }
+.circle {
+    border-radius: 30px;
+    border: 1px solid #dfdcdc;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    margin: 0 auto;
+    margin-top: -6px;
+}
+.circle p {
+    margin-top: -1px;
+}
+
+
+/* button styles */
+
 .btn {
   border-radius: 2px;
 }
@@ -137,7 +212,6 @@ body {
 .lender-dashboard-btn {
   margin: -7px 0 5px 0;
 }
-
 .lender-funds-page .btn {
   margin: 0 15px 0 0;
   @media (max-width: @screen-xs-max) {
@@ -150,66 +224,40 @@ body {
     width: 30%;
   }
 }
-
-.mobile-padding {
-  @media (max-width: @screen-xs-max) {
-    padding-bottom: 15px !important;
-  }
-}
-
-.form-control {
-  .box-shadow(none);
-}
-
-.tooltip-inner {
-  border: solid 1px #ccc;
-  padding: 12px;
-  text-align: left;
-}
-
-.circle {
-    border-radius: 30px;
-    border: 1px solid #dfdcdc;
-    width: 40px;
-    height: 40px;
-    text-align: center;
-    line-height: 40px;
-    margin: 0 auto;
-    margin-top: -6px;
-}
-.circle p {
-    margin-top: -1px;
-}
-
-/* Static info pages */
-.info-page h3 {
-  font-size: 1.5em;
-  line-height: 1em;
-  margin-top: 1.25em;
+.lender-welcome .btn {
+  width: 100%;
   @media (min-width: @screen-sm-min) {
-    font-size: 24px;
-    line-height: 24px;
+    width: auto;
+    position: absolute; 
+    top: 100px;
   }
 }
-.info-page p, .info-page ul li, .info-page ol li {
-  margin-top: 0;
-  font-size: 16px;
-  line-height: 23px;
+.btn-social {
+  width: 30%;
+  line-height: 30px;
+  margin-right: 5px;
+  padding-left: 5px;
+  font-size: 18px;
   @media (min-width: @screen-sm-min) {
-    line-height: 25px;
-  }
-  @media (min-width: @screen-sm-min) {
-    font-size: 18px;
-    font-weight: 300;
-    line-height: 28px;
+    font-size: 22px;
   }
 }
-.info-page p, {
-  margin-bottom: 1em;
+.btn-twitter {
+  color: #ffffff;
+  background-color: #55acee;
+  border-color: #3b88c3;
 }
-.info-page hr {
-  margin: 3em 0;
+.btn-twitter:hover {
+  background-color: lighten(#55acee, 5%);
+  color: white;
 }
+.btn-danger:hover {
+  background-color: lighten(@brand-danger, 5%);
+  color: white;
+}
+
+
+/* tables */
 
 @media (max-width: @screen-xs-max) {
     
@@ -261,44 +309,6 @@ body {
   .no-more-tables td:before { content: attr(data-title) !important; }
 }
 
-.profile-image {
-    width: 100%;
-    min-height: 200px;
-    /* lt ie8 */
-    -ms-background-position-x: center;
-    -ms-background-position-y: center;
-    background-position: center top;
-
-    /* scale bg image proportionately */
-    background-size: cover;
-    
-    /* ie8 workaround - http://louisremi.github.io/background-size-polyfill/ */
-    -ms-behavior: url(/backgroundsize.min.htc);
-}
-.btn-social {
-  width: 30%;
-  line-height: 30px;
-  margin-right: 5px;
-  padding-left: 5px;
-  font-size: 18px;
-  @media (min-width: @screen-sm-min) {
-    font-size: 22px;
-  }
-}
-.btn-twitter {
-  color: #ffffff;
-  background-color: #55acee;
-  border-color: #3b88c3;
-}
-.btn-twitter:hover {
-  background-color: lighten(#55acee, 5%);
-  color: white;
-}
-.btn-danger:hover {
-  background-color: lighten(@brand-danger, 5%);
-  color: white;
-}
-
 .dl-horizontal.dl-horizontal-left dt {
   text-align: left;
 }
@@ -309,18 +319,5 @@ body {
 .table.table-borderless {
   th, td {
     border-top: none;
-  }
-}
-.lender-welcome h1 {
-  @media (min-width: @screen-sm-min) {
-    margin-top: 50px;
-  }
-}
-.lender-welcome .btn {
-  width: 100%;
-  @media (min-width: @screen-sm-min) {
-    width: auto;
-    position: absolute; 
-    top: 100px;
   }
 }
