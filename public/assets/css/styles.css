@@ -9206,6 +9206,11 @@ hr {
     width: 293px;
   }
 }
+/* make sidebar scrollable */
+.sidenav ul {
+  overflow-y: auto;
+  height: 500px;
+}
 .footer {
   margin-bottom: 0;
   padding-bottom: 0;
