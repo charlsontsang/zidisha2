@@ -13,7 +13,7 @@ class DatabaseMigration extends Command {
 	 *
 	 * @var string
 	 */
-	protected $name = 'migrateDB';
+	protected $name = 'migrate-zidisha1';
 
 	/**
 	 * The console command description.
@@ -97,35 +97,90 @@ class DatabaseMigration extends Command {
             $this->line('Migrate users table');
 
             $count = $this->con->table('users')->count();
-            $offset = 0;
+            $this->line("    $count users");
+            
             $limit = 500;
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
-                $users = $this->con->table('users')
-                    ->join('lenders', 'users.userid', '=', 'lenders.userid')
-                    ->join('borrowers', 'users.userid', '=', 'borrowers.userid')
-                    ->where($offset)->take($limit)->get();
+            for ($offset = 0; $offset < $count; $offset += $limit) {
+                $this->line($offset);
+                $users = $this->con->table('users as u')
+                    ->select(
+                        'u.*',
+                        'l.userid as lUserid',
+                        'l.Email as lEmail',
+                        'l.Active as lActive',
+                        'b.userid as bUserid',
+                        'b.Email as bEmail',
+                        'b.Active as bActive',
+                        'p.userid as pUserid',
+                        'p.Email as pEmail',
+                        'p.Active as pActive'
+                    )
+                    ->leftJoin('lenders as l', 'u.userid', '=', 'l.userid')
+                    ->leftJoin('borrowers as b', 'u.userid', '=', 'b.userid')
+                    ->leftJoin('partners as p', 'u.userid', '=', 'p.userid')
+                    ->skip($offset)
+                    ->take($limit)
+                    ->orderBy('u.userid', 'asc')
+                    ->get();
 
                 $userArray = [];
 
+                $roles = [
+                    1 => 1, // borrower
+                    4 => 0, // lender
+                    6 => 2, // partner                  
+                    9 => 3, // admin
+                ];
+                               
                 foreach ($users as $user) {
+                    // lender
+                    if ($user->lUserid !== null) {
+                        $active = $user->lActive ? true : false;
+                        $email = $user->lEmail;
+                        $role = 0;
+                    }
+                    // borrower
+                    elseif ($user->bUserid !== null) {
+                        $active = $user->lActive ? true : false;
+                        $email = $user->lEmail;
+                        $role = 1;
+                    }
+                    elseif ($user->userid == 92) { // TODO, partner?
+                        $active = true;
+                        $email = 'admin@zidisha.org';
+                        $role = 3;
+                    }
+                    // partner
+                    elseif ($user->pUserid !== null) {
+                        $active = $user->pActive ? true : false;
+                        $email = $user->pEmail;
+                        $role = 2;
+                    }
+                    else {
+                        $active = false;
+                        $email = 'fake_email_' . $user->userid . '@zidisha.org';
+                        $role = $roles[$user->userlevel];
+                    }
+                                        
                     $newUser = [
-                        'id'                 => $user['users.userid'],
-                        'username'           => $user['users.username'],
-                        'email'              => $user['lenders.Email'] ? $user['lenders.Email'] : $user['borrowers.Email'],
-                        'password'           => $user['users.password'],
-                        'profile_picture_id' => 'TODO',
-                        'facebook_id'        => $user['users.facebook_id'],
+                        'id'                 => $user->userid,
+                        'username'           => $user->username,
+                        'email'              => $email,
+                        'password'           => $user->password,
+                        'profile_picture_id' => null, // TODO
+                        'facebook_id'        => $user->facebook_id,
                         'google_id'          => null, // since google login is now added
                         'google_picture'     => null,
-                        'remember_token'     => 'TODO',
-                        'role'               => null, //TODO , once i know how it's in old db
-                        'sub_role'           => null, //TODO , once i know how it's in old db
-                        'joined_at'          => date("Y-m-d H:i:s", $user['users.regdate']),
-                        'last_login_at'      => date("Y-m-d H:i:s", $user['users.last_login']),
-                        'active'             => $user['lenders.Active'] ? $user['lenders.Active'] : $user['borrowers.Active']
-                    ];
+                        'remember_token'     => null, // this cannot be shared between old and new codebase
+                        'role'               => $role,
+                        'sub_role'           => null, // TODO
+                        'joined_at'          => date("Y-m-d H:i:s", $user->regdate),
+                        'last_login_at'      => date("Y-m-d H:i:s", $user->last_login),
+                        'created_at'         => date("Y-m-d H:i:s", $user->regdate),
+                        'active'             => $active,
+                    ];  
 
-                    array_push($userArray, $newUser);
+                    $userArray[] = $newUser;
                 }
                 DB::table('users')->insert($userArray);
             }

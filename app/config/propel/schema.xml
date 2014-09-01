@@ -4,14 +4,14 @@
     <table name="users" phpName="User" namespace="User">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="username" type="VARCHAR" size="20" required="true"/>
-        <column name="email" type="VARCHAR" size="100" required="true"/>
+        <column name="email" type="VARCHAR" size="100" required="false"/>
         <column name="password" type="VARCHAR" size="60" required="false"/>
         <column name="profile_picture_id" type="INTEGER" required="false"/>
-        <column name="facebook_id" type="BIGINT" required="false"/>
+        <column name="facebook_id" type="VARCHAR" required="false"/>
         <column name="google_id" type="VARCHAR" required="false"/>
         <column name="google_picture" type="LONGVARCHAR" required="false"/>
         <column name="remember_token" type="VARCHAR" size="100" required="false"/>
-        <column name="role" type="ENUM" valueSet="lender, borrower, admin"/>
+        <column name="role" type="ENUM" valueSet="lender, borrower, partner, admin"/>
         <column name="sub_role" type="ENUM" valueSet="volunteer, volunteerMentor"/>
         <column name="joined_at" type="TIMESTAMP"/>
         <column name="last_login_at" type="TIMESTAMP"/>
@@ -23,9 +23,9 @@
         <unique>
             <unique-column name="username"/>
         </unique>
-        <unique>
-            <unique-column name="email"/>
-        </unique>
+        <!--<unique>-->
+            <!--<unique-column name="email"/>-->
+        <!--</unique>-->
     </table>
 
     <table name="loan_categories" phpName="Category" namespace="Loan">
