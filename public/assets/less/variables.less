@@ -9,8 +9,8 @@
 
 @gray-darker:            screen(lighten(#000, 13.5%), #333232);
 @gray-dark:              #333232;   
-@gray:                   screen(lighten(#000, 33.5%), #333232);
-@gray-light:             screen(lighten(#000, 60%), #333232);
+@gray:                   #404040;
+@gray-light:             screen(lighten(#000, 33%), #333232);
 @gray-lighter:           screen(lighten(#000, 93.5%), #333232);
 
 @brand-primary:         #2e9df7;
@@ -39,7 +39,7 @@
 //
 //## Font, line-height, and color for body text, headings, and more.
 
-@font-family-sans-serif:  "Helvetica Neue", Helvetica, Arial, sans-serif;
+@font-family-sans-serif:  "Lato", Helvetica, Arial, sans-serif;
 @font-family-serif:       Georgia, "Times New Roman", Times, serif;
 //** Default monospace fonts for `<code>`, `<kbd>`, and `<pre>`.
 @font-family-monospace:   Menlo, Monaco, Consolas, "Courier New", monospace;
@@ -63,9 +63,9 @@
 
 //** By default, this inherits from the `<body>`.
 @headings-font-family:    inherit;
-@headings-font-weight:    300;
+@headings-font-weight:    600;
 @headings-line-height:    1.1;
-@headings-color:          inherit;
+@headings-color:          @gray;
 
 
 //-- Iconography
