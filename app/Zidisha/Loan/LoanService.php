@@ -751,7 +751,7 @@ class LoanService
         }
     }
 
-    public function authorizeLoan($loan, $data)
+    public function authorizeLoan(Loan $loan, $data)
     {
         $data += [
             'authorizedAt' => new \DateTime(),
@@ -819,7 +819,14 @@ class LoanService
 
         $this->updateLoanIndex($loan);
 
-        //TODO Send email / sift sience event
+        // TODO, lenders + bid amount
+        $lenders = [];
+        foreach ($lenders as $lender) { 
+            $this->lenderMailer->sendDisbursedLoanMail($loan, $lender);
+        }
+        $this->borrowerMailer->sendDisbursedLoanMail($loan);
+        
+        // TODO sift science event
     }
 
     protected function getLenderRefunds($transactions)

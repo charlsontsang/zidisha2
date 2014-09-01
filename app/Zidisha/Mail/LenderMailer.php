@@ -452,4 +452,9 @@ class LenderMailer
 
         return $data;
     }
+
+    public function sendDisbursedLoanMail(Loan $loan, Lender $lender)
+    {
+        // TODO see $session->updateActiveLoan, sendwithus tag LENDER_DISBURSED_TAG
+    }
 }

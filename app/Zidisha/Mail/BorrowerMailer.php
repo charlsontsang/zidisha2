@@ -295,6 +295,11 @@ class BorrowerMailer{
 
     public function sendLoanFullyFundedMail($loan)
     {
-        /// See $session->SendFullyFundedMail
+        // TODO See $session->SendFullyFundedMail
+    }
+
+    public function sendDisbursedLoanMail($loan)
+    {
+        // TODO see $session->updateActiveLoan, sendwithus tag BORROWER_NOTIFICATIONS_TAG
     }
 }
