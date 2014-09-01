@@ -9103,6 +9103,11 @@ hr {
 }
 @media (min-width: 768px) {
   .sidenav {
+    padding-left: 10px;
+  }
+}
+@media (min-width: 992px) {
+  .sidenav {
     padding-left: 20px;
   }
 }
@@ -9139,7 +9144,7 @@ hr {
 }
 .sidenav .nav .nav > li > a {
   padding-top: 1px;
-  padding-bottom: 1px;
+  padding-bottom: 10px;
   padding-left: 30px;
   font-size: 16px;
   font-weight: normal;
@@ -9187,7 +9192,7 @@ hr {
   /* Widen the fixed sidebar */
   .sidenav.affix,
   .sidenav.affix-bottom {
-    width: 280px;
+    width: 200px;
   }
   .sidenav.affix {
     position: fixed;
@@ -9204,7 +9209,7 @@ hr {
     margin-bottom: 0;
   }
 }
-@media (min-width: 768px) and (min-width: 768px) {
+@media (min-width: 768px) and (min-width: 992px) {
   .sidenav.affix,
   .sidenav.affix-bottom {
     width: 293px;
