@@ -46,7 +46,6 @@ class BorrowerMailerTester
         $this->borrowerMailer->sendBorrowerJoinedConfirmationMail($borrower);
     }
 
-
     public function sendExpiredLoanMail()
     {
         $loan = LoanQuery::create()
@@ -70,5 +69,24 @@ class BorrowerMailerTester
         
         
         $this->borrowerMailer->sendLoanConfirmationMail($borrower, $loan);
+    }
+
+    public function sendLoanFullyFundedMail()
+    {
+        $user = new User();
+        $user->setEmail('test@test.com');
+
+        $borrower = new Borrower();
+        $borrower->setUser($user);
+        $borrower->setFirstName('First Name');
+        $borrower->setLastName('Last Name');
+
+        $loan = new Loan();
+        $loan->setId(14);
+        $loan->setAppliedAt(new \DateTime());
+        $loan->setBorrower($borrower);
+        $borrower->setActiveLoan($loan);
+
+        $this->borrowerMailer->sendLoanFullyFundedMail($loan);
     }
 } 
