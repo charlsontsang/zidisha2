@@ -368,7 +368,7 @@ class LenderMailer
         $subject = \Lang::get('lender.mails.new-loan-notification.subject', ['borrowerName' => $loan->getBorrower()->getName()]);
         
         $this->mailer->send(
-            'emails.lender.new-loan-notification',
+            'emails.label-template',
             $data + [
                 'to'         => $lender->getUser()->getEmail(),
                 'label'      => 'lender.mails.new-loan-notification.lender-body',
