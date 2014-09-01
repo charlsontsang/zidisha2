@@ -338,12 +338,12 @@
     </table>
 
     <table name="borrower_comments" phpName="BorrowerComment" namespace="Comment">
-        <column name="published" type="BOOLEAN" defaultValue="false"/>
         <behavior name="concrete_inheritance">
             <parameter name="extends" value="comments" />
             <parameter name="copy_data_to_parent" value="false" />
         </behavior>
         <column name="borrower_id" type="INTEGER" required="true"/>
+        <column name="published" type="BOOLEAN" defaultValue="false"/>
         <foreign-key foreignTable="borrowers">
             <reference local="borrower_id" foreign="id"/>
         </foreign-key>
