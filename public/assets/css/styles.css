@@ -8677,9 +8677,11 @@ fieldset[disabled] .datepicker table tr td span.active.disabled:hover.active {
   margin-left: -5px;
   margin-right: -5px;
 }
-/* prevent floating footer */
 body {
+  /* prevent floating footer */
   padding-bottom: 0 !important;
+  /* enable scrollspy http://stackoverflow.com/questions/12095579/twitter-bootstrap-scrollspy-always-selecting-last-element */
+  height: 100%;
 }
 .footer {
   margin-top: 15px;
