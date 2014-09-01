@@ -103,6 +103,9 @@ class LendController extends BaseController
             $conditions['search'] = $searchQuery;
             $routeParams['search'] = $searchQuery;
         }
+        
+        $viewAllRouteParams = ['category' => 'all', 'country' => 'everywhere'] + $routeParams;
+        unset($viewAllRouteParams['search']);
 
         $page = Request::query('page') ? : 1;
         $paginator = $this->loanService->searchLoans($conditions, $page);
@@ -113,7 +116,7 @@ class LendController extends BaseController
             'pages.lend',
             compact(
                 'countries', 'selectedCountry', 'loanCategories',
-                'selectedLoanCategory', 'paginator', 'routeParams',
+                'selectedLoanCategory', 'paginator', 'routeParams', 'viewAllRouteParams',
                 'searchQuery', 'searchRouteParams', 'countResults', 'countAll',
                 'sortConditions', 'sortBy'
             )

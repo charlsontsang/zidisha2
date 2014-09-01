@@ -65,7 +65,7 @@ Lend
             
                     @if($countAll > $countResults)
                         <span id="view-all">
-                            <a href="{{ route('lend:index', ['category' => 'all'] + ['country' => 'everywhere'] + $routeParams) }}">View all {{ $countAll }} projects</a>
+                            <a href="{{ route('lend:index', $viewAllRouteParams) }}">View all {{ $countAll }} projects</a>
                         </span>
                     @endif
 
