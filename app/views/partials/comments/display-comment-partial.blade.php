@@ -1,4 +1,4 @@
-<div class="media">
+<div class="media comments">
     <a class="pull-left" href="#">
         @if($comment->getUser() && !$comment->getUser()->isAdmin())
         <a class="pull-left" href="{{ $comment->getUser()->getProfileUrl() }}">
