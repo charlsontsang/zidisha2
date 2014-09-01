@@ -16,7 +16,7 @@ return [
     'question6'            => 'What background information do you collect from Zidisha borrowers?',
     'answer6'              => 'Borrowers that apply to join Zidisha must provide their precise residential address, telephone number, and national identity number before we allow them to post a loan application. We also require them to verify their online identity by linking an active personal Facebook account to their Zidisha account. Applicants must also provide personal references and the contact information for a local community leader (like a school principal or leader of a place of worship) who can provide a recommendation for them. The local banks and payment services that process Zidisha loan disbursements also check the loan recipients’ national identity cards.',
     'question7'            => 'What is the total cost to the borrower?',
-    'answer7'              => 'The total cost to the borrower for each loan is the %fee%% flat transaction fee, plus the weighted average flat interest rate bid by lenders financing the loan. For example, if lenders bid to finance a three-month, $100 loan at 3% weighted average interest, then the total cost to the borrower will be (5% + 3%) * (3 / 12) * $100 = $2. The borrower in this example would repay $2 in fees and interest on the $100 loan.<br/><br/>
+    'answer7'              => 'The total cost to the borrower for each loan is the 5% flat transaction fee, plus the weighted average flat interest rate bid by lenders financing the loan. For example, if lenders bid to finance a three-month, $100 loan at 3% weighted average interest, then the total cost to the borrower will be (5% + 3%) * (3 / 12) * $100 = $2. The borrower in this example would repay $2 in fees and interest on the $100 loan.<br/><br/>
 In addition, borrowers pay a one-time new member registration fee of approximately $12, which is charged ONLY if the new member succeeds in raising a loan through Zidisha.',
     'question8'            => 'Why is there a wide range of interest rates proposed for loans on Zidisha?',
     'answer8'              => 'Unlike with other microlending programs, Zidisha borrowers have the right to set the maximum interest rate they\'ll pay. Lenders can then choose whether or not to fund that particular loan either at or below the borrower\'s proposed interest rate.',
@@ -107,25 +107,13 @@ When a repayment is received, the principal portion of the repayment is divided 
     'answer27'             => '
 	Lenders choose to fund loans for various reasons. Most often, lenders wish to help entrepreneurs succeed in growing their businesses. Through Zidisha, lenders get the chance to hear directly from the borrower about how their loan funds have helped. They also get the opportunity to get to know a small business owner on the other side of the world and learn about daily life and culture in that country. The direct connection between lender and borrower improves transparency, so lenders can be sure that all of their funds are going to their intended beneficiaries. Yes, lenders can earn interest through Zidisha. However, making money is not the main reason most lenders participate. The interest earnings allow lenders to compensate for credit risk and for costs such as money transfer fees and changes in currency exchange rates, so they can preserve the value of their loan funds over time.',
     'question28'           => 'How much can I borrow?',
-    'answer28'             => 'If you have been invited to join by an existing member in good standing, you can borrow up to USD 150 (150 US Dollars) for your first Zidisha loan.  If you do not have an invite from an existing member, you can borrow up to %firstLoanValue% US Dollars for your first loan.  After that, your credit limit will increase depending on your record of on-time repayments.<br/><br/> The current loan size progression is as follows:<br/><br/>
-							1. USD %firstLoanValue%<br/>
-							2. USD %2nxtLoanvalue%<br/>
-							3. USD %3nxtLoanvalue%<br/>
-							4. USD %4nxtLoanvalue%<br/>
-							5. USD %5nxtLoanvalue%<br/>
-							6. USD %6nxtLoanvalue%<br/>
-							7. USD %7nxtLoanvalue%<br/>
-							8. USD %8nxtLoanvalue%<br/>
-							9. USD %9nxtLoanvalue%<br/>
-							10. USD %10nxtLoanvalue%<br/>
-							11 and thereafter. USD 10,000<br/><br/>
-							Please note that the minimum time period for progressing to the next maximum loan size is %TimeThrshld_under% month for loans under USD 200.	<br/>	',
+    'answer28'             => 'If you have been invited to join by an existing member in good standing, you can borrow up to USD 150 (150 US Dollars) for your first Zidisha loan.  If you do not have an invite from an existing member, you can borrow up to 50 US Dollars for your first loan.  After that, your credit limit will increase depending on your record of on-time repayments.',
     'question29'           => 'What are the fees and interest?',
-    'answer29'             => 'Zidisha does not set an interest rate on its loans. Instead, lenders propose their own preferred interest rate, which may be between %fee%% and %maxLoanAppInterest%%. If lenders find your application compelling, they may choose to fund the loan below the maximum interest rate of %maxLoanAppInterest%%.
+    'answer29'             => 'Zidisha does not set an interest rate on its loans. Instead, lenders propose their own preferred interest rate, which may be between 0% and 15%. If lenders find your application compelling, they may choose to fund the loan below the maximum interest rate of 15%.  
 <br/><br/>
-Interest includes a service fee of %fee%% of the original loan amount per year the loan is outstanding (any interest above the %fee%% is paid to lenders). Zidisha is a nonprofit organization, and the service fee is used to pay for necessary operating costs such as bank fees and money transfer charges. 
+Interest includes a service fee of 5% of the original loan amount per year the loan is outstanding (any interest above the 5% is paid to lenders). Zidisha is a nonprofit organization, and the service fee is used to pay for necessary operating costs such as bank fees and money transfer charges. Inclusive of the 5% service fee, the maximum interest that is possible for a Zidisha loan is 20%.
 <br/><br/>
-New applicants also pay a one-time, fixed registration fee upon funding of their first loan. The registration fee is not paid up front, but is deducted from the disbursement of the first loan. If a prospective borrower\'s loan application is not funded, then no fee is charged.
+New applicants in most countries also pay a one-time, fixed registration fee upon funding of their first loan. The registration fee is not paid up front, but is deducted from the disbursement of the first loan. If a prospective borrower\'s loan application is not funded, then no fee is charged.
 ',
     'question30'           => 'What are the terms of repayment?',
     'answer30'             => 'Repayments are made in weekly or monthly installments, depending on your country. You may choose your own preferred amount to repay in each installment, and your own preferred day of the week or month on which repayments will fall due.',
@@ -159,9 +147,9 @@ Zidisha lenders generally assign positive feedback ratings to borrowers who repa
   ',
     'question36'           => 'How is my interest rate determined?',
     'answer36'             => '
-	The interest rate is the weighted average of all lender bids, plus a 5% transaction fee which is used to cover Zidisha\'s money transfer costs.  Since lender bids must be either less than or equal to the maximum rate of %maxLoanAppInterest%%, your interest rate will not be greater than %maxLoanAppInterest%% and may be less.  It is an annualized rate, a flat percentage of the loan principal amount per year the loan is held.
+	The interest rate is the weighted average of all lender bids, plus a 5% transaction fee which is used to cover Zidisha\'s money transfer costs.  Since lender bids must be either less than or equal to the maximum rate of 15%, your interest rate will not be greater than 20% and may be less.  It is an annualized rate, a flat percentage of the loan principal amount per year the loan is held.
 	<br/><br/>
-	The final interest rate will always be somewhere between 5% (the minimum transaction fee) and the maximum interest rate of %maxLoanAppInterest%%.  The exact rate is determined by the weighted average interest rate bid by the lenders on each loan.',
+	The final interest rate will always be somewhere between 5% (the minimum transaction fee) and the maximum interest rate of 20%.  The exact rate is determined by the weighted average interest rate bid by the lenders on each loan.',
     'question37'           => 'What should I do if I cannot make a scheduled repayment installment?',
     'answer37'             => 'If you cannot pay the full amount due on the scheduled date, you must modify your repayment schedule in order to remain in good standing and avoid penalties. To do this, log in to your Zidisha account and use the "Reschedule Loan" page to propose a repayment amount that you can afford. You may reduce the amount due as necessary, but you cannot skip a scheduled installment entirely. Rescheduling your loan will not affect your on-time repayment score as long as you honor the new repayment schedule. You may reschedule your loan again to increase installment amounts once you are able, so that the total repayment period and interest due is not increased any more than necessary.',
     'question38'           => 'How do I know my repayment is received?',
