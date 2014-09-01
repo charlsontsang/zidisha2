@@ -202,7 +202,7 @@ class TransactionQuery extends BaseTransactionQuery
             ->filterByUserId($userId)
             ->filterRepaidToLender()
             ->useLoanQuery()
-                ->filterEnded()
+                ->filterCompleted()
             ->endUse()
             ->select('totals')
             ->withColumn('SUM(Transaction.amount)', 'totals')

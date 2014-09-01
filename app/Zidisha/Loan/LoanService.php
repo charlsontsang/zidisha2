@@ -122,7 +122,7 @@ class LoanService
 
         $isFirstLoan = LoanQuery::create()
             ->filterByBorrower($borrower)
-            ->filterEnded() // TODO correct? verify database
+            ->filterCompleted() // TODO correct? verify database
             ->count();
         $registrationFee = $isFirstLoan ? $borrower->getCountry()->getRegistrationFee() : Money::create(0, $currencyCode);
         

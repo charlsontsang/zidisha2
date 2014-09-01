@@ -120,7 +120,7 @@ class BidQuery extends BaseBidQuery
             ->filterByLender($lender)
             ->filterByAcceptedAmount('0', Criteria::NOT_EQUAL)
             ->useLoanQuery()
-            ->filterEnded()
+            ->filterCompleted()
             ->endUse()
             ->paginate($page3, 2);
     }
@@ -131,7 +131,7 @@ class BidQuery extends BaseBidQuery
             ->filterByLender($lender)
             ->filterByAcceptedAmount('0', Criteria::NOT_EQUAL)
             ->useLoanQuery()
-            ->filterEnded()
+            ->filterCompleted()
             ->endUse()
             ->select(array('total'))
             ->withColumn('SUM(accepted_amount)', 'total')
