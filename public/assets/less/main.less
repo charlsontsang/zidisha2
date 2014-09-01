@@ -2,10 +2,7 @@
   font-weight: 300;
 }
 .text-large {
-  font-size: 22px;
-}
-.lead {
-  font-weight: 300;
+  font-size: 22px !important;
 }
 .gutter-xs {
   padding-left: 2px;
@@ -46,7 +43,7 @@ body {
   }
 }
 .page-section {
-  background-color: #f9f9f9;
+  background-color: #f8f8f8;
   border-bottom: 1px solid #e0e0e0;
   margin-bottom: 22px;
   padding-bottom: 22px;
@@ -187,7 +184,6 @@ body {
 /* Static info pages */
 .info-page h3 {
   font-size: 1.5em;
-  font-weight: 400;
   line-height: 1em;
   margin-top: 1.25em;
   @media (min-width: @screen-sm-min) {
@@ -199,7 +195,9 @@ body {
   margin-top: 0;
   font-size: 16px;
   line-height: 23px;
-  font-weight: 300;
+  @media (min-width: @screen-sm-min) {
+    line-height: 25px;
+  }
   @media (min-width: @screen-sm-min) {
     font-size: 18px;
     line-height: 28px;

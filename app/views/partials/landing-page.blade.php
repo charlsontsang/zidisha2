@@ -2,10 +2,10 @@
   <div class="container">
     <div class="row">
         <div class="col-sm-12">
-          <h2 class="alpha">
+          <h3 class="lead alpha">
             <span>Trending Projects</span>
             <span class="pull-right"><a href="{{ route('lend:index') }}" id="see-all">See All</a></span>
-          </h2>
+          </h3>
         </div>
         @foreach($projects as $loan)
         <div class="col-sm-4" style="padding:10px;">
@@ -22,6 +22,13 @@
                 </div>
                 <div class="row">   
                     <div class="col-xs-12 loan" >
+
+                        <div id="funding-tag">
+                            <span><strong>${{ ceil($loan->getStillNeededUsdAmount()->getAmount()) }}</strong></span>
+                            <br/>
+                            <span class="text-light">Needed</span>
+                        </div>
+
                         <div class="loan-category">
                           {{ $loan->getBorrower()->getCountry()->getName() }}
                         </div>
@@ -45,24 +52,24 @@
 <div class="container">
   <div class="row home-section info-page home text-center">
     <div class="col-sm-12">
-      <h1 class="alpha">What makes Zidisha different?</h1>
+      <h2 class="alpha">What makes Zidisha different?</h2>
     </div>
 
     <div class="col-sm-4">
-      <p><i class="fa fa-fw fa-dollar"></i></p>
-      <h3>Lower cost for borrowers</h3>
-      <p>Profits from the loans go to the borrowers and their communities, not to intermediaries.
+      <h3><i class="fa fa-fw fa-dollar"></i></h3>
+      <h4>Lower cost for borrowers</h4>
+      <p>Profits from the loans go to the borrowers and their communities, not to intermediaries.</p>
     </div>
 
     <div class="col-sm-4">
-      <p><i class="fa fa-fw fa-sun-o"></i></p>
-      <h3>Transparency for lenders</h3>
+      <h3><i class="fa fa-fw fa-sun-o"></i></h3>
+      <h4>Transparency for lenders</h4>
       <p>We display the full cost of the loan and let lenders choose the interest rate.</p>
     </div>
 
     <div class="col-sm-4">
-      <p><i class="fa fa-fw fa-comments"></i></p>
-      <h3>Direct communication</h3>
+      <h3><i class="fa fa-fw fa-comments"></i></h3>
+      <h4>Direct communication</h4>
       <p>Borrowers post their own loan proposals, answer questions and share updates with you directly.</p>
     </div>
     
@@ -88,18 +95,18 @@
           </blockquote>   
       </div>
       <div class="col-sm-3">
-        <p><a href="http://venturebeat.com/2014/03/25/meet-the-tech-for-good-startups-at-y-combinators-demo-day/" target="_blank"><img src="/assets/images/pages/press/VB_logo.png" width="80%" class="press-logo" /></a></p>
+        <p><a href="http://paulbuchheit.blogspot.com/2014/03/help-me-distribute-100000-to-new.html" target="_blank"><img src="/assets/images/pages/press/yc_logo.png" width="100%" class="press-logo" /></a></p>
       </div>
       <div class="col-sm-9">
           <blockquote>
-              <p>"Zidisha is cutting out the middlemen to enable direct lending to the entrepreneurs, and only needs 10 percent in fees to cover its cost (that’s versus the 30-80 percent Kiva requires)."</p>
+              <p>"Zidisha connects lenders directly to borrowers, providing not only an affordable loan, but also a personal connection."</p>
               <footer>
-                  <cite><a href="http://venturebeat.com/2014/03/25/meet-the-tech-for-good-startups-at-y-combinators-demo-day/" target="_blank">Venture Beat</a></cite>
+                  <cite><a href="http://paulbuchheit.blogspot.com/2014/03/help-me-distribute-100000-to-new.html" target="_blank">Gmail Creator Paul Buchheit</a></cite>
               </footer>
-          </blockquote> 
+          </blockquote>
       </div>    
       <div class="col-sm-3">
-        <p><a href="http://techcrunch.com/2014/01/23/zidisha-launches-a-kickstarter-style-micro-lending-platform-for-low-income-entrepreneurs-in-developing-countries/" target="_blank"><img src="/assets/images/pages/press/tc_logo.png" width="60%" class="press-logo" /></a></p>
+        <p><a href="http://techcrunch.com/2014/01/23/zidisha-launches-a-kickstarter-style-micro-lending-platform-for-low-income-entrepreneurs-in-developing-countries/" target="_blank"><img src="/assets/images/pages/press/tc_logo.png" width="60%" id="tc_logo" class="press-logo" /></a></p>
       </div>
       <div class="col-sm-9">
           <blockquote>

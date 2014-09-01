@@ -92,22 +92,7 @@ Meet the Team
 			</ul>
 	        <p><i class="fa fa-fw fa-user"></i><strong>Michaela Ladstaetter</strong>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;Accountant</p>
 	        <p><i class="fa fa-fw fa-map-marker"></i>South Tyrol, Italy</p>
-	    </div>		
-	    <div class="col-sm-4">
-		    <ul class="img-list">
-			  <li>
-			    <img src="/assets/images/pages/team/alissa.jpg" width="100%" />
-			    <span class="text-content"><span>
-			    	<strong>Alissa Jordan</strong><br/>
-			    	Holds a B.A. in Communication Studies and is passionate about international nonprofit work. Has family from Kenya and looks forward to soon traveling to East Africa. Runner, writer, an avid bookworm, consumer of coffee and lover of new cultural experiences.
-			    </span></span>
-			  </li>
-			</ul>
-	        <p><i class="fa fa-fw fa-user"></i><strong>Alissa Jordan</strong>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;Ghana Liaison</p>
-	        <p><i class="fa fa-fw fa-map-marker"></i>Minneapolis, Minnesota</p>
 	    </div>
-	</div>
-	<div class="row">
 	    <div class="col-sm-4">
 		    <ul class="img-list">
 			  <li>
@@ -121,19 +106,8 @@ Meet the Team
 	        <p><i class="fa fa-fw fa-user"></i><strong>Mbemba Ousmane Kamara</strong>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;Guinea Liaison</p>
 	        <p><i class="fa fa-fw fa-map-marker"></i>London, United Kingdom</p>
 	    </div>
-	    <div class="col-sm-4">
-		    <ul class="img-list">
-			  <li>
-			    <img src="/assets/images/pages/team/miriam.jpg" width="100%" />
-			    <span class="text-content"><span>
-			    	<strong>Miriam Frost</strong><br/>
-			    	Recent graduate of the University of Rochester. Studied abroad in Senegal in 2012 and returned to try out life as an expat. Volunteers with refugees, tutors English, adopts stray dogs and cats, and is attempting to try every beignet lady in Dakar.
-			    </span></span>
-			  </li>
-			</ul>
-	        <p><i class="fa fa-fw fa-user"></i><strong>Miriam Frost</strong>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;Senegal Ambassador</p>
-	        <p><i class="fa fa-fw fa-map-marker"></i>Dakar, Senegal</p>
-	    </div>
+	</div>
+	<div class="row">
 		<div class="col-sm-4">
 		    <ul class="img-list">
 			  <li>
@@ -147,8 +121,6 @@ Meet the Team
 	        <p><i class="fa fa-fw fa-user"></i><strong>Jonas De Taeye</strong>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;Web Developer</p>
 	        <p><i class="fa fa-fw fa-map-marker"></i>Ghent, Belgium</p>
 	    </div>
-	</div>
-	<div class="row" style="margin: 0 -20px 40px -20px !important;">
 		<div class="col-sm-4">
 		    <ul class="img-list">
 			  <li>
@@ -175,6 +147,8 @@ Meet the Team
 	        <p><i class="fa fa-fw fa-user"></i><strong>Taylor Hanna</strong>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;Kenya Liaison</p>
 	        <p><i class="fa fa-fw fa-map-marker"></i>Austin, Texas</p>
 	    </div>
+	</div>
+	<div class="row" style="margin: 0 -20px 40px -20px !important;">
 		<div class="col-sm-4">
 		    <ul class="img-list">
 			  <li>
@@ -187,21 +161,6 @@ Meet the Team
 			</ul>
 	        <p><i class="fa fa-fw fa-user"></i><strong>Tom Skacel</strong>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;Kenya Liaison</p>
 	        <p><i class="fa fa-fw fa-map-marker"></i>Sydney, Australia</p>
-	    </div>
-	</div>
-	<div class="row">
-	    <div class="col-sm-4">
-		    <ul class="img-list">
-			  <li>
-			    <img src="/assets/images/pages/team/kimberly.png" width="100%" />
-			    <span class="text-content"><span>
-			    	<strong>Kimberly Gollogly</strong><br/>
-					Studying Commerce and Global Development at the University of Virginia.  Her passion for service and business originally began in high school when she worked with a social enterprise to create a customer loyalty plan.
-				</span></span>
-			  </li>
-			</ul>
-	        <p><i class="fa fa-fw fa-user"></i><strong>Kimberly Gollogly</strong>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;Kenya Liaison</p>
-	        <p><i class="fa fa-fw fa-map-marker"></i>Charlottesville, Virginia</p>
 	    </div>
 	    <div class="col-sm-4">
 		    <ul class="img-list">
@@ -310,6 +269,47 @@ Meet the Team
 			</ul>
 	        <p><i class="fa fa-fw fa-user"></i><strong>Abi Ogunfowora</strong>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;Kenya Liaison</p>
 	        <p><i class="fa fa-fw fa-map-marker"></i>Brussels, Belgium</p>
+	    </div>
+	</div>
+	<div class="row">
+		<div class="col-sm-4">
+		    <ul class="img-list">
+			  <li>
+			    <img src="/assets/images/pages/team/matt.jpg" width="100%" />
+			    <span class="text-content"><span>
+			    	<strong>Matt Hachey</strong><br/>
+					Studying Global Development at the University of South Carolina.  Past work in Tanzania piqued his interest in international service and innovative financial solutions.  An avid reader, enjoys playing the guitar, and can frequently be found on a hiking trail.
+				</span></span>
+			  </li>
+			</ul>
+	        <p><i class="fa fa-fw fa-user"></i><strong>Matt Hachey</strong>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;Kenya Liaison</p>
+	        <p><i class="fa fa-fw fa-map-marker"></i>Columbia, South Carolina</p>
+	    </div>		
+	    <div class="col-sm-4">
+		    <ul class="img-list">
+			  <li>
+			    <img src="/assets/images/pages/team/hina.jpg" width="100%" />
+			    <span class="text-content"><span>
+			    	<strong>Hina Musa</strong><br/>
+			    	B.A. from the University of Texas at Austin, witnessed microfinance's impact firsthand in Thailand and Bangladesh.  Now works for a local government community development initiative in Houston. Enjoys reading, baking desserts and trying new foods.
+			    </span></span>
+			  </li>
+			</ul>
+	        <p><i class="fa fa-fw fa-user"></i><strong>Hina Musa</strong>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;Kenya Liaison</p>
+	        <p><i class="fa fa-fw fa-map-marker"></i>Houston, Texas</p>
+	    </div>		
+	    <div class="col-sm-4">
+		    <ul class="img-list">
+			  <li>
+			    <img src="/assets/images/pages/team/tricia.jpg" width="100%" />
+			    <span class="text-content"><span>
+			    	<strong>Tricia Wagga</strong><br/>
+			    	B.S in HR Management and a M.S in Justice and Legal Studies, married with three children. Tricia's love for Kenya began over a decade ago. Enjoys interacting with entrepreneurs there and gets a good laugh when they critique her Kiswahili.
+			    </span></span>
+			  </li>
+			</ul>
+	        <p><i class="fa fa-fw fa-user"></i><strong>Tricia Wagga</strong>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;Kenya Liaison</p>
+	        <p><i class="fa fa-fw fa-map-marker"></i>New Jersey</p>
 	    </div>
 	</div>
 </div>
