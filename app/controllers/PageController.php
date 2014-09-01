@@ -90,7 +90,6 @@ class PageController extends BaseController {
 
     public function getFaq()
     {
-        $paramArray = $this->borrowerService->getFaqParameterArray();
         return View::make('pages.faq');
     }
 
