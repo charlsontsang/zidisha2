@@ -415,6 +415,8 @@ class LoanService
             'isAutomatedLending'   => false,
         ];
         
+        $isFullyFundedBeforeBid = $loan->isFullyFunded();
+        
         /** @var Bid $bid */
         list($bid, $changedBids) = PropelDB::transaction(function($con) use($loan, $lender, $data) {
             $oldBids = BidQuery::create()
@@ -462,7 +464,9 @@ class LoanService
             }
         }
         
-        $this->sendLoanFullyFundedNotification($loan);
+        if (!$isFullyFundedBeforeBid) {
+            $this->sendLoanFullyFundedNotification($loan);
+        }
 
         return $bid;
     }
@@ -1234,9 +1238,9 @@ class LoanService
             foreach ($bids as $bid) {
                 $this->lenderMailer->sendLoanFullyFundedMail($bid);
             }
+            
+            $this->borrowerMailer->sendLoanFullyFundedMail($loan);
         }
-        
-        // TODO send email to borrower
     }
 
     public function rescheduleLoan(Loan $loan, array $data, $simulate = false)

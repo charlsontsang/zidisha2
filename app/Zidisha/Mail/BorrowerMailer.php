@@ -292,4 +292,9 @@ class BorrowerMailer{
     {
         //TODO: sendLoanFinalArrearToInvite
     }
+
+    public function sendLoanFullyFundedMail($loan)
+    {
+        /// See $session->SendFullyFundedMail
+    }
 }
