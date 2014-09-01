@@ -8798,11 +8798,14 @@ hr {
   line-height: 1em;
   margin-top: 1.25em;
 }
-@media (min-width: 768px) {
+@media (min-width: 992px) {
   .info-page h3 {
     font-size: 24px;
     line-height: 24px;
   }
+}
+.info-page h4 {
+  margin-top: 1.5em;
 }
 .info-page p,
 .info-page ul li,
@@ -8818,7 +8821,7 @@ hr {
     line-height: 25px;
   }
 }
-@media (min-width: 768px) {
+@media (min-width: 992px) {
   .info-page p,
   .info-page ul li,
   .info-page ol li {
@@ -9107,6 +9110,7 @@ hr {
 .sidenav-first-level {
   margin-top: 20px;
   margin-bottom: 20px;
+  color: #2e9df7;
 }
 /* All levels of nav */
 .sidenav .nav > li > a {
@@ -9207,9 +9211,9 @@ hr {
   }
 }
 /* make sidebar scrollable */
-.sidenav ul {
+.sidenav ul > li > ul {
   overflow-y: auto;
-  height: 500px;
+  height: 400px;
 }
 .footer {
   margin-bottom: 0;
