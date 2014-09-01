@@ -18,9 +18,9 @@ Lending Groups
         <a href="{{ route('lender:groups:create') }}" class="btn btn-primary">
            Start a new group
         </a>
+        @endif
     </div>
 </div>
-@endif
 @if($paginator != null)
 <table class="table table-striped no-more-tables">
     <thead>
