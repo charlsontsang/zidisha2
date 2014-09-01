@@ -569,7 +569,7 @@ class LoanService
 
         $this->updateLoanIndex($loan);
         
-        //TODO send emails
+        //TODO send emails (move lenders part from sendLoanFullyFundedNotification)
 
         return $acceptedBids;
     }
