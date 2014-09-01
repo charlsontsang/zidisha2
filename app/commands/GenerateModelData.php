@@ -476,15 +476,17 @@ class GenerateModelData extends Command
 
                 $comment = new BorrowerComment();
 
-                $comment->setBorrower($borrower)
+                $comment
+                    ->setBorrower($borrower)
                     ->setUser($user->getUser())
+                    ->setPublished($this->faker->boolean())
                     ->setMessage($this->faker->paragraph(3))
                     ->setLevel(0);
 
-                if($isTranslated){
+                if ($isTranslated) {
                     $comment->setMessageTranslation($this->faker->paragraph(3))
                         ->setTranslatorId(1);
-                }elseif($i<100){
+                } elseif($i<100) {
                     $comment->setUser($borrower->getUser());
                 }
 
