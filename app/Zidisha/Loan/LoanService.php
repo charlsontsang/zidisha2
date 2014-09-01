@@ -280,7 +280,7 @@ class LoanService
             $filterAnd->addFilter($termFilter);
         }
         if ($conditions) {
-            $query->setFilter($filterAnd);
+            $query->setPostFilter($filterAnd);
         }
 
         $query->setFrom(($page - 1) * $limit);
