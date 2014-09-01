@@ -9401,8 +9401,8 @@ hr {
   }
 }
 @media (min-width: 768px) {
-  .text-large .lead .home-bottom {
-    margin-top: 15px;
+  .home-bottom {
+    margin-top: 15px !important;
   }
 }
 #see-all {

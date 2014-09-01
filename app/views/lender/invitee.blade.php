@@ -40,7 +40,7 @@ You're invited!
   <div class="row home-section info-page home text-center">
 
     <div class="col-md-8 col-md-offset-2">
-      <p class="text-large lead">Enjoy connecting with remarkable people around the world and helping them reach their goals.</p>
+      <p class="text-large lead home-bottom">Enjoy connecting with remarkable people around the world and helping them reach their goals.</p>
 
       <p>
           <a class="btn btn-home btn-lg btn-home-bottom" href="{{ $buttonLink }}">{{ $buttonText }}</a>
