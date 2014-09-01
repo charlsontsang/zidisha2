@@ -12,8 +12,14 @@
     </a>
     <div class="media-body">
         <h4 class="media-heading">
-            <a href="{{ $comment->getUser()->getProfileUrl() }}"> {{ $comment->getUser()->getUserName() }}  - {{ $comment->getId() }}</a>
-            <small>{{ $comment->getCreatedAt('M d, Y') }}</small>
+            <a href="
+            @if($comment->getUser()->isLender())
+                {{ $comment->getUser()->getProfileUrl() }}
+            @else
+                {{ route('loan:index', $comment->getUser()->getBorrower()->getActiveLoanId()) }}
+            @endif
+            "> {{ $comment->getUser()->getUserName() }}  - {{ $comment->getId() }}</a>
+            <small>{{ $comment->getCreatedAt('M j, Y') }}</small>
         </h4>
 
         <p>
