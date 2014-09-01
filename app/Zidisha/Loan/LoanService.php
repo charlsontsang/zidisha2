@@ -645,8 +645,6 @@ class LoanService
 
         $this->updateLoanIndex($loan);
         
-        // TODO emails to refunded lenders
-
         return $lenderRefunds;
     }
 
