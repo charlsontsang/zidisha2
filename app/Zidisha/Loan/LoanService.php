@@ -608,8 +608,15 @@ class LoanService
 
         $this->updateLoanIndex($loan);
 
-        foreach ($lenderRefunds as $refundLender) {
-            $this->lenderMailer->sendExpiredLoanMail($loan, $refundLender);
+        /** @var LenderRefund $lenderRefund */
+        foreach ($lenderRefunds as $lenderRefund) {
+            if ($lenderRefund->getAmount()->isPositive()) {
+                $this->lenderMailer->sendExpiredLoanMail($loan, $lenderRefund->getLender(), $lenderRefund->getAmount());
+            }
+
+            if ($lenderRefund->getLenderInviteCredit()->isPositive()) {
+                $this->lenderMailer->sendExpiredLoanWithLenderInviteCreditMail($loan, $lenderRefund->getLender(), $lenderRefund->getLenderInviteCredit());
+            }
         }
         
         $this->borrowerMailer->sendExpiredLoanMail($loan);

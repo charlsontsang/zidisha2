@@ -11,10 +11,8 @@ use Zidisha\Lender\Invite;
 use Zidisha\Lender\Lender;
 use Zidisha\Loan\Bid;
 use Zidisha\Loan\ForgivenessLoan;
-use Zidisha\Loan\LenderRefund;
 use Zidisha\Loan\Loan;
 use Zidisha\Loan\LoanService;
-use Zidisha\Loan\RefundLender;
 use Zidisha\User\User;
 
 /**
@@ -267,16 +265,30 @@ class LenderMailer
         );
     }
     
-    public function sendExpiredLoanMail(Loan $loan, LenderRefund $refundLender)
+    // TODO see $session->sendLoanExpiredMailToLender
+    public function sendExpiredLoanMail(Loan $loan, Lender $lender, Money $amount)
     {
         $this->mailer->send(
             'emails.hero',
             [
-                'to'         => $refundLender->getLender()->getUser()->getEmail(),
+                'to'         => $lender->getUser()->getEmail(),
                 'subject'    => 'Loan expired notification',
                 'templateId' => \Setting::get('sendwithus.lender-expired-loan-template-id'),
             ]
         );        
+    }
+
+    // TODO see $session->sendLoanExpiredMailToInvitedLender
+    public function sendExpiredLoanWithLenderInviteCreditMail(Loan $loan, Lender $lender, Money $amount)
+    {
+        $this->mailer->send(
+            'emails.hero',
+            [
+                'to'         => $lender->getUser()->getEmail(),
+                'subject'    => 'Loan expired notification',
+                'templateId' => \Setting::get('sendwithus.lender-expired-loan-template-id'),
+            ]
+        );
     }
 
     public function sendAbandonedUserMail(User $user)
