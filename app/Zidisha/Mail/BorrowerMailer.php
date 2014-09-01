@@ -2,6 +2,7 @@
 namespace Zidisha\Mail;
 
 
+use Carbon\Carbon;
 use Zidisha\Borrower\Borrower;
 use Zidisha\Borrower\FeedbackMessage;
 use Zidisha\Borrower\Invite;
@@ -293,13 +294,29 @@ class BorrowerMailer{
         //TODO: sendLoanFinalArrearToInvite
     }
 
-    public function sendLoanFullyFundedMail($loan)
-    {
-        // TODO See $session->SendFullyFundedMail
-    }
 
     public function sendDisbursedLoanMail($loan)
     {
         // TODO see $session->updateActiveLoan, sendwithus tag BORROWER_NOTIFICATIONS_TAG
+    }
+    
+    public function sendLoanFullyFundedMail(Loan $loan)
+    {
+        $borrower = $loan->getBorrower();
+        $deadlineDays = \Setting::get('loan.deadline');
+        $appliedAt = Carbon::instance($loan->getAppliedAt());
+        $expireDate = $appliedAt->addDays($deadlineDays);
+        $message = \Lang::get('borrower.mails.loan-fully-funded.body', ['borrowerName' => $borrower->getName(), 'loanApplicationPage' => route('loan:index', $loan->getId()), 'expiryDate' => $expireDate->toFormattedDateString()]);
+        $data['content'] = $message;
+
+        $this->mailer->send(
+            'emails.hero',
+            $data + [
+                'to'         => $loan->getBorrower()->getUser()->getEmail(),
+                'from'       => 'noreply@zidisha.org',
+                'subject'    => \Lang::get('borrower.mails.loan-fully-funded.subject'),
+                'templateId' => \Setting::get('sendwithus.borrower-loan-fully-funded-template-id')
+            ]
+        );
     }
 }
