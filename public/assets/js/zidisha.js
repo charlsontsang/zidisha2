@@ -141,6 +141,11 @@ $(function () {
         $body.scrollspy('refresh');
     });
 
+    $('.sidenav li').on('click', function () {
+        $(this).prev().removeClass( "active");
+        $(this).addClass( "active" );
+    });
+
     // Sidenav affixing
     setTimeout(function () {
         var $sideBar = $('.sidenav');

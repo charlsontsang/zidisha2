@@ -373,11 +373,3 @@
     </div>
 </div>
 @stop
-
-
-@include('partials._modal', [
-'id' => 'differenceBetween',
-'title' => \Lang::get('borrower.modals.differenceBetween.title'),
-'body' => \Lang::get('borrower.modals.differenceBetween.body')
-]
-)
