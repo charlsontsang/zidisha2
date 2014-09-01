@@ -200,7 +200,7 @@ class DatabaseMigration extends Command {
                 $lenders = $this->con->table('lenders')
                     ->join('users', 'lenders.userid', '=', 'users.userid')
                     ->join('countries', 'lenders.Country', '=', 'countries.code')
-                    ->where($offset)->take($limit)->get();
+                    ->skip($offset)->take($limit)->get();
                 $lenderArray = [];
                 $profileArray = [];
                 $preferenceArray = [];
@@ -272,7 +272,7 @@ class DatabaseMigration extends Command {
                     ->join('countries', 'borrowers.Country', '=', 'countries.code')
                     ->join('borrowers_extn', 'borrowers.userid', '=', 'borrowers_extn.userid')
                     ->join('facebook_info', 'borrowers.userid', '=', 'facebook_info.userid')
-                    ->where($offset)->take($limit)->get();
+                    ->skip($offset)->take($limit)->get();
                 $borrowerArray = [];
                 $profileArray = [];
                 $contactArray = [];
@@ -468,7 +468,7 @@ class DatabaseMigration extends Command {
             $limit = 500;
             for ($offset; $offset < $count; $offset = ($offset + $limit)) {
                 $loans = $this->con->table('loanapplic')
-                    ->where($offset)->take($limit)->get();
+                    ->skip($offset)->take($limit)->get();
                 $loanArray = [];
 
                 //TODO check most amount things and fill  unfilled values
@@ -530,7 +530,7 @@ class DatabaseMigration extends Command {
             for ($offset; $offset < $limit; $count = ($offset + $limit)) {
                 $bids = $this->con->table('loanbids')
                     ->join('loanapplic', 'loanbids.loanid', '=', 'loanapplic.loanid')
-                    ->where($offset)->take($limit)->get();
+                    ->skip($offset)->take($limit)->get();
                 $bidArray = [];
 
                 foreach ($bids as $bid) {
@@ -564,7 +564,7 @@ class DatabaseMigration extends Command {
 
             for ($offset; $offset < $count; $offset = ($offset + $limit)) {
                 $adminNotes = $this->con->table('loan_notes')
-                    ->where($offset)->limit($limit)->get();
+                    ->skip($offset)->limit($limit)->get();
                 $adminNoteArray = [];
 
                 foreach ($adminNotes as $adminNote) {
@@ -592,7 +592,7 @@ class DatabaseMigration extends Command {
 
             for ($offset; $offset < $count; $offset = ($offset + $limit)) {
                 $stages = $this->con->table('loanstage')
-                    ->where($offset)->take($limit)->get();
+                    ->skip($offset)->take($limit)->get();
                 $stageArray = [];
 
                 foreach ($stages as $stage) {
@@ -622,7 +622,7 @@ class DatabaseMigration extends Command {
 
             for ($offset; $offset < $count; $offset = ($offset + $limit)) {
                 $transactions = $this->con->table('transactions')
-                    ->where($offset)->take($limit)->get();
+                    ->skip($offset)->take($limit)->get();
                 $transactionArray = [];
 
                 foreach ($transactions as $transaction) {
@@ -655,7 +655,7 @@ class DatabaseMigration extends Command {
 
             for ($offset; $offset < $count ; $offset = ($offset + $limit)) {
                 $comments = $this->con->table('comments')
-                    ->where($offset)->limit($limit)->get();
+                    ->skip($offset)->limit($limit)->get();
                 $commentArray = [];
 
                 foreach ($comments as $comment) {
@@ -678,7 +678,7 @@ class DatabaseMigration extends Command {
             for ($offset; $offset < $count; $offset = ($offset + $limit)) {
                 $rates = $this->con->table('excrate')
                     ->join('currency', 'excrate.currency', '=', 'currency.id')
-                    ->where($offset)->limit($limit)->get();
+                    ->skip($offset)->limit($limit)->get();
                 $rateArray = [];
 
                 foreach ($rates as $rate) {
@@ -705,7 +705,7 @@ class DatabaseMigration extends Command {
 
             for ($offset; $offset < $count; $offset = ($offset + $limit)) {
                 $installments = $this->con->table('repaymentschedule')
-                    ->where($offset)->limit($limit)->get();
+                    ->skip($offset)->limit($limit)->get();
                 $installmentArray = [];
 
                 foreach ($installments as $installment) {
@@ -734,7 +734,7 @@ class DatabaseMigration extends Command {
 
             for ($offset; $offset < $count; $offset = ($offset + $limit)) {
                 $payments = $this->con->table('repaymentschedule_actual')
-                    ->where($offset)->limit($limit)->get();
+                    ->skip($offset)->limit($limit)->get();
                 $paymentArray = [];
 
                 foreach ($payments as $payment) {
@@ -763,7 +763,7 @@ class DatabaseMigration extends Command {
 
             for ($offset; $offset < $count; $offset = ($offset + $limit)) {
                 $borrowerPayments = $this->con->table('borrower_payments')
-                    ->where($offset)->limit($limit)->get();
+                    ->skip($offset)->limit($limit)->get();
                 $borrowerPaymentArray = [];
 
                 foreach ($borrowerPayments as $borrowerPayment) {
@@ -795,7 +795,7 @@ class DatabaseMigration extends Command {
 
             for ($offset; $offset < $count; $offset = ($offset + $limit)) {
                 $lenderInvites = $this->con->table('lender_invites')
-                    ->where($offset)->limit($limit)->get();
+                    ->skip($offset)->limit($limit)->get();
                 $lenderInviteArray = [];
 
                 foreach ($lenderInvites as $lenderInvite) {
@@ -824,7 +824,7 @@ class DatabaseMigration extends Command {
 
             for ($offset; $offset < $count; $offset = ($offset + $limit)) {
                 $inviteVisits = $this->con->table('lender_invite_visits')
-                    ->where($offset)->limit($limit)->get();
+                    ->skip($offset)->limit($limit)->get();
                 $inviteVisitArray = [];
 
                 foreach ($inviteVisits as $inviteVisit) {
@@ -853,7 +853,7 @@ class DatabaseMigration extends Command {
 
             for ($offset; $offset < $count; $$offset = ($offset + $limit)) {
                 $inviteTransactions = $this->con->table('lender_invite_transactions')
-                    ->where($offset)->limit($limit)->get();
+                    ->skip($offset)->limit($limit)->get();
                 $inviteTransactionArray = [];
 
                 foreach ($inviteTransactions as $inviteTransaction) {
@@ -883,7 +883,7 @@ class DatabaseMigration extends Command {
 
             for ($offset; $offset < $count; $offset = ($offset + $limit)) {
                 $paypalIpnLogs = $this->con->table('paypal_ipn_raw_log')
-                    ->where($offset)->limit($limit)->get();
+                    ->skip($offset)->limit($limit)->get();
                 $paypalIpnLogArray = [];
 
                 foreach ($paypalIpnLogs as $paypalIpnLog) {
@@ -908,7 +908,7 @@ class DatabaseMigration extends Command {
 
             for ($offset; $offset < $count; $offset = ($offset + $limit)) {
                 $paypalTransactions = $this->con->table('paypal_txns')
-                    ->where($offset)->limit($limit)->get();
+                    ->skip($offset)->limit($limit)->get();
                 $paypalTransactionArray = [];
 
                 foreach ($paypalTransactions as $paypalTransaction) {
@@ -943,7 +943,7 @@ class DatabaseMigration extends Command {
             for ($offset; $offset < $count; $offset = ($offset + $limit)) {
                 $giftCards = $this->con->table('gift_cards')
                     ->join('gift_transaction', 'gift_cards.txn_id', '=', 'gift_transaction.txn_id') // TODO cross check(is it gift_transaction.txn_id or gift_transaction.id)
-                    ->where($offset)->limit($limit)->get();
+                    ->skip($offset)->limit($limit)->get();
                 $giftCardArray = [];
 
                 foreach ($giftCards as $giftCard) {
@@ -983,7 +983,7 @@ class DatabaseMigration extends Command {
 
             for ($offset; $offset < $count; $offset = ($offset + $limit)) {
                 $giftCardTransactions = $this->con->table('gift_transaction')
-                    ->where($offset)->limit($limit)->get();
+                    ->skip($offset)->limit($limit)->get();
                 $giftCardTransactionArray = [];
 
                 foreach ($giftCardTransactions as $giftCardTransaction) {
@@ -1015,7 +1015,7 @@ class DatabaseMigration extends Command {
 
             for ($offset; $offset < $count; $offset = ($offset + $limit)) {
                 $forgivenessLoanShares = $this->con->table('forgiven_loans')
-                    ->where($offset)->limit($limit)->get();
+                    ->skip($offset)->limit($limit)->get();
                 $forgivenessLoanShareArray = [];
 
                 foreach ($forgivenessLoanShares as $forgivenessLoanShare) {
@@ -1045,7 +1045,7 @@ class DatabaseMigration extends Command {
 
             for ($offset; $offset < $count; $offset = ($offset + $limit)) {
                 $forgivenessLoans = $this->con->table('loans_to_forgive')
-                    ->where($offset)->limit($limit)->get();
+                    ->skip($offset)->limit($limit)->get();
                 $forgivenessLoanArray = [];
 
                 foreach ($forgivenessLoans as $forgivenessLoan) {
@@ -1072,7 +1072,7 @@ class DatabaseMigration extends Command {
 
             for ($offset; $offset <$count; $offset = ($offset + $limit)) {
                 $borrowerRefunds = $this->con->table('borrower_refunds')
-                    ->where($offset)->limit($limit)->get();
+                    ->skip($offset)->limit($limit)->get();
                 $borrowerRefundArray = [];
 
                 foreach ($borrowerRefunds as $borrowerRefund) {
@@ -1101,7 +1101,7 @@ class DatabaseMigration extends Command {
 
             for ($offset; $offset < $count; $offset = ($offset + $limit)) {
                 $volunteerMentors = $this->con->table('community_organizers')
-                    ->where($offset)->limit($limit)->get();
+                    ->skip($offset)->limit($limit)->get();
                 $volunteerMentorArray = [];
 
                 foreach ($volunteerMentors as $volunteerMentor) {
@@ -1129,7 +1129,7 @@ class DatabaseMigration extends Command {
 
             for ($offset; $offset < $count; $offset = ($offset + $limit)) {
                 $feedbackMessages = $this->con->table('borrower_reports')
-                    ->where($offset)->limit($limit)->get();
+                    ->skip($offset)->limit($limit)->get();
                 $feedbackMessageArray = [];
 
                 foreach ($feedbackMessages as $feedbackMessage) {
@@ -1161,7 +1161,7 @@ class DatabaseMigration extends Command {
 
             for ($offset; $offset < $count; $offset = ($offset + $limit)) {
                 $borrowerReviews = $this->con->table('borrower_review')
-                    ->where($offset)->limit($limit)->get();
+                    ->skip($offset)->limit($limit)->get();
                 $borrowerReviewArray = [];
 
                 foreach ($borrowerReviews as $borrowerReview) {
@@ -1195,7 +1195,7 @@ class DatabaseMigration extends Command {
 
             for ($offset; $offset < $count; $offset = ($offset + $limit)) {
                 $languages = $this->con->table('language')
-                    ->where($offset)->limit($limit)->get();
+                    ->skip($offset)->limit($limit)->get();
                 $languageArray = [];
 
                 foreach ($languages as $language) {
@@ -1220,7 +1220,7 @@ class DatabaseMigration extends Command {
 
             for ($offset; $offset < $count; $offset = ($offset + $limit)) {
                 $lendingGroups = $this->con->table('lender_groups')
-                    ->where($offset)->limit($limit)->get();
+                    ->skip($offset)->limit($limit)->get();
                 $lendingGroupArray = [];
 
                 foreach ($lendingGroups as $lendingGroup) {
@@ -1251,7 +1251,7 @@ class DatabaseMigration extends Command {
 
             for ($offset; $offset < $count; $offset = ($offset + $limit)) {
                 $groupMembers = $this->con->table('lending_group_members')
-                    ->where($offset)->limit($limit)->get();
+                    ->skip($offset)->limit($limit)->get();
                 $groupMemberArray = [];
 
                 foreach ($groupMembers as $groupMember) {
@@ -1279,7 +1279,7 @@ class DatabaseMigration extends Command {
 
             for ($offset; $offset < $count; $offset = ($offset + $limit)) {
                 $notifications = $this->con->table('notification_history')
-                    ->where($offset)->limit($limit)->get();
+                    ->skip($offset)->limit($limit)->get();
                 $notificationArray = [];
 
                 foreach ($notifications as $notification) {
@@ -1305,7 +1305,7 @@ class DatabaseMigration extends Command {
 
             for ($offset; $offset < $count; $offset = ($offset + $limit)) {
                 $withdrawalRequests = $this->con->table('withdraw')
-                    ->where($offset)->limit($limit)->get();
+                    ->skip($offset)->limit($limit)->get();
                 $withdrawalRequestArray = [];
 
                 foreach ($withdrawalRequests as $withdrawalRequest) {
@@ -1332,7 +1332,7 @@ class DatabaseMigration extends Command {
 
             for ($offset; $offset < $count; $offset = ($offset + $limit)) {
                 $followers = $this->con->table('followers')
-                    ->where($offset)->limit($limit)->get();
+                    ->skip($offset)->limit($limit)->get();
                 $followerArray = [];
 
                 foreach ($followers as $follower) {
@@ -1362,7 +1362,7 @@ class DatabaseMigration extends Command {
 
             for ($offset; $offset < $count; $offset = ($offset + $limit)) {
                 $borrowerInvites = $this->con->table('invites')
-                    ->where($offset)->limit($limit)->get();
+                    ->skip($offset)->limit($limit)->get();
                 $borrowerInviteArray = [];
 
                 foreach ( $borrowerInvites as $borrowerInvite) {
@@ -1390,7 +1390,7 @@ class DatabaseMigration extends Command {
 
             for ($offset; $offset < $count; $offset = ($offset + $limit)) {
                 $creditSettings = $this->con->table('credit_setting')
-                    ->where($offset)->limit($limit)->get();
+                    ->skip($offset)->limit($limit)->get();
                 $creditSettingArray = [];
 
                 foreach ($creditSettings as $creditSetting) {
@@ -1420,7 +1420,7 @@ class DatabaseMigration extends Command {
 
             for ($offset; $offset < $count; $offset = ($offset + $limit)) {
                 $creditsEarned = $this->con->table('credits_earned')
-                    ->where($offset)->limit($limit)->get();
+                    ->skip($offset)->limit($limit)->get();
                 $creditEarnedArray = [];
 
                 foreach ($creditsEarned as $creditEarned) {
@@ -1450,7 +1450,7 @@ class DatabaseMigration extends Command {
 
             for ($offset; $offset < $count; $offset = ($offset + $limit)) {
                 $bulkEmails = $this->con->table('bulk_emails')
-                    ->where($offset)->limit($limit)->get();
+                    ->skip($offset)->limit($limit)->get();
                 $bulkEmailArray = [];
 
                 foreach ($bulkEmails as $bulkEmail) {
@@ -1483,7 +1483,7 @@ class DatabaseMigration extends Command {
 
             for ($offset; $offset < $count; $offset = ($offset + $limit)) {
                 $bulkEmailRecipients = $this->con->table('bulk_email_recipients')
-                    ->where($offset)->limit($limit)->get();
+                    ->skip($offset)->limit($limit)->get();
                 $bulkEmailRecipientArray = [];
 
                 foreach ($bulkEmailRecipients as $bulkEmailRecipient ) {
@@ -1509,7 +1509,7 @@ class DatabaseMigration extends Command {
 
             for ($offset; $offset < $count; $offset = ($offset + $limit)) {
                 $facebookUsers = $this->con->table('facebook_info')
-                    ->where($offset)->limit($limit)->get();
+                    ->skip($offset)->limit($limit)->get();
                 $facebookUserArray = [];
 
                 foreach ($facebookUsers as $facebookUser) {
@@ -1540,7 +1540,7 @@ class DatabaseMigration extends Command {
 
             for ($offset; $offset < $count; $offset = ($offset + $limit)) {
                 $autoLendingSettings = $this->con->table('auto_lending')
-                    ->where($offset)->limit($limit)->get();
+                    ->skip($offset)->limit($limit)->get();
                 $autoLendingSettingArray = [];
 
                 foreach ($autoLendingSettings as $autoLendingSetting) {
@@ -1573,7 +1573,7 @@ class DatabaseMigration extends Command {
 
             for ($offset; $offset < $count; $offset = ($offset + $limit)) {
                 $statistics =$this->con->table('statistics')
-                    ->where($offset)->limit($limit)->get();
+                    ->skip($offset)->limit($limit)->get();
                 $statisticArray = [];
 
                 foreach ($statistics as $statistic) {
@@ -1601,7 +1601,7 @@ class DatabaseMigration extends Command {
 
             for ($offset; $offset < $count; $offset = ($offset + $limit)) {
                 $reschedules = $this->con->table('reschedule')
-                    ->where($offset)->limit($limit)->get();
+                    ->skip($offset)->limit($limit)->get();
                 $rescheduleArray = [];
 
                 foreach ($reschedules as $reschedule) {
