@@ -527,40 +527,6 @@ class LoanService
         return $changedBids;
     }
 
-    public function editBid(Bid $bid, $data)
-    {
-        $loan = $bid->getLoan();
-
-        PropelDB::transaction(function($con) use ($bid, $loan, $data) {
-            $oldBids = BidQuery::create()
-                ->getOrderedBids($loan)
-                ->find();
-
-            $bid
-                ->setBidAmount(Money::create($data['amount'], 'USD'))
-                ->setInterestRate($data['interestRate']);
-            
-            $bid->save();
-
-            $newBids = BidQuery::create()
-                ->getOrderedBids($loan)
-                ->find();
-
-            $changedBids = $this->processBids($con, $loan, $oldBids, $newBids);
-
-            $totalBidAmount = BidQuery::create()
-                ->filterByLoan($loan)
-                ->getTotalBidAmount();
-
-            $loan->setRaisedUsdAmount($totalBidAmount);
-            
-            $loan->save();
-        });
-
-        //Todo: refresh elastic search.
-        return $bid;
-    }
-
     public function acceptBids(Loan $loan, $data = [])
     {
         $data += [

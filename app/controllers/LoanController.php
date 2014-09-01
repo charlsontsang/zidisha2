@@ -226,35 +226,4 @@ class LoanController extends BaseController
 
         return View::make('pages.loan-success', compact('loan', 'twitterUrl', 'facebookUrl', 'mailUrl'));
     }
-
-    public function postEditBid($loanId, $bidId)
-    {
-        $data = \Input::all();
-
-        $lender = \Auth::user()->getLender();
-
-        $bid = BidQuery::create()
-            ->filterById($bidId)
-            ->filterByLoanId($loanId)
-            ->filterByLender($lender)
-            ->findOne();
-
-        if (!$bid) {
-            App::abort(404);
-        }
-
-        $editBidForm = new EditBidForm($bid);
-        $editBidForm->handleRequest(Request::instance());
-
-        if (!$editBidForm->isValid()) {
-            Flash::success(\Lang::get('Loan.edit-bid.failed') . $data['amount']);
-            return Redirect::route('loan:index', $bid->getLoanId());
-        }
-
-        // TODO form->makePayment
-        $bid = $this->loanService->editBid($bid, $data);
-
-        Flash::success(\Lang::get('Loan.edit-bid.success') . $bid->getBidAmount());
-        return Redirect::route('loan:index', $bid->getLoanId());
-    }
 }
