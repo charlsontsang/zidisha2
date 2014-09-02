@@ -223,14 +223,24 @@ class TransactionQuery extends BaseTransactionQuery
         return Money::create($total, 'USD');
     }
 
-    public function getCurrentBalance($userId)
+    public function getCurrentBalance($userIds)
     {
         $total = $this
-            ->filterByUserId($userId)
-            ->select(array('total'))
+            ->filterByUserId($userIds)
+            ->select(array('total', 'userId'))
             ->withColumn('SUM(amount)', 'total')
-            ->findOne();
-
-        return Money::create($total, 'USD');
+            ->withColumn('user_id', 'userId')
+            ->groupByUserId()
+            ->find();
+        $results = $total->toKeyValue('userId', 'total');
+        if (count($results) > 1) {
+            $balanceArray = [];
+            foreach ($results as $key=>$value) {
+                $balanceArray[$key] = Money::create($value, 'USD');
+            }
+            return $balanceArray;
+        } else {
+            return Money::create($results[$userIds], 'USD');
+        }
     }
 } // TransactionQuery
