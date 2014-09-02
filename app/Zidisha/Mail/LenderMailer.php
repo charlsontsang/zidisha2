@@ -500,13 +500,13 @@ class LenderMailer
         );
     }
 
-    public function sendReceivedRepaymentMail(Lender $lender, Loan $loan, Money $amount,  Money $currentBalance)
+    public function sendReceivedRepaymentMail(Lender $lender, Loan $loan, Money $amount,  Money $currentCredit)
     {
         $parameters = [
             'borrowerName'         => $loan->getBorrower()->getName(),
             'amount'               => $amount,
             'loanUrl'              => route('loan:index', $loan->getId()),
-            'currentCredit'        => $currentBalance->getAmount(),
+            'currentCredit'        => $currentCredit->getAmount(),
             'lendUrl'              => route('lend:index'),
             'autoLendingUrl'       => route('lender:auto-lending'),
             'accountPreferenceUrl' => route('lender:preference')
@@ -522,6 +522,26 @@ class LenderMailer
             $data + [
                 'to'         => $lender->getUser()->getEmail(),
                 'subject'    => \Lang::get('lender.mails.loan-repayment-received.subject', $parameters),
+                'templateId' => \Setting::get('sendwithus.lender-loan-repayment-template-id'),
+            ]
+        );
+    }
+
+    public function sendReceivedRepaymentCreditBalanceMail(Lender $lender, Money $currentCredit)
+    {
+        $parameters = [
+            'currentCredit'        => $currentCredit->getAmount(),
+            'lendUrl'              => route('lend:index'),
+        ];
+
+        $body = \Lang::get('lender.mails.loan-repayment-received-balance.body', $parameters);
+        $data['content'] = $body;
+
+        $this->mailer->send(
+            'emails.hero',
+            $data + [
+                'to'         => $lender->getUser()->getEmail(),
+                'subject'    => \Lang::get('lender.mails.loan-repayment-received-balance.subject', $parameters),
                 'templateId' => \Setting::get('sendwithus.lender-loan-repayment-template-id'),
             ]
         );
