@@ -313,7 +313,7 @@ class BorrowerMailer{
             'emails.hero',
             $data + [
                 'to'         => $loan->getBorrower()->getUser()->getEmail(),
-                'from'       => 'noreply@zidisha.org',
+                'from'       => \Lang::get('site.fromEmailAddress'),
                 'subject'    => \Lang::get('borrower.mails.loan-fully-funded.subject'),
                 'templateId' => \Setting::get('sendwithus.borrower-notifications-template-id')
             ]

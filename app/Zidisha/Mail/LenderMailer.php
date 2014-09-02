@@ -265,14 +265,26 @@ class LenderMailer
         );
     }
     
-    // TODO see $session->sendLoanExpiredMailToLender
     public function sendExpiredLoanMail(Loan $loan, Lender $lender, Money $amount)
     {
+        $borrower = $loan->getBorrower();
+        $currentBalance = TransactionQuery::create()
+            ->getCurrentBalance($lender->getId());
+        $messageParameters = [
+            'borrowerName'  => $borrower->getName(),
+            'bidAmount'     => $amount,
+            'creditbalance' => $currentBalance,
+            'lendLink'      => route('lend:index')
+        ];
+        $message = \Lang::get('lender.mails.loan-expired.body', $messageParameters);
+        $data['content'] = $message;
+
         $this->mailer->send(
             'emails.hero',
-            [
+            $data + [
                 'to'         => $lender->getUser()->getEmail(),
-                'subject'    => 'Loan expired notification',
+                'from'       => \Lang::get('site.fromEmailAddress'),
+                'subject'    => \Lang::get('lender.mails.loan-expired.subject', ['borrowerName' => $borrower->getName()]),
                 'templateId' => \Setting::get('sendwithus.lender-expired-loan-template-id'),
             ]
         );        

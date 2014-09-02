@@ -97,9 +97,9 @@ The Zidisha Team',
         'button_text' =>'View Loans'
     ],
     'loan-expired' => [
-        'subject' => 'Your loan to %borrower_name% has been returned',
+        'subject' => 'Your loan to :borrowerName has been returned',
         'body' => 'Hi there,
-We have a little bit of bad news.  It looks like :borrowerName’s loan wasn’t fully funded.  We’ve returned your contribution of ::bidAmount to your account.
+We have a little bit of bad news.  It looks like :borrowerName ’s loan wasn’t fully funded.  We’ve returned your contribution of :bidAmount to your account.
 But don\'t give up!  There are many more promising endeavors waiting to be funded.
 Your lending credit balance is now USD :creditbalance. Use your credit to make a new loan <a href=\":lendLink\">here</a>.
 
