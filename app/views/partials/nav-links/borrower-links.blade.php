@@ -1,5 +1,5 @@
 <li><a href="{{ route('borrower:dashboard') }}">Dashboard</a></li>
-<li><a href="#">Public Loan Page</a></li>
+<li><a href="{{ route('loan:index', Auth::getUser()->getBorrower()->getActiveLoanId()) }}">Public Loan Page</a></li>
 <li><a href="{{ route('borrower:edit-profile') }}">Edit Profile</a></li>
 <li><a href="{{ route('borrower:invite') }}">Send Invites</a></li>
 <li><a href="{{ route('borrower:invites') }}">Your Invites</a></li>
