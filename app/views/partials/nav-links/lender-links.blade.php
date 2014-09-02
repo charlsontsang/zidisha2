@@ -1,0 +1,11 @@
+<li><a href="{{ route('lender:dashboard') }}">Dashboard</a></li>
+<li><a href="{{ route('lender:loans') }}">Your Loans</a></li>
+<li><a href="{{ route('lender:public-profile', Auth::getUser()->getUsername()) }}">View Profile</a></li>
+<li><a href="{{ route('lender:edit-profile') }}">Edit Profile</a></li>
+<li><a href="{{ route('lender:preference') }}">Account Preferences</a></li>
+<li><a href="{{ route('lender:gift-cards') }}">Gift Cards</a></li>
+<li><a href="{{ route('lender:gift-cards:track') }}">Track Gift Cards</a></li>
+<li><a href="{{ route('lender:invite') }}">Invite Friends</a></li>
+<li><a href="{{ route('lender:history') }}">Transaction History</a></li>
+<li><a href="{{ route('lender:funds') }}">Transfer Funds</a></li>
+<li><a href="{{ route('lender:auto-lending') }}">Auto Lending</a></li>
