@@ -299,7 +299,7 @@ class BorrowerMailer{
     {
         // TODO see $session->updateActiveLoan, sendwithus tag BORROWER_NOTIFICATIONS_TAG
     }
-    
+
     public function sendLoanFullyFundedMail(Loan $loan)
     {
         $borrower = $loan->getBorrower();
@@ -315,7 +315,7 @@ class BorrowerMailer{
                 'to'         => $loan->getBorrower()->getUser()->getEmail(),
                 'from'       => 'noreply@zidisha.org',
                 'subject'    => \Lang::get('borrower.mails.loan-fully-funded.subject'),
-                'templateId' => \Setting::get('sendwithus.borrower-loan-fully-funded-template-id')
+                'templateId' => \Setting::get('sendwithus.borrower-notifications-template-id')
             ]
         );
     }
