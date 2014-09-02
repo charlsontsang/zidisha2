@@ -552,7 +552,7 @@ class LenderMailer
         $data = [
             'parameters' => [
                 'borrowerName'     => $loan->getBorrower()->getName(),
-                'reviewUrl'          => route('loan:index', $loan->getId()),
+                'reviewUrl'          => route('loan:index', $loan->getId()).'#feedback',
             ],
         ];
 
@@ -565,5 +565,10 @@ class LenderMailer
                 'subject'    => \Lang::get('lender.mails.loan-repayment-feedback.subject', ['borrowerName' => $loan->getBorrower()->getName()])
             ]
         );
+    }
+
+    public function SendRepaidLoanGainMail(Lender $lender, Loan $loan)
+    {
+
     }
 }

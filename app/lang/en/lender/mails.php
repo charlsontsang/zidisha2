@@ -202,6 +202,33 @@ Cheers,
 The Zidisha Team
 <br/><br/>
 PS:  Share, tweet or email this success story to your friends!'
+    ],
+    'loan-repaid-gain' => [
+        'subject' => ':gainAmount gain from your loan to :borrowerName',
+        'body' => '
+        Hi there,
+<br/><br/>
+Your lending fund gained value from your recent loan to <a href=":loanUrl">:borrowerName</a>!  Here are the details:
+<br/><br/>
+Loan purpose: :purpose
+<br/>
+Amount lent: $ :loanAmount
+<br/>
+Amount repaid: $ :repaidAmount
+<br/>
+Net gain: $ :gainAmount
+<br/>
+Percentage gain: :gainPercent %
+<br/><br/>
+You can make this a win for everyone by reinvesting the gain in new loans to other entrepreneurs <a href=":loanUrl">here</a>.
+<br/><br/>
+Here\'s to many more successful loans!
+<br/><br/>
+Congrats,
+<br/><br/>
+The Zidisha Team
+<br/><br/>
+PS:  You can view the gains or losses for all of your completed loans <a href=":myStatsUrl">here</a>.
+        '
     ]
 ];
-
