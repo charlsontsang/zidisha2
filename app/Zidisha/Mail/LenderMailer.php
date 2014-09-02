@@ -288,11 +288,9 @@ class LenderMailer
         );        
     }
 
-    public function sendExpiredLoanWithLenderInviteCreditMail(Loan $loan, Lender $lender, Money $amount)
+    public function sendExpiredLoanWithLenderInviteCreditMail(Loan $loan, Lender $lender, Money $amount, Money $inviteCreditBalance)
     {
         $borrower = $loan->getBorrower();
-        $inviteCreditBalance = InviteTransactionQuery::create()
-            ->getTotalInviteCreditAmount($lender);
         $parameters = [
             'borrowerName'              => $borrower->getName(),
             'bidAmount'                 => $amount->getAmount(),

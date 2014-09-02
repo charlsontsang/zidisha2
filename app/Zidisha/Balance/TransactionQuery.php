@@ -233,7 +233,7 @@ class TransactionQuery extends BaseTransactionQuery
             ->groupByUserId()
             ->find();
         $results = $total->toKeyValue('userId', 'total');
-        if (count($results) > 1) {
+        if (count($userIds) > 1) {
             $balanceArray = [];
             foreach ($results as $key=>$value) {
                 $balanceArray[$key] = Money::create($value, 'USD');

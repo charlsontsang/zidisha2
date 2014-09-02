@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Zidisha\Admin\Setting;
 use Zidisha\Analytics\MixpanelService;
+use Zidisha\Balance\InviteTransactionQuery;
 use Zidisha\Balance\Transaction;
 use Zidisha\Balance\TransactionQuery;
 use Zidisha\Balance\TransactionService;
@@ -631,6 +632,8 @@ class LoanService
         }
         $currentCreditArray = TransactionQuery::create()
             ->getCurrentBalance($lenderIds);
+        $inviteCreditArray = InviteTransactionQuery::create()
+            ->getTotalInviteCreditAmount($lenderIds);
         /** @var LenderRefund $lenderRefund */
         foreach ($lenderRefunds as $lenderRefund) {
             if ($lenderRefund->getAmount()->isPositive()) {
@@ -638,7 +641,7 @@ class LoanService
             }
 
             if ($lenderRefund->getLenderInviteCredit()->isPositive()) {
-                $this->lenderMailer->sendExpiredLoanWithLenderInviteCreditMail($loan, $lenderRefund->getLender(), $lenderRefund->getLenderInviteCredit());
+                $this->lenderMailer->sendExpiredLoanWithLenderInviteCreditMail($loan, $lenderRefund->getLender(), $lenderRefund->getLenderInviteCredit(), $inviteCreditArray[$lenderRefund->getLender()->getId()]);
             }
         }
         

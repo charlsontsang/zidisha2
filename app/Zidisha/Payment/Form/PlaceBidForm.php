@@ -92,7 +92,7 @@ class PlaceBidForm extends AbstractPaymentForm
                 $this->lenderInviteCredit = Money::create(0);
             } else {
                 $this->lenderInviteCredit = InviteTransactionQuery::create()
-                    ->getTotalInviteCreditAmount(\Auth::user()->getLender());
+                    ->getTotalInviteCreditAmount(\Auth::user()->getId());
             }
         }
 

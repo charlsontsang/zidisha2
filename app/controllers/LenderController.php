@@ -6,6 +6,7 @@ use Zidisha\Admin\Setting;
 use Zidisha\Balance\InviteTransactionQuery;
 use Zidisha\Balance\Transaction;
 use Zidisha\Balance\TransactionQuery;
+use Zidisha\Lender\Lender;
 use Zidisha\Loan\Paginator\ActiveLoanBids;
 use Zidisha\Loan\Paginator\FundraisingLoanBids;
 use Zidisha\Currency\Currency;
@@ -148,6 +149,7 @@ class LenderController extends BaseController
 
     public function getDashboard()
     {
+        /** @var Lender $lender */
         $lender = \Auth::user()->getLender();
         $userId = \Auth::user()->getId();
         if (!$lender) {
@@ -161,7 +163,7 @@ class LenderController extends BaseController
             ->getCurrentBalance($userId);
 
         $newMemberInviteCredit = InviteTransactionQuery::create()
-            ->getTotalInviteCreditAmount($lender);
+            ->getTotalInviteCreditAmount($lender->getId());
 
         $lendingGroups = LendingGroupQuery::create()
             ->getLendingGroupsForLender($lender);
@@ -325,7 +327,7 @@ class LenderController extends BaseController
             ->getCurrentBalance($userId);
 
         $lenderInviteCredit = InviteTransactionQuery::create()
-            ->getTotalInviteCreditAmount($lender);
+            ->getTotalInviteCreditAmount($lender->getId());
 
         $principleOutstanding = BidQuery::create()
             ->getTotalOutstandingAmount($lender);
