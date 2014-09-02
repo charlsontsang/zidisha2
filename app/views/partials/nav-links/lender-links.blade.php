@@ -8,4 +8,4 @@
 <li><a href="{{ route('lender:invite') }}">Invite Friends</a></li>
 <li><a href="{{ route('lender:history') }}">Transaction History</a></li>
 <li><a href="{{ route('lender:funds') }}">Transfer Funds</a></li>
-<li><a href="{{ route('lender:auto-lending') }}">Auto Lending</a></li>
+<li><a href="{{ route('lender:auto-lending') }}">Autolending</a></li>

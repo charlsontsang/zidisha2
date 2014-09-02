@@ -6,7 +6,14 @@ Transfer Funds
 
 @section('content')
 <div class="row lender-funds-page">
-    <div class="col-sm-8 col-sm-offset-2">
+    <div class="col-sm-3 col-md-4">
+        <ul class="nav side-menu" role="complementary">
+          <h4>Quick Links</h4>
+            @include('partials.nav-links.lender-links')       
+          </ul>
+    </div>
+
+    <div class="col-sm-9 col-md-8 info-page">
         <div class="page-header">
             <h1>Transfer Funds</h1>
         </div>

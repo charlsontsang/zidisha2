@@ -1,18 +1,25 @@
 @extends('layouts.master')
 
 @section('page-title')
-Account Preferences
+Autolending
 @stop
 
 @section('content')
 <div class="row">
-    <div class="col-sm-8 col-sm-offset-2">
+    <div class="col-sm-3 col-md-4">
+        <ul class="nav side-menu" role="complementary">
+          <h4>Quick Links</h4>
+            @include('partials.nav-links.lender-links')       
+          </ul>
+    </div>
+
+    <div class="col-sm-9 col-md-8 info-page">
         <div class="page-header">
-            <h1>Automated Lending</h1>
+            <h1>Autolending</h1>
         </div>
         <div>
         <p>
-        Automated lending allows you to maximize your impact by continuously relending your available lending credit. Talk about paying it forward! <a href="#">Learn more</a>
+        Autolending allows you to maximize your impact by continuously relending your available lending credit. Talk about paying it forward! <a href="#">Learn more</a>
         </p>
         </div>        
         
