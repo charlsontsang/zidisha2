@@ -8669,9 +8669,9 @@ hr {
 .navbar-text {
   color: #767676 !important;
 }
-.navbar-default .navbar-nav > li > a:hover,
-.navbar-default .navbar-nav > li > a:focus {
-  color: #2e9df7;
+.nav > li > a:hover,
+.nav > li > a:focus {
+  color: #2e9df7 !important;
 }
 @media (max-width: 767px) {
   .nav > li,
@@ -8699,6 +8699,28 @@ hr {
   #lending-credit {
     display: inline;
   }
+}
+/* left link navigation in static and account pages */
+.side-menu {
+  display: none;
+}
+@media (min-width: 768px) {
+  .side-menu {
+    display: block;
+    margin-top: 35px;
+  }
+}
+.side-menu > li > a {
+  padding: 4px 0 !important;
+  font-size: 16px;
+  color: #767676 !important;
+}
+.side-menu > li > a:hover,
+.side-menu > li > a:focus {
+  background-color: transparent !important;
+}
+.side-menu > li > a:active {
+  color: #2e9df7;
 }
 /*
  * Side navigation
