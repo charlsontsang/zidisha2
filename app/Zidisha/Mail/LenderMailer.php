@@ -344,6 +344,7 @@ class LenderMailer
         $subject = \Lang::get('lender.mails.lender-unused-fund.subject');
 
         $message = \Lang::get('lender.mails.lender-unused-fund.body', ['lenderBalance' => $currentBalance->getAmount()]);
+        $data['content'] = $message;
 
         $this->mailer->send(
             'emails.hero',
