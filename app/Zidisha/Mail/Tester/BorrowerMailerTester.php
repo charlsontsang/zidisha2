@@ -3,6 +3,7 @@ namespace Zidisha\Mail\Tester;
 
 use Zidisha\Borrower\Borrower;
 use Zidisha\Borrower\JoinLog;
+use Zidisha\Currency\Money;
 use Zidisha\Loan\Loan;
 use Zidisha\Loan\LoanQuery;
 use Zidisha\Mail\BorrowerMailer;
@@ -88,5 +89,15 @@ class BorrowerMailerTester
         $borrower->setActiveLoan($loan);
 
         $this->borrowerMailer->sendLoanFullyFundedMail($loan);
+    }
+
+    public function sendDisbursedLoanMail()
+    {
+        $loan = LoanQuery::create()
+            ->findOne();
+        $loan->setDisbursedAt(new \DateTime());
+        $loan->setDisbursedAmount(Money::create('300', $loan->getCurrencyCode()));
+
+        $this->borrowerMailer->sendDisbursedLoanMail($loan);
     }
 } 
