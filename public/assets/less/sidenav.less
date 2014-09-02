@@ -10,8 +10,11 @@
 .sidenav.affix {
   position: static;
 }
-@media (min-width: 768px) {
-  .sidenav {
+.sidenav {
+  @media (min-width: @screen-sm-min) {
+    padding-left: 10px;
+  }
+  @media (min-width: @screen-md-min) {
     padding-left: 20px;
   }
 }
@@ -20,6 +23,7 @@
 .sidenav-first-level {
   margin-top: 20px;
   margin-bottom: 20px;
+  color: @brand-primary;
 }
 
 /* All levels of nav */
@@ -28,24 +32,18 @@
   padding: 4px 20px;
   font-size: 16px;
   font-weight: 500;
-  color: #999;
+  color: @gray-light;
 }
 .sidenav .nav > li > a:hover,
-.sidenav .nav > li > a:focus {
-  padding-left: 19px;
-  color: #563d7c;
-  text-decoration: none;
-  background-color: transparent;
-  border-left: 1px solid #563d7c;
-}
+.sidenav .nav > li > a:focus,
 .sidenav .nav > .active > a,
 .sidenav .nav > .active:hover > a,
 .sidenav .nav > .active:focus > a {
   padding-left: 18px;
   font-weight: bold;
-  color: #563d7c;
+  color: @brand-primary;
   background-color: transparent;
-  border-left: 2px solid #563d7c;
+  border-left: 2px solid @brand-primary;
 }
 
 /* Nav: second level (shown on .active) */
@@ -55,7 +53,7 @@
 }
 .sidenav .nav .nav > li > a {
   padding-top: 1px;
-  padding-bottom: 1px;
+  padding-bottom: 10px;
   padding-left: 30px;
   font-size: 16px;
   font-weight: normal;
@@ -80,18 +78,18 @@
   margin-left: 10px;
   font-size: 12px;
   font-weight: 500;
-  color: #999;
+  color: @gray-light;
 }
 .back-to-top:hover,
 .bs-docs-theme-toggle:hover {
-  color: #563d7c;
+  color: @brand-primary;
   text-decoration: none;
 }
 .bs-docs-theme-toggle {
   margin-top: 0;
 }
 
-@media (min-width: 768px) {
+@media (min-width: @screen-sm-min) {
   .back-to-top,
   .bs-docs-theme-toggle {
     display: block;
@@ -107,8 +105,8 @@
 
   .sidenav.affix,
   .sidenav.affix-bottom {
-    width: 280px;
-    @media (min-width: @screen-sm-min) {
+    width: 200px;
+    @media (min-width: @screen-md-min) {
       width: 293px;
     }
   }
@@ -126,3 +124,8 @@
   }
 }
 
+/* make sidebar scrollable */
+.sidenav ul > li > ul {
+    overflow-y: auto;
+    height: 400px;
+}

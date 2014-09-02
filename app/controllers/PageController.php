@@ -83,14 +83,13 @@ class PageController extends BaseController {
             ->filterByPublished(true)
             ->orderByCreatedAt('desc')
             ->joinWith('User')
-            ->paginateWithUploads($page, 20);
+            ->paginateWithUploads($page, 100);
 
         return View::make('pages.project-updates', compact('comments'));
     }
 
     public function getFaq()
     {
-        $paramArray = $this->borrowerService->getFaqParameterArray();
         return View::make('pages.faq');
     }
 

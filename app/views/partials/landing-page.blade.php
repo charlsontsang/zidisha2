@@ -52,23 +52,23 @@
 <div class="container">
   <div class="row home-section info-page home text-center">
     <div class="col-sm-12">
-      <h2 class="alpha">What makes Zidisha different?</h2>
+      <h2>What makes Zidisha different?</h2>
     </div>
 
     <div class="col-sm-4">
-      <h3><i class="fa fa-fw fa-dollar"></i></h3>
+      <h3 class="alpha"><i class="fa fa-fw fa-dollar"></i></h3>
       <h4>Lower cost for borrowers</h4>
       <p>Profits from the loans go to the borrowers and their communities, not to intermediaries.</p>
     </div>
 
     <div class="col-sm-4">
-      <h3><i class="fa fa-fw fa-sun-o"></i></h3>
+      <h3 class="alpha"><i class="fa fa-fw fa-sun-o"></i></h3>
       <h4>Transparency for lenders</h4>
       <p>We display the full cost of the loan and let lenders choose the interest rate.</p>
     </div>
 
     <div class="col-sm-4">
-      <h3><i class="fa fa-fw fa-comments"></i></h3>
+      <h3 class="alpha"><i class="fa fa-fw fa-comments"></i></h3>
       <h4>Direct communication</h4>
       <p>Borrowers post their own loan proposals, answer questions and share updates with you directly.</p>
     </div>
@@ -81,7 +81,7 @@
 </div>
 <div class="container-fluid home-section home-grey info-page home">
   <div class="container">
-    <div class="row">
+    <div class="row press">
       <div class="col-sm-3">
         <p><a href="http://blogs.wsj.com/venturecapital/2014/08/25/y-combinator-nonprofit-zidisha-changes-microfinance-equation/" target="_blank"><img src="/assets/images/pages/press/wsj_logo.png" width="110%" class="press-logo" /></a></p>
       </div>
