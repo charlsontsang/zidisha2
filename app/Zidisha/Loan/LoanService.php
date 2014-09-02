@@ -624,10 +624,17 @@ class LoanService
 
         $this->updateLoanIndex($loan);
 
+        $lenderIds = [];
+        /** @var LenderRefund $lenderRefund */
+        foreach ($lenderRefunds as $lenderRefund) {
+            $lenderIds[] = $lenderRefund->getLender()->getId();
+        }
+        $currentCreditArray = TransactionQuery::create()
+            ->getCurrentBalance($lenderIds);
         /** @var LenderRefund $lenderRefund */
         foreach ($lenderRefunds as $lenderRefund) {
             if ($lenderRefund->getAmount()->isPositive()) {
-                $this->lenderMailer->sendExpiredLoanMail($loan, $lenderRefund->getLender(), $lenderRefund->getAmount());
+                $this->lenderMailer->sendExpiredLoanMail($loan, $lenderRefund->getLender(), $lenderRefund->getAmount(), $currentCreditArray[$lenderRefund->getLender()->getId()]);
             }
 
             if ($lenderRefund->getLenderInviteCredit()->isPositive()) {

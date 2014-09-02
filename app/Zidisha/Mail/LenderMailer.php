@@ -266,11 +266,9 @@ class LenderMailer
         );
     }
     
-    public function sendExpiredLoanMail(Loan $loan, Lender $lender, Money $amount)
+    public function sendExpiredLoanMail(Loan $loan, Lender $lender, Money $amount, Money $currentBalance)
     {
         $borrower = $loan->getBorrower();
-        $currentBalance = TransactionQuery::create()
-            ->getCurrentBalance($lender->getId());
         $parameters = [
             'borrowerName'  => $borrower->getName(),
             'bidAmount'     => $amount->getAmount(),

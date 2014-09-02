@@ -123,8 +123,9 @@ class LenderMailerTester
             ->findOne();
 
         $amount = Money::create(25);
+        $currentCredit = Money::create(100);
 
-        $this->lenderMailer->sendExpiredLoanMail($loan, $lender, $amount);
+        $this->lenderMailer->sendExpiredLoanMail($loan, $lender, $amount, $currentCredit);
     }
 
     public function sendExpiredLoanWithLenderInviteCreditMail()
