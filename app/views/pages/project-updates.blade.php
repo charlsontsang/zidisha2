@@ -13,7 +13,7 @@ Project Updates
         </ul>
     </div>
 
-    <div class="col-sm-9 col-md-8 info-page">
+    <div class="col-sm-9 col-md-8">
         <div class="page-header">
             <h1>Project Updates</h1>
         </div>
