@@ -119,4 +119,15 @@ The Zidisha Team
 
 PS:  You can sort the <a href=":lendLink">fundraising loans</a> by “Amount still needed” to find the ones that need the least money to be fully funded.'
     ],
+    'loan-disbursed' => [
+        'subject' => ':borrowerName has received your loan!',
+        'message' => ':borrowFirstName has received your loan.',
+        'body' => 'Good news!  We transferred your loan to :borrowerName on :disbursedDate. :borrowFirstName is now on the way to achieving a brighter future, thanks to you.
+<br/><br/>
+Your loan disbursement is just the beginning. Keep informed of progress and interact with :borrowFirstName via the <a href=":loanPage">loan profile page</a>. Don\'t be shy! We encourage you to post comments and questions for :borrowFirstName throughout the lending period.<br/><br/>
+Cheers,<br/><br/>
+The Zidisha Team
+<br/><br/>
+PS:  Want a really cool gift idea?  Check out our <a href=":giftCardPage">gift cards</a> - your friend chooses the entrepreneur!'
+    ],
 ];

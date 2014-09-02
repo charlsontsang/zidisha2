@@ -249,5 +249,8 @@ return [
         'sendwithus.lender-loan-fully-funded-template-id' => [
             'label' => 'Lender loan fully funded template id'            
         ],
+        'sendwithus.lender-loan-disbursed-template-id' => [
+            'label' => 'Lender loan disbursed template id'
+        ]
     ]
 ];
