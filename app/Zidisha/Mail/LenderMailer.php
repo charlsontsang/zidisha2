@@ -272,8 +272,8 @@ class LenderMailer
             ->getCurrentBalance($lender->getId());
         $messageParameters = [
             'borrowerName'  => $borrower->getName(),
-            'bidAmount'     => $amount,
-            'creditbalance' => $currentBalance,
+            'bidAmount'     => $amount->getAmount(),
+            'creditbalance' => $currentBalance->getAmount(),
             'lendLink'      => route('lend:index')
         ];
         $message = \Lang::get('lender.mails.loan-expired.body', $messageParameters);
