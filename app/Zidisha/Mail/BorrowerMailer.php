@@ -295,9 +295,38 @@ class BorrowerMailer{
     }
 
 
-    public function sendDisbursedLoanMail($loan)
+    public function sendDisbursedLoanMail(Loan $loan)
     {
-        // TODO see $session->updateActiveLoan, sendwithus tag BORROWER_NOTIFICATIONS_TAG
+        $borrower = $loan->getBorrower();
+        $disbursedAmount = $loan->getDisbursedAmount();
+        $registrationFee = $borrower->getCountry()->getRegistrationFee();
+        $repaymentInstruction = '';
+        $countryInstruction = $borrower->getCountry()->getRepaymentInstructions();
+        if (!empty($countryInstruction)) {
+            $repaymentInstruction = nl2br($countryInstruction);
+        }
+        $parameters = [
+            'borrowerName'         => $borrower->getName(),
+            'disbursedAmount'      => $disbursedAmount->getAmount(),
+            'registrationFee'      => $registrationFee->getAmount(),
+            'netAmount'            => $disbursedAmount->subtract($registrationFee)->getAmount(),
+            'zidishaLink'          => route('home'),
+            'repaymentInstruction' => $repaymentInstruction
+        ];
+
+        $data['image_src'] = $borrower->getUser()->getProfilePictureUrl();
+        $body = \Lang::get('borrower.mails.loan-disbursed.body', $parameters);
+        $data['content'] = $body;
+
+        $this->mailer->send(
+            'emails.hero',
+            $data + [
+                'to'         => $borrower->getUser()->getEmail(),
+                'from'       => \Lang::get('site.fromEmailAddress'),
+                'subject'    => \Lang::get('borrower.mails.loan-disbursed.subject', $parameters),
+                'templateId' => \Setting::get('sendwithus.borrower-notifications-template-id')
+            ]
+        );
     }
 
     public function sendLoanFullyFundedMail(Loan $loan)
@@ -313,7 +342,6 @@ class BorrowerMailer{
             'emails.hero',
             $data + [
                 'to'         => $loan->getBorrower()->getUser()->getEmail(),
-                'from'       => \Lang::get('site.fromEmailAddress'),
                 'subject'    => \Lang::get('borrower.mails.loan-fully-funded.subject'),
                 'templateId' => \Setting::get('sendwithus.borrower-notifications-template-id')
             ]

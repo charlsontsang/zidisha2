@@ -20,4 +20,14 @@ Please do not hesitate to contact us at service@zidisha.org if you desire assist
 Best wishes,<br/><br/>
 The Zidisha Team'
     ],
+    'loan-disbursed' => [
+        'subject' => 'Loan disbursement confirmation',
+        'body' => 'Dear :borrowerName ,<br/><br/>This is to confirm disbursement of your Zidisha loan in the amount of :disbursedAmount. If this is your first Zidisha loan, the new client registration fee of :registrationFee was deducted from your loan disbursement for a net payment of :netAmount.<br/><br/>".
+"To view your repayment schedule please log into your account at <a href=":zidishaLink" target=\'_blank\'>www.zidisha.org</a> and click on "Repayment Schedule"<br/><br/>'.
+':repaymentInstruction<br/><br/>'.
+'Now, we\'d like to ask for your help. Please log in to your account at <a href=":zidishaLink" target=\'_blank\'>www.zidisha.org</a> and click "Post a Comment". Then type a comment to let lenders know exactly what you have been able to purchase with the loan, and how it has helped you.  Regular communication with lenders regarding the results of their loan will help establish good relations such that that they will be happy to lend to you again in the future.<br/><br/>'.
+'Should you have any questions, please do not hesitate to contact us at service@zidisha.org.<br/><br/>'.
+'We wish you much success in your endeavor.<br/><br/>'.
+'Zidisha Team'
+    ],
 ];
