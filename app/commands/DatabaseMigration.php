@@ -52,6 +52,7 @@ class DatabaseMigration extends Command {
             $this->call('migrate-zidisha1', array('table' => 'users'));
             $this->call('migrate-zidisha1', array('table' => 'lenders'));
             $this->call('migrate-zidisha1', array('table' => 'borrowers'));
+            $this->call('migrate-zidisha1', array('table' => 'volunteer_mentors'));
             $this->call('migrate-zidisha1', array('table' => 'loan_categories'));
             $this->call('migrate-zidisha1', array('table' => 'loans'));
             $this->call('migrate-zidisha1', array('table' => 'loan_bids'));
@@ -73,7 +74,6 @@ class DatabaseMigration extends Command {
             $this->call('migrate-zidisha1', array('table' => 'forgiveness_loan_shares'));
             $this->call('migrate-zidisha1', array('table' => 'forgiveness_loans'));
             $this->call('migrate-zidisha1', array('table' => 'borrower_refunds'));
-            $this->call('migrate-zidisha1', array('table' => 'volunteer_mentors'));
             $this->call('migrate-zidisha1', array('table' => 'borrower_feedback_messages'));
             $this->call('migrate-zidisha1', array('table' => 'borrower_reviews'));
             $this->call('migrate-zidisha1', array('table' => 'lending_groups'));
@@ -353,7 +353,7 @@ class DatabaseMigration extends Command {
                         'active_loan_id'      => null, // TODO $borrower->activeLoanID, do when importing loans 
                         'loan_status'         => $borrower->ActiveLoan,
                         'active'              => $borrower->Active,
-                        'volunteer_mentor_id' => null, // $borrower->Assigned_to TODO when importing volunteer mentors
+                        'volunteer_mentor_id' => null, // we do it when importing volunteer mentors
                         'referrer_id'         => $referrerId,
                         'verified'            => $borrower->emailVerified,
                         'activation_status'   => $activationStatus[$borrower->Assigned_status],
@@ -1188,29 +1188,54 @@ class DatabaseMigration extends Command {
 
         if ($table == 'volunteer_mentors') {
             $this->line('Migrate volunteer_mentors table');
+            $ids = [];
+            $menteeCount = [];
 
             $count = $this->con->table('community_organizers')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $volunteerMentors = $this->con->table('community_organizers')
-                    ->skip($offset)->limit($limit)->get();
+                    ->select('community_organizers.*', 'countries.id AS country_id')
+                    ->join('countries', 'community_organizers.country', '=', 'countries.code')
+                    ->join('borrowers', 'community_organizers.user_id', '=', 'borrowers.userid') // TODO other community_organizers
+                    ->skip($offset)
+                    ->limit($limit)
+                    ->get();
                 $volunteerMentorArray = [];
 
                 foreach ($volunteerMentors as $volunteerMentor) {
                     $newVolunteerMentor = [
-                        'borrower_id' => $volunteerMentor['user_id'],
-                        'country_id'  => $volunteerMentor['country'],
-                        'grant_date'  => date("Y-m-d H:i:s", $volunteerMentor['grant_date']),
-                        'note'        => $volunteerMentor['note'],
-                        'status'      => $volunteerMentor['status']
+                        'borrower_id' => $volunteerMentor->user_id,
+                        'country_id'  => $volunteerMentor->country_id,
+                        'grant_date'  => date("Y-m-d H:i:s", $volunteerMentor->grant_date),
+                        'created_at'  => date("Y-m-d H:i:s", $volunteerMentor->grant_date),
+                        'updated_at'  => date("Y-m-d H:i:s", $volunteerMentor->grant_date),
+                        'note'        => $volunteerMentor->note,
+                        'active'      => $volunteerMentor->status
                     ];
-                    //TODO, will mentee_count get calculated here?
 
                     array_push($volunteerMentorArray, $newVolunteerMentor);
+                    $ids[] = $volunteerMentor->user_id;
+                    $menteeCount[$volunteerMentor->user_id] = 0;
                 }
                 DB::table('volunteer_mentors')->insert($volunteerMentorArray);
+            }
+            
+            $rows = $this->con->table('borrowers_extn AS be')
+                ->select('be.userid', 'be.mentor_id')
+                ->join('borrowers', 'borrowers.userid', '=', 'be.userid')
+                ->whereIn('be.mentor_id', $ids)
+                ->where('borrowers.Active', '=', 1)
+                ->get();
+            
+            foreach ($rows as $row) {
+                DB::table('borrowers')->where('id', $row->userid)->update(['volunteer_mentor_id' => $row->mentor_id]);
+                $menteeCount[$row->mentor_id] += 1;
+            }
+
+            foreach ($menteeCount as $userId => $count) {
+                DB::table('volunteer_mentors')->where('borrower_id', $userId)->update(['mentee_count' => $count]);
             }
         }
 
