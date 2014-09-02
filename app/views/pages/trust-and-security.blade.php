@@ -6,7 +6,14 @@ Trust and Security
 
 @section('content')
 <div class="row">
-    <div class="col-md-8 col-md-offset-2 info-page">
+        <div class="col-sm-3 col-md-4">
+            <ul class="nav side-menu" role="complementary">
+              <h4>About</h4>
+              @include('partials.nav-links.about-links')
+            </ul>
+        </div>
+
+        <div class="col-sm-9 col-md-8 info-page">
         <div class="page-header">
             <h1>Trust and Security</h1>
         </div>
