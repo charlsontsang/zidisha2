@@ -51,8 +51,8 @@ class DatabaseMigration extends Command {
             $this->call('migrate-zidisha1', array('table' => 'countries'));
             $this->call('migrate-zidisha1', array('table' => 'users'));
             $this->call('migrate-zidisha1', array('table' => 'lenders'));
-            $this->call('migrate-zidisha1', array('table' => 'borrowers'));
             $this->call('migrate-zidisha1', array('table' => 'loan_categories'));
+            $this->call('migrate-zidisha1', array('table' => 'borrowers'));
             $this->call('migrate-zidisha1', array('table' => 'loans'));
             $this->call('migrate-zidisha1', array('table' => 'loan_bids'));
             $this->call('migrate-zidisha1', array('table' => 'admin_notes'));
@@ -395,27 +395,29 @@ class DatabaseMigration extends Command {
 
             foreach ($categories as $category) {
                 $newCategory = [
-                    'id'               => $category['id'],
-                    'name'             => $category['name'],
-                    'slug'             => \Illuminate\Support\Str::slug($category['name']),
-                    'what_description' => $category['what'],
-                    'why_description'  => $category['why'],
-                    'how_description'  => $category['lend'], //TODO cross check
-                    'admin_only'       => $category['admin'],
-                    ''
+                    'id'               => $category->id,
+                    'name'             => $category->name,
+                    'slug'             => \Illuminate\Support\Str::slug($category->name),
+                    'what_description' => $category->what,
+                    'why_description'  => $category->why,
+                    'how_description'  => $category->lend,
+                    'admin_only'       => $category->admin,
+                    'sortable_rank'    => $category->sort_order,
+                    'created_at'       => date("Y-m-d H:i:s", time()),
+                    'updated_at'       => date("Y-m-d H:i:s", time()),
                 ];
 
                 array_push($categoryArray, $newCategory);
 
                 $categoryTranslationFR = [
-                    'category_id'   => $category['id'],
+                    'category_id'   => $category->id,
                     'language_code' => 'fr',
-                    'translation'   => $category['name'],
+                    'translation'   => $category->name,
                 ];
                 $categoryTranslationID = [
-                    'category_id'   => $category['id'],
-                    'language_code' => 'id', //TODO, in old DB it seems it's 'in'
-                    'translation'   => $category['name'],
+                    'category_id'   => $category->id,
+                    'language_code' => 'in',
+                    'translation'   => $category->name,
                 ];
                 array_push($categoryTranslationArray, $categoryTranslationFR);
                 array_push($categoryTranslationArray, $categoryTranslationID);
