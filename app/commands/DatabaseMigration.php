@@ -790,22 +790,24 @@ class DatabaseMigration extends Command {
             $this->line('Migrate exchange_rates table');
 
             $count = $this->con->table('excrate')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $rates = $this->con->table('excrate')
+                    ->select('excrate.*', 'currency.Currency')
                     ->join('currency', 'excrate.currency', '=', 'currency.id')
-                    ->skip($offset)->limit($limit)->get();
+                    ->skip($offset)
+                    ->limit($limit)
+                    ->get();
                 $rateArray = [];
 
                 foreach ($rates as $rate) {
                     $newRate = [
-                        'id'            => $rate['excrate.id'],
-                        'rate'          => $rate['excrate.rate'],
-                        'start_date'    => date("Y-m-d H:i:s", $rate['excrate.start']),
-                        'end_date'      => date("Y-m-d H:i:s", $rate['excrate.stop']),
-                        'currency_code' => $rate['currency.Currency']
+                        'id'            => $rate->id,
+                        'rate'          => $rate->rate,
+                        'start_date'    => date("Y-m-d H:i:s", $rate->start),
+                        'end_date'      => date("Y-m-d H:i:s", $rate->stop),
+                        'currency_code' => $rate->Currency
                     ];
 
                     array_push($rateArray, $newRate);
