@@ -40,7 +40,8 @@ Trust and Security
             <li>Notifying and requesting mediation from local contacts, volunteers, and leaders in the borrower's community in the event of default.</li>
         </ul>
 
-        <p>That said, it's important to understand that Zidisha is a purely online service without local offices or loan officers. We are a low-cost nonprofit community (managed by volunteers). Our organization is responsible only for maintaining the Zidisha.org website as a platform for the transactions that take place between its members, and it is up to the lenders, not Zidisha, to determine if a business is viable and worthy of being funded. We do not undertake many of the activities that are performed by traditional banks and microfinance institutions, including:</p>
+        <p>That said, it's important to understand that Zidisha is a purely online service without local offices or loan officers. We are a low-cost nonprofit community (managed by volunteers). Our organization is responsible only for maintaining the Zidisha.org website as a platform for the transactions that take place between its members, and it is up to the lenders, not Zidisha, to determine if a business is viable and worthy of being funded.</p>
+        <p>We do not undertake many of the activities that are performed by traditional banks and microfinance institutions, including:</p>
 
         <ul>
             <li>Fact-checking or guarantees that the information provided by borrowers is accurate.</li>

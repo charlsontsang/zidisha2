@@ -33,7 +33,7 @@ Press
             
         <hr/>
         
-        <p><a href="http://techcrunch.com/2014/01/23/zidisha-launches-a-kickstarter-style-micro-lending-platform-for-low-income-entrepreneurs-in-developing-countries/" target="_blank"><img src="{{ asset('assets/images/pages/press/tc_logo.png'); }}" /></a></p>
+        <p><a href="http://techcrunch.com/2014/01/23/zidisha-launches-a-kickstarter-style-micro-lending-platform-for-low-income-entrepreneurs-in-developing-countries/" target="_blank"><img src="{{ asset('assets/images/pages/press/tc_logo.png'); }}" width="20%" /></a></p>
         <br/>
         <blockquote>
             <p>"By enabling the efficient flow of capital across international boundaries and wealth divisions, and by allowing lenders to connect with and send money directly to borrowers, peer-to-peer micro-lending has the ability to have an enormous impact — on a global scale."</p>
@@ -44,7 +44,7 @@ Press
             
         <hr/>
         
-        <p><a href="http://paulbuchheit.blogspot.com/2014/03/help-me-distribute-100000-to-new.html" target="_blank"><img src="{{ asset('assets/images/pages/press/yc_logo.png'); }}" width="25%" /></a></p>
+        <p><a href="http://paulbuchheit.blogspot.com/2014/03/help-me-distribute-100000-to-new.html" target="_blank"><img src="{{ asset('assets/images/pages/press/yc_logo.png'); }}" width="30%" /></a></p>
         <br/>
         <blockquote>
             <p>"I'm excited to have Zidisha as one of our most recent Y Combinator funded non-profit organizations... Just as Airbnb connects travelers directly to hosts, Zidisha connects lenders directly to borrowers, providing not only an affordable loan, but also a personal connection."</p>

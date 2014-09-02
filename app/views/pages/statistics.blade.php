@@ -87,7 +87,7 @@ Statistics
             {{ BootstrapHtml::tooltip('lender.tooltips.pages.principal-repaid') }}
             <br/>
             USD {{ number_format($lendingStatistics['repaid_amount'], 0, ".", ","); }}
-            ( {{ number_format($lendingStatistics['repaid_rate'], 1, ".", ","); }}% of amount disbursed)
+            ({{ number_format($lendingStatistics['repaid_rate'], 1, ".", ","); }}% of amount disbursed)
             </p>
             <br/>
         @endif
@@ -96,7 +96,7 @@ Statistics
             {{ BootstrapHtml::tooltip('lender.tooltips.pages.principal-repaid-on-time') }}
             <br/>
             USD {{ number_format($lendingStatistics['outstanding_on_time_amount'], 0, ".", ",") }}
-            ( {{ number_format($lendingStatistics['outstanding_on_time_rate'], 1, ".", ","); }}% of amount disbursed)
+            ({{ number_format($lendingStatistics['outstanding_on_time_rate'], 1, ".", ","); }}% of amount disbursed)
             </p>
             <br/>
         @endif
@@ -105,7 +105,7 @@ Statistics
             {{ BootstrapHtml::tooltip('lender.tooltips.pages.principal-repaid-due') }}
             <br/>
             USD {{ number_format($lendingStatistics['outstanding_late_amount'], 0, ".", ",") }}
-            ( {{ number_format($lendingStatistics['outstanding_late_rate'], 1, ".", ","); }}% of amount disbursed)
+            ({{ number_format($lendingStatistics['outstanding_late_rate'], 1, ".", ","); }}% of amount disbursed)
             </p>
             <br/>
         @endif
@@ -114,7 +114,7 @@ Statistics
              {{ BootstrapHtml::tooltip('lender.tooltips.pages.principal-forgiven') }}
              <br/>
              USD {{ number_format($lendingStatistics['forgiven_amount'], 0, ".", ","); }}
-             ( {{ number_format($lendingStatistics['forgiven_rate'], 1, ".", ","); }}% of amount disbursed)
+             ({{ number_format($lendingStatistics['forgiven_rate'], 1, ".", ","); }}% of amount disbursed)
              </p>
              <br/>
         @endif
@@ -123,9 +123,11 @@ Statistics
             {{ BootstrapHtml::tooltip('lender.tooltips.pages.principal-written-off') }}
             <br/>
             USD {{ number_format($lendingStatistics['written_off_amount'], 0, ".", ","); }}
-            ( {{ number_format($lendingStatistics['written_off_rate'], 1, ".", ","); }}% of amount disbursed)
+            ({{ number_format($lendingStatistics['written_off_rate'], 1, ".", ","); }}% of amount disbursed)
         @endif
-        <p>Want to dive deeper? You can see the individual loan reports that provided the raw data for these statistics <a href="https://www.zidisha.org/index.php?p=114">here, TODO</a>.</p>
+        <!-- TO DO 
+        <p>Want to dive deeper? You can see the individual loan reports that provided the raw data for these statistics <a href="https://www.zidisha.org/index.php?p=114">here</a>.</p>
+        -->
     </div>
 </div>
 
