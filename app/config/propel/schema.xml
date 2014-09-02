@@ -237,10 +237,10 @@
         <column name="national_id_number" type="VARCHAR" size="100" required="true"/>
         <column name="phone_number" type="VARCHAR" size="45" required="true"/>
         <column name="alternate_phone_number" type="VARCHAR" size="45" required="true"/>
-        <column name="business_category_id" type="INTEGER" required="true"/>
-        <column name="business_years" type="ENUM" valueSet="0,1,2,3,4" required="true"/>
-        <column name="loan_usage" type="ENUM" valueSet="0,1,2,3,4,5,6,7" required="true"/>
-        <column name="birth_date" type="TIMESTAMP" required="true"/>
+        <column name="business_category_id" type="INTEGER" required="false"/>
+        <column name="business_years" type="ENUM" valueSet="0,1,2,3,4" required="false"/>
+        <column name="loan_usage" type="ENUM" valueSet="0,1,2,3,4,5,6,7" required="false"/>
+        <column name="birth_date" type="TIMESTAMP" required="false"/>
         <behavior name="timestampable"/>
         <foreign-key foreignTable="borrowers">
             <reference local="borrower_id" foreign="id"/>
@@ -815,6 +815,7 @@
         <column name="phone_number" type="VARCHAR" size="32" required="true"/>
         <column name="description" type="VARCHAR" size="255" required="true"/>
         <column name="type" type="ENUM" valueSet="familyMember,neighbor,communityLeader" required="true"/>
+        <behavior name="timestampable"/>
         <foreign-key foreignTable="borrowers">
             <reference local="borrower_id" foreign="id"/>
         </foreign-key>

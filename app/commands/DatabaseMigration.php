@@ -51,8 +51,8 @@ class DatabaseMigration extends Command {
             $this->call('migrate-zidisha1', array('table' => 'countries'));
             $this->call('migrate-zidisha1', array('table' => 'users'));
             $this->call('migrate-zidisha1', array('table' => 'lenders'));
-            $this->call('migrate-zidisha1', array('table' => 'loan_categories'));
             $this->call('migrate-zidisha1', array('table' => 'borrowers'));
+            $this->call('migrate-zidisha1', array('table' => 'loan_categories'));
             $this->call('migrate-zidisha1', array('table' => 'loans'));
             $this->call('migrate-zidisha1', array('table' => 'loan_bids'));
             $this->call('migrate-zidisha1', array('table' => 'admin_notes'));
@@ -263,115 +263,190 @@ class DatabaseMigration extends Command {
             $this->line('Migrate borrower_contacts table');
             $this->line('Migrate borrower_join_logs table');
 
+            $userIdToReferrerId = [];
+            $_nonExistingReferrers = $this->con->table('borrowers AS b') 
+                ->select('b.refer_member_name')
+                ->leftJoin('borrowers AS bb', 'b.refer_member_name', '=', 'bb.userid')
+                ->where('b.refer_member_name', '>', 0)
+                ->whereRaw('bb.userid IS NULL')
+                ->get();
+            $nonExistingReferrers = [];
+            foreach ($_nonExistingReferrers as $_nonExistingReferrer) {
+                $nonExistingReferrers[$_nonExistingReferrer->refer_member_name] = $_nonExistingReferrer->refer_member_name;
+            }
+            
             $count = $this->con->table('borrowers')->count();
-            $offset = 0;
             $limit = 500;
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $borrowers = $this->con->table('borrowers')
+                    ->select(
+                        'borrowers.*',
+                        'users.emailVerified',
+                        'countries.id AS country_id',
+                        'borrowers_extn.community_leader_first_name',
+                        'borrowers_extn.community_leader_last_name',
+                        'borrowers_extn.community_leader_mobile_phone',
+                        'borrowers_extn.community_leader_organization_title',
+                        'borrowers_extn.family_member1_first_name',
+                        'borrowers_extn.family_member1_last_name',
+                        'borrowers_extn.family_member1_mobile_phone',
+                        'borrowers_extn.family_member1_relationship',
+                        'borrowers_extn.family_member2_first_name',
+                        'borrowers_extn.family_member2_last_name',
+                        'borrowers_extn.family_member2_mobile_phone',
+                        'borrowers_extn.family_member2_relationship',
+                        'borrowers_extn.family_member3_first_name',
+                        'borrowers_extn.family_member3_last_name',
+                        'borrowers_extn.family_member3_mobile_phone',
+                        'borrowers_extn.family_member3_relationship',
+                        'borrowers_extn.neighbor1_first_name',
+                        'borrowers_extn.neighbor1_last_name',
+                        'borrowers_extn.neighbor1_mobile_phone',
+                        'borrowers_extn.neighbor1_relationship',
+                        'borrowers_extn.neighbor2_first_name',
+                        'borrowers_extn.neighbor2_last_name',
+                        'borrowers_extn.neighbor2_mobile_phone',
+                        'borrowers_extn.neighbor2_relationship',
+                        'borrowers_extn.neighbor3_first_name',
+                        'borrowers_extn.neighbor3_last_name',
+                        'borrowers_extn.neighbor3_mobile_phone',
+                        'borrowers_extn.neighbor3_relationship'
+//                        'facebook_info.ip_address AS ip_address'
+                    )
                     ->join('users', 'borrowers.userid', '=', 'users.userid')
                     ->join('countries', 'borrowers.Country', '=', 'countries.code')
                     ->join('borrowers_extn', 'borrowers.userid', '=', 'borrowers_extn.userid')
-                    ->join('facebook_info', 'borrowers.userid', '=', 'facebook_info.userid')
-                    ->skip($offset)->take($limit)->get();
+//                    ->join('facebook_info', 'borrowers.userid', '=', 'facebook_info.userid')
+                    ->orderBy('borrowers.userid', 'asc')
+                    ->skip($offset)
+                    ->take($limit)
+                    ->get();
+                
                 $borrowerArray = [];
                 $profileArray = [];
                 $contactArray = [];
                 $borrowerJoinLogArray = [];
+                
+                $activationStatus = [
+                    0 => 0, // pending
+                    -1 => 1, // incomplete TODO check
+                    -2 => 2, // reviewed TODO check
+                    1 => 3, // approved
+                    2 => 4, // declined
+                ];
 
                 foreach ($borrowers as $borrower) {
+                    $referrerId = $borrower->refer_member_name ?: null;
+                    if (isset($nonExistingReferrers[$referrerId])) {
+                        $referrerId = null;
+                    }
+                    elseif ($borrower->userid < $referrerId) {
+                        $userIdToReferrerId[$borrower->userid] = $referrerId;
+                        $referrerId = null;
+                    }
+                    
                     $newBorrower = [
-                        'id'                  => $borrower['users.userid'],
-                        'country_id'          => $borrower['countries.id'],
-                        'first_name'          => $borrower['borrowers.FirstName'],
-                        'last_name'           => $borrower['borrowers.LastName'],
-                        'active_loan_id'      => $borrower['borrowers.activeLoanID'],
-                        'loan_status'         => $borrower['borrowers.ActiveLoan'],
-                        'active'              => $borrower['borrowers.Active'],
-                        'volunteer_mentor_id' => $borrower['borrowers.Assigned_to'],
-                        'referrer_id'         => $borrower['borrowers.refer_member_name'], //TODO cross check
-                        'verified'            => 'TODO', // TODO
-                        'activation_status'   => null, // TODO
+                        'id'                  => $borrower->userid,
+                        'country_id'          => $borrower->country_id,
+                        'first_name'          => $borrower->FirstName,
+                        'last_name'           => $borrower->LastName,
+                        'active_loan_id'      => null, // TODO $borrower->activeLoanID, do when importing loans 
+                        'loan_status'         => $borrower->ActiveLoan,
+                        'active'              => $borrower->Active,
+                        'volunteer_mentor_id' => null, // $borrower->Assigned_to TODO when importing volunteer mentors
+                        'referrer_id'         => $referrerId,
+                        'verified'            => $borrower->emailVerified,
+                        'activation_status'   => $activationStatus[$borrower->Assigned_status],
+                        'created_at'          => date("Y-m-d H:i:s", $borrower->Created),
+                        'updated_at'          => date("Y-m-d H:i:s", $borrower->LastModified),
                     ];
 
                     $profile = [
-                        'borrower_id'                => $borrower['users.userid'],
-                        'about_me'                   => $borrower['borrowers.About'],
-                        'about_me_translation'       => $borrower['borrowers.tr_About'],
-                        'about_business'             => $borrower['borrowers.BizDesc'],
-                        'about_business_translation' => $borrower['borrowers.tr_BizDesc'],
-                        'address'                    => $borrower['borrowers.PAddress'],
-                        'address_instructions'       => 'TODO',// TODO
-                        'city'                       => $borrower['borrowers.City'],
-                        'national_id_number'         => $borrower['borrowers.nationId'],
-                        'phone_number'               => $borrower['borrowers.TelMobile'],
-                        'alternate_phone_number'     => $borrower['borrowers.AlternateTelMobile'], //TODO, though column in both new/old database are required=true, the database sample you gave have value null
-                        'business_category_id'       => '',
-                        'business_years'             => '',
-                        'loan_usage'                 => '',
+                        'borrower_id'                => $borrower->userid,
+                        'about_me'                   => $borrower->About ?: '',
+                        'about_me_translation'       => $borrower->tr_About,
+                        'about_business'             => $borrower->BizDesc ?: '',
+                        'about_business_translation' => $borrower->tr_BizDesc,
+                        'address'                    => $borrower->PAddress ?: '',
+                        'address_instructions'       => $borrower->home_location ?: '',
+                        'city'                       => $borrower->City,
+                        'national_id_number'         => $borrower->nationId,
+                        'phone_number'               => $borrower->TelMobile,// TODO clean up
+                        'alternate_phone_number'     => $borrower->AlternateTelMobile ?: '',// TODO clean up
+                        'business_category_id'       => null,
+                        'business_years'             => null,
+                        'loan_usage'                 => null,
                         'birth_date'                 => null,
+                        'created_at'                 => date("Y-m-d H:i:s", $borrower->Created),
+                        'updated_at'                 => date("Y-m-d H:i:s", $borrower->LastModified),
                     ];
 
-                    //TODO, though all values are required in both tables, many are null in sample data
                     $communityLeader = [
-                        'borrower_id'  => $borrower['users.userid'],
-                        'first_name'   => $borrower['borrowers_extn.community_leader_first_name'],
-                        'last_name'    => $borrower['borrowers_extn.community_leader_last_name'],
-                        'phone_number' => $borrower['borrowers_extn.community_leader_mobile_phone'],
-                        'description'  => $borrower['borrowers_extn.community_leader_organization_title'],
-                        'type'         => 'communityLeader'
+                        'borrower_id'  => $borrower->userid,
+                        'first_name'   => $borrower->community_leader_first_name,
+                        'last_name'    => $borrower->community_leader_last_name,
+                        'phone_number' => $borrower->community_leader_mobile_phone,
+                        'description'  => $borrower->community_leader_organization_title,
+                        'type'         => 2, // communityLeader,
+                        'created_at'   => date("Y-m-d H:i:s", $borrower->Created),
+                        'updated_at'   => date("Y-m-d H:i:s", $borrower->LastModified),
                     ];
 
                     for ($i = 1; $i <= 3; $i++) {
-                        $stringFirstName = 'borrowers_extn.family_member'. $i. '_first_name';
-                        $stringLastName = 'borrowers_extn.family_member'. $i. '_last_name';
-                        $stringPhoneNumber = 'borrowers_extn.family_member'. $i. '_mobile_phone';
-                        $stringDescription = 'borrowers_extn.family_member'. $i. '_relationship';
+                        $stringFirstName = 'family_member'. $i. '_first_name';
+                        $stringLastName = 'family_member'. $i. '_last_name';
+                        $stringPhoneNumber = 'family_member'. $i. '_mobile_phone';
+                        $stringDescription = 'family_member'. $i. '_relationship';
 
-                        if (!$borrower[$stringFirstName] && !$borrower[$stringLastName] && !$borrower[$stringPhoneNumber]){
+                        if (!$borrower->$stringFirstName && !$borrower->$stringLastName && !$borrower->$stringPhoneNumber) {
                             continue;
                         }
                         $familyMember = [
-                            'borrower_id'  => $borrower['users.userid'],
-                            'first_name'   => $borrower[$stringFirstName] ? $borrower[$stringFirstName] : '',
-                            'last_name'    => $borrower[$stringLastName] ? $borrower[$stringLastName] : '',
-                            'phone_number' => $borrower[$stringPhoneNumber] ? $borrower[$stringPhoneNumber] : '',
-                            'description'  => $borrower[$stringDescription] ? $borrower[$stringDescription] : '',
-                            'type'         => 'familyMember'
+                            'borrower_id'  => $borrower->userid,
+                            'first_name'   => $borrower->$stringFirstName ?: '',
+                            'last_name'    => $borrower->$stringLastName ?: '',
+                            'phone_number' => $borrower->$stringPhoneNumber ?: '',
+                            'description'  => $borrower->$stringDescription ?: '',
+                            'type'         => 0, // familyMember
+                            'created_at'   => date("Y-m-d H:i:s", $borrower->Created),
+                            'updated_at'   => date("Y-m-d H:i:s", $borrower->LastModified),
                         ];
                         array_push($contactArray, $familyMember);
                     }
 
                     for ($i = 1; $i <= 3; $i++) {
-                        $stringFirstName = 'borrowers_extn.neighbor'. $i. '_first_name';
-                        $stringLastName = 'borrowers_extn.neighbor'. $i. '_last_name';
-                        $stringPhoneNumber = 'borrowers_extn.neighbor'. $i. '_mobile_phone';
-                        $stringDescription = 'borrowers_extn.neighbor'. $i. '_relationship';
-
-                        if (!$borrower[$stringFirstName] && !$borrower[$stringLastName] && !$borrower[$stringPhoneNumber] && !$stringDescription){
-                            continue;
-                        }
+                        $stringFirstName = 'neighbor'. $i. '_first_name';
+                        $stringLastName = 'neighbor'. $i. '_last_name';
+                        $stringPhoneNumber = 'neighbor'. $i. '_mobile_phone';
+                        $stringDescription = 'neighbor'. $i. '_relationship';
+                        
                         $neighbor = [
-                            'borrower_id'  => $borrower['users.userid'],
-                            'first_name'   => $borrower[$stringFirstName] ? $borrower[$stringFirstName] : '',
-                            'last_name'    => $borrower[$stringLastName] ? $borrower[$stringLastName] : '',
-                            'phone_number' => $borrower[$stringPhoneNumber] ? $borrower[$stringPhoneNumber] : '',
-                            'description'  => $borrower[$stringDescription] ? $borrower[$stringDescription] : '',
-                            'type'         => 'neighbor'
+                            'borrower_id'  => $borrower->userid,
+                            'first_name'   => $borrower->$stringFirstName ?: '',
+                            'last_name'    => $borrower->$stringLastName ?: '',
+                            'phone_number' => $borrower->$stringPhoneNumber ?: '',
+                            'description'  => $borrower->$stringDescription ?: '',
+                            'type'         => 1, // neighbor
+                            'created_at'   => date("Y-m-d H:i:s", $borrower->Created),
+                            'updated_at'   => date("Y-m-d H:i:s", $borrower->LastModified),
                         ];
                         array_push($contactArray, $neighbor);
                     }
 
                     $newJoinLog = [
-                        'borrower_id' => $borrower['users.userid'],
-                        'ip_address' => $borrower['facebook_info.ip_address'] ? $borrower['facebook_info.ip_address'] : '',
-                        'preferred_loan_amount' => '',
-                        'preferred_interest_rate' => '',
+                        'borrower_id'                => $borrower->userid,
+                        'ip_address'                 => '', // TODO clean up duplicates in facebook_info table $borrower->ip_address ?: '',
+                        'preferred_loan_amount'      => '',
+                        'preferred_interest_rate'    => '',
                         'preferred_repayment_amount' => '',
+                        'created_at'                 => date("Y-m-d H:i:s", $borrower->Created),
+                        'updated_at'                 => date("Y-m-d H:i:s", $borrower->Created),
                     ];
 
-                    if (!$borrower['users.emailVerified']) {
-                        $newJoinLog = $newJoinLog + ['verification_code' => md5($borrower['users.password'].$borrower['users.salt'])];
-                    }
+                    // TODO we should probably not share this with old database
+//                    if (!$borrower['users.emailVerified']) {
+//                        $newJoinLog = $newJoinLog + ['verification_code' => md5($borrower['users.password'].$borrower['users.salt'])];
+//                    }
 
                     array_push($borrowerArray, $newBorrower);
                     array_push($profileArray, $profile);
@@ -379,9 +454,13 @@ class DatabaseMigration extends Command {
                     array_push($borrowerJoinLogArray, $newJoinLog);
                 }
                 DB::table('borrowers')->insert($borrowerArray);
-                DB::table('borrowers')->insert($profileArray);
+                DB::table('borrower_profiles')->insert($profileArray);
                 DB::table('borrower_contacts')->insert($contactArray);
                 DB::table('borrower_join_logs')->insert($borrowerJoinLogArray);
+            }
+            
+            foreach ($userIdToReferrerId as $userId => $referrerId) {
+                DB::table('borrowers')->where('id', $userId)->update(['referrer_id' => $referrerId]);
             }
         }
 
