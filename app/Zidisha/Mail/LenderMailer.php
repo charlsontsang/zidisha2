@@ -284,7 +284,6 @@ class LenderMailer
             'emails.hero',
             $data + [
                 'to'         => $lender->getUser()->getEmail(),
-                'from'       => \Lang::get('site.fromEmailAddress'),
                 'subject'    => \Lang::get('lender.mails.loan-expired.subject', $parameters),
                 'templateId' => \Setting::get('sendwithus.lender-expired-loan-template-id'),
             ]
@@ -309,7 +308,6 @@ class LenderMailer
             'emails.hero',
             $data + [
                 'to'         => $lender->getUser()->getEmail(),
-                'from'       => \Lang::get('site.fromEmailAddress'),
                 'subject'    => \Lang::get('lender.mails.loan-expired-invite.subject', $parameters),
                 'templateId' => \Setting::get('sendwithus.lender-expired-loan-template-id'),
             ]
@@ -500,7 +498,6 @@ class LenderMailer
             'emails.hero',
             $data + [
                 'to'         => $lender->getUser()->getEmail(),
-                'from'       => \Lang::get('site.fromEmailAddress'),
                 'subject'    => \Lang::get('lender.mails.loan-disbursed.subject', $parameters),
                 'templateId' => \Setting::get('sendwithus.lender-loan-disbursed-template-id'),
             ]

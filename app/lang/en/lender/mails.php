@@ -98,12 +98,15 @@ The Zidisha Team',
         'subject' => 'Your loan to :borrowerName has been returned',
         'body'    => 'Hi there,
 We have a little bit of bad news.  It looks like :borrowerName ’s loan wasn’t fully funded.  We’ve returned your contribution of :bidAmount to your account.
+<br><br>
 But don\'t give up!  There are many more promising endeavors waiting to be funded.
+<br><br>
 Your lending credit balance is now USD :creditBalance. Use your credit to make a new loan <a href=":lendLink">here</a>.
-
+<br><br>
 Best wishes,
+<br><br>
 The Zidisha Team
-
+<br><br>
 PS:  You can sort the <a href=":lendLink">fundraising loans</a> by “Amount still needed” to find the ones that need the least money to be fully funded.'
     ],
     'loan-expired-invite'      => [

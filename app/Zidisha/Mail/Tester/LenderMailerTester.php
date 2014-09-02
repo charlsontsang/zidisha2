@@ -119,14 +119,8 @@ class LenderMailerTester
     {
         $loan = LoanQuery::create()
             ->findOne();
-        $i = 0;
-        do {
-            $lender = LenderQuery::create()
-                ->findOne();
-            $currentBalance = TransactionQuery::create()
-                ->getCurrentBalance($lender->getId());
-            $i++;
-        } while ($currentBalance->lessThan(Money::create(0, 'USD')) || $i = 20);
+        $lender = LenderQuery::create()
+            ->findOne();
 
         $amount = Money::create(25);
 
@@ -137,14 +131,8 @@ class LenderMailerTester
     {
         $loan = LoanQuery::create()
             ->findOne();
-        $i = 0;
-        do {
-            $lender = LenderQuery::create()
-                ->findOne();
-            $inviteCreditBalance = InviteTransactionQuery::create()
-                ->getTotalInviteCreditAmount($lender);
-            $i++;
-        } while ($inviteCreditBalance->lessThan(Money::create(0, 'USD')) || $i = 20);
+        $lender = LenderQuery::create()
+            ->findOne();
 
         $amount = Money::create(25);
 
