@@ -117,17 +117,11 @@ class LenderMailerTester
     {
         $loan = LoanQuery::create()
             ->findOne();
-        
         $lender = LenderQuery::create()
             ->findOne();
-        
-        $refundLender = new LenderRefund([
-            'lender'             => $lender,
-            'amount'             => Money::create(55),
-            'lenderInviteCredit' => Money::create(25),
-        ]);
-        
-        $this->lenderMailer->sendExpiredLoanMail($loan, $refundLender);
+        $amount = Money::create(25);
+
+        $this->lenderMailer->sendExpiredLoanMail($loan, $lender, $amount);
     }
 
     public function sendAllowLoanForgivenessMail()
