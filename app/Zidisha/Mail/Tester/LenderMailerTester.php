@@ -192,4 +192,32 @@ class LenderMailerTester
         
         $this->lenderMailer->sendNewLoanNotificationMail($loan, $lender);
     }
+
+    public function sendDisbursedLoanMail()
+    {
+        $lenderUser = new User();
+        $lenderUser->setRole('lender');
+        $lenderUser->setEmail('lender@test.com');
+
+        $lender = new Lender();
+        $lender->setUser($lenderUser);
+
+        $borrowerUser = new User();
+        $borrowerUser
+            ->setRole('borrower')
+            ->setEmail('lender@test.com');
+
+        $borrower = new Borrower();
+        $borrower
+            ->setUser($borrowerUser)
+            ->setFirstName('First Name')
+            ->setLastName('Last Name');
+
+        $loan = new Loan();
+        $loan
+            ->setId(1)
+            ->setBorrower($borrower);
+
+        $this->lenderMailer->sendDisbursedLoanMail($loan, $lender);
+    }
 }
