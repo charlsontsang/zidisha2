@@ -48,8 +48,8 @@
         <column name="continent_code" type="VARCHAR" size="2" required="true"/>
         <column name="country_code" type="VARCHAR" size="2" required="true"/>
         <column name="dialing_code" type="VARCHAR" size="4" required="true"/>
-        <column name="phone_number_length" type="INTEGER" required="true"/>
-        <column name="currency_code" type="VARCHAR" size="3" required="true"/>
+        <column name="phone_number_length" type="INTEGER" required="false"/>
+        <column name="currency_code" type="VARCHAR" size="3" required="false"/>
         <column name="borrower_country" type="BOOLEAN"/>
         <column name="registration_fee" type="DECIMAL" size="10" scale="2" defaultValue="0.00" phpType="string"/>
         <column name="installment_period" type="ENUM" valueSet="monthly, weekly"/>
@@ -999,7 +999,7 @@
     <table name="lender_preferences" phpName="Preferences" namespace="Lender">
         <column name="lender_id" type="INTEGER" primaryKey="true"/>
         <column name="hide_lending_activity" type="BOOLEAN" defaultValue="false"/>
-        <column name="hide_karma" type="BOOLEAN" defaultValue="true"/>
+        <column name="hide_karma" type="BOOLEAN" defaultValue="false"/>
         <column name="notify_loan_fully_funded" type="BOOLEAN" defaultValue="true"/>
         <column name="notify_loan_about_to_expire" type="BOOLEAN" defaultValue="true"/>
         <column name="notify_loan_expired" type="BOOLEAN" defaultValue="true"/>

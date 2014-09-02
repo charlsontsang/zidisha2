@@ -47,49 +47,49 @@ class DatabaseMigration extends Command {
         if ($table == 'all') {
             $this->line('Migrate all tables');
 
-            $this->call('migrateDB', array('table' => 'users'));
-            $this->call('migrateDB', array('table' => 'lenders'));
-            $this->call('migrateDB', array('table' => 'borrowers'));
-            $this->call('migrateDB', array('table' => 'loan_categories'));
-            $this->call('migrateDB', array('table' => 'countries'));
-            $this->call('migrateDB', array('table' => 'loans'));
-            $this->call('migrateDB', array('table' => 'loan_bids'));
-            $this->call('migrateDB', array('table' => 'admin_notes'));
-            $this->call('migrateDB', array('table' => 'loan_stages'));
-            $this->call('migrateDB', array('table' => 'transactions'));
-            $this->call('migrateDB', array('table' => 'comments'));
-            $this->call('migrateDB', array('table' => 'exchange_rates'));
-            $this->call('migrateDB', array('table' => 'installments'));
-            $this->call('migrateDB', array('table' => 'installment_payments'));
-            $this->call('migrateDB', array('table' => 'borrower_payments'));
-            $this->call('migrateDB', array('table' => 'lender_invites'));
-            $this->call('migrateDB', array('table' => 'lender_invite_visits'));
-            $this->call('migrateDB', array('table' => 'lender_invite_transactions'));
-            $this->call('migrateDB', array('table' => 'paypal_ipn_log'));
-            $this->call('migrateDB', array('table' => 'paypal_transactions'));
-            $this->call('migrateDB', array('table' => 'gift_cards'));
-            $this->call('migrateDB', array('table' => 'gift_card_transaction'));
-            $this->call('migrateDB', array('table' => 'forgiveness_loan_shares'));
-            $this->call('migrateDB', array('table' => 'forgiveness_loans'));
-            $this->call('migrateDB', array('table' => 'borrower_refunds'));
-            $this->call('migrateDB', array('table' => 'volunteer_mentors'));
-            $this->call('migrateDB', array('table' => 'borrower_feedback_messages'));
-            $this->call('migrateDB', array('table' => 'borrower_reviews'));
-            $this->call('migrateDB', array('table' => 'languages'));
-            $this->call('migrateDB', array('table' => 'lending_groups'));
-            $this->call('migrateDB', array('table' => 'lending_group_members'));
-            $this->call('migrateDB', array('table' => 'notifications'));
-            $this->call('migrateDB', array('table' => 'withdrawal_requests'));
-            $this->call('migrateDB', array('table' => 'followers'));
-            $this->call('migrateDB', array('table' => 'borrower_invites'));
-            $this->call('migrateDB', array('table' => 'credit_settings'));
-            $this->call('migrateDB', array('table' => 'credits_earned'));
-            $this->call('migrateDB', array('table' => 'facebook_users'));
-            $this->call('migrateDB', array('table' => 'auto_lending_settings'));
-            $this->call('migrateDB', array('table' => 'statistics'));
-            $this->call('migrateDB', array('table' => 'reschedule'));
-            $this->call('migrateDB', array('table' => 'bulk_emails'));
-            $this->call('migrateDB', array('table' => 'bulk_email_recipients'));
+            $this->call('migrate-zidisha1', array('table' => 'languages'));
+            $this->call('migrate-zidisha1', array('table' => 'countries'));
+            $this->call('migrate-zidisha1', array('table' => 'users'));
+            $this->call('migrate-zidisha1', array('table' => 'lenders'));
+            $this->call('migrate-zidisha1', array('table' => 'borrowers'));
+            $this->call('migrate-zidisha1', array('table' => 'loan_categories'));
+            $this->call('migrate-zidisha1', array('table' => 'loans'));
+            $this->call('migrate-zidisha1', array('table' => 'loan_bids'));
+            $this->call('migrate-zidisha1', array('table' => 'admin_notes'));
+            $this->call('migrate-zidisha1', array('table' => 'loan_stages'));
+            $this->call('migrate-zidisha1', array('table' => 'transactions'));
+            $this->call('migrate-zidisha1', array('table' => 'comments'));
+            $this->call('migrate-zidisha1', array('table' => 'exchange_rates'));
+            $this->call('migrate-zidisha1', array('table' => 'installments'));
+            $this->call('migrate-zidisha1', array('table' => 'installment_payments'));
+            $this->call('migrate-zidisha1', array('table' => 'borrower_payments'));
+            $this->call('migrate-zidisha1', array('table' => 'lender_invites'));
+            $this->call('migrate-zidisha1', array('table' => 'lender_invite_visits'));
+            $this->call('migrate-zidisha1', array('table' => 'lender_invite_transactions'));
+            $this->call('migrate-zidisha1', array('table' => 'paypal_ipn_log'));
+            $this->call('migrate-zidisha1', array('table' => 'paypal_transactions'));
+            $this->call('migrate-zidisha1', array('table' => 'gift_cards'));
+            $this->call('migrate-zidisha1', array('table' => 'gift_card_transaction'));
+            $this->call('migrate-zidisha1', array('table' => 'forgiveness_loan_shares'));
+            $this->call('migrate-zidisha1', array('table' => 'forgiveness_loans'));
+            $this->call('migrate-zidisha1', array('table' => 'borrower_refunds'));
+            $this->call('migrate-zidisha1', array('table' => 'volunteer_mentors'));
+            $this->call('migrate-zidisha1', array('table' => 'borrower_feedback_messages'));
+            $this->call('migrate-zidisha1', array('table' => 'borrower_reviews'));
+            $this->call('migrate-zidisha1', array('table' => 'lending_groups'));
+            $this->call('migrate-zidisha1', array('table' => 'lending_group_members'));
+            $this->call('migrate-zidisha1', array('table' => 'notifications'));
+            $this->call('migrate-zidisha1', array('table' => 'withdrawal_requests'));
+            $this->call('migrate-zidisha1', array('table' => 'followers'));
+            $this->call('migrate-zidisha1', array('table' => 'borrower_invites'));
+            $this->call('migrate-zidisha1', array('table' => 'credit_settings'));
+            $this->call('migrate-zidisha1', array('table' => 'credits_earned'));
+            $this->call('migrate-zidisha1', array('table' => 'facebook_users'));
+            $this->call('migrate-zidisha1', array('table' => 'auto_lending_settings'));
+            $this->call('migrate-zidisha1', array('table' => 'statistics'));
+            $this->call('migrate-zidisha1', array('table' => 'reschedule'));
+            $this->call('migrate-zidisha1', array('table' => 'bulk_emails'));
+            $this->call('migrate-zidisha1', array('table' => 'bulk_email_recipients'));
 
         }
 
@@ -97,11 +97,9 @@ class DatabaseMigration extends Command {
             $this->line('Migrate users table');
 
             $count = $this->con->table('users')->count();
-            $this->line("    $count users");
             
             $limit = 500;
             for ($offset = 0; $offset < $count; $offset += $limit) {
-                $this->line($offset);
                 $users = $this->con->table('users as u')
                     ->select(
                         'u.*',
@@ -193,13 +191,12 @@ class DatabaseMigration extends Command {
             $this->line('Migrate lending_group_notifications table');
 
             $count = $this->con->table('lenders')->count();
-            $offset = 0;
             $limit = 500;
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
 
                 $lenders = $this->con->table('lenders')
-                    ->join('users', 'lenders.userid', '=', 'users.userid')
-                    ->join('countries', 'lenders.Country', '=', 'countries.code')
+                    ->select('lenders.*', 'countries.id as country_id')
+                    ->leftJoin('countries', 'lenders.Country', '=', 'countries.code')
                     ->skip($offset)->take($limit)->get();
                 $lenderArray = [];
                 $profileArray = [];
@@ -208,43 +205,43 @@ class DatabaseMigration extends Command {
 
                 foreach ($lenders as $lender) {
                     $newLender = [
-                        'id'                  => $lender['users.userid'],
-                        'country_id'          => $lender['countries.id'],
-                        'first_name'          => $lender['lenders.FirstName'],
-                        'last_name'           => $lender['lenders.LastName'],
-                        'admin_donate'        => $lender['lenders.admin_donate'], //TODO check that only boolean values are there in old data
-                        'active'              => $lender['lenders.Active'],
-                        'last_check_in_email' => $lender['lenders.last_check_in_email']
+                        'id'                  => $lender->userid,
+                        'country_id'          => $lender->country_id ?: 202, // TODO default if country missing
+                        'first_name'          => $lender->FirstName,
+                        'last_name'           => $lender->LastName,
+                        'admin_donate'        => $lender->admin_donate,
+                        'active'              => $lender->Active,
+                        'last_check_in_email' => $lender->last_check_in_email
                     ];
 
                     $profile = [
-                        'lender_id' => $lender['users.userid'],
-                        'city'      => $lender['lenders.City'],
-                        'about_me'  => $lender['lenders.About']
+                        'lender_id' => $lender->userid,
+                        'city'      => $lender->City,
+                        'about_me'  => $lender->About
                     ];
                     $preference = [
-                        'lender_id'                   => $lender['users.userid'],
-                        'hide_lending_activity'       => $lender['lenders.hide_Amount'],
-                        'hide_karma'                  => $lender['lenders.hide_karma'], // TODO do default false in new DB?
-                        'notify_loan_fully_funded'    => $lender['lenders.loan_fully_funded_notify'],
-                        'notify_loan_about_to_expire' => $lender['lenders.loan_about_to_expire_notify'],
-                        'notify_loan_expired'         => $lender['lenders.loan_expired_notify'],
-                        'notify_loan_disbursed'       => $lender['lenders.loan_disbursed_notify'],
-                        'notify_comment'              => $lender['lenders.emailcomment'], // TODO cross check
-                        'notify_loan_application'     => $lender['lenders.loan_app_notify'],
-                        'notify_invite_accepted'      => $lender['lenders.invite_notify'],
-                        'notify_loan_repayment'       => $lender['lenders.email_loan_repayment'],
+                        'lender_id'                   => $lender->userid,
+                        'hide_lending_activity'       => $lender->hide_Amount,
+                        'hide_karma'                  => $lender->hide_karma,
+                        'notify_loan_fully_funded'    => $lender->loan_fully_funded_notify,
+                        'notify_loan_about_to_expire' => $lender->loan_about_to_expire_notify,
+                        'notify_loan_expired'         => $lender->loan_expired_notify,
+                        'notify_loan_disbursed'       => $lender->loan_disbursed_notify,
+                        'notify_comment'              => $lender->emailcomment, // TODO cross check
+                        'notify_loan_application'     => $lender->loan_app_notify,
+                        'notify_invite_accepted'      => $lender->invite_notify,
+                        'notify_loan_repayment'       => $lender->email_loan_repayment,
                     ];
 
                     array_push($lenderArray, $newLender);
                     array_push($profileArray, $profile);
                     array_push($preferenceArray, $preference);
 
-                    $groupIds = explode(',',$lender['lenders.groupmsg_notify']);
+                    $groupIds = explode(',',$lender->groupmsg_notify);
                     foreach ($groupIds as $groupId) {
                         $newGroupNotification = [
                             'lending_group_id' => $groupId,
-                            'user_id'          => $lender['users.userid']
+                            'user_id'          => $lender->userid
                         ];
 
                         array_push($lendingGroupNotificationArray, $newGroupNotification);
@@ -253,7 +250,10 @@ class DatabaseMigration extends Command {
                 DB::table('lenders')->insert($lenderArray);
                 DB::table('lender_profiles')->insert($profileArray);
                 DB::table('lender_preferences')->insert($preferenceArray);
-                DB::table('lending_group_notifications')->insert($lendingGroupNotificationArray);
+                if ($lendingGroupNotificationArray) {
+                    // TODO do this when importing lending groups (Foreign key violation)
+                    //DB::table('lending_group_notifications')->insert($lendingGroupNotificationArray);
+                }
             }
         }
 
@@ -427,37 +427,50 @@ class DatabaseMigration extends Command {
         if ($table == 'countries') {
             $this->line('Migrate countries table');
 
-            $countries = $this->con->table('currency')
-                ->join('countries', 'currency.country_code.' , '=', 'countries.code')
-                ->join('country_lang', 'currency.country_code.' , '=', 'country_lang.country_code')
-                ->join('registration_fee', 'currency.currency_name' , '=', 'registration_fee.currency_name')
-                ->join('repayment_instructions', 'currency.country_code' , '=', 'repayment_instructions.country_code')
+            $countries = $this->con->table('countries')
+                ->select(
+                    'countries.*',
+                    'currency.capital',
+                    'currency.Currency',
+                    'currency.active',
+                    'country_lang.lang_code',
+                    'repayment_instructions.description AS repayment_instructions'
+                )
+                ->leftJoin('currency', 'countries.code' , '=', 'currency.country_code')
+                ->leftJoin('country_lang', 'countries.code' , '=', 'country_lang.country_code')
+                ->leftJoin('repayment_instructions', 'countries.code' , '=', 'repayment_instructions.country_code')
                 ->get();
+            
+            $registrationFees = $this->con->table('registration_fee')
+                ->lists('Amount', 'currency_name');
+            
             $countryArray = [];
 
+             // USA Minor Outlying Islands
             foreach ($countries as $country) {
                 $newCountry = [
-                    'name'                    => $country['countries.name'],
-                    'slug'                    => \Illuminate\Support\Str::slug($country['countries.name']),
-                    'capital'                 => $country['currency.capital'],
-                    'continent_code'          => $country['countries.loc'], //TODO cross check
-                    'country_code'            => $country['countries.code'],
-                    'dialing_code'            => $country['countries.phone'] ? $country['countries.phone'] : '',
-                    'phone_number_length'     => '', //TODO
-                    'currency_code'           => $country['currency.Currency'],
-                    'borrower_country'        => $country['currency.active'],
-                    'registration_fee'        => $country['registration_fee.Amount'],
-                    'installment_period'      => null, //TODO
-                    'installment_amount_step' => '', //TODO
-                    'loan_amount_step'        => '', //TODO
-                    'repayment_instructions'  => $country['repayment_instructions.description'] ? $country['repayment_instructions.description'] : null,
-                    'accept_bids_note'        => null, //TODO
-                    'language_code'           => $country['country_lang.lang_code'],
+                    'id'                      => $country->id,
+                    'name'                    => $country->name,
+                    'slug'                    => \Illuminate\Support\Str::slug($country->name),
+                    'capital'                 => $country->capital,
+                    'continent_code'          => $country->loc, //TODO cross check
+                    'country_code'            => $country->code,
+                    'dialing_code'            => $country->phone ?: '',
+//                    'phone_number_length'     => '', //TODO
+                    'currency_code'           => $country->Currency, // TODO NULL for some countries
+                    'borrower_country'        => $country->active,
+                    'registration_fee'        => isset($registrationFees[$country->Currency]) ? $registrationFees[$country->Currency] : null,
+//                    'installment_period'      => null, //TODO
+//                    'installment_amount_step' => '', //TODO
+//                    'loan_amount_step'        => '', //TODO
+                    'repayment_instructions'  => $country->repayment_instructions ?: null,
+//                    'accept_bids_note'        => null, //TODO
+                    'language_code'           => $country->lang_code,
                 ];
 
                 array_push($countryArray, $newCountry);
             }
-            DB:table('countries')->insert($countryArray);
+            DB::table('countries')->insert($countryArray);
         }
 
         if ($table == 'loans') {
@@ -555,7 +568,7 @@ class DatabaseMigration extends Command {
             }
         }
 
-        if ($table = 'admin_notes') {
+        if ($table == 'admin_notes') {
             $this->line('Migrate admin_notes table');
 
             $count = $this->con->table('loan_notes')->count();
@@ -1189,20 +1202,19 @@ class DatabaseMigration extends Command {
         if ($table == 'languages') {
             $this->line('Migrate languages table');
 
-            $count = $this->con->table('language')->get();
-            $offset = 0;
+            $count = $this->con->table('language')->count();
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $languages = $this->con->table('language')
                     ->skip($offset)->limit($limit)->get();
                 $languageArray = [];
 
                 foreach ($languages as $language) {
                     $newLanguage = [
-                        'language_code' => $language['langcode`'],
-                        'name'          => $language['lang'],
-                        'active'        => $language['is_active_for_country'] // TODO, active or is_active_for_country
+                        'language_code' => $language->langcode,
+                        'name'          => $language->lang,
+                        'active'        => $language->active,
                     ];
 
                     array_push($languageArray, $newLanguage);
