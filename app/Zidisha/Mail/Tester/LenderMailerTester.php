@@ -3,6 +3,8 @@ namespace Zidisha\Mail\Tester;
 
 
 use Carbon\Carbon;
+use Zidisha\Balance\InviteTransactionQuery;
+use Zidisha\Balance\TransactionQuery;
 use Zidisha\Borrower\Borrower;
 use Zidisha\Currency\Money;
 use Zidisha\Lender\Lender;
@@ -117,11 +119,32 @@ class LenderMailerTester
     {
         $loan = LoanQuery::create()
             ->findOne();
-        $lender = LenderQuery::create()
-            ->findOne();
+        do {
+            $lender = LenderQuery::create()
+                ->findOne();
+            $currentBalance = TransactionQuery::create()
+                ->getCurrentBalance($lender->getId());
+        } while ($currentBalance->lessThan(Money::create(0, 'USD')));
+
         $amount = Money::create(25);
 
         $this->lenderMailer->sendExpiredLoanMail($loan, $lender, $amount);
+    }
+
+    public function sendExpiredLoanWithLenderInviteCreditMail()
+    {
+        $loan = LoanQuery::create()
+            ->findOne();
+        do {
+            $lender = LenderQuery::create()
+                ->findOne();
+            $inviteCreditBalance = InviteTransactionQuery::create()
+                ->getTotalInviteCreditAmount($lender);
+        } while ($inviteCreditBalance->lessThan(Money::create(0, 'USD')));
+
+        $amount = Money::create(25);
+
+        $this->lenderMailer->sendExpiredLoanWithLenderInviteCreditMail($loan, $lender, $amount);
     }
 
     public function sendAllowLoanForgivenessMail()
