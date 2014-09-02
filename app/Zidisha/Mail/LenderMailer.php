@@ -3,6 +3,7 @@ namespace Zidisha\Mail;
 
 
 use Carbon\Carbon;
+use Zidisha\Balance\InviteTransactionQuery;
 use Zidisha\Balance\TransactionQuery;
 use Zidisha\Comment\Comment;
 use Zidisha\Currency\Money;
@@ -270,13 +271,13 @@ class LenderMailer
         $borrower = $loan->getBorrower();
         $currentBalance = TransactionQuery::create()
             ->getCurrentBalance($lender->getId());
-        $messageParameters = [
+        $parameters = [
             'borrowerName'  => $borrower->getName(),
             'bidAmount'     => $amount->getAmount(),
-            'creditbalance' => $currentBalance->getAmount(),
+            'creditBalance' => $currentBalance->getAmount(),
             'lendLink'      => route('lend:index')
         ];
-        $message = \Lang::get('lender.mails.loan-expired.body', $messageParameters);
+        $message = \Lang::get('lender.mails.loan-expired.body', $parameters);
         $data['content'] = $message;
 
         $this->mailer->send(
@@ -284,20 +285,32 @@ class LenderMailer
             $data + [
                 'to'         => $lender->getUser()->getEmail(),
                 'from'       => \Lang::get('site.fromEmailAddress'),
-                'subject'    => \Lang::get('lender.mails.loan-expired.subject', ['borrowerName' => $borrower->getName()]),
+                'subject'    => \Lang::get('lender.mails.loan-expired.subject', $parameters),
                 'templateId' => \Setting::get('sendwithus.lender-expired-loan-template-id'),
             ]
         );        
     }
 
-    // TODO see $session->sendLoanExpiredMailToInvitedLender
     public function sendExpiredLoanWithLenderInviteCreditMail(Loan $loan, Lender $lender, Money $amount)
     {
+        $borrower = $loan->getBorrower();
+        $inviteCreditBalance = InviteTransactionQuery::create()
+            ->getTotalInviteCreditAmount($lender);
+        $parameters = [
+            'borrowerName'              => $borrower->getName(),
+            'bidAmount'                 => $amount->getAmount(),
+            'lenderInviteCreditBalance' => $inviteCreditBalance->getAmount(),
+            'lendLink'                  => route('lend:index')
+        ];
+        $message = \Lang::get('lender.mails.loan-expired-invite.body', $parameters);
+        $data['content'] = $message;
+
         $this->mailer->send(
             'emails.hero',
-            [
+            $data + [
                 'to'         => $lender->getUser()->getEmail(),
-                'subject'    => 'Loan expired notification',
+                'from'       => \Lang::get('site.fromEmailAddress'),
+                'subject'    => \Lang::get('lender.mails.loan-expired-invite.subject', $parameters),
                 'templateId' => \Setting::get('sendwithus.lender-expired-loan-template-id'),
             ]
         );
