@@ -546,4 +546,24 @@ class LenderMailer
             ]
         );
     }
+
+    public function sendRepaidLoanMail(Lender $lender, Loan $loan)
+    {
+        $data = [
+            'parameters' => [
+                'borrowerName'     => $loan->getBorrower()->getName(),
+                'reviewUrl'          => route('loan:index', $loan->getId()),
+            ],
+        ];
+
+        $this->mailer->send(
+            'emails.label-template',
+            $data + [
+                'to'         => $lender->getUser()->getEmail(),
+                'header'     => \Lang::get('lender.mails.loan-repayment-feedback.body.header', ['borrowerName' => $loan->getBorrower()->getName()]),
+                'label'      => 'lender.mails.loan-repayment-feedback.body',
+                'subject'    => \Lang::get('lender.mails.loan-repayment-feedback.subject', ['borrowerName' => $loan->getBorrower()->getName()])
+            ]
+        );
+    }
 }

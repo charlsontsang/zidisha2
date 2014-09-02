@@ -241,4 +241,14 @@ class LenderMailerTester
 
         $this->lenderMailer->sendReceivedRepaymentCreditBalanceMail($lender, Money::create(240, 'USD'));
     }
+
+    public function sendRepaidLoanMail()
+    {
+        $loan = LoanQuery::create()
+            ->findOne();
+        $lender = LenderQuery::create()
+            ->findOne();
+
+        $this->lenderMailer->sendRepaidLoanMail($lender, $loan);
+    }
 }

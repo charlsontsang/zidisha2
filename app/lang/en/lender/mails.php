@@ -186,5 +186,22 @@ Happy lending,
 <br/><br/>
 The Zidisha Team
         '
+    ],
+    'loan-repayment-feedback'         => [
+        'subject' => 'Hooray! :borrowerName has completely repaid your loan',
+        'header'  => ':borrowerName has completely repaid your loan.',
+        'body'    => '
+        Hi there,
+<br/><br/>
+Great news: :borrowerName has completely repaid your loan!
+<br/><br/>
+Now you can help :borrowerName create a performance record to help in raising future loans.  Post a review of your lending experience <a href=":reviewUrl">here</a>.
+<br/><br/>
+Cheers,
+<br/><br/>
+The Zidisha Team
+<br/><br/>
+PS:  Share, tweet or email this success story to your friends!'
     ]
 ];
+
