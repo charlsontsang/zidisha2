@@ -133,4 +133,44 @@ The Zidisha Team
 <br/><br/>
 PS:  Want a really cool gift idea?  Check out our <a href=":giftCardPage">gift cards</a> - your friend chooses the entrepreneur!'
     ],
+    'loan-defaulted' => [
+        'subject' => 'Write-off notification',
+        'body'    => '
+        Greetings,
+<br/><br/>
+We are writing to let you know that the amount remaining outstanding on <a href=":loanUrl">:borrowerName</a>\'s loan has been written off. To date, :borrowerName has repaid :repaidPercentage % of the USD :requestedAmount funded.
+<br/><br/>
+Under our reporting standards, outstanding loan amounts must be written off six months after a loan’s last scheduled repayment, or if no repayments are made for six months.
+<br/><br/>
+But we haven’t given up.  Many borrowers whose loans were written off have ultimately repaid.  If :borrowerName makes any further payments, we will credit them to your account.
+<br/><br/>
+Best wishes,
+<br/><br/>
+The Zidisha Team'
+    ],
+    'loan-repayment-received' => [
+        'subject' => ':borrowerName sent you a repayment!',
+        'body' => '
+Hi there,
+<br/><br/>
+You just received a repayment of USD :amount from <a href=":loanUrl">:borrowerName</a>!
+<br/><br/>
+This brings your lending credit balance up to USD :currentCredit.  You can re-lend these funds to new entrepreneurs <a href=":lendUrl">here</a>.
+<br/><br/>
+Too busy to select new loans manually? Activate automated relending of your repayments <a href=":autoLendingUrl">here</a>.
+<br/><br/>
+You can adjust your email notification preferences <a href=:accountPreferenceUrl>here</a>.
+<br/><br/>
+Keep spreading opportunities!  We’re thrilled and excited for more wonderful stories to unfold soon.
+<br/><br/>
+Cheers,
+<br/><br/>
+The Zidisha Team',
+        'message2' => '
+        You received a USD :amount loan repayment from <a href=":loanUrl">:borrowerName</a>!<br/><br/>
+Your lender credit balance is now USD :currentCredit. You may use this balance to make a new loan <a href=":lendUrl">here</a>.<br/><br/>
+Best wishes,<br/><br/>
+The Zidisha Team <br/><br/>
+        '
+    ],
 ];

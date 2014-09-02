@@ -499,4 +499,31 @@ class LenderMailer
             ]
         );
     }
+
+    public function sendReceivedRepaymentMail(Lender $lender, Loan $loan, Money $amount,  Money $currentBalance)
+    {
+        $parameters = [
+            'borrowerName'         => $loan->getBorrower()->getName(),
+            'amount'               => $amount,
+            'loanUrl'              => route('loan:index', $loan->getId()),
+            'currentCredit'        => $currentBalance->getAmount(),
+            'lendUrl'              => route('lend:index'),
+            'autoLendingUrl'       => route('lender:auto-lending'),
+            'accountPreferenceUrl' => route('lender:preference')
+        ];
+
+        $body = \Lang::get('lender.mails.loan-repayment-received.body', $parameters);
+        $data['content'] = $body;
+        $content2 = \Lang::get('lender.mails.loan-repayment-received.message2', $parameters);
+        $data['content2'] = $content2;
+
+        $this->mailer->send(
+            'emails.hero',
+            $data + [
+                'to'         => $lender->getUser()->getEmail(),
+                'subject'    => \Lang::get('lender.mails.loan-repayment-received.subject', $parameters),
+                'templateId' => \Setting::get('sendwithus.lender-loan-repayment-template-id'),
+            ]
+        );
+    }
 }

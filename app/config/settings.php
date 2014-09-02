@@ -251,6 +251,9 @@ return [
         ],
         'sendwithus.lender-loan-disbursed-template-id' => [
             'label' => 'Lender loan disbursed template id'
-        ]
+        ],
+        'sendwithus.lender-loan-repayment-template-id' => [
+            'label' => 'Lender loan repayment template id'
+        ],
     ]
 ];

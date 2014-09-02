@@ -209,4 +209,28 @@ class LenderMailerTester
 
         $this->lenderMailer->sendDisbursedLoanMail($loan, $lender);
     }
+
+    public function sendLoanDefaultedMail()
+    {
+        $loan = LoanQuery::create()
+            ->findOne();
+
+        $lender = LenderQuery::create()
+            ->findOne();
+
+        $this->lenderMailer->sendLoanDefaultedMail($loan, $lender);
+    }
+
+    public function sendReceivedRepaymentMail()
+    {
+        $loan = LoanQuery::create()
+        ->findOne();
+        $loan
+            ->setAmount(Money::create(800, $loan->getCurrencyCode()))
+            ->setPaidAmount(Money::create(530, $loan->getCurrencyCode()));
+        $lender = LenderQuery::create()
+            ->findOne();
+
+        $this->lenderMailer->sendReceivedRepaymentMail($lender, $loan, Money::create(10, 'USD'), Money::create(100, 'USD'));
+    }
 }

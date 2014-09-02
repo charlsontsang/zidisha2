@@ -29,17 +29,21 @@ class InviteTransactionQuery extends BaseInviteTransactionQuery
             ->withColumn('SUM(amount)', 'total')
             ->withColumn('lender_id', 'lenderId')
             ->groupByLenderId()
-            ->findOne();
-        $results = $total->toKeyValue('userId', 'total');
+            ->find();
+        if ($total->getData()) {
+            $results = $total->toKeyValue('lenderId', 'total');
 
-        if (count($lenderIds) > 1) {
-            $creditArray = [];
-            foreach ($results as $key=>$value) {
-                $creditArray[$key] = Money::create($value, 'USD');
+            if (count($lenderIds) > 1) {
+                $creditArray = [];
+                foreach ($results as $key=>$value) {
+                    $creditArray[$key] = Money::create($value, 'USD');
+                }
+                return $creditArray;
+            } else {
+                return Money::create($results[$lenderIds], 'USD');
             }
-            return $creditArray;
         } else {
-            return Money::create($results[$lenderIds], 'USD');
+            return Money::create(0, 'USD');
         }
     }
 } // InviteTransactionQuery
