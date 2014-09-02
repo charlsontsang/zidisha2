@@ -13,7 +13,7 @@
                 @else
                     <img src="/assets/images/carousel/mary.jpg" width="300px">
                 @endif
-                <div class="carousel-caption">
+                <div class="carousel-caption caption-group">
                     <h3>{{ $group->getName() }}</h3>
                 </div>
             </div>
@@ -24,18 +24,18 @@
 @section('content')
 <div class="row">
     <div class="col-sm-8 loan-body">
-        <div class="loan-section well" style="padding-left: 0 !important;">
+        <div class="loan-section">
             <div class="loan-section-title">
                 <span class="text-light">Impact</span>
             </div>
             <div class="loan-section-content">
-                <p class="text-large">This month: {{ $groupImpacts['totalImpactThisMonth'] }}
+                <p>This month: <strong>{{ $groupImpacts['totalImpactThisMonth'] }}</strong>
                 </p>
-                <p class="text-large">Last month: {{ $groupImpacts['totalImpactLastMonth'] }}
+                <p>Last month: <strong>{{ $groupImpacts['totalImpactLastMonth'] }}</strong>
                 </p>
         
-                <p class="text-large">
-                    All time: {{ $groupImpacts['totalImpact'] }}
+                <p>
+                    All time: <strong>{{ $groupImpacts['totalImpact'] }}</strong>
                 </p>
             </div>
         </div>
