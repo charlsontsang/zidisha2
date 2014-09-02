@@ -1,17 +1,25 @@
 @extends('layouts.master')
 
 @section('page-title')
-Invite Your Friends
+Send Invites
 @stop
 
 @section('content')
-@if($isEligible == 1)
-    <div class="page-header" style="text-align: center;">
-        <h1>Invite your Friend to Zidisha!</h1>
+<div class="row">
+    <div class="col-sm-3 col-md-4">
+        <ul class="nav side-menu" role="complementary">
+          <h4>Quick Links</h4>
+            @include('partials.nav-links.borrower-links')       
+          </ul>
     </div>
 
-    <br/><br/>
-        <div>
+    <div class="col-sm-9 col-md-8 info-page">
+        <div class="page-header">
+            <h1>Send Invites</h1>
+        </div>
+
+        @if($isEligible == 1)
+         <div>
             {{ BootstrapForm::open(array('route' => 'borrower:post-invite')) }}
             {{ BootstrapForm::populate($form) }}
 
@@ -24,15 +32,17 @@ Invite Your Friends
 
             {{ BootstrapForm::close() }}
         </div>
-@else
-    {{ \Lang::get('borrower.invite.not-eligible') }}
+        @else
+            {{ \Lang::get('borrower.invite.not-eligible') }}
 
-    @if($isEligible == 2)
-        {{ \Lang::get('borrower.invite.not-eligible-repayRate') }}
-    @elseif($isEligible == 3)
-        {{ \Lang::get('borrower.invite.not-eligible-invitee-repayRate') }}
-    @else
-        {{ \Lang::get('borrower.invite.not-eligible-invitee-quota', ['maxInviteesWithoutPayment' => $maxInviteesWithoutPayment, 'myInvites' => route('borrower:invites')]) }}
-    @endif
-@endif
+            @if($isEligible == 2)
+                {{ \Lang::get('borrower.invite.not-eligible-repayRate') }}
+            @elseif($isEligible == 3)
+                {{ \Lang::get('borrower.invite.not-eligible-invitee-repayRate') }}
+            @else
+                {{ \Lang::get('borrower.invite.not-eligible-invitee-quota', ['maxInviteesWithoutPayment' => $maxInviteesWithoutPayment, 'myInvites' => route('borrower:invites')]) }}
+            @endif
+        @endif
+    </div>
+</div>
 @stop
