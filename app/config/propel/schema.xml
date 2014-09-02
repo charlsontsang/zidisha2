@@ -84,7 +84,7 @@
         <column name="installment_day" type="INTEGER"/>
         <column name="max_interest_rate" type="DECIMAL" size="5" scale="2" phpType="string"/>
         <column name="lender_interest_rate" type="DECIMAL" size="5" scale="2" phpType="string"/>
-        <column name="category_id" type="INTEGER" required="true"/>
+        <column name="category_id" type="INTEGER" required="false"/>
         <column name="secondary_category_id" type="INTEGER"/>
         <column name="status" type="ENUM" valueSet="0, 1, 2, 3, 4, 5, 6, 7"/>
         <column name="applied_at" type="TIMESTAMP" required="true"/>

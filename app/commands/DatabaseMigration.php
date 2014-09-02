@@ -3,6 +3,7 @@
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
+use Zidisha\Balance\Transaction;
 use Zidisha\Lender\Lender;
 use Zidisha\User\User;
 
@@ -558,59 +559,82 @@ class DatabaseMigration extends Command {
             $this->line('Migrate loans table');
 
             $count = $this->con->table('loanapplic')->count();
-            $offset = 0;
             $limit = 500;
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $loans = $this->con->table('loanapplic')
-                    ->skip($offset)->take($limit)->get();
+                    ->select('loanapplic.*', 'currency.Currency')
+                    ->join('borrowers', 'borrowers.userid', '=', 'loanapplic.borrowerid') // TODO check missing borrowers
+                    ->join('currency', 'borrowers.country', '=', 'currency.country_code')
+                    ->skip($offset)
+                    ->take($limit)
+                    ->get();
+                
                 $loanArray = [];
+                $ids = []; 
 
-                //TODO check most amount things and fill  unfilled values
                 foreach ($loans as $loan) {
+                    $ids[] = $loan->loanid;
+                    
                     $newLoan = [
-                        'id'                    => $loan['loanid'],
-                        'borrower_id'           => $loan['borrowerid'],
-                        'summary'               => $loan['summary'],
-                        'summary_translation'   => $loan['tr_summary'],
-                        'proposal'              => $loan['loanuse'],
-                        'proposal_translation'  => $loan['tr_loanuse'],
-                        'amount'                => $loan['Amount'],
-                        'total_amount'          => '',
-                        'paid_amount'           => '',
-                        'usd_amount'            => '',
-                        'installment_day'       => $loan['installment_day'],
-                        'max_interest_rate'     => $loan['finalrate'],
-                        'lender_interest_rate'  => '',
-                        'category_id'           => $loan['loan_category_id'],
-                        'secondary_category_id' => $loan['secondary_loan_category_id'],
-                        'status'                => $loan['active'],
-                        'applied_at'            => date("Y-m-d H:i:s", $loan['applydate']),
-                        'accepted_at'           => date("Y-m-d H:i:s", $loan['AcceptDate']),
-                        'expired_at'            => date("Y-m-d H:i:s", $loan['expires']),
-                        'canceled_at'           => '',
-                        'repaid_at'             => date("Y-m-d H:i:s", $loan['RepaidDate']),
-                        'authorized_at'         => date("Y-m-d H:i:s", $loan['auth_date']),
-                        'authorized_amount'     => '',
-                        'disbursed_at'          => '',
-                        'disbursed_amount'      => $loan['AmountGot'],
-                        'forgiven_amount'       => '',
-                        'registration_fee'      => '',
-                        'raised_usd_amount'     => '',
-                        'raised_percentage'     => '',
-                        'paid_percentage'       => '',
-                        'service_fee_rate'      => $loan['WebFee'],
-                        'extra_days'            => $loan['extra_days'],
-                        'currency_code'         => '',
-                        'installment_period'    => $loan['weekly_inst'] ? 'weekly' : 'monthly',
-                        'period'                => '',
-                        'accept_bids_note'      => $loan['accept_bid_note'],
-                        'sift_science_score'    => '',
-                        'deleted_by_admin'      => $loan['adminDelete'],
+                        'id'                    => $loan->loanid,
+                        'borrower_id'           => $loan->borrowerid,
+                        'summary'               => $loan->summary,
+                        'summary_translation'   => $loan->tr_summary,
+                        'proposal'              => $loan->loanuse,
+                        'proposal_translation'  => $loan->tr_loanuse,
+                        'amount'                => $loan->Amount,
+                        'total_amount'          => null, // TODO calculate in new code,
+                        'paid_amount'           => null, // TODO calculate in new code
+                        'usd_amount'            => $loan->reqdamt,
+                        'installment_day'       => $loan->installment_day,
+                        'max_interest_rate'     => $loan->interest,
+                        'lender_interest_rate'  => $loan->finalrate,
+                        'category_id'           => $loan->loan_category_id ?: null,
+                        'secondary_category_id' => $loan->secondary_loan_category_id ?: null,
+                        'status'                => $loan->active,
+                        'applied_at'            => date("Y-m-d H:i:s", $loan->applydate),
+                        'accepted_at'           => date("Y-m-d H:i:s", $loan->AcceptDate),
+                        'expired_at'            => date("Y-m-d H:i:s", $loan->expires),
+                        'canceled_at'           => null, // nobody ever cancelled a loan
+                        'repaid_at'             => date("Y-m-d H:i:s", $loan->RepaidDate),
+                        'authorized_at'         => date("Y-m-d H:i:s", $loan->auth_date),
+                        'authorized_amount'     => $loan->p_amount,
+                        'disbursed_at'          => null, // TODO missing loans
+                        'disbursed_amount'      => $loan->AmountGot,
+                        'forgiven_amount'       => null, // TODO calculate in new code
+                        'registration_fee'      => '0',
+                        'raised_usd_amount'     => null, // TODO calculate in new code
+                        'raised_percentage'     => null, // TODO calculate in new code
+                        'paid_percentage'       => null, // TODO calculate in new code
+                        'service_fee_rate'      => $loan->WebFee,
+                        'extra_days'            => $loan->extra_days,
+                        'currency_code'         => $loan->Currency,
+                        'installment_period'    => $loan->weekly_inst ? 1 : 0, // 'weekly' : 'monthly',
+                        'period'                => $loan->period,
+                        'accept_bids_note'      => $loan->accept_bid_note,
+                        'sift_science_score'    => null, // new
+                        'deleted_by_admin'      => $loan->adminDelete,
                     ];
 
-                    array_push($loanArray, $newLoan);
+                    $loanArray[$loan->loanid] = $newLoan;
                 }
-                DB::table('loans')->insert($loanArray);
+                $rows = $this->con->table('transactions')
+                    ->whereIn('loanid', $ids)
+                    ->where('txn_type', Transaction::DISBURSEMENT)
+                    ->lists('TrDate', 'loanid');
+                foreach ($rows as $loanId => $date) {
+                    $loanArray[$loanId]['disbursed_at'] = date("Y-m-d H:i:s", $date);
+                }
+
+                $rows = $this->con->table('transactions')
+                    ->whereIn('loanid', $ids)
+                    ->where('txn_type', Transaction::REGISTRATION_FEE)
+                    ->lists('amount', 'loanid');
+                foreach ($rows as $loanId => $amount) {
+                    $loanArray[$loanId]['registration_fee'] = -$amount;
+                }
+                
+                DB::table('loans')->insert($loanArray);                
             }
         }
 
