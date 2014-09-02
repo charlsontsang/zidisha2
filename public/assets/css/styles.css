@@ -8729,7 +8729,7 @@ hr {
 /* All levels of nav */
 .sidenav .nav > li > a {
   display: block;
-  padding: 4px 20px;
+  padding: 4px 20px !important;
   font-size: 16px;
   font-weight: 500;
   color: #767676;
@@ -8739,7 +8739,7 @@ hr {
 .sidenav .nav > .active > a,
 .sidenav .nav > .active:hover > a,
 .sidenav .nav > .active:focus > a {
-  padding-left: 18px;
+  padding-left: 18px !important;
   font-weight: bold;
   color: #2e9df7;
   background-color: transparent;
@@ -8827,7 +8827,7 @@ hr {
 /* make sidebar scrollable */
 .sidenav ul > li > ul {
   overflow-y: auto;
-  height: 400px;
+  height: 350px;
 }
 .footer {
   margin-bottom: 0;
