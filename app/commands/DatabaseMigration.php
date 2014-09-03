@@ -1178,23 +1178,22 @@ class DatabaseMigration extends Command {
             $this->line('Migrate borrower_refunds table');
 
             $count = $this->con->table('borrower_refunds')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset <$count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset <$count; $offset += $limit) {
                 $borrowerRefunds = $this->con->table('borrower_refunds')
                     ->skip($offset)->limit($limit)->get();
                 $borrowerRefundArray = [];
 
                 foreach ($borrowerRefunds as $borrowerRefund) {
                     $newBorrowerRefund = [
-                        'id'                  => $borrowerRefund['id'],
-                        'amount'              => $borrowerRefund['amount'],
-                        'borrower_id'         => $borrowerRefund['borrower_id'],
-                        'loan_id'             => $borrowerRefund['loan_id'],
-                        'borrower_payment_id' => $borrowerRefund['borrower_payment_id'],
-                        'refunded'            => $borrowerRefund['refunded'],
-                        'created_at'          => $borrowerRefund['created'] // because it's already DateTime in old DB
+                        'id'                  => $borrowerRefund->id,
+                        'amount'              => $borrowerRefund->amount,
+                        'borrower_id'         => $borrowerRefund->borrower_id,
+                        'loan_id'             => $borrowerRefund->loan_id,
+                        'borrower_payment_id' => $borrowerRefund->borrower_payment_id,
+                        'refunded'            => $borrowerRefund->refunded,
+                        'created_at'          => $borrowerRefund->created // because it's already DateTime in old DB
                     ];
 
                     array_push($borrowerRefundArray, $newBorrowerRefund);
