@@ -4,6 +4,8 @@ namespace Zidisha\Lender;
 
 
 use Zidisha\Borrower\Borrower;
+use Zidisha\Loan\Base\LoanQuery;
+use Zidisha\Loan\Loan;
 use Zidisha\Vendor\PropelDB;
 
 class FollowService {
@@ -82,18 +84,29 @@ class FollowService {
         $count = FollowerQuery::create()
             ->filterByBorrower($borrower)
             ->count();
+        
+        $lastLoanId  = LoanQuery::create()
+            ->select('id')
+            ->filterByBorrower($borrower)
+            ->filterByStatus([Loan::ACTIVE, Loan::REPAID, Loan::DEFAULTED])
+            ->orderById('desc')
+            ->findOne();
 
-        $query = "SELECT COUNT(DISTINCT l.id)
-                  FROM lenders l
-                  JOIN (SELECT lender_id FROM loan_bids 
-                         WHERE loan_id IN (SELECT loan_id FROM loans WHERE borrower_id = :borrowerId)
+        if ($lastLoanId) {
+            $query = "SELECT COUNT(DISTINCT l.id)
+                  FROM (SELECT DISTINCT(lender_id) FROM loan_bids 
+                         WHERE loan_id = :loanId
                            AND active = true) b
-                    ON l.id = b.lender_id
+                  JOIN lenders l ON l.id = b.lender_id
                   JOIN lender_preferences p ON p.lender_id = l.id 
                   WHERE l.id NOT IN (SELECT lender_id FROM followers WHERE borrower_id = :borrowerId)
                     AND l.active = true
                     AND (p.notify_comment = true OR p.notify_comment = true)";
-        $count += PropelDB::fetchNumber($query, ['borrowerId' => $borrower->getId()]);
+            $count += PropelDB::fetchNumber($query, [
+                'loanId' => $lastLoanId,
+                'borrowerId' => $borrower->getId()
+            ]);
+        }
 
         return $count;
     }
