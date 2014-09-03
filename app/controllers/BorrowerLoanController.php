@@ -83,6 +83,12 @@ class BorrowerLoanController extends BaseController
             $data['repaymentSchedule'] = $repaymentSchedule;
 
             $template = 'borrower.loan.loan-funded';
+        } elseif ($loan->isActive()) {
+            $repaymentSchedule = $this->repaymentService->getRepaymentSchedule($loan);
+
+            $data['repaymentSchedule'] = $repaymentSchedule;
+
+            $template = 'borrower.loan.loan-active';
         }
         
         return View::make($template , $data);
