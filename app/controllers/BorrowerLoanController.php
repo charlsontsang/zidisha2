@@ -29,18 +29,33 @@ class BorrowerLoanController extends BaseController
         $this->repaymentService = $repaymentService;
     }
 
-    public function getLoan($loanId)
+    public function getLoan($loanId = null)
     {
+        /** @var Borrower $borrower */
         $borrower = \Auth::user()->getBorrower();
+        
+        if (!$loanId) {
+            $loan = $borrower->getActiveLoan();
+            if (!$loan) {
+                // TODO render no active loan template, show previous loans
+                dd('TODO');
+            }            
+        } else {
+            $loan = LoanQuery::create()
+                ->findOneById($loanId);
 
-        $loan = LoanQuery::create()
-            ->findOneById($loanId);
-
-        if (!$loan || $borrower != $loan->getBorrower()) {
-            App::abort('404');
+            if (!$loan || $borrower != $loan->getBorrower()) {
+                App::abort('404');
+            }
         }
+        
+        $loans = LoanQuery::create()
+            ->filterByBorrower($borrower)
+            ->orderById()
+            ->find();
 
-        $data = compact('loan', 'borrower');
+        $data = compact('loan', 'loans', 'borrower');
+        $template = 'borrower.loan.loan-base';
 
         if ($loan->isOpen()) {
             $bids = BidQuery::create()
@@ -60,9 +75,11 @@ class BorrowerLoanController extends BaseController
             
             $data['calculator'] = $installmentCalculator;
             $data['installments'] = $installments;
-        }
 
-        return View::make('borrower.loan.loan-information' , $data);
+            $template = 'borrower.loan.loan-open';
+        }
+        
+        return View::make($template , $data);
     }
 
     public function postAcceptBids($loanId)

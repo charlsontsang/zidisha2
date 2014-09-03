@@ -19,6 +19,7 @@ return [
     'interest-rate-for-weeks'    => ':interestRate % annual rate for :period weeks',
     'total-amount'               => 'Total Amount (Including Interest and Transaction Fee) to be Repaid',
     'total-amount-due'           => 'Total Repayment Due',
+    'expires-at'                 => 'Expiration Date',
     
     'reschedule' => [
         'title'                          => 'Reschedule Loan',
