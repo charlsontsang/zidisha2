@@ -220,7 +220,7 @@ Net gain: $ :gainAmount
 <br/>
 Percentage gain: :gainPercent %
 <br/><br/>
-You can make this a win for everyone by reinvesting the gain in new loans to other entrepreneurs <a href=":loanUrl">here</a>.
+You can make this a win for everyone by reinvesting the gain in new loans to other entrepreneurs <a href=":lendUrl">here</a>.
 <br/><br/>
 Here\'s to many more successful loans!
 <br/><br/>

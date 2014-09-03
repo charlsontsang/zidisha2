@@ -251,4 +251,18 @@ class LenderMailerTester
 
         $this->lenderMailer->sendRepaidLoanMail($lender, $loan);
     }
+
+    public function sendRepaidLoanGainMail()
+    {
+        $loan = LoanQuery::create()
+            ->findOne();
+        $lender = LenderQuery::create()
+            ->findOne();
+        $loanAmount = Money::create(240, 'USD');
+        $repaidAmount = Money::create(240, 'USD');
+        $gainAmount = Money::create(20, 'USD');
+        $gainPercent = 4;
+
+        $this->lenderMailer->sendRepaidLoanGainMail($lender, $loan, $loanAmount, $repaidAmount, $gainAmount, $gainPercent);
+    }
 }

@@ -567,8 +567,35 @@ class LenderMailer
         );
     }
 
-    public function SendRepaidLoanGainMail(Lender $lender, Loan $loan)
+    public function sendRepaidLoanGainMail(Lender $lender, Loan $loan, Money $loanAmount, Money $repaidAmount, Money $gainAmount, $gainPercent)
     {
+        $borrower = $loan->getBorrower();
+//        $loanAmount = $loan->getUsdAmount();
+//        $repaidAmount = $loan->getUsdAmount()->multiply($loan->getRepaidPercent())->divide(100);
+//        $gainAmount = $repaidAmount->subtract($loanAmount);
+//        $gainPercent = $gainAmount->multiply(100)->divide($loanAmount);
+        $parameters = [
+            'gainAmount'   => $gainAmount->getAmount(),
+            'gainPercent'  => $gainPercent,
+            'borrowerName' => $borrower->getName(),
+            'loanUrl'      => route('loan:index', $loan->getId()),
+            'purpose'      => $loan->getProposal(),
+            'loanAmount'   => $loanAmount->getAmount(),
+            'repaidAmount' => $repaidAmount->getAmount(),
+            'lendUrl'      => route('lend:index'),
+            'myStatsUrl'   => route('lender:loans')
+        ];
 
+        $body = \Lang::get('lender.mails.loan-repaid-gain.body', $parameters);
+        $data['content'] = $body;
+
+        $this->mailer->send(
+            'emails.hero',
+            $data + [
+                'to'         => $lender->getUser()->getEmail(),
+                'subject'    => \Lang::get('lender.mails.loan-repaid-gain.subject', $parameters),
+                'templateId' => \Setting::get('sendwithus.lender-loan-repayment-template-id'), //TODO template for REPAID_GAIN_TAG
+            ]
+        );
     }
 }
