@@ -6,4 +6,5 @@
 <li><a href="{{ route('borrower:invites') }}">Your Invites</a></li>
 <li><a href="{{ route('borrower:credit') }}">Current Credit</a></li>
 <li><a href="{{ route('borrower:history') }}">Payment History</a></li>
+<li><a href="{{ route('page:loan-feature-criteria') }}">How To Have Your Loan Featured</a></li>
 @endif
