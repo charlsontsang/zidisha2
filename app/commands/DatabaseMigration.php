@@ -931,23 +931,22 @@ class DatabaseMigration extends Command {
             $this->line('Migrate lender_invite_visits table');
 
             $count = $this->con->table('lender_invite_visits')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $inviteVisits = $this->con->table('lender_invite_visits')
                     ->skip($offset)->limit($limit)->get();
                 $inviteVisitArray = [];
 
                 foreach ($inviteVisits as $inviteVisit) {
                     $newInviteVisit = [
-                        'id'               => $inviteVisit['id'],
-                        'lender_id'        => $inviteVisit['lender_id'],
-                        'lender_invite_id' => $inviteVisit['lender_invite_id'],
-                        'share_type'       => $inviteVisit['share_type'],
-                        'http_referer'     => $inviteVisit['http_referer'],
-                        'ip_address'       => $inviteVisit['ip_address'],
-                        'created_at'       => $inviteVisit['created'] // because it's already DateTime in old DB
+                        'id'               => $inviteVisit->id,
+                        'lender_id'        => $inviteVisit->lender_id,
+                        'lender_invite_id' => $inviteVisit->lender_invite_id,
+                        'share_type'       => $inviteVisit->share_type,
+                        'http_referer'     => $inviteVisit->http_referer,
+                        'ip_address'       => $inviteVisit->ip_address,
+                        'created_at'       => $inviteVisit->created // because it's already DateTime in old DB
                     ];
 
                     array_push($inviteVisitArray, $newInviteVisit);
