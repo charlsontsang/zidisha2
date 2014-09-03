@@ -78,7 +78,22 @@
                                         <strong>@choice('lender.follow.count', $followersCount)</strong>
                                         <br/>
 
-                                        <a id="follow-link" href="#">Follow {{{ $borrower->getFirstName() }}}<br/></a>
+                                        <div id="follow-link">
+                                            <a
+                                                href="{{ route('lender:follow', $borrower->getId()) }}"
+                                                class="followBorrower"
+                                                style="{{ $follower ? 'display:none' : '' }}"
+                                                data-follow="follow"
+                                                data-toggle="tooltip">
+                                                @lang('lender.follow.title', ['name' => $borrower->getFirstName()])
+                                            </a>
+                                            @if(Auth::user()->isLender())
+                                                @include('lender.follow.follower', [
+                                                'lender' => Auth::user()->getLender(),
+                                                'follower' => $follower,
+                                                ])
+                                            @endif
+                                        </div>
 
                                         Feedback Rating:{{ BootstrapHtml::tooltip('borrower.tooltips.loan.feedback-rating') }}
                                         <strong>TODO</strong>
