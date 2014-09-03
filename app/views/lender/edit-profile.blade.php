@@ -18,26 +18,28 @@ Edit Profile
             <h1>Edit Profile</h1>
         </div>
 
-		{{ BootstrapForm::open(array('route' => 'lender:post-profile', 'translationDomain' => 'edit-profile', 'files' => true)) }}
+		{{ BootstrapForm::open(array('route' => 'lender:post-profile', 'files' => true)) }}
 		{{ BootstrapForm::populate($form) }}
 
-		{{ BootstrapForm::file('picture') }}
+		<h4>Account Information</h4>
 
-		{{ BootstrapForm::password('password') }}
+		{{ BootstrapForm::text('email', null, ['label' => 'Email']) }}
 
-		{{ BootstrapForm::password('password_confirmation') }}
+		{{ BootstrapForm::password('password', ['label' => 'Change Password']) }}
 
-		{{ BootstrapForm::text('firstName') }}
+		{{ BootstrapForm::password('password_confirmation', ['label' => 'Confirm New Password']) }}
 
-		{{ BootstrapForm::text('lastName') }}
+		<h4>Public Profile</h4>
 
-		{{ BootstrapForm::text('email') }}
+		<p>Introduce yourself to our entrepreneurs!</p>
 
-		{{ BootstrapForm::text('city') }}
+		{{ BootstrapForm::file('picture', ['label' => 'Your Picture']) }}
 
-		{{ BootstrapForm::textarea('aboutMe') }}
+		{{ BootstrapForm::text('city', null, ['label' => 'Your City']) }}
 
-		{{ BootstrapForm::submit('save') }}
+		{{ BootstrapForm::textarea('aboutMe', null, ['label' => 'About Yourself']) }}
+
+		{{ BootstrapForm::submit('Save') }}
 
 		{{ BootstrapForm::close() }}
 		

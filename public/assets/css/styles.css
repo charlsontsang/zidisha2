@@ -8848,6 +8848,9 @@ hr {
     max-width: 300px;
   }
 }
+form label.control-label {
+  color: #767676;
+}
 form .btn {
   margin-bottom: 15px;
 }
