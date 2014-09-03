@@ -113,8 +113,9 @@ class BorrowerLoanController extends BaseController
                 $template = 'borrower.loan.loan-defaulted';
             }
         } elseif ($loan->isExpired()) {
-
             $template = 'borrower.loan.loan-expired';
+        } elseif ($loan->isCanceled()) {
+            $template = 'borrower.loan.loan-canceled';
         }
         
         return View::make($template , $data);

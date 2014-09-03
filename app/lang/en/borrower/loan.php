@@ -48,5 +48,8 @@ return [
     ],
     'expired'                    => [
         'expire-message' => 'Your Loan has been Expired.'
+    ],
+    'canceled'                  => [
+        'cancel-message' => 'Your Loan has been Canceled.'
     ]
 ];
