@@ -1404,20 +1404,19 @@ class DatabaseMigration extends Command {
             $this->line('Migrate notifications table');
 
             $count = $this->con->table('notification_history')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $notifications = $this->con->table('notification_history')
                     ->skip($offset)->limit($limit)->get();
                 $notificationArray = [];
 
                 foreach ($notifications as $notification) {
                     $newNotification = [
-                        'id'         => $notification['id'],
-                        'type'       => $notification['type'],
-                        'user_id'    => $notification['userid'],
-                        'created_at' => $notification['created']
+                        'id'         => $notification->id,
+                        'type'       => $notification->type,
+                        'user_id'    => $notification->userid,
+                        'created_at' => $notification->created
                     ];
 
                     array_push($notificationArray, $newNotification);
