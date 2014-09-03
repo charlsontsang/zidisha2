@@ -1,20 +1,20 @@
 @extends('layouts.master')
 
 @section('page-title')
-    @lang('borrower.your-loans.reschedule.title')
+    @lang('borrower.loan.reschedule.title')
 @stop
 
 @section('content')
 <div class="page-header">
     <h1>
-        @lang('borrower.your-loans.reschedule.title')
+        @lang('borrower.loan.reschedule.title')
     </h1>
 </div>
 
 <p class="alert alert-warning">
-    @lang('borrower.your-loans.reschedule.confirmation-note', [
-        'cancel' => Lang::get('borrower.your-loans.reschedule.cancel'),
-        'confirm' => Lang::get('borrower.your-loans.reschedule.confirm'),
+    @lang('borrower.loan.reschedule.confirmation-note', [
+        'cancel' => Lang::get('borrower.loan.reschedule.cancel'),
+        'confirm' => Lang::get('borrower.loan.reschedule.confirm'),
     ])
 </p>
 
@@ -24,7 +24,7 @@
             <tbody>
             <tr>
                 <td>
-                    <strong>@lang('borrower.your-loans.disbursed-amount'):</strong>
+                    <strong>@lang('borrower.loan.disbursed-amount'):</strong>
                 </td>
                 <td>
                     {{ $loan->getDisbursedAmount() }}
@@ -33,13 +33,13 @@
 
             <tr>
                 <td colspan="2">
-                    <h4>@lang('borrower.your-loans.reschedule.current-schedule')</h4>
+                    <h4>@lang('borrower.loan.reschedule.current-schedule')</h4>
                 </td>
             </tr>
 
             <tr>
                 <td>
-                    <strong>@lang('borrower.your-loans.repayment-period'):</strong>
+                    <strong>@lang('borrower.loan.repayment-period'):</strong>
                 </td>
                 <td>
                     {{ $loan->getPeriod() }}
@@ -48,11 +48,11 @@
 
             <tr>
                 <td>
-                    <strong>@lang('borrower.your-loans.total-interest-and-fees'):</strong>
+                    <strong>@lang('borrower.loan.total-interest-and-fees'):</strong>
                 </td>
                 <td>
                     {{ $loan->getTotalInterest()->round(2) }}
-                    ({{ Lang::get($loan->isWeeklyInstallment() ? 'borrower.your-loans.interest-rate-for-weeks' : 'borrower.your-loans.interest-rate-for-months', [
+                    ({{ Lang::get($loan->isWeeklyInstallment() ? 'borrower.loan.interest-rate-for-weeks' : 'borrower.loan.interest-rate-for-months', [
                         'interestRate' => $loan->getTotalInterestRate(),
                         'period' => $loan->getPeriod(),
                     ]) }})
@@ -61,7 +61,7 @@
 
             <tr>
                 <td>
-                    <strong>@lang('borrower.your-loans.total-amount-due'):</strong>
+                    <strong>@lang('borrower.loan.total-amount-due'):</strong>
                 </td>
                 <td>
                     {{ $loan->getTotalAmount()->round(2) }}
@@ -70,13 +70,13 @@
 
             <tr>
                 <td colspan="2">
-                    <h4>@lang('borrower.your-loans.reschedule.new-schedule')</h4>
+                    <h4>@lang('borrower.loan.reschedule.new-schedule')</h4>
                 </td>
             </tr>
 
             <tr>
                 <td>
-                    <strong>@lang('borrower.your-loans.repayment-period'):</strong>
+                    <strong>@lang('borrower.loan.repayment-period'):</strong>
                 </td>
                 <td>
                     {{ $repaymentSchedule->getPeriod() }}
@@ -85,11 +85,11 @@
 
             <tr>
                 <td>
-                    <strong>@lang('borrower.your-loans.total-interest-and-fees'):</strong>
+                    <strong>@lang('borrower.loan.total-interest-and-fees'):</strong>
                 </td>
                 <td>
                     {{ $repaymentSchedule->getTotalInterest()->round(2) }}
-                    ({{ Lang::get($loan->isWeeklyInstallment() ? 'borrower.your-loans.interest-rate-for-weeks' : 'borrower.your-loans.interest-rate-for-months', [
+                    ({{ Lang::get($loan->isWeeklyInstallment() ? 'borrower.loan.interest-rate-for-weeks' : 'borrower.loan.interest-rate-for-months', [
                         'interestRate' => $loan->getTotalInterestRate(),
                         'period' => $loan->getPeriod(),
                     ]) }})
@@ -98,7 +98,7 @@
 
             <tr>
                 <td>
-                    <strong>@lang('borrower.your-loans.total-amount-due'):</strong>
+                    <strong>@lang('borrower.loan.total-amount-due'):</strong>
                 </td>
                 <td>
                     {{ $repaymentSchedule->getTotalAmountDue()->round(2) }}
@@ -115,12 +115,12 @@
 
 {{ BootstrapForm::open([
     'route' => ['borrower:post-reschedule-loan-confirmation'],
-    'translationDomain' => 'borrower.your-loans.reschedule'
+    'translationDomain' => 'borrower.loan.reschedule'
 ]) }}
 
 <div class="row">
     <div class="col-xs-6">
-        <a href="{{ route('borrower:reschedule-loan') }}" class="btn btn-default">@lang('borrower.your-loans.reschedule.cancel')</a>
+        <a href="{{ route('borrower:reschedule-loan') }}" class="btn btn-default">@lang('borrower.loan.reschedule.cancel')</a>
     </div>
     <div class="col-xs-6">
         {{ BootstrapForm::submit('confirm', ['class' => 'btn btn-success']) }}

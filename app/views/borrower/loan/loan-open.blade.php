@@ -9,14 +9,14 @@
         <h2>Accept bids</h2>
 
         <div class="alert alert-warning" role="alert">
-            @lang('borrower.your-loans.accept-bids.instructions')
+            @lang('borrower.loan.accept-bids.instructions')
         </div>
 
         <table class="table table-2-col">
             <tbody>
             <tr>
                 <td>
-                    <strong>@lang('borrower.your-loans.requested-amount'):</strong>
+                    <strong>@lang('borrower.loan.requested-amount'):</strong>
                 </td>
                 <td>
                     {{ $loan->getAmount() }}
@@ -25,7 +25,7 @@
 
             <tr>
                 <td>
-                    <strong>@lang('borrower.your-loans.repayment-period'):</strong>
+                    <strong>@lang('borrower.loan.repayment-period'):</strong>
                 </td>
                 <td>
                     {{ $loan->getPeriod() }}
@@ -34,7 +34,7 @@
 
             <tr>
                 <td>
-                    <strong>@lang('borrower.your-loans.final-lender-interest-rate'):</strong>
+                    <strong>@lang('borrower.loan.final-lender-interest-rate'):</strong>
                 </td>
                 <td>
                     {{ $loan->getLenderInterestRate() }}%
@@ -43,7 +43,7 @@
 
             <tr>
                 <td>
-                    <strong>@lang('borrower.your-loans.service-fee-rate'):</strong>
+                    <strong>@lang('borrower.loan.service-fee-rate'):</strong>
                 </td>
                 <td>
                     {{ $loan->getServiceFeeRate() }}%
@@ -53,7 +53,7 @@
             @if($loan->getRegistrationFee()->isPositive())
             <tr>
                 <td>
-                    <strong>@lang('borrower.your-loans.registration-fee'):</strong>
+                    <strong>@lang('borrower.loan.registration-fee'):</strong>
                 </td>
                 <td>
                     {{ $loan->getRegistrationFee() }}
@@ -63,11 +63,11 @@
 
             <tr>
                 <td>
-                    <strong>@lang('borrower.your-loans.total-interest-and-fees'):</strong>
+                    <strong>@lang('borrower.loan.total-interest-and-fees'):</strong>
                 </td>
                 <td>
                     {{ $calculator->totalInterest()->round(2) }}
-                    ({{ Lang::get($loan->isWeeklyInstallment() ? 'borrower.your-loans.interest-rate-for-weeks' : 'borrower.your-loans.interest-rate-for-months', [
+                    ({{ Lang::get($loan->isWeeklyInstallment() ? 'borrower.loan.interest-rate-for-weeks' : 'borrower.loan.interest-rate-for-months', [
                     'interestRate' => $loan->getLenderInterestRate() + $loan->getServiceFeeRate(),
                     'period' => $loan->getPeriod(),
                     ]) }})
@@ -76,7 +76,7 @@
 
             <tr>
                 <td>
-                    <strong>@lang('borrower.your-loans.total-amount'):</strong>
+                    <strong>@lang('borrower.loan.total-amount'):</strong>
                 </td>
                 <td>
                     {{ $calculator->totalAmount()->round(2) }}
@@ -86,7 +86,7 @@
         </table>
 
         <p>
-            @lang('borrower.your-loans.accept-bids.schedule')
+            @lang('borrower.loan.accept-bids.schedule')
         </p>
 
 
@@ -123,12 +123,12 @@
 
         {{ BootstrapForm::open([
         'action' => ['BorrowerLoanController@postAcceptBids', $loan->getId()],
-        'translationDomain' => 'borrower.your-loans.accept-bids'
+        'translationDomain' => 'borrower.loan.accept-bids'
         ]) }}
 
         {{ BootstrapForm::textarea('acceptBidsNote', null, [
         'label' => false,
-        'description' => $borrower->getCountry()->getAcceptBidsNote() ?: Lang::get('borrower.your-loans.accept-bids.default-note'),
+        'description' => $borrower->getCountry()->getAcceptBidsNote() ?: Lang::get('borrower.loan.accept-bids.default-note'),
         'rows' => 5,
         ]) }}
 
@@ -142,7 +142,7 @@
             <tbody>
             <tr>
                 <td>
-                    <strong>@lang('borrower.your-loans.requested-amount'):</strong>
+                    <strong>@lang('borrower.loan.requested-amount'):</strong>
                 </td>
                 <td>
                     {{ $loan->getAmount() }}
@@ -151,7 +151,7 @@
 
             <tr>
                 <td>
-                    <strong>@lang('borrower.your-loans.service-fee-rate'):</strong>
+                    <strong>@lang('borrower.loan.service-fee-rate'):</strong>
                 </td>
                 <td>
                     {{ $loan->getServiceFeeRate() }}%
@@ -161,7 +161,7 @@
             @if($loan->getRegistrationFee()->isPositive())
             <tr>
                 <td>
-                    <strong>@lang('borrower.your-loans.registration-fee'):</strong>
+                    <strong>@lang('borrower.loan.registration-fee'):</strong>
                 </td>
                 <td>
                     {{ $loan->getRegistrationFee() }}
@@ -171,7 +171,7 @@
 
             <tr>
                 <td>
-                    <strong>@lang('borrower.your-loans.expires-at'):</strong>
+                    <strong>@lang('borrower.loan.expires-at'):</strong>
                 </td>
                 <td>
                     {{ $loan->getExpiresAt()->format('M j, Y') }}
