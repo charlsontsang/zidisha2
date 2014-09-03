@@ -77,6 +77,12 @@ class BorrowerLoanController extends BaseController
             $data['installments'] = $installments;
 
             $template = 'borrower.loan.loan-open';
+        } elseif ($loan->isFullyFunded()) {
+            $repaymentSchedule = $this->repaymentService->getRepaymentSchedule($loan);
+
+            $data['repaymentSchedule'] = $repaymentSchedule;
+
+            $template = 'borrower.loan.loan-funded';
         }
         
         return View::make($template , $data);

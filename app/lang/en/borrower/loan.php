@@ -35,5 +35,9 @@ return [
         'confirmation-note'              => 'IMPORTANT NOTE: Your new repayment schedule is not yet accepted. Please review carefully and click ":cancel" in order to make any changes you desire. Once you are satisfied with the new repayment schedule, click ":confirm" in order to accept it.',
         'confirm'                        => 'Confirm',
         'cancel'                         => 'Go Back And Edit',
+    ],
+
+    'fully-funded' => [
+        'message' => 'Your Loan is fully funded, and disbursement is pending.'
     ]
 ];
