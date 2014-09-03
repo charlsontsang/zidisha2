@@ -1377,22 +1377,21 @@ class DatabaseMigration extends Command {
             $this->line('Migrate lending_group_members table');
 
             $count = $this->con->table('lending_group_members')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $groupMembers = $this->con->table('lending_group_members')
                     ->skip($offset)->limit($limit)->get();
                 $groupMemberArray = [];
 
                 foreach ($groupMembers as $groupMember) {
                     $newGroupMember = [
-                        'id'          => $groupMember['id'],
-                        'group_id'    => $groupMember['group_id'],
-                        'member_id'   => $groupMember['member_id'],
-                        'leaved'      => $groupMember['leaved'],
-                        'created_at'  => $groupMember['created'],
-                        'updated_at' => $groupMember['modified']
+                        'id'          => $groupMember->id,
+                        'group_id'    => $groupMember->group_id,
+                        'member_id'   => $groupMember->member_id,
+                        'leaved'      => $groupMember->leaved,
+                        'created_at'  => $groupMember->created,
+                        'updated_at' => $groupMember->modified
                     ];
 
                     array_push($groupMemberArray, $newGroupMember);
