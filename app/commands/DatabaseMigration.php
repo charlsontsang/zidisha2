@@ -1455,24 +1455,23 @@ class DatabaseMigration extends Command {
             $this->line('Migrate followers table');
 
             $count = $this->con->table('followers')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $followers = $this->con->table('followers')
                     ->skip($offset)->limit($limit)->get();
                 $followerArray = [];
 
                 foreach ($followers as $follower) {
                     $newFollower = [
-                        'id'                      => $follower['id'],
-                        'lender_id'               => $follower['lender_id'],
-                        'borrower_id'             => $follower['borrower_id'],
-                        'active'                  => !$follower['deleted'],
-                        'notify_comment'          => $follower['comment_notify'], // TODO cross check, if !$value
-                        'notify_loan_application' => $follower['new_loan_notify'], // TODO cross check, if !$value
-                        'created_at'              => $follower['created'],
-                        'updated_at'              => $follower['modified']
+                        'id'                      => $follower->id,
+                        'lender_id'               => $follower->lender_id,
+                        'borrower_id'             => $follower->borrower_id,
+                        'active'                  => !$follower->deleted,
+                        'notify_comment'          => $follower->comment_notify, // TODO cross check, if !$value
+                        'notify_loan_application' => $follower->new_loan_notify, // TODO cross check, if !$value
+                        'created_at'              => $follower->created,
+                        'updated_at'              => $follower->modified
                     ];
 
                     array_push($followerArray, $newFollower);
