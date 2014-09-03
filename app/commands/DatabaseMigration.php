@@ -1690,22 +1690,21 @@ class DatabaseMigration extends Command {
             $this->line('Migrate statistics table');
 
             $count = $this->con->table('statistics')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $statistics =$this->con->table('statistics')
                     ->skip($offset)->limit($limit)->get();
                 $statisticArray = [];
 
                 foreach ($statistics as $statistic) {
                     $newStatistics = [
-                        'id'         => $statistic['id'],
-                        'name'       => $statistic['Name'],
-                        'value'      => $statistic['value'],
+                        'id'         => $statistic->id,
+                        'name'       => $statistic->Name,
+                        'value'      => $statistic->value,
                         //TODO croos check for foreign key bcz some country values in old DB are '' (empty string)
-                        'country_id' => $statistic['country'],
-                        'date'       => date("Y-m-d H:i:s", $statistic['date'])
+                        'country_id' => $statistic->country,
+                        'date'       => date("Y-m-d H:i:s", $statistic->date)
                     ];
 
                     array_push($statisticArray, $newStatistics);
