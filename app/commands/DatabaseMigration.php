@@ -872,26 +872,25 @@ class DatabaseMigration extends Command {
             $this->line('Migrate borrower_payments table');
 
             $count = $this->con->table('borrower_payments')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $borrowerPayments = $this->con->table('borrower_payments')
                     ->skip($offset)->limit($limit)->get();
                 $borrowerPaymentArray = [];
 
                 foreach ($borrowerPayments as $borrowerPayment) {
                     $newBorrowerPayment = [
-                        'id'           => $borrowerPayment['id'],
-                        'country_code' => $borrowerPayment['country_code'],
-                        'receipt'      => $borrowerPayment['receipt'],
-                        'date'         => date("Y-m-d H:i:s", $borrowerPayment['date']),
-                        'amount'       => $borrowerPayment['amount'],
-                        'borrower_id'  => $borrowerPayment['borrower_id'],
-                        'status'       => $borrowerPayment['status'],
-                        'phone'        => $borrowerPayment['phone'],
-                        'details'      => $borrowerPayment['details'],
-                        'error'        => $borrowerPayment['error']
+                        'id'           => $borrowerPayment->id,
+                        'country_code' => $borrowerPayment->country_code,
+                        'receipt'      => $borrowerPayment->receipt,
+                        'date'         => date("Y-m-d H:i:s", $borrowerPayment->date),
+                        'amount'       => $borrowerPayment->amount,
+                        'borrower_id'  => $borrowerPayment->borrower_id,
+                        'status'       => $borrowerPayment->status,
+                        'phone'        => $borrowerPayment->phone,
+                        'details'      => $borrowerPayment->details,
+                        'error'        => $borrowerPayment->error
                     ];
 
                     array_push($borrowerPaymentArray, $newBorrowerPayment);
