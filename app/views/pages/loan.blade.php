@@ -605,37 +605,6 @@
     $('.followBorrower').tooltip({placement: 'bottom', title: 'Receive an email when this borrower posts a new comment or loan application.'})
 </script>
 <script type="text/javascript">
-    $(document).ready(function () {
-        $('.previous-loans').click(function () {
-            $("#toggle-example").collapse('toggle');
-            return false;
-        });
-    });
-</script>
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('.original-aboutMe').click(function () {
-            $("#toggle-aboutMe").collapse('toggle');
-            return false;
-        });
-    });
-</script>
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('.original-aboutBusiness').click(function () {
-            $("#toggle-aboutBusiness").collapse('toggle');
-            return false;
-        });
-    });
-</script>
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('.original-proposal').click(function () {
-            $("#toggle-proposal").collapse('toggle');
-            return false;
-        });
-    });
-    
     $(function() {
         $('.fa-info-circle').tooltip();
         $('#lend-action').on('click', function() {
