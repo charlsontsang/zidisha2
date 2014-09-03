@@ -1601,20 +1601,19 @@ class DatabaseMigration extends Command {
             $this->line('Migrate bulk_email_recipients table');
 
             $count = $this->con->table('bulk_email_recipients')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $bulkEmailRecipients = $this->con->table('bulk_email_recipients')
                     ->skip($offset)->limit($limit)->get();
                 $bulkEmailRecipientArray = [];
 
                 foreach ($bulkEmailRecipients as $bulkEmailRecipient ) {
                     $newBulkEmailRecipient = [
-                        'id'            => $bulkEmailRecipient['id'],
-                        'bulk_email_id' => $bulkEmailRecipient['bulk_email_id'],
-                        'email'         => $bulkEmailRecipient['email'],
-                        'processed_at'  => $bulkEmailRecipient['processed']
+                        'id'            => $bulkEmailRecipient->id,
+                        'bulk_email_id' => $bulkEmailRecipient->bulk_email_id,
+                        'email'         => $bulkEmailRecipient->email,
+                        'processed_at'  => $bulkEmailRecipient->processed
                     ];
 
                     array_push($bulkEmailRecipientArray, $newBulkEmailRecipient);
