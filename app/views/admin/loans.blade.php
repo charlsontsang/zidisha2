@@ -1,21 +1,26 @@
-@extends('layouts.master')
+@extends('layouts.side-menu')
 
 @section('page-title')
-Loans
+Find Loans
 @stop
 
-@section('content')
+@section('menu-title')
+Quick Links
+@stop
 
-<div>
-    {{ BootstrapForm::open(array('route' => 'admin:loans', 'translationDomain' => 'loans', 'method' => 'get')) }}
-    {{ BootstrapForm::populate($form) }}
+@section('menu-links')
+@include('partials.nav-links.staff-links')
+@stop
 
-    {{ BootstrapForm::select('country', $form->getCountries(), Request::query('country')) }}
-    {{ BootstrapForm::select('status', $form->getStatus(), Request::query('status')) }}
-    {{ BootstrapForm::submit('save') }}
+@section('page-content')
+{{ BootstrapForm::open(array('route' => 'admin:loans', 'translationDomain' => 'loans', 'method' => 'get')) }}
+{{ BootstrapForm::populate($form) }}
 
-    {{ BootstrapForm::close() }}
-</div>
+{{ BootstrapForm::select('country', $form->getCountries(), Request::query('country')) }}
+{{ BootstrapForm::select('status', $form->getStatus(), Request::query('status')) }}
+{{ BootstrapForm::submit('save') }}
+
+{{ BootstrapForm::close() }}
 
 <table class="table table-striped">
     <thead>

@@ -1,12 +1,19 @@
-@extends('layouts.master')
+@extends('layouts.side-menu')
 
 @section('page-title')
-Lenders
+Look Up Lender Account
 @stop
 
-@section('content')
-<h2>Lender Statistics</h2>
-<div>
+@section('menu-title')
+Quick Links
+@stop
+
+@section('menu-links')
+@include('partials.nav-links.staff-links')
+@stop
+
+@section('page-content')
+<p>
     Total lenders : {{ $totalLenders }}
     <br/>
     Active lenders : {{ $activeLenders }}
@@ -16,7 +23,7 @@ Lenders
     Number of lenders using automated lending : {{ $lenderUsingAutomatedLending }}
     <br/>
     Total lender credit available : {{ $totalLenderCredit }}
-</div>
+</p>
 
 <div class="page-header">
     <h1>Lenders</h1>

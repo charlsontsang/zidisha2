@@ -1,30 +1,32 @@
-@extends('layouts.master')
+@extends('layouts.side-menu')
 
 @section('page-title')
-Allow loan forgiveness
+Enable Loan Forgiveness
 @stop
 
-@section('content')
-<div class="page-header">
-    <h1>Allow Loan Forgiveness</h1>
-</div>
+@section('menu-title')
+Quick Links
+@stop
 
+@section('menu-links')
+@include('partials.nav-links.staff-links')
+@stop
+
+@section('page-content')
 <a href="{{route('admin:loan-forgiveness:index', $form->getCountry()->getCountryCode()) }}">Back to overview</a>
 <hr/>
 
-<div>
-    {{ BootstrapForm::open(['action' => 'AdminLoanForgivenessController@postAllow']) }}
-    
-    {{ BootstrapForm::select('countryCode', $form->getCountries(), $form->getCountry()->getCountryCode(), ['label' => 'Select Country', 'id' => 'countryCode']) }}
+{{ BootstrapForm::open(['action' => 'AdminLoanForgivenessController@postAllow']) }}
 
-    {{ BootstrapForm::select('loanId', $form->getLoans(), null, ['label' => 'Select Loan', 'id' => 'loanId']) }}
+{{ BootstrapForm::select('countryCode', $form->getCountries(), $form->getCountry()->getCountryCode(), ['label' => 'Select Country', 'id' => 'countryCode']) }}
 
-    {{ BootstrapForm::textarea('comment', null, ['label' => 'Comment']) }}
+{{ BootstrapForm::select('loanId', $form->getLoans(), null, ['label' => 'Select Loan', 'id' => 'loanId']) }}
 
-    {{ BootstrapForm::submit('Allow Forgiveness') }}
+{{ BootstrapForm::textarea('comment', null, ['label' => 'Comment']) }}
 
-    {{ BootstrapForm::close() }}
-</div>
+{{ BootstrapForm::submit('Allow Forgiveness') }}
+
+{{ BootstrapForm::close() }}
 @stop
 
 
