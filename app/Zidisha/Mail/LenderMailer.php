@@ -257,11 +257,23 @@ class LenderMailer
 
     public function sendLoanDefaultedMail(Loan $loan, Lender $lender)
     {
+        $data = [
+            'parameters' => [
+                'borrowerName'       => $loan->getBorrower()->getName(),
+                'loanUrl'            => route('loan:index', ['loanId' => $loan->getId()]),
+                'repaidPercentage'   => $loan->getRepaidPercent(),
+                'requestedAmount'    => $loan->getUsdAmount()->getAmount()
+            ],
+        ];
+
+        $subject = \Lang::get('lender.mails.loan-defaulted.subject');
+
         $this->mailer->send(
-            'emails.lender.loan.loan-defaulted',
-            [
+            'emails.label-template',
+            $data + [
                 'to'         => $lender->getUser()->getEmail(),
-                'subject'    => 'Loan defaulted',
+                'label'      => 'lender.mails.loan-defaulted.body',
+                'subject'    => $subject
             ]
         );
     }
