@@ -816,23 +816,22 @@ class DatabaseMigration extends Command {
             $this->line('Migrate installments table');
 
             $count = $this->con->table('repaymentschedule')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $installments = $this->con->table('repaymentschedule')
                     ->skip($offset)->limit($limit)->get();
                 $installmentArray = [];
 
                 foreach ($installments as $installment) {
                     $newInstallment = [
-                        'id'          => $installment['id'],
-                        'borrower_id' => $installment['userid'],
-                        'loan_id'     => $installment['loanid'],
-                        'due_date'    => date("Y-m-d H:i:s", $installment['duedate']),
-                        'amount'      => $installment['amount'],
-                        'paid_date'   => date("Y-m-d H:i:s", $installment['paiddate']),
-                        'paid_amount' => $installment['paidamt']
+                        'id'          => $installment->id,
+                        'borrower_id' => $installment->userid,
+                        'loan_id'     => $installment->loanid,
+                        'due_date'    => date("Y-m-d H:i:s", $installment->duedate),
+                        'amount'      => $installment->amount,
+                        'paid_date'   => date("Y-m-d H:i:s", $installment->paiddate),
+                        'paid_amount' => $installment->paidamt
                     ];
 
                     array_push($installmentArray, $newInstallment);
