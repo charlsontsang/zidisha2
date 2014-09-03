@@ -378,4 +378,14 @@ class Loan extends BaseLoan implements CommentReceiverInterface
     {
         return $this->isWeeklyInstallment() ? 52 : 12;
     }
+
+    public function isRepaid()
+    {
+        return $this->getStatus() == static::REPAID;
+    }
+
+    public function isNoLoan()
+    {
+        return $this->getStatus() == static::NO_LOAN;
+    }
 }
