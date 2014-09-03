@@ -1092,26 +1092,25 @@ class DatabaseMigration extends Command {
             $this->line('Migrate gift_card_transaction table');
 
             $count = $this->con->table('gift_transaction')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $giftCardTransactions = $this->con->table('gift_transaction')
                     ->skip($offset)->limit($limit)->get();
                 $giftCardTransactionArray = [];
 
                 foreach ($giftCardTransactions as $giftCardTransaction) {
                     $newGiftCardTransaction = [
-                        'id'               => $giftCardTransaction['id'],
-                        'transaction_id'   => $giftCardTransaction['txn_id'],
-                        'transaction_type' => $giftCardTransaction['txn_type'],
-                        'lender_id'        => $giftCardTransaction['userid'],
-                        'invoice_id'       => $giftCardTransaction['invoiceid'],
-                        'status'           => $giftCardTransaction['status'],
-                        'total_cards'      => $giftCardTransaction['total_cards'],
-                        'amount'           => $giftCardTransaction['amount'],
-                        'donation'         => $giftCardTransaction['donation'],
-                        'date'             => date("Y-m-d H:i:s", $giftCardTransaction['date']),
+                        'id'               => $giftCardTransaction->id,
+                        'transaction_id'   => $giftCardTransaction->txn_id,
+                        'transaction_type' => $giftCardTransaction->txn_type,
+                        'lender_id'        => $giftCardTransaction->userid,
+                        'invoice_id'       => $giftCardTransaction->invoiceid,
+                        'status'           => $giftCardTransaction->status,
+                        'total_cards'      => $giftCardTransaction->total_cards,
+                        'amount'           => $giftCardTransaction->amount,
+                        'donation'         => $giftCardTransaction->donation,
+                        'date'             => date("Y-m-d H:i:s", $giftCardTransaction->date),
                     ];
 
                     array_push($giftCardTransactionArray, $newGiftCardTransaction);
