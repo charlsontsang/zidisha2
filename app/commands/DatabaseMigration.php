@@ -1511,24 +1511,23 @@ class DatabaseMigration extends Command {
             $this->line('Migrate credit_settings table');
 
             $count = $this->con->table('credit_setting')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $creditSettings = $this->con->table('credit_setting')
                     ->skip($offset)->limit($limit)->get();
                 $creditSettingArray = [];
 
                 foreach ($creditSettings as $creditSetting) {
                     $newCreditSetting = [
-                        'id'                => $creditSetting['id'],
-                        'country_code'      => $creditSetting['country_code'],
-                        'loan_amount_limit' => $creditSetting['loanamt_limit'],
-                        'character_limit'   => $creditSetting['character_limit'],
-                        'comments_limit'    => $creditSetting['comments_limit'],
-                        'type'              => $creditSetting['type'], // TODO, add comments type?
-                        'created_at'        => date("Y-m-d H:i:s", $creditSetting['created']),
-                        'updated_at'        => date("Y-m-d H:i:s", $creditSetting['modified'])
+                        'id'                => $creditSetting->id,
+                        'country_code'      => $creditSetting->country_code,
+                        'loan_amount_limit' => $creditSetting->loanamt_limit,
+                        'character_limit'   => $creditSetting->character_limit,
+                        'comments_limit'    => $creditSetting->comments_limit,
+                        'type'              => $creditSetting->type, // TODO, add comments type?
+                        'created_at'        => date("Y-m-d H:i:s", $creditSetting->created),
+                        'updated_at'        => date("Y-m-d H:i:s", $creditSetting->modified)
                     ];
 
                     array_push($creditSettingArray, $newCreditSetting);
