@@ -55,99 +55,101 @@ class BorrowerService
         $data += [
             'joinedAt' => new DateTime(),
         ];
-        
-        $volunteerMentor = VolunteerMentorQuery::create()
-            ->findOneByBorrowerId($data['volunteerMentorId']);
-        $referrer = BorrowerQuery::create()
-            ->findOneById($data['referrerId']);
-        $facebookData = \Session::get('BorrowerJoin.facebookData');
-
-        $user = new User();
-        $user
-            ->setJoinedAt($data['joinedAt'])
-            ->setUsername($data['username'])
-            ->setPassword($data['password'])
-            ->setEmail($data['email'])
-            ->setFacebookId($data['facebookId'])
-            ->setRole('borrower');
-
-        if ($facebookData) {
-            $facebookUser = new FacebookUser();
-            $facebookUser
-                ->setUser($user)
-                ->setEmail($facebookData['email'])
-                ->setAccountName($facebookData['name'])
-                ->setCity($facebookData['location'])
-                ->setBirthDate($facebookData['birthday'])
-                ->setFriendsCount($this->facebookService->getFriendCount())
-                ->setFirstPostDate($this->facebookService->getFirstPostDate());
-            $facebookUser->save();
-        }
-
         $borrower = new Borrower();
-        $borrower
-            ->setFirstName($data['firstName'])
-            ->setLastName($data['lastName'])
-            ->setCountryId($data['countryId'])
-            ->setVolunteerMentor($volunteerMentor)
-            ->setReferrer($referrer)
-            ->setUser($user);
 
-        $profile = new Profile();
-        $profile
-            ->setAddress($data['address'])
-            ->setAddressInstructions($data['addressInstructions'])
-            ->setCity($data['city'])
-            ->setNationalIdNumber($data['nationalIdNumber'])
-            ->setPhoneNumber($data['phoneNumber'])
-            ->setBusinessCategoryId($data['businessCategoryId'])
-            ->setBusinessYears($data['businessYears'])
-            ->setLoanUsage($data['loanUsage'])
-            ->setBirthDate($data['birthDate'])
-            ->setAlternatePhoneNumber($data['alternatePhoneNumber']);
-        $borrower->setProfile($profile);
+        PropelDB::transaction(function($con) use($data, $borrower) {
+            $volunteerMentor = VolunteerMentorQuery::create()
+                ->findOneByBorrowerId($data['volunteerMentorId']);
+            $referrer = BorrowerQuery::create()
+                ->findOneById($data['referrerId']);
+            $facebookData = \Session::get('BorrowerJoin.facebookData');
 
-        $communityLeader = new Contact();
-        $communityLeader
-            ->setType('communityLeader')
-            ->setFirstName($data['communityLeader']['firstName'])
-            ->setLastName($data['communityLeader']['lastName'])
-            ->setPhoneNumber($data['communityLeader']['phoneNumber'])
-            ->setDescription($data['communityLeader']['description']);
-        $borrower->addContact($communityLeader);
+            $user = new User();
+            $user
+                ->setJoinedAt($data['joinedAt'])
+                ->setUsername($data['username'])
+                ->setPassword($data['password'])
+                ->setEmail($data['email'])
+                ->setFacebookId($data['facebookId'])
+                ->setRole('borrower');
 
-        for ($i = 1; $i <= 3; $i++) {
-            $familyMember = new Contact();
-            $familyMember
-                ->setType('familyMember')
-                ->setFirstName($data['familyMember'][$i]['firstName'])
-                ->setLastName($data['familyMember'][$i]['lastName'])
-                ->setPhoneNumber($data['familyMember'][$i]['phoneNumber'])
-                ->setDescription($data['familyMember'][$i]['description']);
-            $borrower->addContact($familyMember);
-        }
+            if ($facebookData) {
+                $facebookUser = new FacebookUser();
+                $facebookUser
+                    ->setUser($user)
+                    ->setEmail($facebookData['email'])
+                    ->setAccountName($facebookData['name'])
+                    ->setCity($facebookData['location'])
+                    ->setBirthDate($facebookData['birthday'])
+                    ->setFriendsCount($this->facebookService->getFriendCount())
+                    ->setFirstPostDate($this->facebookService->getFirstPostDate());
+                $facebookUser->save($con);
+            }
 
-        for ($i = 1; $i <= 3; $i++) {
-            $neighbor = new Contact();
-            $neighbor
-                ->setType('neighbor')
-                ->setFirstName($data['neighbor'][$i]['firstName'])
-                ->setLastName($data['neighbor'][$i]['lastName'])
-                ->setPhoneNumber($data['neighbor'][$i]['phoneNumber'])
-                ->setDescription($data['neighbor'][$i]['description']);
-            $borrower->addContact($neighbor);
-        }
+            $borrower
+                ->setFirstName($data['firstName'])
+                ->setLastName($data['lastName'])
+                ->setCountryId($data['countryId'])
+                ->setVolunteerMentor($volunteerMentor)
+                ->setReferrer($referrer)
+                ->setUser($user);
 
-        $borrower->save();
+            $profile = new Profile();
+            $profile
+                ->setAddress($data['address'])
+                ->setAddressInstructions($data['addressInstructions'])
+                ->setCity($data['city'])
+                ->setNationalIdNumber($data['nationalIdNumber'])
+                ->setPhoneNumber($data['phoneNumber'])
+                ->setBusinessCategoryId($data['businessCategoryId'])
+                ->setBusinessYears($data['businessYears'])
+                ->setLoanUsage($data['loanUsage'])
+                ->setBirthDate($data['birthDate'])
+                ->setAlternatePhoneNumber($data['alternatePhoneNumber']);
+            $borrower->setProfile($profile);
 
-        $joinLog = new JoinLog();
-        $joinLog
-            ->setIpAddress($data['ipAddress'])
-            ->setPreferredLoanAmount($data['preferredLoanAmount'])
-            ->setPreferredInterestRate($data['preferredInterestRate'])
-            ->setPreferredRepaymentAmount($data['preferredRepaymentAmount'])
-            ->setBorrower($borrower);
-        $joinLog->save();
+            $communityLeader = new Contact();
+            $communityLeader
+                ->setType('communityLeader')
+                ->setFirstName($data['communityLeader']['firstName'])
+                ->setLastName($data['communityLeader']['lastName'])
+                ->setPhoneNumber($data['communityLeader']['phoneNumber'])
+                ->setDescription($data['communityLeader']['description']);
+            $borrower->addContact($communityLeader);
+
+            for ($i = 1; $i <= 3; $i++) {
+                $familyMember = new Contact();
+                $familyMember
+                    ->setType('familyMember')
+                    ->setFirstName($data['familyMember'][$i]['firstName'])
+                    ->setLastName($data['familyMember'][$i]['lastName'])
+                    ->setPhoneNumber($data['familyMember'][$i]['phoneNumber'])
+                    ->setDescription($data['familyMember'][$i]['description']);
+                $borrower->addContact($familyMember);
+            }
+
+            for ($i = 1; $i <= 3; $i++) {
+                $neighbor = new Contact();
+                $neighbor
+                    ->setType('neighbor')
+                    ->setFirstName($data['neighbor'][$i]['firstName'])
+                    ->setLastName($data['neighbor'][$i]['lastName'])
+                    ->setPhoneNumber($data['neighbor'][$i]['phoneNumber'])
+                    ->setDescription($data['neighbor'][$i]['description']);
+                $borrower->addContact($neighbor);
+            }
+
+            $borrower->save($con);
+
+            $joinLog = new JoinLog();
+            $joinLog
+                ->setIpAddress($data['ipAddress'])
+                ->setPreferredLoanAmount($data['preferredLoanAmount'])
+                ->setPreferredInterestRate($data['preferredInterestRate'])
+                ->setPreferredRepaymentAmount($data['preferredRepaymentAmount'])
+                ->setBorrower($borrower);
+            $joinLog->save($con);
+        });
 
         $this->sendVerificationCode($borrower);
 
