@@ -1,23 +1,19 @@
-@extends('layouts.master')
+@extends('layouts.side-menu')
 
 @section('page-title')
-How to have your loan featured
+How To Have Your Loan Featured
 @stop
 
-@section('content')
-<div class="row">
-    <div class="col-sm-3 col-md-4">
-        <ul class="nav side-menu" role="complementary">
-          <h4>Quick Links</h4>
-            @include('partials.nav-links.borrower-links')       
-        </ul>
-    </div>
+@section('menu-title')
+Quick Links
+@stop
 
-    <div class="col-sm-9 col-md-8 info-page">
-        <div class="page-header">
-            <h1>How to have your loan featured</h1>
-        </div>
+@section('menu-links')
+@include('partials.nav-links.borrower-links')
+@stop
 
+@section('page-content')
+    <div class="info-page">
         <p>If your loan application is chosen for inclusion in the Featured category, it will be among the first applications shown to
             lenders when they visit our website. Loans that make it into the Featured category are usually funded in less than a day.</p>
 
@@ -84,5 +80,4 @@ How to have your loan featured
             translation of the lyrics in the Comment section. This is the kind of memorable story that will inspire lenders to continue
             supporting this member.</p>
     </div>
-</div>
 @stop
