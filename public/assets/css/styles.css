@@ -9598,6 +9598,11 @@ ul.filter-bar {
     margin-bottom: 0;
   }
 }
+@media (max-width: 767px) {
+  .filter-bar .input-group:last-child {
+    margin-bottom: -10px;
+  }
+}
 .filter-bar .input-group .btn {
   height: 36px;
 }
@@ -9634,7 +9639,7 @@ ul.filter-bar {
 #mobile-results-desc {
   background-color: #f8f8f8;
   padding: 20px 15px;
-  margin-bottom: -20px;
+  margin-bottom: -25px;
 }
 @media (min-width: 768px) {
   #mobile-results-desc {
