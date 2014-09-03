@@ -1429,21 +1429,20 @@ class DatabaseMigration extends Command {
             $this->line('Migrate withdrawal_requests table');
 
             $count = $this->con->table('withdraw')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $withdrawalRequests = $this->con->table('withdraw')
                     ->skip($offset)->limit($limit)->get();
                 $withdrawalRequestArray = [];
 
                 foreach ($withdrawalRequests as $withdrawalRequest) {
                     $newWithdrawalRequest = [
-                        'id'           => $withdrawalRequest['id'],
-                        'lender_id'    => $withdrawalRequest['userid'],
-                        'amount'       => $withdrawalRequest['amount'],
-                        'paid'         => $withdrawalRequest['paid'],
-                        'paypal_email' => $withdrawalRequest['paypalemail']
+                        'id'           => $withdrawalRequest->id,
+                        'lender_id'    => $withdrawalRequest->userid,
+                        'amount'       => $withdrawalRequest->amount,
+                        'paid'         => $withdrawalRequest->paid,
+                        'paypal_email' => $withdrawalRequest->paypalemail
                     ];
 
                     array_push($withdrawalRequestArray, $newWithdrawalRequest);
