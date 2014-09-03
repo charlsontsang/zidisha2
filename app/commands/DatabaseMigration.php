@@ -1012,28 +1012,27 @@ class DatabaseMigration extends Command {
             $this->line('Migrate paypal_transactions table');
 
             $count = $this->con->table('paypal_txns')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $paypalTransactions = $this->con->table('paypal_txns')
                     ->skip($offset)->limit($limit)->get();
                 $paypalTransactionArray = [];
 
                 foreach ($paypalTransactions as $paypalTransaction) {
                     $newPaypalTransaction = [
-                        'id'                     => $paypalTransaction['invoiceid'],
-                        'transaction_id'         => $paypalTransaction['txnid'],
-                        'transaction_type'       => $paypalTransaction['txn_type'],
-                        'amount'                 => $paypalTransaction['amount'],
-                        'donation_amount'        => $paypalTransaction['donation'],
-                        'paypal_transaction_fee' => $paypalTransaction['paypal_tran_fee'],
-                        'total_amount'           => $paypalTransaction['total_amount'],
-                        'status'                 => $paypalTransaction['status'],
-                        'custom'                 => $paypalTransaction['custom'],
-                        'token'                  => $paypalTransaction['paypaldata'],
+                        'id'                     => $paypalTransaction->invoiceid,
+                        'transaction_id'         => $paypalTransaction->txnid,
+                        'transaction_type'       => $paypalTransaction->txn_type,
+                        'amount'                 => $paypalTransaction->amount,
+                        'donation_amount'        => $paypalTransaction->donation,
+                        'paypal_transaction_fee' => $paypalTransaction->paypal_tran_fee,
+                        'total_amount'           => $paypalTransaction->total_amount,
+                        'status'                 => $paypalTransaction->status,
+                        'custom'                 => $paypalTransaction->custom,
+                        'token'                  => $paypalTransaction->paypaldata,
                         // TODO check if necessary and if yes then viable with created_at new then updated_at
-                        'updated_at'             => date("Y-m-d H:i:s", $paypalTransaction['updateddate'])
+                        'updated_at'             => date("Y-m-d H:i:s", $paypalTransaction->updateddate)
                     ];
 
                     array_push($paypalTransactionArray, $newPaypalTransaction);
