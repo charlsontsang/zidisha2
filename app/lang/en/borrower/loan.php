@@ -45,5 +45,8 @@ return [
         'expected-payments' => 'Expected Payments',
         'actual-payments'   => 'Actual Payments',
         'feedback'          => 'Feedback',
+    ],
+    'expired'                    => [
+        'expire-message' => 'Your Loan has been Expired.'
     ]
 ];

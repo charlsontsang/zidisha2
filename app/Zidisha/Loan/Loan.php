@@ -393,4 +393,9 @@ class Loan extends BaseLoan implements CommentReceiverInterface
     {
         return $this->getStatus() == static::DEFAULTED;
     }
+
+    public function isExpired()
+    {
+        return $this->getStatus() == static::EXPIRED;
+    }
 }
