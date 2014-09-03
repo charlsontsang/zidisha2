@@ -1045,35 +1045,41 @@ class DatabaseMigration extends Command {
             $this->line('Migrate gift_cards table');
 
             $count = $this->con->table('gift_cards')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
-                $giftCards = $this->con->table('gift_cards')
-                    ->join('gift_transaction', 'gift_cards.txn_id', '=', 'gift_transaction.txn_id') // TODO cross check(is it gift_transaction.txn_id or gift_transaction.id)
-                    ->skip($offset)->limit($limit)->get();
+            for ($offset = 0; $offset < $count; $offset += $limit) {
+                $giftCards = $this->con->table('gift_cards as g')
+                    ->select(
+                        'g.*',
+                        'gt.userid as userId',
+                        'gt.id as giftTransactionId')
+                    ->join('gift_transaction as gt', 'g.txn_id', '=', 'gt.txn_id') // TODO cross check(is it gift_transaction.txn_id or gift_transaction.id)
+                    ->skip($offset)
+                    ->limit($limit)
+                    ->orderBy('g.txn_id', 'asc')
+                    ->get();
                 $giftCardArray = [];
 
                 foreach ($giftCards as $giftCard) {
                     $newGiftCard = [
-                        'id'                       => $giftCard['gift_cards.id'],
-                        'lender_id'                => $giftCard['gift_transaction.userid'],
-                        'template'                 => $giftCard['gift_cards.template'], // TODO make sure old and new template ids are same
-                        'order_type'               => $giftCard['gift_cards.order_type'], // TODO check both string are smame
-                        'card_amount'              => $giftCard['gift_cards.card_amount'],
-                        'recipient_email'          => $giftCard['gift_cards.recipient_email'],
-                        'confirmation_email'       => $giftCard['gift_cards.sender'],
-                        'recipient_name'           => $giftCard['gift_cards.to_name'],
-                        'from_name'                => $giftCard['gift_cards.from_name'],
-                        'message'                  => $giftCard['gift_cards.message'],
-                        'date'                     => date("Y-m-d H:i:s", $giftCard['gift_cards.date']),
-                        'expire_date'              => date("Y-m-d H:i:s", $giftCard['gift_cards.exp_date']),
-                        'card_code'                => $giftCard['gift_cards.card_code'],
-                        'status'                   => $giftCard['gift_cards.status'],
-                        'claimed'                  => $giftCard['gift_cards.claimed'],
-                        'recipient_id'             => $giftCard['gift_cards.claimed_by'],
-                        'donated'                  => $giftCard['gift_cards.donated'],
-                        'gift_card_transaction_id' => $giftCard['gift_transaction.id'] // TODO cross check
+                        'id'                       => $giftCard->id,
+                        'lender_id'                => $giftCard->userId,
+                        'template'                 => $giftCard->template, // TODO make sure old and new template ids are same
+                        'order_type'               => $giftCard->order_type, // TODO check both string are smame
+                        'card_amount'              => $giftCard->card_amount,
+                        'recipient_email'          => $giftCard->recipient_email,
+                        'confirmation_email'       => $giftCard->sender,
+                        'recipient_name'           => $giftCard->to_name,
+                        'from_name'                => $giftCard->from_name,
+                        'message'                  => $giftCard->message,
+                        'date'                     => date("Y-m-d H:i:s", $giftCard->date),
+                        'expire_date'              => date("Y-m-d H:i:s", $giftCard->exp_date),
+                        'card_code'                => $giftCard->card_code,
+                        'status'                   => $giftCard->status,
+                        'claimed'                  => $giftCard->claimed,
+                        'recipient_id'             => $giftCard->claimed_by,
+                        'donated'                  => $giftCard->donated,
+                        'gift_card_transaction_id' => $giftCard->giftTransactionId // TODO cross check
                     ];
 
                     array_push($giftCardArray, $newGiftCard);
