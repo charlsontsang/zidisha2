@@ -57,14 +57,14 @@
                     </a>
 
                     <ul class="dropdown-menu">
-                        <li><a href="{{ route('admin:borrowers') }}">Find Borrowers</a></li>
+                        <li><a href="{{ route('admin:borrowers') }}">Look Up Borrower Account</a></li>
                         <li><a href="{{ route('admin:volunteer-mentors') }}">Volunteer Mentors</a></li>
                         <li><a href="{{ route('admin:add:volunteer-mentors') }}">Add Volunteer Mentors</a></li>
                         <li><a href="{{ route('admin:borrower-activation') }}">Pending Activation</a></li>
                         <li><a href="{{ route('admin:pending-disbursements') }}">Pending Disbursements</a></li>
                         <li><a href="{{ route('admin:loans') }}">Find Loans</a></li>
-                        <li><a href="{{ route('admin:repayments') }}">Repayments</a></li>
-                        <li><a href="{{ route('admin:loan-forgiveness:index') }}">Loan Forgiveness</a></li>
+                        <li><a href="{{ route('admin:repayments') }}">Enter Repayments</a></li>
+                        <li><a href="{{ route('admin:loan-forgiveness:index') }}">Forgiven Loans</a></li>
                         <li><a href="{{ route('admin:get:translation-feed') }}">Translation Feed</a></li>
                     </ul>
                 </li>
@@ -74,9 +74,9 @@
                     </a>
 
                     <ul class="dropdown-menu">
-                        <li><a href="{{ route('admin:lenders') }}">Find Lenders</a></li>
-                        <li><a href="{{ route('admin:volunteers') }}">Volunteers</a></li>
-                        <li><a href="{{ route('admin:get:gift-cards') }}">Gift Cards</a></li>
+                        <li><a href="{{ route('admin:lenders') }}">Look Up Lender Account</a></li>
+                        <li><a href="{{ route('admin:volunteers') }}">Active Staff</a></li>
+                        <li><a href="{{ route('admin:get:gift-cards') }}">Manage Gift Cards</a></li>
                         <li><a href="{{ route('admin:get:withdrawal-requests') }}">Withdraw Requests</a></li>
                     </ul>
                 </li>
@@ -87,8 +87,8 @@
 
                     <ul class="dropdown-menu">
                         <li><a href="{{ route('admin:translation:index') }}">Translations</a></li>
-                        <li><a href="{{ route('admin:mail:test-mails') }}">Test mails</a></li>
-                        <li><a href="{{ route('admin:sms:test-sms') }}">Test sms</a></li>
+                        <li><a href="{{ route('admin:mail:test-mails') }}">Test Emails</a></li>
+                        <li><a href="{{ route('admin:sms:test-sms') }}">Test SMS</a></li>
                         <li><a href="{{ route('admin:countries') }}">Countries</a></li>
                         <li><a href="{{ route('admin:settings') }}">Other Settings</a></li>
                         <li><a href="{{ route('logout') }}">Log Out</a></li>
