@@ -743,16 +743,16 @@ class DatabaseMigration extends Command {
 
                 foreach ($transactions as $transaction) {
                     $newTransaction = [
-                        'id'               => $transaction['id'],
-                        'user_id'          => $transaction['userid'],
-                        'amount'           => $transaction['amount'],
-                        'description'      => $transaction['txn_desc'],
-                        'loan_id'          => $transaction['loanid'],
-                        'transaction_date' => date("Y-m-d H:i:s", $transaction['TrDate']),
-                        'exchange_rate'    => $transaction['conversionrate'],
-                        'type'             => $transaction['txn_type'],
-                        'sub_type'         => $transaction['txn_sub_type'],
-                        'loan_bid_id'      => $transaction['loanbid_id']
+                        'id'               => $transaction->id,
+                        'user_id'          => $transaction->userid,
+                        'amount'           => $transaction->amount,
+                        'description'      => $transaction->txn_desc,
+                        'loan_id'          => $transaction->loanid,
+                        'transaction_date' => date("Y-m-d H:i:s", $transaction->TrDate),
+                        'exchange_rate'    => $transaction->conversionrate,
+                        'type'             => $transaction->txn_type,
+                        'sub_type'         => $transaction->txn_sub_type,
+                        'loan_bid_id'      => $transaction->loanbid_id
                     ];
 
                     array_push($transactionArray, $newTransaction);
