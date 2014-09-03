@@ -704,24 +704,23 @@ class DatabaseMigration extends Command {
             $this->line('Migrate loan_stages table');
 
             $count = $this->con->table('loanstage')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $stages = $this->con->table('loanstage')
                     ->skip($offset)->take($limit)->get();
                 $stageArray = [];
 
                 foreach ($stages as $stage) {
                     $newStage = [
-                        'id'          => $stage['id'],
-                        'loan_id'     => $stage['loanid'],
-                        'borrower_id' => $stage['borrowerid'],
-                        'status'      => $stage['status'],
-                        'start_date'  => date("Y-m-d H:i:s", $stage['startdate']),
-                        'end_date'    => date("Y-m-d H:i:s", $stage['enddate']),
-                        'created_at'  => date("Y-m-d H:i:s", $stage['created']),
-                        'updated_at'  => date("Y-m-d H:i:s", $stage['modified']),
+                        'id'          => $stage->id,
+                        'loan_id'     => $stage->loanid,
+                        'borrower_id' => $stage->borrowerid,
+                        'status'      => $stage->status,
+                        'start_date'  => date("Y-m-d H:i:s", $stage->startdate),
+                        'end_date'    => date("Y-m-d H:i:s", $stage->enddate),
+                        'created_at'  => date("Y-m-d H:i:s", $stage->created),
+                        'updated_at'  => date("Y-m-d H:i:s", $stage->modified),
                     ];
 
                     array_push($stageArray, $newStage);
