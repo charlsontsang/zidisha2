@@ -88,7 +88,7 @@
                                             <p><a href="#feedback">View Lender Feedback</a></p>
                                         @endif
 
-                                        On-Time Repayments:<i class="fa fa-info-circle repayment" data-toggle="tooltip"></i>
+                                        On-Time Repayments:{{ BootstrapHtml::tooltip('borrower.tooltips.loan.on-time-repayments') }}
                                         <strong>TODO</strong>
                                         <br/>
                                         
@@ -148,7 +148,7 @@
                                             Date Disbursed: 
                                             <strong>{{ $loan->getDisbursedAt()->format('M j, Y') }}</strong>
                                             <br/>
-                                            Repayment period:<i class="fa fa-info-circle repaymentPeriod" data-toggle="tooltip"></i>
+                                            Repayment period:{{ BootstrapHtml::tooltip('borrower.tooltips.loan.repayment-period') }}
                                             <strong>{{ $loan->getPeriod() }}
                                             @if($loan->getInstallmentPeriod() == 0)
                                             months
@@ -170,13 +170,13 @@
                                     </div>
                                     @if($loan->isDisbursed())
                                     <div class="col-sm-6">     
-                                        Lender interest:</b><i class="fa fa-info-circle totalInterest" data-toggle="tooltip"></i> 
-                                        <strong>${{ $totalInterest }} TO DO</strong> 
+                                        Lender interest:{{ BootstrapHtml::tooltip('borrower.tooltips.loan.lender-interest') }}
+                                        <strong>${{ $totalInterest }} TO DO</strong>
                                         <br/>
-                                        Service fee:</b><i class="fa fa-info-circle transactionFee" data-toggle="tooltip"></i> 
+                                        Service fee:{{ BootstrapHtml::tooltip('borrower.tooltips.loan.service-fee') }}
                                         <strong>${{ $serviceFee->getAmount() }}</strong>
                                         <br/>
-                                        Total cost of loan:<i class="fa fa-info-circle repaidAmount" data-toggle="tooltip"></i>
+                                        Total cost of loan:{{ BootstrapHtml::tooltip('borrower.tooltips.loan.total-cost-of-loan') }}
                                         <strong>${{ $totalInterest->add($serviceFee)->getAmount() }}</strong>
                                     </div>
                                     @endif
@@ -512,7 +512,7 @@
                                     <tr>
                                         <td>
                                             Donation to Zidisha
-                                            <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="bottom" title="Helps with our operating costs"></i>
+                                            {{ BootstrapHtml::tooltip('borrower.tooltips.loan.donation-to-zidisha') }}
                                         </td>
                                         <td style="width: 100px;">
                                                 {{ BootstrapForm::text('donationAmount', null, [
@@ -525,7 +525,7 @@
                                     <tr style="display: none;">
                                         <td>
                                             Credit card fee
-                                            <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="bottom" title="Covers credit card charges"></i>
+                                            {{ BootstrapHtml::tooltip('borrower.tooltips.loan.credit-card-fee') }}
                                         </td>
                                         <td>$<span id="fee-amount-display"></span></td>
                                     </tr>
@@ -601,22 +601,6 @@
     });
 </script>
 @endif
-<script type="text/javavscript">
-    $('.repayment').tooltip({placement: 'bottom', title: 'Percentage of all repayment installments that the borrower has paid on time (within ten days of the due date), for all loans that he or she has taken since joining Zidisha. The total number of repayment installments that have been due is displayed in parentheses.'})
-</script>
-<script type="text/javascript">
-    $('.repaymentPeriod').tooltip({placement: 'bottom', title: 'Time from disbursement until loan is fully' +
-        ' repaid'})
-</script>
-<script type="text/javascript">
-    $('.totalInterest').tooltip({placement: 'bottom', title: 'Total interest due to lenders'})
-</script>
-<script type="text/javascript">
-    $('.transactionFee').tooltip({placement: 'bottom', title: 'Covers the cost of transferring funds to the borrower'})
-</script>
-<script type="text/javascript">
-    $('.repaidAmount').tooltip({placement: 'bottom', title: 'Total cost to the borrower for this loan (interest + service fee)'})
-</script>
 <script type="text/javascript">
     $('.followBorrower').tooltip({placement: 'bottom', title: 'Receive an email when this borrower posts a new comment or loan application.'})
 </script>
