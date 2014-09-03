@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Zidisha\Admin\Setting;
 use Zidisha\Analytics\MixpanelService;
+use Zidisha\Balance\InviteTransactionQuery;
 use Zidisha\Balance\Transaction;
 use Zidisha\Balance\TransactionQuery;
 use Zidisha\Balance\TransactionService;
@@ -192,8 +193,24 @@ class LoanService
 
     protected function getLendersForNewLoanNotificationMail(Loan $loan)
     {
-        // TODO see $database->getLendersEmailForLoanApp
-        $lenderIds = [];
+        $query = "SELECT id
+            FROM lenders AS l
+            JOIN lender_preferences AS p
+            ON (l.id = p.lender_id)
+            WHERE
+               ((p.notify_loan_application = TRUE AND l.id IN (SELECT lender_id FROM loan_bids AS b WHERE b.loan_id = :loanId AND active = TRUE AND lender_id NOT IN (SELECT lender_id FROM followers AS f WHERE f.borrower_id = :borrowerId)))
+                OR
+                (l.id IN (SELECT lender_id FROM followers as ff WHERE ff.borrower_id = :borrowerId AND ff.notify_loan_application = TRUE AND active= TRUE )))
+               AND active = TRUE ";
+
+        $lenderIds = PropelDB::fetchAll(
+            $query,
+            [
+                'loanId'     => $loan->getId(),
+                'borrowerId' => $loan->getBorrowerId(),
+            ]
+        );
+
         $lenders = LenderQuery::create()
             ->filterById($lenderIds)
             ->find();
@@ -608,14 +625,23 @@ class LoanService
 
         $this->updateLoanIndex($loan);
 
+        $lenderIds = [];
+        /** @var LenderRefund $lenderRefund */
+        foreach ($lenderRefunds as $lenderRefund) {
+            $lenderIds[] = $lenderRefund->getLender()->getId();
+        }
+        $currentCreditArray = TransactionQuery::create()
+            ->getCurrentBalance($lenderIds);
+        $inviteCreditArray = InviteTransactionQuery::create()
+            ->getTotalInviteCreditAmount($lenderIds);
         /** @var LenderRefund $lenderRefund */
         foreach ($lenderRefunds as $lenderRefund) {
             if ($lenderRefund->getAmount()->isPositive()) {
-                $this->lenderMailer->sendExpiredLoanMail($loan, $lenderRefund->getLender(), $lenderRefund->getAmount());
+                $this->lenderMailer->sendExpiredLoanMail($loan, $lenderRefund->getLender(), $lenderRefund->getAmount(), $currentCreditArray[$lenderRefund->getLender()->getId()]);
             }
 
             if ($lenderRefund->getLenderInviteCredit()->isPositive()) {
-                $this->lenderMailer->sendExpiredLoanWithLenderInviteCreditMail($loan, $lenderRefund->getLender(), $lenderRefund->getLenderInviteCredit());
+                $this->lenderMailer->sendExpiredLoanWithLenderInviteCreditMail($loan, $lenderRefund->getLender(), $lenderRefund->getLenderInviteCredit(), $inviteCreditArray[$lenderRefund->getLender()->getId()]);
             }
         }
         

@@ -136,7 +136,7 @@
             $currentBalance = \Zidisha\Balance\TransactionQuery::create()
                 ->getCurrentBalance(\Auth::id());
             $inviteCredit = \Zidisha\Balance\InviteTransactionQuery::create()
-                ->getTotalInviteCreditAmount(\Auth::user()->getLender());
+                ->getTotalInviteCreditAmount(\Auth::id());
             $lendingCredit = $currentBalance->add($inviteCredit);
             ?>
                 <p id="lending-credit" class="navbar-text">

@@ -3,6 +3,7 @@ namespace Zidisha\Mail;
 
 
 use Carbon\Carbon;
+use Zidisha\Balance\InviteTransactionQuery;
 use Zidisha\Balance\TransactionQuery;
 use Zidisha\Comment\Comment;
 use Zidisha\Currency\Money;
@@ -256,36 +257,66 @@ class LenderMailer
 
     public function sendLoanDefaultedMail(Loan $loan, Lender $lender)
     {
+        $data = [
+            'parameters' => [
+                'borrowerName'       => $loan->getBorrower()->getName(),
+                'loanUrl'            => route('loan:index', ['loanId' => $loan->getId()]),
+                'repaidPercentage'   => $loan->getRepaidPercent(),
+                'requestedAmount'    => $loan->getUsdAmount()->getAmount()
+            ],
+        ];
+
+        $subject = \Lang::get('lender.mails.loan-defaulted.subject');
+
         $this->mailer->send(
-            'emails.lender.loan.loan-defaulted',
-            [
+            'emails.label-template',
+            $data + [
                 'to'         => $lender->getUser()->getEmail(),
-                'subject'    => 'Loan defaulted',
+                'label'      => 'lender.mails.loan-defaulted.body',
+                'subject'    => $subject
             ]
         );
     }
     
-    // TODO see $session->sendLoanExpiredMailToLender
-    public function sendExpiredLoanMail(Loan $loan, Lender $lender, Money $amount)
+    public function sendExpiredLoanMail(Loan $loan, Lender $lender, Money $amount, Money $currentBalance)
     {
+        $borrower = $loan->getBorrower();
+        $parameters = [
+            'borrowerName'  => $borrower->getName(),
+            'bidAmount'     => $amount->getAmount(),
+            'creditBalance' => $currentBalance->getAmount(),
+            'lendLink'      => route('lend:index')
+        ];
+        $message = \Lang::get('lender.mails.loan-expired.body', $parameters);
+        $data['content'] = $message;
+
         $this->mailer->send(
             'emails.hero',
-            [
+            $data + [
                 'to'         => $lender->getUser()->getEmail(),
-                'subject'    => 'Loan expired notification',
+                'subject'    => \Lang::get('lender.mails.loan-expired.subject', $parameters),
                 'templateId' => \Setting::get('sendwithus.lender-expired-loan-template-id'),
             ]
         );        
     }
 
-    // TODO see $session->sendLoanExpiredMailToInvitedLender
-    public function sendExpiredLoanWithLenderInviteCreditMail(Loan $loan, Lender $lender, Money $amount)
+    public function sendExpiredLoanWithLenderInviteCreditMail(Loan $loan, Lender $lender, Money $amount, Money $inviteCreditBalance)
     {
+        $borrower = $loan->getBorrower();
+        $parameters = [
+            'borrowerName'              => $borrower->getName(),
+            'bidAmount'                 => $amount->getAmount(),
+            'lenderInviteCreditBalance' => $inviteCreditBalance->getAmount(),
+            'lendLink'                  => route('lend:index')
+        ];
+        $message = \Lang::get('lender.mails.loan-expired-invite.body', $parameters);
+        $data['content'] = $message;
+
         $this->mailer->send(
             'emails.hero',
-            [
+            $data + [
                 'to'         => $lender->getUser()->getEmail(),
-                'subject'    => 'Loan expired notification',
+                'subject'    => \Lang::get('lender.mails.loan-expired-invite.subject', $parameters),
                 'templateId' => \Setting::get('sendwithus.lender-expired-loan-template-id'),
             ]
         );
@@ -319,6 +350,7 @@ class LenderMailer
         $subject = \Lang::get('lender.mails.lender-unused-fund.subject');
 
         $message = \Lang::get('lender.mails.lender-unused-fund.body', ['lenderBalance' => $currentBalance->getAmount()]);
+        $data['content'] = $message;
 
         $this->mailer->send(
             'emails.hero',
@@ -368,7 +400,7 @@ class LenderMailer
         $subject = \Lang::get('lender.mails.new-loan-notification.subject', ['borrowerName' => $loan->getBorrower()->getName()]);
         
         $this->mailer->send(
-            'emails.lender.new-loan-notification',
+            'emails.label-template',
             $data + [
                 'to'         => $lender->getUser()->getEmail(),
                 'label'      => 'lender.mails.new-loan-notification.lender-body',
@@ -455,6 +487,127 @@ class LenderMailer
 
     public function sendDisbursedLoanMail(Loan $loan, Lender $lender)
     {
-        // TODO see $session->updateActiveLoan, sendwithus tag LENDER_DISBURSED_TAG
+        $borrower = $loan->getBorrower();
+        $parameters = [
+            'borrowerName'    => $borrower->getName(),
+            'borrowFirstName' => $borrower->getFirstName(),
+            'disbursedDate'   => date('F d, Y',  time()),
+            'loanPage'        => route('loan:index', $loan->getId()),
+            'giftCardPage'    => route('lender:gift-cards')
+        ];
+
+        $data['image_src'] = $borrower->getUser()->getProfilePictureUrl();
+        $message = \Lang::get('lender.mails.loan-disbursed.message', $parameters);
+        $data['header'] = $message;
+        $body = \Lang::get('lender.mails.loan-disbursed.body', $parameters);
+        $data['content'] = $body;
+
+        $this->mailer->send(
+            'emails.hero',
+            $data + [
+                'to'         => $lender->getUser()->getEmail(),
+                'subject'    => \Lang::get('lender.mails.loan-disbursed.subject', $parameters),
+                'templateId' => \Setting::get('sendwithus.lender-loan-disbursed-template-id'),
+            ]
+        );
+    }
+
+    public function sendReceivedRepaymentMail(Lender $lender, Loan $loan, Money $amount,  Money $currentCredit)
+    {
+        $parameters = [
+            'borrowerName'         => $loan->getBorrower()->getName(),
+            'amount'               => $amount,
+            'loanUrl'              => route('loan:index', $loan->getId()),
+            'currentCredit'        => $currentCredit->getAmount(),
+            'lendUrl'              => route('lend:index'),
+            'autoLendingUrl'       => route('lender:auto-lending'),
+            'accountPreferenceUrl' => route('lender:preference')
+        ];
+
+        $body = \Lang::get('lender.mails.loan-repayment-received.body', $parameters);
+        $data['content'] = $body;
+        $content2 = \Lang::get('lender.mails.loan-repayment-received.message2', $parameters);
+        $data['content2'] = $content2;
+
+        $this->mailer->send(
+            'emails.hero',
+            $data + [
+                'to'         => $lender->getUser()->getEmail(),
+                'subject'    => \Lang::get('lender.mails.loan-repayment-received.subject', $parameters),
+                'templateId' => \Setting::get('sendwithus.lender-loan-repayment-template-id'),
+            ]
+        );
+    }
+
+    public function sendReceivedRepaymentCreditBalanceMail(Lender $lender, Money $currentCredit)
+    {
+        $parameters = [
+            'currentCredit'        => $currentCredit->getAmount(),
+            'lendUrl'              => route('lend:index'),
+        ];
+
+        $body = \Lang::get('lender.mails.loan-repayment-received-balance.body', $parameters);
+        $data['content'] = $body;
+
+        $this->mailer->send(
+            'emails.hero',
+            $data + [
+                'to'         => $lender->getUser()->getEmail(),
+                'subject'    => \Lang::get('lender.mails.loan-repayment-received-balance.subject', $parameters),
+                'templateId' => \Setting::get('sendwithus.lender-loan-repayment-template-id'),
+            ]
+        );
+    }
+
+    public function sendRepaidLoanMail(Lender $lender, Loan $loan)
+    {
+        $data = [
+            'parameters' => [
+                'borrowerName'     => $loan->getBorrower()->getName(),
+                'reviewUrl'          => route('loan:index', $loan->getId()).'#feedback',
+            ],
+        ];
+
+        $this->mailer->send(
+            'emails.label-template',
+            $data + [
+                'to'         => $lender->getUser()->getEmail(),
+                'header'     => \Lang::get('lender.mails.loan-repayment-feedback.body.header', ['borrowerName' => $loan->getBorrower()->getName()]),
+                'label'      => 'lender.mails.loan-repayment-feedback.body',
+                'subject'    => \Lang::get('lender.mails.loan-repayment-feedback.subject', ['borrowerName' => $loan->getBorrower()->getName()])
+            ]
+        );
+    }
+
+    public function sendRepaidLoanGainMail(Lender $lender, Loan $loan, Money $loanAmount, Money $repaidAmount, Money $gainAmount, $gainPercent)
+    {
+        $borrower = $loan->getBorrower();
+//        $loanAmount = $loan->getUsdAmount();
+//        $repaidAmount = $loan->getUsdAmount()->multiply($loan->getRepaidPercent())->divide(100);
+//        $gainAmount = $repaidAmount->subtract($loanAmount);
+//        $gainPercent = $gainAmount->multiply(100)->divide($loanAmount);
+        $parameters = [
+            'gainAmount'   => $gainAmount->getAmount(),
+            'gainPercent'  => $gainPercent,
+            'borrowerName' => $borrower->getName(),
+            'loanUrl'      => route('loan:index', $loan->getId()),
+            'purpose'      => $loan->getProposal(),
+            'loanAmount'   => $loanAmount->getAmount(),
+            'repaidAmount' => $repaidAmount->getAmount(),
+            'lendUrl'      => route('lend:index'),
+            'myStatsUrl'   => route('lender:loans')
+        ];
+
+        $body = \Lang::get('lender.mails.loan-repaid-gain.body', $parameters);
+        $data['content'] = $body;
+
+        $this->mailer->send(
+            'emails.hero',
+            $data + [
+                'to'         => $lender->getUser()->getEmail(),
+                'subject'    => \Lang::get('lender.mails.loan-repaid-gain.subject', $parameters),
+                'templateId' => \Setting::get('sendwithus.lender-loan-repayment-template-id'), //TODO template for REPAID_GAIN_TAG
+            ]
+        );
     }
 }

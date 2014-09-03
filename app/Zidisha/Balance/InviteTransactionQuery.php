@@ -21,15 +21,29 @@ use Zidisha\Lender\Lender;
 class InviteTransactionQuery extends BaseInviteTransactionQuery
 {
 
-    public function getTotalInviteCreditAmount(Lender $lender)
+    public function getTotalInviteCreditAmount($lenderIds)
     {
         $total = $this
-            ->filterByLender($lender)
-            ->select(array('total'))
+            ->filterByLenderId($lenderIds)
+            ->select(array('total', 'lenderId'))
             ->withColumn('SUM(amount)', 'total')
-            ->findOne();
+            ->withColumn('lender_id', 'lenderId')
+            ->groupByLenderId()
+            ->find();
+        if ($total->getData()) {
+            $results = $total->toKeyValue('lenderId', 'total');
 
-        return Money::valueOf($total, Currency::valueOf('USD'));
-
+            if (count($lenderIds) > 1) {
+                $creditArray = [];
+                foreach ($results as $key=>$value) {
+                    $creditArray[$key] = Money::create($value, 'USD');
+                }
+                return $creditArray;
+            } else {
+                return Money::create($results[$lenderIds], 'USD');
+            }
+        } else {
+            return Money::create(0, 'USD');
+        }
     }
 } // InviteTransactionQuery

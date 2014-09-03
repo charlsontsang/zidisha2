@@ -2,6 +2,7 @@
 namespace Zidisha\Mail;
 
 
+use Carbon\Carbon;
 use Zidisha\Borrower\Borrower;
 use Zidisha\Borrower\FeedbackMessage;
 use Zidisha\Borrower\Invite;
@@ -293,13 +294,57 @@ class BorrowerMailer{
         //TODO: sendLoanFinalArrearToInvite
     }
 
-    public function sendLoanFullyFundedMail($loan)
+
+    public function sendDisbursedLoanMail(Loan $loan)
     {
-        // TODO See $session->SendFullyFundedMail
+        $borrower = $loan->getBorrower();
+        $disbursedAmount = $loan->getDisbursedAmount();
+        $registrationFee = $borrower->getCountry()->getRegistrationFee();
+        $repaymentInstruction = '';
+        $countryInstruction = $borrower->getCountry()->getRepaymentInstructions();
+        if (!empty($countryInstruction)) {
+            $repaymentInstruction = nl2br($countryInstruction);
+        }
+        $parameters = [
+            'borrowerName'         => $borrower->getName(),
+            'disbursedAmount'      => $disbursedAmount->getAmount(),
+            'registrationFee'      => $registrationFee->getAmount(),
+            'netAmount'            => $disbursedAmount->subtract($registrationFee)->getAmount(),
+            'zidishaLink'          => route('home'),
+            'repaymentInstruction' => $repaymentInstruction
+        ];
+
+        $data['image_src'] = $borrower->getUser()->getProfilePictureUrl();
+        $body = \Lang::get('borrower.mails.loan-disbursed.body', $parameters);
+        $data['content'] = $body;
+
+        $this->mailer->send(
+            'emails.hero',
+            $data + [
+                'to'         => $borrower->getUser()->getEmail(),
+                'from'       => \Lang::get('site.fromEmailAddress'),
+                'subject'    => \Lang::get('borrower.mails.loan-disbursed.subject', $parameters),
+                'templateId' => \Setting::get('sendwithus.borrower-notifications-template-id')
+            ]
+        );
     }
 
-    public function sendDisbursedLoanMail($loan)
+    public function sendLoanFullyFundedMail(Loan $loan)
     {
-        // TODO see $session->updateActiveLoan, sendwithus tag BORROWER_NOTIFICATIONS_TAG
+        $borrower = $loan->getBorrower();
+        $deadlineDays = \Setting::get('loan.deadline');
+        $appliedAt = Carbon::instance($loan->getAppliedAt());
+        $expireDate = $appliedAt->addDays($deadlineDays);
+        $message = \Lang::get('borrower.mails.loan-fully-funded.body', ['borrowerName' => $borrower->getName(), 'loanApplicationPage' => route('loan:index', $loan->getId()), 'expiryDate' => $expireDate->toFormattedDateString()]);
+        $data['content'] = $message;
+
+        $this->mailer->send(
+            'emails.hero',
+            $data + [
+                'to'         => $loan->getBorrower()->getUser()->getEmail(),
+                'subject'    => \Lang::get('borrower.mails.loan-fully-funded.subject'),
+                'templateId' => \Setting::get('sendwithus.borrower-notifications-template-id')
+            ]
+        );
     }
 }
