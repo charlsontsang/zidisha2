@@ -1123,24 +1123,23 @@ class DatabaseMigration extends Command {
             $this->line('Migrate forgiveness_loan_shares table');
 
             $count = $this->con->table('forgiven_loans')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $forgivenessLoanShares = $this->con->table('forgiven_loans')
                     ->skip($offset)->limit($limit)->get();
                 $forgivenessLoanShareArray = [];
 
                 foreach ($forgivenessLoanShares as $forgivenessLoanShare) {
                     $newForgivenessLoanShare = [
-                        'id'          => $forgivenessLoanShare['id'],
-                        'loan_id'     => $forgivenessLoanShare['loan_id'],
-                        'lender_id'   => $forgivenessLoanShare['lender_id'],
-                        'borrower_id' => $forgivenessLoanShare['borrower_id'],
-                        'amount'      => $forgivenessLoanShare['amount'],
-                        'usdAmount'   => $forgivenessLoanShare['damount'],
-                        'is_accepted' => $forgivenessLoanShare['tnc'],
-                        'date'        => date("Y-m-d H:i:s", $forgivenessLoanShare['date'])
+                        'id'          => $forgivenessLoanShare->id,
+                        'loan_id'     => $forgivenessLoanShare->loan_id,
+                        'lender_id'   => $forgivenessLoanShare->lender_id,
+                        'borrower_id' => $forgivenessLoanShare->borrower_id,
+                        'amount'      => $forgivenessLoanShare->amount,
+                        'usdAmount'   => $forgivenessLoanShare->damount,
+                        'is_accepted' => $forgivenessLoanShare->tnc,
+                        'date'        => date("Y-m-d H:i:s", $forgivenessLoanShare->date)
                     ];
 
                     array_push($forgivenessLoanShareArray, $newForgivenessLoanShare);
