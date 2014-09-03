@@ -88,7 +88,7 @@ class DatabaseMigration extends Command {
             $this->call('migrate-zidisha1', array('table' => 'facebook_users'));
             $this->call('migrate-zidisha1', array('table' => 'auto_lending_settings'));
             $this->call('migrate-zidisha1', array('table' => 'statistics'));
-            $this->call('migrate-zidisha1', array('table' => 'reschedule'));
+            $this->call('migrate-zidisha1', array('table' => 'reschedules'));
             $this->call('migrate-zidisha1', array('table' => 'bulk_emails'));
             $this->call('migrate-zidisha1', array('table' => 'bulk_email_recipients'));
 
@@ -642,29 +642,29 @@ class DatabaseMigration extends Command {
             $this->line('Migrate loan_bids table');
 
             $count = $this->con->table('loanbids')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $limit; $count = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $bids = $this->con->table('loanbids')
+                    ->select('loanbids.*', 'loanapplic.borrowerid')
                     ->join('loanapplic', 'loanbids.loanid', '=', 'loanapplic.loanid')
                     ->skip($offset)->take($limit)->get();
                 $bidArray = [];
 
                 foreach ($bids as $bid) {
                     $newBid = [
-                        'id'                      => $bid['loanbids.bidid'],
-                        'loan_id'                 => $bid['loanbids.loanid'],
-                        'lender_id'               => $bid['loanbids.lenderid'],
-                        'borrower_id'             => $bid['loanapplic.borrowerid'],
-                        'bid_amount'              => $bid['loanbids.bidamount'],
+                        'id'                      => $bid->bidid,
+                        'loan_id'                 => $bid->loanid,
+                        'lender_id'               => $bid->lenderid,
+                        'borrower_id'             => $bid->borrowerid,
+                        'bid_amount'              => $bid->bidamount,
                         'interest_rate'           => '', //TODO
-                        'active'                  => $bid['loanbids.active'],
-                        'accepted_amount'         => $bid['loanbids.givenamount'],
-                        'bid_at'                  => date("Y-m-d H:i:s", $bid['loanbids.biddate']),
-                        'is_lender_invite_credit' => $bid['loanbids.use_lender_invite_credit'],
+                        'active'                  => $bid->active,
+                        'accepted_amount'         => $bid->givenamount,
+                        'bid_at'                  => date("Y-m-d H:i:s", $bid->biddate),
+                        'is_lender_invite_credit' => $bid->use_lender_invite_credit,
                         'is_automated_lending'    => null, //TODO
-                        'updated_at'              => date("Y-m-d H:i:s", $bid['loanbids.modified']), //TODO is necessary?
+                        'updated_at'              => date("Y-m-d H:i:s", $bid->modified), //TODO is necessary?
                     ];
 
                     array_push($bidArray, $newBid);
@@ -677,22 +677,21 @@ class DatabaseMigration extends Command {
             $this->line('Migrate admin_notes table');
 
             $count = $this->con->table('loan_notes')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $adminNotes = $this->con->table('loan_notes')
                     ->skip($offset)->limit($limit)->get();
                 $adminNoteArray = [];
 
                 foreach ($adminNotes as $adminNote) {
                     $newAdminNote = [
-                        'id'          => $adminNote['id'],
-                        'user_id'     => $adminNote['userid'],
-                        'loan_id'     => $adminNote['loanid'],
+                        'id'          => $adminNote->id,
+                        'user_id'     => $adminNote->userid,
+                        'loan_id'     => $adminNote->loanid,
                         'borrower_id' => null,
-                        'note'        => $adminNote['disbursement_notes'],
-                        'type'        => 'disbursement'
+                        'note'        => $adminNote->disbursement_notes,
+                        'type'        => 0, //disbursement
                     ];
 
                     array_push($adminNoteArray, $newAdminNote);
@@ -705,24 +704,23 @@ class DatabaseMigration extends Command {
             $this->line('Migrate loan_stages table');
 
             $count = $this->con->table('loanstage')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $stages = $this->con->table('loanstage')
                     ->skip($offset)->take($limit)->get();
                 $stageArray = [];
 
                 foreach ($stages as $stage) {
                     $newStage = [
-                        'id'          => $stage['id'],
-                        'loan_id'     => $stage['loanid'],
-                        'borrower_id' => $stage['borrowerid'],
-                        'status'      => $stage['status'],
-                        'start_date'  => date("Y-m-d H:i:s", $stage['startdate']),
-                        'end_date'    => date("Y-m-d H:i:s", $stage['enddate']),
-                        'created_at'  => date("Y-m-d H:i:s", $stage['created']),
-                        'updated_at'  => date("Y-m-d H:i:s", $stage['modified']),
+                        'id'          => $stage->id,
+                        'loan_id'     => $stage->loanid,
+                        'borrower_id' => $stage->borrowerid,
+                        'status'      => $stage->status,
+                        'start_date'  => date("Y-m-d H:i:s", $stage->startdate),
+                        'end_date'    => date("Y-m-d H:i:s", $stage->enddate),
+                        'created_at'  => date("Y-m-d H:i:s", $stage->created),
+                        'updated_at'  => date("Y-m-d H:i:s", $stage->modified),
                     ];
 
                     array_push($stageArray, $newStage);
@@ -735,26 +733,25 @@ class DatabaseMigration extends Command {
             $this->line('Migrate transactions table');
 
             $count = $this->con->table('transactions')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $transactions = $this->con->table('transactions')
                     ->skip($offset)->take($limit)->get();
                 $transactionArray = [];
 
                 foreach ($transactions as $transaction) {
                     $newTransaction = [
-                        'id'               => $transaction['id'],
-                        'user_id'          => $transaction['userid'],
-                        'amount'           => $transaction['amount'],
-                        'description'      => $transaction['txn_desc'],
-                        'loan_id'          => $transaction['loanid'],
-                        'transaction_date' => date("Y-m-d H:i:s", $transaction['TrDate']),
-                        'exchange_rate'    => $transaction['conversionrate'],
-                        'type'             => $transaction['txn_type'],
-                        'sub_type'         => $transaction['txn_sub_type'],
-                        'loan_bid_id'      => $transaction['loanbid_id']
+                        'id'               => $transaction->id,
+                        'user_id'          => $transaction->userid,
+                        'amount'           => $transaction->amount,
+                        'description'      => $transaction->txn_desc,
+                        'loan_id'          => $transaction->loanid,
+                        'transaction_date' => date("Y-m-d H:i:s", $transaction->TrDate),
+                        'exchange_rate'    => $transaction->conversionrate,
+                        'type'             => $transaction->txn_type,
+                        'sub_type'         => $transaction->txn_sub_type,
+                        'loan_bid_id'      => $transaction->loanbid_id
                     ];
 
                     array_push($transactionArray, $newTransaction);
@@ -768,18 +765,17 @@ class DatabaseMigration extends Command {
             $this->line('Migrate comments table');
 
             $count = $this->con->table('comments')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count ; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count ; $offset += $limit) {
                 $comments = $this->con->table('comments')
                     ->skip($offset)->limit($limit)->get();
                 $commentArray = [];
 
                 foreach ($comments as $comment) {
                     $newComment = [
-                        'id'      => $comment['id'],
-                        'user_id' => $comment['userid'],
+                        'id'      => $comment->id,
+                        'user_id' => $comment->userid,
                         'message' => ''
                     ];
                 }
@@ -820,23 +816,22 @@ class DatabaseMigration extends Command {
             $this->line('Migrate installments table');
 
             $count = $this->con->table('repaymentschedule')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $installments = $this->con->table('repaymentschedule')
                     ->skip($offset)->limit($limit)->get();
                 $installmentArray = [];
 
                 foreach ($installments as $installment) {
                     $newInstallment = [
-                        'id'          => $installment['id'],
-                        'borrower_id' => $installment['userid'],
-                        'loan_id'     => $installment['loanid'],
-                        'due_date'    => date("Y-m-d H:i:s", $installment['duedate']),
-                        'amount'      => $installment['amount'],
-                        'paid_date'   => date("Y-m-d H:i:s", $installment['paiddate']),
-                        'paid_amount' => $installment['paidamt']
+                        'id'          => $installment->id,
+                        'borrower_id' => $installment->userid,
+                        'loan_id'     => $installment->loanid,
+                        'due_date'    => date("Y-m-d H:i:s", $installment->duedate),
+                        'amount'      => $installment->amount,
+                        'paid_date'   => date("Y-m-d H:i:s", $installment->paiddate),
+                        'paid_amount' => $installment->paidamt
                     ];
 
                     array_push($installmentArray, $newInstallment);
@@ -849,22 +844,21 @@ class DatabaseMigration extends Command {
             $this->line('Migrate installment_payments table');
 
             $count = $this->con->table('repaymentschedule_actual')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $payments = $this->con->table('repaymentschedule_actual')
                     ->skip($offset)->limit($limit)->get();
                 $paymentArray = [];
 
                 foreach ($payments as $payment) {
                     $newPayment = [
-                        'id'               => $payment['id'],
-                        'installment_id'   => $payment['rid'],
-                        'borrower_id'      => $payment['userid'],
-                        'loan_id'          => $payment['loanid'],
-                        'paid_date'        => date("Y-m-d H:i:s", $payment['paiddate']),
-                        'paid_amount'      => $payment['paidamt'],
+                        'id'               => $payment->id,
+                        'installment_id'   => $payment->rid,
+                        'borrower_id'      => $payment->userid,
+                        'loan_id'          => $payment->loanid,
+                        'paid_date'        => date("Y-m-d H:i:s", $payment->paiddate),
+                        'paid_amount'      => $payment->paidamt,
                         'exchange_rate_id' => 0, //TODO
                     ];
 
@@ -878,26 +872,25 @@ class DatabaseMigration extends Command {
             $this->line('Migrate borrower_payments table');
 
             $count = $this->con->table('borrower_payments')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $borrowerPayments = $this->con->table('borrower_payments')
                     ->skip($offset)->limit($limit)->get();
                 $borrowerPaymentArray = [];
 
                 foreach ($borrowerPayments as $borrowerPayment) {
                     $newBorrowerPayment = [
-                        'id'           => $borrowerPayment['id'],
-                        'country_code' => $borrowerPayment['country_code'],
-                        'receipt'      => $borrowerPayment['receipt'],
-                        'date'         => date("Y-m-d H:i:s", $borrowerPayment['date']),
-                        'amount'       => $borrowerPayment['amount'],
-                        'borrower_id'  => $borrowerPayment['borrower_id'],
-                        'status'       => $borrowerPayment['status'],
-                        'phone'        => $borrowerPayment['phone'],
-                        'details'      => $borrowerPayment['details'],
-                        'error'        => $borrowerPayment['error']
+                        'id'           => $borrowerPayment->id,
+                        'country_code' => $borrowerPayment->country_code,
+                        'receipt'      => $borrowerPayment->receipt,
+                        'date'         => date("Y-m-d H:i:s", $borrowerPayment->date),
+                        'amount'       => $borrowerPayment->amount,
+                        'borrower_id'  => $borrowerPayment->borrower_id,
+                        'status'       => $borrowerPayment->status,
+                        'phone'        => $borrowerPayment->phone,
+                        'details'      => $borrowerPayment->details,
+                        'error'        => $borrowerPayment->error
                     ];
 
                     array_push($borrowerPaymentArray, $newBorrowerPayment);
@@ -910,23 +903,22 @@ class DatabaseMigration extends Command {
             $this->line('Migrate lender_invites table');
 
             $count = $this->con->table('lender_invites')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $lenderInvites = $this->con->table('lender_invites')
                     ->skip($offset)->limit($limit)->get();
                 $lenderInviteArray = [];
 
                 foreach ($lenderInvites as $lenderInvite) {
                     $newLenderInvite = [
-                        'id'         => $lenderInvite['id'],
-                        'lender_id'  => $lenderInvite['lender_id'],
-                        'email'      => $lenderInvite['email'],
-                        'invited'    => $lenderInvite['invited'],
-                        'hash'       => $lenderInvite['hash'],
-                        'invitee_id' => $lenderInvite['invitee_id'],
-                        'created_at' => $lenderInvite['created'] // because it's already DateTime in old DB
+                        'id'         => $lenderInvite->id,
+                        'lender_id'  => $lenderInvite->lender_id,
+                        'email'      => $lenderInvite->email,
+                        'invited'    => $lenderInvite->invited,
+                        'hash'       => $lenderInvite->hash,
+                        'invitee_id' => $lenderInvite->invitee_id,
+                        'created_at' => $lenderInvite->created // because it's already DateTime in old DB
                     ];
 
                     array_push($lenderInviteArray, $newLenderInvite);
@@ -939,23 +931,22 @@ class DatabaseMigration extends Command {
             $this->line('Migrate lender_invite_visits table');
 
             $count = $this->con->table('lender_invite_visits')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $inviteVisits = $this->con->table('lender_invite_visits')
                     ->skip($offset)->limit($limit)->get();
                 $inviteVisitArray = [];
 
                 foreach ($inviteVisits as $inviteVisit) {
                     $newInviteVisit = [
-                        'id'               => $inviteVisit['id'],
-                        'lender_id'        => $inviteVisit['lender_id'],
-                        'lender_invite_id' => $inviteVisit['lender_invite_id'],
-                        'share_type'       => $inviteVisit['share_type'],
-                        'http_referer'     => $inviteVisit['http_referer'],
-                        'ip_address'       => $inviteVisit['ip_address'],
-                        'created_at'       => $inviteVisit['created'] // because it's already DateTime in old DB
+                        'id'               => $inviteVisit->id,
+                        'lender_id'        => $inviteVisit->lender_id,
+                        'lender_invite_id' => $inviteVisit->lender_invite_id,
+                        'share_type'       => $inviteVisit->share_type,
+                        'http_referer'     => $inviteVisit->http_referer,
+                        'ip_address'       => $inviteVisit->ip_address,
+                        'created_at'       => $inviteVisit->created // because it's already DateTime in old DB
                     ];
 
                     array_push($inviteVisitArray, $newInviteVisit);
@@ -968,24 +959,23 @@ class DatabaseMigration extends Command {
             $this->line('Migrate lender_invite_transactions table');
 
             $count = $this->con->table('lender_invite_transactions')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $$offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $$offset += $limit) {
                 $inviteTransactions = $this->con->table('lender_invite_transactions')
                     ->skip($offset)->limit($limit)->get();
                 $inviteTransactionArray = [];
 
                 foreach ($inviteTransactions as $inviteTransaction) {
                     $newInviteTransaction = [
-                        'id'               => $inviteTransaction['id'],
-                        'lender_id'        => $inviteTransaction['lender_id'],
-                        'amount'           => $inviteTransaction['amount'],
-                        'description'      => $inviteTransaction['txn_desc'],
-                        'transaction_date' => $inviteTransaction['created'], // because it's already DateTime in old DB
-                        'type'             => $inviteTransaction['txn_type'],
-                        'loan_id'          => $inviteTransaction['loan_id'],
-                        'loan_bid_id'      => $inviteTransaction['loanbid_id']
+                        'id'               => $inviteTransaction->id,
+                        'lender_id'        => $inviteTransaction->lender_id,
+                        'amount'           => $inviteTransaction->amount,
+                        'description'      => $inviteTransaction->txn_desc,
+                        'transaction_date' => $inviteTransaction->created, // because it's already DateTime in old DB
+                        'type'             => $inviteTransaction->txn_type,
+                        'loan_id'          => $inviteTransaction->loan_id,
+                        'loan_bid_id'      => $inviteTransaction->loanbid_id
                     ];
 
                     array_push($inviteTransactionArray, $newInviteTransaction);
@@ -998,19 +988,18 @@ class DatabaseMigration extends Command {
             $this->line('Migrate paypal_ipn_log table');
 
             $count = $this->con->table('paypal_ipn_raw_log')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $paypalIpnLogs = $this->con->table('paypal_ipn_raw_log')
                     ->skip($offset)->limit($limit)->get();
                 $paypalIpnLogArray = [];
 
                 foreach ($paypalIpnLogs as $paypalIpnLog) {
                     $newPaypalIpnLog = [
-                        'id'         => $paypalIpnLog['id'],
-                        'log'        => $paypalIpnLog['ipn_data_serialized'],
-                        'created_at' => date("Y-m-d H:i:s", $paypalIpnLog['created_timestamp'])
+                        'id'         => $paypalIpnLog->id,
+                        'log'        => $paypalIpnLog->ipn_data_serialized,
+                        'created_at' => date("Y-m-d H:i:s", $paypalIpnLog->created_timestamp)
                     ];
 
                     array_push($paypalIpnLogArray, $newPaypalIpnLog);
@@ -1023,28 +1012,27 @@ class DatabaseMigration extends Command {
             $this->line('Migrate paypal_transactions table');
 
             $count = $this->con->table('paypal_txns')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $paypalTransactions = $this->con->table('paypal_txns')
                     ->skip($offset)->limit($limit)->get();
                 $paypalTransactionArray = [];
 
                 foreach ($paypalTransactions as $paypalTransaction) {
                     $newPaypalTransaction = [
-                        'id'                     => $paypalTransaction['invoiceid'],
-                        'transaction_id'         => $paypalTransaction['txnid'],
-                        'transaction_type'       => $paypalTransaction['txn_type'],
-                        'amount'                 => $paypalTransaction['amount'],
-                        'donation_amount'        => $paypalTransaction['donation'],
-                        'paypal_transaction_fee' => $paypalTransaction['paypal_tran_fee'],
-                        'total_amount'           => $paypalTransaction['total_amount'],
-                        'status'                 => $paypalTransaction['status'],
-                        'custom'                 => $paypalTransaction['custom'],
-                        'token'                  => $paypalTransaction['paypaldata'],
+                        'id'                     => $paypalTransaction->invoiceid,
+                        'transaction_id'         => $paypalTransaction->txnid,
+                        'transaction_type'       => $paypalTransaction->txn_type,
+                        'amount'                 => $paypalTransaction->amount,
+                        'donation_amount'        => $paypalTransaction->donation,
+                        'paypal_transaction_fee' => $paypalTransaction->paypal_tran_fee,
+                        'total_amount'           => $paypalTransaction->total_amount,
+                        'status'                 => $paypalTransaction->status,
+                        'custom'                 => $paypalTransaction->custom,
+                        'token'                  => $paypalTransaction->paypaldata,
                         // TODO check if necessary and if yes then viable with created_at new then updated_at
-                        'updated_at'             => date("Y-m-d H:i:s", $paypalTransaction['updateddate'])
+                        'updated_at'             => date("Y-m-d H:i:s", $paypalTransaction->updateddate)
                     ];
 
                     array_push($paypalTransactionArray, $newPaypalTransaction);
@@ -1057,35 +1045,41 @@ class DatabaseMigration extends Command {
             $this->line('Migrate gift_cards table');
 
             $count = $this->con->table('gift_cards')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
-                $giftCards = $this->con->table('gift_cards')
-                    ->join('gift_transaction', 'gift_cards.txn_id', '=', 'gift_transaction.txn_id') // TODO cross check(is it gift_transaction.txn_id or gift_transaction.id)
-                    ->skip($offset)->limit($limit)->get();
+            for ($offset = 0; $offset < $count; $offset += $limit) {
+                $giftCards = $this->con->table('gift_cards as g')
+                    ->select(
+                        'g.*',
+                        'gt.userid as userId',
+                        'gt.id as giftTransactionId')
+                    ->join('gift_transaction as gt', 'g.txn_id', '=', 'gt.txn_id') // TODO cross check(is it gift_transaction.txn_id or gift_transaction.id)
+                    ->skip($offset)
+                    ->limit($limit)
+                    ->orderBy('g.txn_id', 'asc')
+                    ->get();
                 $giftCardArray = [];
 
                 foreach ($giftCards as $giftCard) {
                     $newGiftCard = [
-                        'id'                       => $giftCard['gift_cards.id'],
-                        'lender_id'                => $giftCard['gift_transaction.userid'],
-                        'template'                 => $giftCard['gift_cards.template'], // TODO make sure old and new template ids are same
-                        'order_type'               => $giftCard['gift_cards.order_type'], // TODO check both string are smame
-                        'card_amount'              => $giftCard['gift_cards.card_amount'],
-                        'recipient_email'          => $giftCard['gift_cards.recipient_email'],
-                        'confirmation_email'       => $giftCard['gift_cards.sender'],
-                        'recipient_name'           => $giftCard['gift_cards.to_name'],
-                        'from_name'                => $giftCard['gift_cards.from_name'],
-                        'message'                  => $giftCard['gift_cards.message'],
-                        'date'                     => date("Y-m-d H:i:s", $giftCard['gift_cards.date']),
-                        'expire_date'              => date("Y-m-d H:i:s", $giftCard['gift_cards.exp_date']),
-                        'card_code'                => $giftCard['gift_cards.card_code'],
-                        'status'                   => $giftCard['gift_cards.status'],
-                        'claimed'                  => $giftCard['gift_cards.claimed'],
-                        'recipient_id'             => $giftCard['gift_cards.claimed_by'],
-                        'donated'                  => $giftCard['gift_cards.donated'],
-                        'gift_card_transaction_id' => $giftCard['gift_transaction.id'] // TODO cross check
+                        'id'                       => $giftCard->id,
+                        'lender_id'                => $giftCard->userId,
+                        'template'                 => $giftCard->template, // TODO make sure old and new template ids are same
+                        'order_type'               => $giftCard->order_type, // TODO check both string are smame
+                        'card_amount'              => $giftCard->card_amount,
+                        'recipient_email'          => $giftCard->recipient_email,
+                        'confirmation_email'       => $giftCard->sender,
+                        'recipient_name'           => $giftCard->to_name,
+                        'from_name'                => $giftCard->from_name,
+                        'message'                  => $giftCard->message,
+                        'date'                     => date("Y-m-d H:i:s", $giftCard->date),
+                        'expire_date'              => date("Y-m-d H:i:s", $giftCard->exp_date),
+                        'card_code'                => $giftCard->card_code,
+                        'status'                   => $giftCard->status,
+                        'claimed'                  => $giftCard->claimed,
+                        'recipient_id'             => $giftCard->claimed_by,
+                        'donated'                  => $giftCard->donated,
+                        'gift_card_transaction_id' => $giftCard->giftTransactionId // TODO cross check
                     ];
 
                     array_push($giftCardArray, $newGiftCard);
@@ -1098,26 +1092,25 @@ class DatabaseMigration extends Command {
             $this->line('Migrate gift_card_transaction table');
 
             $count = $this->con->table('gift_transaction')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $giftCardTransactions = $this->con->table('gift_transaction')
                     ->skip($offset)->limit($limit)->get();
                 $giftCardTransactionArray = [];
 
                 foreach ($giftCardTransactions as $giftCardTransaction) {
                     $newGiftCardTransaction = [
-                        'id'               => $giftCardTransaction['id'],
-                        'transaction_id'   => $giftCardTransaction['txn_id'],
-                        'transaction_type' => $giftCardTransaction['txn_type'],
-                        'lender_id'        => $giftCardTransaction['userid'],
-                        'invoice_id'       => $giftCardTransaction['invoiceid'],
-                        'status'           => $giftCardTransaction['status'],
-                        'total_cards'      => $giftCardTransaction['total_cards'],
-                        'amount'           => $giftCardTransaction['amount'],
-                        'donation'         => $giftCardTransaction['donation'],
-                        'date'             => date("Y-m-d H:i:s", $giftCardTransaction['date']),
+                        'id'               => $giftCardTransaction->id,
+                        'transaction_id'   => $giftCardTransaction->txn_id,
+                        'transaction_type' => $giftCardTransaction->txn_type,
+                        'lender_id'        => $giftCardTransaction->userid,
+                        'invoice_id'       => $giftCardTransaction->invoiceid,
+                        'status'           => $giftCardTransaction->status,
+                        'total_cards'      => $giftCardTransaction->total_cards,
+                        'amount'           => $giftCardTransaction->amount,
+                        'donation'         => $giftCardTransaction->donation,
+                        'date'             => date("Y-m-d H:i:s", $giftCardTransaction->date),
                     ];
 
                     array_push($giftCardTransactionArray, $newGiftCardTransaction);
@@ -1130,24 +1123,23 @@ class DatabaseMigration extends Command {
             $this->line('Migrate forgiveness_loan_shares table');
 
             $count = $this->con->table('forgiven_loans')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $forgivenessLoanShares = $this->con->table('forgiven_loans')
                     ->skip($offset)->limit($limit)->get();
                 $forgivenessLoanShareArray = [];
 
                 foreach ($forgivenessLoanShares as $forgivenessLoanShare) {
                     $newForgivenessLoanShare = [
-                        'id'          => $forgivenessLoanShare['id'],
-                        'loan_id'     => $forgivenessLoanShare['loan_id'],
-                        'lender_id'   => $forgivenessLoanShare['lender_id'],
-                        'borrower_id' => $forgivenessLoanShare['borrower_id'],
-                        'amount'      => $forgivenessLoanShare['amount'],
-                        'usdAmount'   => $forgivenessLoanShare['damount'],
-                        'is_accepted' => $forgivenessLoanShare['tnc'],
-                        'date'        => date("Y-m-d H:i:s", $forgivenessLoanShare['date'])
+                        'id'          => $forgivenessLoanShare->id,
+                        'loan_id'     => $forgivenessLoanShare->loan_id,
+                        'lender_id'   => $forgivenessLoanShare->lender_id,
+                        'borrower_id' => $forgivenessLoanShare->borrower_id,
+                        'amount'      => $forgivenessLoanShare->amount,
+                        'usdAmount'   => $forgivenessLoanShare->damount,
+                        'is_accepted' => $forgivenessLoanShare->tnc,
+                        'date'        => date("Y-m-d H:i:s", $forgivenessLoanShare->date)
                     ];
 
                     array_push($forgivenessLoanShareArray, $newForgivenessLoanShare);
@@ -1160,21 +1152,20 @@ class DatabaseMigration extends Command {
             $this->line('Migrate forgiveness_loans table');
 
             $count = $this->con->table('loans_to_forgive')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $forgivenessLoans = $this->con->table('loans_to_forgive')
                     ->skip($offset)->limit($limit)->get();
                 $forgivenessLoanArray = [];
 
                 foreach ($forgivenessLoans as $forgivenessLoan) {
                     $newForgivenessLoan = [
-                        'loan_id'           => $forgivenessLoan['loanid'],
-                        'borrower_id'       => $forgivenessLoan['borrowerid'],
-                        'comment'           => $forgivenessLoan['comment'],
-                        'verification_code' => $forgivenessLoan['validation_code'],
-                        'is_reminder_sent'  => $forgivenessLoan['reminder_sent']
+                        'loan_id'           => $forgivenessLoan->loanid,
+                        'borrower_id'       => $forgivenessLoan->borrowerid,
+                        'comment'           => $forgivenessLoan->comment,
+                        'verification_code' => $forgivenessLoan->validation_code,
+                        'is_reminder_sent'  => $forgivenessLoan->reminder_sent
                     ];
 
                     array_push($forgivenessLoanArray, $newForgivenessLoan);
@@ -1187,23 +1178,22 @@ class DatabaseMigration extends Command {
             $this->line('Migrate borrower_refunds table');
 
             $count = $this->con->table('borrower_refunds')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset <$count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset <$count; $offset += $limit) {
                 $borrowerRefunds = $this->con->table('borrower_refunds')
                     ->skip($offset)->limit($limit)->get();
                 $borrowerRefundArray = [];
 
                 foreach ($borrowerRefunds as $borrowerRefund) {
                     $newBorrowerRefund = [
-                        'id'                  => $borrowerRefund['id'],
-                        'amount'              => $borrowerRefund['amount'],
-                        'borrower_id'         => $borrowerRefund['borrower_id'],
-                        'loan_id'             => $borrowerRefund['loan_id'],
-                        'borrower_payment_id' => $borrowerRefund['borrower_payment_id'],
-                        'refunded'            => $borrowerRefund['refunded'],
-                        'created_at'          => $borrowerRefund['created'] // because it's already DateTime in old DB
+                        'id'                  => $borrowerRefund->id,
+                        'amount'              => $borrowerRefund->amount,
+                        'borrower_id'         => $borrowerRefund->borrower_id,
+                        'loan_id'             => $borrowerRefund->loan_id,
+                        'borrower_payment_id' => $borrowerRefund->borrower_payment_id,
+                        'refunded'            => $borrowerRefund->refunded,
+                        'created_at'          => $borrowerRefund->created // because it's already DateTime in old DB
                     ];
 
                     array_push($borrowerRefundArray, $newBorrowerRefund);
@@ -1269,26 +1259,25 @@ class DatabaseMigration extends Command {
             $this->line('Migrate borrower_feedback_messages table');
 
             $count = $this->con->table('borrower_reports')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $feedbackMessages = $this->con->table('borrower_reports')
                     ->skip($offset)->limit($limit)->get();
                 $feedbackMessageArray = [];
 
                 foreach ($feedbackMessages as $feedbackMessage) {
                     $newFeedbackMessage = [
-                        'borrower_id'    => $feedbackMessage['borrower_id'],
+                        'borrower_id'    => $feedbackMessage->borrower_id,
                         'type'           => null, //TODO
                         'borrower_email' => '', //TODO
-                        'cc'             => $feedbackMessage['cc'],
-                        'reply_to'       => $feedbackMessage['replyto'],
-                        'subject'        => $feedbackMessage['subject'],
-                        'message'        => $feedbackMessage['message'],
-                        'sent_at'        => date("Y-m-d H:i:s", $feedbackMessage['sent_on']),
+                        'cc'             => $feedbackMessage->cc,
+                        'reply_to'       => $feedbackMessage->replyto,
+                        'subject'        => $feedbackMessage->subject,
+                        'message'        => $feedbackMessage->message,
+                        'sent_at'        => date("Y-m-d H:i:s", $feedbackMessage->sent_on),
                         'sender_name'    => '', //TODO
-                        'loan_id'        => $feedbackMessage['loanid']
+                        'loan_id'        => $feedbackMessage->loanid
                     ];
 
                     array_push($feedbackMessageArray, $newFeedbackMessage);
@@ -1301,28 +1290,27 @@ class DatabaseMigration extends Command {
             $this->line('Migrate borrower_reviews table');
 
             $count = $this->con->table('borrower_review')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $borrowerReviews = $this->con->table('borrower_review')
                     ->skip($offset)->limit($limit)->get();
                 $borrowerReviewArray = [];
 
                 foreach ($borrowerReviews as $borrowerReview) {
                     $newBorrowerReview = [
-                        'borrower_id'               => $borrowerReview['borrower_id'],
-                        'is_photo_clear'            => $borrowerReview['is_photo_clear'],
-                        'is_desc_clear'             => $borrowerReview['is_desc_clear'],
-                        'is_address_locatable'      => $borrowerReview['is_addr_locatable'],
+                        'borrower_id'               => $borrowerReview->borrower_id,
+                        'is_photo_clear'            => $borrowerReview->is_photo_clear,
+                        'is_desc_clear'             => $borrowerReview->is_desc_clear,
+                        'is_address_locatable'      => $borrowerReview->is_addr_locatable,
                         'is_address_locatable_note' => '', //TODO
-                        'is_number_provided'        => $borrowerReview['is_number_provided'],
-                        'is_nat_id_uploaded'        => $borrowerReview['is_nat_id_uploaded'],
-                        'is_rec_form_uploaded'      => $borrowerReview['is_rec_form_uploaded'],
-                        'is_rec_form_offcr_name'    => $borrowerReview['is_rec_form_offcr_name'],
-                        'is_pending_mediation'      => $borrowerReview['is_pending_mediation'],
-                        'created_by'                => $borrowerReview['created_by'],
-                        'modified_by'               => $borrowerReview['modified_by']
+                        'is_number_provided'        => $borrowerReview->is_number_provided,
+                        'is_nat_id_uploaded'        => $borrowerReview->is_nat_id_uploaded,
+                        'is_rec_form_uploaded'      => $borrowerReview->is_rec_form_uploaded,
+                        'is_rec_form_offcr_name'    => $borrowerReview->is_rec_form_offcr_name,
+                        'is_pending_mediation'      => $borrowerReview->is_pending_mediation,
+                        'created_by'                => $borrowerReview->created_by,
+                        'modified_by'               => $borrowerReview->modified_by
                     ];
 
                     array_push($borrowerReviewArray, $newBorrowerReview);
@@ -1359,25 +1347,24 @@ class DatabaseMigration extends Command {
             $this->line('Migrate lending_groups table');
 
             $count = $this->con->table('lender_groups')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $lendingGroups = $this->con->table('lender_groups')
                     ->skip($offset)->limit($limit)->get();
                 $lendingGroupArray = [];
 
                 foreach ($lendingGroups as $lendingGroup) {
                     $newLendingGroup = [
-                        'id'                       => $lendingGroup['id'],
-                        'name'                     => $lendingGroup['name'],
-                        'website'                  => $lendingGroup['website'],
-                        'group_profile_picture_id' => $lendingGroup['image'], //TODO with upload things
-                        'about'                    => $lendingGroup['about_grp'],
-                        'creator_id'               => $lendingGroup['created_by'],
-                        'leader_id'                => $lendingGroup['grp_leader'],
-                        'created_at'               => $lendingGroup['created'],
-                        'updated_at'              => $lendingGroup['modified']
+                        'id'                       => $lendingGroup->id,
+                        'name'                     => $lendingGroup->name,
+                        'website'                  => $lendingGroup->website,
+                        'group_profile_picture_id' => $lendingGroup->image, //TODO with upload things
+                        'about'                    => $lendingGroup->about_grp,
+                        'creator_id'               => $lendingGroup->created_by,
+                        'leader_id'                => $lendingGroup->grp_leader,
+                        'created_at'               => $lendingGroup->created,
+                        'updated_at'              => $lendingGroup->modified
                     ];
 
                     array_push($lendingGroupArray, $newLendingGroup);
@@ -1390,22 +1377,21 @@ class DatabaseMigration extends Command {
             $this->line('Migrate lending_group_members table');
 
             $count = $this->con->table('lending_group_members')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $groupMembers = $this->con->table('lending_group_members')
                     ->skip($offset)->limit($limit)->get();
                 $groupMemberArray = [];
 
                 foreach ($groupMembers as $groupMember) {
                     $newGroupMember = [
-                        'id'          => $groupMember['id'],
-                        'group_id'    => $groupMember['group_id'],
-                        'member_id'   => $groupMember['member_id'],
-                        'leaved'      => $groupMember['leaved'],
-                        'created_at'  => $groupMember['created'],
-                        'updated_at' => $groupMember['modified']
+                        'id'          => $groupMember->id,
+                        'group_id'    => $groupMember->group_id,
+                        'member_id'   => $groupMember->member_id,
+                        'leaved'      => $groupMember->leaved,
+                        'created_at'  => $groupMember->created,
+                        'updated_at' => $groupMember->modified
                     ];
 
                     array_push($groupMemberArray, $newGroupMember);
@@ -1418,20 +1404,19 @@ class DatabaseMigration extends Command {
             $this->line('Migrate notifications table');
 
             $count = $this->con->table('notification_history')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $notifications = $this->con->table('notification_history')
                     ->skip($offset)->limit($limit)->get();
                 $notificationArray = [];
 
                 foreach ($notifications as $notification) {
                     $newNotification = [
-                        'id'         => $notification['id'],
-                        'type'       => $notification['type'],
-                        'user_id'    => $notification['userid'],
-                        'created_at' => $notification['created']
+                        'id'         => $notification->id,
+                        'type'       => $notification->type,
+                        'user_id'    => $notification->userid,
+                        'created_at' => $notification->created
                     ];
 
                     array_push($notificationArray, $newNotification);
@@ -1444,21 +1429,20 @@ class DatabaseMigration extends Command {
             $this->line('Migrate withdrawal_requests table');
 
             $count = $this->con->table('withdraw')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $withdrawalRequests = $this->con->table('withdraw')
                     ->skip($offset)->limit($limit)->get();
                 $withdrawalRequestArray = [];
 
                 foreach ($withdrawalRequests as $withdrawalRequest) {
                     $newWithdrawalRequest = [
-                        'id'           => $withdrawalRequest['id'],
-                        'lender_id'    => $withdrawalRequest['userid'],
-                        'amount'       => $withdrawalRequest['amount'],
-                        'paid'         => $withdrawalRequest['paid'],
-                        'paypal_email' => $withdrawalRequest['paypalemail']
+                        'id'           => $withdrawalRequest->id,
+                        'lender_id'    => $withdrawalRequest->userid,
+                        'amount'       => $withdrawalRequest->amount,
+                        'paid'         => $withdrawalRequest->paid,
+                        'paypal_email' => $withdrawalRequest->paypalemail
                     ];
 
                     array_push($withdrawalRequestArray, $newWithdrawalRequest);
@@ -1471,24 +1455,23 @@ class DatabaseMigration extends Command {
             $this->line('Migrate followers table');
 
             $count = $this->con->table('followers')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $followers = $this->con->table('followers')
                     ->skip($offset)->limit($limit)->get();
                 $followerArray = [];
 
                 foreach ($followers as $follower) {
                     $newFollower = [
-                        'id'                      => $follower['id'],
-                        'lender_id'               => $follower['lender_id'],
-                        'borrower_id'             => $follower['borrower_id'],
-                        'active'                  => !$follower['deleted'],
-                        'notify_comment'          => $follower['comment_notify'], // TODO cross check, if !$value
-                        'notify_loan_application' => $follower['new_loan_notify'], // TODO cross check, if !$value
-                        'created_at'              => $follower['created'],
-                        'updated_at'              => $follower['modified']
+                        'id'                      => $follower->id,
+                        'lender_id'               => $follower->lender_id,
+                        'borrower_id'             => $follower->borrower_id,
+                        'active'                  => !$follower->deleted,
+                        'notify_comment'          => $follower->comment_notify, // TODO cross check, if !$value
+                        'notify_loan_application' => $follower->new_loan_notify, // TODO cross check, if !$value
+                        'created_at'              => $follower->created,
+                        'updated_at'              => $follower->modified
                     ];
 
                     array_push($followerArray, $newFollower);
@@ -1501,22 +1484,21 @@ class DatabaseMigration extends Command {
             $this->line('Migrate borrower_invites table');
 
             $count = $this->con->table('invites')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $borrowerInvites = $this->con->table('invites')
                     ->skip($offset)->limit($limit)->get();
                 $borrowerInviteArray = [];
 
                 foreach ( $borrowerInvites as $borrowerInvite) {
                     $newBorrowerInvite =  [
-                        'id'          => $borrowerInvite['id'],
-                        'borrower_id' => $borrowerInvite['userid'],
-                        'email'       => $borrowerInvite['email'],
-                        'invited'     => $borrowerInvite['visited'], // TODO cross check
-                        'hash'        => $borrowerInvite['cookie_value'],
-                        'invitee_id'  => $borrowerInvite['invitee_id']
+                        'id'          => $borrowerInvite->id,
+                        'borrower_id' => $borrowerInvite->userid,
+                        'email'       => $borrowerInvite->email,
+                        'invited'     => $borrowerInvite->visited, // TODO cross check
+                        'hash'        => $borrowerInvite->cookie_value,
+                        'invitee_id'  => $borrowerInvite->invitee_id
                     ];
 
                     array_push($borrowerInviteArray, $newBorrowerInvite);
@@ -1529,24 +1511,23 @@ class DatabaseMigration extends Command {
             $this->line('Migrate credit_settings table');
 
             $count = $this->con->table('credit_setting')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $creditSettings = $this->con->table('credit_setting')
                     ->skip($offset)->limit($limit)->get();
                 $creditSettingArray = [];
 
                 foreach ($creditSettings as $creditSetting) {
                     $newCreditSetting = [
-                        'id'                => $creditSetting['id'],
-                        'country_code'      => $creditSetting['country_code'],
-                        'loan_amount_limit' => $creditSetting['loanamt_limit'],
-                        'character_limit'   => $creditSetting['character_limit'],
-                        'comments_limit'    => $creditSetting['comments_limit'],
-                        'type'              => $creditSetting['type'], // TODO, add comments type?
-                        'created_at'        => date("Y-m-d H:i:s", $creditSetting['created']),
-                        'updated_at'        => date("Y-m-d H:i:s", $creditSetting['modified'])
+                        'id'                => $creditSetting->id,
+                        'country_code'      => $creditSetting->country_code,
+                        'loan_amount_limit' => $creditSetting->loanamt_limit,
+                        'character_limit'   => $creditSetting->character_limit,
+                        'comments_limit'    => $creditSetting->comments_limit,
+                        'type'              => $creditSetting->type, // TODO, add comments type?
+                        'created_at'        => date("Y-m-d H:i:s", $creditSetting->created),
+                        'updated_at'        => date("Y-m-d H:i:s", $creditSetting->modified)
                     ];
 
                     array_push($creditSettingArray, $newCreditSetting);
@@ -1559,24 +1540,23 @@ class DatabaseMigration extends Command {
             $this->line('Migrate credits_earned table');
 
             $count = $this->con->table('credits_earned')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $creditsEarned = $this->con->table('credits_earned')
                     ->skip($offset)->limit($limit)->get();
                 $creditEarnedArray = [];
 
                 foreach ($creditsEarned as $creditEarned) {
                     $newCreditEarned = [
-                        'id'          => $creditEarned['id'],
-                        'borrower_id' => $creditEarned['borrower_id'],
-                        'loan_id'     => $creditEarned['loan_id'],
-                        'credit_type' => $creditEarned['credit_type'], // TODO, add valueSet in table?
-                        'ref_id'      => $creditEarned['ref_id'],
-                        'credit'      => $creditEarned['credit'],
-                        'created_at'  => date("Y-m-d H:i:s", $creditEarned['created']),
-                        'updated_at'  => date("Y-m-d H:i:s", $creditEarned['modified'])
+                        'id'          => $creditEarned->id,
+                        'borrower_id' => $creditEarned->borrower_id,
+                        'loan_id'     => $creditEarned->loan_id,
+                        'credit_type' => $creditEarned->credit_type, // TODO, add valueSet in table?
+                        'ref_id'      => $creditEarned->ref_id,
+                        'credit'      => $creditEarned->credit,
+                        'created_at'  => date("Y-m-d H:i:s", $creditEarned->created),
+                        'updated_at'  => date("Y-m-d H:i:s", $creditEarned->modified)
                     ];
 
                     array_push($creditEarnedArray, $newCreditEarned);
@@ -1589,27 +1569,26 @@ class DatabaseMigration extends Command {
             $this->line('Migrate bulk_emails table');
 
             $count = $this->con->table('bulk_emails')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $bulkEmails = $this->con->table('bulk_emails')
                     ->skip($offset)->limit($limit)->get();
                 $bulkEmailArray = [];
 
                 foreach ($bulkEmails as $bulkEmail) {
                     $newBulkEmail = [
-                        'id'           => $bulkEmail['id'],
-                        'sender_email' => $bulkEmail['sender'],
-                        'subject'      => $bulkEmail['subject'],
-                        'header'       => $bulkEmail['header'],
-                        'message'      => $bulkEmail['message'],
-                        'template'     => $bulkEmail['template'],
-                        'html'         => $bulkEmail['html'],
-                        'tag'          => $bulkEmail['tag'],
-                        'params'       => $bulkEmail['params'],
-                        'processed_at' => $bulkEmail['processed'],
-                        'created_at'   => $bulkEmail['created']
+                        'id'           => $bulkEmail->id,
+                        'sender_email' => $bulkEmail->sender,
+                        'subject'      => $bulkEmail->subject,
+                        'header'       => $bulkEmail->header,
+                        'message'      => $bulkEmail->message,
+                        'template'     => $bulkEmail->template,
+                        'html'         => $bulkEmail->html,
+                        'tag'          => $bulkEmail->tag,
+                        'params'       => $bulkEmail->params,
+                        'processed_at' => $bulkEmail->processed,
+                        'created_at'   => $bulkEmail->created
                     ];
 
                     array_push($bulkEmailArray, $newBulkEmail);
@@ -1622,20 +1601,19 @@ class DatabaseMigration extends Command {
             $this->line('Migrate bulk_email_recipients table');
 
             $count = $this->con->table('bulk_email_recipients')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $bulkEmailRecipients = $this->con->table('bulk_email_recipients')
                     ->skip($offset)->limit($limit)->get();
                 $bulkEmailRecipientArray = [];
 
                 foreach ($bulkEmailRecipients as $bulkEmailRecipient ) {
                     $newBulkEmailRecipient = [
-                        'id'            => $bulkEmailRecipient['id'],
-                        'bulk_email_id' => $bulkEmailRecipient['bulk_email_id'],
-                        'email'         => $bulkEmailRecipient['email'],
-                        'processed_at'  => $bulkEmailRecipient['processed']
+                        'id'            => $bulkEmailRecipient->id,
+                        'bulk_email_id' => $bulkEmailRecipient->bulk_email_id,
+                        'email'         => $bulkEmailRecipient->email,
+                        'processed_at'  => $bulkEmailRecipient->processed
                     ];
 
                     array_push($bulkEmailRecipientArray, $newBulkEmailRecipient);
@@ -1648,19 +1626,18 @@ class DatabaseMigration extends Command {
             $this->line('Migrate facebook_users table');
 
             $count = $this->con->table('facebook_info')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $facebookUsers = $this->con->table('facebook_info')
                     ->skip($offset)->limit($limit)->get();
                 $facebookUserArray = [];
 
                 foreach ($facebookUsers as $facebookUser) {
-                    $facebookData = unserialize($facebookUser['facebook_data']);
+                    $facebookData = unserialize($facebookUser->facebook_data);
                     $newFacebookUser = [
-                        'id'              => $facebookUser['id'],
-                        'user_id'         => $facebookUser['userid'],
+                        'id'              => $facebookUser->id,
+                        'user_id'         => $facebookUser->userid,
                         'account_name'    => $facebookData['user_profile']['name'],
                         'email'           => $facebookData['user_profile']['email'],
                         'birth_date'      => $facebookData['user_profile']['birthday'],
@@ -1679,27 +1656,26 @@ class DatabaseMigration extends Command {
             $this->line('Migrate auto_lending_settings table');
 
             $count = $this->con->table('auto_lending')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $autoLendingSettings = $this->con->table('auto_lending')
                     ->skip($offset)->limit($limit)->get();
                 $autoLendingSettingArray = [];
 
                 foreach ($autoLendingSettings as $autoLendingSetting) {
                     $newAutoLendingSetting = [
-                        'id'                   => $autoLendingSetting['id'],
-                        'lender_id'            => $autoLendingSetting['lender_id'],
-                        'preference'           => $autoLendingSetting['preference'],
-                        'min_desired_interest' => $autoLendingSetting['desired_interest'],
-                        'max_desired_interest' => $autoLendingSetting['max_desired_interest'],
-                        'current_allocated'    => $autoLendingSetting['current_allocated'],
-                        'lender_credit'        => $autoLendingSetting['lender_credit'],
-                        'active'               => $autoLendingSetting['Active'],
-                        'last_processed'       => $autoLendingSetting['last_processed'],
-                        'created_at'           => $autoLendingSetting['created'],
-                        'updated_at'           => $autoLendingSetting['modified']
+                        'id'                   => $autoLendingSetting->id,
+                        'lender_id'            => $autoLendingSetting->lender_id,
+                        'preference'           => $autoLendingSetting->preference,
+                        'min_desired_interest' => $autoLendingSetting->desired_interest,
+                        'max_desired_interest' => $autoLendingSetting->max_desired_interest,
+                        'current_allocated'    => $autoLendingSetting->current_allocated,
+                        'lender_credit'        => $autoLendingSetting->lender_credit,
+                        'active'               => $autoLendingSetting->Active,
+                        'last_processed'       => $autoLendingSetting->last_processed,
+                        'created_at'           => $autoLendingSetting->created,
+                        'updated_at'           => $autoLendingSetting->modified
                     ];
 
                     array_push($autoLendingSettingArray, $newAutoLendingSetting);
@@ -1712,22 +1688,21 @@ class DatabaseMigration extends Command {
             $this->line('Migrate statistics table');
 
             $count = $this->con->table('statistics')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $statistics =$this->con->table('statistics')
                     ->skip($offset)->limit($limit)->get();
                 $statisticArray = [];
 
                 foreach ($statistics as $statistic) {
                     $newStatistics = [
-                        'id'         => $statistic['id'],
-                        'name'       => $statistic['Name'],
-                        'value'      => $statistic['value'],
+                        'id'         => $statistic->id,
+                        'name'       => $statistic->Name,
+                        'value'      => $statistic->value,
                         //TODO croos check for foreign key bcz some country values in old DB are '' (empty string)
-                        'country_id' => $statistic['country'],
-                        'date'       => date("Y-m-d H:i:s", $statistic['date'])
+                        'country_id' => $statistic->country,
+                        'date'       => date("Y-m-d H:i:s", $statistic->date)
                     ];
 
                     array_push($statisticArray, $newStatistics);
@@ -1737,25 +1712,24 @@ class DatabaseMigration extends Command {
         }
 
         if ($table == 'reschedules') {
-            $this->line('Migrate reschedule table');
+            $this->line('Migrate reschedules table');
 
             $count = $this->con->table('reschedule')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $reschedules = $this->con->table('reschedule')
                     ->skip($offset)->limit($limit)->get();
                 $rescheduleArray = [];
 
                 foreach ($reschedules as $reschedule) {
                     $newReschedule = [
-                        'id'          => $reschedule['id'],
-                        'loan_id'     => $reschedule['loan_id'],
-                        'borrower_id' => $reschedule['borrower_id'],
-                        'reason'      => $reschedule['reschedule_reason'],
-                        'period'      => $reschedule['period'],
-                        'created_at'  => date("Y-m-d H:i:s", $reschedule['date'])
+                        'id'          => $reschedule->id,
+                        'loan_id'     => $reschedule->loan_id,
+                        'borrower_id' => $reschedule->borrower_id,
+                        'reason'      => $reschedule->reschedule_reason,
+                        'period'      => $reschedule->period,
+                        'created_at'  => date("Y-m-d H:i:s", $reschedule->date)
                     ];
 
                     array_push($rescheduleArray, $newReschedule);
