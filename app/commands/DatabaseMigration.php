@@ -1658,27 +1658,26 @@ class DatabaseMigration extends Command {
             $this->line('Migrate auto_lending_settings table');
 
             $count = $this->con->table('auto_lending')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $autoLendingSettings = $this->con->table('auto_lending')
                     ->skip($offset)->limit($limit)->get();
                 $autoLendingSettingArray = [];
 
                 foreach ($autoLendingSettings as $autoLendingSetting) {
                     $newAutoLendingSetting = [
-                        'id'                   => $autoLendingSetting['id'],
-                        'lender_id'            => $autoLendingSetting['lender_id'],
-                        'preference'           => $autoLendingSetting['preference'],
-                        'min_desired_interest' => $autoLendingSetting['desired_interest'],
-                        'max_desired_interest' => $autoLendingSetting['max_desired_interest'],
-                        'current_allocated'    => $autoLendingSetting['current_allocated'],
-                        'lender_credit'        => $autoLendingSetting['lender_credit'],
-                        'active'               => $autoLendingSetting['Active'],
-                        'last_processed'       => $autoLendingSetting['last_processed'],
-                        'created_at'           => $autoLendingSetting['created'],
-                        'updated_at'           => $autoLendingSetting['modified']
+                        'id'                   => $autoLendingSetting->id,
+                        'lender_id'            => $autoLendingSetting->lender_id,
+                        'preference'           => $autoLendingSetting->preference,
+                        'min_desired_interest' => $autoLendingSetting->desired_interest,
+                        'max_desired_interest' => $autoLendingSetting->max_desired_interest,
+                        'current_allocated'    => $autoLendingSetting->current_allocated,
+                        'lender_credit'        => $autoLendingSetting->lender_credit,
+                        'active'               => $autoLendingSetting->Active,
+                        'last_processed'       => $autoLendingSetting->last_processed,
+                        'created_at'           => $autoLendingSetting->created,
+                        'updated_at'           => $autoLendingSetting->modified
                     ];
 
                     array_push($autoLendingSettingArray, $newAutoLendingSetting);
