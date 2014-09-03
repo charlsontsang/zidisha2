@@ -988,19 +988,18 @@ class DatabaseMigration extends Command {
             $this->line('Migrate paypal_ipn_log table');
 
             $count = $this->con->table('paypal_ipn_raw_log')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $paypalIpnLogs = $this->con->table('paypal_ipn_raw_log')
                     ->skip($offset)->limit($limit)->get();
                 $paypalIpnLogArray = [];
 
                 foreach ($paypalIpnLogs as $paypalIpnLog) {
                     $newPaypalIpnLog = [
-                        'id'         => $paypalIpnLog['id'],
-                        'log'        => $paypalIpnLog['ipn_data_serialized'],
-                        'created_at' => date("Y-m-d H:i:s", $paypalIpnLog['created_timestamp'])
+                        'id'         => $paypalIpnLog->id,
+                        'log'        => $paypalIpnLog->ipn_data_serialized,
+                        'created_at' => date("Y-m-d H:i:s", $paypalIpnLog->created_timestamp)
                     ];
 
                     array_push($paypalIpnLogArray, $newPaypalIpnLog);
