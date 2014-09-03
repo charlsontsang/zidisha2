@@ -39,5 +39,8 @@ return [
 
     'fully-funded' => [
         'message' => 'Your Loan is fully funded, and disbursement is pending.'
+    ],
+    'active' => [
+        'next-installment' => 'Next Installment'
     ]
 ];
