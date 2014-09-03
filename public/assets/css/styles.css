@@ -8851,10 +8851,17 @@ hr {
 form label.control-label {
   color: #767676;
 }
-.form-control .btn {
-  margin-top: 15px;
+form .btn-primary {
+  margin-top: 5px;
   margin-bottom: 30px;
-  width: 300px;
+  min-width: 100px;
+  max-width: 300px;
+}
+@media (max-width: 767px) {
+  form .btn-primary {
+    margin-bottom: 15px;
+    width: 100%;
+  }
 }
 .form-control-feedback {
   top: 10px !important;
@@ -10035,6 +10042,7 @@ a.link-dark {
 }
 .lend-form button {
   font-size: 18px;
+  margin-bottom: 0 !important;
 }
 #mobile-lend-btn {
   font-size: 20px;

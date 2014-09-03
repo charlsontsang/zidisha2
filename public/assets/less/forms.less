@@ -6,10 +6,15 @@ select.form-control, input.form-control, textarea.form-control {
 form label.control-label {
 	color: @gray-light;
 }
-.form-control .btn {
-	margin-top: 15px;
+form .btn-primary {
+	margin-top: 5px;
 	margin-bottom: 30px;
-	width: 300px;
+	min-width: 100px;
+	max-width: 300px;
+	@media (max-width: @screen-xs-max) {
+		margin-bottom: 15px;
+		width: 100%;
+	}
 }
 .form-control-feedback {
 	top: 10px !important;
