@@ -35,8 +35,8 @@ class BorrowerLoanController extends BaseController
             $loan = $borrower->getActiveLoan();
             if (!$loan) {
                 // TODO render no active loan template, show previous loans
-                dd('TODO');
-            }            
+                return View::make('borrower.loan.loan-no-loans');
+            }
         } else {
             $loan = LoanQuery::create()
                 ->findOneById($loanId);
