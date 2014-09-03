@@ -88,7 +88,7 @@ class DatabaseMigration extends Command {
             $this->call('migrate-zidisha1', array('table' => 'facebook_users'));
             $this->call('migrate-zidisha1', array('table' => 'auto_lending_settings'));
             $this->call('migrate-zidisha1', array('table' => 'statistics'));
-            $this->call('migrate-zidisha1', array('table' => 'reschedule'));
+            $this->call('migrate-zidisha1', array('table' => 'reschedules'));
             $this->call('migrate-zidisha1', array('table' => 'bulk_emails'));
             $this->call('migrate-zidisha1', array('table' => 'bulk_email_recipients'));
 
@@ -1714,25 +1714,24 @@ class DatabaseMigration extends Command {
         }
 
         if ($table == 'reschedules') {
-            $this->line('Migrate reschedule table');
+            $this->line('Migrate reschedules table');
 
             $count = $this->con->table('reschedule')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $reschedules = $this->con->table('reschedule')
                     ->skip($offset)->limit($limit)->get();
                 $rescheduleArray = [];
 
                 foreach ($reschedules as $reschedule) {
                     $newReschedule = [
-                        'id'          => $reschedule['id'],
-                        'loan_id'     => $reschedule['loan_id'],
-                        'borrower_id' => $reschedule['borrower_id'],
-                        'reason'      => $reschedule['reschedule_reason'],
-                        'period'      => $reschedule['period'],
-                        'created_at'  => date("Y-m-d H:i:s", $reschedule['date'])
+                        'id'          => $reschedule->id,
+                        'loan_id'     => $reschedule->loan_id,
+                        'borrower_id' => $reschedule->borrower_id,
+                        'reason'      => $reschedule->reschedule_reason,
+                        'period'      => $reschedule->period,
+                        'created_at'  => date("Y-m-d H:i:s", $reschedule->date)
                     ];
 
                     array_push($rescheduleArray, $newReschedule);
