@@ -19,7 +19,7 @@ Account Preferences
             {{ BootstrapForm::select('hideLendingActivity', $form->getBooleanArray()) }}
             <p>
                 I would like my karma score to be displayed on my public profile.
-                <a href="#" class="karmaScore" data-toggle="tooltip">(?)</a>
+                {{ BootstrapHtml::tooltip('lender.tooltips.preference.karma-score') }}
             </p>{{ BootstrapForm::select('hideKarma', $form->getBooleanArray()) }}
         </div>
         <div>
@@ -45,10 +45,4 @@ Account Preferences
         {{ BootstrapForm::close() }}
     </div>
 </div>
-@stop
-
-@section('script-footer')
-<script type="text/javascript">
-    $('.karmaScore').tooltip({placement: 'bottom', title: 'Karma is calculated on the basis of the total amount lent by the new members a member has recruited to Zidisha via email invites or gift cards, and the number of comments a member has posted in the Zidisha website.'})
-</script>
 @stop

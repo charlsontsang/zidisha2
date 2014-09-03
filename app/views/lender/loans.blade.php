@@ -17,7 +17,7 @@ My Stats
 
         <div class="row">
             <div class="col-sm-7">
-                <p>Funds uploaded:<i class="fa fa-info-circle funds-upload" data-toggle="tooltip"></i></p>
+                <p>Funds uploaded:{{ BootstrapHtml::tooltip('lender.tooltips.loans.funds-uploaded') }}</p>
             </div>
             <div class="col-sm-5">
                 <p>{{ $totalFundsUpload }}</p>
@@ -47,14 +47,14 @@ My Stats
         </div>
         <div class="row">
             <div class="col-sm-7">
-                <p>Loans outstanding:<i class="fa fa-info-circle principal-outstanding" data-toggle="tooltip"></i></p>
+                <p>Loans outstanding:{{ BootstrapHtml::tooltip('lender.tooltips.loans.loans-outstanding') }}</p>
             </div>
             <div class="col-sm-5">
                 <p>{{ $principleOutstanding }}</p>
             </div>
 
             <div class="col-sm-7">
-                <p>Lending credit available:<i class="fa fa-info-circle credit-available" data-toggle="tooltip"></i></p>
+                <p>Lending credit available:{{ BootstrapHtml::tooltip('lender.tooltips.loans.lending-credit-available') }}</p>
             </div>
 
             <div class="col-sm-5">
@@ -139,8 +139,14 @@ My Stats
         <th colspan="3" width="50%">Project</th>
         <th>Date Funded</th>
         <th>Amount Lent</th>
-        <th>Amount Repaid<i class="fa fa-info-circle amount-repaid-active-loans" data-toggle="tooltip"></i></th>
-        <th>Amount Outstanding<i class="fa fa-info-circle principal-outstanding-active-loans" data-toggle="tooltip"></i></th>
+        <th>
+            Amount Repaid
+            {{ BootstrapHtml::tooltip('lender.tooltips.loans.amount-repaid-active-loans') }}
+        </th>
+        <th>
+            Amount Outstanding
+            {{ BootstrapHtml::tooltip('lender.tooltips.loans.amount-outstanding-active-loans') }}
+        </th>
     </tr>
     </thead>
     <tbody>
@@ -205,8 +211,14 @@ My Stats
         <th colspan="3" width="50%">Project</th>
         <th>Date Funded</th>
         <th>Amount Lent</th>
-        <th>Amount Repaid<i class="fa fa-info-circle amount-repaid-completed-loans" data-toggle="tooltip"></i></th>
-        <th>Net Change in Loan Fund Value<i class="fa fa-info-circle net-change-completed-loans" data-toggle="tooltip"></i></th>
+        <th>
+            Amount Repaid
+            {{ BootstrapHtml::tooltip('lender.tooltips.loans.amount-repaid-completed-loans') }}
+        </th>
+        <th>
+            Net Change in Loan Fund Value
+            {{ BootstrapHtml::tooltip('lender.tooltips.loans.net-change-completed-loans') }}
+        </th>
     </tr>
     </thead>
     <tbody>
@@ -251,30 +263,9 @@ My Stats
 
 @section('script-footer')
 <script type="text/javascript">
-    $('.funds-upload').tooltip({placement: 'bottom', title: 'The total amount of funds you have uploaded into your account as lending credit. Does not include loan repayments credited to your account.'})
-</script>
-<script type="text/javascript">
-    $('.credit-available').tooltip({placement: 'bottom', title: 'The current balance of credit available for lending, composed of lender fund uploads and repayments received, which have not been withdrawn or bid on new loans. Does not include amounts in your Lending Cart.'})
-</script>
-<script type="text/javascript">
-    $('.principal-outstanding').tooltip({placement: 'bottom', title: 'The portion of US dollar amounts you have lent which is still outstanding with the borrowers (not yet repaid). This amount does not include any interest which is due for the loans, and its value is not adjusted for credit risk or exchange rate fluctuations.'})
-</script>
-<script type="text/javascript">
     $('.total-impact').tooltip({placement: 'bottom', title: 'The total amount lent by you, your invitees and your gift card recipients.'})
 </script>
 <script type="text/javascript">
-    $('.amount-repaid-active-loans').tooltip({placement: 'bottom', title: 'This is the amount that has been repaid into your lending account for this loan, including interest and adjusted for currency exchange rate fluctuations.'})
-</script>
-<script type="text/javascript">
-    $('.principal-outstanding-active-loans').tooltip({placement: 'bottom', title: 'The portion of US dollar amounts you have lent which is still outstanding with the borrowers (not yet repaid). This amount does not include any interest which is due for the loans, and its value is not adjusted for credit risk or exchange rate fluctuations.'})
-</script>
-<script type="text/javascript">
     $('.loan-status-active-loans').tooltip({placement: 'bottom', title: 'Loans are labeled "Repaying Early" or "Repaying Late" if repayments are more than 10 days ahead or behind schedule, using a threshold of $10 or the value of one installment (whichever is greater). Otherwise, they are labeled "On Time.'})
-</script>
-<script type="text/javascript">
-    $('.amount-repaid-completed-loans').tooltip({placement: 'bottom', title: 'This is the amount that has been repaid into your lending account for this loan, including interest and adjusted for currency exchange rate fluctuations.'})
-</script>
-<script type="text/javascript">
-    $('.net-change-completed-loans').tooltip({placement: 'bottom', title: 'This is the amount by which this loan increased or decreased the total value of your loan fund. It is the difference between the amount you originally paid to fund this loan, and the total amount that was returned to your account after currency fluctuations, interest and any writeoff or forgiveness of outstanding principal.'})
 </script>
 @stop

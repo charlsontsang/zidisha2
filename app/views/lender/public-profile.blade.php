@@ -22,7 +22,9 @@
             {{ $lender->getCountry()->getName() }}
         </p>
         <p>
-            Karma:<i class="fa fa-info-circle karma" data-toggle="tooltip"></i> {{ $karma }} 
+            Karma:
+            {{ BootstrapHtml::tooltip('lender.tooltips.profile.karma') }}
+            {{ $karma }}
         </p>
         <p>{{ $lender->getProfile()->getAboutMe() }}</p>
     </div>
@@ -112,10 +114,4 @@
     {{ BootstrapHtml::paginator($completedLoansBids, 'page3')->links() }}
 @endif
 
-@stop
-
-@section('script-footer')
-<script type="text/javascript">
-    $('.karma').tooltip({placement: 'bottom', title: 'Karma goes up with good deeds like posting comments, inviting new lenders and helping to develop our lending group community.'})
-</script>
 @stop
