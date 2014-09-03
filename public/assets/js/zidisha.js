@@ -162,7 +162,25 @@ $(function () {
                     return (this.bottom = $('.footer').outerHeight(true));
                 }
             }
-        })
+        });
+        
+        $sideBar.on('affix.bs.affix', function() {
+            if ($sideBar.next().length) {
+                $sideBar.next().css({
+                    position: 'absolute',
+                    top: $sideBar.next().position().top
+                });
+            }
+        });
+
+        $sideBar.on('affix-top.bs.affix', function() {
+            if ($sideBar.next().length) {
+                $sideBar.next().css({
+                    position: 'static',
+                    top: 0
+                });
+            }
+        });
     }, 100);
 });
 

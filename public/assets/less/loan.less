@@ -189,13 +189,9 @@
 }
 #follow-button {
   width: 208px;
-  position: absolute;
-  top: 437px;
   height: 36px;
-  z-index: -1;
   @media (min-width: @screen-md-min) {
     width: 278px;
-    top: 453px;
   }
   @media (max-width: @screen-xs-max) {
     display: none;
@@ -222,4 +218,7 @@
 #lend-form-fields {
   margin-top: 10px;
   margin-bottom: 15px;
+}
+.bid-form {
+  z-index: 10;  
 }
