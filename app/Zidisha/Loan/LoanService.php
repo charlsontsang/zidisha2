@@ -17,7 +17,6 @@ use Zidisha\Currency\ExchangeRateQuery;
 use Zidisha\Currency\Money;
 use Zidisha\Lender\Lender;
 use Zidisha\Lender\LenderQuery;
-use Zidisha\Loan\Base\BidQuery;
 use Zidisha\Loan\Calculator\BidsCalculator;
 use Zidisha\Loan\Calculator\InstallmentCalculator;
 use Zidisha\Loan\Calculator\RepaymentCalculator;
