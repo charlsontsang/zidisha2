@@ -3,8 +3,8 @@
         <table class="table">
             <thead>
             <tr>
-                <th colspan="2">Expected Payments</th>
-                <th colspan="2">Actual Payments</th>
+                <th colspan="2">{{ \Lang::get('borrower.loan.partials.expected-payments') }}</th>
+                <th colspan="2">{{ \Lang::get('borrower.loan.partials.actual-payments') }}</th>
             </tr>
             </thead>
             <tbody>
@@ -37,7 +37,7 @@
         <table class="table">
             <thead>
             <tr>
-                <th colspan="2">Expected Payments</th>
+                <th colspan="2">{{ \Lang::get('borrower.loan.partials.expected-payments') }}</th>
             </tr>
             </thead>
             <tbody>
