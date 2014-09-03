@@ -13,7 +13,7 @@ class FollowService {
         $follower = FollowerQuery::create()
             ->filterByLender($lender)
             ->filterByBorrower($borrower)
-            ->findone();
+            ->findOne();
         
         if (!$follower) {
             $follower = new Follower();
@@ -36,7 +36,7 @@ class FollowService {
         $follower = FollowerQuery::create()
             ->filterByLender($lender)
             ->filterByBorrower($borrower)
-            ->findone();
+            ->findOne();
 
         if (!$follower) {
             $follower = new Follower();
@@ -58,7 +58,7 @@ class FollowService {
         $follower = FollowerQuery::create()
             ->filterByLender($lender)
             ->filterByBorrower($borrower)
-            ->findone();
+            ->findOne();
 
         if (!$follower) {
             $follower = new Follower();
