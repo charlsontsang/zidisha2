@@ -8851,8 +8851,10 @@ hr {
 form label.control-label {
   color: #767676;
 }
-form .btn {
-  margin-bottom: 15px;
+.form-control .btn {
+  margin-top: 15px;
+  margin-bottom: 30px;
+  width: 300px;
 }
 .form-control-feedback {
   top: 10px !important;
