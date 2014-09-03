@@ -246,3 +246,5 @@ var handler;
 
     calculateAmounts();
 }
+
+$('[data-toggle="tooltip"]').tooltip();

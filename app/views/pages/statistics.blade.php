@@ -15,12 +15,14 @@ Statistics
         <h2>Community Statistics</h2>
         <p><em>What the whole Zidisha community has achieved so far</em></p>
 
-        <p>Loan money raised:<i class="fa fa-info-circle raisedAmount" data-toggle="tooltip"></i>
+        <p>Loan money raised:
+        {{ BootstrapHtml::tooltip('lender.tooltips.pages.loan-money-raised') }}
         <br/>
         USD {{ number_format($totalStatistics['disbursed_amount'], 0, ".", ","); }}
         </p>
         <br/>
-        <p>Loan projects funded:<i class="fa fa-info-circle loansFunded" data-toggle="tooltip"></i>
+        <p>Loan projects funded:
+        {{ BootstrapHtml::tooltip('lender.tooltips.pages.loan-projects-funded') }}
         <br/>
         {{ number_format($totalStatistics['raised_count'], 0, ".", ","); }}
         </p>
@@ -58,19 +60,24 @@ Statistics
             </div>
         </span>
         <br/><br/>
-        <p>Loan money raised:<i class="fa fa-info-circle raisedAmountFiltered" data-toggle="tooltip"></i>
+        <p>Loan money raised:
+        {{ BootstrapHtml::tooltip('lender.tooltips.pages.loan-money-raised-filtered') }}
         <br/>
         USD {{ number_format($lendingStatistics['disbursed_amount'], 0, ".", ","); }}</p>
         <br/>
-        <p>Loan projects funded:<i class="fa fa-info-circle loansFundedFiltered" data-toggle="tooltip"></i><br/>
+        <p>Loan projects funded:
+        {{ BootstrapHtml::tooltip('lender.tooltips.pages.loan-projects-funded-filtered') }}
+        <br/>
         {{ number_format($lendingStatistics['raised_count'], 0, ".", ","); }}</p>
         <br/>
-        <p>Average lender interest:<i class="fa fa-info-circle lenderInterest" data-toggle="tooltip"></i>
+        <p>Average lender interest:
+        {{ BootstrapHtml::tooltip('lender.tooltips.pages.average-lender-interest') }}
         <br/>
         {{ number_format($lendingStatistics['average_lender_interest'], 1, ".", ","); }}%</p>
         <br/>
         @if ($lendingStatistics['repaid_amount'])
-            <p>Principal repaid:<i class="fa fa-info-circle principalRepaid" data-toggle="tooltip"></i>
+            <p>Principal repaid:
+            {{ BootstrapHtml::tooltip('lender.tooltips.pages.principal-repaid') }}
             <br/>
             USD {{ number_format($lendingStatistics['repaid_amount'], 0, ".", ","); }}
             ( {{ number_format($lendingStatistics['repaid_rate'], 1, ".", ","); }}% of amount disbursed)
@@ -78,7 +85,8 @@ Statistics
             <br/>
         @endif
         @if ($lendingStatistics['outstanding_on_time_amount'])
-            <p>Principal held by borrowers repaying on time (within 30-day threshold):<i class="fa fa-info-circle principalRepaidOnTime" data-toggle="tooltip"></i>
+            <p>Principal held by borrowers repaying on time (within 30-day threshold):
+            {{ BootstrapHtml::tooltip('lender.tooltips.pages.principal-repaid-on-time') }}
             <br/>
             USD {{ number_format($lendingStatistics['outstanding_on_time_amount'], 0, ".", ",") }}
             ( {{ number_format($lendingStatistics['outstanding_on_time_rate'], 1, ".", ","); }}% of amount disbursed)
@@ -86,7 +94,8 @@ Statistics
             <br/>
         @endif
         @if ($lendingStatistics['outstanding_late_amount'])
-            <p>Principal held by borrowers more than 30 days past due with scheduled repayments:<i class="fa fa-info-circle principalRepaidDue" data-toggle="tooltip"></i>
+            <p>Principal held by borrowers more than 30 days past due with scheduled repayments:
+            {{ BootstrapHtml::tooltip('lender.tooltips.pages.principal-repaid-due') }}
             <br/>
             USD {{ number_format($lendingStatistics['outstanding_late_amount'], 0, ".", ",") }}
             ( {{ number_format($lendingStatistics['outstanding_late_rate'], 1, ".", ","); }}% of amount disbursed)
@@ -94,7 +103,8 @@ Statistics
             <br/>
         @endif
         @if ($lendingStatistics['forgiven_amount'])
-             <p>Principal that has been forgiven by lenders:<i class="fa fa-info-circle principalForgiven" data-toggle="tooltip"></i>
+             <p>Principal that has been forgiven by lenders:
+             {{ BootstrapHtml::tooltip('lender.tooltips.pages.principal-forgiven') }}
              <br/>
              USD {{ number_format($lendingStatistics['forgiven_amount'], 0, ".", ","); }}
              ( {{ number_format($lendingStatistics['forgiven_rate'], 1, ".", ","); }}% of amount disbursed)
@@ -102,7 +112,8 @@ Statistics
              <br/>
         @endif
         @if ($lendingStatistics['written_off_amount'])
-            <p>Principal that has been written off:<i class="fa fa-info-circle principalWrittenOff" data-toggle="tooltip"></i>
+            <p>Principal that has been written off:
+            {{ BootstrapHtml::tooltip('lender.tooltips.pages.principal-written-off') }}
             <br/>
             USD {{ number_format($lendingStatistics['written_off_amount'], 0, ".", ","); }}
             ( {{ number_format($lendingStatistics['written_off_rate'], 1, ".", ","); }}% of amount disbursed)
@@ -148,37 +159,4 @@ Statistics
         @endforeach
     </ul>
 </div>
-@stop
-
-@section('script-footer')
-<script type="text/javascript">
-    $('.raisedAmount').tooltip({placement: 'bottom', title: 'The cumulative US Dollar amount of loans disbursed'})
-</script>
-<script type="text/javascript">
-    $('.loansFunded').tooltip({placement: 'bottom', title: 'The cumulative number of individual loans funded'})
-</script>
-<script type="text/javascript">
-    $('.raisedAmountFiltered').tooltip({placement: 'bottom', title: 'The total US Dollar amount of loans disbursed in the selected time period and location'})
-</script>
-<script type="text/javascript">
-    $('.loansFundedFiltered').tooltip({placement: 'bottom', title: 'The number of individual loans funded in the selected time period and location'})
-</script>
-<script type="text/javascript">
-    $('.lenderInterest').tooltip({placement: 'bottom', title: 'The average lender interest rate of all loans fully funded by lenders and accepted by borrowers, weighted by the dollar amount of each lender\'s share. Interest is expressed as a flat percentage of loan principal per year the loan is held.'})
-</script>
-<script type="text/javascript">
-    $('.principalRepaid').tooltip({placement: 'bottom', title: 'The principal (not including interest) that has already been repaid to lenders for loans disbursed in the selected time period and location, expressed as a dollar amount and as a percentage of the amount disbursed'})
-</script>
-<script type="text/javascript">
-    $('.principalRepaidOnTime').tooltip({placement: 'bottom', title: 'The principal (not including interest) still held by borrowers who are current or less than 30 days and $10 past due with their scheduled repayment installments, expressed as a dollar amount and as a percentage of the amount disbursed'})
-</script>
-<script type="text/javascript">
-    $('.principalRepaidDue').tooltip({placement: 'bottom', title: 'The principal (not including interest) still held by borrowers who are more than 30 days and $10 past due with their scheduled repayment installments, expressed as a dollar amount and as a percentage of the amount disbursed'})
-</script>
-<script type="text/javascript">
-    $('.principalForgiven').tooltip({placement: 'bottom', title: 'The principal (not including interest) that lenders have elected not to accept as repayments for humanitarian reasons'})
-</script>
-<script type="text/javascript">
-    $('.principalWrittenOff').tooltip({placement: 'bottom', title: 'The principal (not including interest) that has been classified as written off. Zidisha classifies as written off all amounts that have not been repaid six months after a loan\'s final repayment installment due date, and all loans for which the borrower has not made a payment in over six months.  Writing off a loan is a reporting convention, and does not necessarily mean collection efforts stop or that it will not be repaid to lenders.'})
-</script>
 @stop

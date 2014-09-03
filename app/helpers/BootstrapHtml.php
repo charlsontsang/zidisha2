@@ -14,4 +14,11 @@ class BootstrapHtml {
         );
     }
 
+    public static function tooltip($tag, $parameters = [])
+    {
+        $title = \Lang::get($tag, $parameters);
+
+        return '<i class="fa fa-info-circle" data-toggle="tooltip" data-placement="bottom" title="'.$title.'"></i>';
+    }
+
 } 
