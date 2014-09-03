@@ -959,24 +959,23 @@ class DatabaseMigration extends Command {
             $this->line('Migrate lender_invite_transactions table');
 
             $count = $this->con->table('lender_invite_transactions')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $$offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $$offset += $limit) {
                 $inviteTransactions = $this->con->table('lender_invite_transactions')
                     ->skip($offset)->limit($limit)->get();
                 $inviteTransactionArray = [];
 
                 foreach ($inviteTransactions as $inviteTransaction) {
                     $newInviteTransaction = [
-                        'id'               => $inviteTransaction['id'],
-                        'lender_id'        => $inviteTransaction['lender_id'],
-                        'amount'           => $inviteTransaction['amount'],
-                        'description'      => $inviteTransaction['txn_desc'],
-                        'transaction_date' => $inviteTransaction['created'], // because it's already DateTime in old DB
-                        'type'             => $inviteTransaction['txn_type'],
-                        'loan_id'          => $inviteTransaction['loan_id'],
-                        'loan_bid_id'      => $inviteTransaction['loanbid_id']
+                        'id'               => $inviteTransaction->id,
+                        'lender_id'        => $inviteTransaction->lender_id,
+                        'amount'           => $inviteTransaction->amount,
+                        'description'      => $inviteTransaction->txn_desc,
+                        'transaction_date' => $inviteTransaction->created, // because it's already DateTime in old DB
+                        'type'             => $inviteTransaction->txn_type,
+                        'loan_id'          => $inviteTransaction->loan_id,
+                        'loan_bid_id'      => $inviteTransaction->loanbid_id
                     ];
 
                     array_push($inviteTransactionArray, $newInviteTransaction);
