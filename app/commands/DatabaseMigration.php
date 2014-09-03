@@ -677,22 +677,21 @@ class DatabaseMigration extends Command {
             $this->line('Migrate admin_notes table');
 
             $count = $this->con->table('loan_notes')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $adminNotes = $this->con->table('loan_notes')
                     ->skip($offset)->limit($limit)->get();
                 $adminNoteArray = [];
 
                 foreach ($adminNotes as $adminNote) {
                     $newAdminNote = [
-                        'id'          => $adminNote['id'],
-                        'user_id'     => $adminNote['userid'],
-                        'loan_id'     => $adminNote['loanid'],
+                        'id'          => $adminNote->id,
+                        'user_id'     => $adminNote->userid,
+                        'loan_id'     => $adminNote->loanid,
                         'borrower_id' => null,
-                        'note'        => $adminNote['disbursement_notes'],
-                        'type'        => 'disbursement'
+                        'note'        => $adminNote->disbursement_notes,
+                        'type'        => 0, //disbursement
                     ];
 
                     array_push($adminNoteArray, $newAdminNote);
