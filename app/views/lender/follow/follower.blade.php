@@ -1,12 +1,14 @@
 <?php
-    $followByDefault = isset($followByDefault) ? $followByDefault : false;
+    $enableFollow = isset($enableFollow) ? $enableFollow : false;
+    $enableUnfollow = true;
     /** @var Zidisha\Lender\Follower $follower */
     $follower = isset($follower) ? $follower : false;
-    $following = $followByDefault;
+    $following = $enableFollow;
     $notifyComment = true;
     $notifyLoanApplication = true;
     if ($follower) {
         $following = true;
+        $enableUnfollow = !$follower->isFunded();
         $notifyComment = $follower->getNotifyComment();
         $notifyLoanApplication = $follower->getNotifyLoanApplication();
     } else {
@@ -16,12 +18,12 @@
     }
 ?>
 <div class="follow-settings" style="{{ $following ? '' : 'display:none' }}">
-    <p>
+    <p style="{{ $enableUnfollow ? '' : 'display:none' }}">
         <a
             data-follow="unfollow"
-            data-follow-enabled="{{ $followByDefault ? '' : 'enabled' }}"
-            class="btn btn-default btn-block"
-            href="{{ route('lender:unfollow', $loan->getBorrowerId()) }}"
+            data-follow-enabled="{{ $enableFollow ? 'enabled' : '' }}"
+            class="btn btn-default"
+            href="{{ route('lender:unfollow', $borrower->getId()) }}"
             >
             Unfollow {{ $borrower->getFirstName() }}
         </a>
@@ -32,12 +34,12 @@
         {{ BootstrapForm::checkbox('notifyComment', true, $notifyComment, [
             'id' => 'notify-comment-' . $borrower->getId(),
             'label' => 'posts a new comment',
-            'target' => route('lender:update-follower', $loan->getBorrowerId()),
+            'target' => route('lender:update-follower', $borrower->getId()),
         ]) }}
         {{ BootstrapForm::checkbox('notifyLoanApplication', true, $notifyLoanApplication, [
             'id' => 'notify-comment-' . $borrower->getId(),
             'label' => 'posts a new loan application',
-            'target' => route('lender:update-follower', $loan->getBorrowerId())
+            'target' => route('lender:update-follower', $borrower->getId())
         ]) }}
     </div>
 </div>

@@ -54,6 +54,7 @@
                         @if(Auth::getUser()->isLender())
                         <li><a href="{{ route('lender:dashboard') }}">Dashboard</a></li>
                         <li><a href="{{ route('lender:loans') }}">Your Loans</a></li>
+                        <li><a href="{{ route('lender:following') }}">Following</a></li>
                         <li><a href="{{ route('lender:public-profile', Auth::getUser()->getUsername()) }}">View Profile</a></li>
                         <li><a href="{{ route('lender:edit-profile') }}">Edit Profile</a></li>
                         <li><a href="{{ route('lender:preference') }}">Account Preferences</a></li>

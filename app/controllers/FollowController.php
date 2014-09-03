@@ -2,7 +2,7 @@
 
 use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Lender\FollowService;
-use Zidisha\Loan\LoanQuery;
+use Zidisha\Lender\Lender;
 
 class FollowController extends BaseController
 {
@@ -68,6 +68,20 @@ class FollowController extends BaseController
         return [
             'message' => Lang::get('lender.follow.flash.update-settings'),
         ];
+    }
+
+    public function getFollowing()
+    {
+        /** @var Lender $lender */
+        $lender = \Auth::user()->getLender();
+
+        $followers = $this->followService->getFollowers($lender);
+        
+        return View::make('lender.follow.following', [
+            'lender'             => $lender,
+            'fundedFollowers'    => $followers['funded'],
+            'followingFollowers' => $followers['following']
+        ]);
     }
 
 }

@@ -331,7 +331,15 @@ Route::group(
 
 
                 Route::get('lender-accept-forgive-loan/{verificationCode}', [ 'uses' => 'AdminLoanForgivenessController@lenderAcceptLoanForgiveness', 'as'   => 'lender:loan-forgiveness:accept']);
-                Route::get('lender-reject-forgive-loan/{verificationCode}', [ 'uses' => 'AdminLoanForgivenessController@lenderRejectLoanForgiveness', 'as'   => 'lender:loan-forgiveness:reject']);                
+                Route::get('lender-reject-forgive-loan/{verificationCode}', [ 'uses' => 'AdminLoanForgivenessController@lenderRejectLoanForgiveness', 'as'   => 'lender:loan-forgiveness:reject']);
+
+                Route::get(
+                    '/following',
+                    array(
+                        'uses' => 'FollowController@getFollowing',
+                        'as'   => 'lender:following'
+                    )
+                );
             }
         );
 

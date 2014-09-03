@@ -128,14 +128,9 @@ class LoanController extends BaseController
         $placeBidForm = new PlaceBidForm($loan);
 
         $followersCount = $this->followService->getFollowerCount($borrower);
-        $hasFundedBorrower = false;
         $follower = false;
         if (\Auth::check() && \Auth::user()->isLender()) {
-            $hasFundedBorrower = $this->loanService->hasFunded(\Auth::user()->getLender(), $borrower);
-            $follower = \Zidisha\Lender\Base\FollowerQuery::create()
-                ->filterByLenderId(\Auth::id())
-                ->filterByBorrower($borrower)
-                ->findOne();
+            $follower = $this->followService->getFollower(\Auth::user()->getLender(), $borrower);
         }
         $repaymentSchedule = $this->repaymentService->getRepaymentSchedule($loan);
         $repaymentScore = $this->loanService->getOnTimeRepaymentScore($borrower);

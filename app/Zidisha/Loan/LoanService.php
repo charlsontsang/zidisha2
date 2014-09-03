@@ -923,9 +923,7 @@ class LoanService
         $count = BidQuery::create()
             ->filterByLender($lender)
             ->filterByActive(true)
-            ->useLoanQuery()
-                ->filterByBorrower($borrower)
-            ->endUse()
+            ->filterByBorrower($borrower)
             ->count();
         
         return $count > 0;
