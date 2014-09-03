@@ -80,7 +80,7 @@
 
                                         <a id="follow-link" href="#">Follow {{{ $borrower->getFirstName() }}}<br/></a>
 
-                                        Feedback Rating:<i class="fa fa-info-circle rating" data-toggle="tooltip"></i>
+                                        Feedback Rating:{{ BootstrapHtml::tooltip('borrower.tooltips.loan.feedback-rating') }}
                                         <strong>TODO</strong>
                                         <br/>
 
@@ -603,9 +603,6 @@
 @endif
 <script type="text/javavscript">
     $('.repayment').tooltip({placement: 'bottom', title: 'Percentage of all repayment installments that the borrower has paid on time (within ten days of the due date), for all loans that he or she has taken since joining Zidisha. The total number of repayment installments that have been due is displayed in parentheses.'})
-</script>
-<script type="text/javascript">
-    $('.rating').tooltip({placement: 'bottom', title: 'Percentage of positive feedback ratings posted by previous lenders. The total feedback ratings received are in parentheses.'})
 </script>
 <script type="text/javascript">
     $('.repaymentPeriod').tooltip({placement: 'bottom', title: 'Time from disbursement until loan is fully' +
