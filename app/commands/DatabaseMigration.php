@@ -1628,19 +1628,18 @@ class DatabaseMigration extends Command {
             $this->line('Migrate facebook_users table');
 
             $count = $this->con->table('facebook_info')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $facebookUsers = $this->con->table('facebook_info')
                     ->skip($offset)->limit($limit)->get();
                 $facebookUserArray = [];
 
                 foreach ($facebookUsers as $facebookUser) {
-                    $facebookData = unserialize($facebookUser['facebook_data']);
+                    $facebookData = unserialize($facebookUser->facebook_data);
                     $newFacebookUser = [
-                        'id'              => $facebookUser['id'],
-                        'user_id'         => $facebookUser['userid'],
+                        'id'              => $facebookUser->id,
+                        'user_id'         => $facebookUser->userid,
                         'account_name'    => $facebookData['user_profile']['name'],
                         'email'           => $facebookData['user_profile']['email'],
                         'birth_date'      => $facebookData['user_profile']['birthday'],
