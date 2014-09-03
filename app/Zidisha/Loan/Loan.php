@@ -388,4 +388,9 @@ class Loan extends BaseLoan implements CommentReceiverInterface
     {
         return $this->getStatus() == static::NO_LOAN;
     }
+
+    public function isDefaulted()
+    {
+        return $this->getStatus() == static::DEFAULTED;
+    }
 }

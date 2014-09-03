@@ -86,7 +86,7 @@ class BorrowerLoanController extends BaseController
         } elseif ($loan->isActive()) {
 
             $template = 'borrower.loan.loan-active';
-        } elseif ($loan->isRepaid()) {
+        } elseif ($loan->isRepaid() || $loan->isDefaulted()) {
             // TODO, same todo as in LoanController
             $displayFeedbackComments = ($loan->getStatus() == Loan::DEFAULTED || $loan->getStatus() == Loan::REPAID);
 
@@ -107,7 +107,13 @@ class BorrowerLoanController extends BaseController
 
             $data += compact('canPostFeedback', 'canReplyFeedback', 'loanFeedbackComments');
 
-            $template = 'borrower.loan.loan-repaid';
+            if ($loan->isRepaid()) {
+                $template = 'borrower.loan.loan-repaid';
+            } else {
+                $template = 'borrower.loan.loan-defaulted';
+            }
+        } elseif ($loan->isDefaulted()) {
+
         }
         
         return View::make($template , $data);
