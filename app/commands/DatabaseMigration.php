@@ -1152,21 +1152,20 @@ class DatabaseMigration extends Command {
             $this->line('Migrate forgiveness_loans table');
 
             $count = $this->con->table('loans_to_forgive')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $forgivenessLoans = $this->con->table('loans_to_forgive')
                     ->skip($offset)->limit($limit)->get();
                 $forgivenessLoanArray = [];
 
                 foreach ($forgivenessLoans as $forgivenessLoan) {
                     $newForgivenessLoan = [
-                        'loan_id'           => $forgivenessLoan['loanid'],
-                        'borrower_id'       => $forgivenessLoan['borrowerid'],
-                        'comment'           => $forgivenessLoan['comment'],
-                        'verification_code' => $forgivenessLoan['validation_code'],
-                        'is_reminder_sent'  => $forgivenessLoan['reminder_sent']
+                        'loan_id'           => $forgivenessLoan->loanid,
+                        'borrower_id'       => $forgivenessLoan->borrowerid,
+                        'comment'           => $forgivenessLoan->comment,
+                        'verification_code' => $forgivenessLoan->validation_code,
+                        'is_reminder_sent'  => $forgivenessLoan->reminder_sent
                     ];
 
                     array_push($forgivenessLoanArray, $newForgivenessLoan);
