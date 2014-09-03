@@ -29,7 +29,7 @@ class BorrowerLoanController extends BaseController
         $this->repaymentService = $repaymentService;
     }
 
-    public function getLoanInformation($loanId)
+    public function getLoan($loanId)
     {
         $borrower = \Auth::user()->getBorrower();
 
@@ -88,7 +88,7 @@ class BorrowerLoanController extends BaseController
         $this->loanService->acceptBids($loan);
 
         \Flash::success('You have accepted the loan bids successfully.');
-        return Redirect::action('BorrowerLoanController@getLoanInformation', ['loanId' => $loanId] );
+        return Redirect::action('BorrowerLoanController@getLoan', ['loanId' => $loanId] );
     }
 
     public function getRescheduleLoan()
@@ -186,7 +186,7 @@ class BorrowerLoanController extends BaseController
         \Session::forget('reschedule');
 
         Flash::success('Successfully rescheduled loan');
-        return Redirect::route('borrower:loan-information', $loan->getId());
+        return Redirect::route('borrower:loan', $loan->getId());
     }
 
     protected function validateReschedule(Loan $loan)
