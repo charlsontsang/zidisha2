@@ -1259,26 +1259,25 @@ class DatabaseMigration extends Command {
             $this->line('Migrate borrower_feedback_messages table');
 
             $count = $this->con->table('borrower_reports')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $feedbackMessages = $this->con->table('borrower_reports')
                     ->skip($offset)->limit($limit)->get();
                 $feedbackMessageArray = [];
 
                 foreach ($feedbackMessages as $feedbackMessage) {
                     $newFeedbackMessage = [
-                        'borrower_id'    => $feedbackMessage['borrower_id'],
+                        'borrower_id'    => $feedbackMessage->borrower_id,
                         'type'           => null, //TODO
                         'borrower_email' => '', //TODO
-                        'cc'             => $feedbackMessage['cc'],
-                        'reply_to'       => $feedbackMessage['replyto'],
-                        'subject'        => $feedbackMessage['subject'],
-                        'message'        => $feedbackMessage['message'],
-                        'sent_at'        => date("Y-m-d H:i:s", $feedbackMessage['sent_on']),
+                        'cc'             => $feedbackMessage->cc,
+                        'reply_to'       => $feedbackMessage->replyto,
+                        'subject'        => $feedbackMessage->subject,
+                        'message'        => $feedbackMessage->message,
+                        'sent_at'        => date("Y-m-d H:i:s", $feedbackMessage->sent_on),
                         'sender_name'    => '', //TODO
-                        'loan_id'        => $feedbackMessage['loanid']
+                        'loan_id'        => $feedbackMessage->loanid
                     ];
 
                     array_push($feedbackMessageArray, $newFeedbackMessage);
