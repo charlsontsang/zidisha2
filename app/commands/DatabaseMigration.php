@@ -844,22 +844,21 @@ class DatabaseMigration extends Command {
             $this->line('Migrate installment_payments table');
 
             $count = $this->con->table('repaymentschedule_actual')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $payments = $this->con->table('repaymentschedule_actual')
                     ->skip($offset)->limit($limit)->get();
                 $paymentArray = [];
 
                 foreach ($payments as $payment) {
                     $newPayment = [
-                        'id'               => $payment['id'],
-                        'installment_id'   => $payment['rid'],
-                        'borrower_id'      => $payment['userid'],
-                        'loan_id'          => $payment['loanid'],
-                        'paid_date'        => date("Y-m-d H:i:s", $payment['paiddate']),
-                        'paid_amount'      => $payment['paidamt'],
+                        'id'               => $payment->id,
+                        'installment_id'   => $payment->rid,
+                        'borrower_id'      => $payment->userid,
+                        'loan_id'          => $payment->loanid,
+                        'paid_date'        => date("Y-m-d H:i:s", $payment->paiddate),
+                        'paid_amount'      => $payment->paidamt,
                         'exchange_rate_id' => 0, //TODO
                     ];
 
