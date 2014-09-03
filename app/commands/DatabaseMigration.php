@@ -642,29 +642,29 @@ class DatabaseMigration extends Command {
             $this->line('Migrate loan_bids table');
 
             $count = $this->con->table('loanbids')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $limit; $count = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $bids = $this->con->table('loanbids')
+                    ->select('loanbids.*', 'loanapplic.borrowerid')
                     ->join('loanapplic', 'loanbids.loanid', '=', 'loanapplic.loanid')
                     ->skip($offset)->take($limit)->get();
                 $bidArray = [];
 
                 foreach ($bids as $bid) {
                     $newBid = [
-                        'id'                      => $bid['loanbids.bidid'],
-                        'loan_id'                 => $bid['loanbids.loanid'],
-                        'lender_id'               => $bid['loanbids.lenderid'],
-                        'borrower_id'             => $bid['loanapplic.borrowerid'],
-                        'bid_amount'              => $bid['loanbids.bidamount'],
+                        'id'                      => $bid->bidid,
+                        'loan_id'                 => $bid->loanid,
+                        'lender_id'               => $bid->lenderid,
+                        'borrower_id'             => $bid->borrowerid,
+                        'bid_amount'              => $bid->bidamount,
                         'interest_rate'           => '', //TODO
-                        'active'                  => $bid['loanbids.active'],
-                        'accepted_amount'         => $bid['loanbids.givenamount'],
-                        'bid_at'                  => date("Y-m-d H:i:s", $bid['loanbids.biddate']),
-                        'is_lender_invite_credit' => $bid['loanbids.use_lender_invite_credit'],
+                        'active'                  => $bid->active,
+                        'accepted_amount'         => $bid->givenamount,
+                        'bid_at'                  => date("Y-m-d H:i:s", $bid->biddate),
+                        'is_lender_invite_credit' => $bid->use_lender_invite_credit,
                         'is_automated_lending'    => null, //TODO
-                        'updated_at'              => date("Y-m-d H:i:s", $bid['loanbids.modified']), //TODO is necessary?
+                        'updated_at'              => date("Y-m-d H:i:s", $bid->modified), //TODO is necessary?
                     ];
 
                     array_push($bidArray, $newBid);
