@@ -765,18 +765,17 @@ class DatabaseMigration extends Command {
             $this->line('Migrate comments table');
 
             $count = $this->con->table('comments')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count ; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count ; $offset += $limit) {
                 $comments = $this->con->table('comments')
                     ->skip($offset)->limit($limit)->get();
                 $commentArray = [];
 
                 foreach ($comments as $comment) {
                     $newComment = [
-                        'id'      => $comment['id'],
-                        'user_id' => $comment['userid'],
+                        'id'      => $comment->id,
+                        'user_id' => $comment->userid,
                         'message' => ''
                     ];
                 }
