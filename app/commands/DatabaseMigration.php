@@ -733,10 +733,9 @@ class DatabaseMigration extends Command {
             $this->line('Migrate transactions table');
 
             $count = $this->con->table('transactions')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $transactions = $this->con->table('transactions')
                     ->skip($offset)->take($limit)->get();
                 $transactionArray = [];
