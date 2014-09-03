@@ -1,5 +1,18 @@
 $(function () {
 
+    function flash(message, level, delay) {
+        $.growl(message, {
+            type: level || 'success',
+            allow_dismiss: true,
+            delay: delay || 0,
+            z_index: 2000
+        });
+    }
+
+    $('[data-toggle="tooltip"]').tooltip();
+
+    // COMMENTS
+
     var $comments = $('.comments');
 
     $comments.on('click', '.comment-action', function () {
@@ -61,28 +74,79 @@ $(function () {
             .text($this.data('toggle-text'))
             .data('toggle-text', oldText);
     });
+    
+    // FOLLOWERS
 
     $('.follow-notifications :checkbox').change(function() {
         var $this = $(this),
-            $wrapper = $this.closest('.checkbox'),
-            $success = $wrapper.find('.text-success'),
             url = $this.attr('target'),
             data = {};
-        
-        if ($success.length == 0) {
-            $success = $this.closest('.follow-notifications').find('.text-success').last().clone().appendTo($wrapper);
-        }
-        
+
         data[$this.attr('name')] = $this.is(':checked') ? 1 : 0;
-        $success.show();
-        $.post(url, data, function() {
-            setTimeout(function() {
-                $success.hide();
-            }, 1500);
-        });
+
+        $this.attr('disabled', 'disabled');
+        
+        $.post(url, data, function(res) {
+            flash(res.message, 'success', 4000);
+        }, 'json')
+            .always(function() {
+                $this.removeAttr('disabled');
+            })
+            .fail(function() {
+                flash('Oops, something went wrong', 'danger');
+            });
         
         return false;
     });
+    
+    $('[data-follow="follow"]').on('click', function(e) {
+        var $this = $(this),
+            url = $this.attr('href');
+        
+        e.preventDefault();
+        
+        $this.attr('disabled', 'disabled');
+
+         $.post(url, function(res) {            
+            $this
+                .hide()
+                .parent().find('.follow-settings').show();
+        }, 'json')
+             .always(function() {
+                 $this.removeAttr('disabled');
+             })
+             .fail(function() {
+                 flash('Oops, something went wrong', 'danger');
+             });
+    });
+
+    $('[data-follow="unfollow"]').on('click', function(e) {
+        var $this = $(this),
+            url = $this.attr('href');
+
+        e.preventDefault();
+
+        $this.attr('disabled', 'disabled');
+
+        $.post(url, function(res) {
+            var $wrapper = $this.closest('.follow-settings');
+            
+            $wrapper.hide();
+            $wrapper.find(':checkbox').prop('checked', true);
+            
+            if ($this.attr('data-follow-enabled') == 'enabled') {
+                $wrapper.parent().find('[data-follow="follow"]').show();
+            }
+        }, 'json')
+            .always(function() {
+                $this.removeAttr('disabled');
+            })
+            .fail(function() {
+                flash('Oops, something went wrong', 'danger');
+            });
+    });
+    
+    // FILTER BAR
     
     $btnFilters = $('.btn-filter');
     if ($btnFilters.length > 0) {
@@ -264,5 +328,3 @@ var handler;
 
     calculateAmounts();
 }
-
-$('[data-toggle="tooltip"]').tooltip();

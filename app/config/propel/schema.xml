@@ -985,7 +985,6 @@
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="lender_id" type="INTEGER" required="true"/>
         <column name="borrower_id" type="INTEGER" required="true"/>
-        <column name="active" type="BOOLEAN" defaultValue="true"/>
         <column name="notify_comment" type="BOOLEAN" defaultValue="false"/>
         <column name="notify_loan_application" type="BOOLEAN" defaultValue="false"/>
         <behavior name="timestampable"/>

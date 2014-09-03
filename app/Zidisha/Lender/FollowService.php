@@ -10,6 +10,11 @@ class FollowService {
 
     public function follow(Lender $lender, Borrower $borrower, $data = [])
     {
+        $data += [
+            'notifyComment' => true,
+            'notifyLoanApplication' => true,
+        ];
+        
         $follower = FollowerQuery::create()
             ->filterByLender($lender)
             ->filterByBorrower($borrower)
@@ -23,7 +28,6 @@ class FollowService {
         }
         
         $follower
-            ->setActive(true)
             ->setNotifyComment($data['notifyComment'])
             ->setNotifyLoanApplication($data['notifyLoanApplication']);
         $follower->save();
@@ -38,19 +42,11 @@ class FollowService {
             ->filterByBorrower($borrower)
             ->findOne();
 
-        if (!$follower) {
-            $follower = new Follower();
-            $follower
-                ->setLender($lender)
-                ->setBorrower($borrower)
-                ->setNotifyComment($lender->getPreferences()->getNotifyComment())
-                ->setNotifyLoanApplication($lender->getPreferences()->getNotifyLoanApplication());
+        if ($follower) {
+            $follower->delete();
         }
 
-        $follower->setActive(false);
-        $follower->save();
-
-        return $follower;
+        return true;
     }
 
     public function updateFollower(Lender $lender, Borrower $borrower, $data = [])
@@ -63,7 +59,6 @@ class FollowService {
         if (!$follower) {
             $follower = new Follower();
             $follower
-                ->setActive(true)
                 ->setLender($lender)
                 ->setBorrower($borrower)
                 ->setNotifyComment($lender->getPreferences()->getNotifyComment())
@@ -86,7 +81,6 @@ class FollowService {
     {
         $count = FollowerQuery::create()
             ->filterByBorrower($borrower)
-            ->filterByActive(true)
             ->count();
 
         $query = "SELECT COUNT(DISTINCT l.id)

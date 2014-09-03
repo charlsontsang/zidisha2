@@ -20,56 +20,36 @@ class FollowController extends BaseController
     public function postFollow($borrowerId)
     {
         $borrower = BorrowerQuery::create()->findOneById($borrowerId);
-        $loan = LoanQuery::create()
-            ->filterByBorrower($borrower)
-            ->orderByCreatedAt('desc')
-            ->findOne();
         
-        if (!$borrower || !$loan) {
+        if (!$borrower) {
             App::abort(404);
         }
         
-        $notifyComment = (boolean) Input::get('notifyComment');
-        $notifyLoanApplication = (boolean) Input::get('notifyLoanApplication');
+        $this->followService->follow(\Auth::user()->getLender(), $borrower);
         
-        $this->followService->follow(
-            \Auth::user()->getLender(),
-            $borrower,
-            compact('notifyComment', 'notifyLoanApplication')
-        );
-        
-        \Flash::success('lender.follow.flash.follow-success');
-        
-        // TODO
-        return Redirect::route('loan:index', ['loanId' => $loan->getId()]);
+        return [
+            'message' => Lang::get('lender.follow.flash.follow-success'),
+        ];
     }
 
     public function postUnfollow($borrowerId)
     {
         $borrower = BorrowerQuery::create()->findOneById($borrowerId);
-        $loan = LoanQuery::create()
-            ->filterByBorrower($borrower)
-            ->orderByCreatedAt('desc')
-            ->findOne();
 
-        if (!$borrower || !$loan) {
+        if (!$borrower) {
             App::abort(404);
         }
+        
         $this->followService->unfollow(\Auth::user()->getLender(), $borrower);
 
-        \Flash::success('lender.follow.flash.unfollow-success');
-
-        // TODO
-        return Redirect::route('loan:index', ['loanId' => $loan->getId()]);
+        return [
+            'message' => Lang::get('lender.follow.flash.unfollow-success'),
+        ];
     }
 
     public function postUpdateFollower($borrowerId)
     {
         $borrower = BorrowerQuery::create()->findOneById($borrowerId);
-        $loan = LoanQuery::create()
-            ->filterByBorrower($borrower)
-            ->orderByCreatedAt('desc')
-            ->findOne();
 
         $data = [];
         if (Input::has('notifyComment')) {
@@ -79,13 +59,15 @@ class FollowController extends BaseController
             $data['notifyLoanApplication'] = (boolean) Input::get('notifyLoanApplication');
         }
 
-        if (!$borrower || !$loan || !$data) {
+        if (!$borrower || !$data) {
             App::abort(404);
         }
         
         $this->followService->updateFollower(\Auth::user()->getLender(), $borrower, $data);
 
-        return Response::make();
+        return [
+            'message' => Lang::get('lender.follow.flash.update-settings'),
+        ];
     }
 
 }

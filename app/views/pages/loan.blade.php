@@ -561,10 +561,23 @@
                     @endif
                 
                 <div class="panel-body">
-                    <button id="follow-button" type="button" class="btn btn-default btn-block followBorrower" data-toggle="tooltip">
+                    <a
+                        id="follow-button"
+                        href="{{ route('lender:follow', $borrower->getId()) }}"
+                        class="btn btn-default btn-block followBorrower"
+                        style="{{ $follower ? 'display:none' : '' }}"
+                        data-follow="follow"
+                        data-toggle="tooltip">
+                        
                         <i class="fa fa-fw fa-bookmark"></i>
                         @lang('lender.follow.title', ['name' => $borrower->getFirstName()])
-                    </button>
+                    </a>
+                    @if(Auth::user()->isLender())
+                    @include('lender.follow.follower', [
+                        'lender' => Auth::user()->getLender(),
+                        'follower' => $follower,
+                    ])
+                    @endif
                 </div>
                 
             </div>
