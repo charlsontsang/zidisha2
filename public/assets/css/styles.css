@@ -10082,6 +10082,9 @@ a.link-dark {
 .bid-form {
   z-index: 10;
 }
+.comments textarea {
+  max-width: 100% !important;
+}
 .comments .media,
 .comments .media .media,
 .comments .media:first-child {
