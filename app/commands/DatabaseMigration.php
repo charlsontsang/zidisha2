@@ -1347,25 +1347,24 @@ class DatabaseMigration extends Command {
             $this->line('Migrate lending_groups table');
 
             $count = $this->con->table('lender_groups')->count();
-            $offset = 0;
             $limit = 500;
 
-            for ($offset; $offset < $count; $offset = ($offset + $limit)) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $lendingGroups = $this->con->table('lender_groups')
                     ->skip($offset)->limit($limit)->get();
                 $lendingGroupArray = [];
 
                 foreach ($lendingGroups as $lendingGroup) {
                     $newLendingGroup = [
-                        'id'                       => $lendingGroup['id'],
-                        'name'                     => $lendingGroup['name'],
-                        'website'                  => $lendingGroup['website'],
-                        'group_profile_picture_id' => $lendingGroup['image'], //TODO with upload things
-                        'about'                    => $lendingGroup['about_grp'],
-                        'creator_id'               => $lendingGroup['created_by'],
-                        'leader_id'                => $lendingGroup['grp_leader'],
-                        'created_at'               => $lendingGroup['created'],
-                        'updated_at'              => $lendingGroup['modified']
+                        'id'                       => $lendingGroup->id,
+                        'name'                     => $lendingGroup->name,
+                        'website'                  => $lendingGroup->website,
+                        'group_profile_picture_id' => $lendingGroup->image, //TODO with upload things
+                        'about'                    => $lendingGroup->about_grp,
+                        'creator_id'               => $lendingGroup->created_by,
+                        'leader_id'                => $lendingGroup->grp_leader,
+                        'created_at'               => $lendingGroup->created,
+                        'updated_at'              => $lendingGroup->modified
                     ];
 
                     array_push($lendingGroupArray, $newLendingGroup);
