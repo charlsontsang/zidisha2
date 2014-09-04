@@ -25,16 +25,14 @@ class RepaymentService
     private $borrowerQuery;
     private $currencyService;
     private $transactionService;
-    private $loanService;
 
-    public function __construct(BorrowerPaymentQuery $paymentQuery, BorrowerQuery $borrowerQuery, CurrencyService $currencyService, TransactionService $transactionService, LoanService $loanService)
+    public function __construct(BorrowerPaymentQuery $paymentQuery, BorrowerQuery $borrowerQuery, CurrencyService $currencyService, TransactionService $transactionService)
     {
 
         $this->paymentQuery = $paymentQuery;
         $this->borrowerQuery = $borrowerQuery;
         $this->currencyService = $currencyService;
         $this->transactionService = $transactionService;
-        $this->loanService = $loanService;
     }
 
     public function addBorrowerPayment(Borrower $borrower, $data)
@@ -241,7 +239,8 @@ class RepaymentService
                     ->setLoanStatus(Loan::REPAID);
                 $borrower->save($con);
 
-                $this->loanService->changeLoanStage($con, $loan, Loan::ACTIVE, Loan::REPAID);
+                $loanService = \App::make('\Zidisha\Loan\LoanService');
+                $loanService->changeLoanStage($con, $loan, Loan::ACTIVE, Loan::REPAID);
             }
 
             // TODO
