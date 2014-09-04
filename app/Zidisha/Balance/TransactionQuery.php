@@ -238,6 +238,11 @@ class TransactionQuery extends BaseTransactionQuery
             foreach ($results as $key=>$value) {
                 $balanceArray[$key] = Money::create($value, 'USD');
             }
+            foreach ($userIds as $userId) {
+                if (!isset($balanceArray[$userId])) {
+                    $balanceArray[$userId] = Money::create(0, 'USD');
+                }
+            }
             return $balanceArray;
         } else {
             return Money::create($results[$userIds], 'USD');

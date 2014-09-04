@@ -38,6 +38,11 @@ class InviteTransactionQuery extends BaseInviteTransactionQuery
                 foreach ($results as $key=>$value) {
                     $creditArray[$key] = Money::create($value, 'USD');
                 }
+                foreach ($lenderIds as $lenderId) {
+                    if (!isset($balanceArray[$lenderId])) {
+                        $balanceArray[$lenderId] = Money::create(0, 'USD');
+                    }
+                }
                 return $creditArray;
             } else {
                 return Money::create($results[$lenderIds], 'USD');
