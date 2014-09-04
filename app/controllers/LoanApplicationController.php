@@ -8,6 +8,8 @@ use Zidisha\Loan\Loan;
 use Zidisha\Loan\CategoryQuery;
 use Zidisha\Loan\LoanQuery;
 use Zidisha\Loan\LoanService;
+use Zidisha\Upload\Upload;
+use Zidisha\User\User;
 
 class LoanApplicationController extends BaseController
 {
@@ -100,10 +102,20 @@ class LoanApplicationController extends BaseController
         if ($form->isValid()) {
             $data = $form->getData();
 
-            $borrower = Auth::user()->getBorrower();
+            /** @var User $user */
+            $user = Auth::user();
+            $borrower = $user->getBorrower();
 
             $borrower->getProfile()->setAboutMe($data['aboutMe']);
             $borrower->getProfile()->setAboutBusiness($data['aboutBusiness']);
+            
+            if (\Input::hasFile('picture')) {
+                $upload = Upload::createFromFile(\Input::file('picture'));
+                $upload->setUser($user);
+
+                $user->setProfilePicture($upload);
+                $user->save();
+            }
 
             $borrower->save();
 

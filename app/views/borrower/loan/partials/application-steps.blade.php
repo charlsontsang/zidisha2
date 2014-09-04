@@ -12,3 +12,13 @@
     <?php $i += 1 ?>
     @endforeach
 </div>
+
+@section('script-footer')
+<script type="text/javascript">
+    $(function() {
+        $('form').submit(function(){
+            $('input[type=submit]', this).attr('disabled', 'disabled');
+        });
+    });
+</script>
+@stop

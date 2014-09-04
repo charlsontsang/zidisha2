@@ -15,17 +15,87 @@
 </div>
 
 
-{{ BootstrapForm::open(array('controller' => 'LoanApplicationController@postProfile', 'translationDomain' => 'borrower.loan-application.profile')) }}
+{{ BootstrapForm::open([
+    'controller' => 'LoanApplicationController@postProfile',
+    'translationDomain' => 'borrower.loan-application.profile',
+    'files' => true
+]) }}
+{{ BootstrapForm::populate($form) }}
 <div class="row">
     <div class="col-md-8">
-        {{ BootstrapForm::populate($form) }}
+        <p>
+            <label for="aboutMe" class="control-label">
+                @lang('borrower.loan-application.profile.picture')
+            </label>
+        </p>
 
+        <p>
+            <em>
+                @lang('borrower.loan-application.profile.picture-description')
+            </em>
+        </p>
+
+        <p>
+            @lang('borrower.loan-application.profile.picture-tip')
+        </p>
+
+        <p>
+            @lang('borrower.loan-application.profile.picture-example')
+        </p>    
+    </div>
+    
+    <div class="col-md-4">
+        <img src="{{ \Auth::user()->getProfilePictureUrl() }}" alt=""/>
+
+        <br/>
+        <br/>
+        
+        {{ BootstrapForm::file('picture', ['label' => false]) }}
+    </div>
+    
+    <div class="col-md-8">
+        <p>
+            <label for="aboutMe" class="control-label">
+                @lang('borrower.loan-application.profile.about-me')
+            </label>
+        </p>
+        
+        <p>
+            <em>
+                @lang('borrower.loan-application.profile.about-me-description')
+            </em>
+        </p>
+        
+        <p>
+            @lang('borrower.loan-application.profile.about-me-example')
+        </p>
+        
         {{ BootstrapForm::textarea('aboutMe', null, [
-            'description' => Lang::get('borrower.loan-application.profile.about-me-description')
+            'style' => 'max-width:100%',
+            'label' => false,
         ]) }}
+        
+        <br/>
+
+        <p>
+            <label for="aboutBusiness" class="control-label">
+                @lang('borrower.loan-application.profile.about-business')
+            </label>
+        </p>
+
+        <p>
+            <em>
+                @lang('borrower.loan-application.profile.about-business-description')
+            </em>
+        </p>
+
+        <p>
+            @lang('borrower.loan-application.profile.about-business-tip')
+        </p>
 
         {{ BootstrapForm::textarea('aboutBusiness', null, [
-        'description' => Lang::get('borrower.loan-application.profile.about-business-description')
+            'style' => 'max-width:100%',
+            'label' => false,
         ]) }}
     </div>
 </div>
