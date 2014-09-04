@@ -80,7 +80,7 @@ class BorrowerLoanController extends BaseController
             $data['installments'] = $installments;
 
             $template = 'borrower.loan.loan-open';
-        } elseif ($loan->isFullyFunded()) {
+        } elseif ($loan->isFunded()) {
 
             $template = 'borrower.loan.loan-funded';
         } elseif ($loan->isActive()) {

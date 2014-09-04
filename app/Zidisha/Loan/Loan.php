@@ -403,4 +403,9 @@ class Loan extends BaseLoan implements CommentReceiverInterface
     {
         return $this->getStatus() == static::CANCELED;
     }
+
+    public function isFunded()
+    {
+        return $this->getStatus() == static::FUNDED;
+    }
 }

@@ -1,7 +1,6 @@
-@extends('borrower.loan.loan-base')
+@extends('layouts.master')
 
 @section('content')
-@parent
 
 <p>
     {{ \Lang::get('borrower.loan.no-loan.no-loan-message') }}
