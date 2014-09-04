@@ -15,6 +15,7 @@ use Zidisha\Loan\Base\ForgivenessLoanShareQuery;
 use Zidisha\Loan\BidQuery;
 use Zidisha\Loan\Calculator\RepaymentCalculator;
 use Zidisha\Loan\Loan;
+use Zidisha\Loan\LoanService;
 use Zidisha\Vendor\PropelDB;
 
 class RepaymentService
@@ -24,14 +25,16 @@ class RepaymentService
     private $borrowerQuery;
     private $currencyService;
     private $transactionService;
+    private $loanService;
 
-    public function __construct(BorrowerPaymentQuery $paymentQuery, BorrowerQuery $borrowerQuery, CurrencyService $currencyService, TransactionService $transactionService)
+    public function __construct(BorrowerPaymentQuery $paymentQuery, BorrowerQuery $borrowerQuery, CurrencyService $currencyService, TransactionService $transactionService, LoanService $loanService)
     {
 
         $this->paymentQuery = $paymentQuery;
         $this->borrowerQuery = $borrowerQuery;
         $this->currencyService = $currencyService;
         $this->transactionService = $transactionService;
+        $this->loanService = $loanService;
     }
 
     public function addBorrowerPayment(Borrower $borrower, $data)
@@ -237,6 +240,8 @@ class RepaymentService
                     ->setActiveLoan(null)
                     ->setLoanStatus(Loan::REPAID);
                 $borrower->save($con);
+
+                $this->loanService->changeLoanStage($con, $loan, Loan::ACTIVE, Loan::REPAID);
             }
 
             // TODO
