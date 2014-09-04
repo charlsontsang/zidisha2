@@ -1742,7 +1742,10 @@ class DatabaseMigration extends Command {
 
             for ($offset = 0; $offset < $count; $offset += $limit) {
                 $reschedules = $this->con->table('reschedule')
-                    ->skip($offset)->limit($limit)->get();
+                    ->where('period', '>', 0) // TODO remove broken reschedule
+                    ->skip($offset)
+                    ->limit($limit)
+                    ->get();
                 $rescheduleArray = [];
 
                 foreach ($reschedules as $reschedule) {
@@ -1750,7 +1753,7 @@ class DatabaseMigration extends Command {
                         'id'          => $reschedule->id,
                         'loan_id'     => $reschedule->loan_id,
                         'borrower_id' => $reschedule->borrower_id,
-                        'reason'      => $reschedule->reschedule_reason,
+                        'reason'      => $reschedule->reschedule_reason ?: '',
                         'period'      => $reschedule->period,
                         'created_at'  => date("Y-m-d H:i:s", $reschedule->date)
                     ];
