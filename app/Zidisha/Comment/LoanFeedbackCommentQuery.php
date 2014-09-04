@@ -18,12 +18,13 @@ use Zidisha\Comment\Base\LoanFeedbackCommentQuery as BaseLoanFeedbackCommentQuer
 class LoanFeedbackCommentQuery extends BaseLoanFeedbackCommentQuery
 {
 
-    /**
-     * @param $id
-     * @return CommentQuery
-     */
     public function filterByReceiverId($id)
     {
         return $this->filterByLoanId($id);
+    }
+
+    public function filterByRatingType($type)
+    {
+        return $this->filterByRating($type);
     }
 } // LoanFeedbackCommentQuery

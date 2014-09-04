@@ -157,4 +157,14 @@ class LoanQuery extends BaseLoanQuery
         
         return $this;
     }
+
+    public function getAllLoansForBorrower(Borrower $borrower)
+    {
+        return $this
+            ->select('id')
+            ->filterByBorrower($borrower)
+            ->filterByDeletedByAdmin(false)
+            ->find()
+            ->toArray();
+    }
 } // LoanQuery

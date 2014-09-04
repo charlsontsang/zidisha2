@@ -96,7 +96,7 @@
                                         </div>
 
                                         Feedback Rating:{{ BootstrapHtml::tooltip('borrower.tooltips.loan.feedback-rating') }}
-                                        <strong>TODO</strong>
+                                        <strong>{{ $feedbackRating }} % Positive ({{ $totalFeedback }})</strong>
                                         <br/>
 
                                         @if($displayFeedbackComments)
