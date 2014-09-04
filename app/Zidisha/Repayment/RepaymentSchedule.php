@@ -255,4 +255,22 @@ class RepaymentSchedule implements \IteratorAggregate
     {
         return $this->overDueInstallmentCount;
     }
+
+    public function getNextDueInstallment()
+    {
+        $now = new \DateTime();
+
+        /** @var RepaymentScheduleInstallment $repaymentScheduleInstallment */
+        foreach ($this as $repaymentScheduleInstallment) {
+            $installment = $repaymentScheduleInstallment->getInstallment();
+            if ($installment->getDueDate() > $now &&
+                $installment->getPaidAmount()->isZero() &&
+                $installment->getAmount()->isPositive()
+            ) {
+                return $installment;
+            }
+        }
+
+        return null;
+    }
 }

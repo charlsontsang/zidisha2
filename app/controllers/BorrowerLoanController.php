@@ -2,6 +2,7 @@
 
 use Zidisha\Admin\Form\RescheduleLoanForm;
 use Zidisha\Borrower\Borrower;
+use Zidisha\Comment\LoanFeedbackCommentService;
 use Zidisha\Loan\BidQuery;
 use Zidisha\Loan\Calculator\BidsCalculator;
 use Zidisha\Loan\Calculator\InstallmentCalculator;
@@ -13,20 +14,16 @@ use Zidisha\Repayment\RepaymentService;
 
 class BorrowerLoanController extends BaseController
 {
-    /**
-     * @var Zidisha\Loan\LoanService
-     */
-    private $loanService;
-    
-    /**
-     * @var Zidisha\Repayment\RepaymentService
-     */
-    private $repaymentService;
 
-    public function __construct(LoanService $loanService, RepaymentService $repaymentService)
+    private $loanService;
+    private $repaymentService;
+    private $loanFeedbackCommentService;
+
+    public function __construct(LoanService $loanService, RepaymentService $repaymentService, LoanFeedbackCommentService $loanFeedbackCommentService)
     {
         $this->loanService = $loanService;
         $this->repaymentService = $repaymentService;
+        $this->loanFeedbackCommentService = $loanFeedbackCommentService;
     }
 
     public function getLoan($loanId = null)
@@ -38,8 +35,8 @@ class BorrowerLoanController extends BaseController
             $loan = $borrower->getActiveLoan();
             if (!$loan) {
                 // TODO render no active loan template, show previous loans
-                dd('TODO');
-            }            
+                return View::make('borrower.loan.loan-no-loans');
+            }
         } else {
             $loan = LoanQuery::create()
                 ->findOneById($loanId);
@@ -56,6 +53,12 @@ class BorrowerLoanController extends BaseController
 
         $data = compact('loan', 'loans', 'borrower');
         $template = 'borrower.loan.loan-base';
+
+        if ($loan->getStatus() <= Loan::DEFAULTED && $loan->getStatus() >= Loan::FUNDED && !$loan->isNoLoan()) {
+            $repaymentSchedule = $this->repaymentService->getRepaymentSchedule($loan);
+
+            $data['repaymentSchedule'] = $repaymentSchedule;
+        }
 
         if ($loan->isOpen()) {
             $bids = BidQuery::create()
@@ -77,6 +80,42 @@ class BorrowerLoanController extends BaseController
             $data['installments'] = $installments;
 
             $template = 'borrower.loan.loan-open';
+        } elseif ($loan->isFunded()) {
+
+            $template = 'borrower.loan.loan-funded';
+        } elseif ($loan->isActive()) {
+
+            $template = 'borrower.loan.loan-active';
+        } elseif ($loan->isRepaid() || $loan->isDefaulted()) {
+            // TODO, same todo as in LoanController
+            $displayFeedbackComments = ($loan->getStatus() == Loan::DEFAULTED || $loan->getStatus() == Loan::REPAID);
+
+            $canPostFeedback = false;
+            $canReplyFeedback = false;
+            if ($displayFeedbackComments && Auth::check()) {
+                $user = Auth::user();
+
+                if ($user == $loan->getBorrower()->getUser()) {
+                    $canReplyFeedback = true;
+                }
+            }
+
+            //TODO
+            $feedbackCommentPage = Input::get('feedbackPage', 1);
+
+            $loanFeedbackComments = $this->loanFeedbackCommentService->getPaginatedComments($loan, $feedbackCommentPage, 10);
+
+            $data += compact('canPostFeedback', 'canReplyFeedback', 'loanFeedbackComments');
+
+            if ($loan->isRepaid()) {
+                $template = 'borrower.loan.loan-repaid';
+            } else {
+                $template = 'borrower.loan.loan-defaulted';
+            }
+        } elseif ($loan->isExpired()) {
+            $template = 'borrower.loan.loan-expired';
+        } elseif ($loan->isCanceled()) {
+            $template = 'borrower.loan.loan-canceled';
         }
         
         return View::make($template , $data);

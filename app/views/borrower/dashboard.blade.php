@@ -5,6 +5,9 @@ Dashboard
 @stop
 
 @section('content')
+
+@include('borrower.dashboard.partials.'.$partial)
+
 <div class="row">
     <div class="col-md-8 col-md-offset-2 info-page">
 	    <div class="page-header">
