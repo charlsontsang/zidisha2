@@ -196,6 +196,7 @@ class BorrowerController extends BaseController
 
     public function getPersonalInformation()
     {
+        /** @var Borrower $borrower */
         $borrower = \Auth::user()->getBorrower();
 
         $personalInformation = $borrower->getPersonalInformation();

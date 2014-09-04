@@ -36,13 +36,13 @@ Join the global P2P microlending movement
 
     <br>
 
-    @if ( $form->isEditable('addressInstruction') )
+    @if ( $form->isEditable('addressInstructions') )
             {{ BootstrapForm::label(\Lang::get('borrowerJoin.form.addressInstructions')) }}
             <br><br>
-            {{ BootstrapForm::textArea('addressInstruction', $personalInformation['addressInstruction']) }}
+            {{ BootstrapForm::textArea('addressInstructions', $personalInformation['addressInstructions']) }}
     @else
         <label> Address Instruction  </label>
-        <p>{{ $personalInformation['addressInstruction'] }}</p>
+        <p>{{ $personalInformation['addressInstructions'] }}</p>
     @endif
 
     @if ( $form->isEditable('city') )

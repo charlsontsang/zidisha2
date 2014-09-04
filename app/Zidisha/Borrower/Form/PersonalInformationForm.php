@@ -4,7 +4,6 @@ namespace Zidisha\Borrower\Form;
 use Propel\Runtime\Propel;
 use Zidisha\Borrower\Borrower;
 use Zidisha\Borrower\BorrowerQuery;
-use Zidisha\Borrower\Form\Validator\NumberValidator;
 use Zidisha\Borrower\VolunteerMentorQuery;
 use Zidisha\Country\CountryQuery;
 use Zidisha\Form\AbstractForm;
@@ -64,7 +63,7 @@ class PersonalInformationForm extends AbstractForm
     {
         return [
             'address'                     => 'required',
-            'addressInstruction'          => 'required',
+            'addressInstructions'         => 'required',
             'city'                        => 'required',
             'nationalIdNumber'            => 'required|unique:borrower_profiles,national_id_number,'.$this->borrower->getId() .',borrower_id',
             'phoneNumber'                 => 'required|numeric|digits:' . $this->getPhoneNumberLength() . '|UniqueNumber:'. $this->borrower->getId() .'|MutualUniqueNumber',
