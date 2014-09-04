@@ -2,6 +2,7 @@
 use Zidisha\Borrower\Borrower;
 use Zidisha\Borrower\Form\Loan\ApplicationForm;
 use Zidisha\Borrower\Form\Loan\ProfileForm;
+use Zidisha\Borrower\Form\PersonalInformationForm;
 use Zidisha\Currency\Money;
 use Zidisha\Loan\Calculator\InstallmentCalculator;
 use Zidisha\Loan\Loan;
@@ -83,6 +84,19 @@ class LoanApplicationController extends BaseController
 
     public function postInstructions()
     {
+        /** @var Borrower $borrower */
+        $borrower = \Auth::user()->getBorrower();
+        
+        $personalInformation = $borrower->getPersonalInformation();
+
+        $form = new PersonalInformationForm($borrower);
+        $form->handleData($form->getDefaultData());
+        
+        if (!$form->isValid()) {
+            \Flash::error('Your profile has some errors. Please fix them in order to continue the loan application.');
+            return Redirect::route('borrower:personal-information');
+        }
+        
         $this->setCurrentStep('profile');
 
         return Redirect::action('LoanApplicationController@getProfile');
