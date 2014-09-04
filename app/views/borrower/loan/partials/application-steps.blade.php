@@ -1,3 +1,5 @@
+<br/>
+<br/>
 <div class="row wizard">
     <?php $i = 1 ?>
     @foreach(array_slice($steps, 0, 4) as $name => $options)
