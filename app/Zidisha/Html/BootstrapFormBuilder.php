@@ -266,9 +266,11 @@ class BootstrapFormBuilder
      */
     public function submit($value = null, $options = [])
     {
-        $options = ['name' => $value] + $options;
+        $options = ['name' => $value] + $options + ['translationDomain' => $this->translationDomain];
 
-        $value = $this->translationDomain ? $this->translationDomain . '.' . $value : $value;
+        $translationDomain = $options['translationDomain'];
+        unset($options['translationDomain']);
+        $value = $translationDomain ? $translationDomain . '.' . $value : $value;
         $options = array_merge(['class' => 'btn btn-primary'], $options);
 
         return $this->form->submit(\Lang::get($value), $options);
