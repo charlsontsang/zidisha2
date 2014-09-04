@@ -90,15 +90,15 @@ class LoanService
             $this->changeLoanStage($con, $loan, null, Loan::OPEN, $loan->getAppliedAt());
         });
 
+        $this->addToLoanIndex($loan);
+
         $this->borrowerMailer->sendLoanConfirmationMail($borrower, $loan);
         
         $lenders = $this->getLendersForNewLoanNotificationMail($loan);
         foreach($lenders as $lender) {
             $this->lenderMailer->sendNewLoanNotificationMail($loan, $lender);
         }
-        
-        $this->addToLoanIndex($loan);
-        
+                
         return $loan;
     }
 
