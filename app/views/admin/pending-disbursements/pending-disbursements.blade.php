@@ -3,7 +3,7 @@
 @section('content')
 <div class="page-header">
     <h1>
-        Pending Disbursements <small>{{ $country->getName() }}</small>
+        Pending Disbursements: {{ $country->getName() }}
     </h1>
 </div>
 

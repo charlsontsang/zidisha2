@@ -1,10 +1,13 @@
 @extends('layouts.master')
 
 @section('page-title')
-    Send test mails
+Send Test Emails
 @stop
 
 @section('content')
+<div class="page-header">
+    <h1>Send Test Emails</h1>
+</div>
     {{ BootstrapForm::open(array('route' => 'admin:mail:post:mail')) }}
 
     <br/>

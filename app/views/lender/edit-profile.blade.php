@@ -1,40 +1,40 @@
-@extends('layouts.master')
+@extends('layouts.side-menu')
 
 @section('page-title')
 Edit Profile
 @stop
 
-@section('content')
-<div class="row">
-	<div class="col-sm-6 col-sm-offset-3">
-		<div class="page-header">
-		    <h1>Edit Profile</h1>
-		</div>
+@section('menu-title')
+Quick Links
+@stop
 
-		{{ BootstrapForm::open(array('route' => 'lender:post-profile', 'translationDomain' => 'edit-profile', 'files' => true)) }}
-		{{ BootstrapForm::populate($form) }}
+@section('menu-links')
+@include('partials.nav-links.lender-links')
+@stop
 
-		{{ BootstrapForm::file('picture') }}
+@section('page-content')
+{{ BootstrapForm::open(array('route' => 'lender:post-profile', 'files' => true)) }}
+{{ BootstrapForm::populate($form) }}
 
-		{{ BootstrapForm::password('password') }}
+<h4>Account Information</h4>
 
-		{{ BootstrapForm::password('password_confirmation') }}
+{{ BootstrapForm::text('email', null, ['label' => 'Email']) }}
 
-		{{ BootstrapForm::text('firstName') }}
+{{ BootstrapForm::password('password', ['label' => 'Change Password']) }}
 
-		{{ BootstrapForm::text('lastName') }}
+{{ BootstrapForm::password('password_confirmation', ['label' => 'Confirm New Password']) }}
 
-		{{ BootstrapForm::text('email') }}
+<h4>Public Profile</h4>
 
-		{{ BootstrapForm::text('city') }}
+<p>Introduce yourself to our entrepreneurs!</p>
 
-		{{ BootstrapForm::textarea('aboutMe') }}
+{{ BootstrapForm::file('picture', ['label' => 'Your Picture']) }}
 
-		{{ BootstrapForm::submit('save') }}
+{{ BootstrapForm::text('city', null, ['label' => 'Your City']) }}
 
-		{{ BootstrapForm::close() }}
-		
-	</div>
-</div>
+{{ BootstrapForm::textarea('aboutMe', null, ['label' => 'About Yourself']) }}
 
+{{ BootstrapForm::submit('Save') }}
+
+{{ BootstrapForm::close() }}
 @stop

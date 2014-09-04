@@ -22,14 +22,7 @@
                         About <b class="caret"></b>
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a href="{{ route('page:why-zidisha') }}">Why Zidisha?</a></li>
-                        <li><a href="{{ route('page:our-story') }}">Our Story</a></li>
-                        <li><a href="{{ route('page:how-it-works') }}">How It Works</a></li>
-                        <li><a href="{{ route('page:trust-and-security') }}">Trust &amp; Security</a></li>
-                        <li><a href="{{ route('page:faq') }}">FAQ</a></li>
-                        <li><a href="{{ route('page:team') }}">Team</a></li>
-                        <li><a href="{{ route('page:statistics') }}">Statistics</a></li>
-                        <li><a href="{{ route('page:press') }}">Press</a></li>
+                        @include('partials.nav-links.about-links')
                     </ul>
                 </li>
                 <li class="dropdown">
@@ -37,11 +30,7 @@
                         Community <b class="caret"></b>
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a href="{{ route('project-updates') }}">Project Updates</a></li>
-                        <li><a href="{{ route('lender:groups') }}">Lending Groups</a></li>
-                        <li><a href="https://www.zidisha.org/forum/">Forum</a></li>
-                        <li><a href="{{ route('page:volunteer') }}">Volunteer</a></li>
-                        <li><a href="http://p2p-microlending-blog.zidisha.org/">Blog</a></li>
+                        @include('partials.nav-links.community-links')
                     </ul>
                 </li>
                 @if(Auth::check() && Auth::getUser()->getRole() != 'admin')
@@ -52,27 +41,10 @@
 
                     <ul class="dropdown-menu">
                         @if(Auth::getUser()->isLender())
-                        <li><a href="{{ route('lender:dashboard') }}">Dashboard</a></li>
-                        <li><a href="{{ route('lender:loans') }}">Your Loans</a></li>
-                        <li><a href="{{ route('lender:following') }}">Following</a></li>
-                        <li><a href="{{ route('lender:public-profile', Auth::getUser()->getUsername()) }}">View Profile</a></li>
-                        <li><a href="{{ route('lender:edit-profile') }}">Edit Profile</a></li>
-                        <li><a href="{{ route('lender:preference') }}">Account Preferences</a></li>
-                        <li><a href="{{ route('lender:gift-cards') }}">Gift Cards</a></li>
-                        <li><a href="{{ route('lender:gift-cards:track') }}">Track Gift Cards</a></li>
-                        <li><a href="{{ route('lender:invite') }}">Invite Friends</a></li>
-                        <li><a href="{{ route('lender:history') }}">Transaction History</a></li>
-                        <li><a href="{{ route('lender:funds') }}">Transfer Funds</a></li>
-                        <li><a href="{{ route('lender:auto-lending') }}">Auto Lending</a></li>
+                            @include('partials.nav-links.lender-links')
                         @endif
                         @if(Auth::getUser()->isBorrower())
-                        <li><a href="{{ route('borrower:dashboard') }}">Dashboard</a></li>
-                        <li><a href="#">Public Loan Page</a></li>
-                        <li><a href="{{ route('borrower:edit-profile') }}">Edit Profile</a></li>
-                        <li><a href="{{ route('borrower:invite') }}">Invite Your Friends</a></li>
-                        <li><a href="{{ route('borrower:invites') }}">Your Invites</a></li>
-                        <li><a href="{{ route('borrower:credit') }}">Current Credit</a></li>
-                        <li><a href="{{ route('borrower:history') }}">Payment History</a></li>
+                            @include('partials.nav-links.borrower-links')
                         @endif
                         <li><a href="{{ route('logout') }}">Log Out</a></li>
                     </ul>
@@ -85,14 +57,14 @@
                     </a>
 
                     <ul class="dropdown-menu">
-                        <li><a href="{{ route('admin:borrowers') }}">Find Borrowers</a></li>
+                        <li><a href="{{ route('admin:borrowers') }}">Look Up Borrower Account</a></li>
                         <li><a href="{{ route('admin:volunteer-mentors') }}">Volunteer Mentors</a></li>
                         <li><a href="{{ route('admin:add:volunteer-mentors') }}">Add Volunteer Mentors</a></li>
                         <li><a href="{{ route('admin:borrower-activation') }}">Pending Activation</a></li>
                         <li><a href="{{ route('admin:pending-disbursements') }}">Pending Disbursements</a></li>
                         <li><a href="{{ route('admin:loans') }}">Find Loans</a></li>
-                        <li><a href="{{ route('admin:repayments') }}">Repayments</a></li>
-                        <li><a href="{{ route('admin:loan-forgiveness:index') }}">Loan Forgiveness</a></li>
+                        <li><a href="{{ route('admin:repayments') }}">Enter Repayments</a></li>
+                        <li><a href="{{ route('admin:loan-forgiveness:index') }}">Forgiven Loans</a></li>
                         <li><a href="{{ route('admin:get:translation-feed') }}">Translation Feed</a></li>
                     </ul>
                 </li>
@@ -102,9 +74,9 @@
                     </a>
 
                     <ul class="dropdown-menu">
-                        <li><a href="{{ route('admin:lenders') }}">Find Lenders</a></li>
-                        <li><a href="{{ route('admin:volunteers') }}">Volunteers</a></li>
-                        <li><a href="{{ route('admin:get:gift-cards') }}">Gift Cards</a></li>
+                        <li><a href="{{ route('admin:lenders') }}">Look Up Lender Account</a></li>
+                        <li><a href="{{ route('admin:volunteers') }}">Active Staff</a></li>
+                        <li><a href="{{ route('admin:get:gift-cards') }}">Manage Gift Cards</a></li>
                         <li><a href="{{ route('admin:get:withdrawal-requests') }}">Withdraw Requests</a></li>
                     </ul>
                 </li>
@@ -115,8 +87,8 @@
 
                     <ul class="dropdown-menu">
                         <li><a href="{{ route('admin:translation:index') }}">Translations</a></li>
-                        <li><a href="{{ route('admin:mail:test-mails') }}">Test mails</a></li>
-                        <li><a href="{{ route('admin:sms:test-sms') }}">Test sms</a></li>
+                        <li><a href="{{ route('admin:mail:test-mails') }}">Test Emails</a></li>
+                        <li><a href="{{ route('admin:sms:test-sms') }}">Test SMS</a></li>
                         <li><a href="{{ route('admin:countries') }}">Countries</a></li>
                         <li><a href="{{ route('admin:settings') }}">Other Settings</a></li>
                         <li><a href="{{ route('logout') }}">Log Out</a></li>

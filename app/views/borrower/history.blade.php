@@ -1,14 +1,16 @@
-@extends('layouts.master')
+@extends('layouts.side-menu')
 
 @section('page-title')
 Transaction History
 @stop
 
-@section('content')
-<div class="page-header">
-    <h1>Transaction History</h1>
-</div>
+@section('menu-title')
+Quick Links
+@stop
 
-<h2>Transaction History</h2>
+@section('menu-links')
+@include('partials.nav-links.borrower-links')
+@stop
 
+@section('page-content')
 @stop

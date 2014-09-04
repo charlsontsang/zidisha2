@@ -1,24 +1,16 @@
 @extends('layouts.master')
 
 @section('page-title')
-Send test mails
+Send Test SMS
 @stop
 
 @section('content')
+<div class="page-header">
+    <h1>Send Test SMS</h1>
+</div>
 <div class="row">
     <div class="col-xs-6">
-        <h1>Borrower Sms</h1>
         <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>
-                    Sms
-                </th>
-                <th>
-
-                </th>
-            </tr>
-            </thead>
             <tbody>
             @foreach($borrowerSms as $method)
             @if($method != '__construct' )

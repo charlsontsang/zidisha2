@@ -1,15 +1,19 @@
-@extends('layouts.master')
+@extends('layouts.side-menu')
 
 @section('page-title')
-Exchange rates
+Enter Repayments
 @stop
 
-@section('content')
-<div class="page-header">
-    <h1>Enter Repayments</h1>
-</div>
+@section('menu-title')
+Quick Links
+@stop
 
-<h3>Upload Repayments</h3>
+@section('menu-links')
+@include('partials.nav-links.staff-links')
+@stop
+
+@section('page-content')
+<h4>Upload Repayments</h4>
 
 {{ BootstrapForm::open(array('route' => 'admin:upload-repayments', 'translationDomain' => 'repayments', 'files' => true)) }}
 {{ BootstrapForm::populate($form) }}
@@ -31,7 +35,7 @@ Exchange rates
 
 <hr/>
 
-<h3>Find Borrower</h3>
+<h4>Find Borrower</h4>
 
 {{ BootstrapForm::open(array('route' => 'admin:repayments', 'method' => 'get')) }}
 {{ BootstrapForm::populate($filterForm) }}
@@ -80,5 +84,4 @@ Exchange rates
 </table>
 {{ BootstrapHtml::paginator($borrowers)->appends($filterForm->getPaginatorParams())->links() }}
 @endif
-
 @stop

@@ -1,10 +1,13 @@
 @extends('layouts.master')
 
 @section('page-title')
-Withdrawal Requests
+Withdraw Requests
 @stop
 
 @section('content')
+<div class="page-header">
+    <h1>Withdraw Requests</h1>
+</div>
 {{ BootstrapForm::open(['route' => ['admin:post:paypal-withdrawal-requests'], 'id' => 'paypal-mass-payment-form']) }}
 {{ BootstrapForm::populate($form) }}
 <button id="paypal-mass-payment" class="btn btn-primary" type="submit">Process payments</button>

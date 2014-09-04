@@ -1,10 +1,13 @@
 @extends('layouts.master')
 
 @section('page-title')
-GiftCards
+Manage Gift Cards
 @stop
 
 @section('content')
+<div class="page-header">
+    <h1>Manage Gift Cards</h1>
+</div>
 <table class="table table-striped">
     <thead>
     <tr>

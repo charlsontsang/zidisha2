@@ -1,14 +1,18 @@
-@extends('layouts.master')
+@extends('layouts.side-menu')
 
 @section('page-title')
-Join the global P2P microlending movement
+Edit Profile
 @stop
 
-@section('content')
-<div class="page-header">
-    <h1>Edit Profile</h1>
-</div>
-<hr/>
+@section('menu-title')
+Quick Links
+@stop
+
+@section('menu-links')
+@include('partials.nav-links.borrower-links')
+@stop
+
+@section('page-content')
 <div class="borrower-edit-form">
     <h3>Current Profile Picture</h3>
     <img src="{{ $borrower->getUser()->getProfilePictureUrl() }}" alt=""/>

@@ -80,7 +80,7 @@
                     <div class="col-xs-4">
                         <div class="h3">Connect</div>
                         <ul class="list-unstyled">
-                            <li><a href="#">Project Updates</a></li>
+                            <li><a href="{{ route('project-updates') }}">Project Updates</a></li>
                             <li><a href="http://p2p-microlending-blog.zidisha.org/">Blog</a></li>
                             <li><a href="http://www.facebook.com/ZidishaInc?sk=wall">Facebook</a></li>
                             <li><a href="https://twitter.com/ZidishaInc">Twitter</a></li>

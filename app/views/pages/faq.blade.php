@@ -32,6 +32,7 @@
                         <li><a href="#faq-12">{{ \Lang::get('borrower.faqs.question12') }}</a></li>
                         <li><a href="#faq-13">{{ \Lang::get('borrower.faqs.question13') }}</a></li>
                         <li><a href="#faq-15">{{ \Lang::get('borrower.faqs.question15') }}</a></li>
+                        <li><a href="#faq-63">{{ \Lang::get('borrower.faqs.question63') }}</a></li>
                         <li><a href="#faq-49">{{ \Lang::get('borrower.faqs.question49') }}</a></li>
                         <li><a href="#faq-16">{{ \Lang::get('borrower.faqs.question16') }}</a></li>
                         <li><a href="#faq-17">{{ \Lang::get('borrower.faqs.question17') }}</a></li>
@@ -157,6 +158,10 @@
      
         <h4 id="faq-15">{{ \Lang::get('borrower.faqs.question15') }}</h4>
         <p>{{ \Lang::get('borrower.faqs.answer15') }}</p>
+     
+     
+        <h4 id="faq-63">{{ \Lang::get('borrower.faqs.question63') }}</h4>
+        <p>{{ \Lang::get('borrower.faqs.answer63') }}</p>
      
      
         <h4 id="faq-49">{{ \Lang::get('borrower.faqs.question49') }}</h4>

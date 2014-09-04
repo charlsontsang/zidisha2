@@ -1,15 +1,19 @@
-@extends('layouts.master')
+@extends('layouts.side-menu')
 
 @section('page-title')
 Forgiven Loans
 @stop
 
-@section('content')
-<div class="page-header">
-    <h1>Loan Forgiveness</h1>
-</div>
+@section('menu-title')
+Quick Links
+@stop
 
-<a href="{{route('admin:loan-forgiveness:allow', $countryCode)}}">Allow Loan Forgiveness</a>
+@section('menu-links')
+@include('partials.nav-links.staff-links')
+@stop
+
+@section('page-content')
+<a href="{{route('admin:loan-forgiveness:allow', $countryCode)}}">Enable Loan Forgiveness</a>
 <hr/>
 
 <ul class="nav nav-tabs" role="tablist">

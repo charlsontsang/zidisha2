@@ -1,24 +1,27 @@
-@extends('layouts.master')
+@extends('layouts.side-menu')
 
 @section('page-title')
-Borrowers
+Look Up Borrower Account
 @stop
 
-@section('content')
-<div class="page-header">
-    <h1>Borrowers</h1>
-</div>
-<div>
-    {{ BootstrapForm::open(array('route' => 'admin:borrowers', 'translationDomain' => 'borrowers', 'method' => 'get')) }}
-    {{ BootstrapForm::populate($form) }}
+@section('menu-title')
+Quick Links
+@stop
 
-    {{ BootstrapForm::select('country', $form->getCountries(), Request::query('country')) }}
-    {{ BootstrapForm::select('status', $form->getStatus(), Request::query('status')) }}
-    {{ BootstrapForm::text('search', Request::query('search')) }}
-    {{ BootstrapForm::submit('Search') }}
+@section('menu-links')
+@include('partials.nav-links.staff-links')
+@stop
 
-    {{ BootstrapForm::close() }}
-</div>
+@section('page-content')
+{{ BootstrapForm::open(array('route' => 'admin:borrowers', 'translationDomain' => 'borrowers', 'method' => 'get')) }}
+{{ BootstrapForm::populate($form) }}
+
+{{ BootstrapForm::select('country', $form->getCountries(), Request::query('country')) }}
+{{ BootstrapForm::select('status', $form->getStatus(), Request::query('status')) }}
+{{ BootstrapForm::text('search', Request::query('search')) }}
+{{ BootstrapForm::submit('Search') }}
+
+{{ BootstrapForm::close() }}
 
 <table class="table table-striped">
     <thead>

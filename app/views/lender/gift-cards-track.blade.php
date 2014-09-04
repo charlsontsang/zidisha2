@@ -1,16 +1,20 @@
-@extends('layouts.master')
+@extends('layouts.side-menu')
 
 @section('page-title')
 Track Gift Cards
 @stop
 
-@section('content')
-<div class="page-header">
-    <h2>Track Gift Cards</h2>
-</div>
+@section('menu-title')
+Quick Links
+@stop
 
+@section('menu-links')
+@include('partials.nav-links.lender-links')
+@stop
+
+@section('page-content')
 <div class="row">
-    <div class="col-sm-5">
+    <div class="col-sm-6">
 
         <div class="row">
             <div class="col-sm-7">
@@ -30,7 +34,7 @@ Track Gift Cards
         </div>
     </div>
 
-    <div class="col-sm-5 col-sm-offset-1">
+    <div class="col-sm-4 col-sm-offset-2">
         <div class="row">
             <div class="col-sm-7">
                 <a href="{{ route('lender:gift-cards') }}" class="btn btn-primary">

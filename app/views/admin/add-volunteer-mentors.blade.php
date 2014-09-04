@@ -1,23 +1,26 @@
-@extends('layouts.master')
+@extends('layouts.side-menu')
 
 @section('page-title')
 Add Volunteer Mentors
 @stop
 
-@section('content')
-<div class="page-header">
-    <h1>Add Volunteer Mentors</h1>
-</div>
-<div>
-    {{ BootstrapForm::open(array('route' => 'admin:add:volunteer-mentors', 'translationDomain' => 'add-volunteer-mentors', 'method' => 'get')) }}
-    {{ BootstrapForm::populate($form) }}
+@section('menu-title')
+Quick Links
+@stop
 
-    {{ BootstrapForm::select('country', $form->getCountries(), Request::query('country')) }}
-    {{ BootstrapForm::text('search', Request::query('search')) }}
-    {{ BootstrapForm::submit('Search') }}
+@section('menu-links')
+@include('partials.nav-links.staff-links')
+@stop
 
-    {{ BootstrapForm::close() }}
-</div>
+@section('page-content')
+{{ BootstrapForm::open(array('route' => 'admin:add:volunteer-mentors', 'translationDomain' => 'add-volunteer-mentors', 'method' => 'get')) }}
+{{ BootstrapForm::populate($form) }}
+
+{{ BootstrapForm::select('country', $form->getCountries(), Request::query('country')) }}
+{{ BootstrapForm::text('search', Request::query('search')) }}
+{{ BootstrapForm::submit('Search') }}
+
+{{ BootstrapForm::close() }}
 
 <table class="table table-striped">
     <thead>

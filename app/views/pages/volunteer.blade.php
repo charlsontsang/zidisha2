@@ -7,10 +7,17 @@ Volunteer and Internship Opportunities
 
 @section('content')
 <div class="row">
-    <div class="col-md-8 col-md-offset-2 info-page">
-	    <div class="page-header">
-	        <h1>Volunteer and Internship Opportunities</h1>
-	    </div>
+    <div class="col-sm-3 col-md-4">
+        <ul class="nav side-menu" role="complementary">
+          <h4>Community</h4>
+          @include('partials.nav-links.community-links')
+        </ul>
+    </div>
+
+    <div class="col-sm-9 col-md-8 info-page">
+        <div class="page-header">
+            <h1>Volunteer and Internship Opportunities</h1>
+        </div>
 
 		<p>Are you passionate about connecting people, helping communities grow, and making an impact around the world? We give volunteers and interns the unique opportunity to gain hands-on experience in microfinance and international development, while extending life-changing business-growth opportunities to entrepreneurs in some of the world's most disadvantaged locations.</p>
 		 

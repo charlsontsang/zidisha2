@@ -9,7 +9,7 @@
     <h2>{{ $lender->getUser()->getUsername() }}</h2>
 </div>
 <div class="row">
-    <div class="col-sm-6 pull-right mobile-padding">
+    <div class="col-sm-4 pull-right mobile-padding">
         <img src="{{ $lender->getUser()->getProfilePictureUrl() }}" width="100%">
     </div>
 

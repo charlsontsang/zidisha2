@@ -7,34 +7,41 @@ How It Works
 
 @section('content')
 <div class="row">
-    <div class="col-md-8 col-md-offset-2 info-page">
+        <div class="col-sm-3 col-md-4">
+            <ul class="nav side-menu" role="complementary">
+              <h4>About</h4>
+              @include('partials.nav-links.about-links')
+            </ul>
+        </div>
+
+        <div class="col-sm-9 col-md-8 info-page">
         <div class="page-header">
             <h1>How It Works</h1>
         </div>
         <p>Can “pocket change” really make a change?  We’re absolutely sure of it.  In fact, you’d be amazed at how far a microloan can take someone with all the motivation in the world, but little to no resources.</p>
         <p>Direct microlending closes the gap between borrowers and lenders across the globe — and makes funding and fulfilling dreams beyond easy, super satisfying and even a little bit addicting.  Here’s how it all works.</p>
 
-        <h3>1. Borrowers apply.</h3>
+        <h4>1. Borrowers apply.</h4>
           <p>An entrepreneurial borrower in a developing country posts a loan request to fund his or her business.</p>
         
-        <h3>2. You choose.</h3>
+        <h4>2. You choose.</h4>
         <p>You pick an available loan, bid to provide all or part of the funding and set your own interest rate.</p>
         
-        <h3>3. Funds flow.</h3>
+        <h4>3. Funds flow.</h4>
         <p>After the loan is fully funded and the borrower accepts it, we disburse 100% of your loan directly to the borrower.</p>
         
-        <h3>4. Everyone stays in touch.</h3>
+        <h4>4. Everyone stays in touch.</h4>
         <p>You and the borrower can message each other back and forth to send updates about the impact of the loan.</p>
         
-        <h3>5. Loans get repaid.</h3>
+        <h4>5. Loans get repaid.</h4>
         <p>The borrower repays your loan in regular installments.</p>
         
-        <h3>6. Funds are renewed.</h3>
+        <h4>6. Funds are renewed.</h4>
         <p>You can turn right around and relend your funds to a new borrower, or withdraw them whenever you wish.</p>
         
         <br/>
 
-        <h2>The Evolution of a Zidisha Loan</h2>
+        <h3>The Evolution of a Zidisha Loan</h3>
 
         <p>Start by browsing the listings of available loan opportunities <a href="{{ route('lend:index') }}">here</a>. When you find one (or more!) that you’d like to fund, you can make a bid for any portion of the loan and choose your own interest rate.</p>
 
