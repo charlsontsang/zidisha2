@@ -1,6 +1,6 @@
 <?php
 return [
-    'progress-bar' => [
+    'title' => [
         'instructions-page' => 'Instructions',
         'profile-page' => 'Complete your profile',
         'application-page' => 'Loan application',
@@ -56,5 +56,15 @@ The current credit limit increase progression for Zidisha members who fulfill th
 	    :nxtLoanvalue
 	</p>
 <br/>',
-    ]
+    ],
+    'instructions' => [
+        'intro' => 'Zidisha provides a platform whereby our members can raise loans by proposing mutually beneficial terms to lenders.  Lenders choose from many competing applications, and your loan will only be funded if it succeeds in appealing to lenders.', 
+        'deadline' => 'If your loan application is not fully funded in :deadline days, it will expire and any bids raised will be returned to lenders. You may then try again with a new application.',
+        'tips' => 'Your loan is most likely to be funded if you make sure to follow these three tips:',
+        'tip1' => 'Make sure your photo describes your business.  Use a photo of yourself working in your business or showing your business products, not a passport photo.  Also make sure to smile and show your face clearly in the photo.',
+        'tip2' => 'Include something interesting you have done in your life or business, or a special hobby or pastime, in your "About Me" and "About My Business" descriptions.',
+        'tip3' => 'Use a loan title that tells lenders what you will do or purchase with the loan funds, and make sure that you include a clear explanation in your "Use of Loan" description.',
+        'more-tips' => 'For more tips on how to ensure your loan is funded quickly, see <strong><a href=":link">How To Have Your Loan Featured</a></strong>.',
+    ],
+    'next' => 'Next',
 ];

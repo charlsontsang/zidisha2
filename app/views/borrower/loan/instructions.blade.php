@@ -9,16 +9,43 @@
 @include('borrower.loan.partials.application-steps')
 
 <div class="page-header">
-    <h1>@lang("borrower.loan-application.progress-bar.instructions-page")</h1>
+    <h1>@lang("borrower.loan-application.title.instructions-page")</h1>
 </div>
 
+<p>
+    @lang("borrower.loan-application.instructions.intro")
+</p>
+<p>
+    @lang("borrower.loan-application.instructions.deadline")
+</p>
 
-Instructions
-<div class="row">
-    <div class="col-md-5 col-md-push-7">
-        {{ BootstrapForm::open(array('controller' => 'LoanApplicationController@postInstructions', 'translationDomain' => 'borrower.loan-instruction-page')) }}
+<p>
+    @lang("borrower.loan-application.instructions.tips")
+</p>
 
-        {{ BootstrapForm::submit('save') }}
+<ol>
+    <li>
+        @lang("borrower.loan-application.instructions.tip1")
+    </li>
+    
+    <li>
+        @lang("borrower.loan-application.instructions.tip2")
+    </li>
+
+    <li>
+        @lang("borrower.loan-application.instructions.tip3")
+    </li>
+</ol>
+
+<p>
+    @lang("borrower.loan-application.instructions.more-tips", ['link' => route('page:loan-feature-criteria')])
+</p>
+
+<div class="clearfix">
+    <div class="pull-right">
+        {{ BootstrapForm::open(array('controller' => 'LoanApplicationController@postInstructions')) }}
+
+        {{ BootstrapForm::submit(Lang::get('borrower.loan-application.next') . ': ' . Lang::get('borrower.loan-application.title.profile-page')) }}
 
         {{ BootstrapForm::close() }}
     </div>
