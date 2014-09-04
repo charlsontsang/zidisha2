@@ -240,40 +240,33 @@ class BorrowerService
         $borrower->save();
     }
 
-    public function editBorrower(Borrower $borrower, $data, $files = [])
+    public function editBorrower(Borrower $borrower, $data, $picture = null, $files = [])
     {
-        $borrower->getUser()->setEmail($data['email']);
-        $borrower->getProfile()->setAboutMe($data['aboutMe']);
-        $borrower->getProfile()->setAboutBusiness($data['aboutBusiness']);
+        $user = $borrower->getUser();
+        $profile = $borrower->getProfile();
+        
+        $user->setEmail($data['email']);
+        
+        $profile
+            ->setAboutMe($data['aboutMe'])
+            ->setAboutBusiness($data['aboutBusiness']);
 
         if (!empty($data['password'])) {
             $borrower->getUser()->setPassword($data['password']);
         }
 
-        if (\Input::hasFile('picture')) {
-            $image = \Input::file('picture');
+        if ($picture) {
+            $upload = Upload::createFromFile($picture);
+            $upload->setUser($user);
 
-            $user = $borrower->getUser();
-
-            if ($image) {
-                $upload = Upload::createFromFile($image);
-                $upload->setUser($user);
-
-                $user->setProfilePicture($upload);
-                //TODO: Test without user save
-                $user->save();
-            }
+            $user->setProfilePicture($upload);
         }
 
-        if ($files) {
-            $user = $borrower->getUser();
-
-            foreach ($files as $file) {
-                $upload = Upload::createFromFile($file);
-                $upload->setUser($user);
-                $borrower->addUpload($upload);
-            }
-            $borrower->save();
+        foreach ($files as $file) {
+            $upload = Upload::createFromFile($file);
+            $upload->setUser($user);
+            
+            $borrower->addUpload($upload);
         }
 
         $borrower->save();

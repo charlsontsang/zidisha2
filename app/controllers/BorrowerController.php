@@ -94,7 +94,7 @@ class BorrowerController extends BaseController
 
             $files = $this->getInputFiles();
 
-            $this->borrowerService->editBorrower($borrower, $data, $files);
+            $this->borrowerService->editBorrower($borrower, $data, \Input::file('picture'), $files);
 
             return Redirect::route('borrower:public-profile', $username);
         }
