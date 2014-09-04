@@ -56,9 +56,9 @@ class DatabaseMigration extends Command {
             $this->call('migrate-zidisha1', array('table' => 'volunteer_mentors'));
             $this->call('migrate-zidisha1', array('table' => 'loan_categories'));
             $this->call('migrate-zidisha1', array('table' => 'loans'));
+            $this->call('migrate-zidisha1', array('table' => 'loan_stages'));
             $this->call('migrate-zidisha1', array('table' => 'loan_bids'));
             $this->call('migrate-zidisha1', array('table' => 'admin_notes'));
-            $this->call('migrate-zidisha1', array('table' => 'loan_stages'));
             $this->call('migrate-zidisha1', array('table' => 'transactions'));
             $this->call('migrate-zidisha1', array('table' => 'comments'));
             $this->call('migrate-zidisha1', array('table' => 'exchange_rates'));
@@ -708,6 +708,7 @@ class DatabaseMigration extends Command {
 
             for ($offset = 0; $offset < $count; $offset += $limit) {
                 $stages = $this->con->table('loanstage')
+                    ->join('loanapplic', 'loanapplic.loanid', '=', 'loanstage.loanid') // TODO missing loans
                     ->skip($offset)->take($limit)->get();
                 $stageArray = [];
 
@@ -718,9 +719,9 @@ class DatabaseMigration extends Command {
                         'borrower_id' => $stage->borrowerid,
                         'status'      => $stage->status,
                         'start_date'  => date("Y-m-d H:i:s", $stage->startdate),
-                        'end_date'    => date("Y-m-d H:i:s", $stage->enddate),
-                        'created_at'  => date("Y-m-d H:i:s", $stage->created),
-                        'updated_at'  => date("Y-m-d H:i:s", $stage->modified),
+                        'end_date'    => $stage->enddate ? date("Y-m-d H:i:s", $stage->enddate) : null,
+                        'created_at'  => $stage->created,
+                        'updated_at'  => $stage->modified,
                     ];
 
                     array_push($stageArray, $newStage);
