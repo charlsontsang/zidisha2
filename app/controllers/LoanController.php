@@ -71,7 +71,7 @@ class LoanController extends BaseController
         }
 
         //TODO:
-        $displayFeedbackComments = ($loan->getStatus() == Loan::DEFAULTED || $loan->getStatus() == Loan::REPAID);
+        $displayFeedbackComments = $loan->isCompleted();
 
         $canPostFeedback = false;
         $canReplyFeedback = false;

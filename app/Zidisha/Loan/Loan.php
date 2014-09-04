@@ -286,7 +286,7 @@ class Loan extends BaseLoan implements CommentReceiverInterface
     }
 
 
-    public function isEnded()
+    public function isCompleted()
     {
         return in_array($this->getStatus(), [Loan::REPAID, Loan::DEFAULTED]);
     }
