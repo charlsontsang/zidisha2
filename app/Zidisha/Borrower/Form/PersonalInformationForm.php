@@ -29,6 +29,8 @@ class PersonalInformationForm extends AbstractForm
      * @var $cities
      */
     protected $cities;
+    
+    protected $validatorClass = 'Zidisha\Borrower\Form\Validator\NumberValidator';
 
     public function __construct(Borrower $borrower)
     {
@@ -196,17 +198,6 @@ class PersonalInformationForm extends AbstractForm
     public function isEditable($fieldName)
     {
         return $this->fields[$fieldName];
-    }
-
-    protected function validate($data, $rules)
-    {
-        \Validator::resolver(
-            function ($translator, $data, $rules, $messages, $parameters) {
-                return new NumberValidator($translator, $data, $rules, $messages, $parameters);
-            }
-        );
-
-        parent::validate($data, $rules);
     }
 
     public function getDefaultData()
