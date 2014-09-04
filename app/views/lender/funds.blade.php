@@ -14,9 +14,10 @@ Quick Links
 
 @section('page-content')
 <p>Current lending credit: <strong>{{ $currentBalance }}</strong></p>
+
 <br/>
 
-<h2>Add Funds</h2>
+<h4>Add Funds</h4>
 
 <p>Transfer funds to your lending account.</p>
 <br/>
@@ -24,9 +25,9 @@ Quick Links
 {{ BootstrapForm::open(array('route' => 'lender:post-funds', 'translationDomain' => 'fund', 'id' => 'funds-upload')) }}
 {{ BootstrapForm::populate($form) }}
 
-{{ BootstrapForm::text('amount', null, ['id' => 'amount']) }}
+{{ BootstrapForm::text('amount', null, ['label' => 'Lending Credit']) }}
 {{ BootstrapForm::hidden('creditAmount', null, ['id' => 'credit-amount']) }}
-{{ BootstrapForm::text('donationAmount', null, ['id' => 'donation-amount']) }}
+{{ BootstrapForm::text('donationAmount', null, ['label' => 'Donation to Zidisha']) }}
 {{ BootstrapForm::hidden('donationCreditAmount', null, ['id' => 'donation-credit-amount']) }}
 
 {{ BootstrapForm::hidden('transactionFee', null, ['id' => 'transaction-fee-amount']) }}
@@ -37,59 +38,60 @@ Quick Links
 {{ BootstrapForm::hidden('stripeToken', null, ['id' => 'stripe-token']) }}
 {{ BootstrapForm::hidden('paymentMethod', null, ['id' => 'payment-method']) }}
 
-{{ BootstrapForm::label("Payment Transfer Cost") }}:
-USD <span id="fee-amount-display"></span>
+<p>
+    Payment Transfer Cost: $<span id="fee-amount-display"></span>
+</p>
 
-<br/><br/>
+<p>
+    Total Payment: $<span id="total-amount-display"></span>
+</p>
 
-{{ BootstrapForm::label("Total amount to be charged to your account") }}
-USD <span id="total-amount-display"></span>
-
-<br/><br/>
-
-<button id="stripe-payment" class="btn btn-primary">Pay with credit card</button>
-
-<button type="submit" id="paypal-payment" class="btn btn-default" value="Pay With Paypal" name="submit_paypal">
-    Continue with
-    <img src="http://logocurio.us/wp-content/uploads/2014/04/paypal-logo.png" alt="Paypal" style="height: 20px"/>
-</button>
+<div>
+    <button id="stripe-payment" class="btn btn-primary">Pay with credit card</button>
+</div>
+<div>
+    <button type="submit" id="paypal-payment" class="btn btn-default" value="Pay With Paypal" name="submit_paypal">
+        Continue with
+        <img src="http://logocurio.us/wp-content/uploads/2014/04/paypal-logo.png" alt="Paypal" style="height: 20px"/>
+    </button>
+</div>
 
 {{ BootstrapForm::close() }}
 
-<hr/>
-
-<h2>Redeem Gift Card</h2>
-
-<p>Redeem a gift card you have received.</p>
-<br/>
-<a href="{{ route('lender:gift-cards') }}">Give a gift card</a>
 <br/><br/>
 
-{{ BootstrapForm::open(array('route' => 'lender:post-redeem-card', 'translationDomain' => 'redeemCard')) }}
+<h4>Redeem Gift Card</h4>
 
-{{ BootstrapForm::text('redemptionCode') }}
+<p>
+    Redeem a gift card you have received.&nbsp;&nbsp;&nbsp;<a href="{{ route('lender:gift-cards') }}">Give a gift card</a>
+</p>
+
+{{ BootstrapForm::open(array('route' => 'lender:post-redeem-card')) }}
+
+{{ BootstrapForm::text('redemptionCode', null, ['label' => 'Enter Redemption Code']) }}
 
 <button id="stripe-payment" class="btn btn-primary">Redeem</button>
 
 {{ BootstrapForm::close() }}
 
-<hr/>
+<br/><br/>
 
-<h2>Withdraw Funds</h2>
+<h4>Withdraw Funds</h4>
 
-<p>Request a transfer of your lending credit to your PayPal account.</p>
-<br/>
-<div>
-    <p>Current lending credit: <strong>{{ $currentBalance }}</strong></p>
-</div>
-<br/>
+<p>
+    Request a transfer of your lending credit to your PayPal account.
+</p>
 
-{{ BootstrapForm::open(array('route' => 'lender:post-withdraw-funds', 'translationDomain' => 'withdrawFunds')) }}
+<p>
+    Current lending credit: <strong>{{ $currentBalance }}</strong>
+</p>
 
-{{ BootstrapForm::text('paypalEmail') }}
-{{ BootstrapForm::text('withdrawAmount') }}
+{{ BootstrapForm::open(array('route' => 'lender:post-withdraw-funds')) }}
 
-<button id="stripe-payment" class="btn btn-primary">Withdraw</button>
+{{ BootstrapForm::text('paypalEmail', null, ['label' => 'Your PayPal Account Address']) }}
+{{ BootstrapForm::text('withdrawAmount', null, ['label' => 'Amount to Withdraw']) }}
+
+<button id="stripe-payment" class="btn btn-primary">Submit</button>
 
 {{ BootstrapForm::close() }}
 @stop

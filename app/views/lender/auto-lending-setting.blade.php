@@ -27,6 +27,8 @@ Quick Links
 {{ BootstrapForm::open(array('route' => [ 'lender:post:auto-lending', $lender->getId() ])) }}
 {{ BootstrapForm::populate($form) }}
 
+<br/>
+
 <h4>Activation</h4>
 
 {{ BootstrapForm::radio('active', 1, null, [
