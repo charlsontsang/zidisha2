@@ -762,24 +762,43 @@ class DatabaseMigration extends Command {
         }
 
         // TODO all type of comments table , till borrower_uploads table
-        if ($table == 'comments') {
-            $this->line('Migrate comments table');
+        if ($table == 'borrower_comments') {
+            $this->line('Migrate borrower_comments table');
 
-            $count = $this->con->table('comments')->count();
+            $count = $this->con->table('zi_comment')->count();
             $limit = 500;
 
             for ($offset = 0; $offset < $count ; $offset += $limit) {
-                $comments = $this->con->table('comments')
-                    ->skip($offset)->limit($limit)->get();
+                $comments = $this->con->table('zi_comment')
+                    ->join('borrowers', 'borrowers.userid', '=', 'zi_comment.receiverid') // TODO missing borrowers
+                    ->join('users', 'users.userid', '=', 'zi_comment.senderid') // TODO missing users
+                    ->orderBy('id', 'asc')
+                    ->skip($offset)
+                    ->limit($limit)
+                    ->get();
                 $commentArray = [];
 
                 foreach ($comments as $comment) {
                     $newComment = [
-                        'id'      => $comment->id,
-                        'user_id' => $comment->userid,
-                        'message' => ''
+                        'id'                  => $comment->id,
+                        'user_id'             => $comment->senderid,
+                        'borrower_id'         => $comment->receiverid,
+                        'message'             => $comment->message ? : '',
+                        'message_translation' => $comment->tr_message ? : null,
+                        'translator_id'       => $comment->tr_user ? : null,
+                        'parent_id'           => null, // TODO
+                        'root_id'             => null, // TODO
+                        'level'               => 0, // TODO
+                        'removed'             => false,
+                        'published'           => $comment->publish,
+                        'created_at'          => date("Y-m-d H:i:s", $comment->pub_date),
+                        'updated_at'          => $comment->modified ? date("Y-m-d H:i:s", $comment->modified) : null,
+                        // TODO reschedule_id
                     ];
+                    
+                    $commentArray[] = $newComment;
                 }
+                DB::table('borrower_comments')->insert($commentArray);
             }
         }
 
