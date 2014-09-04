@@ -60,7 +60,6 @@ class LoanController extends BaseController
 
     public function getIndex($loanId)
     {
-        //for loan
         $loan = $this->loanQuery
             ->filterById($loanId)
             ->joinBorrower()
@@ -70,7 +69,6 @@ class LoanController extends BaseController
             App::abort(404);
         }
 
-        //TODO:
         $displayFeedbackComments = $loan->isCompleted();
 
         $canPostFeedback = false;
@@ -88,6 +86,7 @@ class LoanController extends BaseController
                 ->count();
 
             if ($bidCount) {
+                // TODO only once, so check if lender already gave feedback on this loan
                 $canPostFeedback = true;
                 $canReplyFeedback = true;
             }
