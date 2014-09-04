@@ -1,7 +1,9 @@
 <?php
 
+use Propel\Runtime\ActiveQuery\Criteria;
 use Zidisha\Borrower\BorrowerService;
 use Zidisha\Comment\BorrowerCommentService;
+use Zidisha\Comment\LoanFeedbackCommentQuery;
 use Zidisha\Comment\LoanFeedbackCommentService;
 use Zidisha\Flash\Flash;
 use Zidisha\Lender\FollowService;
@@ -86,8 +88,10 @@ class LoanController extends BaseController
                 ->count();
 
             if ($bidCount) {
-                // TODO only once, so check if lender already gave feedback on this loan
-                $canPostFeedback = true;
+                $hasGivenFeedback = $this->loanFeedbackCommentService->hasGivenFeedback($loan->getId(), $user->getId());
+                if (!$hasGivenFeedback) {
+                    $canPostFeedback = true;
+                }
                 $canReplyFeedback = true;
             }
         }
@@ -141,7 +145,25 @@ class LoanController extends BaseController
         }
 
         $categoryForm = $this->adminCategoryForm;
+
+        $loanIds = LoanQuery::create()
+        ->getAllLoansForBorrower($borrower);
+
+        $totalPositiveFeedback = LoanFeedbackCommentQuery::create()
+            ->filterByReceiverId($loanIds, Criteria::IN)
+            ->filterByRatingType(0, Criteria::EQUAL)
+            ->count();
+
+        $totalFeedback = LoanFeedbackCommentQuery::create()
+            ->filterByReceiverId($loanIds, Criteria::IN)
+            ->count();
         
+        if ($totalFeedback > 0) {
+            $feedbackRating = ($totalPositiveFeedback*100)/$totalFeedback;
+        } else {
+            $feedbackRating = 0;
+        }
+
         return View::make(
             'pages.loan',
             compact(
@@ -166,7 +188,9 @@ class LoanController extends BaseController
                 'placeBidForm',
                 'categoryForm',
                 'invitedBy',
-                'volunteerMentor'
+                'volunteerMentor',
+                'feedbackRating',
+                'totalFeedback'
             )
         );
     }

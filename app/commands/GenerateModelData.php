@@ -155,12 +155,13 @@ class GenerateModelData extends Command
             $this->call('fake', array('model' => 'LenderInvite', 'size' => 200));
             $this->call('fake', array('model' => 'GiftCard', 'size' => 100));
             
-            $this->call('fake', array('model' => 'Loan', 'size' => 50));
+            $this->call('fake', array('model' => 'Loan', 'size' => 70));
             $this->call('fake', array('model' => 'Bid', 'size' => 100));
-            $this->call('fake', array('model' => 'FullyFundedLoan', 'size' => 20));
+            $this->call('fake', array('model' => 'FullyFundedLoan', 'size' => 40));
             $this->call('fake', array('model' => 'AcceptBid', 'size' => 1));
             $this->call('fake', array('model' => 'DisburseLoan', 'size' => 1));
-            
+            $this->call('fake', array('model' => 'RepaidLoan', 'size' => 1));
+
             $this->call('fake', array('model' => 'Repayment', 'size' => 1));
 
             $this->call('fake', array('model' => 'BorrowerInvite', 'size' => 200));
@@ -289,6 +290,10 @@ class GenerateModelData extends Command
 
         if ($model == "DisburseLoan") {
             return $this->generateDisburseLoan();
+        }
+
+        if ($model == "RepaidLoan") {
+            return $this->generateRepaidLoan();
         }
 
         if ($model == "CreditSetting") {
@@ -1015,6 +1020,25 @@ class GenerateModelData extends Command
         return $return;
     }
 
+    protected function generateRepaidLoan()
+    {
+//        $disbursedLoans = LoanQuery::create()
+//            ->filterByStatus(Loan::ACTIVE)
+//            ->find();
+//
+//        $return = [];
+//
+//        foreach ($disbursedLoans as $loan) {
+//            if (rand(1, 5) <= 4) {
+//                $disbursedAt = Carbon::instance($loan->getAcceptedAt());
+//                $disbursedAt->addDays($this->faker->numberBetween(1, 10));
+//                $disbursedAmount = $loan->getAmount();
+//                $this->loanService->disburseLoan($loan, compact('disbursedAt', 'disbursedAmount'));
+//                $return[] = $loan;
+//            }
+//        }
+    }
+
     protected function generateTransactions($count)
     {
         $con = PropelDB::getConnection();
@@ -1077,9 +1101,9 @@ class GenerateModelData extends Command
                 ->find();
             
             foreach ($installments as $installment) {
-                if ($i == $count) {
-                    break;
-                }
+//                if ($i == $count) {
+//                    break;
+//                }
                 
                 if (!$installment->getAmount()->isPositive()){
                     continue;

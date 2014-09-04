@@ -51,4 +51,12 @@ class LoanFeedbackCommentService extends CommentService
     {
         return false;
     }
+
+    public function hasGivenFeedback($userId, $loanId)
+    {
+        return LoanFeedbackCommentQuery::create()
+            ->filterByReceiverId($loanId)
+            ->filterByUserId($userId)
+            ->count();
+    }
 }

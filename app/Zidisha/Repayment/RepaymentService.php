@@ -15,6 +15,7 @@ use Zidisha\Loan\Base\ForgivenessLoanShareQuery;
 use Zidisha\Loan\BidQuery;
 use Zidisha\Loan\Calculator\RepaymentCalculator;
 use Zidisha\Loan\Loan;
+use Zidisha\Loan\LoanService;
 use Zidisha\Vendor\PropelDB;
 
 class RepaymentService
@@ -237,6 +238,9 @@ class RepaymentService
                     ->setActiveLoan(null)
                     ->setLoanStatus(Loan::REPAID);
                 $borrower->save($con);
+
+                $loanService = \App::make('\Zidisha\Loan\LoanService');
+                $loanService->changeLoanStage($con, $loan, Loan::ACTIVE, Loan::REPAID);
             }
 
             // TODO

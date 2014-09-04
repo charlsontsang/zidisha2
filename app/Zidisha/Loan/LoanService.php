@@ -742,7 +742,7 @@ class LoanService
         return $lenderRefunds;
     }
 
-    private function changeLoanStage(
+    public function changeLoanStage(
         ConnectionInterface $con,
         Loan $loan,
         $oldStatus = null,
