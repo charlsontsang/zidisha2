@@ -1109,6 +1109,8 @@
         <column name="city" type="VARCHAR"/>
         <column name="first_post_date" type="TIMESTAMP"/>
         <column name="friends_count" type="INTEGER"/>
+        <column name="ip_address" type="VARCHAR"/>
+        <column name="accept" type="BOOLEAN"/>
         <foreign-key foreignTable="users">
             <reference local="user_id" foreign="id"/>
         </foreign-key>

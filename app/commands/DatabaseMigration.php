@@ -1633,27 +1633,41 @@ class DatabaseMigration extends Command {
         if ($table == 'facebook_users') {
             $this->line('Migrate facebook_users table');
 
-            $count = $this->con->table('facebook_info')->count();
+            $count = $this->con->table('facebook_info')
+                ->join('users', 'users.userid', '=', 'facebook_info.userid')
+                ->count();
             $limit = 500;
 
             for ($offset = 0; $offset < $count; $offset += $limit) {
                 $facebookUsers = $this->con->table('facebook_info')
+                    ->select('facebook_info.*')
+                    ->join('users', 'users.userid', '=', 'facebook_info.userid') // TODO check missing users
                     ->skip($offset)->limit($limit)->get();
                 $facebookUserArray = [];
 
                 foreach ($facebookUsers as $facebookUser) {
                     $facebookData = unserialize($facebookUser->facebook_data);
-                    $newFacebookUser = [
-                        'id'              => $facebookUser->id,
-                        'user_id'         => $facebookUser->userid,
-                        'account_name'    => $facebookData['user_profile']['name'],
-                        'email'           => $facebookData['user_profile']['email'],
-                        'birth_date'      => $facebookData['user_profile']['birthday'],
-                        'city'            => $facebookData['user_profile']['hometown'],
-                        'first_post_date' => $facebookData['posts'][1]['created_time'],
-                        'friends_count'   => $facebookData['user_friends']
+                    $facebookData += [
+                        'user_profile' => [],
+                        'posts' => [],
                     ];
-
+                    if (!is_array($facebookData['posts'])) {
+                        $facebookData['posts'] = [];
+                    }
+                    $facebookData['posts'] += [1 => []];
+                    $newFacebookUser = [
+                        'id'              => $facebookUser->id, // TODO store facebook_id
+                        'user_id'         => $facebookUser->userid,
+                        'account_name'    => array_get($facebookData['user_profile'], 'name'),
+                        'email'           => array_get($facebookData['user_profile'], 'email'),
+                        'birth_date'      => array_get($facebookData['user_profile'], 'birthday'),
+                        'city'            => array_get($facebookData['user_profile'], 'hometown', ['name' => ''])['name'],
+                        'first_post_date' => array_get($facebookData['posts'][1], 'created_time'), // TODO check
+                        'friends_count'   => count(array_get($facebookData, 'user_friends', [])),
+                        'accept'          => $facebookUser->accept,
+                        'ip_address'      => $facebookUser->ip_address,
+                    ];
+                    
                     array_push($facebookUserArray, $newFacebookUser);
                 }
                 DB::table('facebook_users')->insert($facebookUserArray);
