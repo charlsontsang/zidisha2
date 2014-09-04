@@ -102,7 +102,7 @@ class MonthlyLoanArrear extends ScheduledJob
                 ->find();
 
             foreach ($contacts as $contact) {
-                $borrowerSmsService->sendLoanMonthlyArrearNotificationToContacts($contact, $loan);
+                $borrowerSmsService->sendLoanMonthlyArrearNotificationToContact($contact, $loan);
             }
 
             $volunteerMentor = $borrower->getVolunteerMentor();

@@ -34,17 +34,12 @@ class BorrowerSmsService {
         //TODO: sendLoanFinalArrearNotification
     }
 
-    public function sendLoanFinalArrearNotificationToContacts(Contact $contact, Loan $loan)
-    {
-        //TODO: sendLoanFinalArrearNotification
-    }
-
     public function sendLoanFirstArrearNotification(Borrower $borrower, Loan $loan)
     {
         //TODO: sendLoanFirstArrearNotification
     }
 
-    public function sendLoanMonthlyArrearNotificationToContacts(Contact $contact, Loan $loan)
+    public function sendLoanMonthlyArrearNotificationToContact(Contact $contact, Loan $loan)
     {
         //TODO: sendLoanMonthlyArrearNotificationToContacts
     }

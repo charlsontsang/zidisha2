@@ -115,7 +115,6 @@ class LoanFinalArrear extends ScheduledJob
 
             if ($contacts) {
                 foreach ($contacts as $contact) {
-                    $borrowerSmsService->sendLoanFinalArrearNotificationToContacts($contact, $loan);
                 }
             }
             
