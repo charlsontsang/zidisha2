@@ -15,7 +15,7 @@ Join the global P2P microlending movement
         <a href="{{$facebookJoinUrl }}" class="btn btn-primary">Connect With Facebook </a>
     </div>
 
-    @if(!$borrower->getUser()->getFacebookId())
+    @if($isFacebookRequired)
         <span class="help-block">Please Connect your facebook account.</span>
     @endif
 </div>
