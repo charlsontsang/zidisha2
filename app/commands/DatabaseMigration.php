@@ -57,13 +57,17 @@ class DatabaseMigration extends Command {
             $this->call('migrate-zidisha1', array('table' => 'loan_categories'));
             $this->call('migrate-zidisha1', array('table' => 'loans'));
             $this->call('migrate-zidisha1', array('table' => 'loan_stages'));
-            $this->call('migrate-zidisha1', array('table' => 'loan_bids'));
-            $this->call('migrate-zidisha1', array('table' => 'admin_notes'));
-            $this->call('migrate-zidisha1', array('table' => 'transactions'));
-            $this->call('migrate-zidisha1', array('table' => 'comments'));
             $this->call('migrate-zidisha1', array('table' => 'exchange_rates'));
             $this->call('migrate-zidisha1', array('table' => 'installments'));
             $this->call('migrate-zidisha1', array('table' => 'installment_payments'));
+            $this->call('migrate-zidisha1', array('table' => 'facebook_users'));
+            $this->call('migrate-zidisha1', array('table' => 'borrower_invites'));
+            $this->call('migrate-zidisha1', array('table' => 'reschedules'));
+            $this->call('migrate-zidisha1', array('table' => 'borrower_comments'));
+            dd('TODO: other models');
+            $this->call('migrate-zidisha1', array('table' => 'loan_bids'));
+            $this->call('migrate-zidisha1', array('table' => 'admin_notes'));
+            $this->call('migrate-zidisha1', array('table' => 'transactions'));
             $this->call('migrate-zidisha1', array('table' => 'borrower_payments'));
             $this->call('migrate-zidisha1', array('table' => 'lender_invites'));
             $this->call('migrate-zidisha1', array('table' => 'lender_invite_visits'));
@@ -82,13 +86,10 @@ class DatabaseMigration extends Command {
             $this->call('migrate-zidisha1', array('table' => 'notifications'));
             $this->call('migrate-zidisha1', array('table' => 'withdrawal_requests'));
             $this->call('migrate-zidisha1', array('table' => 'followers'));
-            $this->call('migrate-zidisha1', array('table' => 'borrower_invites'));
             $this->call('migrate-zidisha1', array('table' => 'credit_settings'));
             $this->call('migrate-zidisha1', array('table' => 'credits_earned'));
-            $this->call('migrate-zidisha1', array('table' => 'facebook_users'));
             $this->call('migrate-zidisha1', array('table' => 'auto_lending_settings'));
             $this->call('migrate-zidisha1', array('table' => 'statistics'));
-            $this->call('migrate-zidisha1', array('table' => 'reschedules'));
             $this->call('migrate-zidisha1', array('table' => 'bulk_emails'));
             $this->call('migrate-zidisha1', array('table' => 'bulk_email_recipients'));
 
