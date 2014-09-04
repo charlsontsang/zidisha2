@@ -129,15 +129,29 @@ class BorrowerController extends BaseController
         $feedbackMessages = [];
 
         $loan = $borrower->getActiveLoan();
+        $loan->setStatus(Loan::ACTIVE);
+        $loan->save();
+        $partial = 'loan-no-loans';
+        $partials = [
+            Loan::OPEN      => 'loan-open',
+            Loan::FUNDED    => 'loan-funded',
+            Loan::ACTIVE    => 'loan-active',
+            Loan::REPAID    => 'loan-repaid',
+            Loan::NO_LOAN   => 'loan-no-loans',
+            Loan::DEFAULTED => 'loan-defaulted',
+            Loan::CANCELED  => 'loan-canceled',
+            Loan::EXPIRED   => 'loan-expired',
+        ];
 
         if ($loan){
             $feedbackMessages = $this->borrowerService->getFeedbackMessages($loan);
+            $partial = array_get($partials, $loan->getStatus());
         }
         if ($borrower->isActivationPending()) {
             $feedbackMessages = $this->borrowerActivationService->getFeedbackMessages($borrower);
         }
 
-        return View::make('borrower.dashboard', compact('borrower', 'volunteerMentor', 'feedbackMessages'));
+        return View::make('borrower.dashboard', compact('borrower', 'volunteerMentor', 'feedbackMessages', 'partial'));
     }
 
     public function getTransactionHistory()
