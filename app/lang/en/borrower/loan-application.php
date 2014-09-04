@@ -66,5 +66,12 @@ The current credit limit increase progression for Zidisha members who fulfill th
         'tip3' => 'Use a loan title that tells lenders what you will do or purchase with the loan funds, and make sure that you include a clear explanation in your "Use of Loan" description.',
         'more-tips' => 'For more tips on how to ensure your loan is funded quickly, see <strong><a href=":link">How To Have Your Loan Featured</a></strong>.',
     ],
+    'profile' => [
+        'about-me' => 'About Me',
+        'about-me-description' => '(Minimum 300 characters)<br/><br/>This will display as an introduction of yourself in your public profile page. You may choose to describe your family, area where you live, occupation, educational background, why you started a business, what you purchase with the earnings from your business, hobbies and things you like to do in your free time, and any other details that may interest Zidisha lenders in other countries. Try to include something interesting and unique that will make your story memorable to lenders.',
+        'about-business' => 'About Yourself',
+        'about-business-description' => '(Minimum 300 characters)<br/><br/>This will display as an introduction of yourself in your public profile page. You may choose to describe your family, area where you live, occupation, educational background, why you started a business, what you purchase with the earnings from your business, hobbies and things you like to do in your free time, and any other details that may interest Zidisha lenders in other countries. Try to include something interesting and unique that will make your story memorable to lenders.',
+    ],
     'next' => 'Next',
+    'previous' => 'Previous',
 ];

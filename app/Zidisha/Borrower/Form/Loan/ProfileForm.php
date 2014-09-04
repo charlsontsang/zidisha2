@@ -12,8 +12,8 @@ class ProfileForm extends AbstractForm
     public function getRules($data)
     {
         return [
-            'aboutMe'       => 'min:300',
-            'aboutBusiness' => 'min:300',
+            'aboutMe'       => 'required|min:300',
+            'aboutBusiness' => 'required|min:300',
         ];
     }
 
