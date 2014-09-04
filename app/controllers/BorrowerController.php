@@ -242,6 +242,7 @@ class BorrowerController extends BaseController
             return Redirect::route('borrower:personal-information');
         }
 
+        \Flash::error('Your profile has some errors.');
         return Redirect::route('borrower:personal-information')->withForm($form);
     }
 
