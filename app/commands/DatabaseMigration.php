@@ -831,8 +831,10 @@ class DatabaseMigration extends Command {
                         'loan_id'     => $installment->loanid,
                         'due_date'    => date("Y-m-d H:i:s", $installment->duedate),
                         'amount'      => $installment->amount,
-                        'paid_date'   => date("Y-m-d H:i:s", $installment->paiddate),
-                        'paid_amount' => $installment->paidamt
+                        'paid_date'   => $installment->paiddate ? date("Y-m-d H:i:s", $installment->paiddate) : null,
+                        'paid_amount' => $installment->paidamt,
+                        'created_at'  => null, // TODO
+                        'updated_at'  => null, // TODO
                     ];
 
                     array_push($installmentArray, $newInstallment);
