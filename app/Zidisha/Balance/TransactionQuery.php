@@ -235,11 +235,10 @@ class TransactionQuery extends BaseTransactionQuery
         $results = $total->toKeyValue('userId', 'total');
         if (count($userIds) > 1) {
             $balanceArray = [];
-            foreach ($results as $key=>$value) {
-                $balanceArray[$key] = Money::create($value, 'USD');
-            }
             foreach ($userIds as $userId) {
-                if (!isset($balanceArray[$userId])) {
+                if (isset($results[$userId])) {
+                    $balanceArray[$userId] = Money::create($results[$userId], 'USD');
+                } else {
                     $balanceArray[$userId] = Money::create(0, 'USD');
                 }
             }
