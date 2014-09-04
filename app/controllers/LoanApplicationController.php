@@ -1,12 +1,12 @@
 <?php
 use Zidisha\Borrower\Borrower;
+use Zidisha\Borrower\BorrowerService;
 use Zidisha\Borrower\Form\Loan\ApplicationForm;
 use Zidisha\Borrower\Form\Loan\ProfileForm;
 use Zidisha\Borrower\Form\PersonalInformationForm;
 use Zidisha\Currency\Money;
 use Zidisha\Loan\Calculator\InstallmentCalculator;
 use Zidisha\Loan\Loan;
-use Zidisha\Loan\CategoryQuery;
 use Zidisha\Loan\LoanQuery;
 use Zidisha\Loan\LoanService;
 use Zidisha\Upload\Upload;
@@ -25,11 +25,16 @@ class LoanApplicationController extends BaseController
     ];
 
     private $loanService;
+    /**
+     * @var Zidisha\Borrower\BorrowerService
+     */
+    private $borrowerService;
 
-    public function __construct(LoanService $loanService)
+    public function __construct(LoanService $loanService, BorrowerService $borrowerService)
     {
         $this->beforeFilter('@stepsBeforeFilter');
         $this->loanService = $loanService;
+        $this->borrowerService = $borrowerService;
         $this->beforeFilter($this->isNewLoanAllowedFilter());
         $this->beforeFilter($this->validateOpenLoanFilter());
     }
@@ -87,16 +92,28 @@ class LoanApplicationController extends BaseController
         /** @var Borrower $borrower */
         $borrower = \Auth::user()->getBorrower();
         
-        $personalInformation = $borrower->getPersonalInformation();
-
         $form = new PersonalInformationForm($borrower);
         $form->handleData($form->getDefaultData());
         
+        $valid = true;
+        
         if (!$form->isValid()) {
             \Flash::error('Your profile has some errors. Please fix them in order to continue the loan application.');
-            return Redirect::route('borrower:personal-information');
+            $valid = false;
+        }
+
+        $isFacebookRequired = $this->borrowerService->isFacebookRequired($borrower);
+        
+        if ($isFacebookRequired) {
+            \Flash::error('Facebook verification required.');
+            $valid = false;
         }
         
+        if (!$valid) {
+            return Redirect::route('borrower:personal-information');
+        }
+
+
         $this->setCurrentStep('profile');
 
         return Redirect::action('LoanApplicationController@getProfile');
