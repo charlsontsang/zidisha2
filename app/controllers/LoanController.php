@@ -86,8 +86,10 @@ class LoanController extends BaseController
                 ->count();
 
             if ($bidCount) {
-                // TODO only once, so check if lender already gave feedback on this loan
-                $canPostFeedback = true;
+                $hasGivenFeedback = $this->loanFeedbackCommentService->hasGivenFeedback($loan->getId(), $user->getId());
+                if (!$hasGivenFeedback) {
+                    $canPostFeedback = true;
+                }
                 $canReplyFeedback = true;
             }
         }
