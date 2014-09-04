@@ -87,7 +87,7 @@
                                                 data-toggle="tooltip">
                                                 @lang('lender.follow.title', ['name' => $borrower->getFirstName()])
                                             </a>
-                                            @if(Auth::user()->isLender())
+                                            @if(Auth::check() && Auth::user()->isLender())
                                                 @include('lender.follow.follower', [
                                                 'lender' => Auth::user()->getLender(),
                                                 'follower' => $follower,
@@ -587,7 +587,7 @@
                         <i class="fa fa-fw fa-bookmark"></i>
                         @lang('lender.follow.title', ['name' => $borrower->getFirstName()])
                     </a>
-                    @if(Auth::user()->isLender())
+                    @if(Auth::check() && Auth::user()->isLender())
                     @include('lender.follow.follower', [
                         'lender' => Auth::user()->getLender(),
                         'follower' => $follower,
