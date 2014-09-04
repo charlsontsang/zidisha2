@@ -851,6 +851,9 @@ class DatabaseMigration extends Command {
 
             for ($offset = 0; $offset < $count; $offset += $limit) {
                 $payments = $this->con->table('repaymentschedule_actual')
+                    ->select('repaymentschedule_actual.*')
+                    ->join('repaymentschedule', 'repaymentschedule.id', '=', 'repaymentschedule_actual.rid') // TODO fix this
+                    ->where('rid', '>', 0) // TODO remove rid = 0 rows
                     ->skip($offset)->limit($limit)->get();
                 $paymentArray = [];
 
@@ -860,9 +863,11 @@ class DatabaseMigration extends Command {
                         'installment_id'   => $payment->rid,
                         'borrower_id'      => $payment->userid,
                         'loan_id'          => $payment->loanid,
-                        'paid_date'        => date("Y-m-d H:i:s", $payment->paiddate),
+                        'paid_date'        => date("Y-m-d H:i:s", $payment->paiddate), // TODO check paiddate = 0
                         'paid_amount'      => $payment->paidamt,
-                        'exchange_rate_id' => 0, //TODO
+                        'exchange_rate_id' => 1, // TODO
+                        'created_at'       => null, // TODO
+                        'updated_at'       => null, // TODO
                     ];
 
                     array_push($paymentArray, $newPayment);
