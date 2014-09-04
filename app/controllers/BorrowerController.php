@@ -137,14 +137,15 @@ class BorrowerController extends BaseController
             $loan = LoanQuery::create()
                 ->getLastEndedLoan($borrower);
         }
-
-        $partial = 'loan-no-loans';
+        
+        $partial = 'loan-no-loan';
+        
         $partials = [
             Loan::OPEN      => 'loan-open',
             Loan::FUNDED    => 'loan-funded',
             Loan::ACTIVE    => 'loan-active',
             Loan::REPAID    => 'loan-repaid',
-            Loan::NO_LOAN   => 'loan-no-loans',
+            Loan::NO_LOAN   => 'loan-no-loan',
             Loan::DEFAULTED => 'loan-defaulted',
             Loan::CANCELED  => 'loan-canceled',
             Loan::EXPIRED   => 'loan-expired',

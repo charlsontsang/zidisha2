@@ -53,6 +53,6 @@ return [
         'cancel-message' => 'Your Loan has been Canceled.'
     ],
     'no-loan'                    => [
-        'no-loan-message' => 'You have not applied for any Loan.'
+        'no-loan-message' => 'You have no active loan.'
     ]
 ];
