@@ -14,62 +14,116 @@ Quick Links
 
 @section('page-content')
 <p>
-Autolending allows you to maximize your impact by continuously relending your available lending credit. Talk about paying it forward! <a href="#">Learn more</a>
-</p>       
+    Autolending allows you to maximize your impact by continuously relending your available lending credit. Talk about paying it forward!
+    &nbsp;&nbsp;&nbsp;                    
+    <a href="#" data-toggle="tooltip" data-placement="bottom" title="When you activate automated lending, the credit available in your account will be automatically allocated to new fundraising loans according to the preferences you select.  
+        Automated lending takes place once every 24 hours, in increments of $10.  To ensure a broad distribution of your funds, each loan will receive no more than $10 from your account.
+        When you upload additional funds to your account, you will be offered the choice to lend them manually to the entrepreneur of your choice, or to have them automatically lent according to your selected parameters.
+        You may use this page to deactivate automated lending at any time.">
+        Learn more
+    </a>    
+</p>
 
-{{ BootstrapForm::open(array('route' => [ 'lender:post:auto-lending', $lender->getId() ], 'translationDomain' => 'lender.auto-lending.preferences')) }}
+{{ BootstrapForm::open(array('route' => [ 'lender:post:auto-lending', $lender->getId() ])) }}
 {{ BootstrapForm::populate($form) }}
 
-{{ \BootstrapForm::radio('active', 1); }} YES!  Activate automated lending.
-{{ \BootstrapForm::radio('active', 0); }} No thanks, deactivate automated lending.
+<h4>Activation</h4>
 
+{{ BootstrapForm::radio('active', 1, null, [
+    'label' => 'Activate automated lending.'
+]) }}
 
-<br/>
-<hr/>
-<p>
-Please set your minimum desired interest rate.  
-</p>
-{{ \BootstrapForm::radio('minimumInterestRate', '0') }} 0%
-{{ \BootstrapForm::radio('minimumInterestRate', '3') }} 3%
-{{ \BootstrapForm::radio('minimumInterestRate', '5') }} 5%
-{{ \BootstrapForm::radio('minimumInterestRate', '10') }} 10%
-{{ \BootstrapForm::radio('minimumInterestRate', 'other') }} Other: {{ \BootstrapForm::text('minimumInterestRateOther') }} 
+{{ BootstrapForm::radio('active', 0, null, [
+    'label' => 'Dectivate automated lending.'
+]) }}
 
 <br/>
-<hr/>
+
+<h4>Funds Allocation</h4>
 <p>
-Please set your maximum desired interest rate. 
+    Choose the minimum interest rate.  
 </p>
-{{ \BootstrapForm::radio('maximumInterestRate', '0') }} 0%
-{{ \BootstrapForm::radio('maximumInterestRate', '3') }} 3%
-{{ \BootstrapForm::radio('maximumInterestRate', '5') }} 5%
-{{ \BootstrapForm::radio('maximumInterestRate', '10') }} 10%
-{{ \BootstrapForm::radio('maximumInterestRate', 'other') }} Other: {{ \BootstrapForm::text('maximumInterestRateOther') }} 
+{{ \BootstrapForm::radio('minimumInterestRate', '0', null, [
+    'label' => '0%'
+]) }}
+{{ \BootstrapForm::radio('minimumInterestRate', '3', null, [
+    'label' => '3%'
+]) }} 
+{{ \BootstrapForm::radio('minimumInterestRate', '5', null, [
+    'label' => '5%'
+]) }} 
+{{ \BootstrapForm::radio('minimumInterestRate', '10', null, [
+    'label' => '10%'
+]) }} 
+{{ \BootstrapForm::radio('minimumInterestRate', 'other', null, [
+    'label' => 'Other:'
+]) }} 
+{{ \BootstrapForm::text('minimumInterestRateOther', null, [
+    'label' => ''
+]) }} 
 
 <br/>
-<hr/>
+
 <p>
-How would you like your funds to be automatically lent out?  
+    Choose the maximum interest rate to receive.
 </p>
-{{ \BootstrapForm::radio('preference', \Zidisha\Lender\AutoLendingSetting::HIGH_FEEDBCK_RATING) }}  Give priority to borrowers with highest feedback rating.
-{{ \BootstrapForm::radio('preference', \Zidisha\Lender\AutoLendingSetting::EXPIRE_SOON) }} Give priority to loans expiring the soonest.
-{{ \BootstrapForm::radio('preference', \Zidisha\Lender\AutoLendingSetting::HIGH_OFFER_INTEREST) }} Give priority to loans with highest available interest rates.
-{{ \BootstrapForm::radio('preference', \Zidisha\Lender\AutoLendingSetting::HIGH_NO_COMMENTS) }} Give priority to borrowers with the highest number of comments posted.
-{{ \BootstrapForm::radio('preference', \Zidisha\Lender\AutoLendingSetting::LOAN_RANDOM) }} Choose loans at random.
-{{ \BootstrapForm::radio('preference', \Zidisha\Lender\AutoLendingSetting::AUTO_LEND_AS_PREV_LOAN) }} Match loans made manually by other lenders.
+{{ \BootstrapForm::radio('maximumInterestRate', '0', null, [
+    'label' => '0%'
+]) }}
+{{ \BootstrapForm::radio('maximumInterestRate', '3', null, [
+    'label' => '3%'
+]) }} 
+{{ \BootstrapForm::radio('maximumInterestRate', '5', null, [
+    'label' => '5%'
+]) }} 
+{{ \BootstrapForm::radio('maximumInterestRate', '10', null, [
+    'label' => '10%'
+]) }} 
+{{ \BootstrapForm::radio('maximumInterestRate', 'other', null, [
+    'label' => 'Other:'
+]) }} 
+{{ \BootstrapForm::text('maximumInterestRateOther', null, [
+    'label' => ''
+]) }} 
+
+<br/>
+
+<p>
+    How would you like your loans to be chosen?  
+</p>
+
+  
+{{ \BootstrapForm::radio('preference', \Zidisha\Lender\AutoLendingSetting::AUTO_LEND_AS_PREV_LOAN, null, [
+    'label' => 'Match loans made manually by other lenders.'
+]) }}  
+{{ \BootstrapForm::radio('preference', \Zidisha\Lender\AutoLendingSetting::HIGH_NO_COMMENTS, null, [
+    'label' => 'Give priority to borrowers with the highest number of comments posted.'
+]) }} 
+{{ \BootstrapForm::radio('preference', \Zidisha\Lender\AutoLendingSetting::HIGH_FEEDBCK_RATING, null, [
+    'label' => 'Give priority to borrowers with the highest feedback rating.'
+]) }}  
+{{ \BootstrapForm::radio('preference', \Zidisha\Lender\AutoLendingSetting::EXPIRE_SOON, null, [
+    'label' => 'Give priority to loans about to expire.'
+]) }}
+{{ \BootstrapForm::radio('preference', \Zidisha\Lender\AutoLendingSetting::LOAN_RANDOM, null, [
+    'label' => 'Choose loans at random.'
+]) }}  
         
 @if ($currentBalance->isPositive()) 
-    <br/>
-    <hr/>
-    <p>
-        Would you like your current credit balance of <b><i>{{$currentBalance->getAmount()}} {{$currentBalance->getCurrency()}}</i></b> to be automatically allocated to fundraising loans according to these criteria?
-    </p>
-    {{ \BootstrapForm::radio('currentAllocated', 1) }}  Yes, apply automated lending to both my current balance and to future repayments that are credited to my account.
-    {{ \BootstrapForm::radio('currentAllocated', 0) }} No, apply automated lending only to future repayments and leave my current balance available for manual lending.   
+<br/>
+<p>
+    Would you like your current credit balance of {{$currentBalance->getAmount()}} {{$currentBalance->getCurrency()}} to be automatically allocated to fundraising loans according to these criteria?
+</p>
+{{ \BootstrapForm::radio('currentAllocated', 1, null, [
+    'label' => 'Yes, apply automated lending to both my current balance and to future repayments that are credited to my account.'
+]) }}  
+{{ \BootstrapForm::radio('currentAllocated', 0, null, [
+    'label' => 'No, apply automated lending only to future repayments and leave my current balance available for manual lending.'
+]) }}     
 @endif
+
 <br/>
-<br/>
-<hr/>
-{{ BootstrapForm::submit('save') }}
+
+{{ BootstrapForm::submit('Save') }}
 {{ BootstrapForm::close() }}
 @stop
