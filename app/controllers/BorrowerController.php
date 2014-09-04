@@ -124,13 +124,20 @@ class BorrowerController extends BaseController
     {
         /** @var Borrower $borrower */
         $borrower = \Auth::User()->getBorrower();
+        if (!$borrower) {
+            App::abort(404);
+        }
 
         $volunteerMentor = $borrower->getVolunteerMentor() ? $borrower->getVolunteerMentor()->getBorrowerVolunteer() : null;
         $feedbackMessages = [];
 
         $loan = $borrower->getActiveLoan();
-        $loan->setStatus(Loan::ACTIVE);
-        $loan->save();
+
+        if (!$loan) {
+            $loan = LoanQuery::create()
+                ->getLastEndedLoan($borrower);
+        }
+
         $partial = 'loan-no-loans';
         $partials = [
             Loan::OPEN      => 'loan-open',
