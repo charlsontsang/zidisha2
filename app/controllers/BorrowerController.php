@@ -150,7 +150,7 @@ class BorrowerController extends BaseController
             Loan::EXPIRED   => 'loan-expired',
         ];
 
-        if ($loan){
+        if ($loan) {
             $feedbackMessages = $this->borrowerService->getFeedbackMessages($loan);
             $partial = array_get($partials, $loan->getStatus());
         }
