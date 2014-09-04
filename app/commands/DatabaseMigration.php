@@ -1496,6 +1496,7 @@ class DatabaseMigration extends Command {
 
             for ($offset = 0; $offset < $count; $offset += $limit) {
                 $borrowerInvites = $this->con->table('invites')
+                    ->join('borrowers', 'borrowers.userid', '=', 'invites.userid') // TODO missing borrowers, lenders?
                     ->skip($offset)->limit($limit)->get();
                 $borrowerInviteArray = [];
 
@@ -1505,8 +1506,8 @@ class DatabaseMigration extends Command {
                         'borrower_id' => $borrowerInvite->userid,
                         'email'       => $borrowerInvite->email,
                         'invited'     => $borrowerInvite->visited, // TODO cross check
-                        'hash'        => $borrowerInvite->cookie_value,
-                        'invitee_id'  => $borrowerInvite->invitee_id
+                        'hash'        => '', // $borrowerInvite->cookie_value, // TODO
+                        'invitee_id'  => $borrowerInvite->invitee_id ?: null
                     ];
 
                     array_push($borrowerInviteArray, $newBorrowerInvite);
