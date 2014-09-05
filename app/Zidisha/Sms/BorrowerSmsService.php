@@ -8,7 +8,6 @@ use Zidisha\Borrower\Contact;
 use Zidisha\Currency\Money;
 use Zidisha\Loan\Loan;
 use Zidisha\Repayment\Installment;
-use Zidisha\Utility\Utility;
 
 class BorrowerSmsService {
 
@@ -27,8 +26,8 @@ class BorrowerSmsService {
             'contactName'         => $contact->getName(),
         ];
         $text = \Lang::get('borrowerJoin.sms.contact-confirmation', $arguments);
-        $number = Utility::formatNumber($contact->getPhoneNumber(), $contact->getBorrower()->getCountry()->getCountryCode());
-        $this->smsService->send($number, $text);
+
+        $this->smsService->send($contact->getPhoneNumber(), $text, $contact->getBorrower()->getCountry()->getCountryCode());
     }
 
     public function sendLoanFinalArrearNotification(Borrower $borrower, Loan $loan)
