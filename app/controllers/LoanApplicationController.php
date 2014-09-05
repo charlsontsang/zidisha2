@@ -173,10 +173,17 @@ class LoanApplicationController extends BaseController
         } else {
             $form  = new ApplicationForm(\Auth::user()->getBorrower());
         }
+
+        $isFirstLoan = LoanQuery::create()
+            ->filterByBorrower($borrower)
+            ->filterCompleted() // TODO correct? verify database
+            ->count();
+        $registrationFee = $isFirstLoan ? $borrower->getCountry()->getRegistrationFee() : Money::create(0, $borrower->getCountry()->getCurrencyCode());
         
         return $this->stepView('application', [
                 'form' => $form,
-                'installmentPeriod' => $form->isWeekly() ? 'weekly' : 'monthly'
+                'installmentPeriod' => $form->isWeekly() ? 'weekly' : 'monthly',
+                'registrationFee' => $registrationFee
             ]);
     }
 

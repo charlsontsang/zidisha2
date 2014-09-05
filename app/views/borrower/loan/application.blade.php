@@ -22,11 +22,10 @@
             @lang('borrower.loan-application.application.intro', ['link' => route('lend:index')])
         </p>
     
-        @if(true)
+        @if($registrationFee->isPositive())
         <div class="alert alert-warning">
             @lang('borrower.loan-application.application.registration-fee-note', [
-                'amount' => 300,
-                'currency' => 'XOF',
+                'amount' => $registrationFee,
             ])
         </div>
         @endif
