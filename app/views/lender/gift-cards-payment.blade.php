@@ -16,7 +16,13 @@ Gift Card Purchase
          <table class="table">
             <tbody>
                 <tr>
-                    <td>Gift card for [name]</td>
+                    <td>
+                        @if(!empty($recipientName))
+                            Gift card for {{ $recipientName }}
+                        @else
+                            Gift card
+                        @endif
+                    </td>
                     <td>${{ $amount }}</span></td> 
                 </tr>
                 <tr>

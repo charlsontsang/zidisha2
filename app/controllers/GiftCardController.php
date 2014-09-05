@@ -35,8 +35,9 @@ class GiftCardController extends BaseController
     public function getTermsAccept(){
         $data = Session::get('giftCard');
         $amount = $data['amount'];
+        $recipientName = $data['recipientName'];
         $paymentForm = new GiftCardForm($this->giftCardService);
-        return View::make('lender.gift-cards-payment', compact('amount'), ['paymentForm' => $paymentForm,]);
+        return View::make('lender.gift-cards-payment', compact('amount', 'recipientName'), ['paymentForm' => $paymentForm,]);
     }
 
     public function postGiftCards()
