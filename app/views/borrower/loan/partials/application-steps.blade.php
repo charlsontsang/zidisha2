@@ -21,4 +21,4 @@
         });
     });
 </script>
-@stop
+@append

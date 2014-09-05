@@ -24,7 +24,7 @@
 <div class="row">
     <div class="col-md-8">
         <p>
-            <label for="aboutMe" class="control-label">
+            <label for="picture" class="control-label">
                 @lang('borrower.loan-application.profile.picture')
             </label>
         </p>

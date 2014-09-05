@@ -423,7 +423,7 @@ Route::group(
                     array('uses' => 'BorrowerInviteController@postInvite', 'as' => 'borrower:post-invite', 'before' => 'csrf')
                 );
                 Route::get('invites/{id?}', array('uses' => 'BorrowerInviteController@getInvites', 'as' => 'borrower:invites'));
-                Route::get('currentCredit', [ 'uses' => 'BorrowerController@getCurrentCredit', 'as' => 'borrower:credit']);
+                Route::get('current-credit', [ 'uses' => 'BorrowerController@getCurrentCredit', 'as' => 'borrower:credit']);
 
                 Route::get(
                     'reschedule-loan',

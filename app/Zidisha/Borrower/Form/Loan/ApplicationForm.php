@@ -94,6 +94,11 @@ class ApplicationForm extends AbstractForm
 
         return $values;
     }
+    
+    public function isWeekly()
+    {
+        return $this->borrower->getCountry()->getInstallmentPeriod() == Loan::WEEKLY_INSTALLMENT;
+    }
 
     protected function getDaysInPeriod()
     {

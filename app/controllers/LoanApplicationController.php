@@ -174,7 +174,10 @@ class LoanApplicationController extends BaseController
             $form  = new ApplicationForm(\Auth::user()->getBorrower());
         }
         
-        return $this->stepView('application', ['form' => $form,]);
+        return $this->stepView('application', [
+                'form' => $form,
+                'installmentPeriod' => $form->isWeekly() ? 'weekly' : 'monthly'
+            ]);
     }
 
     public function postApplication()
