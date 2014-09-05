@@ -92,9 +92,9 @@ Quick Links
                     <?php $name = "<a href='route('loan:index', $id)'>".$invite->getInvitee()->getName()."</a>"; ?>
                     @if($loanStatus == \Zidisha\Loan\Loan::OPEN)
                         <?php $status =  \Lang::get('borrower.invite.fundRaising-loan'); ?>
-                    @elseif($repaymentSchedule->getMissedInstallmentCount() == 0 && $loanStatus = \Zidisha\Loan::ACTIVE)
+                    @elseif($repaymentSchedule->getMissedInstallmentCount() == 0 && $loanStatus = \Zidisha\Loan\Loan::ACTIVE)
                         <?php $status =  \Lang::get('borrower.invite.repaying-on-time'); ?>
-                    @elseif($repaymentSchedule->getMissedInstallmentCount() != 0 && $loanStatus = \Zidisha\Loan::ACTIVE)
+                    @elseif($repaymentSchedule->getMissedInstallmentCount() != 0 && $loanStatus = \Zidisha\Loan\Loan::ACTIVE)
                         <?php $status =  \Lang::get('borrower.invite.past-due'); ?>
                     @endif
                     <?php $rate = $loanService->getOnTimeRepaymentScore($invite->getInvitee()); ?>
