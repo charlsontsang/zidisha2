@@ -10245,9 +10245,10 @@ span.text-content span {
   padding: 0 40px;
 }
 .pay-giftcard {
+  width: 100%;
+  max-width: 350px;
+  margin: 0 auto -15px auto;
   padding: 15px;
-  margin-top: 0;
-  margin-bottom: -15px;
 }
 @media (min-width: 768px) {
   .pay-giftcard {
