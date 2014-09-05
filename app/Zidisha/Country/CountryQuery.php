@@ -18,4 +18,10 @@ use Zidisha\Country\Base\CountryQuery as BaseCountryQuery;
 class CountryQuery extends BaseCountryQuery
 {
 
+    public function getOneByCountryCode($countryCode)
+    {
+        return $this
+            ->filterByCountryCode($countryCode)
+            ->findOne();
+    }
 } // CountryQuery
