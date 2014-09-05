@@ -812,7 +812,7 @@ class BorrowerService
             if(!empty($loan)) {
                 $amountNative = LoanQuery::create()
                     ->filterById($loan->getId(), Criteria::NOT_EQUAL)
-                    ->getMaximumDisbursedAmount($borrower, $currencyCode);
+                    ->getMaximumRepaidDisbursedAmount($borrower, $currencyCode);
 
                 $amount = Converter::toUSD($amountNative, $exchangeRate);
 
@@ -827,7 +827,7 @@ class BorrowerService
                 }
             } else {
                 $previousLoanAmount = LoanQuery::create()
-                    ->getMaximumDisbursedAmount($borrower, $currencyCode);
+                    ->getMaximumRepaidDisbursedAmount($borrower, $currencyCode);
             }
         }
         return $previousLoanAmount;

@@ -123,7 +123,7 @@ class LoanQuery extends BaseLoanQuery
             ->find();
     }
 
-    public function getMaximumDisbursedAmount(Borrower $borrower, $currencyCode)
+    public function getMaximumRepaidDisbursedAmount(Borrower $borrower, $currencyCode)
     {
         $amount = $this
             ->filterByBorrower($borrower)

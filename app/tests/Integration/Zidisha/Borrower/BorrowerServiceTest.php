@@ -83,7 +83,7 @@ class BorrowerServiceTest extends \IntegrationTestCase
             ->findCurrent($this->borrower->getCountry()->getCurrency());
         $amountNative = LoanQuery::create()
             ->filterById($secondLoan->getId(), Criteria::NOT_EQUAL)
-            ->getMaximumDisbursedAmount($this->borrower, $loan->getCurrencyCode());
+            ->getMaximumRepaidDisbursedAmount($this->borrower, $loan->getCurrencyCode());
 
         $loanAmount = $method->invoke($this->borrowerService, $this->borrower, $secondLoan, $exchangeRate);
 
