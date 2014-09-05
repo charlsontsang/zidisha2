@@ -66,10 +66,10 @@ class BorrowerMailerTester
 
     public function sendExpiredLoanMail()
     {
-        $loan = LoanQuery::create()
+        $borrower = BorrowerQuery::create()
             ->findOne();
         
-        $this->borrowerMailer->sendExpiredLoanMail($loan);
+        $this->borrowerMailer->sendExpiredLoanMail($borrower);
     }
 
     public function sendLoanConfirmationMail()

@@ -183,12 +183,12 @@ class BorrowerMailer{
 
     }
     
-    public function sendExpiredLoanMail(Borrower $borrower, Loan $loan)
+    public function sendExpiredLoanMail(Borrower $borrower)
     {
         $parameters = [
             'borrowerName'        => $borrower->getName(),
             'loanApplicationLink' => route('borrower:loan-application'),
-            'tips'                => $borrower->getName(),
+            'tips'                => implode('<br>', array_slice(\Lang::get('borrower.loan-application.instructions'), 2, 4)),
         ];
 
         $body = \Lang::get('borrower.mails.loan-expired.body', $parameters);

@@ -644,7 +644,7 @@ class LoanService
             }
         }
         
-        $this->borrowerMailer->sendExpiredLoanMail($borrower, $loan);
+        $this->borrowerMailer->sendExpiredLoanMail($borrower);
         
         return $lenderRefunds;
     }
