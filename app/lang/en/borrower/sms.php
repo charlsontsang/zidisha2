@@ -17,5 +17,9 @@ Please send make this payment immediately following the payment instructions in 
 If you do not reschedule and we do not receive the past due amount, then we will contact and request mediation from members of your community, including but not limited to the individuals whose contacts you provided in support of your loan application:
 :contacts
 
-Thank you, Zidisha Team'
+Thank you, Zidisha Team',
+
+    'first-arrear-notification' =>
+        'Dear :borrowerName, we did not receive your loan repayment of :currencyCode :dueAmt, which was due on :dueDate. Please make this payment immediately. Thank you, Zidisha team',
+
 ];

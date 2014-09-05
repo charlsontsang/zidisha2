@@ -54,9 +54,25 @@ class BorrowerSmsService {
         }
     }
 
-    public function sendLoanFirstArrearNotification(Borrower $borrower, Loan $loan)
+    public function sendLoanFirstArrearNotification(Borrower $borrower, Loan $loan, Installment $dueInstallment)
     {
-        //TODO: sendLoanFirstArrearNotification
+        $profile = $borrower->getProfile();
+        $data = [
+            'parameters' => [
+                'borrowerName' => $borrower->getName(),
+                'currencyCode' => $borrower->getCountry()->getCountryCode(),
+                'dueAmt'       => $dueInstallment->getAmount(),
+                'dueDate'      => $dueInstallment->getDueDate()->format('d-m-Y'),
+            ],
+            'countryCode'         => $borrower->getCountry()->getCountryCode(),
+            'label'               => 'borrower.sms.first-arrear-notification'
+        ];
+        $this->smsService->send($profile->getPhoneNumber(), $data);
+
+        $alternateNumber = $profile->getAlternatePhoneNumber();
+        if ($alternateNumber) {
+            $this->smsService->send($alternateNumber, $data);
+        }
     }
 
     public function sendLoanMonthlyArrearNotificationToContact(Contact $contact, Loan $loan)
