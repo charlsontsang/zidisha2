@@ -240,6 +240,8 @@ class LoanApplicationController extends BaseController
         } else {
             $this->loanService->applyForLoan($borrower, $data);
         }
+
+        Session::forget('loan_data');
         
         $this->setCurrentStep('confirmation');
 
