@@ -117,4 +117,19 @@ class BorrowerMailerTester
 
         $this->borrowerMailer->sendLoanFinalArrearMail($borrower, $loan, $installment);
     }
+
+    public function sendLoanFirstArrearMail()
+    {
+        $borrower = BorrowerQuery::create()
+            ->findOne();
+        $loan = LoanQuery::create()
+            ->findOne();
+        $installment = new Installment();
+        $installment->setDueDate(new \DateTime())
+            ->setAmount(Money::create(340, $loan->getCurrencyCode()))
+            ->setLoan($loan)
+            ->setBorrower($borrower);
+
+        $this->borrowerMailer->sendLoanFirstArrearMail($borrower, $loan, $installment);
+    }
 } 

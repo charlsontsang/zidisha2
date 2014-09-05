@@ -42,4 +42,13 @@ If you do not reschedule and we do not receive the past due amount, then we will
 Thank you,<br/><br/>
 The Zidisha Team'
     ],
+    'loan-arrear-reminder-first' => [
+        'subject' => '',
+        'body' => 'Dear :borrowerName,<br/><br/>
+This is notification that we did not receive your loan repayment installment of :currencyCode :dueAmt, which was due on :dueDate.<br/><br/>
+Please make the past due payment immediately following the instructions below.<br/><br/>
+:repaymentInstructions<br/><br/>
+Thank you,<br/><br/>
+The Zidisha Team<br/><br/>'
+    ]
 ];
