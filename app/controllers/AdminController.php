@@ -981,7 +981,7 @@ class AdminController extends BaseController
             $loan = $borrower->getActiveLoan();
         }
         
-        if ($loan->isActivated()) {
+        if ($loan->isDisbursed()) {
             $repaymentSchedule = $this->repaymentService->getRepaymentSchedule($loan);
         } else {
             $repaymentSchedule = null;
