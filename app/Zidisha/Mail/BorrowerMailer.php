@@ -82,15 +82,23 @@ class BorrowerMailer{
 
     public function sendBorrowerJoinedVolunteerMentorConfirmationMail(Borrower $borrower)
     {
-        $subject = \Lang::get('borrowerJoin.emails.subject.volunteer-mentor-confirmation', ['name' => $borrower->getName()]);
-        $data = [
-            'borrower' => $borrower,
-            'to'        => $borrower->getVolunteerMentor()->getBorrowerVolunteer()->getUser()->getEmail(),
-            'from'      => 'service@zidisha.org',
-            'subject'   => $subject,
+        $parameters = [
+            'borrowerName' => $borrower->getName(),
+            'vmName'       => $borrower->getVolunteerMentor()->getBorrowerVolunteer()->getName(),
+            'profileUrl'   => route('borrower:public-profile', $borrower->getUser()->getUsername())
         ];
 
-        $this->mailer->send('emails.borrower.join.volunteer-mentor-confirmation', $data);
+        $body = \Lang::get('borrower.mails.volunteer-mentor-confirmation.body', $parameters);
+        $data['content'] = $body;
+
+        $this->mailer->send(
+            'emails.hero',
+            $data + [
+                'to'         => $borrower->getUser()->getEmail(),
+                'subject'    => \Lang::get('borrower.mails.volunteer-mentor-confirmation.subject', $parameters),
+                'templateId' => \Setting::get('sendwithus.borrower-notifications-template-id')
+            ]
+        );
     }
 
     public function sendFeedbackMail(FeedbackMessage $feedbackMessage)

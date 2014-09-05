@@ -124,5 +124,12 @@ Your application code is given below for your reference.
 <br/>
 :resumeCode'
     ],
-
+    'volunteer-mentor-confirmation' => [
+        'subject' => 'New assigned member: :borrowerName',
+        'body' => 'Dear :vmName,<br/><br/>
+:borrowerName has applied to join Zidisha and has selected you as a Volunteer Mentor. We encourage you to review :borrowerName\'s profile here: <a href=":profileUrl">View</a><br/><br/>
+If you have any concerns about the information :borrowerName has provided, please let us know by replying to this email.<br/><br/>
+Thank you,<br/><br/>
+The Zidisha Team'
+    ],
 ];

@@ -4,6 +4,8 @@ namespace Zidisha\Mail\Tester;
 use Zidisha\Borrower\Borrower;
 use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Borrower\JoinLog;
+use Zidisha\Borrower\VolunteerMentor;
+use Zidisha\Borrower\VolunteerMentorQuery;
 use Zidisha\Currency\Money;
 use Zidisha\Loan\Loan;
 use Zidisha\Loan\LoanQuery;
@@ -49,6 +51,17 @@ class BorrowerMailerTester
     public function sendFormResumeLaterMail()
     {
         $this->borrowerMailer->sendFormResumeLaterMail('jdjdjdj@gg.com', '12345abcde');
+    }
+
+    public function sendBorrowerJoinedVolunteerMentorConfirmationMail()
+    {
+        $borrower = BorrowerQuery::create()
+            ->findOne();
+        $volunteerMentor = VolunteerMentorQuery::create()
+            ->findOne();
+        $borrower->setVolunteerMentor($volunteerMentor);
+
+        $this->borrowerMailer->sendBorrowerJoinedVolunteerMentorConfirmationMail($borrower);
     }
 
     public function sendExpiredLoanMail()
