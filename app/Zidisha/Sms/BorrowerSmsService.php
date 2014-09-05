@@ -164,21 +164,4 @@ class BorrowerSmsService {
             $this->smsService->send($alternateNumber, $data);
         }
     }
-
-    public function sendAgainRepaymentReminder(Borrower $borrower, Loan $loan, $installments)
-    {
-        $totalAmount = Money::create(0, $loan->getCurrencyCode());
-        $paidAmount = Money::create(0, $loan->getCurrencyCode());
-
-        /** @var Installment $installment */
-        foreach ($installments as $installment) {
-            $totalAmount = $totalAmount->add($installment->getAmount());
-            $paidAmount = $paidAmount->add($installment->getPaidAmount());
-        }
-
-        $dueAmount = $totalAmount->subtract($paidAmount)->round(2);
-        
-        //TODO: Send Sms to borrower
-
-    }
 }

@@ -112,10 +112,6 @@ class AgainRepaymentReminder extends ScheduledJob
             /** @var  BorrowerMailer $borrowerMailer */
             $borrowerMailer = \App::make('Zidisha\Mail\BorrowerMailer');
             $borrowerMailer->sendAgainRepaymentReminder($borrower, $installment, $dueAmount);
-
-            /** @var  BorrowerSmsService $borrowerSmsService */
-            $borrowerSmsService = \App::make('Zidisha\Sms\BorrowerSmsService');
-            $borrowerSmsService->sendAgainRepaymentReminder($borrower, $installment, $dueAmount);
         }
         
         $job->delete();
