@@ -121,7 +121,7 @@ class ApplicationForm extends AbstractForm
     
     public function getLoanAmountRange() {
         $step = $this->borrower->getCountry()->getLoanAmountStep();
-        $maximumAmount = $this->loanCalculator->maximumAmount()->getAmount();
+        $maximumAmount = round($this->loanCalculator->maximumAmount()->getAmount());
         
         $range = range($step, $maximumAmount, $step);
         
