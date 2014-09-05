@@ -1,15 +1,18 @@
-@extends('layouts.master')
+@extends('layouts.side-menu')
 
 @section('page-title')
 Following
 @stop
 
-@section('content')
+@section('menu-title')
+Quick Links
+@stop
 
-<div class="page-header">
-    <h1>Entrepreneurs I'm Following</h1>
-</div>
+@section('menu-links')
+@include('partials.nav-links.lender-links')
+@stop
 
+@section('page-content')
 <p>  
     Stay up-to-date on the progress of your favorite entrepreneurs.
     The borrowers you’ve funded and opted to follow are listed below.
