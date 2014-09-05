@@ -210,6 +210,8 @@ class LoanApplicationController extends BaseController
 
         $calculator = new InstallmentCalculator($loan);
         $installments = $calculator->generateLoanInstallments($loan);
+        
+        $data['installmentAmount'] = Money::create($data['installmentAmount'], $loan->getCurrencyCode());
 
         return $this->stepView('publish', compact('data', 'calculator', 'installments', 'loan'));
     }

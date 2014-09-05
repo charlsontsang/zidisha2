@@ -10,80 +10,146 @@
 
 <div class="page-header">
     <h1>
-        @lang("borrower.loan-application.progress-bar.publish-page")
+        @lang("borrower.loan-application.title.publish-page")
     </h1>
 </div>
 
-
+{{ BootstrapForm::open(array('controller' => 'LoanApplicationController@postPublish', 'translationDomain' => 'borrower.loan-application.publish')) }}
 <div class="row">
-    <h1>Publish Page</h1>
-    {{ BootstrapForm::open(array('controller' => 'LoanApplicationController@postPublish', 'translationDomain' => 'borrower.loan-publish-page')) }}
+    <div class="col-md-10">
 
-   @if($data)
-   <p><strong> {{ \Lang::get('borrower.loan-application.publish-loan.amount-requested') }} : </strong> {{ $data['amount'] }} </p> <br>
+        <p>
+            @lang('borrower.loan-application.publish.intro')
+        </p>
 
-   <p><strong> {{ \Lang::get('borrower.loan-application.publish-loan.maximum-interest-rate') }} : </strong> {{ $loan->getMaxInterestRate() }} %  </p> <br>
+        <br/>
 
-   <p><strong> {{ \Lang::get('borrower.loan-application.publish-loan.monthly-repayment-amount') }} : </strong> {{ $data['installmentAmount'] }} </p> <br>
-
-   <p><strong> {{ \Lang::get('borrower.loan-application.publish-loan.repayment-period') }} : </strong> {{ $loan->getPeriod() }} </p> <br>
-
-    <p><strong> {{ \Lang::get('borrower.loan-application.publish-loan.maximum-interest-and-transaction-fees') }} : </strong>  {{ $calculator->totalInterest() }} </p> <br>
-
-    <p><strong> {{ \Lang::get('borrower.loan-application.publish-loan.total-repayment-due-date') }} : </strong> {{ $calculator->totalAmount() }} </p> <br>
-
-   @endif
-
-    <p>
-        {{ \Lang::get('borrower.loan-application.publish-loan.loan-confirmation-instructions') }}
-    </p>
-
-    <p>
-        {{ \Lang::get('borrower.loan-application.publish-loan.loan-confirmation') }}
-    </p>
-
-
-    <table class="table table-striped table-bordered">
-        <thead>
-        <tr>
-            <th>{{ \Lang::get('borrower.loan-application.publish-loan.table.due-date') }}</th>
-            <th>{{ \Lang::get('borrower.loan-application.publish-loan.table.repayment-due') }}</th>
-            <th>{{ \Lang::get('borrower.loan-application.publish-loan.table.balance-remaining') }}</th>
-        </tr>
-        </thead>
-        <tbody>
-            <?php
-                $i = 0;
-                $totalAmount = $calculator->totalAmount();
-            ?>
-            @foreach($installments as $installment)
-                <tr>
-                    <td>{{ $i }}</td>
-                    <?php $totalAmount = $totalAmount->subtract($installment->getAmount()) ?>
-                    <td>{{ $installment->getAmount() }}</td>
-                    <td>{{ $totalAmount }}</td>
-                    <?php $i++; ?>
-                </tr>
-            @endforeach
+        <table class="table table-2-col">
+            <tbody>
+            <tr>
+                <td>
+                    <strong>@lang('borrower.loan-application.publish.amount-requested'):</strong>
+                </td>
+                <td>
+                    {{ $loan->getAmount() }}
+                </td>
+            </tr>
 
             <tr>
-                <td> <strong>{{ \Lang::get('borrower.loan-application.publish-loan.table.total-repayment') }}</strong> </td>
-                <td> <strong> {{  $calculator->totalAmount() }} </strong> </td>
-                <td></td>
+                <td>
+                    <strong>@lang('borrower.loan-application.publish.maximum-interest-rate'):</strong>
+                </td>
+                <td>
+                    {{ $loan->getMaxInterestRate() }} %
+                </td>
             </tr>
-        </tbody>
-    </table>
 
-    <div class="col-md-7">
+            <tr>
+                <td>
+                    <strong>
+                        @if($loan->isWeeklyInstallment())
+                            @lang('borrower.loan-application.publish.weekly-repayment-amount'):
+                        @else
+                            @lang('borrower.loan-application.publish.monthly-repayment-amount'):
+                        @endif
+                    </strong>
+                </td>
+                <td>
+                    {{ $data['installmentAmount'] }}
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <strong>@lang('borrower.loan-application.publish.repayment-period'):</strong>
+                </td>
+                <td>
+                    {{ $loan->getPeriod() }}
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <strong>@lang('borrower.loan-application.publish.maximum-interest-and-transaction-fees'):</strong>
+                </td>
+                <td>
+                    {{ $calculator->totalInterest()->round(2) }}
+                    (@lang(
+                        $loan->isWeeklyInstallment() ? 'borrower.loan-application.publish.weekly-interest-rate' : 'borrower.loan-application.publish.monthly-interest-rate',
+                        ['interestRate' => $loan->getMaxInterestRate(), 'period' => $loan->getPeriod()]
+                    ))
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <strong>@lang('borrower.loan-application.publish.total-repayment-due-date'):</strong>
+                </td>
+                <td>
+                    {{ $calculator->totalAmount()->round(2) }}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <p>
+            @lang('borrower.loan-application.publish.confirmation-instructions')
+        </p>
+
+        <p>
+            @lang('borrower.loan-application.publish.confirmation', [
+                'previous' => \Lang::get('borrower.loan-application.publish.previous'),
+                'publish'  => \Lang::get('borrower.loan-application.publish.submit'),
+            ])
+        </p>    
+
+        <table class="table table-striped table-bordered">
+            <thead>
+            <tr>
+                <th>{{ \Lang::get('borrower.loan-application.publish.table.due-date') }}</th>
+                <th>{{ \Lang::get('borrower.loan-application.publish.table.repayment-due', ['currencyCode' => $loan->getCurrencyCode()]) }}</th>
+                <th>{{ \Lang::get('borrower.loan-application.publish.table.balance-remaining') }}</th>
+            </tr>
+            </thead>
+            <tbody>
+                <?php
+                    $i = 0;
+                    $totalAmount = $calculator->totalAmount();
+                ?>
+                @foreach($installments as $installment)
+                    @if($i)
+                    <tr>
+                        <td>{{ $i }}</td>
+                        <?php $totalAmount = $totalAmount->subtract($installment->getAmount()) ?>
+                        <td>{{ $installment->getAmount()->round(2)->getAmount() }}</td>
+                        <td>{{ $totalAmount->round(2)->getAmount() }}</td>
+                    </tr>
+                    @endif
+                    <?php $i++; ?>
+                @endforeach
+    
+                <tr>
+                    <td> <strong>{{ \Lang::get('borrower.loan-application.publish.table.total-repayment') }}</strong> </td>
+                    <td> <strong> {{  $calculator->totalAmount()->round(2)->getAmount() }} </strong> </td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="row">
+
+    <div class="col-xs-6">
         <a href="{{ action('LoanApplicationController@getApplication') }}" class="btn btn-primary">
-            Previous
+            @lang('borrower.loan-application.publish.previous')
         </a>
     </div>
-    <div class="col-md-5">
 
-        {{ BootstrapForm::submit('save') }}
-
-        {{ BootstrapForm::close() }}
+    <div class="col-xs-6">
+        <div class="pull-right">
+            {{ BootstrapForm::submit('submit') }}
+        </div>
     </div>
 </div>
 @stop
