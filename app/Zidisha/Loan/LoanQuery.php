@@ -133,7 +133,7 @@ class LoanQuery extends BaseLoanQuery
             ->withColumn('MAX(disbursed_amount)', 'AmountRaised')
             ->findOne();
 
-        return Money::create($amount, $currencyCode);
+        return Money::create($amount ?: 0, $currencyCode);
     }
 
     public function filterByAutoLendableLoan()
