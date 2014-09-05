@@ -17,5 +17,4 @@ use Zidisha\Borrower\Base\ContactQuery as BaseContactQuery;
  */
 class ContactQuery extends BaseContactQuery
 {
-
 } // ContactQuery

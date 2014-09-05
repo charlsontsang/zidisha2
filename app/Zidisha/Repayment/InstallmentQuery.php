@@ -2,6 +2,8 @@
 
 namespace Zidisha\Repayment;
 
+use Carbon\Carbon;
+use Propel\Runtime\ActiveQuery\Criteria;
 use Zidisha\Borrower\Base\Borrower;
 use Zidisha\Currency\Currency;
 use Zidisha\Currency\Money;
@@ -57,6 +59,17 @@ class InstallmentQuery extends BaseInstallmentQuery
             ->orderById('desc')
             ->select('paidAmount')
             ->withColumn('paid_amount', 'paidAmount')
+            ->findOne();
+    }
+
+    public function getDueInstallment(Loan $loan)
+    {
+        return $this
+            ->filterByLoan($loan)
+            ->filterByAmount(0, Criteria::GREATER_THAN)
+            ->where('Installment.PaidAmount IS NULL OR Installment.PaidAmount < Installment.Amount AND Installment.Amount > 0')
+            ->where('Installment.DueDate < ?', Carbon::now())
+            ->orderByDueDate()
             ->findOne();
     }
 } // InstallmentQuery

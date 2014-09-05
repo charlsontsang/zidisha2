@@ -152,4 +152,54 @@ class Borrower extends BaseBorrower implements CommentReceiverInterface
         );
     }
 
+
+    public function getContactsList()
+    {
+        $contacts = '';
+        $communityLeader = $this->getCommunityLeader();
+        if ($communityLeader) {
+            $contacts .= sprintf("\n%s %s of %s, %s",$communityLeader->getFirstName(), $communityLeader->getLastName(), $communityLeader->getDescription(), $communityLeader->getPhoneNumber());
+        }
+
+        $familyMembers = $this->getFamilyMembers();
+        /** @var Contact $familyMember */
+        foreach ($familyMembers as $familyMember) {
+            $contacts .= sprintf("\n%s %s of %s, %s",$familyMember->getFirstName(), $familyMember->getLastName(), $familyMember->getDescription(), $familyMember->getPhoneNumber());
+        }
+
+        $neighbors = $this->getNeighbors();
+        /** @var Contact $neighbor */
+        foreach ($neighbors as $neighbor) {
+            $contacts .= sprintf("\n%s %s of %s, %s",$neighbor->getFirstName(), $neighbor->getLastName(), $neighbor->getDescription(), $neighbor->getPhoneNumber());
+        }
+
+        if ($this->getReferrerId()) {
+            $referrer = $this->getReferrer();
+            $contacts .= "\n".$referrer->getName()." ".$referrer->getProfile()->getPhoneNumber();
+        }
+
+        if ($this->getVolunteerMentorId()) {
+            $volunteerMentor = $this->getVolunteerMentor()->getBorrowerVolunteer();
+            $contacts .= "\n".$volunteerMentor->getName()." ".$volunteerMentor->getProfile()->getPhoneNumber();
+        }
+
+        $invitee = InviteQuery::create()
+            ->getInvitee($this->getId());
+        if ($invitee) {
+            $contacts.="\n".$invitee->getBorrower()->getName()." ".$invitee->getBorrower()->getProfile()->getPhoneNumber();
+        }
+
+        return $contacts;
+        //TODO
+//        if(!empty($bdetail['fb_data'])){
+//            $fb_data= unserialize(base64_decode($bdetail['fb_data']));
+//            if(isset($fb_data['user_friends']['data'])){
+//                $friends= count($fb_data['user_friends']['data']);
+//            }else{
+//                $friends=count($fb_data['user_friends']);
+//            }
+//            $params.="\n".$friends." friends linked to ".$fb_data['user_profile']['name']." Facebook profile";
+//        }
+    }
+
 }

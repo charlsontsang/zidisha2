@@ -32,16 +32,20 @@ class BorrowerSmsService {
         $this->smsService->send($contact->getPhoneNumber(), $data);
     }
 
-    public function sendLoanFinalArrearNotification(Borrower $borrower, Loan $loan)
+    public function sendLoanFinalArrearNotification(Borrower $borrower, Loan $loan, Installment $dueInstallment)
     {
-        //TODO: sendLoanFinalArrearNotification
-//        $arguments = [
-//            'borrowerName'        => $contact->getBorrower()->getName(),
-//            'borrowerPhoneNumber' => $contact->getBorrower()->getProfile()->getPhoneNumber(),
-//            'contactName'         => $contact->getName(),
-//        ];
-//        $text = \Lang::get('borrowerJoin.sms.contact-confirmation', $arguments);
-//        $this->smsService->send($contact->getPhoneNumber(), $text, $contact->getBorrower()->getCountry()->getCountryCode());
+        $data = [
+            'parameters' => [
+                'borrowerName' => $borrower->getName(),
+                'contacts'     => $borrower->getContactsList(),
+                'currencyCode' => $borrower->getCountry()->getCountryCode(),
+                'dueAmt'       => $dueInstallment->getAmount(),
+                'dueDate'      => $dueInstallment->getDueDate()->format('d-m-Y'),
+            ],
+            'countryCode'         => $borrower->getCountry()->getCountryCode(),
+            'label'               => 'borrower.sms.final-arrear-notification'
+        ];
+        $this->smsService->send($borrower->getProfile()->getPhoneNumber(), $data);
     }
 
     public function sendLoanFirstArrearNotification(Borrower $borrower, Loan $loan)

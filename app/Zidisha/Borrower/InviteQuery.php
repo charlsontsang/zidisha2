@@ -17,5 +17,10 @@ use Zidisha\Borrower\Base\InviteQuery as BaseInviteQuery;
  */
 class InviteQuery extends BaseInviteQuery
 {
-
+    public function getInvitee($inviteeId)
+    {
+        return $this
+            ->filterByInviteeId($inviteeId)
+            ->findOne();
+    }
 } // InviteQuery
