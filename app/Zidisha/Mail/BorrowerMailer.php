@@ -303,7 +303,7 @@ class BorrowerMailer{
         );
     }
 
-    public function sendRepaymentReminderTommorow(Borrower $borrower, Installment $installment)
+    public function sendRepaymentReminderTomorrow(Borrower $borrower, Installment $installment)
     {
         $this->mailer->send(
             'emails.hero',
