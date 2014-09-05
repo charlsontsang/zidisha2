@@ -126,17 +126,20 @@ class BorrowerMailer{
         $data = [
             'parameters' => [
                 'borrowerName'  => $borrower->getName(),
-                'loanApplicationPage' => route('loan:index', $loan->getId()), //TODO: confirm
+                'loanApplicationPage' => route('loan:index', $loan->getId()),
                 'loanApplicationLink' => route('borrower:loan-application'),
                 'loanApplicationDeadLine' => \Setting::get('loan.deadline'),
             ],
-            'to'        => $borrower->getUser()->getEmail(),
-            'from'      => 'noreply@zidisha.org',
-            'subject'   => $subject,
-            'label'     => 'borrower.mails.loan-confirmation.body'
         ];
 
-        $this->mailer->send('emails.borrower.loan-confirmation', $data);
+        $this->mailer->send(
+            'emails.label-template',
+            $data + [
+                'to'         => $borrower->getUser()->getEmail(),,
+                'label'      => 'borrower.mails.loan-confirmation.body',
+                'subject'    => $subject
+            ]
+        );
     }
 
     public function sendApprovedConfirmationMail(Borrower $borrower)
