@@ -161,7 +161,6 @@ class LoanApplicationController extends BaseController
 
     public function getApplication()
     {
-
         /** @var Borrower $borrower */
         $borrower = Auth::user()->getBorrower();
 
@@ -250,7 +249,16 @@ class LoanApplicationController extends BaseController
 
     public function getConfirmation()
     {
-        return $this->stepView('confirmation');
+        $template = Session::has('borrower.openLoanId') ? 'confirmation-update' : 'confirmation';
+        
+        /** @var Borrower $borrower */
+        $borrower = Auth::user()->getBorrower();
+        $loan = $borrower->getActiveLoan();
+
+        $this->flushStepsSession();
+        Session::forget('borrower.openLoanId');
+
+        return $this->stepView($template, compact('borrower', 'loan'));
     }
 
     public function getInstallmentAmountRange()

@@ -5,6 +5,7 @@ return [
         'profile-page' => 'Complete your profile',
         'application-page' => 'Loan application',
         'publish-page' => 'Review and publish',
+        'confirmation-page' => 'Loan Application',
     ],
     'publish' => [
         'intro'                                 => 'Please confirm that the loan application information and requested repayment schedule are correct.',
@@ -74,6 +75,14 @@ return [
         'proposal-description' => 'Please describe in detail what you will buy with the loan, what benefit it will create, and why lenders should support you in making this purchase.<br/><br/>This text will be displayed to prospective lenders who have seen your photo and title and opened your loan profile page to learn more.',
         'proposal-tip' => 'Tip: Make sure to use US Dollars for money amounts so that lenders can understand how much it is. Use this website to convert your currency amounts to dollar amounts: <a href="http://www.oanda.com/currency/converter/" target="blank">http://www.oanda.com/currency/converter/</a>',
         'proposal-example' => 'The "My Loan Proposal" section in <a href="https://www.zidisha.org/microfinance/loan/samsang2/6434.html" target="blank">this profile</a> is a good example.',
+    ],
+    'confirmation' => [
+        'intro' => 'Congratulations! Your loan application has been posted for funding.  Click <a href=":loanLink">here</a> to view your loan application page.',
+        'note' => 'Please note that your application will be posted for a maximum of :days days, or until it is fully funded and you choose to accept the bids raised. You may edit your loan application page at any time using the <a href=":loanEditLink">Loan Application</a> page.',  
+        'best-of-luck' => 'Best of luck in your endeavor,<br/><br/>Zidisha Team',  
+    ],
+    'confirmation-update' => [
+        'intro' => 'Your loan application is successfully updated. Click <a href=":loanLink">here</a> to view your loan application page.',
     ],
     'next' => 'Next',
     'previous' => 'Previous',
