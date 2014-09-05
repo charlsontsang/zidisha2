@@ -1,50 +1,83 @@
 @extends('layouts.master')
 
 @section('page-title')
-Gift Card Terms of Use
+Gift Card Purchase
 @stop
 
 @section('content')
+</div> <!-- /container -->
+<div class="container-fluid lend">
 
-<p>By purchasing a gift card, I agree to the <a target="_blank" href="/terms-of-use#gift-card">Gift Card Terms of Use</a>.</p>
+<div class="row">
+    <div class="col-sm-4 col-sm-offset-4">
+        <div class="panel panel-default lend-details lend-form pay-giftcard">
 
-{{ BootstrapForm::open(array('route' => 'lender:gift-cards:post-terms-accept', 'translationDomain' => 'fund',
-'id' => 'funds-upload')) }}
-{{ BootstrapForm::populate($paymentForm) }}
+            {{ BootstrapForm::open(array('route' => 'lender:gift-cards:post-terms-accept', 
+            'id' => 'funds-upload')) }}
+            {{ BootstrapForm::populate($paymentForm) }}
 
-{{ BootstrapForm::label("Total Gift Card Amount") }}:
-USD {{ $amount }}
+             <table class="table">
+                <tbody>
+                    <tr>
+                        <td>Gift card for [name]</td>
+                        <td>${{ $amount }}</span></td> 
+                    </tr>
+                    <tr>
+                        <td>
+                            Donation to Zidisha
+                            {{ BootstrapHtml::tooltip('borrower.tooltips.loan.donation-to-zidisha') }}
+                        </td>
+                        <td style="width: 100px;">
+                            {{ BootstrapForm::text('donationAmount', null, [
+                                'id'      => 'donation-amount',
+                                'label'   => false,
+                            ]) }}
+                        <!-- TO DO: make the default 15% of the loan amount -->
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Credit card fee
+                            {{ BootstrapHtml::tooltip('borrower.tooltips.loan.credit-card-fee') }}
+                        </td>
+                        <td>$<span id="fee-amount-display"></span></td>
+                    </tr>
+                    <tr>
+                        <td>Current Balance</td>
+                        <td>TO DO</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Total</strong></td>
+                        <td>$<strong><span id="total-amount-display"></span></strong></td>
+                    </tr>
+                </tbody>
+            </table>
 
-<br/>
-{{ BootstrapForm::hidden('amount', $amount, ['id' => 'amount']) }}
-{{ BootstrapForm::text('donationAmount', null, ['id' => 'donation-amount']) }}
-{{ BootstrapForm::hidden('creditAmount', null, ['id' => 'credit-amount']) }}
-{{ BootstrapForm::hidden('donationCreditAmount', null, ['id' => 'donation-credit-amount']) }}
+            {{ BootstrapForm::hidden('amount', $amount, ['id' => 'amount']) }}
 
-{{ BootstrapForm::hidden('transactionFee', null, ['id' => 'transaction-fee-amount']) }}
-{{ BootstrapForm::hidden('transactionFeeRate', null, ['id' => 'transaction-fee-rate']) }}
-{{ BootstrapForm::hidden('currentBalance', null, ['id' => 'current-balance']) }}
-{{ BootstrapForm::hidden('totalAmount', null, ['id' => 'total-amount']) }}
+            {{ BootstrapForm::hidden('creditAmount', null, ['id' => 'credit-amount']) }}
+            {{ BootstrapForm::hidden('donationCreditAmount', null, ['id' => 'donation-credit-amount']) }}
 
-{{ BootstrapForm::hidden('stripeToken', null, ['id' => 'stripe-token']) }}
-{{ BootstrapForm::hidden('paymentMethod', null, ['id' => 'payment-method']) }}
+            {{ BootstrapForm::hidden('transactionFee', null, ['id' => 'transaction-fee-amount']) }}
+            {{ BootstrapForm::hidden('transactionFeeRate', null, ['id' => 'transaction-fee-rate']) }}
+            {{ BootstrapForm::hidden('currentBalance', null, ['id' => 'current-balance']) }}
+            {{ BootstrapForm::hidden('totalAmount', null, ['id' => 'total-amount']) }}
 
-{{ BootstrapForm::label("Payment Transfer Cost") }}:
-USD <span id="fee-amount-display"></span>
+            {{ BootstrapForm::hidden('stripeToken', null, ['id' => 'stripe-token']) }}
+            {{ BootstrapForm::hidden('paymentMethod', null, ['id' => 'payment-method']) }}
 
-<br/>
+            <p>
+                By purchasing a gift card, I agree to the <a target="_blank" href="/terms-of-use#gift-card">Gift Card Terms of Use</a>.
+            </p>
+                            
+            <button type="submit" id="stripe-payment" class="btn btn-primary btn-block">Pay With Card</button>
+            <input type="submit" id="paypal-payment" class="btn btn-primary btn-block" value="Pay With Paypal" name="submit_paypal">
+            <input type="submit" id="balance-payment" class="btn btn-primary btn-block" value="Pay" name="submit_credit">
 
-{{ BootstrapForm::label("Total amount to be charged to your account") }}
-USD <span id="total-amount-display"></span>
-
-<br/>
-<button type="submit" id="stripe-payment" class="btn btn-primary">Pay With Card</button>
-<input type="submit" id="paypal-payment" class="btn btn-primary" value="Pay With Paypal" name="submit_paypal">
-<input type="submit" id="balance-payment" class="btn btn-primary" value="Pay" name="submit_credit">
-
-<button type="submit" class="btn btn-primary">Accept and Continue</button>
-
-{{ BootstrapForm::close() }}
+            {{ BootstrapForm::close() }}
+        </div>
+    </div>
+</div>
 @stop
 
 

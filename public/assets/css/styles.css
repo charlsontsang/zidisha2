@@ -9856,9 +9856,6 @@ a.link-dark {
 .lend-details .table .form-control {
   width: 70%;
 }
-.lend-details .table .form-control#donation-amount {
-  height: 25px;
-}
 .lend-details .table tbody > tr > td {
   vertical-align: middle;
 }
@@ -10103,6 +10100,9 @@ a.link-dark {
 .bid-form {
   z-index: 10;
 }
+#donation-amount {
+  height: 25px;
+}
 .comments textarea {
   max-width: 100% !important;
 }
@@ -10243,4 +10243,22 @@ span.text-content span {
 }
 .giftcard > div > div {
   padding: 0 40px;
+}
+.pay-giftcard {
+  padding: 15px;
+  margin-top: 0;
+  margin-bottom: -15px;
+}
+@media (min-width: 768px) {
+  .pay-giftcard {
+    margin-top: 25px;
+    margin-bottom: 0;
+  }
+}
+.pay-giftcard .form-group {
+  margin-bottom: 0;
+}
+.pay-giftcard .btn-primary {
+  max-width: 400px;
+  margin-bottom: 0;
 }
