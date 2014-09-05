@@ -5,6 +5,7 @@ namespace Zidisha\Loan\Calculator;
 
 use Zidisha\Admin\Setting;
 use Zidisha\Borrower\Borrower;
+use Zidisha\Borrower\Calculator\CreditLimitCalculator;
 use Zidisha\Currency\Converter;
 use Zidisha\Currency\ExchangeRate;
 use Zidisha\Currency\Money;
@@ -25,13 +26,25 @@ class LoanCalculator
     /**
      * @var \Zidisha\Currency\ExchangeRate
      */
-    private $exchangeRate;
+    protected $exchangeRate;
+
+    /**
+     * @var \Zidisha\Borrower\Calculator\CreditLimitCalculator
+     */
+    protected $creditLimitCalculator;
+
+    /**
+     * @var Money
+     */
+    protected $maximumAmount;
 
     public function __construct(Borrower $borrower, ExchangeRate $exchangeRate)
     {
         $this->borrower = $borrower;
         $this->currency = $borrower->getCountry()->getCurrency();
         $this->exchangeRate = $exchangeRate;
+        
+        $this->creditLimitCalculator = new CreditLimitCalculator($borrower, $exchangeRate);
     }
 
     public function minimumAmount()
@@ -44,8 +57,11 @@ class LoanCalculator
 
     public function maximumAmount()
     {
-        // TODO getCurrentCreditLimit
-        return Money::create(10000, $this->currency);
+        if ($this->maximumAmount === null) {
+            $this->maximumAmount = $this->creditLimitCalculator->getCreditLimit($this->borrower);
+        }
+        
+        return $this->maximumAmount;
     }
 
     public function minInstallmentAmount(Money $amount)
