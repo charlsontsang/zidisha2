@@ -39,7 +39,6 @@ class BorrowerSmsService {
             'parameters' => [
                 'borrowerName' => $borrower->getName(),
                 'contacts'     => nl2br($borrower->getContactsList()),
-                'currencyCode' => $borrower->getCountry()->getCountryCode(),
                 'dueAmt'       => $dueInstallment->getAmount(),
                 'dueDate'      => $dueInstallment->getDueDate()->format('d-m-Y'),
             ],
@@ -60,7 +59,6 @@ class BorrowerSmsService {
         $data = [
             'parameters' => [
                 'borrowerName' => $borrower->getName(),
-                'currencyCode' => $borrower->getCountry()->getCountryCode(),
                 'dueAmt'       => $dueInstallment->getAmount(),
                 'dueDate'      => $dueInstallment->getDueDate()->format('d-m-Y'),
             ],
@@ -115,7 +113,6 @@ class BorrowerSmsService {
         $profile = $borrower->getProfile();
         $data = [
             'parameters' => [
-                'currencyCode' => $borrower->getCountry()->getCountryCode(),
                 'dueAmt'       => $dueInstallment->getAmount()->subtract($dueInstallment->getPaidAmount()),
                 'dueDate'      => $dueInstallment->getDueDate()->format('d-m-Y'),
             ],
@@ -135,7 +132,6 @@ class BorrowerSmsService {
         $profile = $borrower->getProfile();
         $data = [
             'parameters' => [
-                'currencyCode' => $borrower->getCountry()->getCountryCode(),
                 'dueAmt'       => $dueInstallment->getAmount(),
                 'dueDate'      => $dueInstallment->getDueDate()->format('d-m-Y'),
             ],
@@ -155,8 +151,7 @@ class BorrowerSmsService {
         $profile = $borrower->getProfile();
         $data = [
             'parameters' => [
-                'currencyCode' => $borrower->getCountry()->getCountryCode(),
-                'dueAmt'       => $amounts['amount_total'] - $amounts['paid_amount_total'],
+                'dueAmt'       => ($amounts['amount_total'] - $amounts['paid_amount_total']),
                 'dueDate'      => $dueInstallment->getDueDate()->format('d-m-Y'),
             ],
             'countryCode'         => $borrower->getCountry()->getCountryCode(),
