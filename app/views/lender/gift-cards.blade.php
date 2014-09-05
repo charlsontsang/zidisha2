@@ -75,11 +75,19 @@ Gift Cards
 
         {{ BootstrapForm::select('amount', $form->getAmounts(), null, ['label' => 'Amount']) }}
 
-        {{ BootstrapForm::select( 'orderType', $form->getOrderTypes(), null, ['label' => 'Delivery Method']) }}
+        {{ BootstrapForm::label('Delivery Method:') }}
 
-        {{ BootstrapForm::text('recipientEmail', null, ['label' => 'Recipient Email']) }}
+        {{ BootstrapForm::radio('orderType', 'Email', null, [
+            'label' => 'Email', 'id' => 'email'
+        ]) }}
 
-        {{ BootstrapForm::label('Optional Fields') }}
+        {{ BootstrapForm::radio('orderType', 'Self-Print', null, [
+            'label' => 'Self-Print', 'id' => 'print'
+        ]) }}
+
+        {{ BootstrapForm::text('recipientEmail', null, ['label' => 'Recipient Email', 'id' => 'recipient']) }}
+
+        <strong>Optional Fields</strong>
       
         {{ BootstrapForm::text('recipientName', null, ['label' => 'To']) }}
 
@@ -104,6 +112,16 @@ Gift Cards
             $(this).addClass('selected');
         });
         $('div.giftcard-thumbnail:first').addClass('selected');
+    });
+</script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#print').click(function () {
+            $('#recipient').parents('.form-group').hide();
+        });
+        $('#email').click(function () {
+            $('#recipient').parents('.form-group').show();
+        });
     });
 </script>
 @stop
