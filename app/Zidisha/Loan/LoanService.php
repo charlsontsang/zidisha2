@@ -1039,7 +1039,7 @@ class LoanService
         $installment = InstallmentQuery::create()
             ->filterByBorrower($borrower)
             ->filterByLoan($loan)
-            ->orderById('desc')
+            ->orderByDueDate('desc')
             ->findOne();
         $repaymentThreshold = \Config::get('constants.repaymentThreshold');
 
