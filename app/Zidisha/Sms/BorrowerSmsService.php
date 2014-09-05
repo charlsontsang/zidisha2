@@ -32,7 +32,7 @@ class BorrowerSmsService {
         $this->smsService->send($contact->getPhoneNumber(), $data);
     }
 
-    public function sendLoanFinalArrearNotification(Borrower $borrower, Loan $loan, Installment $dueInstallment)
+    public function sendLoanFinalArrearNotification(Borrower $borrower, Installment $dueInstallment)
     {
         $profile = $borrower->getProfile();
         $data = [
@@ -54,7 +54,7 @@ class BorrowerSmsService {
         }
     }
 
-    public function sendLoanFirstArrearNotification(Borrower $borrower, Loan $loan, Installment $dueInstallment)
+    public function sendLoanFirstArrearNotification(Borrower $borrower, Installment $dueInstallment)
     {
         $profile = $borrower->getProfile();
         $data = [

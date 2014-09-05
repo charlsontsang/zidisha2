@@ -220,7 +220,7 @@ class BorrowerMailer{
         );
     }
 
-    public function sendLoanFinalArrearMail(Borrower $borrower, Loan $loan, Installment $dueInstallment)
+    public function sendLoanFinalArrearMail(Borrower $borrower, Installment $dueInstallment)
     {
         $country = $borrower->getCountry();
         $parameters = [
@@ -245,7 +245,7 @@ class BorrowerMailer{
         );
     }
 
-    public function sendLoanFirstArrearMail(Borrower $borrower, Loan $loan, Installment $dueInstallment)
+    public function sendLoanFirstArrearMail(Borrower $borrower, Installment $dueInstallment)
     {
         $country = $borrower->getCountry();
         $parameters = [
@@ -339,23 +339,24 @@ class BorrowerMailer{
     public function sendRepaymentReminderForDueAmount(Borrower $borrower, Installment $dueInstallment, $amounts)
     {
         $country = $borrower->getCountry();
+        $dueAmount = round($amounts['amount_total'] - $amounts['paid_amount_total']);
         $parameters = [
             'borrowerName'          => $borrower->getName(),
             'currencyCode'          => $country->getCountryCode(),
-            'dueAmt'                => $dueInstallment->getAmount()->subtract($dueInstallment->getPaidAmount()),
+            'dueAmt'                => $dueAmount,
             'dueDate'               => $dueInstallment->getDueDate()->format('d-m-Y'),
             'repaymentInstructions' => $country->getRepaymentInstructions(),
-            'paidAmt'               => $dueInstallment->getPaidAmount()->getAmount(),
+            'pastDueAmt'            => round($dueAmount - $dueInstallment->getAmount()->getAmount()), //TODO
         ];
 
-        $body = \Lang::get('borrower.mails.reminder-advance.body', $parameters);
+        $body = \Lang::get('borrower.mails.reminder-postDue.body', $parameters);
         $data['content'] = $body;
 
         $this->mailer->send(
             'emails.hero',
             $data + [
                 'to'         => $borrower->getUser()->getEmail(),
-                'subject'    => \Lang::get('borrower.mails.reminder-advance.subject', $parameters),
+                'subject'    => \Lang::get('borrower.mails.reminder-postDue.subject', $parameters),
                 'templateId' => \Setting::get('sendwithus.borrower-notifications-template-id')
             ]
         );

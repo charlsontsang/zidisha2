@@ -107,30 +107,26 @@ class BorrowerMailerTester
     {
         $borrower = BorrowerQuery::create()
             ->findOne();
-        $loan = LoanQuery::create()
-            ->findOne();
         $installment = new Installment();
         $installment->setDueDate(new \DateTime())
-            ->setAmount(Money::create(340, $loan->getCurrencyCode()))
-            ->setLoan($loan)
+            ->setAmount(Money::create(340, $borrower->getCountry()->getCurrencyCode()))
+            ->setLoanId(5)
             ->setBorrower($borrower);
 
-        $this->borrowerMailer->sendLoanFinalArrearMail($borrower, $loan, $installment);
+        $this->borrowerMailer->sendLoanFinalArrearMail($borrower, $installment);
     }
 
     public function sendLoanFirstArrearMail()
     {
         $borrower = BorrowerQuery::create()
             ->findOne();
-        $loan = LoanQuery::create()
-            ->findOne();
         $installment = new Installment();
         $installment->setDueDate(new \DateTime())
-            ->setAmount(Money::create(340, $loan->getCurrencyCode()))
-            ->setLoan($loan)
+            ->setAmount(Money::create(340, $borrower->getCountry()->getCurrencyCode()))
+            ->setLoanId(5)
             ->setBorrower($borrower);
 
-        $this->borrowerMailer->sendLoanFirstArrearMail($borrower, $loan, $installment);
+        $this->borrowerMailer->sendLoanFirstArrearMail($borrower, $installment);
     }
 
     public function sendLoanMonthlyArrearMail()
@@ -166,5 +162,22 @@ class BorrowerMailerTester
             ->setBorrower($borrower);
 
         $this->borrowerMailer->sendRepaymentReminder($borrower,$installment);
+    }
+
+    public function sendRepaymentReminderForDueAmount()
+    {
+        $borrower = BorrowerQuery::create()
+            ->findOne();
+        $installment = new Installment();
+        $installment->setDueDate(new \DateTime())
+            ->setAmount(Money::create(340, $borrower->getCountry()->getCurrencyCode()))
+            ->setLoanId(5)
+            ->setBorrower($borrower);
+        $amounts = [
+            'amount_total'      => 45,
+            'paid_amount_total' => 20
+        ];
+
+        $this->borrowerMailer->sendRepaymentReminderForDueAmount($borrower, $installment,$amounts);
     }
 } 

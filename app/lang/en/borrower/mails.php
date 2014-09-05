@@ -85,7 +85,7 @@ The Zidisha Team'
         'subject' => 'Reminder from Zidisha',
         'body'    => 'Dear :borrowerName,<br/><br/>
 This is a courtesy reminder that your next loan repayment installment will be due on :dueDate.<br/><br/>
-You currently have an advance payment credit of :currencyCode :paidAmt. This will be credited toward your balance due on :dueDate, for a net amount of :currencyCode :dueAmt due on :dueDate.<br/><br/>
+You currently have a past due balance of :currencyCode :pastDueAmt. This will be added to your balance due on :dueDate, for a total amount of :currencyCode :dueAmt due on :dueDate.<br/>
 :repaymentInstructions<br/><br/>
 Please ensure that the due payment is made promptly, and contact us in case of difficulty.<br/><br/>
 Thank you,<br/><br/>
