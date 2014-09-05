@@ -154,4 +154,17 @@ class BorrowerMailerTester
 
         $this->borrowerMailer->sendRepaymentReminderTomorrow($borrower, $installment);
     }
+
+    public function sendRepaymentReminder()
+    {
+        $borrower = BorrowerQuery::create()
+            ->findOne();
+        $installment = new Installment();
+        $installment->setDueDate(new \DateTime())
+            ->setAmount(Money::create(340, $borrower->getCountry()->getCurrencyCode()))
+            ->setLoanId(5)
+            ->setBorrower($borrower);
+
+        $this->borrowerMailer->sendRepaymentReminder($borrower,$installment);
+    }
 } 
