@@ -87,6 +87,7 @@ Gift Cards
 
         {{ BootstrapForm::text('recipientEmail', null, ['label' => 'Recipient Email', 'id' => 'recipient']) }}
 
+        <br/>
         <strong>Optional Fields</strong>
       
         {{ BootstrapForm::text('recipientName', null, ['label' => 'To']) }}
