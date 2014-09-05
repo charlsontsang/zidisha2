@@ -2,6 +2,7 @@
 namespace Zidisha\Sms\Tester;
 
 use Zidisha\Borrower\Borrower;
+use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Borrower\Contact;
 use Zidisha\Borrower\Profile;
 use Zidisha\Sms\BorrowerSmsService;
@@ -19,13 +20,8 @@ class BorrowerSmsTester {
 
     public function sendBorrowerJoinedContactConfirmationSms()
     {
-        $profile = new Profile();
-        $profile->setPhoneNumber('234234');
-
-        $borrower = new Borrower();
-        $borrower->setFirstName('First Name');
-        $borrower->setLastName('Last Name');
-        $borrower->setProfile($profile);
+        $borrower = BorrowerQuery::create()
+            ->findOne();
 
         $contact = new Contact();
         $contact->setBorrower($borrower);

@@ -20,20 +20,28 @@ class BorrowerSmsService {
 
     public function sendBorrowerJoinedContactConfirmationSms(Contact $contact)
     {
-        $arguments = [
-            'borrowerName'        => $contact->getBorrower()->getName(),
-            'borrowerPhoneNumber' => $contact->getBorrower()->getProfile()->getPhoneNumber(),
-            'contactName'         => $contact->getName(),
+        $data = [
+            'parameters' => [
+                'borrowerName'        => $contact->getBorrower()->getName(),
+                'borrowerPhoneNumber' => $contact->getBorrower()->getProfile()->getPhoneNumber(),
+                'contactName'         => $contact->getName(),
+            ],
+            'countryCode'         => $contact->getBorrower()->getCountry()->getCountryCode(),
+            'label'               => 'borrower.sms.contact-confirmation'
         ];
-        $text = \Lang::get('borrowerJoin.sms.contact-confirmation', $arguments);
-
-        $this->smsService->send($contact->getPhoneNumber(), $text, $contact->getBorrower()->getCountry()->getCountryCode());
+        $this->smsService->send($contact->getPhoneNumber(), $data);
     }
 
     public function sendLoanFinalArrearNotification(Borrower $borrower, Loan $loan)
     {
         //TODO: sendLoanFinalArrearNotification
-
+//        $arguments = [
+//            'borrowerName'        => $contact->getBorrower()->getName(),
+//            'borrowerPhoneNumber' => $contact->getBorrower()->getProfile()->getPhoneNumber(),
+//            'contactName'         => $contact->getName(),
+//        ];
+//        $text = \Lang::get('borrowerJoin.sms.contact-confirmation', $arguments);
+//        $this->smsService->send($contact->getPhoneNumber(), $text, $contact->getBorrower()->getCountry()->getCountryCode());
     }
 
     public function sendLoanFirstArrearNotification(Borrower $borrower, Loan $loan)

@@ -2,6 +2,7 @@
 namespace Zidisha\Sms;
 
 use Zidisha\Mail\Mailer;
+use Zidisha\Utility\Utility;
 
 class dummySms
 {
@@ -15,13 +16,15 @@ class dummySms
         $this->mailer = $mailer;
     }
 
-    public function send($phoneNumber, $text)
+    public function send($phoneNumber, $data)
     {
-        $data['to'] = $phoneNumber.'@test.com';
-        $data['from'] = 'sms@zidisha.com';
-        $data['subject'] = "SMS for " . $phoneNumber;
-        $data['data'] = $text;
-
-        $this->mailer->send('emails.sms.send-data', $data);
+        $number =  Utility::formatNumber($phoneNumber, $data['countryCode']);
+        $this->mailer->send(
+            'emails.label-template',
+            $data + [
+                'to'         =>  $number.'@test.com',
+                'subject'    => "SMS for " . $number
+            ]
+        );
     }
 }

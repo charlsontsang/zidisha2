@@ -20,10 +20,9 @@ class SmsService
         }
     }
 
-    public function send($phoneNumber, $text, $countryCode)
+    public function send($phoneNumber, $data)
     {
-        $number = Utility::formatNumber($phoneNumber, $countryCode);
-        $this->sms->send($number, $text);
+        $this->sms->send($phoneNumber, $data);
     }
 
     public function queue($phoneNumber, $text, $queue = null)
@@ -38,7 +37,7 @@ class SmsService
 
     public function handleQueuedMessage($job, $data)
     {
-        $this->send($data['phoneNumber'], $data['text'], $data['countryCode']);
+        $this->send($data['phoneNumber'], $data['text'], $da);
 
         $job->delete();
     }
