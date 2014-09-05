@@ -61,5 +61,15 @@ This is notification that, in accordance with the terms of the Loan Contract, we
 Please send make this payment immediately following the bank deposit instructions in your Zidisha.org member account. If you are unable to make the past due payment immediately, you may use the \'Reschedule Loan\' page of your member account at Zidisha.org to propose an alternative repayment schedule to lenders.
 
 If you do not reschedule and we do not receive the past due amount, then we will continue to contact and request mediation from members of your community. Thank you, Zidisha Team'
-    ]
+    ],
+    'reminder-advance'             => [
+        'subject' => '',
+        'body'    => 'Dear :borrowerName,<br/><br/>
+This is a courtesy reminder that your next loan repayment installment will be due on :dueDate.<br/><br/>
+You currently have an advance payment credit of :currencyCode :paidAmt. This will be credited toward your balance due on :dueDate, for a net amount of :currencyCode :dueAmt due on :dueDate.<br/><br/>
+:repaymentInstructions<br/><br/>
+Please ensure that the due payment is made promptly, and contact us in case of difficulty.<br/><br/>
+Thank you,<br/><br/>
+The Zidisha Team'
+    ],
 ];
