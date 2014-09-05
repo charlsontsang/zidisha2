@@ -1048,7 +1048,7 @@
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="borrower_id" type="INTEGER" required="true"/>
         <column name="loan_id" type="INTEGER" required="true"/>
-        <column name="credit_type" type="ENUM" required="true"/>
+        <column name="credit_type" type="ENUM" valueSet="0,1,2,3" required="true"/>
         <column name="ref_id" type="INTEGER" required="true"/>
         <column name="credit" type="INTEGER" required="true"/>
         <behavior name="timestampable"/>
