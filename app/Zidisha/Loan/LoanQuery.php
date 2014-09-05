@@ -129,7 +129,6 @@ class LoanQuery extends BaseLoanQuery
             ->filterByBorrower($borrower)
             ->filterByDeletedByAdmin(false)
             ->filterByStatus(Loan::REPAID)
-            ->filterByExpiredAt(null)
             ->select('AmountRaised')
             ->withColumn('MAX(disbursed_amount)', 'AmountRaised')
             ->findOne();
