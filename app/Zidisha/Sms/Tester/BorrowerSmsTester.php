@@ -121,11 +121,8 @@ class BorrowerSmsTester {
             ->setAmount(Money::create(340, $borrower->getCountry()->getCurrencyCode()))
             ->setLoanId(5)
             ->setBorrower($borrower);
-        $amounts = [
-            'amount_total'      => 45,
-            'paid_amount_total' => 20
-        ];
+        $dueAmount = Money::create(60, $borrower->getCountry()->getCurrencyCode());
 
-        $this->borrowerSmsService->sendRepaymentReminderForDueAmount($borrower, $installment, $amounts);
+        $this->borrowerSmsService->sendRepaymentReminderForDueAmount($borrower, $installment, $dueAmount);
     }
 }

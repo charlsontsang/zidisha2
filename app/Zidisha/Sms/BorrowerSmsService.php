@@ -146,12 +146,12 @@ class BorrowerSmsService {
         }
     }
 
-    public function sendRepaymentReminderForDueAmount(Borrower $borrower, Installment $dueInstallment, $amounts)
+    public function sendRepaymentReminderForDueAmount(Borrower $borrower, Installment $dueInstallment, Money $dueAmount)
     {
         $profile = $borrower->getProfile();
         $data = [
             'parameters' => [
-                'dueAmt'       => ($amounts['amount_total'] - $amounts['paid_amount_total']),
+                'dueAmt'       => $dueAmount,
                 'dueDate'      => $dueInstallment->getDueDate()->format('d-m-Y'),
             ],
             'countryCode'         => $borrower->getCountry()->getCountryCode(),

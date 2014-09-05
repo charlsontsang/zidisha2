@@ -33,7 +33,7 @@ The Zidisha Team'
     'loan-arrear-reminder-final'   => [
         'subject' => 'Past Due Loan Final Notice',
         'body'    => 'Dear :borrowerName,<br/><br/>
-This is a final notice that we did not receive your loan repayment installment of :currencyCode :dueAmt, which was due on :dueDate.<br/><br/>
+This is a final notice that we did not receive your loan repayment installment of :dueAmt, which was due on :dueDate.<br/><br/>
 Please make the past due payment immediately following the instructions below. If you are unable to make the past due payment immediately, you may use the \'Reschedule Loan\' page of your member account at Zidisha.org to propose an alternative repayment schedule to lenders.<br/><br/>
 If you do not reschedule and we do not receive the past due amount, then we will contact and request mediation from members of your community, including but not limited to the individuals whose contacts you provided in support of your loan application:<br/>
 :contacts<br/><br/>
@@ -45,7 +45,7 @@ The Zidisha Team'
     'loan-arrear-reminder-first'   => [
         'subject' => '',
         'body'    => 'Dear :borrowerName,<br/><br/>
-This is notification that we did not receive your loan repayment installment of :currencyCode :dueAmt, which was due on :dueDate.<br/><br/>
+This is notification that we did not receive your loan repayment installment of :dueAmt, which was due on :dueDate.<br/><br/>
 Please make the past due payment immediately following the instructions below.<br/><br/>
 :repaymentInstructions<br/><br/>
 Thank you,<br/><br/>
@@ -66,7 +66,7 @@ If you do not reschedule and we do not receive the past due amount, then we will
         'subject' => 'Reminder from Zidisha',
         'body'    => 'Dear :borrowerName,<br/><br/>
 This is a courtesy reminder that your next loan repayment installment will be due on :dueDate.<br/><br/>
-You currently have an advance payment credit of :currencyCode :paidAmt. This will be credited toward your balance due on :dueDate, for a net amount of :currencyCode :dueAmt due on :dueDate.<br/><br/>
+You currently have an advance payment credit of :paidAmt. This will be credited toward your balance due on :dueDate, for a net amount of :dueAmt due on :dueDate.<br/><br/>
 :repaymentInstructions<br/><br/>
 Please ensure that the due payment is made promptly, and contact us in case of difficulty.<br/><br/>
 Thank you,<br/><br/>
@@ -75,7 +75,7 @@ The Zidisha Team'
     'reminder' => [
         'subject' => 'Reminder from Zidisha',
         'body' => 'Dear :borrowerName,<br/><br/>
-This is a courtesy reminder that your next loan repayment installment will be due on :dueDate in the amount of :currencyCode :dueAmt.<br/>
+This is a courtesy reminder that your next loan repayment installment will be due on :dueDate in the amount of :dueAmt.<br/>
 :repaymentInstructions<br/><br/>
 Please ensure that the due payment is made promptly, and contact us in case of difficulty.<br/><br/>
 Thank you,<br/><br/>
@@ -85,7 +85,7 @@ The Zidisha Team'
         'subject' => 'Reminder from Zidisha',
         'body'    => 'Dear :borrowerName,<br/><br/>
 This is a courtesy reminder that your next loan repayment installment will be due on :dueDate.<br/><br/>
-You currently have a past due balance of :currencyCode :pastDueAmt. This will be added to your balance due on :dueDate, for a total amount of :currencyCode :dueAmt due on :dueDate.<br/>
+You currently have a past due balance of :pastDueAmt. This will be added to your balance due on :dueDate, for a total amount of :dueAmt due on :dueDate.<br/>
 :repaymentInstructions<br/><br/>
 Please ensure that the due payment is made promptly, and contact us in case of difficulty.<br/><br/>
 Thank you,<br/><br/>

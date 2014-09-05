@@ -201,7 +201,6 @@ class BorrowerMailer{
         $country = $borrower->getCountry();
         $parameters = [
             'borrowerName'          => $borrower->getName(),
-            'currencyCode'          => $country->getCountryCode(),
             'dueAmt'                => $dueInstallment->getAmount()->subtract($dueInstallment->getPaidAmount()),
             'dueDate'               => $dueInstallment->getDueDate()->format('d-m-Y'),
             'repaymentInstructions' => $country->getRepaymentInstructions(),
@@ -226,7 +225,6 @@ class BorrowerMailer{
         $parameters = [
             'borrowerName'          => $borrower->getName(),
             'contacts'              => nl2br($borrower->getContactsList()),
-            'currencyCode'          => $country->getCountryCode(),
             'dueAmt'                => $dueInstallment->getAmount(),
             'dueDate'               => $dueInstallment->getDueDate()->format('d-m-Y'),
             'repaymentInstructions' => $country->getRepaymentInstructions()
@@ -250,7 +248,6 @@ class BorrowerMailer{
         $country = $borrower->getCountry();
         $parameters = [
             'borrowerName'          => $borrower->getName(),
-            'currencyCode'          => $country->getCountryCode(),
             'dueAmt'                => $dueInstallment->getAmount(),
             'dueDate'               => $dueInstallment->getDueDate()->format('d-m-Y'),
             'repaymentInstructions' => $country->getRepaymentInstructions()
@@ -316,11 +313,10 @@ class BorrowerMailer{
         $country = $borrower->getCountry();
         $parameters = [
             'borrowerName'          => $borrower->getName(),
-            'currencyCode'          => $country->getCountryCode(),
             'dueAmt'                => $dueInstallment->getAmount()->subtract($dueInstallment->getPaidAmount()),
             'dueDate'               => $dueInstallment->getDueDate()->format('d-m-Y'),
             'repaymentInstructions' => $country->getRepaymentInstructions(),
-            'paidAmt'               => $dueInstallment->getPaidAmount()->getAmount(),
+            'paidAmt'               => $dueInstallment->getPaidAmount(),
         ];
 
         $body = \Lang::get('borrower.mails.reminder-advance.body', $parameters);
@@ -336,17 +332,15 @@ class BorrowerMailer{
         );
     }
 
-    public function sendRepaymentReminderForDueAmount(Borrower $borrower, Installment $dueInstallment, $amounts)
+    public function sendRepaymentReminderForDueAmount(Borrower $borrower, Installment $dueInstallment, Money $dueAmount)
     {
         $country = $borrower->getCountry();
-        $dueAmount = round($amounts['amount_total'] - $amounts['paid_amount_total']);
         $parameters = [
             'borrowerName'          => $borrower->getName(),
-            'currencyCode'          => $country->getCountryCode(),
             'dueAmt'                => $dueAmount,
             'dueDate'               => $dueInstallment->getDueDate()->format('d-m-Y'),
             'repaymentInstructions' => $country->getRepaymentInstructions(),
-            'pastDueAmt'            => round($dueAmount - $dueInstallment->getAmount()->getAmount()), //TODO
+            'pastDueAmt'            => $dueAmount->subtract($dueInstallment->getAmount()), //TODO
         ];
 
         $body = \Lang::get('borrower.mails.reminder-postDue.body', $parameters);

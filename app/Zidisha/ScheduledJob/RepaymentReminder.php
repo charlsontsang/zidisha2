@@ -80,10 +80,10 @@ class RepaymentReminder extends ScheduledJob
                 ->withColumn('SUM(amount)', 'amount_total')
                 ->withColumn('SUM(paid_amount)', 'paid_amount_total')
                 ->find();
-
+            $dueAmount = Money::create(($amounts['amount_total'] - $amounts['paid_amount_total']), $borrower->getCountry()->getCurrencyCode());
             //Send mail to borrower
-            $borrowerMailer->sendRepaymentReminderForDueAmount($borrower, $installment, $amounts);
-            $borrowerSmsService->sendRepaymentReminderForDueAmount($borrower, $installment, $amounts);
+            $borrowerMailer->sendRepaymentReminderForDueAmount($borrower, $installment, $dueAmount);
+            $borrowerSmsService->sendRepaymentReminderForDueAmount($borrower, $installment, $dueAmount);
         }
 
         $job->delete();
