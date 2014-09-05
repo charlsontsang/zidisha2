@@ -100,4 +100,18 @@ Please deposit the past due amount immediately.  If you are experiencing difficu
 Thank you,<br/><br/>
 Zidisha Team'
     ],
+    'email-verification'           => [
+        'subject' => 'Please confirm your email address',
+        'body'    => 'Thank you for creating a Zidisha account! To confirm your email address, simply click the confirmation link at the bottom of this email.<br/><br/>' .
+            '<a href=":verifyLink">Verify</a><br/>
+You may also paste the link into the address bar of your internet browser and press Enter or Return to complete the confirmation.'
+    ],
+    'registration-join'            => [
+        'subject' => 'Zidisha application submitted',
+        'body'    => 'Dear :borrowerName, <br/><br/>Thank you for your application to join Zidisha.<br/><br/>A Zidisha staff member will now review your account, a process that normally takes up to one week.  You will be notified by email when the review is complete.  You may also log in to Zidisha to check the status of your account at any time.<br/><br/>
+
+Regards,<br/><br/>
+
+The Zidisha Team'
+    ],
 ];

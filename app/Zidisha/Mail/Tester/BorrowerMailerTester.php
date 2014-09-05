@@ -40,11 +40,8 @@ class BorrowerMailerTester
 
     public function sendBorrowerJoinedConfirmationMail()
     {
-        $user = new User();
-        $user->setEmail('test@test.com');
-
-        $borrower = new Borrower();
-        $borrower->setUser($user);
+        $borrower = BorrowerQuery::create()
+            ->findOne();
 
         $this->borrowerMailer->sendBorrowerJoinedConfirmationMail($borrower);
     }

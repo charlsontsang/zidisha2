@@ -42,14 +42,21 @@ class BorrowerMailer{
 
     public function sendBorrowerJoinedConfirmationMail(Borrower $borrower)
     {
-        $data = [
-            'borrower' => $borrower,
-            'to'        => $borrower->getUser()->getEmail(),
-            'from'      => 'noreply@zidisha.org',
-            'subject'   => \Lang::get('borrowerJoin.emails.subject.confirmation')
+        $parameters = [
+            'borrowerName' => $borrower->getName()
         ];
 
-        $this->mailer->send('emails.borrower.join.confirmation', $data);
+        $body = \Lang::get('borrower.mails.registration-join.body', $parameters);
+        $data['content'] = $body;
+
+        $this->mailer->send(
+            'emails.hero',
+            $data + [
+                'to'         => $borrower->getUser()->getEmail(),
+                'subject'    => \Lang::get('borrower.mails.registration-join.subject', $parameters),
+                'templateId' => \Setting::get('sendwithus.borrower-notifications-template-id')
+            ]
+        );
     }
 
     public function sendFormResumeLaterMail($email, $resumeCode)
