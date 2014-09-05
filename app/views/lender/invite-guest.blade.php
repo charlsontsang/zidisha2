@@ -20,7 +20,7 @@ Invite Your Friends To Zidisha
         </div>
         <br/>
         <br/>
-        <a href="{{ route('login') }}" class="btn btn-primary">
+        <a href="{{ route('login') }}" data-toggle="modal" data-target="#login-modal" class="btn btn-primary">
             Log in to invite friends
         </a>
     </div>
