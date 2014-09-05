@@ -566,7 +566,7 @@
                             </button>
 
                             <button type="submit" id="paypal-payment" class="btn btn-default btn-block">
-                                Continue with
+                                Pay with
                                 <img src="http://logocurio.us/wp-content/uploads/2014/04/paypal-logo.png" alt="Paypal" style="height: 28px"/>
                             </button>
                         </div>

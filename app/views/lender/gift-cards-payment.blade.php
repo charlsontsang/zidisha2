@@ -13,6 +13,19 @@ Gift Card Purchase
         'id' => 'funds-upload')) }}
         {{ BootstrapForm::populate($paymentForm) }}
 
+        {{ BootstrapForm::hidden('amount', $amount, ['id' => 'amount']) }}
+
+        {{ BootstrapForm::hidden('creditAmount', null, ['id' => 'credit-amount']) }}
+        {{ BootstrapForm::hidden('donationCreditAmount', null, ['id' => 'donation-credit-amount']) }}
+
+        {{ BootstrapForm::hidden('transactionFee', null, ['id' => 'transaction-fee-amount']) }}
+        {{ BootstrapForm::hidden('transactionFeeRate', null, ['id' => 'transaction-fee-rate']) }}
+        {{ BootstrapForm::hidden('currentBalance', null, ['id' => 'current-balance']) }}
+        {{ BootstrapForm::hidden('totalAmount', null, ['id' => 'total-amount']) }}
+
+        {{ BootstrapForm::hidden('stripeToken', null, ['id' => 'stripe-token']) }}
+        {{ BootstrapForm::hidden('paymentMethod', null, ['id' => 'payment-method']) }}
+
          <table class="table">
             <tbody>
                 <tr>
@@ -56,25 +69,15 @@ Gift Card Purchase
             </tbody>
         </table>
 
-        {{ BootstrapForm::hidden('amount', $amount, ['id' => 'amount']) }}
-
-        {{ BootstrapForm::hidden('creditAmount', null, ['id' => 'credit-amount']) }}
-        {{ BootstrapForm::hidden('donationCreditAmount', null, ['id' => 'donation-credit-amount']) }}
-
-        {{ BootstrapForm::hidden('transactionFee', null, ['id' => 'transaction-fee-amount']) }}
-        {{ BootstrapForm::hidden('transactionFeeRate', null, ['id' => 'transaction-fee-rate']) }}
-        {{ BootstrapForm::hidden('currentBalance', null, ['id' => 'current-balance']) }}
-        {{ BootstrapForm::hidden('totalAmount', null, ['id' => 'total-amount']) }}
-
-        {{ BootstrapForm::hidden('stripeToken', null, ['id' => 'stripe-token']) }}
-        {{ BootstrapForm::hidden('paymentMethod', null, ['id' => 'payment-method']) }}
-
         <p>
             By purchasing a gift card, I agree to the <a target="_blank" href="/terms-of-use#gift-card">Gift Card Terms of Use</a>.
         </p>
                         
-        <button type="submit" id="stripe-payment" class="btn btn-primary btn-block">Pay With Card</button>
-        <input type="submit" id="paypal-payment" class="btn btn-primary btn-block" value="Pay With Paypal" name="submit_paypal">
+        <button type="submit" id="stripe-payment" class="btn btn-primary btn-block">Pay with credit card</button>
+        <button type="submit" id="paypal-payment" class="btn btn-default btn-block" name="submit_paypal">
+            Pay with
+            <img src="http://logocurio.us/wp-content/uploads/2014/04/paypal-logo.png" alt="Paypal" style="height: 28px"/>
+        </button>
         <input type="submit" id="balance-payment" class="btn btn-primary btn-block" value="Pay" name="submit_credit">
 
         {{ BootstrapForm::close() }}
