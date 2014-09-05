@@ -132,4 +132,12 @@ class BorrowerMailerTester
 
         $this->borrowerMailer->sendLoanFirstArrearMail($borrower, $loan, $installment);
     }
+
+    public function sendLoanMonthlyArrearMail()
+    {
+        $borrower = BorrowerQuery::create()
+            ->findOne();
+
+        $this->borrowerMailer->sendLoanMonthlyArrearMail($borrower);
+    }
 } 

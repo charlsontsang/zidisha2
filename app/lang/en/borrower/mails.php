@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'loan-confirmation'          => [
+    'loan-confirmation'            => [
         'subject' => 'Your Loan Application Has Been Published',
         'body'    => 'Dear :borrowerName,<br/><br/>
 Congratulations!  Your loan application has been posted for funding.  Click <a href=":loanApplicationPage">here</a> to view your loan application page.<br/><br/>
@@ -9,7 +9,7 @@ Please note that your application will be posted for a maximum of :loanApplicati
 Best of luck in your endeavor,<br/><br/>
 The Zidisha Team'
     ],
-    'loan-fully-funded'          => [
+    'loan-fully-funded'            => [
         'subject' => 'Loan funding confirmation email',
         'body'    => 'Dear :borrowerName, <br/><br/>
 Congratulations!  Your loan application is fully funded.<br/><br/>
@@ -20,7 +20,7 @@ Please do not hesitate to contact us at service@zidisha.org if you desire assist
 Best wishes,<br/><br/>
 The Zidisha Team'
     ],
-    'loan-disbursed'             => [
+    'loan-disbursed'               => [
         'subject' => 'Loan disbursement confirmation',
         'body'    => 'Dear :borrowerName ,<br/><br/>This is to confirm disbursement of your Zidisha loan in the amount of :disbursedAmount. If this is your first Zidisha loan, the new client registration fee of :registrationFee was deducted from your loan disbursement for a net payment of :netAmount.<br/><br/>".
 "To view your repayment schedule please log into your account at <a href=":zidishaLink" target=\'_blank\'>www.zidisha.org</a> and click on "Repayment Schedule"<br/><br/>' .
@@ -30,7 +30,7 @@ The Zidisha Team'
             'We wish you much success in your endeavor.<br/><br/>' .
             'Zidisha Team'
     ],
-    'loan-arrear-reminder-final' => [
+    'loan-arrear-reminder-final'   => [
         'subject' => 'Past Due Loan Final Notice',
         'body'    => 'Dear :borrowerName,<br/><br/>
 This is a final notice that we did not receive your loan repayment installment of :currencyCode :dueAmt, which was due on :dueDate.<br/><br/>
@@ -42,13 +42,24 @@ If you do not reschedule and we do not receive the past due amount, then we will
 Thank you,<br/><br/>
 The Zidisha Team'
     ],
-    'loan-arrear-reminder-first' => [
+    'loan-arrear-reminder-first'   => [
         'subject' => '',
-        'body' => 'Dear :borrowerName,<br/><br/>
+        'body'    => 'Dear :borrowerName,<br/><br/>
 This is notification that we did not receive your loan repayment installment of :currencyCode :dueAmt, which was due on :dueDate.<br/><br/>
 Please make the past due payment immediately following the instructions below.<br/><br/>
 :repaymentInstructions<br/><br/>
 Thank you,<br/><br/>
-The Zidisha Team<br/><br/>'
+The Zidisha Team<br/><br/>',
+    ],
+    'loan-arrear-reminder-monthly' => [
+        'subject' => 'Past Due Loan Mediation Requested',
+        'body'    => 'Dear :borrowerName,
+
+This is notification that, in accordance with the terms of the Loan Contract, we have requested mediation from one or more of the following individuals regarding your past due loan balance.
+:contacts
+<br>
+Please send make this payment immediately following the bank deposit instructions in your Zidisha.org member account. If you are unable to make the past due payment immediately, you may use the \'Reschedule Loan\' page of your member account at Zidisha.org to propose an alternative repayment schedule to lenders.
+
+If you do not reschedule and we do not receive the past due amount, then we will continue to contact and request mediation from members of your community. Thank you, Zidisha Team'
     ]
 ];

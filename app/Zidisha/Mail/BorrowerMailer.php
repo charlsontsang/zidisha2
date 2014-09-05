@@ -283,13 +283,22 @@ class BorrowerMailer{
         );
     }
 
-    public function sendLoanMonthlyArrearMail(Borrower $borrower, Loan $loan)
+    public function sendLoanMonthlyArrearMail(Borrower $borrower)
     {
+        $parameters = [
+            'borrowerName' => $borrower->getName(),
+            'contacts'     => nl2br($borrower->getContactsList()),
+        ];
+
+        $body = \Lang::get('borrower.mails.loan-arrear-reminder-monthly.body', $parameters);
+        $data['content'] = $body;
+
         $this->mailer->send(
             'emails.hero',
-            [
-                'to'      => $borrower->getUser()->getEmail(),
-                'subject' => 'Borrower account notifications',
+            $data + [
+                'to'         => $borrower->getUser()->getEmail(),
+                'subject'    => \Lang::get('borrower.mails.loan-arrear-reminder-monthly.subject', $parameters),
+                'templateId' => \Setting::get('sendwithus.borrower-notifications-template-id')
             ]
         );
     }

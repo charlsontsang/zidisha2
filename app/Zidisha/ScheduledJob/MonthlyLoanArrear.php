@@ -115,8 +115,8 @@ class MonthlyLoanArrear extends ScheduledJob
                 $borrowerMailer->sendLoanMonthlyArrearToVolunteerMentor($volunteerMentor, $borrower, $loan);
             }
 
-            $borrowerMailer->sendLoanMonthlyArrearMail($borrower, $loan);
-            $borrowerSmsService->sendLoanMonthlyArrearNotification($borrower, $loan);
+            $borrowerMailer->sendLoanMonthlyArrearMail($borrower);
+            $borrowerSmsService->sendLoanMonthlyArrearNotification($borrower);
         }
 
         $job->delete();
