@@ -1043,7 +1043,10 @@ class LoanService
             ->findOne();
         $repaymentThreshold = \Config::get('constants.repaymentThreshold');
 
-        return Carbon::instance($installment->getPaidDate())->diffInDays($installment->getDueDate()) <= $repaymentThreshold;
+        $paidDate = Carbon::instance($installment->getPaidDate());
+        $lastDueDate = Carbon::instance($installment->getDueDate());
+        
+        return $lastDueDate->diffInDays($paidDate, false) <= $repaymentThreshold;
     }
 
     public function allowLoanForgiveness(Loan $loan, $data)
