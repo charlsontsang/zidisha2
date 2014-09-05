@@ -113,6 +113,11 @@ class ApplicationForm extends AbstractForm
 
         return array_combine($array, $array);
     }
+
+    public function getMaximumAmount()
+    {
+        return $this->loanCalculator->maximumAmount();
+    }
     
     public function getLoanAmountRange() {
         $step = $this->borrower->getCountry()->getLoanAmountStep();

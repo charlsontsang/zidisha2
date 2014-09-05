@@ -38,7 +38,7 @@
     
         <p>
             @lang('borrower.loan-application.application.amount-description', [
-                'amount' => $currentCreditLimit,
+                'amount' => $form->getMaximumAmount(),
             ])
             <br/>
             <a href="{{ route('borrower:credit') }}" target="_blank">
