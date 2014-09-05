@@ -95,12 +95,12 @@ class BorrowerSmsService {
     {
         $profile = $borrower->getProfile();
         $data = [
-            'parameters' => [
+            'parameters'  => [
                 'borrowerName' => $borrower->getName(),
                 'contacts'     => nl2br($borrower->getContactsList()),
             ],
-            'countryCode'         => $borrower->getCountry()->getCountryCode(),
-            'label'               => 'borrower.sms.loan-arrear-reminder-monthly'
+            'countryCode' => $borrower->getCountry()->getCountryCode(),
+            'label'       => 'borrower.sms.loan-arrear-reminder-monthly'
         ];
         $this->smsService->send($profile->getPhoneNumber(), $data);
 
