@@ -82,8 +82,8 @@ class RepaymentReminder extends ScheduledJob
                 ->find();
 
             //Send mail to borrower
-            $borrowerMailer->sendRepaymentReminderForDueAmount($borrower, $loan, $amounts);
-            $borrowerSmsService->sendRepaymentReminderForDueAmount($borrower, $loan, $amounts);
+            $borrowerMailer->sendRepaymentReminderForDueAmount($borrower, $installment, $amounts);
+            $borrowerSmsService->sendRepaymentReminderForDueAmount($borrower, $installment, $amounts);
         }
 
         $job->delete();

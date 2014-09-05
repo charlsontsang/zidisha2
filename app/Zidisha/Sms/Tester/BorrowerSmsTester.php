@@ -96,9 +96,40 @@ class BorrowerSmsTester {
         $installment = new Installment();
         $installment->setDueDate(new \DateTime())
             ->setAmount(Money::create(340, $borrower->getCountry()->getCurrencyCode()))
+            ->setPaidAmount(Money::create(135, $borrower->getCountry()->getCurrencyCode()))
             ->setLoanId(5)
             ->setBorrower($borrower);
 
         $this->borrowerSmsService->sendRepaymentReminderTomorrow($borrower, $installment);
+    }
+
+    public function sendRepaymentReminder()
+    {
+        $borrower = BorrowerQuery::create()
+            ->findOne();
+        $installment = new Installment();
+        $installment->setDueDate(new \DateTime())
+            ->setAmount(Money::create(340, $borrower->getCountry()->getCurrencyCode()))
+            ->setLoanId(5)
+            ->setBorrower($borrower);
+
+        $this->borrowerSmsService->sendRepaymentReminder($borrower, $installment);
+    }
+
+    public function sendRepaymentReminderForDueAmount()
+    {
+        $borrower = BorrowerQuery::create()
+            ->findOne();
+        $installment = new Installment();
+        $installment->setDueDate(new \DateTime())
+            ->setAmount(Money::create(340, $borrower->getCountry()->getCurrencyCode()))
+            ->setLoanId(5)
+            ->setBorrower($borrower);
+        $amounts = [
+            'amount_total'      => 45,
+            'paid_amount_total' => 20
+        ];
+
+        $this->borrowerSmsService->sendRepaymentReminderForDueAmount($borrower, $installment, $amounts);
     }
 }

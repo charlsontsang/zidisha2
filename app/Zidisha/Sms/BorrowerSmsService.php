@@ -116,6 +116,26 @@ class BorrowerSmsService {
         $data = [
             'parameters' => [
                 'currencyCode' => $borrower->getCountry()->getCountryCode(),
+                'dueAmt'       => $dueInstallment->getAmount()->subtract($dueInstallment->getPaidAmount()),
+                'dueDate'      => $dueInstallment->getDueDate()->format('d-m-Y'),
+            ],
+            'countryCode'         => $borrower->getCountry()->getCountryCode(),
+            'label'               => 'borrower.sms.repayment-reminder'
+        ];
+        $this->smsService->send($profile->getPhoneNumber(), $data);
+
+        $alternateNumber = $profile->getAlternatePhoneNumber();
+        if ($alternateNumber) {
+            $this->smsService->send($alternateNumber, $data);
+        }
+    }
+
+    public function sendRepaymentReminder(Borrower $borrower, Installment $dueInstallment)
+    {
+        $profile = $borrower->getProfile();
+        $data = [
+            'parameters' => [
+                'currencyCode' => $borrower->getCountry()->getCountryCode(),
                 'dueAmt'       => $dueInstallment->getAmount(),
                 'dueDate'      => $dueInstallment->getDueDate()->format('d-m-Y'),
             ],
@@ -130,14 +150,24 @@ class BorrowerSmsService {
         }
     }
 
-    public function sendRepaymentReminder(Borrower $borrower, Installment $installment)
+    public function sendRepaymentReminderForDueAmount(Borrower $borrower, Installment $dueInstallment, $amounts)
     {
-        //TODO: sendRepaymentReminder
-    }
+        $profile = $borrower->getProfile();
+        $data = [
+            'parameters' => [
+                'currencyCode' => $borrower->getCountry()->getCountryCode(),
+                'dueAmt'       => $amounts['amount_total'] - $amounts['paid_amount_total'],
+                'dueDate'      => $dueInstallment->getDueDate()->format('d-m-Y'),
+            ],
+            'countryCode'         => $borrower->getCountry()->getCountryCode(),
+            'label'               => 'borrower.sms.repayment-reminder'
+        ];
+        $this->smsService->send($profile->getPhoneNumber(), $data);
 
-    public function sendRepaymentReminderForDueAmount(Borrower $borrower, Loan $loan, $amounts)
-    {
-        //TODO : sendRepaymentReminderForDueAmount
+        $alternateNumber = $profile->getAlternatePhoneNumber();
+        if ($alternateNumber) {
+            $this->smsService->send($alternateNumber, $data);
+        }
     }
 
     public function sendAgainRepaymentReminder(Borrower $borrower, Loan $loan, $installments)
