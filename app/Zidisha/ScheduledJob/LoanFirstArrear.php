@@ -113,8 +113,11 @@ class LoanFirstArrear extends ScheduledJob
                 /** @var  BorrowerSmsService $borrowerSmsService */
                 $borrowerSmsService = \App::make('Zidisha\Sms\BorrowerSmsService');
 
-                $borrowerMailer->sendLoanFirstArrearMail($borrower, $loan);
-                $borrowerSmsService->sendLoanFirstArrearNotification($borrower, $loan);
+                $dueInstallment =  InstallmentQuery::create()
+                    ->getDueInstallment($loan);
+
+                $borrowerMailer->sendLoanFirstArrearMail($borrower, $dueInstallment);
+                $borrowerSmsService->sendLoanFirstArrearNotification($borrower, $dueInstallment);
             }
         }
 

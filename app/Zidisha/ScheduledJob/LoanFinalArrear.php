@@ -97,7 +97,7 @@ class LoanFinalArrear extends ScheduledJob
         $missedInstallmentCount =  InstallmentQuery::create()
             ->filterByLoan($loan)
             ->filterByAmount(0, Criteria::GREATER_THAN)
-            ->where('Installment.PaidAmount IS NULL OR Installment.PaidAmount < Installment.Amount')
+            ->where('Installment.PaidAmount IS NULL OR Installment.PaidAmount < Installment.Amount AND Installment.Amount > 0')
             ->where('Installment.DueDate < ?', Carbon::now())
             ->count();
         
@@ -135,8 +135,11 @@ class LoanFinalArrear extends ScheduledJob
                 $borrowerMailer->sendLoanFinalArrearToVolunteerMentor($volunteerMentor, $borrower, $loan);
             }
 
-            $borrowerMailer->sendLoanFinalArrearMail($borrower, $loan);
-            $borrowerSmsService->sendLoanFinalArrearNotification($borrower, $loan);
+            $dueInstallment =  InstallmentQuery::create()
+                ->getDueInstallment($loan);
+
+            $borrowerMailer->sendLoanFinalArrearMail($borrower, $dueInstallment);
+            $borrowerSmsService->sendLoanFinalArrearNotification($borrower, $dueInstallment);
         }
 
         $job->delete();

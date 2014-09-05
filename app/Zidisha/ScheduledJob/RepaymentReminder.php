@@ -66,8 +66,8 @@ class RepaymentReminder extends ScheduledJob
 
         if ($installment  && $installment->getDueDate() == $this->getStartDate()) {
             if ($installment->getPaidAmount()->isPositive() && $installment->getPaidAmount()->lessThan($installment->getAmount())) {
-                $borrowerMailer->sendRepaymentReminderTommorow($borrower, $installment);
-                $borrowerSmsService->sendRepaymentReminderTommorow($borrower, $installment);
+                $borrowerMailer->sendRepaymentReminderTomorrow($borrower, $installment);
+                $borrowerSmsService->sendRepaymentReminderTomorrow($borrower, $installment);
             } else {
                 $borrowerMailer->sendRepaymentReminder($borrower, $installment);
                 $borrowerSmsService->sendRepaymentReminder($borrower, $installment);
@@ -80,10 +80,10 @@ class RepaymentReminder extends ScheduledJob
                 ->withColumn('SUM(amount)', 'amount_total')
                 ->withColumn('SUM(paid_amount)', 'paid_amount_total')
                 ->find();
-
+            $dueAmount = Money::create(($amounts['amount_total'] - $amounts['paid_amount_total']), $borrower->getCountry()->getCurrencyCode());
             //Send mail to borrower
-            $borrowerMailer->sendRepaymentReminderForDueAmount($borrower, $loan, $amounts);
-            $borrowerSmsService->sendRepaymentReminderForDueAmount($borrower, $loan, $amounts);
+            $borrowerMailer->sendRepaymentReminderForDueAmount($borrower, $installment, $dueAmount);
+            $borrowerSmsService->sendRepaymentReminderForDueAmount($borrower, $installment, $dueAmount);
         }
 
         $job->delete();

@@ -256,4 +256,17 @@ class Utility {
 
         return $post_val;
     }
+
+    public static function formatNumber($phoneNumber, $countryCode){
+        $result=preg_replace("/[^0-9]+/", "", $phoneNumber);
+        $country = CountryQuery::create()
+            ->getOneByCountryCode($countryCode);
+        $number = "";
+
+        if ($country) {
+            $number = substr($result, -($country->getPhoneNumberLength()));
+            $number=str_pad($number, 13, '+'.$country->getDialingCode(), STR_PAD_LEFT);
+        }
+        return $number;
+    }
 }

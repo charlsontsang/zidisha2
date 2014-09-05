@@ -9,6 +9,7 @@ use Zidisha\Borrower\ContactQuery;
 use Zidisha\Loan\ForgivenessLoanQuery;
 use Zidisha\Loan\LoanQuery;
 use Zidisha\Mail\BorrowerMailer;
+use Zidisha\Repayment\InstallmentQuery;
 use Zidisha\ScheduledJob\Map\ScheduledJobTableMap;
 use Zidisha\Sms\BorrowerSmsService;
 
@@ -101,8 +102,11 @@ class MonthlyLoanArrear extends ScheduledJob
                 ->filterByBorrower($borrower)
                 ->find();
 
+            $dueInstallment =  InstallmentQuery::create()
+                ->getDueInstallment($loan);
+
             foreach ($contacts as $contact) {
-                $borrowerSmsService->sendLoanMonthlyArrearNotificationToContact($contact, $loan);
+                $borrowerSmsService->sendLoanMonthlyArrearNotificationToContact($contact, $borrower, $dueInstallment);
             }
 
             $volunteerMentor = $borrower->getVolunteerMentor();
@@ -111,8 +115,8 @@ class MonthlyLoanArrear extends ScheduledJob
                 $borrowerMailer->sendLoanMonthlyArrearToVolunteerMentor($volunteerMentor, $borrower, $loan);
             }
 
-            $borrowerMailer->sendLoanMonthlyArrearMail($borrower, $loan);
-            $borrowerSmsService->sendLoanMonthlyArrearNotification($borrower, $loan);
+            $borrowerMailer->sendLoanMonthlyArrearMail($borrower);
+            $borrowerSmsService->sendLoanMonthlyArrearNotification($borrower);
         }
 
         $job->delete();

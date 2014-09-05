@@ -5,6 +5,7 @@ namespace Zidisha\ScheduledJob;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Queue\Jobs\Job;
+use Propel\Runtime\ActiveQuery\Criteria;
 use Zidisha\Currency\Money;
 use Zidisha\Loan\ForgivenessLoanQuery;
 use Zidisha\Loan\LoanQuery;
@@ -89,19 +90,28 @@ class AgainRepaymentReminder extends ScheduledJob
         
         $forgivenessLoan = ForgivenessLoanQuery::create()
             ->findOneByLoanId($loanId);
-        
-        $installments = InstallmentQuery::create()
+
+        $installment = InstallmentQuery::create()
             ->filterByLoan($loan)
-            ->find();
-        
-        if (!$forgivenessLoan && $installments) {
+            ->where('Installment.Amount > 0')
+            ->where('Installment.PaidAmount IS NULL OR Installment.PaidAmount < Installment.Amount')
+            ->orderByDueDate('ASC')
+            ->findOne();
+
+
+        if (!$forgivenessLoan && $installment) {
+            $amounts = InstallmentQuery::create()
+                ->filterByLoan($loan)
+                ->filterByDueDate(Carbon::now(), Criteria::LESS_EQUAL)
+                ->select(array('amount_total', 'paid_amount_total'))
+                ->withColumn('SUM(amount)', 'amount_total')
+                ->withColumn('SUM(paid_amount)', 'paid_amount_total')
+                ->find();
+            $dueAmount = Money::create(($amounts['amount_total'] - $amounts['paid_amount_total']), $borrower->getCountry()->getCurrencyCode());
+
             /** @var  BorrowerMailer $borrowerMailer */
             $borrowerMailer = \App::make('Zidisha\Mail\BorrowerMailer');
-            $borrowerMailer->sendAgainRepaymentReminder($borrower, $loan, $installments);
-
-            /** @var  BorrowerSmsService $borrowerSmsService */
-            $borrowerSmsService = \App::make('Zidisha\Sms\BorrowerSmsService');
-            $borrowerSmsService->sendAgainRepaymentReminder($borrower, $loan, $installments);
+            $borrowerMailer->sendAgainRepaymentReminder($borrower, $installment, $dueAmount);
         }
         
         $job->delete();

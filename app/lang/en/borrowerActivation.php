@@ -29,12 +29,4 @@ Best regards,
 
 Zidisha Team',
     ],
-    'email' => [
-        'approved' => [
-            'subject' => 'Zidisha Account Activation',
-        ],
-        'declined' => [
-            'subject' => 'Message from Zidisha',
-        ]
-    ]
 ];
