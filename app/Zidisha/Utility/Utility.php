@@ -256,4 +256,46 @@ class Utility {
 
         return $post_val;
     }
+
+    public static function formatNumber($number, $countryCode){
+        $result=preg_replace("/[^0-9]+/", "", $number);
+        $to_number = "";
+        if($countryCode=='KE'){
+            $to_number = substr($result, -9);
+            $to_number=str_pad($to_number, 13, '+254', STR_PAD_LEFT);
+        }
+        if($countryCode=='NE'){
+            $to_number = substr($result, -8);
+            $to_number=str_pad($to_number, 12, '+227', STR_PAD_LEFT);
+        }
+        if($countryCode=='SN'){
+            $to_number = substr($result, -9);
+            $to_number=str_pad($to_number, 13, '+221', STR_PAD_LEFT);
+        }
+        if($countryCode=='ID'){
+            $to_number = substr($result, -11);
+            $to_number=str_pad($to_number, 14, '+62', STR_PAD_LEFT);
+        }
+        if($countryCode=='BF'){
+            $to_number = substr($result, -8);
+            $to_number=str_pad($to_number, 12, '+226', STR_PAD_LEFT);
+        }
+        if($countryCode=='GN'){
+            $to_number = substr($result, -8);
+            $to_number=str_pad($to_number, 12, '+224', STR_PAD_LEFT);
+        }
+        if($countryCode=='BJ'){
+            $to_number = substr($result, -8);
+            $to_number=str_pad($to_number, 12, '+229', STR_PAD_LEFT);
+        }
+        if($countryCode=='GH'){
+            $to_number = substr($result, -10);
+            $to_number=str_pad($to_number, 14, '+233', STR_PAD_LEFT);
+        }
+        if($countryCode=='ZM'){
+            $to_number = substr($result, -10);
+            $to_number=str_pad($to_number, 14, '+260', STR_PAD_LEFT);
+        }
+        return $to_number;
+    }
 }
