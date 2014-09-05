@@ -121,8 +121,14 @@ class ApplicationForm extends AbstractForm
     
     public function getLoanAmountRange() {
         $step = $this->borrower->getCountry()->getLoanAmountStep();
+        $maximumAmount = $this->loanCalculator->maximumAmount()->getAmount();
         
-        $range = range($step, $this->loanCalculator->maximumAmount()->getAmount(), $step);
+        $range = range($step, $maximumAmount, $step);
+        
+        if ($range[count($range) - 1] != $maximumAmount) {
+            $range[] = $maximumAmount;
+        }
+        
         $range = array_reverse($range);
         
         return array_combine($range, $range);
@@ -136,10 +142,6 @@ class ApplicationForm extends AbstractForm
         $minInstallmentAmount = $minInstallmentAmount->divide($step)->ceil()->multiply($step);
         
         $maxInstallmentAmount = $amount->divide($this->loanCalculator->minimumPeriod($amount))->floor();
-
-        if ($step > $maxInstallmentAmount->getAmount()) {
-            return [];
-        }
         
         $range = range($minInstallmentAmount->getAmount(), $maxInstallmentAmount->getAmount(), $step);
         $range = array_reverse($range);
