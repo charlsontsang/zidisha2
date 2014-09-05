@@ -1,0 +1,28 @@
+<?php
+
+return [
+    'title'                       => 'Current Credit Limit',
+    'intro'                       => 'This page shows your current credit limit, or the maximum amount you could raise if you were to post a new loan application today.',
+    'note'                        => 'Please note that your current credit limit is based the amounts you have repaid in the past, and on the on-time repayment performance of each installment due. From time to time, Zidisha may also offer bonus credits for positive contributions to our community, or change the amounts by which credit limits increase for a given level of performance.',
+    'current-credit-limit'        => 'Your current credit limit is',
+    'how-determined'              => 'Here is how that credit limit was determined',
+    'insufficient-repayment-rate' => 'Your current on-time repayment rate for monthly installments is :repaymentRate%. In order to qualify for an increase in maximum loan size, you must improve your on-time repayment rate by making future monthly repayment installments on time.  Once your on-time repayment rate for monthly installments reaches :minRepaymentRate%, you will become eligible for a loan size increase.',
+    'first-loan'                  => 'This is the standard credit limit for the first loan raised through Zidisha.',
+    'repaid-late'                 => 'You are not eligible for a credit limit increase because your most recent loan was not repaid on time. In order to qualify for an increase in maximum loan size, you must repay your next loan on time while maintaining an on-time repayment rate for monthly installments of at least :minRepaymentRate%.',
+    'insufficient-loan-length'    => 'In order to qualify for an increase in maximum loan size, you must hold the current loan for at least :minLoanLength months and maintain an on-time repayment rate for monthly installments of at least :minRepaymentRate%.',
+    'repaid-too-early'            => 'You are not eligible for a credit limit increase because you repaid more than $100 and more than 10% of your loan in any 30-day period.',
+    'sufficient-repayment-rate'   => 'Your current on-time repayment rate for monthly installments is :repaymentRate%. In order to remain eligible for an increase in maximum loan size, you must continue to make at least :minRepaymentRate% of your monthly repayment installments on time.',
+    'base-credit-limit'           => 'Base credit limit',
+    'invite-credit'               => 'Bonus credit for inviting new members',
+    'vm-credit'                   => 'Bonus credit for volunteer mentor assigned members who are current with repayments',
+    'comment-credit'              => 'Comment credits earned',
+    'comment-credit-note'         => 'Please not that we are no longer offering bonus credits for posting comments. During the time when we were offering bonus credits for posting comments, you earned an additional credit limit increase of :commentCredit.',
+    'max-bonus-credit'            => 'Maximum bonus credit',
+    'total-credit-limit'          => 'Total credit limit earned',
+    'how-increase'                => 'In order to increase your maximum loan size, you must',
+    'maintain-repayment-rate'     => 'Maintain a :minRepaymentRate% on-time repayment rate for all installments since joining Zidisha.',
+    'make-final-repayment'        => 'Make the final repayment installment of the current loan on time.',
+    'current-loan-length'         => 'Hold the current loan for at least one month.|Hold the current loan for at least :minLoanLength months.',
+    'distribute-repayments'       => 'Distribute your repayments over a series of regular installments. You may not qualify for a loan size increase if you repay more than $100 and more than 10% of your loan in any 30-day period.',
+    'progression'                 => 'The current credit limit increase progression for Zidisha members who fulfill the above criteria is as follows',
+];
