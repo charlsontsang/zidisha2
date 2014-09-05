@@ -660,7 +660,7 @@ class BorrowerService
     {
         $firstLoanValue = Money::create(Setting::get('loan.firstLoanValue'), 'USD');
         $isFirstFundedLoan = LoanQuery::create()
-            ->isFirstFundedLoan($borrower);
+            ->hasDisbursedLoan($borrower);
         $loanStatus = $borrower->getLoanStatus();
         $exchangeRate = ExchangeRateQuery::create()
             ->findCurrent($borrower->getCountry()->getCurrency());
@@ -799,7 +799,7 @@ class BorrowerService
     public function getPreviousLoanAmount(Borrower $borrower, Loan $loan, ExchangeRate $exchangeRate)
     {
         $isFirstFundedLoan = LoanQuery::create()
-            ->isFirstFundedLoan($borrower);
+            ->hasDisbursedLoan($borrower);
         $firstLoanValue = Money::create(Setting::get('loan.firstLoanValue'), 'USD');
         $currencyCode = $loan->getCurrencyCode();
         $currency = $loan->getCurrency();

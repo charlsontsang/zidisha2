@@ -422,7 +422,7 @@ class BorrowerController extends BaseController
             }
 
             $isFirstFundedLoan = LoanQuery::create()
-                ->isFirstFundedLoan($borrower);
+                ->hasDisbursedLoan($borrower);
             $disbursedDate = $activeLoan ? $activeLoan->getDisbursedAt() : null;
             if ($disbursedDate) {
                 $currentTime = Carbon::now();

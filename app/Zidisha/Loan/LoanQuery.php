@@ -27,6 +27,11 @@ class LoanQuery extends BaseLoanQuery
         return $this->filterByStatus([Loan::REPAID, Loan::DEFAULTED]);
     }
 
+    public function filterDisbursed()
+    {
+        return $this->filterByStatus([Loan::ACTIVE, Loan::REPAID, Loan::DEFAULTED]);
+    }
+
     public function filterActive()
     {
         return $this->filterByStatus([Loan::ACTIVE, Loan::FUNDED]);
@@ -99,11 +104,11 @@ class LoanQuery extends BaseLoanQuery
             ->findOne();
     }
 
-    public function isFirstFundedLoan(Borrower $borrower)
+    public function hasDisbursedLoan(Borrower $borrower)
     {
         $count =  $this
             ->filterByBorrower($borrower)
-            ->filterByStatus([Loan::ACTIVE, Loan::REPAID, Loan::DEFAULTED])
+            ->filterDisbursed()
             ->count();
 
         return $count == 0;
@@ -166,4 +171,5 @@ class LoanQuery extends BaseLoanQuery
             ->find()
             ->toArray();
     }
+
 } // LoanQuery
