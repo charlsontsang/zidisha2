@@ -29,9 +29,4 @@ Best regards,
 
 Zidisha Team',
     ],
-    'email' => [
-        'declined' => [
-            'subject' => 'Message from Zidisha',
-        ]
-    ]
 ];

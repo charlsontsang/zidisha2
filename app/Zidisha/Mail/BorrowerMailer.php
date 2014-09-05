@@ -161,15 +161,21 @@ class BorrowerMailer{
 
     public function sendDeclinedConfirmationMail(Borrower $borrower)
     {
-        $subject = \Lang::get('borrowerActivation.email.declined.subject', ['name' => $borrower->getName()]);
-        $data = [
+        $parameters = [
             'borrowerName' => $borrower->getName(),
-            'to'           => $borrower->getUser()->getEmail(),
-            'from'         => 'service@zidisha.org',
-            'subject'      => $subject,
         ];
 
-        $this->mailer->send('emails.borrower.activation.declined-confirmation', $data);
+        $body = \Lang::get('borrower.mails.declined-confirmation.body', $parameters);
+        $data['content'] = $body;
+
+        $this->mailer->send(
+            'emails.hero',
+            $data + [
+                'to'         => $borrower->getUser()->getEmail(),
+                'subject'    => \Lang::get('borrower.mails.declined-confirmation.subject', $parameters),
+                'templateId' => \Setting::get('sendwithus.borrower-notifications-template-id')
+            ]
+        );
     }
 
     public function sendBorrowerCommentNotification(Borrower $borrower, Comment $comment)
@@ -177,14 +183,23 @@ class BorrowerMailer{
 
     }
     
-    public function sendExpiredLoanMail(Loan $loan)
+    public function sendExpiredLoanMail(Borrower $borrower, Loan $loan)
     {
+        $parameters = [
+            'borrowerName'        => $borrower->getName(),
+            'loanApplicationLink' => route('borrower:loan-application'),
+            'tips'                => $borrower->getName(),
+        ];
+
+        $body = \Lang::get('borrower.mails.loan-expired.body', $parameters);
+        $data['content'] = $body;
+
         $this->mailer->send(
             'emails.hero',
-            [
-                'to'         => $loan->getBorrower()->getUser()->getEmail(),
-                'subject'    => 'Borrower account notifications',
-                'templateId' => \Setting::get('sendwithus.borrower-expired-loan-template-id'),
+            $data + [
+                'to'         => $borrower->getUser()->getEmail(),
+                'subject'    => \Lang::get('borrower.mails.loan-expired.subject', $parameters),
+                'templateId' => \Setting::get('sendwithus.borrower-notifications-template-id')
             ]
         );
     }

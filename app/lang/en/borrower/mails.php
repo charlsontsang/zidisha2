@@ -141,5 +141,23 @@ You are now eligible to offer a loan agreement to Zidisha lenders.  To post a lo
 Best wishes,<br/><br/>
 The Zidisha Team'
     ],
+    'declined-confirmation' => [
+        'subject' => 'Message from Zidisha',
+        'body' => 'Dear :borrowerName, <br/><br/>'.
+            'We regret to inform you that your Zidisha account cannot be activated, because we were unable to confirm that your account meets all required criteria for a Zidisha loan.<br/><br/>
+Best wishes,<br/><br/>'.
+            'Zidisha Team'
+    ],
+    'loan-expired' => [
+        'subject' => 'Your Loan Application Has Expired',
+        'body' => 'Dear :borrowerName,<br/><br/>
+This is a notification that your Zidisha loan application has expired without being fully funded, and the loan bids raised have been returned to lenders.<br/><br/>
+You may post a new loan application at any time using the <a href=":loanApplicationLink">Loan Application</a> page of your member account.<br/><br/>
+:tips
+<br/><br/>
+If you modify your profile to follow each of the above tips, then your application is much more likely to be funded the next time.  Should you have any questions or difficulties, please do not hesitate to contact us at service@zidisha.org.<br/><br/>
+Best wishes,<br/><br/>
+The Zidisha Team'
+    ],
 
 ];
