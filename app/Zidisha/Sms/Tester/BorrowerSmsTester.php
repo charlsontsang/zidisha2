@@ -62,4 +62,22 @@ class BorrowerSmsTester {
 
         $this->borrowerSmsService->sendLoanFirstArrearNotification($borrower, $loan, $installment);
     }
+
+    public function sendLoanMonthlyArrearNotificationToContact()
+    {
+        $borrower = BorrowerQuery::create()
+            ->findOne();
+        $installment = new Installment();
+        $installment->setDueDate(new \DateTime())
+            ->setAmount(Money::create(340, $borrower->getCountry()->getCurrencyCode()))
+            ->setLoanId(5)
+            ->setBorrower($borrower);
+        $contact = new Contact();
+        $contact->setBorrower($borrower);
+        $contact->setFirstName("haha")
+            ->setLastName("huhu");
+        $contact->setPhoneNumber('123123123');
+
+        $this->borrowerSmsService->sendLoanMonthlyArrearNotificationToContact($contact, $borrower, $installment);
+    }
 }

@@ -75,9 +75,20 @@ class BorrowerSmsService {
         }
     }
 
-    public function sendLoanMonthlyArrearNotificationToContact(Contact $contact, Loan $loan)
+    public function sendLoanMonthlyArrearNotificationToContact(Contact $contact, Borrower $borrower, Installment $dueInstallment)
     {
-        //TODO: sendLoanMonthlyArrearNotificationToContacts
+        $profile = $borrower->getProfile();
+        $data = [
+            'parameters' => [
+                'contactName'    => $contact->getName(),
+                'borrowerName'   => $borrower->getName(),
+                'dueDays'        => round((time() - $dueInstallment->getDueDate()->getTimestamp())/(60*60*24)),
+                'borrowerNumber' => $profile->getPhoneNumber(),
+            ],
+            'countryCode'         => $borrower->getCountry()->getCountryCode(),
+            'label'               => 'borrower.sms.loan-arrear-mediation-notification'
+        ];
+        $this->smsService->send($contact->getPhoneNumber(), $data);
     }
 
     public function sendLoanMonthlyArrearNotification(Borrower $borrower, Loan $loan)
