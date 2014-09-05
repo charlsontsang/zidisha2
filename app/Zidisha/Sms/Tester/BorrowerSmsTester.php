@@ -80,4 +80,12 @@ class BorrowerSmsTester {
 
         $this->borrowerSmsService->sendLoanMonthlyArrearNotificationToContact($contact, $borrower, $installment);
     }
+
+    public function sendLoanMonthlyArrearNotification()
+    {
+        $borrower = BorrowerQuery::create()
+            ->findOne();
+
+        $this->borrowerSmsService->sendLoanMonthlyArrearNotification($borrower);
+    }
 }

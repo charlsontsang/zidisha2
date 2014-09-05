@@ -217,7 +217,7 @@ class BorrowerMailer{
         $country = $borrower->getCountry();
         $parameters = [
             'borrowerName'          => $borrower->getName(),
-            'contacts'              => $borrower->getContactsList(),
+            'contacts'              => nl2br($borrower->getContactsList()),
             'currencyCode'          => $country->getCountryCode(),
             'dueAmt'                => $dueInstallment->getAmount(),
             'dueDate'               => $dueInstallment->getDueDate()->format('d-m-Y'),

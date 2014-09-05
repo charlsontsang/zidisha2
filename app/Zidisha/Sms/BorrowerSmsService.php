@@ -38,7 +38,7 @@ class BorrowerSmsService {
         $data = [
             'parameters' => [
                 'borrowerName' => $borrower->getName(),
-                'contacts'     => $borrower->getContactsList(),
+                'contacts'     => nl2br($borrower->getContactsList()),
                 'currencyCode' => $borrower->getCountry()->getCountryCode(),
                 'dueAmt'       => $dueInstallment->getAmount(),
                 'dueDate'      => $dueInstallment->getDueDate()->format('d-m-Y'),
@@ -91,9 +91,23 @@ class BorrowerSmsService {
         $this->smsService->send($contact->getPhoneNumber(), $data);
     }
 
-    public function sendLoanMonthlyArrearNotification(Borrower $borrower, Loan $loan)
+    public function sendLoanMonthlyArrearNotification(Borrower $borrower)
     {
-        //TODO: sendLoanMonthlyArrearNotification        
+        $profile = $borrower->getProfile();
+        $data = [
+            'parameters' => [
+                'borrowerName' => $borrower->getName(),
+                'contacts'     => nl2br($borrower->getContactsList()),
+            ],
+            'countryCode'         => $borrower->getCountry()->getCountryCode(),
+            'label'               => 'borrower.sms.loan-arrear-reminder-monthly'
+        ];
+        $this->smsService->send($profile->getPhoneNumber(), $data);
+
+        $alternateNumber = $profile->getAlternatePhoneNumber();
+        if ($alternateNumber) {
+            $this->smsService->send($alternateNumber, $data);
+        }
     }
 
     public function sendRepaymentReminderTommorow(Borrower $borrower, Installment $installment)
