@@ -272,7 +272,7 @@ class CreditLimitCalculator
     {
         $loanStatus = $this->borrower->getLoanStatus();
         
-        if ($loanStatus == Loan::ACTIVE || $loanStatus == Loan::FUNDED || $loanStatus == Loan::OPEN) {
+        if ($loanStatus == Loan::ACTIVE || $loanStatus == Loan::FUNDED) {
             // we calculate credit limit based on current loan amount
             $loan = $this->borrower->getActiveLoan();
             //assume current loan will be repaid on time for purpose of displaying future credit limits
@@ -403,11 +403,6 @@ class CreditLimitCalculator
             && $lastInstallmentUsdAmount->greaterThan(Money::create(100, 'USD')))
         {
             $this->repaidTooEarly;
-            return $loanAmount;
-        }
-        
-        // make sure the borrower cannot keep increasing the loan amount by editing the loan
-        if ($loanStatus == Loan::OPEN) {
             return $loanAmount;
         }
         
