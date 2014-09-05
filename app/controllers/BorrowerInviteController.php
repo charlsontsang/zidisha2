@@ -3,9 +3,11 @@
 use Zidisha\Borrower\Borrower;
 use Zidisha\Borrower\BorrowerGuestQuery;
 use Zidisha\Borrower\BorrowerService;
+use Zidisha\Borrower\Calculator\CreditLimitCalculator;
 use Zidisha\Borrower\Form\InviteForm;
 use Zidisha\Borrower\InviteQuery;
 use Zidisha\Credit\CreditSettingQuery;
+use Zidisha\Currency\ExchangeRateQuery;
 use Zidisha\Loan\LoanService;
 use Zidisha\Repayment\RepaymentService;
 
@@ -114,9 +116,13 @@ class BorrowerInviteController extends BaseController
         $minRepaymentRate = \Setting::get('invite.minRepaymentRate');
         $inviteesRepaymentRate = $this->borrowerService->getInviteeRepaymentRate($borrower);
         $successRate = number_format(($inviteesRepaymentRate)*100);
-        $creditEarned = $this->borrowerService->getInviteCredit($borrower);
+
+        $exchangeRate = ExchangeRateQuery::create()
+            ->findCurrent($borrower->getCountry()->getCurrency());
+        $calculator = new CreditLimitCalculator($borrower, $exchangeRate);
+        $bonusEarned = $calculator->getInviteCredit();
+        
         $currencyCode = $borrower->getCountry()->getCurrencyCode();
-        $bonusEarned = $creditEarned;
         $paginator = InviteQuery::create()
             ->filterByBorrower($borrower)
             ->paginate($page, 10);
