@@ -8853,6 +8853,7 @@ form label.control-label,
   color: #767676;
 }
 form .btn-primary,
+form .btn-default,
 .giftcard .btn-primary {
   margin-top: 5px;
   margin-bottom: 30px;
@@ -8861,6 +8862,7 @@ form .btn-primary,
 }
 @media (max-width: 767px) {
   form .btn-primary,
+  form .btn-default,
   .giftcard .btn-primary {
     margin-bottom: 15px;
     width: 100%;

@@ -72,12 +72,9 @@ Gift Card Purchase
         <p>
             By purchasing a gift card, I agree to the <a target="_blank" href="/terms-of-use#gift-card">Gift Card Terms of Use</a>.
         </p>
-                        
-        <button type="submit" id="stripe-payment" class="btn btn-primary btn-block">Pay with credit card</button>
-        <button type="submit" id="paypal-payment" class="btn btn-default btn-block" name="submit_paypal">
-            Pay with
-            <img src="http://logocurio.us/wp-content/uploads/2014/04/paypal-logo.png" alt="Paypal" style="height: 28px"/>
-        </button>
+
+        @include('partials/payment-buttons')
+
         <input type="submit" id="balance-payment" class="btn btn-primary btn-block" value="Pay" name="submit_credit">
 
         {{ BootstrapForm::close() }}
