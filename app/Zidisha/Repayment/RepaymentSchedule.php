@@ -123,9 +123,8 @@ class RepaymentSchedule implements \IteratorAggregate
             } elseif ($isInstallmentPaidEarly) {
                 $paymentStatus = 'early';
             }
-            $currentTime = Carbon::now();
 
-            if(!$repaymentScheduleInstallment->getPayments() && $dueInstallmentDate->isPast() &&$dueInstallmentAmount->isPositive()) {
+            if (!$repaymentScheduleInstallment->getPayments() && $dueInstallmentDate->isPast() && $dueInstallmentAmount->isPositive()) {
                 $overDueInstallmentCount++;
             }
         }
