@@ -421,7 +421,7 @@ class BorrowerController extends BaseController
                 $params['volunteerMentorCredit'] = $vmCredit;
             }
 
-            $isFirstFundedLoan = LoanQuery::create()
+            $isFirstFundedLoan = !LoanQuery::create()
                 ->hasDisbursedLoan($borrower);
             $disbursedDate = $activeLoan ? $activeLoan->getDisbursedAt() : null;
             if ($disbursedDate) {
