@@ -49,17 +49,18 @@ class InstallmentQuery extends BaseInstallmentQuery
 
     /**
      * @param Loan $loan
-     * @return float
-     * @throws \Propel\Runtime\Exception\PropelException
+     * @return Money
      */
     public function getLastInstallmentAmount(Loan $loan)
     {
-        return $this
+        $amount = $this
             ->filterByLoan($loan)
-            ->orderById('desc')
+            ->orderByDueDate('desc')
             ->select('paidAmount')
             ->withColumn('paid_amount', 'paidAmount')
             ->findOne();
+
+        return Money::create($amount ?: 0, $loan->getCurrencyCode());
     }
 
     public function getDueInstallment(Loan $loan)
