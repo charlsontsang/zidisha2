@@ -172,25 +172,25 @@ class BorrowerMailer{
         
     }
 
-    public function sendAgainRepaymentReminder(Borrower $borrower, Loan $loan, $installments)
+    public function sendAgainRepaymentReminder(Borrower $borrower, Installment $dueInstallment, Money $dueAmount)
     {
-        $totalAmount = Money::create(0, $loan->getCurrencyCode());
-        $paidAmount = Money::create(0, $loan->getCurrencyCode());
+        $country = $borrower->getCountry();
+        $parameters = [
+            'borrowerName'          => $borrower->getName(),
+            'dueAmt'                => $dueAmount,
+            'dueDate'               => $dueInstallment->getDueDate()->format('d-m-Y'),
+            'repaymentInstructions' => $country->getRepaymentInstructions(),
+        ];
 
-        /** @var Installment $installment */
-        foreach ($installments as $installment) {
-            $totalAmount = $totalAmount->add($installment->getAmount());
-            $paidAmount = $paidAmount->add($installment->getPaidAmount());
-        }
-
-        $dueAmount = $totalAmount->subtract($paidAmount)->round(2);
+        $body = \Lang::get('borrower.mails.reminder-again.body', $parameters);
+        $data['content'] = $body;
 
         $this->mailer->send(
             'emails.hero',
-            [
+            $data + [
                 'to'         => $borrower->getUser()->getEmail(),
-                'subject'    => 'Borrower Again Repayment Instructions',
-                'templateId' => \Setting::get('sendwithus.borrower-again-repayment-instruction-template-id'),
+                'subject'    => \Lang::get('borrower.mails.reminder-again.subject', $parameters),
+                'templateId' => \Setting::get('sendwithus.borrower-notifications-template-id')
             ]
         );
 

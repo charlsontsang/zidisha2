@@ -72,9 +72,9 @@ Please ensure that the due payment is made promptly, and contact us in case of d
 Thank you,<br/><br/>
 The Zidisha Team'
     ],
-    'reminder' => [
+    'reminder'                     => [
         'subject' => 'Reminder from Zidisha',
-        'body' => 'Dear :borrowerName,<br/><br/>
+        'body'    => 'Dear :borrowerName,<br/><br/>
 This is a courtesy reminder that your next loan repayment installment will be due on :dueDate in the amount of :dueAmt.<br/>
 :repaymentInstructions<br/><br/>
 Please ensure that the due payment is made promptly, and contact us in case of difficulty.<br/><br/>
@@ -90,5 +90,14 @@ You currently have a past due balance of :pastDueAmt. This will be added to your
 Please ensure that the due payment is made promptly, and contact us in case of difficulty.<br/><br/>
 Thank you,<br/><br/>
 The Zidisha Team'
+    ],
+    'reminder-again'               => [
+        'subject' => 'Reminder from Zidisha',
+        'body'    => 'Dear :borrowerName,<br/><br/>
+This is a notification of your Zidisha loan repayment balance of :dueAmt, which has been past due since :dueDate, has not been received to date.<br/><br/>
+:repaymentInstructions<br/><br/>
+Please deposit the past due amount immediately.  If you are experiencing difficulty or believe you have received this message in error, please contact us at service@zidisha.org.<br/><br/>
+Thank you,<br/><br/>
+Zidisha Team'
     ],
 ];
