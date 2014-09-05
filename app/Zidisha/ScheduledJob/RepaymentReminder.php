@@ -67,7 +67,7 @@ class RepaymentReminder extends ScheduledJob
         if ($installment  && $installment->getDueDate() == $this->getStartDate()) {
             if ($installment->getPaidAmount()->isPositive() && $installment->getPaidAmount()->lessThan($installment->getAmount())) {
                 $borrowerMailer->sendRepaymentReminderTommorow($borrower, $installment);
-                $borrowerSmsService->sendRepaymentReminderTommorow($borrower, $installment);
+                $borrowerSmsService->sendRepaymentReminderTomorrow($borrower, $installment);
             } else {
                 $borrowerMailer->sendRepaymentReminder($borrower, $installment);
                 $borrowerSmsService->sendRepaymentReminder($borrower, $installment);

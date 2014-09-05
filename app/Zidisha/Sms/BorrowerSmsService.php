@@ -110,7 +110,7 @@ class BorrowerSmsService {
         }
     }
 
-    public function sendRepaymentReminderTommorow(Borrower $borrower, Installment $installment)
+    public function sendRepaymentReminderTomorrow(Borrower $borrower, Installment $installment)
     {
         //TODO: sendRepaymentReminderTommorowSms
     }
