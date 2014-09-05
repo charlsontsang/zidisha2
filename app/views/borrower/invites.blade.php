@@ -56,7 +56,7 @@ Quick Links
                <?php $repaymentRate = ''; ?>
                <?php $bonus = \Zidisha\Currency\Money::create(0, $currencyCode); ?>
             @else
-                <?php $lastLoan = \Zidisha\Loan\LoanQuery::create()->getLastLoan($invite->getInvitee()) ?>
+                <?php $lastLoan = \Zidisha\Loan\LoanQuery::create()->findLastLoan($invite->getInvitee()) ?>
                 {{-- //TODO endrosement --}}
                 @if(empty($lastLoan))
                     <?php $flag=1; ?>

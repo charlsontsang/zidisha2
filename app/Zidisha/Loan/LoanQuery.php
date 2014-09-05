@@ -81,7 +81,7 @@ class LoanQuery extends BaseLoanQuery
             ->count();
     }
 
-    public function getLastLoan(Borrower $borrower) {
+    public function findLastLoan(Borrower $borrower) {
         return $this
             ->filterByBorrower($borrower)
             ->filterByDeletedByAdmin(false)

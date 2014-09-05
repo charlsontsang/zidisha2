@@ -553,7 +553,7 @@ class BorrowerService
         foreach($invitees as $invite){
 //checks repayment rate of invited members
             $lastLoanOfInvitee= LoanQuery::create()
-                ->getLastLoan($invite->getInvitee());
+                ->findLastLoan($invite->getInvitee());
 
             if(!empty($lastLoanOfInvitee)){
                 $totalLoans += 1;
@@ -595,7 +595,7 @@ class BorrowerService
         foreach($invitees as $invite){
             //checks repayment rate of invited members
             $invite_lastloan= LoanQuery::create()
-                ->getLastLoan($invite->getInvitee());
+                ->findLastLoan($invite->getInvitee());
 
             if (!empty($lastLoanOfInvitee)) {
                 $repaymentRate = $this->loanService->getOnTimeRepaymentScore($invite->getInvitee());
@@ -619,7 +619,7 @@ class BorrowerService
         $creditEarned = Money::create(0, $borrower->getCountry()->getCurrency());
         foreach($invitees as $invite){
             $lastLoanOfInvitee= LoanQuery::create()
-                ->getLastLoan($invite->getInvitee());
+                ->findLastLoan($invite->getInvitee());
             if(empty($lastLoanOfInvitee)){
                 continue;
             }
