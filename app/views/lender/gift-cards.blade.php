@@ -46,17 +46,17 @@ Gift Cards
                 </div>
             </div>
             <div class="col-sm-6">
-                <div id="giftcard-6-1" class="giftcard-thumbnail">
-                    <label for="giftcard_template_radio-6-1" ><img src="{{ asset('assets/images/gift-card/image6.png'); }}"/></label>
-                    <input name="template" id="giftcard_template_radio-6-1" value="6" type="radio">
+                <div id="giftcard-5-1" class="giftcard-thumbnail">
+                    <label for="giftcard_template_radio-5-1" ><img src="{{ asset('assets/images/gift-card/image5.png'); }}"/></label>
+                    <input name="template" id="giftcard_template_radio-5-1" value="5" type="radio">
                 </div>
                 <div id="giftcard-7-1" class="giftcard-thumbnail">
                     <label for="giftcard_template_radio-7-1" ><img src="{{ asset('assets/images/gift-card/image7.png'); }}"/></label>
                     <input name="template" id="giftcard_template_radio-7-1" value="7" type="radio">
                 </div>
-                <div id="giftcard-5-1" class="giftcard-thumbnail">
-                    <label for="giftcard_template_radio-5-1" ><img src="{{ asset('assets/images/gift-card/image5.png'); }}"/></label>
-                    <input name="template" id="giftcard_template_radio-5-1" value="5" type="radio">
+                <div id="giftcard-6-1" class="giftcard-thumbnail">
+                    <label for="giftcard_template_radio-6-1" ><img src="{{ asset('assets/images/gift-card/image6.png'); }}"/></label>
+                    <input name="template" id="giftcard_template_radio-6-1" value="6" type="radio">
                 </div>
                 <div id="giftcard-9-1" class="giftcard-thumbnail">
                     <label for="giftcard_template_radio-9-1" ><img src="{{ asset('assets/images/gift-card/image9.png'); }}"/></label>
