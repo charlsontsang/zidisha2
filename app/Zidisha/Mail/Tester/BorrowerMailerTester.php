@@ -89,6 +89,13 @@ class BorrowerMailerTester
         $this->borrowerMailer->sendLoanConfirmationMail($borrower, $loan);
     }
 
+    public function sendApprovedConfirmationMail()
+    {
+        $borrower = BorrowerQuery::create()
+            ->findOne();
+        $this->borrowerMailer->sendApprovedConfirmationMail($borrower);
+    }
+
     public function sendLoanFullyFundedMail()
     {
         $user = new User();

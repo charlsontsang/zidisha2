@@ -68,14 +68,12 @@ class BorrowerMailer{
             ],
         ];
 
-        $subject = \Lang::get('borrower.mails.resume-registration.subject');
-
         $this->mailer->send(
             'emails.label-template',
             $data + [
                 'to'         => $email,
                 'label'      => 'borrower.mails.resume-registration.body',
-                'subject'    => $subject
+                'subject'    => \Lang::get('borrower.mails.resume-registration.subject')
             ]
         );
     }
@@ -135,7 +133,7 @@ class BorrowerMailer{
         $this->mailer->send(
             'emails.label-template',
             $data + [
-                'to'         => $borrower->getUser()->getEmail(),,
+                'to'         => $borrower->getUser()->getEmail(),
                 'label'      => 'borrower.mails.loan-confirmation.body',
                 'subject'    => $subject
             ]
@@ -144,15 +142,21 @@ class BorrowerMailer{
 
     public function sendApprovedConfirmationMail(Borrower $borrower)
     {
-        $subject = \Lang::get('borrowerActivation.email.approved.subject', ['name' => $borrower->getName()]);
         $data = [
-            'borrowerName' => $borrower->getName(),
-            'to'           => $borrower->getUser()->getEmail(),
-            'from'         => 'service@zidisha.org',
-            'subject'      => $subject,
+            'parameters' => [
+                'borrowerName' => $borrower->getName(),
+                'zidishaLink' => route('home'),
+            ],
         ];
 
-        $this->mailer->send('emails.borrower.activation.approved-confirmation', $data);
+        $this->mailer->send(
+            'emails.label-template',
+            $data + [
+                'to'         => $borrower->getUser()->getEmail(),
+                'label'      => 'borrower.mails.approved-confirmation.body',
+                'subject'    => \Lang::get('borrower.mails.approved-confirmation.subject'),
+            ]
+        );
     }
 
     public function sendDeclinedConfirmationMail(Borrower $borrower)
