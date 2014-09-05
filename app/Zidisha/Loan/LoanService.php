@@ -934,6 +934,7 @@ class LoanService
         $BorrowerLoans = LoanQuery::create()
             ->filterByBorrower($borrower)
             ->find();
+        
         $onTimeInstallmentCount=0;
         $totalTodayInstallmentCount=0;
 
@@ -942,15 +943,16 @@ class LoanService
             $totalTodayInstallmentCount += $repaymentSchedule->getTodayInstallmentCount();
             $onTimeInstallmentCount += $repaymentSchedule->getPaidOnTimeInstallmentCount();
         }
+        
         if ($totalTodayInstallmentCount == 0) {
             $repaymentScore = 100;
-        }else {
-            $repaymentRate = ($onTimeInstallmentCount/$totalTodayInstallmentCount)*100;
+        } else {
+            $repaymentRate = $onTimeInstallmentCount / $totalTodayInstallmentCount * 100;
 
-            if (empty($repaymentRate) || $repaymentRate < 0) {
+            if ($repaymentRate < 0) { // TODO why?
                 $repaymentRate = 0;
             }
-            $repaymentScore = number_format($repaymentRate,2, '.', ',');
+            $repaymentScore = round($repaymentRate, 2);
         }
         return $repaymentScore;
     }
