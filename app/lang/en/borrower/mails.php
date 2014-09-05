@@ -114,4 +114,15 @@ Regards,<br/><br/>
 
 The Zidisha Team'
     ],
+    'resume-registration'          => [
+        'subject' => 'Continue Borrower Registration.',
+        'body'    => 'Please click on this link to continue working on your application:
+<br/>
+<a href=":resumeLink">Resume Application</a>
+<br/>
+Your application code is given below for your reference.
+<br/>
+:resumeCode'
+    ],
+
 ];

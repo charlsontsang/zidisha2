@@ -46,6 +46,11 @@ class BorrowerMailerTester
         $this->borrowerMailer->sendBorrowerJoinedConfirmationMail($borrower);
     }
 
+    public function sendFormResumeLaterMail()
+    {
+        $this->borrowerMailer->sendFormResumeLaterMail('jdjdjdj@gg.com', '12345abcde');
+    }
+
     public function sendExpiredLoanMail()
     {
         $loan = LoanQuery::create()

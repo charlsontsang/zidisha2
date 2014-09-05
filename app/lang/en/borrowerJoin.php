@@ -36,9 +36,7 @@ return [
 
     'emails' => [
         'subject'=>[
-            'confirmation' => 'Zidisha application submitted',
             'volunteer-mentor-confirmation' => 'New assigned member :name',
-
         ]
     ],
     'sms' => [

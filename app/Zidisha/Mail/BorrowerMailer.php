@@ -62,15 +62,21 @@ class BorrowerMailer{
     public function sendFormResumeLaterMail($email, $resumeCode)
     {
         $data = [
-            'resumeCode' => $resumeCode,
-            'to' => $email,
-            'from' => 'service@zidisha.org',
-            'subject' => 'Zidisha Borrower Account Verification'
+            'parameters' => [
+                'resumeLink' => route('borrower:resumeApplication', $resumeCode),
+                'resumeCode' => $resumeCode
+            ],
         ];
 
+        $subject = \Lang::get('borrower.mails.resume-registration.subject');
+
         $this->mailer->send(
-            'emails.borrower.resumeLater',
-            $data
+            'emails.label-template',
+            $data + [
+                'to'         => $email,
+                'label'      => 'borrower.mails.resume-registration.body',
+                'subject'    => $subject
+            ]
         );
     }
 
