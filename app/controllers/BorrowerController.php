@@ -135,7 +135,7 @@ class BorrowerController extends BaseController
 
         if (!$loan) {
             $loan = LoanQuery::create()
-                ->getLastEndedLoan($borrower);
+                ->findLastCompletedLoan($borrower);
         }
         
         $partial = 'loan-no-loan';
@@ -278,7 +278,7 @@ class BorrowerController extends BaseController
         $borrower = \Auth::user()->getBorrower();
 
         $lastEndedLoan = LoanQuery::create()
-            ->getLastEndedLoan($borrower);
+            ->findLastCompletedLoan($borrower);
         $activeLoan = $borrower->getActiveLoan();
         $exchangeRate = ExchangeRateQuery::create()
             ->findCurrent($borrower->getCountry()->getCurrency());

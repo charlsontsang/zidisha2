@@ -478,7 +478,7 @@ class BorrowerService
     {
         //borrower must have repaid some amount to Zidisha
         $previousLoan = LoanQuery::create()
-            ->getLastEndedLoan($borrower);
+            ->findLastCompletedLoan($borrower);
         //in case where there is no previous loan, checks whether borrower has yet made any payments on current loan
         if(!empty($previousLoan)){
             $paid = $previousLoan;
@@ -678,7 +678,7 @@ class BorrowerService
             // case where borrower has repaid one or more loans and has not yet posted an application for a new one
             // we calculate credit limit based on most recently repaid loan amount
             $loan = LoanQuery::create()
-                ->getLastEndedLoan($borrower);
+                ->findLastCompletedLoan($borrower);
             $onTime = $loan ? $this->loanService->isRepaidOnTime($borrower, $loan) : true;
         }
         if ($loan) {

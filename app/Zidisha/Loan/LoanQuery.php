@@ -89,13 +89,12 @@ class LoanQuery extends BaseLoanQuery
             ->findOne();
     }
 
-    public function getLastEndedLoan(Borrower $borrower)
+    public function findLastCompletedLoan(Borrower $borrower)
     {
         return $this
             ->filterByBorrower($borrower)
             ->filterByDeletedByAdmin(false)
-            ->filterByStatus([Loan::REPAID, Loan::DEFAULTED])
-            ->filterByExpiredAt(null)
+            ->filterCompleted()
             ->orderById('DESC')
             ->findOne();
     }
