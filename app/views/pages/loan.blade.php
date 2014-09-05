@@ -509,17 +509,6 @@
 
                             <table class="table">
                                 <tbody>
-                                    @if($placeBidForm->getLenderInviteCredit()->isPositive())
-                                    <tr>
-                                        <td>Lender invite credit</td>
-                                        <td>${{ number_format($placeBidForm->getLenderInviteCredit()->getAmount(), 2, '.', '') }}</td>
-                                    </tr>
-                                    @elseif($placeBidForm->getCurrentBalance()->isPositive())
-                                    <tr>
-                                        <td>Current Balance</td>
-                                        <td>${{ number_format($placeBidForm->getCurrentBalance()->getAmount(), 2, '.', '') }}</td>
-                                    </tr>
-                                    @endif
                                     <tr>
                                         <td>Loan for {{ $borrower->getFirstName() }}</td>
                                         <td>$<span id="amount-display"></span></td> 
@@ -544,6 +533,17 @@
                                         </td>
                                         <td>$<span id="fee-amount-display"></span></td>
                                     </tr>
+                                    @if($placeBidForm->getLenderInviteCredit()->isPositive())
+                                    <tr>
+                                        <td>Lender invite credit</td>
+                                        <td>${{ number_format($placeBidForm->getLenderInviteCredit()->getAmount(), 2, '.', '') }}</td>
+                                    </tr>
+                                    @elseif($placeBidForm->getCurrentBalance()->isPositive())
+                                    <tr>
+                                        <td>Current Balance</td>
+                                        <td>${{ number_format($placeBidForm->getCurrentBalance()->getAmount(), 2, '.', '') }}</td>
+                                    </tr>
+                                    @endif
                                     <tr>
                                         <td><strong>Total</strong></td>
                                         <td>$<strong><span id="total-amount-display"></span></strong></td>
