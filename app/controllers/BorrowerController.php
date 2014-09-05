@@ -296,7 +296,7 @@ class BorrowerController extends BaseController
         $secondLoanValue = Money::create(Setting::get('loan.secondLoanValue'),'USD');
         $thirdLoanValue = Money::create(Setting::get('loan.thirdLoanValue'), 'USD');
         $nextLoanValue = Money::create(Setting::get('loan.nextLoanValue'), 'USD');
-        $repaymentSchedule = $this->repaymentService->getRepaymentSchedule($activeLoan);
+        $repaymentSchedule = $activeLoan ? $this->repaymentService->getRepaymentSchedule($activeLoan) : null;
         $currency = $borrower->getCountry()->getCurrency();
         $maximumAmount = Converter::fromUSD($nextLoanValue, $currency, $exchangeRate);
         $loanStatus = $borrower->getLoanStatus();
@@ -307,7 +307,7 @@ class BorrowerController extends BaseController
         $repaymentRate = $this->loanService->getOnTimeRepaymentScore($borrower);
         $borrowerAmountExceptCredit = $this->borrowerService->getCurrentCreditLimit($borrower, $creditEarned, false);
         $maximumBorrowerAmountNextLoan = $this->borrowerService->getCurrentCreditLimit($borrower, $creditEarned, true);
-        $raisedUsdAmount = $activeLoan->getRaisedUsdAmount();
+        $raisedUsdAmount = $activeLoan ? $activeLoan->getRaisedUsdAmount() : Money::create(0, $borrower->getCountry()->getCurrencyCode());
         $raisedAmount = Converter::fromUSD($raisedUsdAmount, $currency, $exchangeRate);
 
         if ($loanStatus == Loan::OPEN || $loanStatus == Loan::ACTIVE || $lastEndedLoan || empty($activeLoan)) {
@@ -395,7 +395,7 @@ class BorrowerController extends BaseController
                     }
                 }
             }
-            if ($repaymentSchedule->getMissedInstallmentCount() == 0) {
+            if ($repaymentSchedule && $repaymentSchedule->getMissedInstallmentCount() == 0) {
                 $currentCreditLimit = $maximumBorrowerAmountNextLoan;
 
                 if ($loanStatus == Loan::FUNDED || $loanStatus == Loan::OPEN) {
@@ -423,7 +423,7 @@ class BorrowerController extends BaseController
 
             $isFirstFundedLoan = LoanQuery::create()
                 ->isFirstFundedLoan($borrower);
-            $disbursedDate = $activeLoan->getDisbursedAt();
+            $disbursedDate = $activeLoan ? $activeLoan->getDisbursedAt() : null;
             if ($disbursedDate) {
                 $currentTime = Carbon::now();
                 $disbursedAt = Carbon::instance($disbursedDate);
