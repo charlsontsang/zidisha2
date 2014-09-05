@@ -151,7 +151,7 @@ class ApplicationForm extends AbstractForm
 
     public function getDefaultData()
     {
-        if ($this->loan) {
+        if ($this->loan && !\Session::has('loan_data')) {
             $installmentCalculator = new InstallmentCalculator($this->loan);
             $installmentCalculator->amount();
             
