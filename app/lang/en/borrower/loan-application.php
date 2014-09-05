@@ -88,7 +88,7 @@ The current credit limit increase progression for Zidisha members who fulfill th
         'intro' => 'This page will allow you to publish a loan application for funding on the <a href=":link" target="blank">Lend</a> page of our website.<br/><br/>You will have the chance to review and modify your loan repayment schedule before your application is published.',
         'registration-fee-note' => 'Please Note: A new member registration fee of :amount will be applied only to your first Zidisha loan. This amount will be deducted from your loan disbursement if your loan is funded.',
         'amount' => 'Requested Loan Amount',
-        'amount-description' => 'You may request any amount up to your current credit limit of :currency :amount.',
+        'amount-description' => 'You may request any amount up to your current credit limit of :amount.',
         'amount-credit-limit' => 'How was my current credit limit determined?',
         'amount-note' => 'Note that the actual loan amount may differ slightly from amount requested due to currency exchange rate fluctuations.',
         'installment-amount-weekly' => 'Weekly Repayment Amount',

@@ -38,8 +38,7 @@
     
         <p>
             @lang('borrower.loan-application.application.amount-description', [
-                'amount' => '123',
-                'currency' => 'TODO',
+                'amount' => $currentCreditLimit,
             ])
             <br/>
             <a href="{{ route('borrower:credit') }}" target="_blank">
