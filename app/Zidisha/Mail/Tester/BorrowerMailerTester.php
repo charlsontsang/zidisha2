@@ -2,11 +2,13 @@
 namespace Zidisha\Mail\Tester;
 
 use Zidisha\Borrower\Borrower;
+use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Borrower\JoinLog;
 use Zidisha\Currency\Money;
 use Zidisha\Loan\Loan;
 use Zidisha\Loan\LoanQuery;
 use Zidisha\Mail\BorrowerMailer;
+use Zidisha\Repayment\Installment;
 use Zidisha\User\User;
 
 class BorrowerMailerTester
@@ -99,5 +101,20 @@ class BorrowerMailerTester
         $loan->setDisbursedAmount(Money::create('300', $loan->getCurrencyCode()));
 
         $this->borrowerMailer->sendDisbursedLoanMail($loan);
+    }
+
+    public function sendLoanFinalArrearMail()
+    {
+        $borrower = BorrowerQuery::create()
+            ->findOne();
+        $loan = LoanQuery::create()
+            ->findOne();
+        $installment = new Installment();
+        $installment->setDueDate(new \DateTime())
+            ->setAmount(Money::create(340, $loan->getCurrencyCode()))
+            ->setLoan($loan)
+            ->setBorrower($borrower);
+
+        $this->borrowerMailer->sendLoanFinalArrearMail($borrower, $loan, $installment);
     }
 } 

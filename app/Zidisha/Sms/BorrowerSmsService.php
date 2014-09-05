@@ -34,6 +34,7 @@ class BorrowerSmsService {
 
     public function sendLoanFinalArrearNotification(Borrower $borrower, Loan $loan, Installment $dueInstallment)
     {
+        $profile = $borrower->getProfile();
         $data = [
             'parameters' => [
                 'borrowerName' => $borrower->getName(),
@@ -45,7 +46,12 @@ class BorrowerSmsService {
             'countryCode'         => $borrower->getCountry()->getCountryCode(),
             'label'               => 'borrower.sms.final-arrear-notification'
         ];
-        $this->smsService->send($borrower->getProfile()->getPhoneNumber(), $data);
+        $this->smsService->send($profile->getPhoneNumber(), $data);
+
+        $alternateNumber = $profile->getAlternatePhoneNumber();
+        if ($alternateNumber) {
+            $this->smsService->send($alternateNumber, $data);
+        }
     }
 
     public function sendLoanFirstArrearNotification(Borrower $borrower, Loan $loan)

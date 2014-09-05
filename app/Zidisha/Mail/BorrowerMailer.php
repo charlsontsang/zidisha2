@@ -212,13 +212,26 @@ class BorrowerMailer{
         );
     }
 
-    public function sendLoanFinalArrearMail(Borrower $borrower, Loan $loan)
+    public function sendLoanFinalArrearMail(Borrower $borrower, Loan $loan, Installment $dueInstallment)
     {
+        $parameters = [
+            'borrowerName'          => $borrower->getName(),
+            'contacts'              => $borrower->getContactsList(),
+            'currencyCode'          => $borrower->getCountry()->getCountryCode(),
+            'dueAmt'                => $dueInstallment->getAmount(),
+            'dueDate'               => $dueInstallment->getDueDate()->format('d-m-Y'),
+            'repaymentInstructions' => $borrower->getCountry()->getRepaymentInstructions()
+        ];
+
+        $body = \Lang::get('borrower.mails.loan-arrear-reminder-final.body', $parameters);
+        $data['content'] = $body;
+
         $this->mailer->send(
             'emails.hero',
-            [
-                'to'      => $borrower->getUser()->getEmail(),
-                'subject' => 'Borrower account notifications',
+            $data + [
+                'to'         => $borrower->getUser()->getEmail(),
+                'subject'    => \Lang::get('borrower.mails.loan-arrear-reminder-final.subject', $parameters),
+                'templateId' => \Setting::get('sendwithus.borrower-notifications-template-id')
             ]
         );
     }
@@ -322,7 +335,6 @@ class BorrowerMailer{
             'emails.hero',
             $data + [
                 'to'         => $borrower->getUser()->getEmail(),
-                'from'       => \Lang::get('site.fromEmailAddress'),
                 'subject'    => \Lang::get('borrower.mails.loan-disbursed.subject', $parameters),
                 'templateId' => \Setting::get('sendwithus.borrower-notifications-template-id')
             ]

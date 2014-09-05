@@ -138,7 +138,7 @@ class LoanFinalArrear extends ScheduledJob
             $dueInstallment =  InstallmentQuery::create()
                 ->getDueInstallment($loan);
 
-            $borrowerMailer->sendLoanFinalArrearMail($borrower, $loan);
+            $borrowerMailer->sendLoanFinalArrearMail($borrower, $loan, $dueInstallment);
             $borrowerSmsService->sendLoanFinalArrearNotification($borrower, $loan, $dueInstallment);
         }
 
