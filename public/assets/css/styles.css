@@ -10218,6 +10218,11 @@ span.text-content span {
   width: 100%;
   border: 4px solid #767676;
 }
+@media (max-width: 767px) {
+  .giftcard-thumbnail img {
+    margin-left: -7px;
+  }
+}
 .giftcard-thumbnail input[type="radio"] {
   display: none;
 }
@@ -10226,9 +10231,15 @@ span.text-content span {
   border-color: #2e9df7;
 }
 .giftcard {
-  margin-top: 40px;
+  margin-top: 15px;
   margin-bottom: -50px;
-  padding: 40px;
+  padding: 15px 0 50px 0;
+}
+@media (min-width: 768px) {
+  .giftcard {
+    margin-top: 40px;
+    padding: 40px;
+  }
 }
 .giftcard > div > div {
   padding: 0 40px;

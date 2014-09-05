@@ -8,7 +8,10 @@
 }
 .giftcard-thumbnail img { 
   width: 100%;
-  border: 4px solid @gray-light;
+  border: 4px solid @gray-light;  
+  @media (max-width: @screen-xs-max) {
+    margin-left: -7px;
+  }
 }
 .giftcard-thumbnail input[type="radio"] { 
   display: none; 
@@ -17,9 +20,13 @@
   border-color: @brand-primary;
 }
 .giftcard {
-  margin-top: 40px;
-  margin-bottom: -50px;
-  padding: 40px;
+  margin-top: 15px;
+  margin-bottom: -50px; 
+  padding: 15px 0 50px 0;
+  @media (min-width: @screen-sm-min) {
+    margin-top: 40px;
+    padding: 40px;
+  }
 }
 .giftcard > div > div {
   padding: 0 40px;
