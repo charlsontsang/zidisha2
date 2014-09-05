@@ -627,7 +627,7 @@ class BorrowerService
             if($repaymentRate >= $minRepaymentRate)
             {
                 $creditEarned = CreditSettingQuery::create()
-                    ->getBorrowerInviteCreditLoanAmountLimit($borrower);
+                    ->getBorrowerInviteCreditAmount($borrower->getCountry());
             }
         }
         return $creditEarned;
@@ -642,7 +642,7 @@ class BorrowerService
                 ->filterByVolunteerMentorId($borrower->getId())
                 ->find();
             $borrowerInviteCredit = CreditSettingQuery::create()
-                ->getBorrowerInviteCreditLoanAmountLimit($borrower);
+                ->getBorrowerInviteCreditAmount($borrower->getCountry());
 
             foreach ($mentees as $mentee) {
                 //TODO
