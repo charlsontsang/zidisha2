@@ -199,8 +199,7 @@ class BorrowerMailer{
                 'to'          => $borrower->getUser()->getEmail(),
                 'subject'     => \Lang::get('borrower.mails.borrower-comment-notification.subject', $parameters),
                 'templateId'  => \Setting::get('sendwithus.comments-template-id'),
-                'footer'      => 'View and respond to the comment here:',
-//                'footer'      => \Lang::get('borrower.mails.borrower-comment-notification.footer', $parameters),
+                'footer'      => \Lang::get('borrower.mails.borrower-comment-notification.footer', $parameters),
                 'button_url'  => route('loan:index', $loan->getId()),
                 'button_text' => \Lang::get('borrower.mails.borrower-comment-notification.button-text', $parameters),
             ]
