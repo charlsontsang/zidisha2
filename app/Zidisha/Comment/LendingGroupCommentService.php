@@ -5,6 +5,7 @@ namespace Zidisha\Comment;
 use Zidisha\Lender\LendingGroup;
 use Zidisha\Mail\AdminMailer;
 use Zidisha\Mail\UserMailer;
+use Zidisha\Upload\Upload;
 
 class LendingGroupCommentService extends CommentService
 {
@@ -48,13 +49,26 @@ class LendingGroupCommentService extends CommentService
             $users[] = $lendingGroupSubscriber->getUser();
         }
 
+        $images = $this->getImages($comment);
         foreach ($users as $user) {
             if ($comment->getUser() != $user) {
-                $this->userMailer->sentLendingGroupCommentNotification($comment, $user);
+                $this->userMailer->sentLendingGroupCommentNotification($lendingGroup, $comment, $user, $images);
             }
         }
+    }
 
-        $this->adminMailer->sendLendingGroupCommentNotification($comment);
-
+    protected function getImages(Comment $comment)
+    {
+        $uploads = CommentUploadQuery::create()
+            ->filterByComment($comment)
+            ->find();
+        $images = '';
+        /** @var Upload $upload */
+        foreach ($uploads as $upload) {
+            if ($upload->isImage()) {
+                $images .= "<br><br><a target='_blank' href='route('home')'><img src='$upload->getImageUrl('small-profile-picture')' width='100' style='border:none'></a><br>";
+            }
+        }
+        return $images;
     }
 }
