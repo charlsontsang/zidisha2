@@ -181,51 +181,13 @@ class BorrowerMailer{
         );
     }
 
-    public function sendBorrowerCommentNotification(Borrower $borrower, Loan $loan, Comment $comment)
+    public function sendBorrowerCommentNotification(Borrower $borrower, Loan $loan, Comment $comment, $postedBy, $images)
     {
-        $commenter = $comment->getUser();
-        $bname_format=ucwords(strtolower($borrower->getName()));
-        $sender_name=ucwords(strtolower($commenter->getUsername()));
-        if ($commenter->isBorrower()) {
-            $city = $commenter->getBorrower()->getProfile()->getCity();
-            $country = $commenter->getBorrower()->getCountry()->getName();
-            if ($city) {
-                $location = ucwords(strtolower($city.", ".$country));
-            } else {
-                $location =  ucwords(strtolower($country));
-            }
-        } elseif ($commenter->isLender()) {
-            $city = $commenter->getLender()->getProfile()->getCity();
-            $country = $commenter->getLender()->getCountry()->getName();
-            if ($city) {
-                $location = ucwords(strtolower($city.", ".$country));
-            } else {
-                $location =  ucwords(strtolower($country));
-            }
-        } else {
-            $location = '';
-        }
-        if ($comment->getUserId() != $borrower->getId()){
-            $postedBy = "Posted at the profile of ".$bname_format." by ".$sender_name." in ".$location;
-        } else {
-            $postedBy = "Posted by ".$bname_format." in ".$location;
-        }
-        $uploads = BorrowerCommentUploadsQuery::create()
-            ->filterByBorrowerComment($comment)
-            ->find();
-        $images = '';
-        /** @var Upload $upload */
-        foreach ($uploads as $upload) {
-            if ($upload->isImage()) {
-                $images .= "<br><br><a target='_blank' href='route('home')'><img src='$upload->getImageUrl('small-profile-picture')' width='100' style='border:none'></a><br>";
-            }
-        }
-
         $parameters = [
             'borrowerName' => $borrower->getName(),
             'message'      => nl2br($comment->getMessage()),
-            'postedBy'      => $postedBy,
-            'images'      => $images,
+            'postedBy'     => $postedBy,
+            'images'       => $images,
         ];
 
         $body = \Lang::get('borrower.mails.borrower-comment-notification.body', $parameters);
@@ -237,7 +199,8 @@ class BorrowerMailer{
                 'to'          => $borrower->getUser()->getEmail(),
                 'subject'     => \Lang::get('borrower.mails.borrower-comment-notification.subject', $parameters),
                 'templateId'  => \Setting::get('sendwithus.comments-template-id'),
-                'footer'      => \Lang::get('borrower.mails.borrower-comment-notification.footer', $parameters),
+                'footer'      => 'View and respond to the comment here:',
+//                'footer'      => \Lang::get('borrower.mails.borrower-comment-notification.footer', $parameters),
                 'button_url'  => route('loan:index', $loan->getId()),
                 'button_text' => \Lang::get('borrower.mails.borrower-comment-notification.button-text', $parameters),
             ]

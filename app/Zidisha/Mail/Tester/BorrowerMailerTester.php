@@ -257,7 +257,9 @@ class BorrowerMailerTester
             ->findOne();
         $comment = BorrowerCommentQuery::create()
             ->findOne();
+        $postedBy = 'dmdm by hddhd on ffjfjfjf';
+        $images = '.....';
 
-        $this->borrowerMailer->sendBorrowerCommentNotification($borrower, $loan, $comment);
+        $this->borrowerMailer->sendBorrowerCommentNotification($borrower, $loan, $comment, $postedBy, $images);
     }
 } 

@@ -90,9 +90,9 @@ The Zidisha Team',
         'footer'      => 'Redeem your credit by making a loan here:',
         'button-text' => 'Make A Loan'
     ],
-    'sendwithusdefaults'              => [
+    'sendwithus-defaults'              => [
         'footer'      => 'Don\’t miss our latest loan projects:',
-        'button_text' => 'View Loans'
+        'button-text' => 'View Loans'
     ],
     'loan-expired'                    => [
         'subject' => 'Your loan to :borrowerName has been returned',

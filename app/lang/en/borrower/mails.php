@@ -171,6 +171,8 @@ You may contact us by replying to this email. Thanks very much for your help.<br
 The Zidisha Team'
     ],
     'borrower-comment-notification'      => [
+        'footer' => 'View and respond to the comment here:',
+        'button-text' => 'View Comment',
         'subject' => 'You Received a Message at Zidisha',
         'body'    => 'Dear :borrowerName,<br/><br/>
 You have a new message on your Zidisha loan page.<br/><br/>
@@ -179,7 +181,5 @@ You have a new message on your Zidisha loan page.<br/><br/>
             'Please log in to your account at www.zidisha.org and click "Post a comment" to respond to this message.<br/><br/>' .
             'Thank you,<br/><br/>' .
             'Zidisha Team',
-        'footer' => 'View and respond to the comment here:',
-        'button-text' => 'View Comment'
     ],
 ];

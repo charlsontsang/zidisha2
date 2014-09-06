@@ -58,11 +58,6 @@ class Mailer
         ];
 
         if (array_get($data, 'templateId') && $this->useSendWithUs) {
-            $data += [
-                'footer'      => 'Don’t miss our latest loan projects:',
-                'button_url'  => route('lend:index'),
-                'button_text' => 'View Loans'
-            ];
             $this->sendwithusDriver->send($view, $data);
         } elseif (array_get($data, 'label')) {
             $this->laravelMailerDriver->send('emails.label-template', $data);
