@@ -91,7 +91,7 @@
                     {{ $repaymentSchedule->getTotalInterest()->round(2) }}
                     ({{ Lang::get($loan->isWeeklyInstallment() ? 'borrower.loan.interest-rate-for-weeks' : 'borrower.loan.interest-rate-for-months', [
                         'interestRate' => $loan->getTotalInterestRate(),
-                        'period' => $loan->getPeriod(),
+                        'period' => $repaymentSchedule->getPeriod(),
                     ]) }})
                 </td>
             </tr>
