@@ -7,6 +7,8 @@ use Zidisha\Borrower\InviteQuery;
 use Zidisha\Borrower\JoinLog;
 use Zidisha\Borrower\VolunteerMentor;
 use Zidisha\Borrower\VolunteerMentorQuery;
+use Zidisha\Comment\BorrowerCommentQuery;
+use Zidisha\Comment\CommentQuery;
 use Zidisha\Currency\Money;
 use Zidisha\Loan\Loan;
 use Zidisha\Loan\LoanQuery;
@@ -245,5 +247,17 @@ class BorrowerMailerTester
         $email = "yoyo@ff.com";
 
         $this->borrowerMailer->sendLoanMonthlyArrearToContact($name, $email, $borrower, $installment);
+    }
+
+    public function sendBorrowerCommentNotification()
+    {
+        $borrower = BorrowerQuery::create()
+            ->findOne();
+        $loan = LoanQuery::create()
+            ->findOne();
+        $comment = BorrowerCommentQuery::create()
+            ->findOne();
+
+        $this->borrowerMailer->sendBorrowerCommentNotification($borrower, $loan, $comment);
     }
 } 

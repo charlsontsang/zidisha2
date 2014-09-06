@@ -77,7 +77,7 @@ class BorrowerCommentService extends CommentService
         }
 
         if ($comment->getUserId() != $borrower->getId()) {
-            $this->borrowerMailer->sendBorrowerCommentNotification($borrower, $comment);
+            $this->borrowerMailer->sendBorrowerCommentNotification($borrower, $loan, $comment);
         }
 
         $this->adminMailer->sendBorrowerCommentNotification($comment);

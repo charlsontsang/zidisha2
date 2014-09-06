@@ -7,10 +7,13 @@ use Zidisha\Borrower\Borrower;
 use Zidisha\Borrower\FeedbackMessage;
 use Zidisha\Borrower\Invite;
 use Zidisha\Borrower\VolunteerMentor;
+use Zidisha\Comment\BorrowerCommentUploads;
+use Zidisha\Comment\BorrowerCommentUploadsQuery;
 use Zidisha\Comment\Comment;
 use Zidisha\Currency\Money;
 use Zidisha\Loan\Loan;
 use Zidisha\Repayment\Installment;
+use Zidisha\Upload\Upload;
 use Zidisha\User\User;
 
 class BorrowerMailer{
@@ -178,9 +181,67 @@ class BorrowerMailer{
         );
     }
 
-    public function sendBorrowerCommentNotification(Borrower $borrower, Comment $comment)
+    public function sendBorrowerCommentNotification(Borrower $borrower, Loan $loan, Comment $comment)
     {
+        $commenter = $comment->getUser();
+        $bname_format=ucwords(strtolower($borrower->getName()));
+        $sender_name=ucwords(strtolower($commenter->getUsername()));
+        if ($commenter->isBorrower()) {
+            $city = $commenter->getBorrower()->getProfile()->getCity();
+            $country = $commenter->getBorrower()->getCountry()->getName();
+            if ($city) {
+                $location = ucwords(strtolower($city.", ".$country));
+            } else {
+                $location =  ucwords(strtolower($country));
+            }
+        } elseif ($commenter->isLender()) {
+            $city = $commenter->getLender()->getProfile()->getCity();
+            $country = $commenter->getLender()->getCountry()->getName();
+            if ($city) {
+                $location = ucwords(strtolower($city.", ".$country));
+            } else {
+                $location =  ucwords(strtolower($country));
+            }
+        } else {
+            $location = '';
+        }
+        if ($comment->getUserId() != $borrower->getId()){
+            $postedBy = "Posted at the profile of ".$bname_format." by ".$sender_name." in ".$location;
+        } else {
+            $postedBy = "Posted by ".$bname_format." in ".$location;
+        }
+        $uploads = BorrowerCommentUploadsQuery::create()
+            ->filterByBorrowerComment($comment)
+            ->find();
+        $images = '';
+        /** @var Upload $upload */
+        foreach ($uploads as $upload) {
+            if ($upload->isImage()) {
+                $images .= "<br><br><a target='_blank' href='route('home')'><img src='$upload->getImageUrl('small-profile-picture')' width='100' style='border:none'></a><br>";
+            }
+        }
 
+        $parameters = [
+            'borrowerName' => $borrower->getName(),
+            'message'      => nl2br($comment->getMessage()),
+            'postedBy'      => $postedBy,
+            'images'      => $images,
+        ];
+
+        $body = \Lang::get('borrower.mails.borrower-comment-notification.body', $parameters);
+        $data['content'] = $body;
+
+        $this->mailer->send(
+            'emails.hero',
+            $data + [
+                'to'          => $borrower->getUser()->getEmail(),
+                'subject'     => \Lang::get('borrower.mails.borrower-comment-notification.subject', $parameters),
+                'templateId'  => \Setting::get('sendwithus.comments-template-id'),
+                'footer'      => \Lang::get('borrower.mails.borrower-comment-notification.footer', $parameters),
+                'button_url'  => route('loan:index', $loan->getId()),
+                'button_text' => \Lang::get('borrower.mails.borrower-comment-notification.button-text', $parameters),
+            ]
+        );
     }
     
     public function sendExpiredLoanMail(Borrower $borrower)

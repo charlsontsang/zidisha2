@@ -256,7 +256,10 @@ return [
             'label' => 'Lender loan repayment template id'
         ],
         'sendwithus.borrower-invite-template-id' => [
-            'label' => 'Lender loan repayment template id'
+            'label' => 'Borrower Invite template id'
+        ],
+        'sendwithus.comments-template-id' => [
+            'label' => 'Comments template id'
         ],
     ]
 ];
