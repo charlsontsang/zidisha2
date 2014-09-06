@@ -11,6 +11,7 @@ use Zidisha\Currency\Money;
 use Zidisha\Lender\Lender;
 use Zidisha\Lender\LenderQuery;
 use Zidisha\Loan\Bid;
+use Zidisha\Loan\BidQuery;
 use Zidisha\Loan\Loan;
 use Zidisha\Loan\LoanQuery;
 use Zidisha\Loan\LenderRefund;
@@ -31,16 +32,11 @@ class LenderMailerTester
 
     public function sendFirstBidConfirmationMail()
     {
-        $user = new User();
-        $user->setEmail('test@test.com');
+        $bid = BidQuery::create()
+            ->findOne();
+        $lender = $bid->getLender();
 
-        $lender = new Lender();
-        $lender->setUser($user);
-
-        $bid = new Bid();
-        $bid->setLender($lender);
-
-        $this->lenderMailer->sendFirstBidConfirmationMail($bid);
+        $this->lenderMailer->sendFirstBidConfirmationMail($lender);
     }
 
     public function sendOutbidMail()

@@ -470,7 +470,7 @@ class LoanService
             ->count() == 1;
 
         if ($isFirstBid) {
-            $this->lenderMailer->sendFirstBidConfirmationMail($bid);
+            $this->lenderMailer->sendFirstBidConfirmationMail($lender);
         }
 
         // Outbid notification

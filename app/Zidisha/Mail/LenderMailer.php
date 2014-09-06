@@ -36,21 +36,15 @@ class LenderMailer
         $this->mailer = $mailer;
     }
 
-    /**
-     * @param Bid $bid
-     */
-    public function sendFirstBidConfirmationMail(Bid $bid)
+    public function sendFirstBidConfirmationMail(Lender $lender)
     {
-        $email = $bid->getLender()->getUser()->getEmail();
-        $username = $bid->getLender()->getName();
         $this->mailer->send(
-            'emails.lender.loan.first-bid-confirmation',
+            'emails.hero',
             [
-                'to'      => $email,
-                'from'    => 'service@zidisha.com',
-                'subject' => 'Congratulations you have made your first Bid on Zidisha.',
+                'to'         => $lender->getUser()->getEmail(),
+                'subject'    => '',
                 'templateId' => \Setting::get('sendwithus.lender-loan-first-bid-confirmation-template-id'),
-                'username' => $username
+                'username'   => $lender->getUser()->getUsername(),
             ]
         );
     }
