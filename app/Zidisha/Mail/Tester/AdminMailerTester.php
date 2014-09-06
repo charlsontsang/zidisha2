@@ -2,7 +2,9 @@
 namespace Zidisha\Mail\Tester;
 
 use Zidisha\Comment\BorrowerCommentQuery;
+use Zidisha\Loan\LoanQuery;
 use Zidisha\Mail\AdminMailer;
+use Zidisha\User\UserQuery;
 
 class AdminMailerTester
 {
@@ -18,17 +20,13 @@ class AdminMailerTester
 
     public function sendBorrowerCommentNotification()
     {
-        $comment = BorrowerCommentQuery::create()
-                    ->findOne();
-
-        $this->adminMailer->sendBorrowerCommentNotification($comment);
-    }
-
-    public function sendLendingGroupCommentNotification()
-    {
+        $loan = LoanQuery::create()
+            ->findOne();
         $comment = BorrowerCommentQuery::create()
             ->findOne();
+        $postedBy = 'dmdm by hddhd on ffjfjfjf';
+        $images = '.....';
 
-        $this->adminMailer->sendLendingGroupCommentNotification($comment);
+        $this->adminMailer->sendBorrowerCommentNotification($loan, $comment, $postedBy, $images);
     }
 }

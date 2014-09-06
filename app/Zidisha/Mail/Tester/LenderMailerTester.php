@@ -6,10 +6,12 @@ use Carbon\Carbon;
 use Zidisha\Balance\InviteTransactionQuery;
 use Zidisha\Balance\TransactionQuery;
 use Zidisha\Borrower\Borrower;
+use Zidisha\Comment\BorrowerCommentQuery;
 use Zidisha\Currency\Money;
 use Zidisha\Lender\Lender;
 use Zidisha\Lender\LenderQuery;
 use Zidisha\Loan\Bid;
+use Zidisha\Loan\BidQuery;
 use Zidisha\Loan\Loan;
 use Zidisha\Loan\LoanQuery;
 use Zidisha\Loan\LenderRefund;
@@ -30,16 +32,11 @@ class LenderMailerTester
 
     public function sendFirstBidConfirmationMail()
     {
-        $user = new User();
-        $user->setEmail('test@test.com');
+        $bid = BidQuery::create()
+            ->findOne();
+        $lender = $bid->getLender();
 
-        $lender = new Lender();
-        $lender->setUser($user);
-
-        $bid = new Bid();
-        $bid->setLender($lender);
-
-        $this->lenderMailer->sendFirstBidConfirmationMail($bid);
+        $this->lenderMailer->sendFirstBidConfirmationMail($lender);
     }
 
     public function sendOutbidMail()
@@ -264,5 +261,19 @@ class LenderMailerTester
         $gainPercent = 4;
 
         $this->lenderMailer->sendRepaidLoanGainMail($lender, $loan, $loanAmount, $repaidAmount, $gainAmount, $gainPercent);
+    }
+
+    public function sendBorrowerCommentNotification()
+    {
+        $lender = LenderQuery::create()
+            ->findOne();
+        $loan = LoanQuery::create()
+            ->findOne();
+        $comment = BorrowerCommentQuery::create()
+            ->findOne();
+        $postedBy = 'dmdm by hddhd on ffjfjfjf';
+        $images = '.....';
+
+        $this->lenderMailer->sendBorrowerCommentNotification($lender, $loan, $comment, $postedBy, $images);
     }
 }

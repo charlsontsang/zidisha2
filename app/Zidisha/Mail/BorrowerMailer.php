@@ -7,10 +7,13 @@ use Zidisha\Borrower\Borrower;
 use Zidisha\Borrower\FeedbackMessage;
 use Zidisha\Borrower\Invite;
 use Zidisha\Borrower\VolunteerMentor;
+use Zidisha\Comment\BorrowerCommentUploads;
+use Zidisha\Comment\BorrowerCommentUploadsQuery;
 use Zidisha\Comment\Comment;
 use Zidisha\Currency\Money;
 use Zidisha\Loan\Loan;
 use Zidisha\Repayment\Installment;
+use Zidisha\Upload\Upload;
 use Zidisha\User\User;
 
 class BorrowerMailer{
@@ -178,9 +181,29 @@ class BorrowerMailer{
         );
     }
 
-    public function sendBorrowerCommentNotification(Borrower $borrower, Comment $comment)
+    public function sendBorrowerCommentNotification(Borrower $borrower, Loan $loan, Comment $comment, $postedBy, $images)
     {
+        $parameters = [
+            'borrowerName' => $borrower->getName(),
+            'message'      => nl2br($comment->getMessage()),
+            'postedBy'     => $postedBy,
+            'images'       => $images,
+        ];
 
+        $body = \Lang::get('borrower.mails.borrower-comment-notification.body', $parameters);
+        $data['content'] = $body;
+
+        $this->mailer->send(
+            'emails.hero',
+            $data + [
+                'to'          => $borrower->getUser()->getEmail(),
+                'subject'     => \Lang::get('borrower.mails.borrower-comment-notification.subject', $parameters),
+                'templateId'  => \Setting::get('sendwithus.comments-borrower-template-id'),
+                'footer'      => \Lang::get('borrower.mails.borrower-comment-notification.footer', $parameters),
+                'button_url'  => route('loan:index', $loan->getId()),
+                'button_text' => \Lang::get('borrower.mails.borrower-comment-notification.button-text', $parameters),
+            ]
+        );
     }
     
     public function sendExpiredLoanMail(Borrower $borrower)
@@ -204,17 +227,25 @@ class BorrowerMailer{
         );
     }
 
-    public function sendBorrowerInvite(Borrower $lender, Invite $borrowerInvite, $subject, $message)
+    public function sendBorrowerInvite(Borrower $borrower, Invite $borrowerInvite, $subject, $message)
     {
-        $email = $borrowerInvite->getEmail();
-        //TODO send invite email
+        $parameters = [
+            'borrowLink' => route('home'),
+        ];
+
+        $link = \Lang::get('borrower.mails.invite.link', $parameters);
+        $data['content'] = $message."<br/><br/>".$link;;
+
+        $this->mailer->send(
+            'emails.hero',
+            $data + [
+                'to'         => $borrowerInvite->getEmail(),
+                'subject'    => $subject,
+                'templateId' => \Setting::get('sendwithus.borrower-invite-template-id')
+            ]
+        );
     }
     
-    public function sendLoanFirstArrear(User $user)
-    {
-        
-    }
-
     public function sendAgainRepaymentReminder(Borrower $borrower, Installment $dueInstallment, Money $dueAmount)
     {
         $country = $borrower->getCountry();
@@ -309,24 +340,23 @@ class BorrowerMailer{
         );
     }
 
-    public function sendLoanFinalArrearToVolunteerMentor(VolunteerMentor $volunteerMentor, Borrower $borrower, Loan $loan)
+    public function sendLoanMonthlyArrearToContact($name, $email, Borrower $borrower, Installment $dueInstallment)
     {
-        $this->mailer->send(
-            'emails.hero',
-            [
-                'to'      => $borrower->getUser()->getEmail(),
-                'subject' => 'Borrower account notifications',
-            ]
-        );
-    }
+        $data = [
+            'parameters' => [
+                'contactName'    => $name,
+                'borrowerName'   => $borrower->getName(),
+                'dueDays'        => round((time() - $dueInstallment->getDueDate()->getTimestamp())/(60*60*24)),
+                'borrowerNumber' => $borrower->getProfile()->getPhoneNumber(),
+            ],
+        ];
 
-    public function sendLoanMonthlyArrearToVolunteerMentor(VolunteerMentor $volunteerMentor, Borrower $borrower, Loan $loan)
-    {
         $this->mailer->send(
-            'emails.hero',
-            [
-                'to'      => $borrower->getUser()->getEmail(),
-                'subject' => 'Borrower account notifications',
+            'emails.label-template',
+            $data + [
+                'to'         => $email,
+                'label'      => 'borrower.mails.loan-arrear-mediation-notification.body',
+                'subject'    => \Lang::get('borrower.mails.loan-arrear-mediation-notification.subject'),
             ]
         );
     }
@@ -398,12 +428,6 @@ class BorrowerMailer{
             ]
         );
     }
-
-    public function sendLoanFinalArrearToInvite(Invite $invite, Borrower $borrower, Loan $loan)
-    {
-        //TODO: sendLoanFinalArrearToInvite
-    }
-
 
     public function sendDisbursedLoanMail(Loan $loan)
     {

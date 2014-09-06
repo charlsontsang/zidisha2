@@ -1,6 +1,6 @@
 <?php
 return [
-    'new-loan-notification'           => [
+    'new-loan-notification'              => [
         'subject'       => ':borrowerName has posted a new loan application!',
         'lender-body'   => ':borrowerName fully repaid the loan you funded on :repayDate, and has just posted a new loan application!
 <br/><br/>
@@ -18,7 +18,7 @@ Cheers,
 <br/><br/>
 The Zidisha Team'
     ],
-    'loan-fully-funded'               => [
+    'loan-fully-funded'                  => [
         'subject'          => ':borrowerName is fully funded!',
         'body'             => '',
         'accept-message-1' => 'New opportunities are opening up for :borrowerName',
@@ -34,7 +34,7 @@ The Zidisha Team
 PS:  Join a <a href=":lendingGroupLink">Lending Group</a> to meet other lenders who share your interests!
 '
     ],
-    'lender-invite'                   => [
+    'lender-invite'                      => [
         'subject' => ':lenderName has sent you $25 to lend to a Zidisha entrepreneur',
         'body'    => '
 :lenderName has sent you $25 to lend to a Zidisha entrepreneur.
@@ -43,7 +43,7 @@ PS:  Join a <a href=":lendingGroupLink">Lending Group</a> to meet other lenders 
 Use your $25 to fund a small business growth loan to a disadvantaged entrepreneur in Africa or Asia.
 You can communicate with your chosen entrepreneur via the Zidisha website as his or her business develops - changing a life while interacting directly with a remarkable individual on the other side of the world.'
     ],
-    'lender-unused-fund'              => [
+    'lender-unused-fund'                 => [
         'subject' => 'You have unused funds in your Zidisha account',
         'body'    => 'Hi there,
                      <br/><br/>
@@ -58,7 +58,7 @@ You can communicate with your chosen entrepreneur via the Zidisha website as his
         'header'  => 'You\'re invited!',
         'footer'  => 'View more fundraising loan projects here!'
     ],
-    'lender-account-abandoned'        => [
+    'lender-account-abandoned'           => [
         'body' => 'Dear :lenderName,
 <br/><br/>
 We noticed that you have not logged into your account at Zidisha.org for over one year.  
@@ -72,7 +72,7 @@ Thanks so much for having participated in our lending community, and for helping
 Best regards,<br/><br/>
 The Zidisha Team'
     ],
-    'lender-invite-credit'            => [
+    'lender-invite-credit'               => [
         'subject'     => 'Your invite is accepted!',
         'body'        => '
 Greetings,
@@ -90,11 +90,11 @@ The Zidisha Team',
         'footer'      => 'Redeem your credit by making a loan here:',
         'button-text' => 'Make A Loan'
     ],
-    'sendwithusdefaults'              => [
+    'sendwithus-defaults'                => [
         'footer'      => 'Don\’t miss our latest loan projects:',
-        'button_text' => 'View Loans'
+        'button-text' => 'View Loans'
     ],
-    'loan-expired'                    => [
+    'loan-expired'                       => [
         'subject' => 'Your loan to :borrowerName has been returned',
         'body'    => 'Hi there,
 We have a little bit of bad news.  It looks like :borrowerName ’s loan wasn’t fully funded.  We’ve returned your contribution of :bidAmount to your account.
@@ -109,7 +109,7 @@ The Zidisha Team
 <br><br>
 PS:  You can sort the <a href=":lendLink">fundraising loans</a> by “Amount still needed” to find the ones that need the least money to be fully funded.'
     ],
-    'loan-expired-invite'             => [
+    'loan-expired-invite'                => [
         'subject' => 'Your loan to :borrowerName has been returned',
         'body'    => '
 Hi there,
@@ -122,7 +122,7 @@ The Zidisha Team
 
 PS:  You can sort the <a href=":lendLink">fundraising loans</a> by “Amount still needed” to find the ones that need the least money to be fully funded.'
     ],
-    'loan-disbursed'                  => [
+    'loan-disbursed'                     => [
         'subject' => ':borrowerName has received your loan!',
         'message' => ':borrowFirstName has received your loan.',
         'body'    => 'Good news!  We transferred your loan to :borrowerName on :disbursedDate. :borrowFirstName is now on the way to achieving a brighter future, thanks to you.
@@ -133,7 +133,7 @@ The Zidisha Team
 <br/><br/>
 PS:  Want a really cool gift idea?  Check out our <a href=":giftCardPage">gift cards</a> - your friend chooses the entrepreneur!'
     ],
-    'loan-defaulted'                  => [
+    'loan-defaulted'                     => [
         'subject' => 'Write-off notification',
         'body'    => '
         Greetings,
@@ -148,7 +148,7 @@ Best wishes,
 <br/><br/>
 The Zidisha Team'
     ],
-    'loan-repayment-received'         => [
+    'loan-repayment-received'            => [
         'subject'  => ':borrowerName sent you a repayment!',
         'body'     => '
 Hi there,
@@ -173,7 +173,7 @@ Best wishes,<br/><br/>
 The Zidisha Team <br/><br/>
         '
     ],
-    'loan-repayment-received-balance' => [
+    'loan-repayment-received-balance'    => [
         'subject' => 'Your lending credit has reached USD :currentCredit',
         'body'    => '
         Hi there,
@@ -187,7 +187,7 @@ Happy lending,
 The Zidisha Team
         '
     ],
-    'loan-repayment-feedback'         => [
+    'loan-repayment-feedback'            => [
         'subject' => 'Hooray! :borrowerName has completely repaid your loan',
         'header'  => ':borrowerName has completely repaid your loan.',
         'body'    => '
@@ -203,9 +203,9 @@ The Zidisha Team
 <br/><br/>
 PS:  Share, tweet or email this success story to your friends!'
     ],
-    'loan-repaid-gain' => [
+    'loan-repaid-gain'                   => [
         'subject' => ':gainAmount gain from your loan to :borrowerName',
-        'body' => '
+        'body'    => '
         Hi there,
 <br/><br/>
 Your lending fund gained value from your recent loan to <a href=":loanUrl">:borrowerName</a>!  Here are the details:
@@ -230,5 +230,26 @@ The Zidisha Team
 <br/><br/>
 PS:  You can view the gains or losses for all of your completed loans <a href=":myStatsUrl">here</a>.
         '
-    ]
+    ],
+    'borrower-comment-notification'      => [
+        'subject' => 'New message from :borrowerName',
+        'body'    => ':message<br/><br/>
+- :postedBy
+:images',
+    ],
+    'lending-group-comment-notification' => [
+        'subject' => 'New Message: :groupName Lending Group',
+        'body'    => ':message<br/><br/>
+- Posted by :byUserName on :date<br/><br/>
+<a href=":groupLink">View and respond to the comment here.</a><br/><br/>
+:images<br/><br/>
+You may change your group comment notification preferences in the <a href=":groupLink"> :groupName Lending Group profile page</a>.'
+    ],
+//    'out-bid-notification' => [
+//        'subject' => 'Outbid Notification',
+//        'body' => 'This is a notification that your bid to fund :bidAmount of the loan for <a href='%borrower_link%' target='_blank'>%bname%</a> at %bid_interest%% interest has been outbid by another lender who proposed a lower interest rate. The amount outbid of $%out_bid_amt% has been returned to your lender account, and you may use it to fund another loan or to bid again on this one.<br/><br/>".
+//"Loan bids may be partially or fully outbid when the total value of lender bids exceeds the amount needed for the loan. In these cases, only the amount originally requested by the borrower is accepted, and bids at the lowest interest rates are retained. You may bid again on <a href='%borrower_link%' target='_blank'>%bname%</a>'s loan by proposing a lower interest rate.<br/><br/>".
+//"Best wishes,<br/><br/>".
+//"The Zidisha Team'
+//    ]
 ];

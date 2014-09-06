@@ -6,6 +6,7 @@ use Zidisha\Loan\Base\LoanQuery;
 use Zidisha\Mail\AdminMailer;
 use Zidisha\Mail\BorrowerMailer;
 use Zidisha\Mail\LenderMailer;
+use Zidisha\Upload\Upload;
 use Zidisha\User\UserQuery;
 use Zidisha\Vendor\PropelDB;
 
@@ -70,16 +71,66 @@ class BorrowerCommentService extends CommentService
             ->filterById($ids)
             ->find();
 
+        $postedBy = $this->getPostedBy($borrower, $comment);
+        $images = $this->getImages($comment);
+
         foreach ($lenders as $lender) {
             if ($comment->getUserId() != $lender->getId()) {
-                $this->lenderMailer->sendBorrowerCommentNotification($lender, $comment);
+                $this->lenderMailer->sendBorrowerCommentNotification($lender, $loan, $comment, $postedBy, $images);
             }
         }
 
         if ($comment->getUserId() != $borrower->getId()) {
-            $this->borrowerMailer->sendBorrowerCommentNotification($borrower, $comment);
+            $this->borrowerMailer->sendBorrowerCommentNotification($borrower, $loan, $comment, $postedBy, $images);
         }
 
-        $this->adminMailer->sendBorrowerCommentNotification($comment);
+        $this->adminMailer->sendBorrowerCommentNotification($loan, $comment, $postedBy, $images);
+    }
+
+    protected function getPostedBy(Borrower $borrower, Comment $comment)
+    {
+        $commenter = $comment->getUser();
+        $bname_format=ucwords(strtolower($borrower->getName()));
+        $sender_name=ucwords(strtolower($commenter->getUsername()));
+        if ($commenter->isBorrower()) {
+            $city = $commenter->getBorrower()->getProfile()->getCity();
+            $country = $commenter->getBorrower()->getCountry()->getName();
+            if ($city) {
+                $location = ucwords(strtolower($city.", ".$country));
+            } else {
+                $location =  ucwords(strtolower($country));
+            }
+        } elseif ($commenter->isLender()) {
+            $city = $commenter->getLender()->getProfile()->getCity();
+            $country = $commenter->getLender()->getCountry()->getName();
+            if ($city) {
+                $location = ucwords(strtolower($city.", ".$country));
+            } else {
+                $location =  ucwords(strtolower($country));
+            }
+        } else {
+            $location = '';
+        }
+        if ($comment->getUserId() != $borrower->getId()){
+            $postedBy = "Posted at the profile of ".$bname_format." by ".$sender_name." in ".$location;
+        } else {
+            $postedBy = "Posted by ".$bname_format." in ".$location;
+        }
+        return $postedBy;
+    }
+
+    protected function getImages(Comment $comment)
+    {
+        $uploads = CommentUploadQuery::create()
+            ->filterByComment($comment)
+            ->find();
+        $images = '';
+        /** @var Upload $upload */
+        foreach ($uploads as $upload) {
+            if ($upload->isImage()) {
+                $images .= "<br><br><a target='_blank' href='route('home')'><img src='$upload->getImageUrl('small-profile-picture')' width='100' style='border:none'></a><br>";
+            }
+        }
+        return $images;
     }
 }

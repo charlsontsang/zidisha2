@@ -36,50 +36,60 @@ class LenderMailer
         $this->mailer = $mailer;
     }
 
-    /**
-     * @param Bid $bid
-     */
-    public function sendFirstBidConfirmationMail(Bid $bid)
+    public function sendFirstBidConfirmationMail(Lender $lender)
     {
-        $email = $bid->getLender()->getUser()->getEmail();
-        $username = $bid->getLender()->getName();
         $this->mailer->send(
-            'emails.lender.loan.first-bid-confirmation',
+            'emails.hero',
             [
-                'to'      => $email,
-                'from'    => 'service@zidisha.com',
-                'subject' => 'Congratulations you have made your first Bid on Zidisha.',
+                'to'         => $lender->getUser()->getEmail(),
+                'subject'    => '',
                 'templateId' => \Setting::get('sendwithus.lender-loan-first-bid-confirmation-template-id'),
-                'username' => $username
+                'username'   => $lender->getUser()->getUsername(),
             ]
         );
     }
 
     public function sendOutbidMail($changedBid)
     {
-        /** @var Bid $bid*/
-        $bid = $changedBid['bid'];
-        /** @var Money $acceptedAmount */
-        $acceptedAmount = $changedBid['acceptedAmount'];
-        /** @var Money $changedAmount */
-        $changedAmount = $changedBid['changedAmount'];
-        $email = $bid->getLender()->getUser()->getEmail();
-
-        $this->mailer->send(
-            $acceptedAmount->isZero() ? 'emails.lender.loan.fully-outbid' : 'emails.lender.loan.partially-outbid',
-            [
-                'to'              => $email,
-                'from'            => 'service@zidisha.com',
-                'subject'         => 'Outbid Notification.',
-                'bidAmount'       => $bid->getBidAmount()->round(2)->getAmount(),
-                'bidInterestRate' => $bid->getInterestRate(),
-                'outbidAmount'    => $changedAmount->round(2)->getAmount(),
-                'acceptedAmount'  => $acceptedAmount->round(2)->getAmount(),
-                'borrowerLink'    => $bid->getLoan()->getBorrower()->getUser()->getProfileUrl(),
-                'borrowerName'    => $bid->getLoan()->getBorrower()->getName(),
-                'loanLink'        => route('loan:index', ['loanId' => $bid->getLoan()->getBorrower()->getActiveLoanId()]),
-            ]
-        );
+//        /** @var Bid $bid*/
+//        $bid = $changedBid['bid'];
+//        /** @var Money $acceptedAmount */
+//        $acceptedAmount = $changedBid['acceptedAmount'];
+//        /** @var Money $changedAmount */
+//        $changedAmount = $changedBid['changedAmount'];
+//        $email = $bid->getLender()->getUser()->getEmail();
+//
+//        $this->mailer->send(
+//            $acceptedAmount->isZero() ? 'emails.lender.loan.fully-outbid' : 'emails.lender.loan.partially-outbid',
+//            [
+//                'to'              => $email,
+//                'from'            => 'service@zidisha.com',
+//                'subject'         => 'Outbid Notification.',
+//                'bidAmount'       => $bid->getBidAmount()->round(2)->getAmount(),
+//                'bidInterestRate' => $bid->getInterestRate(),
+//                'outbidAmount'    => $changedAmount->round(2)->getAmount(),
+//                'acceptedAmount'  => $acceptedAmount->round(2)->getAmount(),
+//                'borrowerLink'    => $bid->getLoan()->getBorrower()->getUser()->getProfileUrl(),
+//                'borrowerName'    => $bid->getLoan()->getBorrower()->getName(),
+//                'loanLink'        => route('loan:index', ['loanId' => $bid->getLoan()->getBorrower()->getActiveLoanId()]),
+//            ]
+//        );
+//
+//        $data = [
+//            'parameters' => [
+//                'borrowerName' => $borrower->getName(),
+//                'zidishaLink' => route('home'),
+//            ],
+//        ];
+//
+//        $this->mailer->send(
+//            'emails.label-template',
+//            $data + [
+//                'to'         => $borrower->getUser()->getEmail(),
+//                'label'      => 'lender.mails.approved-confirmation.body',
+//                'subject'    => \Lang::get('borrower.mails.approved-confirmation.subject'),
+//            ]
+//        );
     }
 
     /**
@@ -250,9 +260,26 @@ class LenderMailer
         );
     }
 
-    public function sendBorrowerCommentNotification(Lender $lender, Comment $comment)
+    public function sendBorrowerCommentNotification(Lender $lender, Loan $loan, Comment $comment, $postedBy, $images)
     {
+        $borrower = $loan->getBorrower();
+        $parameters = [
+            'borrowerName' => $borrower->getName(),
+            'message'      => nl2br($comment->getMessage()),
+            'postedBy'     => $postedBy,
+            'images'       => $images,
+        ];
+        $message = \Lang::get('lender.mails.borrower-comment-notification.body', $parameters);
+        $data['content'] = $message;
 
+        $this->mailer->send(
+            'emails.hero',
+            $data + [
+                'to'         => $lender->getUser()->getEmail(),
+                'subject'    => \Lang::get('lender.mails.borrower-comment-notification.subject', $parameters),
+                'templateId' => \Setting::get('sendwithus.comments-template-id'),
+            ]
+        );
     }
 
     public function sendLoanDefaultedMail(Loan $loan, Lender $lender)
