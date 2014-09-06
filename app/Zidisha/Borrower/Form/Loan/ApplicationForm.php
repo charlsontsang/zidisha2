@@ -87,6 +87,7 @@ class ApplicationForm extends AbstractForm
         if ($languageCode != 'EN') {
             $translations = CategoryTranslationQuery::create()
                 ->filterByLanguageCode($languageCode)
+                ->filterByCategoryId(array_keys($values))
                 ->find();
 
             $values = $translations->toKeyValue('categoryId', 'translation') + $values;
