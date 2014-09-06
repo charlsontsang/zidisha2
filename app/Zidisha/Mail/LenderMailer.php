@@ -51,29 +51,45 @@ class LenderMailer
 
     public function sendOutbidMail($changedBid)
     {
-        /** @var Bid $bid*/
-        $bid = $changedBid['bid'];
-        /** @var Money $acceptedAmount */
-        $acceptedAmount = $changedBid['acceptedAmount'];
-        /** @var Money $changedAmount */
-        $changedAmount = $changedBid['changedAmount'];
-        $email = $bid->getLender()->getUser()->getEmail();
-
-        $this->mailer->send(
-            $acceptedAmount->isZero() ? 'emails.lender.loan.fully-outbid' : 'emails.lender.loan.partially-outbid',
-            [
-                'to'              => $email,
-                'from'            => 'service@zidisha.com',
-                'subject'         => 'Outbid Notification.',
-                'bidAmount'       => $bid->getBidAmount()->round(2)->getAmount(),
-                'bidInterestRate' => $bid->getInterestRate(),
-                'outbidAmount'    => $changedAmount->round(2)->getAmount(),
-                'acceptedAmount'  => $acceptedAmount->round(2)->getAmount(),
-                'borrowerLink'    => $bid->getLoan()->getBorrower()->getUser()->getProfileUrl(),
-                'borrowerName'    => $bid->getLoan()->getBorrower()->getName(),
-                'loanLink'        => route('loan:index', ['loanId' => $bid->getLoan()->getBorrower()->getActiveLoanId()]),
-            ]
-        );
+//        /** @var Bid $bid*/
+//        $bid = $changedBid['bid'];
+//        /** @var Money $acceptedAmount */
+//        $acceptedAmount = $changedBid['acceptedAmount'];
+//        /** @var Money $changedAmount */
+//        $changedAmount = $changedBid['changedAmount'];
+//        $email = $bid->getLender()->getUser()->getEmail();
+//
+//        $this->mailer->send(
+//            $acceptedAmount->isZero() ? 'emails.lender.loan.fully-outbid' : 'emails.lender.loan.partially-outbid',
+//            [
+//                'to'              => $email,
+//                'from'            => 'service@zidisha.com',
+//                'subject'         => 'Outbid Notification.',
+//                'bidAmount'       => $bid->getBidAmount()->round(2)->getAmount(),
+//                'bidInterestRate' => $bid->getInterestRate(),
+//                'outbidAmount'    => $changedAmount->round(2)->getAmount(),
+//                'acceptedAmount'  => $acceptedAmount->round(2)->getAmount(),
+//                'borrowerLink'    => $bid->getLoan()->getBorrower()->getUser()->getProfileUrl(),
+//                'borrowerName'    => $bid->getLoan()->getBorrower()->getName(),
+//                'loanLink'        => route('loan:index', ['loanId' => $bid->getLoan()->getBorrower()->getActiveLoanId()]),
+//            ]
+//        );
+//
+//        $data = [
+//            'parameters' => [
+//                'borrowerName' => $borrower->getName(),
+//                'zidishaLink' => route('home'),
+//            ],
+//        ];
+//
+//        $this->mailer->send(
+//            'emails.label-template',
+//            $data + [
+//                'to'         => $borrower->getUser()->getEmail(),
+//                'label'      => 'lender.mails.approved-confirmation.body',
+//                'subject'    => \Lang::get('borrower.mails.approved-confirmation.subject'),
+//            ]
+//        );
     }
 
     /**

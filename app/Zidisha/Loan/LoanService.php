@@ -476,7 +476,17 @@ class LoanService
         // Outbid notification
         foreach ($changedBids as $bidId => $changedBid) {
             if ($changedBid['type'] == 'out_bid') {
-                $this->lenderMailer->sendOutbidMail($changedBid);
+                /** @var Bid $bid*/
+                $bid = $changedBid['bid'];
+                /** @var Money $acceptedAmount */
+                $acceptedAmount = $changedBid['acceptedAmount'];
+                /** @var Money $changedAmount */
+                $changedAmount = $changedBid['changedAmount'];
+                if ($acceptedAmount->isZero()) {
+                    $this->lenderMailer->sendOutbidMail($changedBid);
+                } else {
+//                    $this->lenderMailer->sendDownbidMail($changedBid);
+                }
             }
         }
         

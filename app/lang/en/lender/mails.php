@@ -245,4 +245,11 @@ PS:  You can view the gains or losses for all of your completed loans <a href=":
 :images<br/><br/>
 You may change your group comment notification preferences in the <a href=":groupLink"> :groupName Lending Group profile page</a>.'
     ],
+//    'out-bid-notification' => [
+//        'subject' => 'Outbid Notification',
+//        'body' => 'This is a notification that your bid to fund :bidAmount of the loan for <a href='%borrower_link%' target='_blank'>%bname%</a> at %bid_interest%% interest has been outbid by another lender who proposed a lower interest rate. The amount outbid of $%out_bid_amt% has been returned to your lender account, and you may use it to fund another loan or to bid again on this one.<br/><br/>".
+//"Loan bids may be partially or fully outbid when the total value of lender bids exceeds the amount needed for the loan. In these cases, only the amount originally requested by the borrower is accepted, and bids at the lowest interest rates are retained. You may bid again on <a href='%borrower_link%' target='_blank'>%bname%</a>'s loan by proposing a lower interest rate.<br/><br/>".
+//"Best wishes,<br/><br/>".
+//"The Zidisha Team'
+//    ]
 ];
