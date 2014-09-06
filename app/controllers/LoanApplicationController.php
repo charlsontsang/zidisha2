@@ -33,15 +33,18 @@ class LoanApplicationController extends BaseController
     public function __construct(LoanService $loanService, BorrowerService $borrowerService)
     {
         $this->beforeFilter('@stepsBeforeFilter');
+        $this->beforeFilter('@isNewLoanAllowedFilter');
+        $this->beforeFilter('@validateOpenLoanFilter');
+        
         $this->loanService = $loanService;
         $this->borrowerService = $borrowerService;
-        $this->beforeFilter($this->isNewLoanAllowedFilter());
-        $this->beforeFilter($this->validateOpenLoanFilter());
     }
 
     public function isNewLoanAllowedFilter()
     {
+        /** @var Borrower $borrower */
         $borrower = \Auth::user()->getBorrower();
+        $activeLoan = $borrower->getActiveLoan();
 
         if (!$borrower->isNewLoanAllowed()) {
             \Flash::error('You are not allowed to make new loan right now.');
@@ -57,7 +60,7 @@ class LoanApplicationController extends BaseController
         if (Session::has('borrower.openLoanId')) {
             $loan = $borrower->getActiveLoan();
             
-            if (! $loan->getStatus() == Loan::OPEN) {
+            if (!$loan || !$loan->isOpen() || $loan->getId() != Session::get('borrower.openLoanId')) {
              //if validation fails, remove this from the session, flash an error and redirect to first step   
                 Session::forget('borrower.openLoanId');
                 
@@ -80,7 +83,7 @@ class LoanApplicationController extends BaseController
 
         $activeLoan = $borrower->getActiveLoan();
         
-        if ($activeLoan && $activeLoan->getStatus() == Loan::OPEN) {
+        if ($activeLoan) {
             Session::put('borrower.openLoanId', $activeLoan->getId());
         }
         
@@ -165,10 +168,7 @@ class LoanApplicationController extends BaseController
         $borrower = Auth::user()->getBorrower();
 
         if (Session::has('borrower.openLoanId')) {
-            $loan = LoanQuery::create()
-                ->findOneById(Session::get('borrower.openLoanId'));
-
-            $form = new ApplicationForm($borrower, $loan);
+            $form = new ApplicationForm($borrower, $borrower->getActiveLoan());
         } else {
             $form  = new ApplicationForm(\Auth::user()->getBorrower());
         }

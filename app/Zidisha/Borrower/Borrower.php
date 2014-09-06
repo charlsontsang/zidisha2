@@ -152,7 +152,6 @@ class Borrower extends BaseBorrower implements CommentReceiverInterface
         );
     }
 
-
     public function getContactsList()
     {
         $contacts = '';
