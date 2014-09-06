@@ -207,7 +207,7 @@ class BorrowerMailer{
     public function sendBorrowerInvite(Borrower $borrower, Invite $borrowerInvite, $subject, $message)
     {
         $parameters = [
-            'borrowLink' => '', //TODO route for borrower-home.blade.php file
+            'borrowLink' => route('home'),
         ];
 
         $link = \Lang::get('borrower.mails.invite.link', $parameters);
@@ -218,16 +218,11 @@ class BorrowerMailer{
             $data + [
                 'to'         => $borrowerInvite->getEmail(),
                 'subject'    => $subject,
-                'templateId' => \Setting::get('sendwithus.borrower-notifications-template-id')
+                'templateId' => \Setting::get('sendwithus.borrower-invite-template-id')
             ]
         );
     }
     
-    public function sendLoanFirstArrear(User $user)
-    {
-        
-    }
-
     public function sendAgainRepaymentReminder(Borrower $borrower, Installment $dueInstallment, Money $dueAmount)
     {
         $country = $borrower->getCountry();
