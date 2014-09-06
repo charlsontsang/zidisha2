@@ -286,7 +286,7 @@ class CreditLimitCalculator
         if ($loan) {
             $loanAmount = $loan->isDisbursed() ? $loan->getDisbursedAmount() : $loan->getAmount();
         } else {
-            // no fundraising or completed loans
+            // no funded or completed loans
             $loanAmount = Money::create(0, $this->currency);
         }
 
@@ -365,14 +365,14 @@ class CreditLimitCalculator
         $repaymentRate = $this->loanService->getOnTimeRepaymentScore($this->borrower);
         $minRepaymentRate = $this->getMinimumRepaymentRate();
 
+        $this->sufficientRepaymentRate = $repaymentRate;
+
         // case where last loan repaid on time but monthly installment repayment rate is below admin threshold
         // loan size stays same
         if ($repaymentRate < $minRepaymentRate) {
             $this->insufficientRepaymentRate = true;
             return $loanAmount;
         }
-
-        $this->sufficientRepaymentRate = $repaymentRate;
         
         // case where last loan repaid on time and overall repayment is above admin threshold
         // we next check whether the last loan was held long enough to qualify for credit limit increase,
