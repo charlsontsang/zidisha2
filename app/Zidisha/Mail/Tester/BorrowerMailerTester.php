@@ -232,7 +232,7 @@ class BorrowerMailerTester
         $this->borrowerMailer->sendBorrowerInvite($borrower, $invite, 'join zidisha dude', 'hey...........join here');
     }
 
-    public function sendLoanMonthlyArrearToVolunteerMentor()
+    public function sendLoanMonthlyArrearToContact()
     {
         $borrower = BorrowerQuery::create()
             ->findOne();
@@ -241,9 +241,9 @@ class BorrowerMailerTester
             ->setAmount(Money::create(340, $borrower->getCountry()->getCurrencyCode()))
             ->setLoanId(5)
             ->setBorrower($borrower);
-        $vm = VolunteerMentorQuery::create()
-            ->findOne();
+        $name = "hehehehe";
+        $email = "yoyo@ff.com";
 
-        $this->borrowerMailer->sendLoanMonthlyArrearToVolunteerMentor($vm, $borrower, $installment);
+        $this->borrowerMailer->sendLoanMonthlyArrearToContact($name, $email, $borrower, $installment);
     }
 } 

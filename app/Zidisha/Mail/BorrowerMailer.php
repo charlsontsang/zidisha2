@@ -328,11 +328,11 @@ class BorrowerMailer{
         );
     }
 
-    public function sendLoanMonthlyArrearToVolunteerMentor(VolunteerMentor $volunteerMentor, Borrower $borrower, Installment $dueInstallment)
+    public function sendLoanMonthlyArrearToContact($name, $email, Borrower $borrower, Installment $dueInstallment)
     {
         $data = [
             'parameters' => [
-                'contactName'    => $volunteerMentor->getBorrowerVolunteer()->getName(),
+                'contactName'    => $name,
                 'borrowerName'   => $borrower->getName(),
                 'dueDays'        => round((time() - $dueInstallment->getDueDate()->getTimestamp())/(60*60*24)),
                 'borrowerNumber' => $borrower->getProfile()->getPhoneNumber(),
@@ -342,7 +342,7 @@ class BorrowerMailer{
         $this->mailer->send(
             'emails.label-template',
             $data + [
-                'to'         => $volunteerMentor->getBorrowerVolunteer()->getUser()->getEmail(),
+                'to'         => $email,
                 'label'      => 'borrower.mails.loan-arrear-mediation-notification.body',
                 'subject'    => \Lang::get('borrower.mails.loan-arrear-mediation-notification.subject'),
             ]

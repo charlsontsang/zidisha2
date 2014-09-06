@@ -255,5 +255,8 @@ return [
         'sendwithus.lender-loan-repayment-template-id' => [
             'label' => 'Lender loan repayment template id'
         ],
+        'sendwithus.borrower-invite-template-id' => [
+            'label' => 'Lender loan repayment template id'
+        ],
     ]
 ];

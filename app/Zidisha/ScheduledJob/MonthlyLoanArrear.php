@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use DB;
 use Illuminate\Queue\Jobs\Job;
 use Zidisha\Borrower\ContactQuery;
+use Zidisha\Borrower\InviteQuery;
 use Zidisha\Loan\ForgivenessLoanQuery;
 use Zidisha\Loan\LoanQuery;
 use Zidisha\Mail\BorrowerMailer;
@@ -112,9 +113,27 @@ class MonthlyLoanArrear extends ScheduledJob
             $volunteerMentor = $borrower->getVolunteerMentor();
 
             if ($volunteerMentor) {
-                $borrowerMailer->sendLoanMonthlyArrearToVolunteerMentor($volunteerMentor, $borrower, $dueInstallment);
+                $vmBorrower = $volunteerMentor->getBorrowerVolunteer();
+                $name = $vmBorrower->getName();
+                $email = $vmBorrower->getUser()->getEmail();
+                $borrowerMailer->sendLoanMonthlyArrearToContact($name, $email, $borrower, $dueInstallment);
             }
 
+            if ($borrower->getReferrerId()) {
+                $referrer = $borrower->getReferrer();
+                $name = $referrer->getName();
+                $email = $referrer->getUser()->getEmail();
+                $borrowerMailer->sendLoanMonthlyArrearToContact($name, $email, $borrower, $dueInstallment);
+            }
+
+            $invitee = InviteQuery::create()
+                ->getInvitee($borrower->getId());
+            if ($invitee) {
+                $inviteeBorrower = $invitee->getBorrower();
+                $name = $inviteeBorrower->getName();
+                $email = $inviteeBorrower->getUser()->getEmail();
+                $borrowerMailer->sendLoanMonthlyArrearToContact($name, $email, $borrower, $dueInstallment);
+            }
             $borrowerMailer->sendLoanMonthlyArrearMail($borrower);
             $borrowerSmsService->sendLoanMonthlyArrearNotification($borrower);
         }
