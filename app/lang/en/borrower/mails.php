@@ -159,5 +159,8 @@ If you modify your profile to follow each of the above tips, then your applicati
 Best wishes,<br/><br/>
 The Zidisha Team'
     ],
+    'invite' => [
+        'link' => 'Go to <a href=":borrowLink">Join and Accept Invitation</a> to accept this invite or to learn more.'
+    ],
 
 ];

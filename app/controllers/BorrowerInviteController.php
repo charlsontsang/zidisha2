@@ -86,7 +86,7 @@ class BorrowerInviteController extends BaseController
             $subject = $data['subject'];
             $message = $data['note'];
 
-                    $this->borrowerService->borrowerInviteViaEmail($borrower, $email, $subject, $message);
+            $this->borrowerService->borrowerInviteViaEmail($borrower, $email, $subject, $message);
 
             Flash::success(\Lang::choice('comments.flash.invite-success', 1, array('count' => 1)));
             return Redirect::route('borrower:invite');

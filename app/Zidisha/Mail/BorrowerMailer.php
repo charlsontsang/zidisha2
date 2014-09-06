@@ -204,10 +204,23 @@ class BorrowerMailer{
         );
     }
 
-    public function sendBorrowerInvite(Borrower $lender, Invite $borrowerInvite, $subject, $message)
+    public function sendBorrowerInvite(Borrower $borrower, Invite $borrowerInvite, $subject, $message)
     {
-        $email = $borrowerInvite->getEmail();
-        //TODO send invite email
+        $parameters = [
+            'borrowLink' => '', //TODO route for borrower-home.blade.php file
+        ];
+
+        $link = \Lang::get('borrower.mails.invite.link', $parameters);
+        $data['content'] = $message."<br/><br/>".$link;;
+
+        $this->mailer->send(
+            'emails.hero',
+            $data + [
+                'to'         => $borrowerInvite->getEmail(),
+                'subject'    => $subject,
+                'templateId' => \Setting::get('sendwithus.borrower-notifications-template-id')
+            ]
+        );
     }
     
     public function sendLoanFirstArrear(User $user)

@@ -468,6 +468,8 @@ class BorrowerService
         $success = $borrowerInvite->save();
 
         if ($success) {
+            $message = nl2br(stripslashes(strip_tags(trim($message))));
+            $subject = trim($subject);
             $this->borrowerMailer->sendBorrowerInvite($borrower, $borrowerInvite, $subject, $message);
         }
 
