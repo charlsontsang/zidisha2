@@ -120,16 +120,18 @@ class RescheduleCalculator {
             $installment = $repaymentScheduleInstallment->getInstallment();
             $payments = $repaymentScheduleInstallment->getPayments();
 
-            if ($installment->getPaidAmount()->isPositive()
-                && $installment->getPaidAmount()->lessThan($installment->getAmount())
-            ) {
-                $updatedInstallment = $installment->copyUpdate();
-                $updatedInstallment->setAmount($installment->getPaidAmount());
-                
-                $repaymentScheduleInstallments[] = new RepaymentScheduleInstallment($updatedInstallment, $payments);
+            if ($installment->getPaidAmount()->isPositive()) {
+                if ($installment->getPaidAmount()->lessThan($installment->getAmount())) {
+                    $updatedInstallment = $installment->copyUpdate();
+                    $updatedInstallment->setAmount($installment->getPaidAmount());
+
+                    $repaymentScheduleInstallments[] = new RepaymentScheduleInstallment($updatedInstallment, $payments);
+                } else {
+                    $repaymentScheduleInstallments[] = $repaymentScheduleInstallment;
+                }
             }
             elseif ($installment->getDueDate() < $rescheduleDate) {
-                if ($installment->getPaidAmount()->isPositive() || $installment->getAmount()->isZero()) {
+                if ($installment->getAmount()->isZero()) {
                     $repaymentScheduleInstallments[] = $repaymentScheduleInstallment;
                 } else {
                     $updatedInstallment = $installment->copyUpdate();
