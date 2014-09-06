@@ -41,9 +41,4 @@ class AdminMailer
             ]
         );
     }
-
-    public function sendLendingGroupCommentNotification(Comment $comment)
-    {
-
-    }
 }

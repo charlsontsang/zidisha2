@@ -18,14 +18,6 @@ class AdminMailerTester
         $this->adminMailer = $adminMailer;
     }
 
-    public function sendLendingGroupCommentNotification()
-    {
-        $comment = BorrowerCommentQuery::create()
-            ->findOne();
-
-        $this->adminMailer->sendLendingGroupCommentNotification($comment);
-    }
-
     public function sendBorrowerCommentNotification()
     {
         $loan = LoanQuery::create()
