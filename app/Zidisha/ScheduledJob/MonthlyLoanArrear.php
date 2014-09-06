@@ -112,7 +112,7 @@ class MonthlyLoanArrear extends ScheduledJob
             $volunteerMentor = $borrower->getVolunteerMentor();
 
             if ($volunteerMentor) {
-                $borrowerMailer->sendLoanMonthlyArrearToVolunteerMentor($volunteerMentor, $borrower, $loan);
+                $borrowerMailer->sendLoanMonthlyArrearToVolunteerMentor($volunteerMentor, $borrower, $dueInstallment);
             }
 
             $borrowerMailer->sendLoanMonthlyArrearMail($borrower);

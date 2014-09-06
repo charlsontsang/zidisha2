@@ -3,6 +3,7 @@ namespace Zidisha\Mail\Tester;
 
 use Zidisha\Borrower\Borrower;
 use Zidisha\Borrower\BorrowerQuery;
+use Zidisha\Borrower\InviteQuery;
 use Zidisha\Borrower\JoinLog;
 use Zidisha\Borrower\VolunteerMentor;
 use Zidisha\Borrower\VolunteerMentorQuery;
@@ -219,5 +220,30 @@ class BorrowerMailerTester
         $dueAmount = Money::create(60, $borrower->getCountry()->getCurrencyCode());
 
         $this->borrowerMailer->sendAgainRepaymentReminder($borrower, $installment, $dueAmount);
+    }
+
+    public function sendBorrowerInvite()
+    {
+        $borrower = BorrowerQuery::create()
+            ->findOne();
+        $invite = InviteQuery::create()
+            ->findOne();
+
+        $this->borrowerMailer->sendBorrowerInvite($borrower, $invite, 'join zidisha dude', 'hey...........join here');
+    }
+
+    public function sendLoanMonthlyArrearToVolunteerMentor()
+    {
+        $borrower = BorrowerQuery::create()
+            ->findOne();
+        $installment = new Installment();
+        $installment->setDueDate(new \DateTime())
+            ->setAmount(Money::create(340, $borrower->getCountry()->getCurrencyCode()))
+            ->setLoanId(5)
+            ->setBorrower($borrower);
+        $vm = VolunteerMentorQuery::create()
+            ->findOne();
+
+        $this->borrowerMailer->sendLoanMonthlyArrearToVolunteerMentor($vm, $borrower, $installment);
     }
 } 
