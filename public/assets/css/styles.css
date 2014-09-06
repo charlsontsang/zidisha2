@@ -8853,6 +8853,7 @@ form label.control-label,
   color: #767676;
 }
 form .btn-primary,
+form .btn-default,
 .giftcard .btn-primary {
   margin-top: 5px;
   margin-bottom: 30px;
@@ -8861,6 +8862,7 @@ form .btn-primary,
 }
 @media (max-width: 767px) {
   form .btn-primary,
+  form .btn-default,
   .giftcard .btn-primary {
     margin-bottom: 15px;
     width: 100%;
@@ -9856,9 +9858,6 @@ a.link-dark {
 .lend-details .table .form-control {
   width: 70%;
 }
-.lend-details .table .form-control#donation-amount {
-  height: 25px;
-}
 .lend-details .table tbody > tr > td {
   vertical-align: middle;
 }
@@ -10103,6 +10102,9 @@ a.link-dark {
 .bid-form {
   z-index: 10;
 }
+#donation-amount {
+  height: 25px;
+}
 .comments textarea {
   max-width: 100% !important;
 }
@@ -10243,4 +10245,23 @@ span.text-content span {
 }
 .giftcard > div > div {
   padding: 0 40px;
+}
+.pay-giftcard {
+  width: 100%;
+  max-width: 350px;
+  margin: 0 auto -15px auto;
+  padding: 15px;
+}
+@media (min-width: 768px) {
+  .pay-giftcard {
+    margin-top: 25px;
+    margin-bottom: 0;
+  }
+}
+.pay-giftcard .form-group {
+  margin-bottom: 0;
+}
+.pay-giftcard .btn-primary {
+  max-width: 400px;
+  margin-bottom: 0;
 }

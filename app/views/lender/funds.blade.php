@@ -46,14 +46,8 @@ Quick Links
     Total Payment: $<span id="total-amount-display"></span>
 </p>
 
-<div>
-    <button id="stripe-payment" class="btn btn-primary">Pay with credit card</button>
-</div>
-<div>
-    <button type="submit" id="paypal-payment" class="btn btn-default" value="Pay With Paypal" name="submit_paypal">
-        Continue with
-        <img src="http://logocurio.us/wp-content/uploads/2014/04/paypal-logo.png" alt="Paypal" style="height: 20px"/>
-    </button>
+<div class="lend-form">
+    @include('partials/payment-buttons')
 </div>
 
 {{ BootstrapForm::close() }}

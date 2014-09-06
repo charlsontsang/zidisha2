@@ -509,17 +509,6 @@
 
                             <table class="table">
                                 <tbody>
-                                    @if($placeBidForm->getLenderInviteCredit()->isPositive())
-                                    <tr>
-                                        <td>Lender invite credit</td>
-                                        <td>${{ number_format($placeBidForm->getLenderInviteCredit()->getAmount(), 2, '.', '') }}</td>
-                                    </tr>
-                                    @elseif($placeBidForm->getCurrentBalance()->isPositive())
-                                    <tr>
-                                        <td>Current Balance</td>
-                                        <td>${{ number_format($placeBidForm->getCurrentBalance()->getAmount(), 2, '.', '') }}</td>
-                                    </tr>
-                                    @endif
                                     <tr>
                                         <td>Loan for {{ $borrower->getFirstName() }}</td>
                                         <td>$<span id="amount-display"></span></td> 
@@ -544,31 +533,29 @@
                                         </td>
                                         <td>$<span id="fee-amount-display"></span></td>
                                     </tr>
+                                    @if($placeBidForm->getLenderInviteCredit()->isPositive())
+                                    <tr>
+                                        <td>Lender invite credit</td>
+                                        <td>${{ number_format($placeBidForm->getLenderInviteCredit()->getAmount(), 2, '.', '') }}</td>
+                                    </tr>
+                                    @elseif($placeBidForm->getCurrentBalance()->isPositive())
+                                    <tr>
+                                        <td>Current Balance</td>
+                                        <td>${{ number_format($placeBidForm->getCurrentBalance()->getAmount(), 2, '.', '') }}</td>
+                                    </tr>
+                                    @endif
                                     <tr>
                                         <td><strong>Total</strong></td>
                                         <td>$<strong><span id="total-amount-display"></span></strong></td>
                                     </tr>
                                 </tbody>
                             </table>
-                
-        <!--                    <button id="stripe-payment" class="btn btn-primary">Pay With Card</button>-->
-        <!--                    <input type="submit" id="paypal-payment" class="btn btn-default btn-block" value="Pay with Paypal" name="submit_paypal">-->
 
+                            @include('partials/payment-buttons')
+                            
                             <input type="submit" id="balance-payment" class="btn btn-primary btn-block" value="Confirm" name="submit_credit">
 
-                            <button type="button" id="stripe-payment" class="btn btn-primary btn-block btn-icon">
-                                <span class="icon-container">
-                                    <span class="fa fa-credit-card fa-lg fa-fw"></span>
-                                </span>
-                                <span class="text-container">
-                                     Pay with credit card
-                                </span>
-                            </button>
 
-                            <button type="submit" id="paypal-payment" class="btn btn-default btn-block">
-                                Continue with
-                                <img src="http://logocurio.us/wp-content/uploads/2014/04/paypal-logo.png" alt="Paypal" style="height: 28px"/>
-                            </button>
                         </div>
                         {{ BootstrapForm::close() }}
                     </div>

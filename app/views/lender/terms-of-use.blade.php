@@ -32,4 +32,29 @@
 
 <p>Zidisha reserves the right, at its sole discretion, to modify the website or to modify these Terms of Use, at any time and without prior notice. If we modify these Terms of Use, we will update the “Last Updated” date at the top of these Terms of Use. By continuing to access or use the website or our services after we have posted a modification on the website or on these Terms of Use, you are indicating that you agree to be bound by the modified Terms of Use. If the modified Terms of Use are not acceptable to you, your only recourse is to cease using the website and Zidisha services.</p>
 
+<h4 id="gift-card">Gift Card Terms of Use</h4>
+
+<p>1. A recipient may redeem a gift card by placing a loan bid, then entering the card’s redemption code while completing the
+    transaction in the Lending Cart page. When redeemed, the full value of the gift card will be credited to the recipient’s
+    lender
+    account.
+</p>
+
+<p>2. If the gift card is not redeemed within twelve months of the card purchase date, the card will automatically convert to an
+    unrestricted donation to Zidisha Inc., and can no longer be redeemed by the recipient.
+</p>
+
+<p>3. It is the responsibility of the purchaser to exercise appropriate caution in safeguarding a gift card and its redemption
+    code.
+    Gift cards are non-refundable, and replacements cannot be issued for a gift card that is lost or redeemed by someone other
+    than the intended recipient.
+</p>
+
+<p>4. The utilization of gift cards is subject to the general <a href="{{ route('page:terms-of-use') }}">Terms and Conditions</a>
+    governing use of the <a
+        href="www.zidisha.org">www.zidisha.org</a>
+    website
+    .
+</p>
+
 <p><strong>Important Note:</strong> Zidisha is a nonprofit organization engaged in the facilitation of microfinance lending to low-income entrepreneurs in developing countries. Zidisha's primary purpose is to provide financial aid in the form of loans. Zidisha believes that its lending model fosters a sense of responsibility and success for borrowers who repay their loans. The principal purpose of Zidisha's lenders in funding loans is to improve the lives of these entrepreneurs, and not to make a profitable financial investment. Lending to entrepreneurs through Zidisha involves a meaningful risk of loss of your principal lent. In addition, you are very likely to lose money in real terms on any loan you fund, even if it is repaid by the borrower, as a result of currency exchange rate changes, PayPal fees applied to uploading credit to your lender account, inflation and other factors affecting the value of principal and interest payments made by a borrower. Accordingly, we recommend that you consider lending through Zidisha to be a philanthropic activity, and you should not lend more money through Zidisha than you are prepared to lose.</p>

@@ -46,17 +46,17 @@ Gift Cards
                 </div>
             </div>
             <div class="col-sm-6">
-                <div id="giftcard-6-1" class="giftcard-thumbnail">
-                    <label for="giftcard_template_radio-6-1" ><img src="{{ asset('assets/images/gift-card/image6.png'); }}"/></label>
-                    <input name="template" id="giftcard_template_radio-6-1" value="6" type="radio">
+                <div id="giftcard-5-1" class="giftcard-thumbnail">
+                    <label for="giftcard_template_radio-5-1" ><img src="{{ asset('assets/images/gift-card/image5.png'); }}"/></label>
+                    <input name="template" id="giftcard_template_radio-5-1" value="5" type="radio">
                 </div>
                 <div id="giftcard-7-1" class="giftcard-thumbnail">
                     <label for="giftcard_template_radio-7-1" ><img src="{{ asset('assets/images/gift-card/image7.png'); }}"/></label>
                     <input name="template" id="giftcard_template_radio-7-1" value="7" type="radio">
                 </div>
-                <div id="giftcard-5-1" class="giftcard-thumbnail">
-                    <label for="giftcard_template_radio-5-1" ><img src="{{ asset('assets/images/gift-card/image5.png'); }}"/></label>
-                    <input name="template" id="giftcard_template_radio-5-1" value="5" type="radio">
+                <div id="giftcard-6-1" class="giftcard-thumbnail">
+                    <label for="giftcard_template_radio-6-1" ><img src="{{ asset('assets/images/gift-card/image6.png'); }}"/></label>
+                    <input name="template" id="giftcard_template_radio-6-1" value="6" type="radio">
                 </div>
                 <div id="giftcard-9-1" class="giftcard-thumbnail">
                     <label for="giftcard_template_radio-9-1" ><img src="{{ asset('assets/images/gift-card/image9.png'); }}"/></label>
@@ -75,11 +75,20 @@ Gift Cards
 
         {{ BootstrapForm::select('amount', $form->getAmounts(), null, ['label' => 'Amount']) }}
 
-        {{ BootstrapForm::select( 'orderType', $form->getOrderTypes(), null, ['label' => 'Delivery Method']) }}
+        {{ BootstrapForm::label('Delivery Method:') }}
 
-        {{ BootstrapForm::text('recipientEmail', null, ['label' => 'Recipient Email']) }}
+        {{ BootstrapForm::radio('orderType', 'Email', null, [
+            'label' => 'Email', 'id' => 'email'
+        ]) }}
 
-        {{ BootstrapForm::label('Optional Fields') }}
+        {{ BootstrapForm::radio('orderType', 'Self-Print', null, [
+            'label' => 'Self-Print', 'id' => 'print'
+        ]) }}
+
+        {{ BootstrapForm::text('recipientEmail', null, ['label' => 'Recipient Email', 'id' => 'recipient']) }}
+
+        <br/>
+        <strong>Optional Fields</strong>
       
         {{ BootstrapForm::text('recipientName', null, ['label' => 'To']) }}
 
@@ -104,6 +113,16 @@ Gift Cards
             $(this).addClass('selected');
         });
         $('div.giftcard-thumbnail:first').addClass('selected');
+    });
+</script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#print').click(function () {
+            $('#recipient').parents('.form-group').hide();
+        });
+        $('#email').click(function () {
+            $('#recipient').parents('.form-group').show();
+        });
     });
 </script>
 @stop
