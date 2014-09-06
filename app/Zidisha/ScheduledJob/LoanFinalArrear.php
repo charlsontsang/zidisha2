@@ -127,8 +127,6 @@ class LoanFinalArrear extends ScheduledJob
                 }
             }
 
-            //TODO: add facebook contacts
-            
             $volunteerMentor = $borrower->getVolunteerMentor();
 
             if ($volunteerMentor) {

@@ -317,17 +317,6 @@ class BorrowerMailer{
         );
     }
 
-    public function sendLoanFinalArrearToVolunteerMentor(VolunteerMentor $volunteerMentor, Borrower $borrower, Loan $loan)
-    {
-        $this->mailer->send(
-            'emails.hero',
-            [
-                'to'      => $borrower->getUser()->getEmail(),
-                'subject' => 'Borrower account notifications',
-            ]
-        );
-    }
-
     public function sendLoanMonthlyArrearToContact($name, $email, Borrower $borrower, Installment $dueInstallment)
     {
         $data = [
