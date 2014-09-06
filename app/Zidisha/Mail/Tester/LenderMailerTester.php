@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Zidisha\Balance\InviteTransactionQuery;
 use Zidisha\Balance\TransactionQuery;
 use Zidisha\Borrower\Borrower;
+use Zidisha\Comment\BorrowerCommentQuery;
 use Zidisha\Currency\Money;
 use Zidisha\Lender\Lender;
 use Zidisha\Lender\LenderQuery;
@@ -264,5 +265,19 @@ class LenderMailerTester
         $gainPercent = 4;
 
         $this->lenderMailer->sendRepaidLoanGainMail($lender, $loan, $loanAmount, $repaidAmount, $gainAmount, $gainPercent);
+    }
+
+    public function sendBorrowerCommentNotification()
+    {
+        $lender = LenderQuery::create()
+            ->findOne();
+        $loan = LoanQuery::create()
+            ->findOne();
+        $comment = BorrowerCommentQuery::create()
+            ->findOne();
+        $postedBy = 'dmdm by hddhd on ffjfjfjf';
+        $images = '.....';
+
+        $this->lenderMailer->sendBorrowerCommentNotification($lender, $loan, $comment, $postedBy, $images);
     }
 }

@@ -90,7 +90,7 @@ The Zidisha Team',
         'footer'      => 'Redeem your credit by making a loan here:',
         'button-text' => 'Make A Loan'
     ],
-    'sendwithus-defaults'              => [
+    'sendwithus-defaults'             => [
         'footer'      => 'Don\’t miss our latest loan projects:',
         'button-text' => 'View Loans'
     ],
@@ -203,9 +203,9 @@ The Zidisha Team
 <br/><br/>
 PS:  Share, tweet or email this success story to your friends!'
     ],
-    'loan-repaid-gain' => [
+    'loan-repaid-gain'                => [
         'subject' => ':gainAmount gain from your loan to :borrowerName',
-        'body' => '
+        'body'    => '
         Hi there,
 <br/><br/>
 Your lending fund gained value from your recent loan to <a href=":loanUrl">:borrowerName</a>!  Here are the details:
@@ -230,5 +230,11 @@ The Zidisha Team
 <br/><br/>
 PS:  You can view the gains or losses for all of your completed loans <a href=":myStatsUrl">here</a>.
         '
-    ]
+    ],
+    'borrower-comment-notification'   => [
+        'subject' => 'New message from :borrowerName',
+        'body'    => ':message<br/><br/>
+- :postedBy
+:images',
+    ],
 ];

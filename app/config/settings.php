@@ -258,6 +258,9 @@ return [
         'sendwithus.borrower-invite-template-id' => [
             'label' => 'Borrower Invite template id'
         ],
+        'sendwithus.comments-borrower-template-id' => [
+            'label' => 'Comments Borrower template id'
+        ],
         'sendwithus.comments-template-id' => [
             'label' => 'Comments template id'
         ],

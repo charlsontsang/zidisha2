@@ -76,7 +76,7 @@ class BorrowerCommentService extends CommentService
 
         foreach ($lenders as $lender) {
             if ($comment->getUserId() != $lender->getId()) {
-                $this->lenderMailer->sendBorrowerCommentNotification($lender, $comment);
+                $this->lenderMailer->sendBorrowerCommentNotification($lender, $loan, $comment, $postedBy, $images);
             }
         }
 
@@ -84,7 +84,7 @@ class BorrowerCommentService extends CommentService
             $this->borrowerMailer->sendBorrowerCommentNotification($borrower, $loan, $comment, $postedBy, $images);
         }
 
-        $this->adminMailer->sendBorrowerCommentNotification($comment);
+        $this->adminMailer->sendBorrowerCommentNotification($loan, $comment, $postedBy, $images);
     }
 
     protected function getPostedBy(Borrower $borrower, Comment $comment)

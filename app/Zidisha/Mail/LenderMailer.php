@@ -250,9 +250,26 @@ class LenderMailer
         );
     }
 
-    public function sendBorrowerCommentNotification(Lender $lender, Comment $comment)
+    public function sendBorrowerCommentNotification(Lender $lender, Loan $loan, Comment $comment, $postedBy, $images)
     {
+        $borrower = $loan->getBorrower();
+        $parameters = [
+            'borrowerName' => $borrower->getName(),
+            'message'      => nl2br($comment->getMessage()),
+            'postedBy'     => $postedBy,
+            'images'       => $images,
+        ];
+        $message = \Lang::get('lender.mails.borrower-comment-notification.body', $parameters);
+        $data['content'] = $message;
 
+        $this->mailer->send(
+            'emails.hero',
+            $data + [
+                'to'         => $lender->getUser()->getEmail(),
+                'subject'    => \Lang::get('lender.mails.borrower-comment-notification.subject', $parameters),
+                'templateId' => \Setting::get('sendwithus.comments-template-id'),
+            ]
+        );
     }
 
     public function sendLoanDefaultedMail(Loan $loan, Lender $lender)
