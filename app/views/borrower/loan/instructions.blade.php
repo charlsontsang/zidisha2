@@ -16,7 +16,7 @@
     @lang("borrower.loan-application.instructions.intro")
 </p>
 <p>
-    @lang("borrower.loan-application.instructions.deadline")
+    @lang("borrower.loan-application.instructions.deadline", ['deadline' => \Setting::get('loan.deadline')])
 </p>
 
 <p>
