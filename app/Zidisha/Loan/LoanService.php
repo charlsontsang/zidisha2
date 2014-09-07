@@ -11,6 +11,7 @@ use Zidisha\Balance\Transaction;
 use Zidisha\Balance\TransactionQuery;
 use Zidisha\Balance\TransactionService;
 use Zidisha\Borrower\Borrower;
+use Zidisha\Comment\BorrowerCommentService;
 use Zidisha\Currency\Converter;
 use Zidisha\Currency\ExchangeRate;
 use Zidisha\Currency\ExchangeRateQuery;
@@ -56,7 +57,13 @@ class LoanService
      * @var \Zidisha\Vendor\SiftScience\SiftScienceService
      */
     private $siftScienceService;
+    
     private $repaymentService;
+    
+    /**
+     * @var \Zidisha\Comment\BorrowerCommentService
+     */
+    private $borrowerCommentService;
 
     public function __construct(
         TransactionService $transactionService,
@@ -64,7 +71,8 @@ class LoanService
         MixpanelService $mixpanelService,
         BorrowerMailer $borrowerMailer,
         SiftScienceService $siftScienceService,
-        RepaymentService $repaymentService
+        RepaymentService $repaymentService,
+        BorrowerCommentService $borrowerCommentService
     )
     {
         $this->transactionService = $transactionService;
@@ -73,6 +81,7 @@ class LoanService
         $this->borrowerMailer = $borrowerMailer;
         $this->siftScienceService = $siftScienceService;
         $this->repaymentService = $repaymentService;
+        $this->borrowerCommentService = $borrowerCommentService;
     }
 
     public function applyForLoan(Borrower $borrower, $data)
@@ -1312,7 +1321,14 @@ class LoanService
             $loan->save($con);
         });
         
-        // TODO email, comment
+        // TODO email
+        $borrower = $loan->getBorrower();
+        
+        $this->borrowerCommentService->postComment(
+            ['message' => $data['reason']],
+            $borrower->getUser(),
+            $borrower
+        );
         
         return $repaymentSchedule;
     }
