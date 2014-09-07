@@ -50,6 +50,9 @@ Log::useFiles(storage_path() . '/logs/laravel.log');
 App::error(
     function (Exception $exception, $code) {
         Log::error($exception);
+
+        $adminMailer = App::make('Zidisha\Mail\AdminMailer');
+        $adminMailer->sendErrorMail($exception);
     }
 );
 
