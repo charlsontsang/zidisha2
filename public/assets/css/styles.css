@@ -9131,7 +9131,9 @@ form .btn-default,
   }
 }
 @media (min-width: 768px) {
-  .nav > li > a:last-child {
+  .nav > li > a:last-child,
+  .navbar-right > p:last-child {
+    margin-right: 0;
     padding-right: 0;
   }
 }
