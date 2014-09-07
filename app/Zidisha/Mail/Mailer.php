@@ -6,6 +6,7 @@ use Config;
 use Illuminate\Support\SerializableClosure;
 use Mail;
 use Zidisha\Admin\Setting;
+use Zidisha\Utility\Utility;
 
 class Mailer
 {
@@ -54,8 +55,11 @@ class Mailer
         $data += [
             'from'    => Setting::get('site.fromEmailAddress'),
             'replyTo' => Setting::get('site.replyToEmailAddress'),
-            'subject' => $data['subject'],
         ];
+        
+        $data['to'] = Utility::clearPost($data['to']);
+        $data['from'] = Utility::clearPost($data['from']);
+        $data['subject'] = stripcslashes(Utility::clearPost($data['subject']));
 
         if (array_get($data, 'templateId') && $this->useSendWithUs) {
             $this->sendwithusDriver->send($view, $data);

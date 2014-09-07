@@ -2,8 +2,6 @@
 namespace Zidisha\Mail;
 
 
-use Zidisha\Utility\Utility;
-
 class LaravelMailerDriver implements MailDriverInterface
 {
     public function send($view, $data)
@@ -13,9 +11,9 @@ class LaravelMailerDriver implements MailDriverInterface
             $data + compact('data'),
             function ($message) use ($data) {
                 $message
-                    ->to(Utility::clearPost($data['to']))
-                    ->from(Utility::clearPost($data['from']))
-                    ->subject(stripcslashes(Utility::clearPost($data['subject'])));
+                    ->to($data['to'])
+                    ->from($data['from'])
+                    ->subject($data['subject']);
             }
         );
     }
