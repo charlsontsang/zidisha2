@@ -57,6 +57,18 @@ $(function () {
 
         submitButton.button('loading');
     });
+    
+    $body = $('body');
+    
+    $body.on('click', '.share-popup', function() {
+        var shareWindow = window.open(
+            $(this).attr('href'),
+            'shareWindow' + Math.random(),
+                'height=450, width=550, top=' + ($(window).height() / 2 - 275) + ', left=' + ($(window).width() / 2 - 225) + ', toolbar=0, location=0, menubar=0, directories=0, scrollbars=0'
+        );
+
+        return false;
+    });
 
     var $borrowerEditForm = $('.borrower-edit-form');
 

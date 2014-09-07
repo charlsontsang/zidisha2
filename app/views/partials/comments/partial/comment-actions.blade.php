@@ -13,7 +13,7 @@
     @endif
     <a href="#" class="comment-share">@lang('borrower.comments.actions.share')</a>
     <span style="display: none">
-        <a href="{{$comment->getFacebookUrl()}}" ><i class="fa fa-facebook-square"></i></a>
-        <a href="{{$comment->getTwitterUrl()}}" ><i class="fa fa-twitter-square"></i></a>
+        <a class="share-popup" href="{{$comment->getFacebookUrl()}}" ><i class="fa fa-facebook-square"></i></a>
+        <a class="share-popup" href="{{$comment->getTwitterUrl()}}" ><i class="fa fa-twitter-square"></i></a>
     </span>
 </div>
