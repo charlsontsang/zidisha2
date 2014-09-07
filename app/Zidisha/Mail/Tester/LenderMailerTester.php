@@ -58,56 +58,6 @@ class LenderMailerTester
 
         $this->lenderMailer->sendDownBidMail($lender, $bid, $acceptedAmount, $outBidAmount);
     }
-    public function sendOutbidMailOld()
-    {
-        $changedBid = [];
-
-        $changedBid['changedAmount'] = Money::create('15');
-        $changedBid['acceptedAmount'] = Money::create('12.333');
-
-        $lenderUser = new User();
-        $lenderUser->setRole('lender');
-        $lenderUser->setEmail('lender@test.com');
-
-        $lender = new Lender();
-        $lender->setUser($lenderUser);
-
-        $borrowerUser = new User();
-        $borrowerUser->setRole('borrower');
-        $borrowerUser->setEmail('lender@test.com');
-        $borrowerUser->setUsername('borrowerUsername');
-
-        $borrower = new Borrower();
-        $borrower->setUser($borrowerUser);
-        $borrower->setFirstName('First Name');
-        $borrower->setLastName('Last Name');
-        $borrower->setActiveLoanId('12');
-
-        $loan = new Loan();
-        $loan->setBorrower($borrower);
-
-        $bid = new Bid();
-        $bid->setLender($lender);
-        $bid->setBidAmount(Money::create('55'));
-        $bid->setInterestRate('12');
-        $bid->setLoan($loan);
-
-        $changedBid['bid'] = $bid;
-
-        $this->lenderMailer->sendOutbidMail($changedBid);
-
-        $changedBid['acceptedAmount'] = Money::create('0');
-        $changedBid['changedAmount'] = Money::create('20');
-        
-        $bid = new Bid();
-        $bid->setLender($lender);
-        $bid->setBidAmount(Money::create('20'));
-        $bid->setInterestRate('15');
-        $bid->setLoan($loan);
-
-        $changedBid['bid'] = $bid;
-        $this->lenderMailer->sendOutbidMail($changedBid);
-    }
 
     public function sendLenderWelcomeMail()
     {
