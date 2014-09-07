@@ -247,9 +247,16 @@ You may change your group comment notification preferences in the <a href=":grou
     ],
     'out-bid-notification' => [
         'subject' => 'Outbid Notification',
-        'body' => 'This is a notification that your bid to fund :bidAmount of the loan for <a href=\':borrowerLink\' target=\'_blank\'>:borrowerName</a> at :bidInterest interest has been outbid by another lender who proposed a lower interest rate. The amount outbid of :ourBidAmount has been returned to your lender account, and you may use it to fund another loan or to bid again on this one.<br/><br/>'.
+        'body' => 'This is a notification that your bid to fund :bidAmount of the loan for <a href=\':borrowerLink\' target=\'_blank\'>:borrowerName</a> at :bidInterest % interest has been outbid by another lender who proposed a lower interest rate. The amount outbid of :outBidAmount has been returned to your lender account, and you may use it to fund another loan or to bid again on this one.<br/><br/>'.
 "Loan bids may be partially or fully outbid when the total value of lender bids exceeds the amount needed for the loan. In these cases, only the amount originally requested by the borrower is accepted, and bids at the lowest interest rates are retained. You may bid again on <a href=':borrowerLink' target='_blank'>:borrowerName</a>'s loan by proposing a lower interest rate.<br/><br/>".
 "Best wishes,<br/><br/>".
 'The Zidisha Team'
     ],
+    'down-bid-notification' => [
+        'subject' => 'Outbid Notification',
+        'body' => 'This is a notification that :outBidAmount of your bid to fund :bidAmount of the loan for <a href=\':borrowerLink\' target=\'_blank\'>:borrowerName</a> at :bidInterest % interest has been outbid by another lender who proposed a lower interest rate. The remaining value of your bid for this loan is :remainedBidAmount. The amount outbid of :outBidAmount has been returned to your lender account, and you may use it to fund another loan or to bid again on this one.<br/><br/>'.
+"Loan bids may be partially or fully outbid when the total value of lender bids exceeds the amount needed for the loan. In these cases, only the amount originally requested by the borrower is accepted, and bids at the lowest interest rates are retained. You may bid again on <a href=':borrowerLink' target='_blank'>:borrowerName</a>'s loan by proposing a lower interest rate.<br/><br/>".
+"Best wishes,<br/><br/>".
+"The Zidisha Team"
+    ]
 ];

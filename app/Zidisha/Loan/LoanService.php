@@ -494,7 +494,8 @@ class LoanService
                 if ($acceptedAmount->isZero()) {
                     $this->lenderMailer->sendOutbidMail($lender, $bid);
                 } else {
-//                    $this->lenderMailer->sendDownbidMail($changedBid);
+                    $outBidAmount = $bid->getBidAmount()->subtract($acceptedAmount);
+                    $this->lenderMailer->sendDownBidMail($lender, $bid, $acceptedAmount, $outBidAmount);
                 }
             }
         }

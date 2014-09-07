@@ -51,22 +51,6 @@ class LenderMailer
 
     public function sendOutbidMail(Lender $lender, Bid $bid)
     {
-//        $this->mailer->send(
-//            $acceptedAmount->isZero() ? 'emails.lender.loan.fully-outbid' : 'emails.lender.loan.partially-outbid',
-//            [
-//                'to'              => $email,
-//                'from'            => 'service@zidisha.com',
-//                'subject'         => 'Outbid Notification.',
-//                'bidAmount'       => $bid->getBidAmount()->round(2)->getAmount(),
-//                'bidInterestRate' => $bid->getInterestRate(),
-//                'outbidAmount'    => $changedAmount->round(2)->getAmount(),
-//                'acceptedAmount'  => $acceptedAmount->round(2)->getAmount(),
-//                'borrowerLink'    => $bid->getLoan()->getBorrower()->getUser()->getProfileUrl(),
-//                'borrowerName'    => $bid->getLoan()->getBorrower()->getName(),
-//                'loanLink'        => route('loan:index', ['loanId' => $bid->getLoan()->getBorrower()->getActiveLoanId()]),
-//            ]
-//        );
-
         $borrower = $bid->getLoan()->getBorrower();
         $data = [
             'parameters' => [
@@ -74,7 +58,7 @@ class LenderMailer
                 'borrowerName' => ucwords(strtolower($borrower->getName())),
                 'bidInterest'  => $bid->getInterestRate(),
                 'bidAmount'    => $bid->getBidAmount(),
-                'ourBidAmount' => $bid->getBidAmount(),
+                'outBidAmount' => $bid->getBidAmount(),
             ],
         ];
 
@@ -84,6 +68,30 @@ class LenderMailer
                 'to'         => $lender->getUser()->getEmail(),
                 'label'      => 'lender.mails.out-bid-notification.body',
                 'subject'    => \Lang::get('lender.mails.out-bid-notification.subject'),
+            ]
+        );
+    }
+
+    public function sendDownBidMail(Lender $lender, Bid $bid, Money $acceptedAmount, Money $outBidAmount)
+    {
+        $borrower = $bid->getLoan()->getBorrower();
+        $data = [
+            'parameters' => [
+                'borrowerLink'      => route('borrower:public-profile', $borrower->getUser()->getUsername()),
+                'borrowerName'      => ucwords(strtolower($borrower->getName())),
+                'bidInterest'       => $bid->getInterestRate(),
+                'bidAmount'         => $bid->getBidAmount(),
+                'outBidAmount'      => $outBidAmount,
+                'remainedBidAmount' => $acceptedAmount,
+            ],
+        ];
+
+        $this->mailer->send(
+            'emails.label-template',
+            $data + [
+                'to'         => $lender->getUser()->getEmail(),
+                'label'      => 'lender.mails.down-bid-notification.body',
+                'subject'    => \Lang::get('lender.mails.down-bid-notification.subject'),
             ]
         );
     }

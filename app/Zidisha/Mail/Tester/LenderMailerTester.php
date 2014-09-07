@@ -48,6 +48,16 @@ class LenderMailerTester
         $this->lenderMailer->sendOutbidMail($lender, $bid);
     }
 
+    public function sendDownBidMail()
+    {
+        $bid = BidQuery::create()
+            ->findOne();
+        $lender = $bid->getLender();
+        $acceptedAmount = $bid->getBidAmount()->divide(2);
+        $outBidAmount = $bid->getBidAmount()->subtract($acceptedAmount);
+
+        $this->lenderMailer->sendDownBidMail($lender, $bid, $acceptedAmount, $outBidAmount);
+    }
     public function sendOutbidMailOld()
     {
         $changedBid = [];
