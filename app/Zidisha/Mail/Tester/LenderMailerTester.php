@@ -111,8 +111,9 @@ class LenderMailerTester
             ->findOne();
 
         $amount = Money::create(25);
+        $inviteCredit = Money::create(100);
 
-        $this->lenderMailer->sendExpiredLoanWithLenderInviteCreditMail($loan, $lender, $amount);
+        $this->lenderMailer->sendExpiredLoanWithLenderInviteCreditMail($loan, $lender, $amount, $inviteCredit);
     }
 
     public function sendAllowLoanForgivenessMail()

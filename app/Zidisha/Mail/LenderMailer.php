@@ -312,8 +312,8 @@ class LenderMailer
         $borrower = $loan->getBorrower();
         $parameters = [
             'borrowerName'  => $borrower->getName(),
-            'bidAmount'     => $amount->getAmount(),
-            'creditBalance' => $currentBalance->getAmount(),
+            'bidAmount'     => $amount,
+            'creditBalance' => $currentBalance,
             'lendLink'      => route('lend:index')
         ];
         $message = \Lang::get('lender.mails.loan-expired.body', $parameters);
@@ -334,8 +334,8 @@ class LenderMailer
         $borrower = $loan->getBorrower();
         $parameters = [
             'borrowerName'              => $borrower->getName(),
-            'bidAmount'                 => $amount->getAmount(),
-            'lenderInviteCreditBalance' => $inviteCreditBalance->getAmount(),
+            'bidAmount'                 => $amount,
+            'lenderInviteCreditBalance' => $inviteCreditBalance,
             'lendLink'                  => route('lend:index')
         ];
         $message = \Lang::get('lender.mails.loan-expired-invite.body', $parameters);

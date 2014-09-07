@@ -104,7 +104,7 @@ We have a little bit of bad news.  It looks like :borrowerName ’s loan wasn’
 <br><br>
 But don\'t give up!  There are many more promising endeavors waiting to be funded.
 <br><br>
-Your lending credit balance is now USD :creditBalance. Use your credit to make a new loan <a href=":lendLink">here</a>.
+Your lending credit balance is now :creditBalance. Use your credit to make a new loan <a href=":lendLink">here</a>.
 <br><br>
 Best wishes,
 <br><br>
@@ -117,12 +117,15 @@ PS:  You can sort the <a href=":lendLink">fundraising loans</a> by “Amount sti
         'body'    => '
 Hi there,
 We have a little bit of bad news.  It looks like :borrowerName ’s loan wasn’t fully funded.  We’ve returned your invite credit contribution of :bidAmount to your account.
+<br><br>
 But don\'t give up!  There are many more promising endeavors waiting to be funded.
-Your lending credit balance is now USD :lenderInviteCreditBalance. Use your credit to make a new loan <a href=":lendLink">here</a>.
-
+<br><br>
+Your lending credit balance is now :lenderInviteCreditBalance. Use your credit to make a new loan <a href=":lendLink">here</a>.
+<br><br>
 Best wishes,
+<br><br>
 The Zidisha Team
-
+<br><br>
 PS:  You can sort the <a href=":lendLink">fundraising loans</a> by “Amount still needed” to find the ones that need the least money to be fully funded.'
     ],
     'loan-disbursed'                     => [
