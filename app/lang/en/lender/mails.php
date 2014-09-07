@@ -94,7 +94,7 @@ The Zidisha Team',
         'button-text' => 'Make A Loan'
     ],
     'sendwithus-defaults'                => [
-        'footer'      => 'Don\’t miss our latest loan projects:',
+        'footer'      => 'Don’t miss our latest loan projects:',
         'button-text' => 'View Loans'
     ],
     'loan-expired'                       => [
