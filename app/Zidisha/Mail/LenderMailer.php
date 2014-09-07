@@ -289,9 +289,9 @@ class LenderMailer
         $data = [
             'parameters' => [
                 'borrowerName'       => $loan->getBorrower()->getName(),
-                'loanUrl'            => route('loan:index', ['loanId' => $loan->getId()]),
+                'loanUrl'            => route('loan:index', $loan->getId()),
                 'repaidPercentage'   => $loan->getRepaidPercent(),
-                'requestedAmount'    => $loan->getUsdAmount()->getAmount()
+                'requestedAmount'    => $loan->getUsdAmount()
             ],
         ];
 

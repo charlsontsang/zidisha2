@@ -141,7 +141,7 @@ PS:  Want a really cool gift idea?  Check out our <a href=":giftCardPage">gift c
         'body'    => '
         Greetings,
 <br/><br/>
-We are writing to let you know that the amount remaining outstanding on <a href=":loanUrl">:borrowerName</a>\'s loan has been written off. To date, :borrowerName has repaid :repaidPercentage % of the USD :requestedAmount funded.
+We are writing to let you know that the amount remaining outstanding on <a href=":loanUrl">:borrowerName</a>\'s loan has been written off. To date, :borrowerName has repaid :repaidPercentage % of the :requestedAmount funded.
 <br/><br/>
 Under our reporting standards, outstanding loan amounts must be written off six months after a loan’s last scheduled repayment, or if no repayments are made for six months.
 <br/><br/>
