@@ -1305,7 +1305,7 @@ class LoanService
 
             $loan
                 ->setTotalAmount($repaymentSchedule->getTotalAmountDue())
-                //->setOriginalPeriod($loan->getPeriod())
+                ->setOriginalPeriod($loan->getPeriod())
                 ->setPeriod($repaymentSchedule->getPeriod());
 
             $loan->clearInstallments();
