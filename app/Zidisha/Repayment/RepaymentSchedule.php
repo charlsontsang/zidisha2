@@ -4,9 +4,7 @@ namespace Zidisha\Repayment;
 
 
 use Carbon\Carbon;
-use Traversable;
 use Zidisha\Currency\Converter;
-use Zidisha\Currency\ExchangeRateQuery;
 use Zidisha\Currency\Money;
 use Zidisha\Loan\Loan;
 
@@ -229,15 +227,15 @@ class RepaymentSchedule implements \IteratorAggregate
         return null;
     }
 
-    public function remainingPeriod()
+    public function remainingPeriod(\DateTime $date = null)
     {
-        $now = new \DateTime();
+        $date = $date ?: new \DateTime();
         $i = 0;
 
         /** @var RepaymentScheduleInstallment $repaymentScheduleInstallment */
         foreach ($this as $repaymentScheduleInstallment) {
             $installment = $repaymentScheduleInstallment->getInstallment();
-            if ($installment->getDueDate() > $now) {
+            if ($installment->getDueDate() > $date) {
                 $i += 1;
             }
         }
@@ -247,7 +245,7 @@ class RepaymentSchedule implements \IteratorAggregate
 
     public function getPeriod()
     {
-        return count($this->installments);
+        return count($this->installments) - 1;
     }
 
     public function getOverDueInstallmentCount()

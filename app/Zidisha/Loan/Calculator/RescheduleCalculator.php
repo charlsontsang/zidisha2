@@ -75,10 +75,10 @@ class RescheduleCalculator {
         return $remainingDueAmount->add($addedInterest)->divide($maxAddedPeriod)->ceil();
     }
 
-    public function remainingPeriod(Money $installmentAmount)
+    public function remainingPeriod(\Datetime $date, Money $installmentAmount)
     {
-        $remainingDueAmount = $this->loan->getRemainingDueAmount();
-        $remainingPeriod = $this->repaymentSchedule->remainingPeriod();
+        $remainingDueAmount = $this->repaymentSchedule->getRemainingDueAmount();
+        $remainingPeriod = $this->repaymentSchedule->remainingPeriod($date);
 
         $amount = $this->loan->getDisbursedAmount()
             ->subtract($this->loan->getForgivenAmount()->multiply($this->loan->getPrincipalRatio()));
@@ -96,7 +96,7 @@ class RescheduleCalculator {
             ->multiply($remainingPeriod)
             ->divide($installmentPeriodsInYear * 100);
 
-        $installmentInterest = $amount
+        $installmentInterest = $installmentAmount
             ->multiply($totalInterestRate)
             ->divide($installmentPeriodsInYear * 100);
         
@@ -109,11 +109,10 @@ class RescheduleCalculator {
     public function repaymentScheduleInstallments($installmentAmount, \DateTime $rescheduleDate)
     {
         $zero = Money::create(0, $this->loan->getCurrencyCode());
-        $now = new \DateTime();
         
         $repaymentScheduleInstallments = [];
         $deleteRepaymentScheduleInstallments = [];
-        $lastDueDate = null;
+        $rescheduleDate = Carbon::instance($rescheduleDate);
         
         /** @var RepaymentScheduleInstallment $repaymentScheduleInstallment */
         foreach ($this->repaymentSchedule as $repaymentScheduleInstallment) {
@@ -141,29 +140,35 @@ class RescheduleCalculator {
                 }
             } else {
                 $deleteRepaymentScheduleInstallments[] = $repaymentScheduleInstallment;
-                continue;
             }
-            $lastDueDate = $installment->getDueDate();
-        }
-        
-        $lastDueDate = Carbon::instance($lastDueDate);
+        }    
+           
         $addInstallmentPeriods = $this->loan->isWeeklyInstallment() ? 'addWeeks' : 'addMonths';
         $extraPeriod = 0;
+
+        // we only allow rescheduling after the borrower made at least one payment and after the first installment (?TODO),
+        // hence $repaymentScheduleInstallments is never empty
+        /** @var RepaymentScheduleInstallment $lastRepaymentScheduleInstallment */
+        $lastRepaymentScheduleInstallment = $repaymentScheduleInstallments[count($repaymentScheduleInstallments)-1];
+        $lastDueDate = Carbon::instance($lastRepaymentScheduleInstallment->getInstallment()->getDueDate());
         
-        if ($lastDueDate < $now) {
+        if ($deleteRepaymentScheduleInstallments) {
+            /** @var RepaymentScheduleInstallment $nextRepaymentScheduleInstallment */
+            $nextRepaymentScheduleInstallment = $deleteRepaymentScheduleInstallments[0];
+            $nextDueDate = Carbon::instance($nextRepaymentScheduleInstallment->getInstallment()->getDueDate());
+        } else {
             $extraPeriod = 1;
-            while(1) {
-                $date = $lastDueDate->copy()->$addInstallmentPeriods($extraPeriod);
-                if ($date > $now ) {
-                    break;
-                }
+            $nextDueDate = $lastDueDate->copy()->$addInstallmentPeriods(1);
+            
+            while ($nextDueDate < $rescheduleDate) {
                 $extraPeriod += 1;
+                $nextDueDate = $lastDueDate->copy()->$addInstallmentPeriods($extraPeriod);
             }
         }
-
+        
         $remainingAmount = $this->repaymentSchedule->getRemainingAmountDue();
-        $newRemainingPeriod = $this->remainingPeriod($installmentAmount);
-        $remainingPeriod = $this->repaymentSchedule->remainingPeriod();
+        $newRemainingPeriod = $this->remainingPeriod($nextDueDate, $installmentAmount);
+        $remainingPeriod = $this->repaymentSchedule->remainingPeriod($nextDueDate);
         $amount = $this->loan->getDisbursedAmount()
             ->subtract($this->loan->getForgivenAmount()->multiply($this->loan->getPrincipalRatio()));
 
@@ -178,7 +183,7 @@ class RescheduleCalculator {
         $i = 1;
         while ($amount->isPositive()) {
             $newInstallmentDate = $lastDueDate->copy()->$addInstallmentPeriods($i);
-            if ($newInstallmentDate < $rescheduleDate) {
+            if ($newInstallmentDate < $nextDueDate) {
                 $newInstallmentAmount = $zero;
             } else {
                 if ($amount->lessThan($installmentAmount)) {
