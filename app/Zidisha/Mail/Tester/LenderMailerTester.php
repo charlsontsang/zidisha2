@@ -41,6 +41,15 @@ class LenderMailerTester
 
     public function sendOutbidMail()
     {
+        $bid = BidQuery::create()
+            ->findOne();
+        $lender = $bid->getLender();
+
+        $this->lenderMailer->sendOutbidMail($lender, $bid);
+    }
+
+    public function sendOutbidMailOld()
+    {
         $changedBid = [];
 
         $changedBid['changedAmount'] = Money::create('15');

@@ -49,16 +49,8 @@ class LenderMailer
         );
     }
 
-    public function sendOutbidMail($changedBid)
+    public function sendOutbidMail(Lender $lender, Bid $bid)
     {
-//        /** @var Bid $bid*/
-//        $bid = $changedBid['bid'];
-//        /** @var Money $acceptedAmount */
-//        $acceptedAmount = $changedBid['acceptedAmount'];
-//        /** @var Money $changedAmount */
-//        $changedAmount = $changedBid['changedAmount'];
-//        $email = $bid->getLender()->getUser()->getEmail();
-//
 //        $this->mailer->send(
 //            $acceptedAmount->isZero() ? 'emails.lender.loan.fully-outbid' : 'emails.lender.loan.partially-outbid',
 //            [
@@ -74,22 +66,26 @@ class LenderMailer
 //                'loanLink'        => route('loan:index', ['loanId' => $bid->getLoan()->getBorrower()->getActiveLoanId()]),
 //            ]
 //        );
-//
-//        $data = [
-//            'parameters' => [
-//                'borrowerName' => $borrower->getName(),
-//                'zidishaLink' => route('home'),
-//            ],
-//        ];
-//
-//        $this->mailer->send(
-//            'emails.label-template',
-//            $data + [
-//                'to'         => $borrower->getUser()->getEmail(),
-//                'label'      => 'lender.mails.approved-confirmation.body',
-//                'subject'    => \Lang::get('borrower.mails.approved-confirmation.subject'),
-//            ]
-//        );
+
+        $borrower = $bid->getLoan()->getBorrower();
+        $data = [
+            'parameters' => [
+                'borrowerLink' => route('borrower:public-profile', $borrower->getUser()->getUsername()),
+                'borrowerName' => ucwords(strtolower($borrower->getName())),
+                'bidInterest'  => $bid->getInterestRate(),
+                'bidAmount'    => $bid->getBidAmount(),
+                'ourBidAmount' => $bid->getBidAmount(),
+            ],
+        ];
+
+        $this->mailer->send(
+            'emails.label-template',
+            $data + [
+                'to'         => $lender->getUser()->getEmail(),
+                'label'      => 'lender.mails.out-bid-notification.body',
+                'subject'    => \Lang::get('lender.mails.out-bid-notification.subject'),
+            ]
+        );
     }
 
     /**
