@@ -9657,6 +9657,8 @@ ul.filter-bar {
 }
 .filter-bar .input-group .btn {
   height: 36px;
+  margin-top: 0;
+  min-width: 0;
 }
 #show {
   display: none;
