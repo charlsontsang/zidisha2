@@ -78,7 +78,7 @@ $(function () {
         return false;
     });
     
-    $('body').on('click', '[data-toggle-text]', function() {
+    $body.on('click', '[data-toggle-text]', function() {
         var $this = $(this),
             oldText = $this.text();
         
@@ -162,7 +162,7 @@ $(function () {
     
     $btnFilters = $('.btn-filter');
     if ($btnFilters.length > 0) {
-        $('.btn-filter').each(function() {
+        $btnFilters.each(function() {
             $(this).popover({
                 content: $($(this).attr('target')).html(),
                 html: true,
@@ -170,7 +170,7 @@ $(function () {
             });
         });
 
-        $('body').on('click', function (e) {
+        $body.on('click', function (e) {
             $('.btn-filter').each(function () {
                 //the 'is' for buttons that trigger popups
                 //the 'has' for icons within a button that triggers a popup
@@ -195,13 +195,13 @@ $(function () {
         });
     }
 
-    $('body').on('click', '[data-display=display]', function() {
+    $body.on('click', '[data-display=display]', function() {
         $($(this).attr('target')).show();
         $(this).hide();
         return false;
     });
 
-    $('body').on('click', '[data-dismiss=removeFile]', function() {
+    $body.on('click', '[data-dismiss=removeFile]', function() {
         $(this).closest('.file-input-block').remove();
         return false;
     });
