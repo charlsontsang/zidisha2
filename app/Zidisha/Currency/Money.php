@@ -712,7 +712,12 @@ class Money
      */
     public function __toString()
     {
-        return $this->getAmount() . ' ' . $this->getCurrency();
+        return $this->getCurrency() . ' ' . $this->format();
+    }
+
+    public function format()
+    {
+        return number_format($this->getAmount(), 2, '.', ',');
     }
 
     /**
