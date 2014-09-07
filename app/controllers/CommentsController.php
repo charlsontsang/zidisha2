@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Input;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Zidisha\Comment\CommentService;
 use Zidisha\Comment\Form\EditCommentForm;
 use Zidisha\Comment\Form\PostCommentForm;
@@ -54,7 +55,12 @@ abstract class CommentsController extends BaseController
         if (\Input::hasFile('file') && $this->service->isUploadsAllowed()) {
             foreach (\Input::file('file') as $file) {
                 if (!empty($file)) {
-                    if ($file->isValid() && $file->getSize() < Config::get('image.allowed-file-size')) {
+                    /** @var UploadedFile $file */
+                    if ($file->isValid() 
+                        && $file->getPath() != ''
+                        && in_array($file->guessExtension(), ['jpeg', 'png', 'gif', 'bmp'])
+                        && $file->getSize() < Config::get('image.allowed-file-size'))
+                    {
                         $files[] = $file;
                     } else {
                         Flash::error(\Lang::get('borrower.comments.flash.file-not-valid'));
@@ -63,6 +69,7 @@ abstract class CommentsController extends BaseController
             }
             return $files;
         }
+        
         return $files;
     }
 
