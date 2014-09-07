@@ -1325,7 +1325,10 @@ class LoanService
         $borrower = $loan->getBorrower();
         
         $this->borrowerCommentService->postComment(
-            ['message' => $data['reason']],
+            [
+                'message' => $data['reason'],
+                'isReschedulingReason' => true
+            ],
             $borrower->getUser(),
             $borrower
         );

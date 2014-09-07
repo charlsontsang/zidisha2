@@ -33,11 +33,18 @@ class BorrowerCommentService extends CommentService
     }
 
     /**
+     * @param array $data
      * @return BorrowerComment
      */
-    protected function createComment()
+    protected function createComment($data = [])
     {
-        return new BorrowerComment();
+        $comment = new BorrowerComment();
+        
+        if (array_get($data, 'isReschedulingReason', false)) {
+            $comment->setIsReschedulingReason(true);
+        }
+        
+        return $comment;
     }
 
     protected function createCommentQuery()

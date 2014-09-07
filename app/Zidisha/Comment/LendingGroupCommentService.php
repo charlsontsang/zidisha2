@@ -25,9 +25,10 @@ class LendingGroupCommentService extends CommentService
     }
 
     /**
-     * @return Comment
+     * @param array $data
+     * @return LendingGroupComment
      */
-    protected function createComment()
+    protected function createComment($data = [])
     {
         return new LendingGroupComment();
     }

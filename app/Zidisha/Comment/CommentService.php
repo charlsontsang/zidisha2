@@ -13,7 +13,7 @@ abstract class CommentService
     /**
      * @return Comment
      */
-    protected abstract function createComment();
+    protected abstract function createComment($data = []);
 
     /**
      * @return CommentQuery
@@ -25,7 +25,7 @@ abstract class CommentService
     public function postComment($data, User $user,CommentReceiverInterface $receiver, $files = [])
     {
         //Abstract
-        $comment = $this->createComment();
+        $comment = $this->createComment($data);
         $comment->setUserId($user->getId());
         $comment->setMessage($data['message']);
         $comment->setCommentReceiverId($comment, $receiver->getCommentReceiverId());
