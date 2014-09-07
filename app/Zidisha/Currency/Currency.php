@@ -52,6 +52,13 @@ class Currency
     private $name;
 
     /**
+     * The currency sign.
+     * 
+     * @var string
+     */
+    private $sign;
+
+    /**
      * Creates a new instance.
      *
      * @param string $code      the three-letter currency code
@@ -60,12 +67,13 @@ class Currency
      * @param int    $decimalDigits the number of decimal places used for this currency
      * @param string $name          the name as specified in en.wikipedia.org
      */
-    private function __construct($code, $isoStatus, $decimalDigits, $name)
+    private function __construct($code, $isoStatus, $decimalDigits, $name, $sign = null)
     {
         $this->code = $code;
         $this->isoStatus = $isoStatus;
         $this->decimalDigits = $decimalDigits;
         $this->name = $name;
+        $this->sign = $sign ?: $code;
     }
 
     /**
@@ -85,8 +93,9 @@ class Currency
             $isoStatus = $details[ 'isoStatus' ];
             $decimalDigits = $details[ 'decimalDigits' ];
             $name = $details[ 'name' ];
+            $sign = isset($details['sign']) ? $details['sign'] : null;
 
-            return new Currency($code, $isoStatus, $decimalDigits, $name);
+            return new Currency($code, $isoStatus, $decimalDigits, $name, $sign);
         } else {
             throw new \InvalidArgumentException('Unknown currency code \''.$code.'\'.');
         }
@@ -158,7 +167,7 @@ class Currency
      */
     public function __toString()
     {
-        return $this->code;
+        return $this->sign;
     }
 
     /**
@@ -2564,6 +2573,7 @@ class Currency
                 'isoStatus' => self::ISO_STATUS_ACTIVE,
                 'decimalDigits' => 2,
                 'name' => 'United States dollar',
+                'sign' => '$',
             ),
             self::CODE_USN => array(
                 'code' => self::CODE_USN,
