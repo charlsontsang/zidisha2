@@ -636,7 +636,7 @@ class GenerateModelData extends Command
                 ->setPhoneNumberLength(9)
                 ->setInstallmentPeriod($this->faker->randomElement([Loan::WEEKLY_INSTALLMENT, Loan::MONTHLY_INSTALLMENT]))
                 ->setInstallmentAmountStep(100)
-                ->setLoanAmountStep(1000)
+                ->setLoanAmountStep(200)
                 ->setLanguageCode($data[4]);
             
             $country->save();
