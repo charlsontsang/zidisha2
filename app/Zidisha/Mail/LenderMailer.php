@@ -187,14 +187,18 @@ class LenderMailer
 
     public function sendWelcomeMail(Lender $lender)
     {
-        $email = $lender->getUser()->getEmail();
+        $data = [
+            'parameters' => [
+                'lendLink' => route('lend:index'),
+            ],
+        ];
 
         $this->mailer->send(
-            'emails.lender.welcome',
-            [
-                'to'      => $email,
-                'from'    => 'service@zidisha.com',
-                'subject' => 'Welcome to Zidisha!'
+            'emails.label-template',
+            $data + [
+                'to'         => $lender->getUser()->getEmail(),
+                'label'      => 'lender.mails.register-welcome.body',
+                'subject'    => \Lang::get('lender.mails.register-welcome.subject'),
             ]
         );
     }

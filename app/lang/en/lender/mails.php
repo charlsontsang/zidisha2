@@ -36,10 +36,10 @@ PS:  Join a <a href=":lendingGroupLink">Lending Group</a> to meet other lenders 
     ],
     'lender-invite'                      => [
         'button-text' => 'Use Credit',
-        'header'  => 'Zidisha invitation + $25 lending credit',
-        'footer'  => 'Use your credit to fund a loan project here:',
-        'subject' => ':lenderName has sent you $25 to lend to a Zidisha entrepreneur',
-        'body'    => '
+        'header'      => 'Zidisha invitation + $25 lending credit',
+        'footer'      => 'Use your credit to fund a loan project here:',
+        'subject'     => ':lenderName has sent you $25 to lend to a Zidisha entrepreneur',
+        'body'        => '
 :lenderName has sent you $25 to lend to a Zidisha entrepreneur.
 <br/><br/>
 :customMessage
@@ -248,18 +248,36 @@ PS:  You can view the gains or losses for all of your completed loans <a href=":
 :images<br/><br/>
 You may change your group comment notification preferences in the <a href=":groupLink"> :groupName Lending Group profile page</a>.'
     ],
-    'out-bid-notification' => [
+    'out-bid-notification'               => [
         'subject' => 'Outbid Notification',
-        'body' => 'This is a notification that your bid to fund :bidAmount of the loan for <a href=\':borrowerLink\' target=\'_blank\'>:borrowerName</a> at :bidInterest % interest has been outbid by another lender who proposed a lower interest rate. The amount outbid of :outBidAmount has been returned to your lender account, and you may use it to fund another loan or to bid again on this one.<br/><br/>'.
-"Loan bids may be partially or fully outbid when the total value of lender bids exceeds the amount needed for the loan. In these cases, only the amount originally requested by the borrower is accepted, and bids at the lowest interest rates are retained. You may bid again on <a href=':borrowerLink' target='_blank'>:borrowerName</a>'s loan by proposing a lower interest rate.<br/><br/>".
-"Best wishes,<br/><br/>".
-'The Zidisha Team'
+        'body'    => 'This is a notification that your bid to fund :bidAmount of the loan for <a href=\':borrowerLink\' target=\'_blank\'>:borrowerName</a> at :bidInterest % interest has been outbid by another lender who proposed a lower interest rate. The amount outbid of :outBidAmount has been returned to your lender account, and you may use it to fund another loan or to bid again on this one.<br/><br/>' .
+            "Loan bids may be partially or fully outbid when the total value of lender bids exceeds the amount needed for the loan. In these cases, only the amount originally requested by the borrower is accepted, and bids at the lowest interest rates are retained. You may bid again on <a href=':borrowerLink' target='_blank'>:borrowerName</a>'s loan by proposing a lower interest rate.<br/><br/>" .
+            "Best wishes,<br/><br/>" .
+            'The Zidisha Team'
     ],
-    'down-bid-notification' => [
+    'down-bid-notification'              => [
         'subject' => 'Outbid Notification',
-        'body' => 'This is a notification that :outBidAmount of your bid to fund :bidAmount of the loan for <a href=\':borrowerLink\' target=\'_blank\'>:borrowerName</a> at :bidInterest % interest has been outbid by another lender who proposed a lower interest rate. The remaining value of your bid for this loan is :remainedBidAmount. The amount outbid of :outBidAmount has been returned to your lender account, and you may use it to fund another loan or to bid again on this one.<br/><br/>'.
-"Loan bids may be partially or fully outbid when the total value of lender bids exceeds the amount needed for the loan. In these cases, only the amount originally requested by the borrower is accepted, and bids at the lowest interest rates are retained. You may bid again on <a href=':borrowerLink' target='_blank'>:borrowerName</a>'s loan by proposing a lower interest rate.<br/><br/>".
-"Best wishes,<br/><br/>".
-"The Zidisha Team"
-    ]
+        'body'    => 'This is a notification that :outBidAmount of your bid to fund :bidAmount of the loan for <a href=\':borrowerLink\' target=\'_blank\'>:borrowerName</a> at :bidInterest % interest has been outbid by another lender who proposed a lower interest rate. The remaining value of your bid for this loan is :remainedBidAmount. The amount outbid of :outBidAmount has been returned to your lender account, and you may use it to fund another loan or to bid again on this one.<br/><br/>' .
+            "Loan bids may be partially or fully outbid when the total value of lender bids exceeds the amount needed for the loan. In these cases, only the amount originally requested by the borrower is accepted, and bids at the lowest interest rates are retained. You may bid again on <a href=':borrowerLink' target='_blank'>:borrowerName</a>'s loan by proposing a lower interest rate.<br/><br/>" .
+            "Best wishes,<br/><br/>" .
+            "The Zidisha Team"
+    ],
+    'register-welcome'                   => [
+        'subject' => 'Welcome to Zidisha!',
+        'body'    => "Hi there!
+<br/><br/>
+Welcome to the Zidisha community! I’m Julia, the director of Zidisha - and I am so thrilled and honored that you’ve joined us.
+<br/><br/>
+Zidisha is different from other microlending websites.  We bypass local banks, so that the entrepreneurs don’t have to pay high administrative charges for your loans.  And since our entrepreneurs are web users too, you can communicate with them directly through their loan profile pages.  Give it a try!
+<br/><br/>
+To get started, go to the <a href=':lendLink'>Lend</a> page and start exploring!  You can browse by country and business type until you find an entrepreneur you’d like to connect with.
+<br/><br/>
+Zidisha is staffed by an amazing team of volunteers who are always available to help you.  You can reach us at Facebook, Twitter or by email to service@zidisha.org.
+<br/><br/>
+Can’t wait to change the world with you,
+<br/><br/>
+Julia Kurnia
+<br/><br/>
+PS:  Head over to our <a href='http://p2p-microlending-blog.zidisha.org/'>blog</a> for inspiring stories from our most remarkable entrepreneurs!"
+    ],
 ];
