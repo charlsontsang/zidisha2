@@ -29,4 +29,9 @@ class AdminMailerTester
 
         $this->adminMailer->sendBorrowerCommentNotification($loan, $comment, $postedBy, $images);
     }
+
+    public function sendErrorMail()
+    {
+        $this->adminMailer->sendErrorMail(new \Exception('This is the error message.'));    
+    }
 }
