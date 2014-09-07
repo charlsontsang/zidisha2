@@ -116,6 +116,14 @@ class LenderMailerTester
         $this->lenderMailer->sendExpiredLoanWithLenderInviteCreditMail($loan, $lender, $amount, $inviteCredit);
     }
 
+    public function sendUnusedFundsNotification()
+    {
+        $lender = LenderQuery::create()
+            ->findOne();
+
+        $this->lenderMailer->sendUnusedFundsNotification($lender);
+    }
+
     public function sendAllowLoanForgivenessMail()
     {
         $loan = new Loan();

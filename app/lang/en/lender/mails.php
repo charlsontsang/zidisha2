@@ -50,7 +50,7 @@ You can communicate with your chosen entrepreneur via the Zidisha website as his
         'subject' => 'You have unused funds in your Zidisha account',
         'body'    => 'Hi there,
                      <br/><br/>
-                     Since you last visited Zidisha, repayments from entrepreneurs you\'ve supported have increased your lending account balance to USD :lenderBalance.
+                     Since you last visited Zidisha, repayments from entrepreneurs you\'ve supported have increased your lending account balance to :lenderBalance .
                      <br/><br/>
                      We know you’re busy, and wanted to help you out by picking out three amazing loan projects you can support right now:',
         'extra'   => 'Happy lending,

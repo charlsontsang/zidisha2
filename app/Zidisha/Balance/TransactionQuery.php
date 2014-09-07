@@ -248,7 +248,7 @@ class TransactionQuery extends BaseTransactionQuery
             if (isset($results[$userIds])) {
                 return Money::create($results[$userIds], 'USD');
             } else {
-                return Money::create(80000, 'USD');
+                return Money::create(0, 'USD');
             }
         }
     }

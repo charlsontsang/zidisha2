@@ -370,6 +370,8 @@ class LenderMailer
         $data = $this->getFeaturedLoansForMail();
         
         $data['footer'] = \Lang::get('lender.mails.lender-unused-fund.footer');
+        $data['available_amount'] = $currentBalance;
+        $data['header'] = (string) $currentBalance;
         
         $data['extra'] = \Lang::get(
             'lender.mails.lender-unused-fund.body',
@@ -378,7 +380,7 @@ class LenderMailer
 
         $subject = \Lang::get('lender.mails.lender-unused-fund.subject');
 
-        $message = \Lang::get('lender.mails.lender-unused-fund.body', ['lenderBalance' => $currentBalance->getAmount()]);
+        $message = \Lang::get('lender.mails.lender-unused-fund.body', ['lenderBalance' => $currentBalance]);
         $data['content'] = $message;
 
         $this->mailer->send(
