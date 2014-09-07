@@ -35,10 +35,13 @@ PS:  Join a <a href=":lendingGroupLink">Lending Group</a> to meet other lenders 
 '
     ],
     'lender-invite'                      => [
-        'subject' => ':lenderName has sent you $25 to lend to a Zidisha entrepreneur',
-        'body'    => '
+        'button-text' => 'Use Credit',
+        'header'      => 'Zidisha invitation + $25 lending credit',
+        'footer'      => 'Use your credit to fund a loan project here:',
+        'subject'     => ':lenderName has sent you $25 to lend to a Zidisha entrepreneur',
+        'body'        => '
 :lenderName has sent you $25 to lend to a Zidisha entrepreneur.
-<br/>
+<br/><br/>
 :customMessage
 Use your $25 to fund a small business growth loan to a disadvantaged entrepreneur in Africa or Asia.
 You can communicate with your chosen entrepreneur via the Zidisha website as his or her business develops - changing a life while interacting directly with a remarkable individual on the other side of the world.'
@@ -47,7 +50,7 @@ You can communicate with your chosen entrepreneur via the Zidisha website as his
         'subject' => 'You have unused funds in your Zidisha account',
         'body'    => 'Hi there,
                      <br/><br/>
-                     Since you last visited Zidisha, repayments from entrepreneurs you\'ve supported have increased your lending account balance to USD :lenderBalance.
+                     Since you last visited Zidisha, repayments from entrepreneurs you\'ve supported have increased your lending account balance to :lenderBalance .
                      <br/><br/>
                      We know you’re busy, and wanted to help you out by picking out three amazing loan projects you can support right now:',
         'extra'   => 'Happy lending,
@@ -91,7 +94,7 @@ The Zidisha Team',
         'button-text' => 'Make A Loan'
     ],
     'sendwithus-defaults'                => [
-        'footer'      => 'Don\’t miss our latest loan projects:',
+        'footer'      => 'Don’t miss our latest loan projects:',
         'button-text' => 'View Loans'
     ],
     'loan-expired'                       => [
@@ -101,7 +104,7 @@ We have a little bit of bad news.  It looks like :borrowerName ’s loan wasn’
 <br><br>
 But don\'t give up!  There are many more promising endeavors waiting to be funded.
 <br><br>
-Your lending credit balance is now USD :creditBalance. Use your credit to make a new loan <a href=":lendLink">here</a>.
+Your lending credit balance is now :creditBalance. Use your credit to make a new loan <a href=":lendLink">here</a>.
 <br><br>
 Best wishes,
 <br><br>
@@ -114,12 +117,15 @@ PS:  You can sort the <a href=":lendLink">fundraising loans</a> by “Amount sti
         'body'    => '
 Hi there,
 We have a little bit of bad news.  It looks like :borrowerName ’s loan wasn’t fully funded.  We’ve returned your invite credit contribution of :bidAmount to your account.
+<br><br>
 But don\'t give up!  There are many more promising endeavors waiting to be funded.
-Your lending credit balance is now USD :lenderInviteCreditBalance. Use your credit to make a new loan <a href=":lendLink">here</a>.
-
+<br><br>
+Your lending credit balance is now :lenderInviteCreditBalance. Use your credit to make a new loan <a href=":lendLink">here</a>.
+<br><br>
 Best wishes,
+<br><br>
 The Zidisha Team
-
+<br><br>
 PS:  You can sort the <a href=":lendLink">fundraising loans</a> by “Amount still needed” to find the ones that need the least money to be fully funded.'
     ],
     'loan-disbursed'                     => [
@@ -138,7 +144,7 @@ PS:  Want a really cool gift idea?  Check out our <a href=":giftCardPage">gift c
         'body'    => '
         Greetings,
 <br/><br/>
-We are writing to let you know that the amount remaining outstanding on <a href=":loanUrl">:borrowerName</a>\'s loan has been written off. To date, :borrowerName has repaid :repaidPercentage % of the USD :requestedAmount funded.
+We are writing to let you know that the amount remaining outstanding on <a href=":loanUrl">:borrowerName</a>\'s loan has been written off. To date, :borrowerName has repaid :repaidPercentage % of the :requestedAmount funded.
 <br/><br/>
 Under our reporting standards, outstanding loan amounts must be written off six months after a loan’s last scheduled repayment, or if no repayments are made for six months.
 <br/><br/>
@@ -245,11 +251,62 @@ PS:  You can view the gains or losses for all of your completed loans <a href=":
 :images<br/><br/>
 You may change your group comment notification preferences in the <a href=":groupLink"> :groupName Lending Group profile page</a>.'
     ],
-//    'out-bid-notification' => [
-//        'subject' => 'Outbid Notification',
-//        'body' => 'This is a notification that your bid to fund :bidAmount of the loan for <a href='%borrower_link%' target='_blank'>%bname%</a> at %bid_interest%% interest has been outbid by another lender who proposed a lower interest rate. The amount outbid of $%out_bid_amt% has been returned to your lender account, and you may use it to fund another loan or to bid again on this one.<br/><br/>".
-//"Loan bids may be partially or fully outbid when the total value of lender bids exceeds the amount needed for the loan. In these cases, only the amount originally requested by the borrower is accepted, and bids at the lowest interest rates are retained. You may bid again on <a href='%borrower_link%' target='_blank'>%bname%</a>'s loan by proposing a lower interest rate.<br/><br/>".
-//"Best wishes,<br/><br/>".
-//"The Zidisha Team'
-//    ]
+    'out-bid-notification'               => [
+        'subject' => 'Outbid Notification',
+        'body'    => 'This is a notification that your bid to fund :bidAmount of the loan for <a href=\':borrowerLink\' target=\'_blank\'>:borrowerName</a> at :bidInterest % interest has been outbid by another lender who proposed a lower interest rate. The amount outbid of :outBidAmount has been returned to your lender account, and you may use it to fund another loan or to bid again on this one.<br/><br/>' .
+            "Loan bids may be partially or fully outbid when the total value of lender bids exceeds the amount needed for the loan. In these cases, only the amount originally requested by the borrower is accepted, and bids at the lowest interest rates are retained. You may bid again on <a href=':borrowerLink' target='_blank'>:borrowerName</a>'s loan by proposing a lower interest rate.<br/><br/>" .
+            "Best wishes,<br/><br/>" .
+            'The Zidisha Team'
+    ],
+    'down-bid-notification'              => [
+        'subject' => 'Outbid Notification',
+        'body'    => 'This is a notification that :outBidAmount of your bid to fund :bidAmount of the loan for <a href=\':borrowerLink\' target=\'_blank\'>:borrowerName</a> at :bidInterest % interest has been outbid by another lender who proposed a lower interest rate. The remaining value of your bid for this loan is :remainedBidAmount. The amount outbid of :outBidAmount has been returned to your lender account, and you may use it to fund another loan or to bid again on this one.<br/><br/>' .
+            "Loan bids may be partially or fully outbid when the total value of lender bids exceeds the amount needed for the loan. In these cases, only the amount originally requested by the borrower is accepted, and bids at the lowest interest rates are retained. You may bid again on <a href=':borrowerLink' target='_blank'>:borrowerName</a>'s loan by proposing a lower interest rate.<br/><br/>" .
+            "Best wishes,<br/><br/>" .
+            "The Zidisha Team"
+    ],
+    'register-welcome'                   => [
+        'subject' => 'Welcome to Zidisha!',
+        'body'    => "Hi there!
+<br/><br/>
+Welcome to the Zidisha community! I’m Julia, the director of Zidisha - and I am so thrilled and honored that you’ve joined us.
+<br/><br/>
+Zidisha is different from other microlending websites.  We bypass local banks, so that the entrepreneurs don’t have to pay high administrative charges for your loans.  And since our entrepreneurs are web users too, you can communicate with them directly through their loan profile pages.  Give it a try!
+<br/><br/>
+To get started, go to the <a href=':lendLink'>Lend</a> page and start exploring!  You can browse by country and business type until you find an entrepreneur you’d like to connect with.
+<br/><br/>
+Zidisha is staffed by an amazing team of volunteers who are always available to help you.  You can reach us at Facebook, Twitter or by email to service@zidisha.org.
+<br/><br/>
+Can’t wait to change the world with you,
+<br/><br/>
+Julia Kurnia
+<br/><br/>
+PS:  Head over to our <a href='http://p2p-microlending-blog.zidisha.org/'>blog</a> for inspiring stories from our most remarkable entrepreneurs!"
+    ],
+    'loan-about-to-expire'               => [
+        'subject' => ':borrowerName has only 3 days left',
+        'body'    => "Hi there,
+<br/><br/>
+Just a heads up: :borrowerName’s loan application, which you supported on :recentBidDate, is about to expire.
+<br/><br/>
+:borrowerName still needs to raise :amountStillNeeded in the next three days! We know you want to see this loan get fully funded — so here’s how you can help:
+<br/>
+<ul>
+	<li>
+		<a href=':loanLink'>LEND</a> more and help :borrowerName complete the loan with your generous addition.
+	</li>
+	<li>
+		<a href=':inviteLink'>SEND a free $25 credit</a> to a friend who can use it to help fund :borrowerName’s loan.
+	</li>
+	<li>
+		SHARE :borrowerName's loan request link via Facebook and Twitter to inspire others to contribute, too: <a href=':loanLink'>:loanLink</a>
+	</li>
+</ul>
+<br/>
+If :borrowerName's loan expires without being fully funded, the application will close and the funds you’ve contributed will be returned to your lending account.
+<br/><br/>
+Warmly,
+<br/><br/>
+The Zidisha Team"
+    ],
 ];

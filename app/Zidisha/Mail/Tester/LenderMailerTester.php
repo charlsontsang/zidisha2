@@ -8,6 +8,8 @@ use Zidisha\Balance\TransactionQuery;
 use Zidisha\Borrower\Borrower;
 use Zidisha\Comment\BorrowerCommentQuery;
 use Zidisha\Currency\Money;
+use Zidisha\Lender\Invite;
+use Zidisha\Lender\InviteQuery;
 use Zidisha\Lender\Lender;
 use Zidisha\Lender\LenderQuery;
 use Zidisha\Loan\Bid;
@@ -41,73 +43,49 @@ class LenderMailerTester
 
     public function sendOutbidMail()
     {
-        $changedBid = [];
+        $bid = BidQuery::create()
+            ->findOne();
+        $lender = $bid->getLender();
 
-        $changedBid['changedAmount'] = Money::create('15');
-        $changedBid['acceptedAmount'] = Money::create('12.333');
+        $this->lenderMailer->sendOutbidMail($lender, $bid);
+    }
 
-        $lenderUser = new User();
-        $lenderUser->setRole('lender');
-        $lenderUser->setEmail('lender@test.com');
+    public function sendDownBidMail()
+    {
+        $bid = BidQuery::create()
+            ->findOne();
+        $lender = $bid->getLender();
+        $acceptedAmount = $bid->getBidAmount()->divide(2);
+        $outBidAmount = $bid->getBidAmount()->subtract($acceptedAmount);
 
-        $lender = new Lender();
-        $lender->setUser($lenderUser);
+        $this->lenderMailer->sendDownBidMail($lender, $bid, $acceptedAmount, $outBidAmount);
+    }
 
-        $borrowerUser = new User();
-        $borrowerUser->setRole('borrower');
-        $borrowerUser->setEmail('lender@test.com');
-        $borrowerUser->setUsername('borrowerUsername');
+    public function sendLenderInvite()
+    {
+        $lender = LenderQuery::create()
+            ->findOne();
+        $invite = InviteQuery::create()
+            ->findOne();
+        $invite->setHash('hshshshs');
+        $subject = '';
+        $message = 'ahdhdhdhd ddjdjd jeeje jdddjdjdd';
 
-        $borrower = new Borrower();
-        $borrower->setUser($borrowerUser);
-        $borrower->setFirstName('First Name');
-        $borrower->setLastName('Last Name');
-        $borrower->setActiveLoanId('12');
-
-        $loan = new Loan();
-        $loan->setBorrower($borrower);
-
-        $bid = new Bid();
-        $bid->setLender($lender);
-        $bid->setBidAmount(Money::create('55'));
-        $bid->setInterestRate('12');
-        $bid->setLoan($loan);
-
-        $changedBid['bid'] = $bid;
-
-        $this->lenderMailer->sendOutbidMail($changedBid);
-
-        $changedBid['acceptedAmount'] = Money::create('0');
-        $changedBid['changedAmount'] = Money::create('20');
-        
-        $bid = new Bid();
-        $bid->setLender($lender);
-        $bid->setBidAmount(Money::create('20'));
-        $bid->setInterestRate('15');
-        $bid->setLoan($loan);
-
-        $changedBid['bid'] = $bid;
-        $this->lenderMailer->sendOutbidMail($changedBid);
+        $this->lenderMailer->sendLenderInvite($lender, $invite, $subject, $message);
     }
 
     public function sendLenderWelcomeMail()
     {
-        $user = new User();
-        $user->setEmail('lender@test.com');
-
-        $lender = new Lender();
-        $lender->setUser($user);
+        $lender = LenderQuery::create()
+            ->findOne();
 
         $this->lenderMailer->sendWelcomeMail($lender);
     }
 
     public function sendIntroductionMail()
     {
-        $user = new User();
-        $user->setEmail('email@test.com');
-
-        $lender = new Lender();
-        $lender->setUser($user);
+        $lender = LenderQuery::create()
+            ->findOne();
 
         $this->lenderMailer->sendIntroductionMail($lender);
     }
@@ -133,8 +111,32 @@ class LenderMailerTester
             ->findOne();
 
         $amount = Money::create(25);
+        $inviteCredit = Money::create(100);
 
-        $this->lenderMailer->sendExpiredLoanWithLenderInviteCreditMail($loan, $lender, $amount);
+        $this->lenderMailer->sendExpiredLoanWithLenderInviteCreditMail($loan, $lender, $amount, $inviteCredit);
+    }
+
+    public function sendUnusedFundsNotification()
+    {
+        $lender = LenderQuery::create()
+            ->findOne();
+
+        $this->lenderMailer->sendUnusedFundsNotification($lender);
+    }
+
+    public function sendLoanAboutToExpireMail()
+    {
+        $bid = BidQuery::create()
+            ->findOne();
+        $loan = $bid->getLoan();
+        $params = array(
+            'amountStillNeeded' => Money::create('46', 'USD'),
+            'borrowerName'      => ucwords(strtolower($loan->getBorrower()->getName())),
+            'loanLink'          => route('loan:index', $loan->getId()),
+            'inviteLink'        => route('lender:invite'),
+        );
+
+        $this->lenderMailer->sendLoanAboutToExpireMail($bid, $params);
     }
 
     public function sendAllowLoanForgivenessMail()

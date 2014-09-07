@@ -232,6 +232,7 @@ class TransactionQuery extends BaseTransactionQuery
             ->withColumn('user_id', 'userId')
             ->groupByUserId()
             ->find();
+
         $results = $total->toKeyValue('userId', 'total');
         if (count($userIds) > 1) {
             $balanceArray = [];
@@ -244,7 +245,11 @@ class TransactionQuery extends BaseTransactionQuery
             }
             return $balanceArray;
         } else {
-            return Money::create($results[$userIds], 'USD');
+            if (isset($results[$userIds])) {
+                return Money::create($results[$userIds], 'USD');
+            } else {
+                return Money::create(0, 'USD');
+            }
         }
     }
 } // TransactionQuery

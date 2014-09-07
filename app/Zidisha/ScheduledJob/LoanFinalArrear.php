@@ -109,30 +109,6 @@ class LoanFinalArrear extends ScheduledJob
             /** @var  BorrowerSmsService $borrowerSmsService */
             $borrowerSmsService = \App::make('Zidisha\Sms\BorrowerSmsService');
 
-            $contacts = ContactQuery::create()
-                ->filterByBorrower($borrower)
-                ->find();
-
-            if ($contacts) {
-                foreach ($contacts as $contact) {
-                }
-            }
-            
-            $invitee = InviteQuery::create()
-                ->filterByBorrower($borrower)
-                ->find();
-            if ($invitee) {
-                foreach ($invitee as $invite) {
-                    $borrowerMailer->sendLoanFinalArrearToInvite($invite, $borrower, $loan);
-                }
-            }
-
-            $volunteerMentor = $borrower->getVolunteerMentor();
-
-            if ($volunteerMentor) {
-                $borrowerMailer->sendLoanFinalArrearToVolunteerMentor($volunteerMentor, $borrower, $loan);
-            }
-
             $dueInstallment =  InstallmentQuery::create()
                 ->getDueInstallment($loan);
 
