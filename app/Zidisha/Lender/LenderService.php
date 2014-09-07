@@ -71,12 +71,15 @@ class LenderService
         }
     }
 
-    public function lenderInviteViaEmail($lender, $email, $subject, $custom_message)
+    public function lenderInviteViaEmail(Lender $lender, $email, $subject, $custom_message)
     {
+        $hash= sha1(time() . $lender->getId() . $email);
         $lender_invite = new Invite();
-        $lender_invite->setLender($lender);
-        $lender_invite->setEmail($email);
-        $lender_invite->isInvited(true);
+        $lender_invite
+            ->setLender($lender)
+            ->setEmail($email)
+            ->setHash($hash)
+            ->isInvited(true);
         $success = $lender_invite->save();
 
         if ($success) {

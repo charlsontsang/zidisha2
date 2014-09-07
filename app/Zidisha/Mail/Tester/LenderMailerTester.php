@@ -8,6 +8,8 @@ use Zidisha\Balance\TransactionQuery;
 use Zidisha\Borrower\Borrower;
 use Zidisha\Comment\BorrowerCommentQuery;
 use Zidisha\Currency\Money;
+use Zidisha\Lender\Invite;
+use Zidisha\Lender\InviteQuery;
 use Zidisha\Lender\Lender;
 use Zidisha\Lender\LenderQuery;
 use Zidisha\Loan\Bid;
@@ -57,6 +59,19 @@ class LenderMailerTester
         $outBidAmount = $bid->getBidAmount()->subtract($acceptedAmount);
 
         $this->lenderMailer->sendDownBidMail($lender, $bid, $acceptedAmount, $outBidAmount);
+    }
+
+    public function sendLenderInvite()
+    {
+        $lender = LenderQuery::create()
+            ->findOne();
+        $invite = InviteQuery::create()
+            ->findOne();
+        $invite->setHash('hshshshs');
+        $subject = '';
+        $message = 'ahdhdhdhd ddjdjd jeeje jdddjdjdd';
+
+        $this->lenderMailer->sendLenderInvite($lender, $invite, $subject, $message);
     }
 
     public function sendLenderWelcomeMail()

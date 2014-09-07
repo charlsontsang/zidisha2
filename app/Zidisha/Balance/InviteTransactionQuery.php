@@ -47,7 +47,11 @@ class InviteTransactionQuery extends BaseInviteTransactionQuery
                 return Money::create($results[$lenderIds], 'USD');
             }
         } else {
-            return Money::create(0, 'USD');
+            if (isset($results[$lenderIds])) {
+                return Money::create($results[$lenderIds], 'USD');
+            } else {
+                return Money::create(0, 'USD');
+            }
         }
     }
 } // InviteTransactionQuery

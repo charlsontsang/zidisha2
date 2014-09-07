@@ -133,14 +133,10 @@ class LenderMailer
     public function sendLenderInvite(Lender $lender, Invite $lender_invite, $subject, $customMessage)
     {
         $email = $lender_invite->getEmail();
-
-        $data = array();
         $data['header'] = \Lang::get('lender.mails.lender-invite.header');
         $data['footer'] = \Lang::get('lender.mails.lender-invite.footer');
-
-        $data['button_text'] = "View Projects";
-        
-        $params['button_url'] = route('lender:invite');
+        $data['button_text'] = \Lang::get('lender.mails.lender-invite.button-text');
+        $data['button_url'] = route('lender:invitee', $lender->getUser()->getUsername()).'?h='. $lender_invite->getHash();
         $profilePicture = $lender->getUser()->getProfilePictureUrl();
 
         $table = '<table cellspacing="0" cellpadding="10" border="0">';
@@ -151,20 +147,18 @@ class LenderMailer
         $table .= "</table>";
         $customMessage = $table;
 
-        $subject = \Lang::get('lender.mails.lender-invite.subject', ['lenderName' => $lender->getName()]);
+        $subject = $subject ?: \Lang::get('lender.mails.lender-invite.subject', ['lenderName' => $lender->getName()]);
         $message = \Lang::get('lender.mails.lender-invite.body', ['lenderName' => $lender->getName(), 'customMessage' => $customMessage]);
         $data['content'] = $message;
         
         $this->mailer->send(
             'emails.hero',
             $data + [
-                'to'      => $email,
-                'from'    => 'service@zidisha.com',
-                'subject' => $subject,
-                'templateId' => \Setting::get('sendwithus.lender-invite-template-id')
+                'to'         => $email,
+                'subject'    => $subject,
+                'templateId' => \Setting::get('sendwithus.lender-invite-credit-template-id')
             ]
         );
-
     }
 
     public function sendLenderInviteCredit(Invite $invite)

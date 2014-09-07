@@ -35,10 +35,13 @@ PS:  Join a <a href=":lendingGroupLink">Lending Group</a> to meet other lenders 
 '
     ],
     'lender-invite'                      => [
+        'button-text' => 'Use Credit',
+        'header'  => 'Zidisha invitation + $25 lending credit',
+        'footer'  => 'Use your credit to fund a loan project here:',
         'subject' => ':lenderName has sent you $25 to lend to a Zidisha entrepreneur',
         'body'    => '
 :lenderName has sent you $25 to lend to a Zidisha entrepreneur.
-<br/>
+<br/><br/>
 :customMessage
 Use your $25 to fund a small business growth loan to a disadvantaged entrepreneur in Africa or Asia.
 You can communicate with your chosen entrepreneur via the Zidisha website as his or her business develops - changing a life while interacting directly with a remarkable individual on the other side of the world.'
