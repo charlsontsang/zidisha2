@@ -78,6 +78,7 @@
                                         <strong>@choice('lender.follow.count', $followersCount)</strong>
                                         <br/>
 
+                                        @if(Auth::check() && Auth::user()->isLender())
                                         <div id="follow-link">
                                             <a
                                                 href="{{ route('lender:follow', $borrower->getId()) }}"
@@ -87,13 +88,13 @@
                                                 data-toggle="tooltip">
                                                 @lang('lender.follow.title', ['name' => $borrower->getFirstName()])
                                             </a>
-                                            @if(Auth::check() && Auth::user()->isLender())
+                                            
                                                 @include('lender.follow.follower', [
-                                                'lender' => Auth::user()->getLender(),
-                                                'follower' => $follower,
+                                                    'lender' => Auth::user()->getLender(),
+                                                    'follower' => $follower,
                                                 ])
-                                            @endif
                                         </div>
+                                        @endif
 
                                         Feedback Rating:{{ BootstrapHtml::tooltip('borrower.tooltips.loan.feedback-rating') }}
                                         <strong>{{ $feedbackRating }} % Positive ({{ $totalFeedback }})</strong>
@@ -562,6 +563,7 @@
                 </div>
                     @endif
                 
+                @if(Auth::check() && Auth::user()->isLender())
                 <div class="panel-body">
                     <a
                         id="follow-button"
@@ -574,13 +576,12 @@
                         <i class="fa fa-fw fa-bookmark"></i>
                         @lang('lender.follow.title', ['name' => $borrower->getFirstName()])
                     </a>
-                    @if(Auth::check() && Auth::user()->isLender())
                     @include('lender.follow.follower', [
                         'lender' => Auth::user()->getLender(),
                         'follower' => $follower,
                     ])
-                    @endif
                 </div>
+                @endif
                 
             </div>
         </div>
