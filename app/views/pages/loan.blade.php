@@ -158,7 +158,7 @@
                                     <div class="col-sm-6">
                                         @if($loan->isDisbursed())
                                             Amount: 
-                                            <strong>${{ $loan->getDisbursedAmount() }}</strong>
+                                            <strong>{{ $loan->getDisbursedAmount() }}</strong>
                                             <br/>
                                             Date Disbursed: 
                                             <strong>{{ $loan->getDisbursedAt()->format('M j, Y') }}</strong>
@@ -174,10 +174,10 @@
                                             </strong>
                                         @else
                                             Amount requested:
-                                            <strong>${{{ $loan->getUsdAmount()->getAmount() }}}</strong>
+                                            <strong>{{{ $loan->getUsdAmount() }}}</strong>
                                             <br/>
                                             Still needed:
-                                            <strong>${{{ $loan->getStillNeededUsdAmount()->getAmount() }}}</strong>
+                                            <strong>{{{ $loan->getStillNeededUsdAmount() }}}</strong>
                                             <br/>
                                             Application expires:
                                             <strong>{{{ $loan->getExpiresAt()->format('M j, Y') }}}</strong>
