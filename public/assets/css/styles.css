@@ -9172,6 +9172,10 @@ form .btn-default,
 .side-menu > li > a:focus {
   background-color: transparent !important;
 }
+.side-menu > li.active > a {
+  color: #404040 !important;
+  font-weight: bold;
+}
 /*
  * Side navigation
  *
