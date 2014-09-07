@@ -393,16 +393,24 @@ class LenderMailer
         );
     }
 
-    public function sendLoanAboutToExpireMail(Lender $lender)
+    public function sendLoanAboutToExpireMail(Bid $bid, $parameters = [])
     {
+        $lender = $bid->getLender();
+        $parameters += [
+            'recentBidDate' => $bid->getBidAt()->format('d-m-Y'),
+        ];
+
+        $body = \Lang::get('lender.mails.loan-about-to-expire.body', $parameters);
+        $data['content'] = $body;
+
         $this->mailer->send(
             'emails.hero',
-            [
+            $data + [
                 'to'         => $lender->getUser()->getEmail(),
-                'subject'    => 'Loan About to Expire Notification',
-                'templateId' => \Setting::get('sendwithus.loan-about-to-expire-mail-template-id'),
+                'subject'    => \Lang::get('lender.mails.loan-about-to-expire.subject', $parameters),
+                'templateId' => \Setting::get('sendwithus.loan-about-to-expire-mail-template-id')
             ]
-        );                
+        );
     }
 
     public function sendAllowLoanForgivenessMail(Loan $loan, ForgivenessLoan $forgivenessLoan, Lender $lender)

@@ -124,6 +124,21 @@ class LenderMailerTester
         $this->lenderMailer->sendUnusedFundsNotification($lender);
     }
 
+    public function sendLoanAboutToExpireMail()
+    {
+        $bid = BidQuery::create()
+            ->findOne();
+        $loan = $bid->getLoan();
+        $params = array(
+            'amountStillNeeded' => Money::create('46', 'USD'),
+            'borrowerName'      => ucwords(strtolower($loan->getBorrower()->getName())),
+            'loanLink'          => route('loan:index', $loan->getId()),
+            'inviteLink'        => route('lender:invite'),
+        );
+
+        $this->lenderMailer->sendLoanAboutToExpireMail($bid, $params);
+    }
+
     public function sendAllowLoanForgivenessMail()
     {
         $loan = new Loan();

@@ -69,11 +69,17 @@ class LoanAboutToExpireReminder extends ScheduledJob
 
         /** @var  LenderMailer $lenderMailer */
         $lenderMailer = \App::make('Zidisha\Mail\LenderMailer');
+        $params = array(
+            'amountStillNeeded' => $stillNeeded,
+            'borrowerName'      => ucwords(strtolower($borrower->getName())),
+            'loanLink'          => route('loan:index', $loan->getId()),
+            'inviteLink'        => route('lender:invite'),
+        );
 
         /** @var Bid $bid */
         if ($stillNeeded->greaterThan(Money::create(0, $loan->getCurrencyCode()))) {
             foreach ($bids as $bid) {
-                $lenderMailer->sendLoanAboutToExpireMail($bid->getLender());
+                $lenderMailer->sendLoanAboutToExpireMail($bid, $params);
             }
         }
 

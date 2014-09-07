@@ -283,4 +283,30 @@ Julia Kurnia
 <br/><br/>
 PS:  Head over to our <a href='http://p2p-microlending-blog.zidisha.org/'>blog</a> for inspiring stories from our most remarkable entrepreneurs!"
     ],
+    'loan-about-to-expire'               => [
+        'subject' => ':borrowerName has only 3 days left',
+        'body'    => "Hi there,
+<br/><br/>
+Just a heads up: :borrowerName’s loan application, which you supported on :recentBidDate, is about to expire.
+<br/><br/>
+:borrowerName still needs to raise :amountStillNeeded in the next three days! We know you want to see this loan get fully funded — so here’s how you can help:
+<br/>
+<ul>
+	<li>
+		<a href=':loanLink'>LEND</a> more and help :borrowerName complete the loan with your generous addition.
+	</li>
+	<li>
+		<a href=':inviteLink'>SEND a free $25 credit</a> to a friend who can use it to help fund :borrowerName’s loan.
+	</li>
+	<li>
+		SHARE :borrowerName's loan request link via Facebook and Twitter to inspire others to contribute, too: <a href=':loanLink'>:loanLink</a>
+	</li>
+</ul>
+<br/>
+If :borrowerName's loan expires without being fully funded, the application will close and the funds you’ve contributed will be returned to your lending account.
+<br/><br/>
+Warmly,
+<br/><br/>
+The Zidisha Team"
+    ],
 ];

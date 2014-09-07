@@ -267,7 +267,6 @@ class BorrowerMailer{
                 'templateId' => \Setting::get('sendwithus.borrower-notifications-template-id')
             ]
         );
-
     }
 
     public function sendRepaymentReminder(Borrower $borrower, Installment $dueInstallment)
