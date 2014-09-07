@@ -209,7 +209,7 @@ class LenderMailer
             'emails.hero',
             [
                 'to'         => $lender->getUser()->getEmail(),
-                'subject'    => 'Welcome to Zidisha!',
+                'subject'    => '',
                 'templateId' => \Setting::get('sendwithus.introduction-template-id'),
             ]
         );

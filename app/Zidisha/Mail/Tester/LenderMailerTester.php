@@ -84,11 +84,8 @@ class LenderMailerTester
 
     public function sendIntroductionMail()
     {
-        $user = new User();
-        $user->setEmail('email@test.com');
-
-        $lender = new Lender();
-        $lender->setUser($user);
+        $lender = LenderQuery::create()
+            ->findOne();
 
         $this->lenderMailer->sendIntroductionMail($lender);
     }
