@@ -240,6 +240,7 @@ class BorrowerLoanController extends BaseController
         $this->loanService->rescheduleLoan($loan, \Session::get('reschedule'));
 
         \Session::forget('reschedule');
+        \Session::forget('rescheduleDetails');
 
         Flash::success('Successfully rescheduled loan');
         return Redirect::route('borrower:loan', $loan->getId());
