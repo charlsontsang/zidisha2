@@ -75,10 +75,9 @@ class RescheduleCalculator {
         return $remainingDueAmount->add($addedInterest)->divide($maxAddedPeriod)->ceil();
     }
 
-    public function remainingPeriod(\Datetime $date, Money $installmentAmount)
+    public function remainingPeriod(Money $installmentAmount, $remainingPeriod, $extraPeriod)
     {
         $remainingDueAmount = $this->repaymentSchedule->getRemainingDueAmount();
-        $remainingPeriod = $this->repaymentSchedule->remainingPeriod($date);
 
         $amount = $this->loan->getDisbursedAmount()
             ->subtract($this->loan->getForgivenAmount()->multiply($this->loan->getPrincipalRatio()));
@@ -91,16 +90,15 @@ class RescheduleCalculator {
             $installmentPeriodsInYear = 12;
         }
 
-        $remainingInterest = $amount
-            ->multiply($totalInterestRate)
-            ->multiply($remainingPeriod)
-            ->divide($installmentPeriodsInYear * 100);
-
-        $installmentInterest = $installmentAmount
+        $installmentInterest = $amount
             ->multiply($totalInterestRate)
             ->divide($installmentPeriodsInYear * 100);
         
-        $installmentCount = ceil($remainingDueAmount->subtract($remainingInterest)
+        $remainingInterest = $installmentInterest->multiply($remainingPeriod);
+
+        $extraPeriodInterest = $installmentInterest->multiply($extraPeriod);
+                
+        $installmentCount = ceil($remainingDueAmount->subtract($remainingInterest)->add($extraPeriodInterest)
             ->ratio($installmentAmount->subtract($installmentInterest)));
         
         return $installmentCount - 1;
@@ -167,11 +165,11 @@ class RescheduleCalculator {
         }
         
         $remainingAmount = $this->repaymentSchedule->getRemainingAmountDue();
-        $newRemainingPeriod = $this->remainingPeriod($nextDueDate, $installmentAmount);
         $remainingPeriod = $this->repaymentSchedule->remainingPeriod($nextDueDate);
+        $newRemainingPeriod = $this->remainingPeriod($installmentAmount, $remainingPeriod, $extraPeriod);
         $amount = $this->loan->getDisbursedAmount()
             ->subtract($this->loan->getForgivenAmount()->multiply($this->loan->getPrincipalRatio()));
-
+        
         $totalInterestRate = $this->loan->getTotalInterestRate();
 
         $remainingInterest = $amount
