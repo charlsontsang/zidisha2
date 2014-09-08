@@ -8869,7 +8869,7 @@ form .btn-default,
   }
 }
 .form-control-feedback {
-  top: 10px !important;
+  top: 13px !important;
 }
 .form-control {
   -webkit-box-shadow: none;
@@ -8904,6 +8904,39 @@ form .btn-default,
 }
 .modal-body .btn-primary {
   margin-top: 11px;
+}
+.login-form {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+}
+.container-fluid .login-form {
+  padding: 15px;
+  margin-bottom: -15px;
+}
+@media (min-width: 768px) {
+  .container-fluid .login-form {
+    max-width: 330px;
+    margin: 5px auto;
+  }
+}
+.login-form .btn,
+.login-form .form-group {
+  margin: 7px 0;
+}
+.login-form .btn,
+.login-form input {
+  height: 42px;
+}
+.login-form p,
+.login-form .checkbox,
+.login-form input[type="checkbox"] {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  height: auto;
+}
+.login-form .btn-primary {
+  margin-bottom: 10px;
 }
 @media (max-width: 767px) {
   /* Force table to not be like tables anymore */
@@ -9098,7 +9131,9 @@ form .btn-default,
   }
 }
 @media (min-width: 768px) {
-  .nav > li > a:last-child {
+  .nav > li > a:last-child,
+  .navbar-right > p:last-child {
+    margin-right: 0;
     padding-right: 0;
   }
 }
@@ -9136,6 +9171,10 @@ form .btn-default,
 .side-menu > li > a:hover,
 .side-menu > li > a:focus {
   background-color: transparent !important;
+}
+.side-menu > li.active > a {
+  color: #404040 !important;
+  font-weight: bold;
 }
 /*
  * Side navigation
@@ -9622,6 +9661,8 @@ ul.filter-bar {
 }
 .filter-bar .input-group .btn {
   height: 36px;
+  margin-top: 0;
+  min-width: 0;
 }
 #show {
   display: none;

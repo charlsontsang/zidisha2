@@ -15,8 +15,9 @@
 		display: inline-block;
 	}
 }
-.nav > li > a:last-child {
+.nav > li > a:last-child, .navbar-right > p:last-child {
 	@media (min-width: @screen-sm-min) {
+		margin-right: 0;
 		padding-right: 0;
 	}
 }
@@ -53,4 +54,8 @@ li.dropdown {
 .side-menu > li > a:hover,
 .side-menu > li > a:focus {
   background-color: transparent !important;
+}
+.side-menu >li.active > a {
+	color: @gray !important;
+	font-weight: bold;
 }
