@@ -68,7 +68,6 @@ class LoanCalculator
     {
         $period = $this->maximumPeriod();
         
-        // TODO, include transactionFeeRate?
         $annualRate = Setting::get('loan.maximumLenderInterestRate') + Setting::get('loan.transactionFeeRate');
         if ($this->borrower->getCountry()->getInstallmentPeriod() == Loan::WEEKLY_INSTALLMENT) {
             $interest = $amount->multiply($annualRate)->multiply($period)->divide(5200);
