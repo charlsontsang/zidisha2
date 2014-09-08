@@ -518,23 +518,8 @@ class LenderMailer
         return $data;
     }
 
-    public function sendDisbursedLoanMail(Loan $loan, Lender $lender)
+    public function sendDisbursedLoanMail(Lender $lender, $parameters, $data)
     {
-        $borrower = $loan->getBorrower();
-        $parameters = [
-            'borrowerName'    => $borrower->getName(),
-            'borrowFirstName' => $borrower->getFirstName(),
-            'disbursedDate'   => date('F d, Y',  time()),
-            'loanPage'        => route('loan:index', $loan->getId()),
-            'giftCardPage'    => route('lender:gift-cards')
-        ];
-
-        $data['image_src'] = $borrower->getUser()->getProfilePictureUrl();
-        $message = \Lang::get('lender.mails.loan-disbursed.message', $parameters);
-        $data['header'] = $message;
-        $body = \Lang::get('lender.mails.loan-disbursed.body', $parameters);
-        $data['content'] = $body;
-
         $this->mailer->send(
             'emails.hero',
             $data + [

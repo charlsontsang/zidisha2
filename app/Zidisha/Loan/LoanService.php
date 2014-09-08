@@ -880,8 +880,22 @@ class LoanService
 
         // TODO, lenders + bid amount
         $lenders = [];
+        $borrower = $loan->getBorrower();
+        $parameters = [
+            'borrowerName'    => $borrower->getName(),
+            'borrowFirstName' => $borrower->getFirstName(),
+            'disbursedDate'   => date('F d, Y',  time()),
+            'loanPage'        => route('loan:index', $loan->getId()),
+            'giftCardPage'    => route('lender:gift-cards')
+        ];
+
+        $data['image_src'] = $borrower->getUser()->getProfilePictureUrl();
+        $message = \Lang::get('lender.mails.loan-disbursed.message', $parameters);
+        $data['header'] = $message;
+        $body = \Lang::get('lender.mails.loan-disbursed.body', $parameters);
+        $data['content'] = $body;
         foreach ($lenders as $lender) { 
-            $this->lenderMailer->sendDisbursedLoanMail($loan, $lender);
+            $this->lenderMailer->sendDisbursedLoanMail($lender, $parameters, $data);
         }
         $this->borrowerMailer->sendDisbursedLoanMail($loan);
         

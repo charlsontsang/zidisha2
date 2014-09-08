@@ -208,30 +208,31 @@ class LenderMailerTester
 
     public function sendDisbursedLoanMail()
     {
-        $lenderUser = new User();
-        $lenderUser->setRole('lender');
-        $lenderUser->setEmail('lender@test.com');
+        $loan = LoanQuery::create()
+            ->filterByDisbursedAt(null, Criteria::NOT_EQUAL)
+            ->filterByRepaidAt(null)
+            ->findOne();
+        $bid = BidQuery::create()
+            ->filterByLoan($loan)
+            ->filterByAcceptedAmount(null, Criteria::NOT_EQUAL)
+            ->findOne();
+        $lender = $bid->getLender();
+        $borrower = $loan->getBorrower();
+        $parameters = [
+            'borrowerName'    => $borrower->getName(),
+            'borrowFirstName' => $borrower->getFirstName(),
+            'disbursedDate'   => date('F d, Y',  time()),
+            'loanPage'        => route('loan:index', $loan->getId()),
+            'giftCardPage'    => route('lender:gift-cards')
+        ];
 
-        $lender = new Lender();
-        $lender->setUser($lenderUser);
+        $data['image_src'] = $borrower->getUser()->getProfilePictureUrl();
+        $message = \Lang::get('lender.mails.loan-disbursed.message', $parameters);
+        $data['header'] = $message;
+        $body = \Lang::get('lender.mails.loan-disbursed.body', $parameters);
+        $data['content'] = $body;
 
-        $borrowerUser = new User();
-        $borrowerUser
-            ->setRole('borrower')
-            ->setEmail('lender@test.com');
-
-        $borrower = new Borrower();
-        $borrower
-            ->setUser($borrowerUser)
-            ->setFirstName('First Name')
-            ->setLastName('Last Name');
-
-        $loan = new Loan();
-        $loan
-            ->setId(1)
-            ->setBorrower($borrower);
-
-        $this->lenderMailer->sendDisbursedLoanMail($loan, $lender);
+        $this->lenderMailer->sendDisbursedLoanMail($lender, $parameters, $data);
     }
 
     public function sendLoanDefaultedMail()
