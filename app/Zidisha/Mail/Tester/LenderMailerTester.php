@@ -170,15 +170,17 @@ class LenderMailerTester
 
     public function sendNewLoanNotificationMail()
     {
-        $loan = LoanQuery::create()
+        $lastLoan = LoanQuery::create()
             ->filterByRepaidAt(null, Criteria::NOT_EQUAL)
+            ->findOne();
+        $loan = LoanQuery::create()
             ->findOne();
         $lender = LenderQuery::create()
             ->findOne();
         $parameters = [
             'borrowerName' => $loan->getBorrower()->getName(),
             'loanUrl'      => route('loan:index', ['loanId' => $loan->getId()]),
-            'repayDate'    => $loan->getRepaidAt()->format('F j, Y')
+            'repayDate'    => $lastLoan->getRepaidAt()->format('F j, Y')
         ];
         
         $this->lenderMailer->sendNewLoanNotificationMail($lender, $parameters);

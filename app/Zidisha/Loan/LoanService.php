@@ -102,17 +102,22 @@ class LoanService
         $this->addToLoanIndex($loan);
 
         $this->borrowerMailer->sendLoanConfirmationMail($borrower, $loan);
-        
-        $lenders = $this->getLendersForNewLoanNotificationMail($loan);
-        $parameters = [
-            'borrowerName' => $loan->getBorrower()->getName(),
-            'loanUrl'      => route('loan:index', ['loanId' => $loan->getId()]),
-            'repayDate'    => $loan->getRepaidAt()->format('F j, Y')
-        ];
-        foreach($lenders as $lender) {
-            $this->lenderMailer->sendNewLoanNotificationMail($lender, $parameters);
+
+        $lastLoan = LoanQuery::create()
+            ->findLastCompletedLoan($borrower);
+
+        if ($lastLoan) {
+            $lenders = $this->getLendersForNewLoanNotificationMail($loan);
+            $parameters = [
+                'borrowerName' => $loan->getBorrower()->getName(),
+                'loanUrl'      => route('loan:index', ['loanId' => $loan->getId()]),
+                'repayDate'    => $lastLoan->getRepaidAt()->format('F j, Y')
+            ];
+            foreach($lenders as $lender) {
+                $this->lenderMailer->sendNewLoanNotificationMail($lender, $parameters);
+            }
         }
-                
+
         return $loan;
     }
 
