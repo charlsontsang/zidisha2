@@ -144,6 +144,8 @@ class ApplicationForm extends AbstractForm
         
         $maxInstallmentAmount = $amount->divide($this->loanCalculator->minimumPeriod($amount))->floor();
         
+        $step = min($step, $maxInstallmentAmount->subtract($minInstallmentAmount)->getAmount());
+        
         $range = range($minInstallmentAmount->getAmount(), $maxInstallmentAmount->getAmount(), $step);
         $range = array_reverse($range);
 
