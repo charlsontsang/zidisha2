@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Routing\Controller;
+use Zidisha\User\User;
 
 class BaseController extends Controller {
 
@@ -21,4 +22,11 @@ class BaseController extends Controller {
 
     }
 
+    /**
+     * @return User
+     */
+    protected function getUser()
+    {
+        return \Auth::user();
+    }
 }
