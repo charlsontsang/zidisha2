@@ -53,6 +53,6 @@ return [
         'cancel-message' => 'Your Loan has been Canceled.'
     ],
     'no-loan'                    => [
-        'no-loan-message' => 'You have no active loan. Click <a href=":link">here</a> to apply for a loan.'
+        'message' => 'You have no active loan. Click <a href=":link">here</a> to apply for a loan.'
     ]
 ];
