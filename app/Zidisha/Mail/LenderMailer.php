@@ -413,30 +413,30 @@ class LenderMailer
         );
     }
 
-    public function sendAllowLoanForgivenessMail(Loan $loan, ForgivenessLoan $forgivenessLoan, Lender $lender)
+    public function sendAllowLoanForgivenessMail(ForgivenessLoan $forgivenessLoan, Lender $lender, $parameters, $subject)
     {        
-        //TODO generate links for forgive and reject loan.
+        $parameters += [
+            'noLink' => route('loan:index', $forgivenessLoan->getLoanId()).'?v='.$forgivenessLoan->getVerificationCode().'&lid='.$lender->getId()."&dntfrg=1",
+        ];
+        $message = \Lang::get('lender.mails.allow-loan-forgiveness.body', $parameters);
+        $data['content'] = $message;
+
         $this->mailer->send(
             'emails.hero',
-            [
+            $data + [
                 'to'         => $lender->getUser()->getEmail(),
-                'subject'    => 'Borrower account notifications',
-                'templateId' => \Setting::get('sendwithus.lender-loan-forgiveness-mail-template-id'),
+                'subject'    => $subject,
+                'templateId' => \Setting::get('sendwithus.borrower-notifications-template-id'),
             ]
         );
     }
 
-    public function sendNewLoanNotificationMail(Loan $loan, Lender $lender)
+    public function sendNewLoanNotificationMail(Lender $lender, $parameters)
     {
         $data = [
-            'parameters' => [
-                'borrowerName' => $loan->getBorrower()->getName(),
-                'loanUrl'      => route('loan:index', ['loanId' => $loan->getId()]),
-                'repayDate'    => $loan->getRepaidAt()->format('F j, Y')
-            ],
+            'parameters' => $parameters
         ];
-        
-        $subject = \Lang::get('lender.mails.new-loan-notification.subject', ['borrowerName' => $loan->getBorrower()->getName()]);
+        $subject = \Lang::get('lender.mails.new-loan-notification.subject', $parameters);
         
         $this->mailer->send(
             'emails.label-template',

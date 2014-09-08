@@ -309,4 +309,18 @@ Warmly,
 <br/><br/>
 The Zidisha Team"
     ],
+    'allow-loan-forgiveness'             => [
+        'subject' => 'Your loan to :borrowerName',
+        'body'    => 'We are writing to inform you of difficulties experienced by :borrowerName, whose loan you funded on :disbursedDate. You may choose to forgive :borrowerName\'s loan using the button below.<br/><br/>
+:message<br/><br/>
+In exceptional cases, Zidisha offers lenders the option to forgive loans to borrowers who have experienced an unexpected misfortune which affects their ability to repay the loan. In these cases, each lender has the option to forgive his or her share of the loan. Such decisions will remain anonymous and are completely at each lender\'s discretion.<br/><br/>
+Should you decide to forgive this loan, you will be declining to receive further repayments from :borrowerName, and the loan\'s outstanding balance of :outstandingAmount will be reduced by the amount that had been remaining due to you under the original loan agreement.<br/><br/>
+Would you like to forgive your share of this loan?<br/><br/>
+<a class=\'btn\' href=\':yesLink%\' target=\'_blank\'><img alt=\'Forgive.\' src=\':yesImage\' ></a>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<br/><a class=\'btn\' href=\':noLink\' target=\'_blank\'><img alt=\'Do Not Forgive\' src=\':noImage\'></a><br/>
+<a href=\':loanLink\' target=\'_blank\'>View Loan Profile</a><br/><br/>
+Best wishes,<br/><br/>
+The Zidisha Team'
+    ],
 ];

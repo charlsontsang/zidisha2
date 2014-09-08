@@ -3,6 +3,7 @@ namespace Zidisha\Mail\Tester;
 
 
 use Carbon\Carbon;
+use Propel\Runtime\ActiveQuery\Criteria;
 use Zidisha\Balance\InviteTransactionQuery;
 use Zidisha\Balance\TransactionQuery;
 use Zidisha\Borrower\Borrower;
@@ -14,6 +15,7 @@ use Zidisha\Lender\Lender;
 use Zidisha\Lender\LenderQuery;
 use Zidisha\Loan\Bid;
 use Zidisha\Loan\BidQuery;
+use Zidisha\Loan\ForgivenessLoan;
 use Zidisha\Loan\Loan;
 use Zidisha\Loan\LoanQuery;
 use Zidisha\Loan\LenderRefund;
@@ -141,44 +143,45 @@ class LenderMailerTester
 
     public function sendAllowLoanForgivenessMail()
     {
-        $loan = new Loan();
+        $loan = LoanQuery::create()
+            ->filterByDisbursedAt(null, Criteria::NOT_EQUAL)
+            ->findOne();
+        $forgivenessLoan = new ForgivenessLoan();
+        $forgivenessLoan->setLoan($loan)
+            ->setComment('Forgive this loan comment!')
+            ->setVerificationCode(md5(mt_rand(0, 32).time()));
+        $lender = LenderQuery::create()
+            ->findOne();
 
-        $bid = new Bid();
-        $bid->setLender(new Lender);
-        $bid->getLender()->setUser(new User());
-        $bid->getLender()->getUser()->setEmail('test@mail.com');
+        $parameters = [
+            'borrowerName'      => $loan->getBorrower()->getName(),
+            'disbursedDate'     => $loan->getDisbursedAt()->format('d-m-Y'),
+            'message'           => trim($forgivenessLoan->getComment()),
+            'outstandingAmount' => $loan->getUsdAmount()->multiply($loan->getPaidPercentage())->divide(100),
+            'loanLink'          => route('loan:index', $loan->getId()),
+            'yesLink'           => route('loan:index', $loan->getId()).'?v='.$forgivenessLoan->getVerificationCode(),
+            'yesImage'          => '/assets/images/loan-forgive/yes.png',
+            'noImage'           => '/assets/images/loan-forgive.no.png',
+        ];
+        $subject = \Lang::get('lender.mails.allow-loan-forgiveness.subject', $parameters);
             
-        $this->lenderMailer->sendAllowLoanForgivenessMail($loan, $bid);
+        $this->lenderMailer->sendAllowLoanForgivenessMail($forgivenessLoan, $lender, $parameters, $subject);
     }
 
     public function sendNewLoanNotificationMail()
     {
-        $lenderUser = new User();
-        $lenderUser->setRole('lender');
-        $lenderUser->setEmail('lender@test.com');
-
-        $lender = new Lender();
-        $lender->setUser($lenderUser);
-
-        $borrowerUser = new User();
-        $borrowerUser
-            ->setRole('borrower')
-            ->setEmail('lender@test.com');
-
-        $borrower = new Borrower();
-        $borrower
-            ->setUser($borrowerUser)
-            ->setFirstName('First Name')
-            ->setLastName('Last Name');
-
-        $loan = new Loan();
-        $loan
-            ->setId(1)
-            ->setBorrower($borrower)
-            ->setRepaidAt(Carbon::now()->subMonth())
-            ->setInstallmentDay('12');
+        $loan = LoanQuery::create()
+            ->filterByRepaidAt(null, Criteria::NOT_EQUAL)
+            ->findOne();
+        $lender = LenderQuery::create()
+            ->findOne();
+        $parameters = [
+            'borrowerName' => $loan->getBorrower()->getName(),
+            'loanUrl'      => route('loan:index', ['loanId' => $loan->getId()]),
+            'repayDate'    => $loan->getRepaidAt()->format('F j, Y')
+        ];
         
-        $this->lenderMailer->sendNewLoanNotificationMail($loan, $lender);
+        $this->lenderMailer->sendNewLoanNotificationMail($lender, $parameters);
     }
 
     public function sendDisbursedLoanMail()

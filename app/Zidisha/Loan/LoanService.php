@@ -104,8 +104,13 @@ class LoanService
         $this->borrowerMailer->sendLoanConfirmationMail($borrower, $loan);
         
         $lenders = $this->getLendersForNewLoanNotificationMail($loan);
+        $parameters = [
+            'borrowerName' => $loan->getBorrower()->getName(),
+            'loanUrl'      => route('loan:index', ['loanId' => $loan->getId()]),
+            'repayDate'    => $loan->getRepaidAt()->format('F j, Y')
+        ];
         foreach($lenders as $lender) {
-            $this->lenderMailer->sendNewLoanNotificationMail($loan, $lender);
+            $this->lenderMailer->sendNewLoanNotificationMail($lender, $parameters);
         }
                 
         return $loan;
@@ -1071,30 +1076,56 @@ class LoanService
 
     public function allowLoanForgiveness(Loan $loan, $data)
     {
-        $verificationCode = md5(mt_rand(0, 32).time());
-        
-        $forgivenessLoan = new ForgivenessLoan();
-        $forgivenessLoan
-            ->setLoan($loan)
-            ->setComment($data['comment'])
-            ->setVerificationCode($verificationCode)
-            ->setBorrowerId ($loan->getBorrowerId())
-            ->save();
+        /** @var ForgivenessLoan $forgivenessLoan */
+        $forgivenessLoan = PropelDB::transaction(function($con) use($loan, $data) {
+                $alreadyForgivenLoan = ForgivenessLoanQuery::create()
+                    ->filterByLoan($loan)
+                    ->findOne($con);
 
-        // TODO lenders instead of bids
-        $bids = BidQuery::create()
-            ->joinWith('Lender')
-            ->filterByLoan($loan)
-            ->filterByActive(true)
-            ->find();
+                $verificationCode = md5(mt_rand(0, 32).time());
+                if ($alreadyForgivenLoan) {
+                    if (!$alreadyForgivenLoan->getVerificationCode()) {
+                        $alreadyForgivenLoan->setVerificationCode($verificationCode);
+                        $alreadyForgivenLoan->save($con);
+                    }
+                    return $alreadyForgivenLoan;
+                } else {
+                    $forgivenessLoan = new ForgivenessLoan();
+                    $forgivenessLoan
+                        ->setLoan($loan)
+                        ->setComment($data['comment'])
+                        ->setVerificationCode($verificationCode)
+                        ->setBorrowerId ($loan->getBorrowerId())
+                        ->save($con);
+                    return $forgivenessLoan;
+                }
+            });
 
-        $lenders = [];
-        foreach ($bids as $bid) {
-            $lenders[$bid->getLenderId()] = $bid->getLender();
+        $inactiveLenders = LenderQuery::create()
+            ->getInactiveLendersForLoan($loan);
+
+        foreach ($inactiveLenders as $lender) {
+            $this->forgiveLoanShare($loan, $lender);
         }
-        
-        foreach ($lenders as $lender) {
-            $this->lenderMailer->sendAllowLoanForgivenessMail($loan, $forgivenessLoan, $lender);
+
+        // TODO lendersDenied
+
+        $lendersForForgive = LenderQuery::create()
+            ->getLendersForForgive($loan);
+        $parameters = [
+            'borrowerName'      => $loan->getBorrower()->getName(),
+            'disbursedDate'     => $loan->getDisbursedAt()->format('d-m-Y'),
+            'message'           => trim($forgivenessLoan->getComment()),
+            'outstandingAmount' => $loan->getUsdAmount()->multiply($loan->getPaidPercentage())->divide(100),
+            'loanLink'          => route('loan:index', $loan->getId()),
+            'yesLink'           => route('loan:index', $loan->getId()).'?v='.$forgivenessLoan->getVerificationCode(),
+            'yesImage'          => '/assets/images/loan-forgive/yes.png',
+            'noImage'           => '/assets/images/loan-forgive.no.png',
+        ];
+        $subject = \Lang::get('lender.mails.allow-loan-forgiveness.subject', $parameters);
+
+        foreach ($lendersForForgive as $lender) {
+            $this->lenderMailer->sendAllowLoanForgivenessMail($forgivenessLoan, $lender, $parameters, $subject);
         }
 
         return $forgivenessLoan;
