@@ -2,6 +2,7 @@
 
 namespace Zidisha\Repayment;
 
+use Faker\Provider\DateTime;
 use Illuminate\Queue\Jobs\Job;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Zidisha\Balance\TransactionQuery;
@@ -231,7 +232,8 @@ class RepaymentService
             $loan->save();
 
             if ($calculator->isRepaid()) {
-                $loan->setStatus(Loan::REPAID);
+                $loan->setStatus(Loan::REPAID)
+                ->setRepaidAt(new \DateTime());
                 $loan->save($con);
 
                 $borrower

@@ -3,6 +3,7 @@ namespace Zidisha\Mail\Tester;
 
 
 use Carbon\Carbon;
+use Propel\Runtime\ActiveQuery\Criteria;
 use Zidisha\Balance\InviteTransactionQuery;
 use Zidisha\Balance\TransactionQuery;
 use Zidisha\Borrower\Borrower;
@@ -14,6 +15,7 @@ use Zidisha\Lender\Lender;
 use Zidisha\Lender\LenderQuery;
 use Zidisha\Loan\Bid;
 use Zidisha\Loan\BidQuery;
+use Zidisha\Loan\ForgivenessLoan;
 use Zidisha\Loan\Loan;
 use Zidisha\Loan\LoanQuery;
 use Zidisha\Loan\LenderRefund;
@@ -141,72 +143,96 @@ class LenderMailerTester
 
     public function sendAllowLoanForgivenessMail()
     {
-        $loan = new Loan();
+        $loan = LoanQuery::create()
+            ->filterByDisbursedAt(null, Criteria::NOT_EQUAL)
+            ->findOne();
+        $forgivenessLoan = new ForgivenessLoan();
+        $forgivenessLoan->setLoan($loan)
+            ->setComment('Forgive this loan comment!')
+            ->setVerificationCode(md5(mt_rand(0, 32).time()));
+        $lender = LenderQuery::create()
+            ->findOne();
 
-        $bid = new Bid();
-        $bid->setLender(new Lender);
-        $bid->getLender()->setUser(new User());
-        $bid->getLender()->getUser()->setEmail('test@mail.com');
+        $parameters = [
+            'borrowerName'      => $loan->getBorrower()->getName(),
+            'disbursedDate'     => $loan->getDisbursedAt()->format('d-m-Y'),
+            'message'           => trim($forgivenessLoan->getComment()),
+            'outstandingAmount' => $loan->getUsdAmount()->multiply($loan->getPaidPercentage())->divide(100),
+            'loanLink'          => route('loan:index', $loan->getId()),
+            'yesLink'           => route('loan:index', $loan->getId()).'?v='.$forgivenessLoan->getVerificationCode(),
+            'yesImage'          => '/assets/images/loan-forgive/yes.png',
+            'noImage'           => '/assets/images/loan-forgive.no.png',
+        ];
+        $subject = \Lang::get('lender.mails.allow-loan-forgiveness.subject', $parameters);
             
-        $this->lenderMailer->sendAllowLoanForgivenessMail($loan, $bid);
+        $this->lenderMailer->sendAllowLoanForgivenessMail($forgivenessLoan, $lender, $parameters, $subject);
     }
 
     public function sendNewLoanNotificationMail()
     {
-        $lenderUser = new User();
-        $lenderUser->setRole('lender');
-        $lenderUser->setEmail('lender@test.com');
-
-        $lender = new Lender();
-        $lender->setUser($lenderUser);
-
-        $borrowerUser = new User();
-        $borrowerUser
-            ->setRole('borrower')
-            ->setEmail('lender@test.com');
-
-        $borrower = new Borrower();
-        $borrower
-            ->setUser($borrowerUser)
-            ->setFirstName('First Name')
-            ->setLastName('Last Name');
-
-        $loan = new Loan();
-        $loan
-            ->setId(1)
-            ->setBorrower($borrower)
-            ->setRepaidAt(Carbon::now()->subMonth())
-            ->setInstallmentDay('12');
+        $lastLoan = LoanQuery::create()
+            ->filterByRepaidAt(null, Criteria::NOT_EQUAL)
+            ->findOne();
+        $loan = LoanQuery::create()
+            ->findOne();
+        $lender = LenderQuery::create()
+            ->findOne();
+        $parameters = [
+            'borrowerName' => $loan->getBorrower()->getName(),
+            'loanUrl'      => route('loan:index', ['loanId' => $loan->getId()]),
+            'repayDate'    => $lastLoan->getRepaidAt()->format('F j, Y')
+        ];
+        $subject = \Lang::get('lender.mails.new-loan-notification.subject', $parameters);
         
-        $this->lenderMailer->sendNewLoanNotificationMail($loan, $lender);
+        $this->lenderMailer->sendNewLoanNotificationMail($lender, $parameters, $subject);
+    }
+
+    public function sendFollowerNewLoanNotificationMail()
+    {
+        $lastLoan = LoanQuery::create()
+            ->filterByRepaidAt(null, Criteria::NOT_EQUAL)
+            ->findOne();
+        $loan = LoanQuery::create()
+            ->findOne();
+        $lender = LenderQuery::create()
+            ->findOne();
+        $parameters = [
+            'borrowerName' => $loan->getBorrower()->getName(),
+            'loanUrl'      => route('loan:index', ['loanId' => $loan->getId()]),
+            'repayDate'    => $lastLoan->getRepaidAt()->format('F j, Y')
+        ];
+        $subject = \Lang::get('lender.mails.new-loan-notification.subject', $parameters);
+
+        $this->lenderMailer->sendFollowerNewLoanNotificationMail($lender, $parameters, $subject);
     }
 
     public function sendDisbursedLoanMail()
     {
-        $lenderUser = new User();
-        $lenderUser->setRole('lender');
-        $lenderUser->setEmail('lender@test.com');
+        $loan = LoanQuery::create()
+            ->filterByDisbursedAt(null, Criteria::NOT_EQUAL)
+            ->filterByRepaidAt(null)
+            ->findOne();
+        $bid = BidQuery::create()
+            ->filterByLoan($loan)
+            ->filterByAcceptedAmount(null, Criteria::NOT_EQUAL)
+            ->findOne();
+        $lender = $bid->getLender();
+        $borrower = $loan->getBorrower();
+        $parameters = [
+            'borrowerName'    => $borrower->getName(),
+            'borrowFirstName' => $borrower->getFirstName(),
+            'disbursedDate'   => date('F d, Y',  time()),
+            'loanPage'        => route('loan:index', $loan->getId()),
+            'giftCardPage'    => route('lender:gift-cards')
+        ];
 
-        $lender = new Lender();
-        $lender->setUser($lenderUser);
-
-        $borrowerUser = new User();
-        $borrowerUser
-            ->setRole('borrower')
-            ->setEmail('lender@test.com');
-
-        $borrower = new Borrower();
-        $borrower
-            ->setUser($borrowerUser)
-            ->setFirstName('First Name')
-            ->setLastName('Last Name');
-
-        $loan = new Loan();
-        $loan
-            ->setId(1)
-            ->setBorrower($borrower);
-
-        $this->lenderMailer->sendDisbursedLoanMail($loan, $lender);
+        $data['image_src'] = $borrower->getUser()->getProfilePictureUrl();
+        $message = \Lang::get('lender.mails.loan-disbursed.message', $parameters);
+        $data['header'] = $message;
+        $body = \Lang::get('lender.mails.loan-disbursed.body', $parameters);
+        $data['content'] = $body;
+        $subject = \Lang::get('lender.mails.loan-disbursed.subject', $parameters);
+        $this->lenderMailer->sendDisbursedLoanMail($lender, $parameters, $data, $subject);
     }
 
     public function sendLoanDefaultedMail()

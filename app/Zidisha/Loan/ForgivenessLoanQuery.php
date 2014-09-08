@@ -17,10 +17,10 @@ use Zidisha\Loan\Base\ForgivenessLoanQuery as BaseForgivenessLoanQuery;
  */
 class ForgivenessLoanQuery extends BaseForgivenessLoanQuery
 {
-    public function isLoanAlreadyInForgiveness($loanid)
+    public function isLoanAlreadyInForgiveness($loanId)
     {
         return $this
-            ->filterByLoanId($loanid)
+            ->filterByLoanId($loanId)
             ->count();
     }
 } // ForgivenessLoanQuery

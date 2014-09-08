@@ -127,7 +127,7 @@ class AdminLoanForgivenessController extends BaseController
     public function lenderRejectLoanForgiveness($verificationCode)
     {
         $forgivenessLoan = ForgivenessLoanQuery::create()
-            ->findOneByValidationCode($verificationCode);
+            ->findOneByVerificationCode($verificationCode);
 
         if (! $forgivenessLoan) {
             \App::abort(404, 'Opps something went wrong.');
