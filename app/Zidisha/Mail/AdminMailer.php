@@ -70,6 +70,8 @@ class AdminMailer
 
         $session = \Session::all();
         $input = \Input::all();
+        $cookies = \Request::cookie();
+        
         $user = [];
         if (\Auth::check()) {
             /** @var User $u */
@@ -99,6 +101,7 @@ class AdminMailer
                 'request'    => $request,
                 'session'    => $session,
                 'input'      => $input,
+                'cookies'    => $cookies,
                 'user'       => $user,
             ]
         );

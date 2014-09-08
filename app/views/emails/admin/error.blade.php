@@ -30,6 +30,16 @@
     @endforeach
 </table>
 
+<h2>Cookies</h2>
+<table>
+    @foreach($cookies as $k => $v)
+    <tr>
+        <td style="vertical-align: top"><b>{{ $k }}</b></td>
+        <td><?php is_scalar($v) ? print($v) : var_dump($v) ?></td>
+    </tr>
+    @endforeach
+</table>
+
 <h2>User</h2>
 <table>
     @foreach($user as $k => $v)
