@@ -83,7 +83,7 @@ class ScheduledJobs extends Command
             });
 
         if ($scheduledJobClass::COUNT > 1) {
-            $query->whereRaw("s.id IS NULL OR (s.last_processed_at IS NOT NULL AND (s.created_at + '1 month'::interval) < NOW() AND s.count < ".$scheduledJobClass::COUNT . ")");
+            $query->whereRaw("s.id IS NULL OR (s.last_processed_at IS NOT NULL AND (s.created_at + (s.count || ' month')::interval) < NOW() AND s.count < ".$scheduledJobClass::COUNT . ")");
         } else {
             $query->whereRaw("s.id IS NULL");
         }
