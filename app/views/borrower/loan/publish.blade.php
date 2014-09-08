@@ -45,38 +45,8 @@
             ])
         </p>    
 
-        <table class="table table-striped table-bordered">
-            <thead>
-            <tr>
-                <th>{{ \Lang::get('borrower.loan.repayment-schedule.due-date') }}</th>
-                <th>{{ \Lang::get('borrower.loan.repayment-schedule.repayment-due', ['currencyCode' => $loan->getCurrencyCode()]) }}</th>
-                <th>{{ \Lang::get('borrower.loan.repayment-schedule.balance-remaining') }}</th>
-            </tr>
-            </thead>
-            <tbody>
-                <?php
-                    $i = 0;
-                    $totalAmount = $calculator->totalAmount();
-                ?>
-                @foreach($installments as $installment)
-                    @if($i)
-                    <tr>
-                        <td>{{ $i }}</td>
-                        <?php $totalAmount = $totalAmount->subtract($installment->getAmount()) ?>
-                        <td>{{ $installment->getAmount()->round(2)->getAmount() }}</td>
-                        <td>{{ $totalAmount->round(2)->getAmount() }}</td>
-                    </tr>
-                    @endif
-                    <?php $i++; ?>
-                @endforeach
-    
-                <tr>
-                    <td> <strong>{{ \Lang::get('borrower.loan.repayment-schedule.total-repayment') }}</strong> </td>
-                    <td> <strong> {{  $calculator->totalAmount()->round(2)->getAmount() }} </strong> </td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
+        @include('borrower.loan.partials.repayment-schedule-installments', compact('repaymentSchedule'))
+        
     </div>
 </div>
 

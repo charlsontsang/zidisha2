@@ -9,6 +9,7 @@ use Zidisha\Currency\Money;
 use Zidisha\Loan\Calculator\InstallmentCalculator;
 use Zidisha\Loan\LoanQuery;
 use Zidisha\Loan\LoanService;
+use Zidisha\Repayment\RepaymentSchedule;
 use Zidisha\Upload\Upload;
 
 class LoanApplicationController extends BaseBorrowerController
@@ -204,11 +205,11 @@ class LoanApplicationController extends BaseBorrowerController
             ->setLenderInterestRate(Setting::get('loan.maximumLenderInterestRate'));
 
         $calculator = new InstallmentCalculator($loan);
-        $installments = $calculator->generateLoanInstallments($loan);
+        $repaymentSchedule = RepaymentSchedule::createFromInstallments($loan, $calculator->generateLoanInstallments());
         
         $data['installmentAmount'] = Money::create($data['installmentAmount'], $loan->getCurrencyCode());
 
-        return $this->stepView('publish', compact('data', 'calculator', 'installments', 'loan'));
+        return $this->stepView('publish', compact('data', 'calculator', 'loan', 'repaymentSchedule'));
     }
 
     public function postPublish()

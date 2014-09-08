@@ -29,6 +29,22 @@ class RepaymentSchedule implements \IteratorAggregate
         $this->calculateInstallmentsCounts();
     }
 
+    public static function createFromInstallments($loan, $installments)
+    {
+        $repaymentScheduleInstallments = [];
+        
+        foreach ($installments as $installment) {
+            $repaymentScheduleInstallments[] = new RepaymentScheduleInstallment($installment, []);
+        }
+        
+        return new RepaymentSchedule($loan, $repaymentScheduleInstallments);
+    }
+    
+    public function getCurrencyCode()
+    {
+        return $this->loan->getCurrencyCode();
+    }
+
     public function getInstallments()
     {
         return $this->installments;
@@ -45,7 +61,7 @@ class RepaymentSchedule implements \IteratorAggregate
         $today = new Carbon();
         $repaymentThreshold = \Config::get('constants.repaymentThreshold');
         $repaymentThresholdAmount = Money::create(\Config::get('constants.repaymentAmountThreshold'), 'USD');
-        $isActiveLoan = $this->loan->getStatus() == Loan::ACTIVE;
+        $isActiveLoan = $this->loan->isActive();
         $paidInstallmentCount = 0;
         $overDueInstallmentCount = 0;
         $missedInstallmentCount = 0;
