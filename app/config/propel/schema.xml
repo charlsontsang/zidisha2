@@ -960,16 +960,6 @@
         </foreign-key>
     </table>
 
-    <table name="notifications" phpName="Notification" namespace="Notification">
-        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
-        <column name="type" type="ENUM" required="true" valueSet="0,1"/>
-        <column name="user_id" type="INTEGER" required="true"/>
-        <behavior name="timestampable"/>
-        <foreign-key foreignTable="users">
-            <reference local="user_id" foreign="id"/>
-        </foreign-key>
-    </table>
-
     <table name="withdrawal_requests" phpName="WithdrawalRequest" namespace="Balance">
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="lender_id" type="INTEGER" required="true"/>

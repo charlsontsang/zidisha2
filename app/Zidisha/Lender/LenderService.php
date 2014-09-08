@@ -16,8 +16,6 @@ use Zidisha\Currency\Money;
 use Zidisha\Loan\BidQuery;
 use Zidisha\Loan\Loan;
 use Zidisha\Mail\LenderMailer;
-use Zidisha\Notification\Notification;
-use Zidisha\Notification\NotificationQuery;
 use Zidisha\Upload\Upload;
 use Zidisha\User\User;
 use Zidisha\User\UserQuery;
@@ -140,26 +138,6 @@ class LenderService
         }
 
         return false;
-    }
-
-    public function notifyAbandonedLenders()
-    {
-        $c = new Carbon();
-        $lastYear = $c->subYear();
-
-        $abandonedLenders = LenderQuery::create()
-            ->useUserQuery()
-                ->filterAbandoned($lastYear)
-            ->endUse()
-            ->find();
-
-        foreach ($abandonedLenders as $lender) {
-            $this->lenderMailer->sendAbandonedMail($lender);
-            $notification = new Notification();
-            $notification->setType("abandoned")
-                ->setUser($lender->getUser());
-            $notification->save();
-        }
     }
 
     public function deactivateAbandonedLenders()

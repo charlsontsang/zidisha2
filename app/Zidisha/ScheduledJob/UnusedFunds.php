@@ -6,7 +6,6 @@ use Carbon\Carbon;
 use DB;
 use Illuminate\Queue\Jobs\Job;
 use Zidisha\Mail\LenderMailer;
-use Zidisha\Notification\Notification;
 use Zidisha\ScheduledJob\Map\ScheduledJobTableMap;
 
 
@@ -39,17 +38,7 @@ class UnusedFunds extends ScheduledJob
             ->whereRaw("u.last_login_at < '" . Carbon::now()->subMonths(2) . "'")
             ->whereRaw('u.role = 0')
             ->whereRaw('u.active = true')
-            ->whereRaw('(SELECT SUM(amount) FROM transactions t WHERE t.user_id = u.id) >= 50')
-            ->whereRaw(
-                '
-                    (
-                        SELECT COUNT(*) 
-                        FROM notifications n
-                        WHERE n.user_id = u.id
-                        AND n.type = ' . Notification::UNUSED_FUNDS_NOTIFICATION . '
-                    ) = 0
-                '
-            );
+            ->whereRaw('(SELECT SUM(amount) FROM transactions t WHERE t.user_id = u.id) >= 50');
     }
 
     public function process(Job $job)
