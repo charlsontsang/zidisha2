@@ -129,7 +129,7 @@ class BorrowerController extends BaseController
 
         if (!$loan) {
             $loan = LoanQuery::create()
-                ->findLastCompletedLoan($borrower);
+                ->findLastLoan($borrower);
         }
         
         $partial = 'loan-no-loan';
