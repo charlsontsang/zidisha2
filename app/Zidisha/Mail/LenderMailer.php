@@ -431,13 +431,12 @@ class LenderMailer
         );
     }
 
-    public function sendNewLoanNotificationMail(Lender $lender, $parameters)
+    public function sendNewLoanNotificationMail(Lender $lender, $parameters, $subject)
     {
         $data = [
             'parameters' => $parameters
         ];
-        $subject = \Lang::get('lender.mails.new-loan-notification.subject', $parameters);
-        
+
         $this->mailer->send(
             'emails.label-template',
             $data + [
@@ -448,22 +447,17 @@ class LenderMailer
         );
     }
 
-    public function sendFollowerNewLoanNotificationMail(Loan $loan, Lender $lender)
+    public function sendFollowerNewLoanNotificationMail(Lender $lender, $parameters, $subject)
     {
         $data = [
-            'parameters' => [
-                'borrowerName' => $loan->getBorrower()->getName(),
-                'loanUrl'      => route('loan:index', ['loanId' => $loan->getId()]),
-            ]
+            'parameters' => $parameters
         ];
 
-        $subject = \Lang::get('lender.mails.follower-new-loan-notification.subject', ['borrowerName' => $loan->getBorrower()->getName()]);
-
         $this->mailer->send(
-            'emails.lender.new-loan-notification.follower-body',
+            'emails.label-template',
             $data + [
                 'to'         => $lender->getUser()->getEmail(),
-                'label'      => 'lenders.mails.new-loan-notification.body',
+                'label'      => 'lender.mails.new-loan-notification.follower-body',
                 'subject'    => $subject
             ]
         );

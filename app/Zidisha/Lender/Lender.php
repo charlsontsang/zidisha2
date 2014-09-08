@@ -2,6 +2,7 @@
 
 namespace Zidisha\Lender;
 
+use Zidisha\Borrower\Borrower;
 use Zidisha\Lender\Base\Lender as BaseLender;
 
 class Lender extends BaseLender
@@ -12,5 +13,14 @@ class Lender extends BaseLender
 
     public function isActive(){
         return $this->getActive();
+    }
+
+    public function isFollowing(Borrower $borrower)
+    {
+        return FollowerQuery::create()
+            ->filterByBorrower($borrower)
+            ->filterByLender($this)
+            ->filterByActive(true)
+            ->count();
     }
 }

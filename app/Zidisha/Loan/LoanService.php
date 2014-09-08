@@ -113,11 +113,15 @@ class LoanService
                 'loanUrl'      => route('loan:index', ['loanId' => $loan->getId()]),
                 'repayDate'    => $lastLoan->getRepaidAt()->format('F j, Y')
             ];
+            $subject = \Lang::get('lender.mails.new-loan-notification.subject', $parameters);
             foreach($lenders as $lender) {
-                $this->lenderMailer->sendNewLoanNotificationMail($lender, $parameters);
+                if ($lender->isFollowing($borrower)) {
+                    $this->lenderMailer->sendFollowerNewLoanNotificationMail($lender, $parameters, $subject);
+                } else {
+                    $this->lenderMailer->sendNewLoanNotificationMail($lender, $parameters, $subject);
+                }
             }
         }
-
         return $loan;
     }
 
