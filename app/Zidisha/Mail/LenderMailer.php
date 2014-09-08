@@ -518,13 +518,13 @@ class LenderMailer
         return $data;
     }
 
-    public function sendDisbursedLoanMail(Lender $lender, $parameters, $data)
+    public function sendDisbursedLoanMail(Lender $lender, $parameters, $data, $subject)
     {
         $this->mailer->send(
             'emails.hero',
             $data + [
                 'to'         => $lender->getUser()->getEmail(),
-                'subject'    => \Lang::get('lender.mails.loan-disbursed.subject', $parameters),
+                'subject'    => $subject,
                 'templateId' => \Setting::get('sendwithus.lender-loan-disbursed-template-id'),
             ]
         );
@@ -544,8 +544,6 @@ class LenderMailer
 
         $body = \Lang::get('lender.mails.loan-repayment-received.body', $parameters);
         $data['content'] = $body;
-        $content2 = \Lang::get('lender.mails.loan-repayment-received.message2', $parameters);
-        $data['content2'] = $content2;
 
         $this->mailer->send(
             'emails.hero',

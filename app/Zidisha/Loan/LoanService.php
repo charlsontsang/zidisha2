@@ -894,8 +894,9 @@ class LoanService
         $data['header'] = $message;
         $body = \Lang::get('lender.mails.loan-disbursed.body', $parameters);
         $data['content'] = $body;
+        $subject = \Lang::get('lender.mails.loan-disbursed.subject', $parameters);
         foreach ($lenders as $lender) { 
-            $this->lenderMailer->sendDisbursedLoanMail($lender, $parameters, $data);
+            $this->lenderMailer->sendDisbursedLoanMail($lender, $parameters, $data, $subject);
         }
         $this->borrowerMailer->sendDisbursedLoanMail($loan);
         

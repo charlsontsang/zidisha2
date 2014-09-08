@@ -165,13 +165,14 @@ This brings your lending credit balance up to USD :currentCredit.  You can re-le
 <br/><br/>
 Too busy to select new loans manually? Activate automated relending of your repayments <a href=":autoLendingUrl">here</a>.
 <br/><br/>
-You can adjust your email notification preferences <a href=:accountPreferenceUrl>here</a>.
-<br/><br/>
 Keep spreading opportunities!  We’re thrilled and excited for more wonderful stories to unfold soon.
 <br/><br/>
 Cheers,
 <br/><br/>
-The Zidisha Team',
+The Zidisha Team
+<br/><br/>
+PS:  You can adjust your account to send new lending credit emails only when your balance reaches a specified threshold <a href=:accountPreferenceUrl>here</a>;
+',
         'message2' => '
         You received a USD :amount loan repayment from <a href=":loanUrl">:borrowerName</a>!<br/><br/>
 Your lender credit balance is now USD :currentCredit. You may use this balance to make a new loan <a href=":lendUrl">here</a>.<br/><br/>

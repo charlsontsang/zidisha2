@@ -231,8 +231,8 @@ class LenderMailerTester
         $data['header'] = $message;
         $body = \Lang::get('lender.mails.loan-disbursed.body', $parameters);
         $data['content'] = $body;
-
-        $this->lenderMailer->sendDisbursedLoanMail($lender, $parameters, $data);
+        $subject = \Lang::get('lender.mails.loan-disbursed.subject', $parameters);
+        $this->lenderMailer->sendDisbursedLoanMail($lender, $parameters, $data, $subject);
     }
 
     public function sendLoanDefaultedMail()
