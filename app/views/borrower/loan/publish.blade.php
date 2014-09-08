@@ -28,7 +28,7 @@
             <tbody>
             <tr>
                 <td>
-                    <strong>@lang('borrower.loan-application.publish.amount-requested'):</strong>
+                    <strong>@lang('borrower.loan.requested-amount'):</strong>
                 </td>
                 <td>
                     {{ $loan->getAmount() }}
@@ -37,7 +37,7 @@
 
             <tr>
                 <td>
-                    <strong>@lang('borrower.loan-application.publish.maximum-interest-rate'):</strong>
+                    <strong>@lang('borrower.loan.maximum-interest-rate'):</strong>
                 </td>
                 <td>
                     {{ $loan->getMaxInterestRate() }} %
@@ -48,9 +48,9 @@
                 <td>
                     <strong>
                         @if($loan->isWeeklyInstallment())
-                            @lang('borrower.loan-application.publish.weekly-repayment-amount'):
+                            @lang('borrower.loan.weekly-repayment-amount'):
                         @else
-                            @lang('borrower.loan-application.publish.monthly-repayment-amount'):
+                            @lang('borrower.loan.monthly-repayment-amount'):
                         @endif
                     </strong>
                 </td>
@@ -61,7 +61,7 @@
 
             <tr>
                 <td>
-                    <strong>@lang('borrower.loan-application.publish.repayment-period'):</strong>
+                    <strong>@lang('borrower.loan.repayment-period'):</strong>
                 </td>
                 <td>
                     {{ $loan->getPeriod() }}
@@ -70,7 +70,7 @@
 
             <tr>
                 <td>
-                    <strong>@lang('borrower.loan-application.publish.maximum-interest-and-transaction-fees'):</strong>
+                    <strong>@lang('borrower.loan.maximum-interest-and-transaction-fees'):</strong>
                 </td>
                 <td>
                     {{ $calculator->totalInterest()->round(2) }}
@@ -83,7 +83,7 @@
 
             <tr>
                 <td>
-                    <strong>@lang('borrower.loan-application.publish.total-repayment-due-date'):</strong>
+                    <strong>@lang('borrower.loan.total-amount-due-date'):</strong>
                 </td>
                 <td>
                     {{ $calculator->totalAmount()->round(2) }}
@@ -106,9 +106,9 @@
         <table class="table table-striped table-bordered">
             <thead>
             <tr>
-                <th>{{ \Lang::get('borrower.loan-application.publish.table.due-date') }}</th>
-                <th>{{ \Lang::get('borrower.loan-application.publish.table.repayment-due', ['currencyCode' => $loan->getCurrencyCode()]) }}</th>
-                <th>{{ \Lang::get('borrower.loan-application.publish.table.balance-remaining') }}</th>
+                <th>{{ \Lang::get('borrower.loan.repayment-schedule.due-date') }}</th>
+                <th>{{ \Lang::get('borrower.loan.repayment-schedule.repayment-due', ['currencyCode' => $loan->getCurrencyCode()]) }}</th>
+                <th>{{ \Lang::get('borrower.loan.repayment-schedule.balance-remaining') }}</th>
             </tr>
             </thead>
             <tbody>
@@ -129,7 +129,7 @@
                 @endforeach
     
                 <tr>
-                    <td> <strong>{{ \Lang::get('borrower.loan-application.publish.table.total-repayment') }}</strong> </td>
+                    <td> <strong>{{ \Lang::get('borrower.loan.repayment-schedule.total-repayment') }}</strong> </td>
                     <td> <strong> {{  $calculator->totalAmount()->round(2)->getAmount() }} </strong> </td>
                     <td></td>
                 </tr>
