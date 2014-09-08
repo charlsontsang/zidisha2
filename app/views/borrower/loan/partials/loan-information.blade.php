@@ -49,7 +49,7 @@
         <td>
             {{ $totalInterest }}
             (@lang(
-            $loan->isWeeklyInstallment() ? 'borrower.loan-application.publish.weekly-interest-rate' : 'borrower.loan-application.publish.monthly-interest-rate',
+            $loan->isWeeklyInstallment() ? 'borrower.loan.weekly-interest-rate' : 'borrower.loan.monthly-interest-rate',
             ['interestRate' => $maxInterestRate, 'period' => $period]
             ))
         </td>
