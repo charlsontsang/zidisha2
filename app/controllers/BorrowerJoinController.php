@@ -2,7 +2,6 @@
 
 use Zidisha\Borrower\VolunteerMentorQuery;
 use Zidisha\Country\CountryQuery;
-use Zidisha\Sms\BorrowerSmser;
 use Zidisha\Utility\Utility;
 
 class BorrowerJoinController extends BaseController
