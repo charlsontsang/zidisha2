@@ -203,6 +203,7 @@ class GenerateModelData extends Command
             $user = new User();
             $user
                 ->setJoinedAt($data['joinedAt'])
+                ->setLastLoginAt($data['joinedAt'])
                 ->setPassword('1234')
                 ->setEmail('lenderfake@fake.com')
                 ->setUsername('fakelender')
@@ -325,9 +326,9 @@ class GenerateModelData extends Command
         }
 
         if ($model == "UnusedFunds") {
-            $data['username'] = 'lender-test';
+            $data['username'] = 'lender-unusedfund';
             $data['password'] = '1234567890';
-            $data['email'] = 'lenderTest@mail.com';
+            $data['email'] = 'singularityguy@fastmail.fm';
             $data['countryId'] = '1';
 
             $lender = $this->lenderService->joinLender($data);
@@ -419,18 +420,18 @@ class GenerateModelData extends Command
         }
 
 
-        if ($model == 'AbandonedUser') {
-            $data['username'] = 'lender-AbandonedUser';
-            $data['password'] = '1234567890';
-            $data['email'] = 'lender-AbandonedUser@mail.com';
-            $data['countryId'] = '1';
-
-            $lender = $this->lenderService->joinLender($data);
-            $user = $lender->getUser();
-
-            $user->setCreatedAt(Carbon::create()->subDay());
-            $user->save();
-        }
+//        if ($model == 'AbandonedUser') {
+//            $data['username'] = 'lender-AbandonedUser';
+//            $data['password'] = '1234567890';
+//            $data['email'] = 'lender-AbandonedUser@mail.com';
+//            $data['countryId'] = '1';
+//
+//            $lender = $this->lenderService->joinLender($data);
+//            $user = $lender->getUser();
+//
+//            $user->setCreatedAt(Carbon::create()->subDay());
+//            $user->save();
+//        }
         
         if ($model == 'LoanFinalArrear') {
             $loan = $this->generateLoanForArrear(14, 12);            
@@ -657,6 +658,7 @@ class GenerateModelData extends Command
             ->setEmail('admin@mail.com')
             ->setRole('admin')
             ->setLastLoginAt(new Carbon())
+            ->setJoinedAt(new Carbon())
             ->save();
         
         $return[] = $user;
@@ -667,6 +669,7 @@ class GenerateModelData extends Command
             ->setPassword('1234567890')
             ->setEmail('yc@mail.com')
             ->setLastLoginAt(new Carbon())
+            ->setJoinedAt(new Carbon())
             ->save();
 
         $return[] = $user;

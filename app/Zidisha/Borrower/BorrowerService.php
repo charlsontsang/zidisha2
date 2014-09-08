@@ -67,6 +67,7 @@ class BorrowerService
             $user = new User();
             $user
                 ->setJoinedAt($data['joinedAt'])
+                ->setLastLoginAt($data['joinedAt'])
                 ->setUsername($data['username'])
                 ->setPassword($data['password'])
                 ->setEmail($data['email'])

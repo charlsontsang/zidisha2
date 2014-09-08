@@ -202,6 +202,7 @@ class LenderService
         $user = new User();
         $user
             ->setJoinedAt($data['joinedAt'])
+            ->setLastLoginAt($data['joinedAt'])
             ->setPassword($data['password'])
             ->setEmail($data['email'])
             ->setUsername($data['username'])
