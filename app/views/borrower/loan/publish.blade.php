@@ -24,73 +24,15 @@
 
         <br/>
 
-        <table class="table table-2-col">
-            <tbody>
-            <tr>
-                <td>
-                    <strong>@lang('borrower.loan.requested-amount'):</strong>
-                </td>
-                <td>
-                    {{ $loan->getAmount() }}
-                </td>
-            </tr>
-
-            <tr>
-                <td>
-                    <strong>@lang('borrower.loan.maximum-interest-rate'):</strong>
-                </td>
-                <td>
-                    {{ $loan->getMaxInterestRate() }} %
-                </td>
-            </tr>
-
-            <tr>
-                <td>
-                    <strong>
-                        @if($loan->isWeeklyInstallment())
-                            @lang('borrower.loan.weekly-repayment-amount'):
-                        @else
-                            @lang('borrower.loan.monthly-repayment-amount'):
-                        @endif
-                    </strong>
-                </td>
-                <td>
-                    {{ $data['installmentAmount'] }}
-                </td>
-            </tr>
-
-            <tr>
-                <td>
-                    <strong>@lang('borrower.loan.repayment-period'):</strong>
-                </td>
-                <td>
-                    {{ $loan->getPeriod() }}
-                </td>
-            </tr>
-
-            <tr>
-                <td>
-                    <strong>@lang('borrower.loan.maximum-interest-and-transaction-fees'):</strong>
-                </td>
-                <td>
-                    {{ $calculator->totalInterest()->round(2) }}
-                    (@lang(
-                        $loan->isWeeklyInstallment() ? 'borrower.loan-application.publish.weekly-interest-rate' : 'borrower.loan-application.publish.monthly-interest-rate',
-                        ['interestRate' => $loan->getMaxInterestRate(), 'period' => $loan->getPeriod()]
-                    ))
-                </td>
-            </tr>
-
-            <tr>
-                <td>
-                    <strong>@lang('borrower.loan.total-amount-due-date'):</strong>
-                </td>
-                <td>
-                    {{ $calculator->totalAmount()->round(2) }}
-                </td>
-            </tr>
-            </tbody>
-        </table>
+        @include('borrower.loan.partials.loan-information', [
+            'amount'            => $loan->getAmount(),
+            'maxInterestRate'   => $loan->getMaxInterestRate(),
+            'installmentAmount' => $data['installmentAmount'],
+            'period'            => $loan->getPeriod(),
+            'totalInterest'     => $calculator->totalInterest()->round(2),
+            'totalAmount'       => $calculator->totalAmount()->round(2),
+            'loan'              => $loan,
+        ]);
 
         <p>
             @lang('borrower.loan-application.publish.confirmation-instructions')
