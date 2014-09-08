@@ -32,7 +32,7 @@
             'totalInterest'     => $calculator->totalInterest()->round(2),
             'totalAmount'       => $calculator->totalAmount()->round(2),
             'loan'              => $loan,
-        ]);
+        ])
 
         <p>
             @lang('borrower.loan-application.publish.confirmation-instructions')
