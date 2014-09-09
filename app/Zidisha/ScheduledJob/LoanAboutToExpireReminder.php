@@ -43,14 +43,13 @@ class LoanAboutToExpireReminder extends ScheduledJob
         $beforeDays = $deadlineDays - 3;
         $afterDays = $beforeDays + 1;
 
-        return DB::table('loans AS l')
-            ->selectRaw(
-                'l.id, borrower_id AS user_id, applied_at AS start_date, total_amount, summary, summary_translation'
-            )
+        $query = DB::table('loans AS l')
             ->whereRaw("status = " . Loan::OPEN)
             ->whereRaw("deleted_by_admin = false")
             ->whereRaw("applied_at <= '" . Carbon::now()->subDays($beforeDays) . "'")
             ->whereRaw("applied_at >= '" . Carbon::now()->subDays($afterDays) . "'");
+
+        return $this->joinQuery($query, 'l.borrower_id', 'l.applied_at', 'l.id');
     }
 
     public function process(Job $job)
