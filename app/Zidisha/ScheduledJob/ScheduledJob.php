@@ -16,10 +16,14 @@ abstract class ScheduledJob extends BaseScheduledJob
 
     abstract public function process(Job $job);
 
-    public function joinQuery(Builder $query, $userIdColumn, $startDateColumn)
+    public function joinQuery(Builder $query, $userIdColumn, $startDateColumn, $loanIdColumn = null)
     {
+        if ($loanIdColumn) {
+            $query->selectRaw("$userIdColumn AS user_id, $startDateColumn AS start_date, $loanIdColumn AS loan_id");
+        } else {
+            $query->selectRaw("$userIdColumn AS user_id, $startDateColumn AS start_date");
+        }
         $query
-            ->selectRaw("$userIdColumn AS user_id, $startDateColumn AS start_date")
             ->addSelect('s.id as scheduled_job_id')
             ->leftJoin('scheduled_jobs AS s', function($join) use ($userIdColumn, $startDateColumn) {
                     $join
