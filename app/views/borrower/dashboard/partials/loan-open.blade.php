@@ -3,9 +3,9 @@
     <div class="row">
         <div class="col-xs-12">
             <div class="callout callout-success">
-                <h4>Congratulations, your loan is fully funded!</h4>
+                <h4>@lang('borrower.dashboard.loan-open.fully-funded.title')</h4>
                 <p>
-                    accept here
+                    @lang('borrower.dashboard.loan-open.fully-funded.instructions', ['loanLink' => route('borrower:loan')])
                 </p>
             </div>
         </div>

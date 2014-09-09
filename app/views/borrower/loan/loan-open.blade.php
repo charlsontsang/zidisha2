@@ -6,9 +6,9 @@
 <div class="row">
     <div class="col-xs-12">
         <div class="callout callout-success">
-            <h4>Congratulations, your loan is fully funded!</h4>
+            <h4>@lang('borrower.dashboard.loan-open.fully-funded.title')</h4>
             <p>
-                you can accept the bids below.
+                @lang('borrower.loan.loan-open.fully-funded.instructions')
             </p>
         </div>
     </div>
@@ -17,7 +17,7 @@
 <div class="row">
     <div class="col-sm-6">
         @if($loan->isFullyFunded())
-            <h2>Accept bids</h2>
+            <h2>@lang('borrower.loan.accept-bids.title')</h2>
     
             <div class="alert alert-warning" role="alert">
                 @lang('borrower.loan.accept-bids.instructions')
@@ -79,8 +79,8 @@
                     <td>
                         {{ $installmentCalculator->totalInterest()->round(2) }}
                         ({{ Lang::get($loan->isWeeklyInstallment() ? 'borrower.loan.weekly-interest-rate' : 'borrower.loan.monthly-interest-rate', [
-                        'interestRate' => $loan->getLenderInterestRate() + $loan->getServiceFeeRate(),
-                        'period' => $loan->getPeriod(),
+                            'interestRate' => $loan->getLenderInterestRate() + $loan->getServiceFeeRate(),
+                            'period' => $loan->getPeriod(),
                         ]) }})
                     </td>
                 </tr>
@@ -120,7 +120,7 @@
         
             @include('partials/loan-progress', ['loan' => $loan, 'dollar' => false])
             
-            <h2>Loan details</h2>
+            <h2>@lang('borrower.loan.loan-open.details')</h2>
     
             @include('borrower.loan.partials.loan-information', [
                 'amount'            => $loan->getAmount(),
@@ -139,7 +139,7 @@
         @endif
         
         @if($lenders->count())
-            <h2>Lenders</h2>
+            <h2>@lang('borrower.loan.lenders')</h2>
             
             @include('partials.loan-lenders', compact($lenders))
         @endif
