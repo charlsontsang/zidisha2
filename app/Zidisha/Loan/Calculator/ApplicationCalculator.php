@@ -11,7 +11,7 @@ use Zidisha\Currency\ExchangeRate;
 use Zidisha\Currency\Money;
 use Zidisha\Loan\Loan;
 
-class LoanCalculator
+class ApplicationCalculator
 {
     /**
      * @var Borrower

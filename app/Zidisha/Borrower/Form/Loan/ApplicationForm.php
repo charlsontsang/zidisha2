@@ -7,7 +7,7 @@ use Zidisha\Currency\ExchangeRateQuery;
 use Zidisha\Currency\Money;
 use Zidisha\Form\AbstractForm;
 use Zidisha\Loan\Calculator\InstallmentCalculator;
-use Zidisha\Loan\Calculator\LoanCalculator;
+use Zidisha\Loan\Calculator\ApplicationCalculator;
 use Zidisha\Loan\CategoryQuery;
 use Zidisha\Loan\CategoryTranslationQuery;
 use Zidisha\Loan\Loan;
@@ -20,9 +20,9 @@ class ApplicationForm extends AbstractForm
     protected  $borrower;
 
     /**
-     * @var \Zidisha\Loan\Calculator\LoanCalculator
+     * @var \Zidisha\Loan\Calculator\ApplicationCalculator
      */
-    protected $loanCalculator;
+    protected $applicationCalculator;
 
     /**
      * @var \Zidisha\Currency\Currency
@@ -40,7 +40,7 @@ class ApplicationForm extends AbstractForm
         $this->borrower = $borrower;
         $this->currency = $this->borrower->getCountry()->getCurrency();
         $this->exchangeRate = ExchangeRateQuery::create()->findCurrent($this->currency);
-        $this->loanCalculator = new LoanCalculator($borrower, $this->exchangeRate);
+        $this->applicationCalculator = new ApplicationCalculator($borrower, $this->exchangeRate);
     }
     
     public function getExchangeRate()
@@ -58,7 +58,7 @@ class ApplicationForm extends AbstractForm
         if (isset($data['amount'])) {
             $amount = Money::create($data['amount'], $this->currency);
         } else {
-            $amount = $this->loanCalculator->maximumAmount()->getAmount();
+            $amount = $this->applicationCalculator->maximumAmount()->getAmount();
         }
         
         $amounts = implode(',', $this->getLoanAmountRange());
@@ -117,12 +117,12 @@ class ApplicationForm extends AbstractForm
 
     public function getMaximumAmount()
     {
-        return $this->loanCalculator->maximumAmount();
+        return $this->applicationCalculator->maximumAmount();
     }
     
     public function getLoanAmountRange() {
         $step = $this->borrower->getCountry()->getLoanAmountStep();
-        $maximumAmount = round($this->loanCalculator->maximumAmount()->getAmount());
+        $maximumAmount = round($this->applicationCalculator->maximumAmount()->getAmount());
         
         $range = range($step, $maximumAmount, $step);
         
@@ -139,10 +139,10 @@ class ApplicationForm extends AbstractForm
         $step = $this->borrower->getCountry()->getInstallmentAmountStep();
 
         $amount = $amount ?: $this->getAmount();
-        $minInstallmentAmount = $this->loanCalculator->minInstallmentAmount($amount);
+        $minInstallmentAmount = $this->applicationCalculator->minInstallmentAmount($amount);
         $minInstallmentAmount = $minInstallmentAmount->divide($step)->ceil()->multiply($step);
         
-        $maxInstallmentAmount = $amount->divide($this->loanCalculator->minimumPeriod($amount))->floor();
+        $maxInstallmentAmount = $amount->divide($this->applicationCalculator->minimumPeriod($amount))->floor();
         
         $step = min($step, $maxInstallmentAmount->subtract($minInstallmentAmount)->getAmount());
         
@@ -179,7 +179,7 @@ class ApplicationForm extends AbstractForm
         } elseif (\Session::has('loan_data.amount')) {
             $amount = Money::create(\Session::get('loan_data.amount'), $this->currency);
         } else {
-            $amount = $this->loanCalculator->maximumAmount();
+            $amount = $this->applicationCalculator->maximumAmount();
         }
 
         if ($this->loan) {
