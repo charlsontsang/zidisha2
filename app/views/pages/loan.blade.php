@@ -199,11 +199,13 @@
                                     </div>
                                     @endif
                                 </div>
+                                @if($loan->isFunded())
                                 <div class="callout callout-info omega">
                                     <p>
                                         The loan is accepted, and should be disbursed within one week.
                                     </p>
                                 </div>
+                                @endif
                             </div>
                         </div>
 
