@@ -47,6 +47,10 @@ return [
         'confirm'                        => 'Confirm',
         'cancel'                         => 'Go Back And Edit',
     ],
+    'page' => [
+        'public-loan-page' => 'Go to public loan page',
+        'your-loans'       => 'Your loans',
+    ],
     'loan-open' => [
         'details' => 'Loan Details',
         'fully-funded' => [
