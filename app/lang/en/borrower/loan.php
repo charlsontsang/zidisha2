@@ -70,5 +70,9 @@ return [
         'funded'       => 'Funded',
         'still-needed' => 'Still Needed',
         'days-left'    => 'Days Left',
+        'hours-left'   => 'Hours Left',
+        'minutes-left' => 'Minutes Left',
+        'seconds-left' => 'Seconds Left',
+        'expired'      => 'Expired',
     ],
 ];

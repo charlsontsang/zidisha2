@@ -1,6 +1,26 @@
 <?php
+    /** @var \Zidisha\Loan\Loan $loan */
     $dollar = isset($dollar) ? $dollar : true;
     $stillNeededAmount = $dollar ? $loan->getStillNeededUsdAmount() : $loan->getStillNeededAmount();
+
+    $expired = $interval = $intervalLeft = null;
+
+    $dateInterval = $loan->getIntervalLeft();
+    if ($dateInterval->d) {
+        $intervalLeft = $dateInterval->d;
+        $interval = 'days';
+    } elseif ($dateInterval->h) {
+        $intervalLeft = $dateInterval->h;
+        $interval = 'hours';
+    } elseif ($dateInterval->i) {
+        $intervalLeft = $dateInterval->i;
+        $interval = 'minutes';
+    } elseif ($dateInterval->s) {
+        $intervalLeft = $dateInterval->s;
+        $interval = 'seconds';
+    } else {
+        $expired = true;
+    }
 ?>
 
 <div class="progress-group">
@@ -28,10 +48,10 @@
             </span>
         </div>
         <div class="col-xs-4 text-center gutter-xs">
-            <span class="text-large">{{ $loan->getDaysLeft() }}</span>
+            <span class="text-large">{{ $expired ? '' : $intervalLeft }}</span>
             <br/>
             <span class="text-light">
-                @lang('borrower.loan.progress.days-left')
+                @lang($expired ? 'borrower.loan.progress.expired' : "borrower.loan.progress.$interval-left")
             </span>
         </div>
     </div>
