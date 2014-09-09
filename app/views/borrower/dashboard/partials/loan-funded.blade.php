@@ -1,4 +1,3 @@
-<div>
-    <p>{{ \Lang::get('borrower.loan.fully-funded.message') }}</p>
+<div class="callout callout-info">
+    <p>{{ \Lang::get('borrower.loan.loan-funded.message') }}</p>
 </div>
-

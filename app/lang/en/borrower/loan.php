@@ -27,6 +27,7 @@ return [
     'total-amount-due-date'                 => 'Total Repayment Due Date',
     'expires-at'                            => 'Expiration Date',
     'repayment-schedule'                    => [
+        'title'             => 'Repayment Schedule',
         'due-date'          => 'Due Date (Number Of months after disbursement Date)',
         'repayment-due'     => 'Repayment Due (:currencyCode)',
         'balance-remaining' => 'Balance Remaining',
@@ -61,8 +62,9 @@ return [
             'accept-bids' => 'Accept Bids',
         ],
     ],
-    'fully-funded'               => [
-        'message' => 'Your Loan is fully funded, and disbursement is pending.'
+    'loan-funded' => [
+        'accept-bids-note' => 'Your instructions for the loan disbursement',
+        'message' => 'Your loan is now accepted, and should be disbursed to you within one week. Thank you for your patience.'
     ],
     'active'                     => [
         'next-installment' => 'Next Installment'

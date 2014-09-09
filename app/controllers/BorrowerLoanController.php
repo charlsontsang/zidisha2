@@ -55,13 +55,13 @@ class BorrowerLoanController extends BaseController
         $data = compact('loan', 'loans', 'borrower');
         $template = 'borrower.loan.loan-base';
 
-        if ($loan->isFunded() || $loan->isActive() || $loan->isDefaulted() || $loan->isRepaid()) {
+        if ($loan->isActive() || $loan->isDefaulted() || $loan->isRepaid()) {
             $repaymentSchedule = $this->repaymentService->getRepaymentSchedule($loan);
 
             $data['repaymentSchedule'] = $repaymentSchedule;
         }
 
-        if ($loan->isOpen()) {
+        if ($loan->isOpen() || $loan->isFunded() ) {
             $data['lenders'] = LenderQuery::create()->findBidOnLoan($loan);
             
             $bids = BidQuery::create()
@@ -82,10 +82,7 @@ class BorrowerLoanController extends BaseController
             $data['installmentCalculator'] = $installmentCalculator;
             $data['repaymentSchedule'] = $repaymentSchedule;
 
-            $template = 'borrower.loan.loan-open';
-        } elseif ($loan->isFunded()) {
-
-            $template = 'borrower.loan.loan-funded';
+            $template = $loan->isOpen() ? 'borrower.loan.loan-open' : 'borrower.loan.loan-funded';
         } elseif ($loan->isActive()) {
 
             $template = 'borrower.loan.loan-active';
@@ -145,8 +142,7 @@ class BorrowerLoanController extends BaseController
         }
 
         $this->loanService->acceptBids($loan);
-
-        \Flash::success('You have accepted the loan bids successfully.');
+        
         return Redirect::action('BorrowerLoanController@getLoan', ['loanId' => $loanId] );
     }
 
