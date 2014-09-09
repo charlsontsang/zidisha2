@@ -152,6 +152,10 @@
         @endif
     </div>
     <div class="col-sm-6">
+        @if(!$loan->isFullyFunded())
+            @include('borrower.dashboard.loan-open-tips')
+        @endif
+        
         @if($bids)
         <h2>Loan Bids</h2>
 
