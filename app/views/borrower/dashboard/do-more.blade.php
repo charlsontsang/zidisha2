@@ -1,4 +1,4 @@
-<div class="panel panel-default">
+<div class="panel panel-info">
     <div class="panel-heading">
         <h3 class="panel-title">
             @lang('borrower.dashboard.do-more.title')
@@ -12,8 +12,8 @@
             @lang('borrower.dashboard.do-more.how')
         </p>
 
-        <ol>
-            <li>@lang('borrower.dashboard.do-more.invite')</li>
+        <ol class="omega">
+            <li>@lang('borrower.dashboard.do-more.invite', ['inviteLink' => route('borrower:invite')])</li>
             <li>@lang('borrower.dashboard.do-more.comment')</li>
             <li>@lang('borrower.dashboard.do-more.facebook')</li>
             <li>@lang('borrower.dashboard.do-more.volunteer-mentor', ['volunteerMentorLink' => route('page:volunteer-mentor-guidelines')])</li>
