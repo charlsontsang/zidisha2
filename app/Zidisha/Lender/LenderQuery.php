@@ -48,15 +48,32 @@ class LenderQuery extends BaseLenderQuery
             ->filterById($lenderIds);
     }
 
+    public function findBidOnLoan(Loan $loan)
+    {
+        return $this
+            ->distinct()
+            ->filterBidOnLoan($loan)
+            ->joinWith('User')
+            ->joinWith('Profile')
+            ->joinWith('Country')
+            ->find();
+    }
+
+    public function filterBidOnLoan(Loan $loan)
+    {
+        return $this
+            ->joinBid()
+            ->where('Bid.loan_id = ?', $loan->getId());
+    }
+
     public function getLendersForNewLoanNotificationMail(Loan $loan)
     {
         $lenders = LenderQuery::create()
             ->distinct()
-            ->joinBid()
+            ->filterBidOnLoan($loan)
             ->usePreferencesQuery()
                 ->filterByNotifyLoanApplication(true)
             ->endUse()
-            ->where('Bid.loan_id = ?', $loan->getId())
             ->filterByActive(true)
             ->find();
 

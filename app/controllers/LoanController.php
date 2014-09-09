@@ -7,12 +7,12 @@ use Zidisha\Comment\LoanFeedbackCommentQuery;
 use Zidisha\Comment\LoanFeedbackCommentService;
 use Zidisha\Flash\Flash;
 use Zidisha\Lender\FollowService;
+use Zidisha\Lender\LenderQuery;
 use Zidisha\Loan\Form\AdminCategoryForm;
 use Zidisha\Loan\Loan;
 use Zidisha\Loan\LoanQuery;
 use Zidisha\Loan\BidQuery;
 use Zidisha\Loan\LoanService;
-use Zidisha\Payment\Form\EditBidForm;
 use Zidisha\Payment\Form\PlaceBidForm;
 use Zidisha\Repayment\RepaymentService;
 
@@ -108,10 +108,7 @@ class LoanController extends BaseController
             ->count();
         $loanFeedbackComments = $this->loanFeedbackCommentService->getPaginatedComments($loan, $feedbackCommentPage, 10);
 
-        $bids = $this->bidQuery->create()
-            ->filterByLoan($loan)
-            ->orderByBidAt()
-            ->find();
+        $lenders = LenderQuery::create()->findBidOnLoan($loan);
 
         if ($loan->isDisbursed()) {
             $calculator = new \Zidisha\Loan\Calculator\InstallmentCalculator($loan);
@@ -167,7 +164,7 @@ class LoanController extends BaseController
         return View::make(
             'pages.loan',
             compact(
-                'bids',
+                'lenders',
                 'loan',
                 'follower',
                 'borrower',

@@ -308,37 +308,13 @@
 
                         @endif
 
-                        @if(count($bids) > 0)
+                        @if(count($lenders) > 0)
                         <div class="loan-section">
                             <div class="loan-section-title">
                                 <span class="text-light">Lenders</span>
                             </div>
                             <div class="loan-section-content">
-                                <div class="row">
-                                    @foreach($bids as $bid)
-                                        <div class="col-xs-4">
-                                            <div class="lender-thumbnail">
-                                                <a href="{{ $bid->getLender()->getUser()->getProfileUrl() }}">
-                                                    @if($bid->getLender()->getUser()->getProfilePictureUrl())
-                                                        <img src="{{ $bid->getLender()->getUser()->getProfilePictureUrl() }}" alt="">
-                                                    @else
-                                                        <img src="{{ asset('/assets/images/profile-default1.jpg') }}" alt="">
-                                                    @endif
-                                                </a>
-                                                <h3>
-                                                    <a href="{{ route('lender:public-profile', $bid->getLender()->getUser()->getUserName()) }}">
-                                                        {{ $bid->getLender()->getUser()->getUserName() }}</a>
-                                                </h3>
-                                                <p>
-                                                    @if($bid->getLender()->getProfile()->getCity())
-                                                        {{ $bid->getLender()->getProfile()->getCity() }},&nbsp;
-                                                    @endif
-                                                    {{ $bid->getLender()->getCountry()->getName() }}
-                                                </p>
-                                            </div>
-                                        </div> 
-                                    @endforeach
-                                </div>
+                                @include('partials.loan-lenders', compact('lenders'))
                             </div>
                         </div>
                         @endif
