@@ -7,6 +7,7 @@ use DB;
 use Illuminate\Queue\Jobs\Job;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Zidisha\Currency\Money;
+use Zidisha\Loan\LoanQuery;
 use Zidisha\Mail\BorrowerMailer;
 use Zidisha\Repayment\InstallmentQuery;
 use Zidisha\ScheduledJob\Map\ScheduledJobTableMap;
@@ -50,7 +51,8 @@ class RepaymentReminder extends ScheduledJob
     {
         $user = $this->getUser();
         $borrower = $user->getBorrower();
-        $loan = $borrower->getActiveLoan();
+        $loan = LoanQuery::create()
+            ->findOneById($this->getLoanId());
 
         $installment = InstallmentQuery::create()
             ->filterByLoan($loan)
