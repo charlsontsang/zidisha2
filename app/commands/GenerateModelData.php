@@ -1072,8 +1072,8 @@ class GenerateModelData extends Command
             $payment = new UploadFundPayment();
             $payment
                 ->setLenderId($lenderId)
-                ->setTotalAmount(Money::create(rand(10, 200), 'USD'))
-                ->setTransactionFee(Money::create(rand(1, 3), 'USD'))
+                ->setTotalAmount(Money::create(rand(50, 1000), 'USD'))
+                ->setTransactionFee(Money::create(rand(5, 10), 'USD'))
                 ->setPaymentMethod($this->faker->randomElement(['paypal', 'stripe']));
             
             $this->transactionService->addUploadFundTransaction($con, $payment);
