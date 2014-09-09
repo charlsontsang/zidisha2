@@ -65,5 +65,10 @@ return [
     ],
     'no-loan'                    => [
         'message' => 'You have no active loan. Click <a href=":link">here</a> to apply for a loan.'
-    ]
+    ],
+    'progress' => [
+        'funded'       => 'Funded',
+        'still-needed' => 'Still Needed',
+        'days-left'    => 'Days Left',
+    ],
 ];
