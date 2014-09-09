@@ -66,7 +66,7 @@
                     <strong>@lang('borrower.loan.total-interest-and-fees'):</strong>
                 </td>
                 <td>
-                    {{ $calculator->totalInterest()->round(2) }}
+                    {{ $installmentCalculator->totalInterest()->round(2) }}
                     ({{ Lang::get($loan->isWeeklyInstallment() ? 'borrower.loan.interest-rate-for-weeks' : 'borrower.loan.interest-rate-for-months', [
                     'interestRate' => $loan->getLenderInterestRate() + $loan->getServiceFeeRate(),
                     'period' => $loan->getPeriod(),
@@ -79,7 +79,7 @@
                     <strong>@lang('borrower.loan.total-amount'):</strong>
                 </td>
                 <td>
-                    {{ $calculator->totalAmount()->round(2) }}
+                    {{ $installmentCalculator->totalAmount()->round(2) }}
                 </td>
             </tr>
             </tbody>
@@ -101,7 +101,7 @@
             <tbody>
             <?php
             $i = 1;
-            $remainingAmount = $calculator->totalAmount();
+            $remainingAmount = $installmentCalculator->totalAmount();
             ?>
             @foreach($installments as $installment)
             <tr>
@@ -115,7 +115,7 @@
 
             <tr>
                 <td> <strong>{{ \Lang::get('borrower.loan-application.publish-loan.table.total-repayment') }}</strong> </td>
-                <td> <strong> {{  $calculator->totalAmount()->round(2)->getAmount() }} </strong> </td>
+                <td> <strong> {{  $installmentCalculator->totalAmount()->round(2)->getAmount() }} </strong> </td>
                 <td></td>
             </tr>
             </tbody>
@@ -136,49 +136,19 @@
 
         {{ BootstrapForm::close() }}
         @else
-        <h2>Loan details</h2>
+        @include('partials/loan-progress', ['loan' => $loan, 'dollar' => false])
         
-        <table class="table table-2-col">
-            <tbody>
-            <tr>
-                <td>
-                    <strong>@lang('borrower.loan.requested-amount'):</strong>
-                </td>
-                <td>
-                    {{ $loan->getAmount() }}
-                </td>
-            </tr>
+        <h2>Loan details</h2>
 
-            <tr>
-                <td>
-                    <strong>@lang('borrower.loan.service-fee-rate'):</strong>
-                </td>
-                <td>
-                    {{ $loan->getServiceFeeRate() }}%
-                </td>
-            </tr>
-
-            @if($loan->getRegistrationFee()->isPositive())
-            <tr>
-                <td>
-                    <strong>@lang('borrower.loan.registration-fee'):</strong>
-                </td>
-                <td>
-                    {{ $loan->getRegistrationFee() }}
-                </td>
-            </tr>
-            @endif
-
-            <tr>
-                <td>
-                    <strong>@lang('borrower.loan.expires-at'):</strong>
-                </td>
-                <td>
-                    {{ $loan->getExpiresAt()->format('M j, Y') }}
-                </td>
-            </tr>
-            </tbody>
-        </table>
+        @include('borrower.loan.partials.loan-information', [
+            'amount'            => $loan->getAmount(),
+            'maxInterestRate'   => $loan->getMaxInterestRate(),
+            'period'            => $loan->getPeriod(),
+            'totalInterest'     => $installmentCalculator->totalInterest()->round(2),
+            'totalAmount'       => $installmentCalculator->totalAmount()->round(2),
+            'loan'              => $loan,
+        ])
+        
         @endif
     </div>
     <div class="col-sm-6">

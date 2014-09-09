@@ -77,6 +77,7 @@ class BorrowerLoanController extends BaseController
             unset($installments[0]);
             
             $data['calculator'] = $installmentCalculator;
+            $data['installmentCalculator'] = $installmentCalculator;
             $data['installments'] = $installments;
 
             $template = 'borrower.loan.loan-open';
