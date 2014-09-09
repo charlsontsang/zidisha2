@@ -3,6 +3,7 @@
 namespace Zidisha\Loan;
 
 use Carbon\Carbon;
+use Propel\Runtime\ActiveQuery\Criteria;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Zidisha\Admin\Setting;
 use Zidisha\Analytics\MixpanelService;
@@ -107,21 +108,25 @@ class LoanService
             ->findLastCompletedLoan($borrower);
 
         if ($lastLoan) {
-            $lenders = $this->getLendersForNewLoanNotificationMail($loan);
+            $lenders = LenderQuery::create()
+                ->getLendersForNewLoanNotificationMail($lastLoan);
+            
             $parameters = [
                 'borrowerName' => $loan->getBorrower()->getName(),
                 'loanUrl'      => route('loan:index', ['loanId' => $loan->getId()]),
                 'repayDate'    => $lastLoan->getRepaidAt()->format('F j, Y')
             ];
             $subject = \Lang::get('lender.mails.new-loan-notification.subject', $parameters);
-            foreach($lenders as $lender) {
-                if ($lender->isFollowing($borrower)) {
-                    $this->lenderMailer->sendFollowerNewLoanNotificationMail($lender, $parameters, $subject);
-                } else {
-                    $this->lenderMailer->sendNewLoanNotificationMail($lender, $parameters, $subject);
-                }
+            
+            foreach ($lenders['lenders'] as $lender) {
+                $this->lenderMailer->sendNewLoanNotificationMail($lender, $parameters, $subject);
+            }
+
+            foreach ($lenders['followers'] as $lender) {
+                $this->lenderMailer->sendFollowerNewLoanNotificationMail($lender, $parameters, $subject);
             }
         }
+        
         return $loan;
     }
 
@@ -145,7 +150,7 @@ class LoanService
 
         $isFirstLoan = LoanQuery::create()
             ->filterByBorrower($borrower)
-            ->filterCompleted() // TODO correct? verify database
+            ->filterCompleted()
             ->count();
         $registrationFee = $isFirstLoan ? $borrower->getCountry()->getRegistrationFee() : Money::create(0, $currencyCode);
         
@@ -211,33 +216,6 @@ class LoanService
         $this->updateLoanIndex($loan);
 
         return $loan;
-    }
-
-    protected function getLendersForNewLoanNotificationMail(Loan $loan)
-    {
-        $query = "SELECT id
-            FROM lenders AS l
-            JOIN lender_preferences AS p
-            ON (l.id = p.lender_id)
-            WHERE
-               ((p.notify_loan_application = TRUE AND l.id IN (SELECT lender_id FROM loan_bids AS b WHERE b.loan_id = :loanId AND active = TRUE AND lender_id NOT IN (SELECT lender_id FROM followers AS f WHERE f.borrower_id = :borrowerId)))
-                OR
-                (l.id IN (SELECT lender_id FROM followers as ff WHERE ff.borrower_id = :borrowerId AND ff.notify_loan_application = TRUE AND active= TRUE )))
-               AND active = TRUE ";
-
-        $lenderIds = PropelDB::fetchAll(
-            $query,
-            [
-                'loanId'     => $loan->getId(),
-                'borrowerId' => $loan->getBorrowerId(),
-            ]
-        );
-
-        $lenders = LenderQuery::create()
-            ->filterById($lenderIds)
-            ->find();
-
-        return $lenders;
     }
 
     protected function getLoanIndex()

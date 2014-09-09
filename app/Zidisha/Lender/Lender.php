@@ -14,13 +14,4 @@ class Lender extends BaseLender
     public function isActive(){
         return $this->getActive();
     }
-
-    public function isFollowing(Borrower $borrower)
-    {
-        return FollowerQuery::create()
-            ->filterByBorrower($borrower)
-            ->filterByLender($this)
-            ->filterByActive(true)
-            ->count();
-    }
 }

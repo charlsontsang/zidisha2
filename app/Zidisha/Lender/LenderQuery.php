@@ -2,6 +2,7 @@
 
 namespace Zidisha\Lender;
 
+use Propel\Runtime\ActiveQuery\Criteria;
 use Zidisha\Lender\Base\LenderQuery as BaseLenderQuery;
 use Zidisha\Loan\Loan;
 use Zidisha\Vendor\PropelDB;
@@ -46,4 +47,28 @@ class LenderQuery extends BaseLenderQuery
         return $this
             ->filterById($lenderIds);
     }
+
+    public function getLendersForNewLoanNotificationMail(Loan $loan)
+    {
+        $lenders = LenderQuery::create()
+            ->distinct()
+            ->joinBid()
+            ->usePreferencesQuery()
+                ->filterByNotifyLoanApplication(true)
+            ->endUse()
+            ->where('Bid.loan_id = ?', $loan->getId())
+            ->filterByActive(true)
+            ->find();
+
+        $followers = LenderQuery::create()
+            ->joinFollower()
+            ->where('Follower.borrower_id = ?', $loan->getBorrowerId())
+            ->where('Follower.notify_loan_application = true')
+            ->filterById($lenders->toKeyValue('id', 'id'), Criteria::NOT_IN)
+            ->filterByActive(true)
+            ->find();
+        
+        return compact('lenders', 'followers');
+    }
+    
 } // LenderQuery
