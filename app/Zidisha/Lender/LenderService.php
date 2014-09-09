@@ -140,28 +140,6 @@ class LenderService
         return false;
     }
 
-    public function deactivateAbandonedLenders()
-    {
-        $thirteenMonthsAgo = new Carbon();
-        $thirteenMonthsAgo->subMonths(13);
-        $oneMonthAgo = new Carbon();
-        $oneMonthAgo->subMonth();
-
-        $lenders = LenderQuery::create()
-            ->useUserQuery()
-                ->filterAbandoned($thirteenMonthsAgo)
-                ->useNotificationQuery()
-                    ->filterByType("abandoned")
-                    ->filterByCreatedAt(['max' => $oneMonthAgo])
-                ->endUse()
-            ->endUse()
-            ->find();
-
-        foreach($lenders as $lender) {
-            $this->deactivateLender($lender);
-        }
-    }
-
     public function deactivateLender(Lender $lender)
     {
         if (!$lender->isActive()) {
@@ -171,9 +149,10 @@ class LenderService
             ->filterByUser($lender->getUser())
             ->getTotalAmount();
 
-        if ($currentBalance->isPositive()) {
             PropelDB::transaction(function($con) use ($lender, $currentBalance) {
-                $this->transactionService->addConvertToDonationTransaction($con, $lender, $currentBalance);
+                    if ($currentBalance->isPositive()) {
+                        $this->transactionService->addConvertToDonationTransaction($con, $lender, $currentBalance);
+                    }
                 $lender
                     ->setAdminDonate(true)
                     ->setActive(false);
@@ -181,7 +160,6 @@ class LenderService
                 $lender->getUser()->setActive(false);
                 $lender->getUser()->save($con);
             });
-        }
 
         return true;
     }
