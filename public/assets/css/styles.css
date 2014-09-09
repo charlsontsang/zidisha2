@@ -8464,8 +8464,6 @@ form label.control-label,
 form .btn-primary,
 form .btn-default,
 .giftcard .btn-primary {
-  margin-top: 5px;
-  margin-bottom: 30px;
   min-width: 100px;
   max-width: 300px;
 }
@@ -8883,11 +8881,6 @@ form .btn-default,
   .sidenav .nav > .active > ul {
     display: block;
   }
-  /* Widen the fixed sidebar */
-  .sidenav.affix,
-  .sidenav.affix-bottom {
-    width: 200px;
-  }
   .sidenav.affix {
     position: fixed;
     /* Undo the static from mobile first approach */
@@ -8901,12 +8894,6 @@ form .btn-default,
   .sidenav.affix .bs-docs-sidenav {
     margin-top: 0;
     margin-bottom: 0;
-  }
-}
-@media (min-width: 768px) and (min-width: 992px) {
-  .sidenav.affix,
-  .sidenav.affix-bottom {
-    width: 293px;
   }
 }
 /* make sidebar scrollable */
@@ -9643,14 +9630,8 @@ a.link-dark {
   margin: 0;
 }
 .loan-side .panel-default {
-  width: 240px;
   padding: 15px;
   margin-bottom: 0;
-}
-@media (min-width: 992px) {
-  .loan-side .panel-default {
-    width: 309px;
-  }
 }
 @media (max-width: 767px) {
   .loan-side .panel-default {
@@ -9703,15 +9684,6 @@ a.link-dark {
 @media (min-width: 768px) {
   .mobile-bottom-btn {
     display: none;
-  }
-}
-#follow-button {
-  width: 208px;
-  height: 36px;
-}
-@media (min-width: 992px) {
-  #follow-button {
-    width: 278px;
   }
 }
 @media (max-width: 767px) {

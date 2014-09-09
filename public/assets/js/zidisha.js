@@ -224,7 +224,15 @@ $(function () {
 
     // Sidenav affixing
     setTimeout(function () {
-        var $sideBar = $('.sidenav');
+        var $sideBar = $('.sidenav'),
+            width = $sideBar.outerWidth();
+        $sideBar.css('width', width);
+
+        $(window).on('resize', function(){
+            $sideBar.css('width', '');
+            width = $sideBar.outerWidth();
+            $sideBar.css('width', width);
+        });
 
         $sideBar.affix({
             offset: {
@@ -245,7 +253,8 @@ $(function () {
             if ($sideBar.next().length) {
                 $sideBar.next().css({
                     position: 'absolute',
-                    top: $sideBar.next().position().top
+                    top: $sideBar.next().position().top,
+                    width: width
                 });
             }
         });

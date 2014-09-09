@@ -135,12 +135,6 @@ class LoanController extends BaseController
         $repaymentSchedule = $this->repaymentService->getRepaymentSchedule($loan);
         $repaymentScore = $this->loanService->getOnTimeRepaymentScore($borrower);
 
-        if (strlen($loan->getSummary()) <= 60) {
-            $tag = 'h2';
-        } else {
-            $tag = 'h3';
-        }
-
         $categoryForm = $this->adminCategoryForm;
 
         $loanIds = LoanQuery::create()
@@ -181,7 +175,6 @@ class LoanController extends BaseController
                 'repaymentScore',
                 'loanFeedbackComments',
                 'displayFeedbackComments',
-                'tag',
                 'placeBidForm',
                 'categoryForm',
                 'invitedBy',
