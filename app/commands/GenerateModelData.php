@@ -429,14 +429,14 @@ class GenerateModelData extends Command
             $data['password'] = '1234567890';
             $data['email'] = 'lender-NewLenderIntro@mail.com';
             $data['countryId'] = '1';
+            $data['joinedAt'] = Carbon::create()->subDay()->subHour(5);
 
             $lender = $this->lenderService->joinLender($data);
             $user = $lender->getUser();
 
-            $user->setCreatedAt(Carbon::create()->subDay());
+            $user->setCreatedAt(Carbon::create()->subDay()->subHour(5));
             $user->save();
         }
-
 
 //        if ($model == 'AbandonedUser') {
 //            $data['username'] = 'lender-AbandonedUser';
