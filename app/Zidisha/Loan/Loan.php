@@ -131,6 +131,13 @@ class Loan extends BaseLoan implements CommentReceiverInterface
     {
         return $this->getUsdAmount()->subtract($this->getRaisedUsdAmount())->max(Money::create(0));
     }
+    
+    public function getStillNeededAmount()
+    {
+        return $this->getAmount()
+            ->multiply(100 - $this->getRaisedPercentage())
+            ->max(Money::create(0));
+    }
 
     /**
      * @return Money
