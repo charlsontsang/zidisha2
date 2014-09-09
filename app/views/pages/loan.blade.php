@@ -282,10 +282,10 @@
                                 @endif
                             </div>
                         </div>
-
-                        <hr/>
                         
                         @if($displayFeedbackComments)
+                            <hr/>
+                            
                             <div id="feedback" class="loan-section comments">
 
                                 <div class="loan-section-title">
@@ -303,12 +303,10 @@
                                     'canReplyComment' => $canReplyFeedback
                                 ])
                             </div> 
-
-                            <hr/>
-
                         @endif
 
                         @if(count($lenders) > 0)
+                        <hr/>
                         <div class="loan-section">
                             <div class="loan-section-title">
                                 <span class="text-light">Lenders</span>

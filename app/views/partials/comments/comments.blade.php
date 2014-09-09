@@ -15,8 +15,6 @@
         </div>
     </div>
 
-    <hr/>
-
     <ul class="media-list">
         @foreach($comments as $comment)
             @include("partials.comments.root", [
