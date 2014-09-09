@@ -57,7 +57,7 @@
 
     <tr>
         <td>
-            <strong>@lang('borrower.loan.total-amount-due-date'):</strong>
+            <strong>@lang('borrower.loan.total-amount-due'):</strong>
         </td>
         <td>
             {{ $totalAmount }}
