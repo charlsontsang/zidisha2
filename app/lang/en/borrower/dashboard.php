@@ -22,8 +22,8 @@ return [
         'tips'         => 'Click <a href=":tipsLink">here</a> for tips on how to ensure your loan is funded in time.',
         'edit-profile' => 'Click <a href=":editProfileLink">here</a> to edit your photo and profile.',
         'fully-funded' => [
-            'title'        => 'Congratulations, your loan is fully funded!',
-            'instructions' => 'Accept the bids on <a href=":loanLink">your loan page</a>.',
+            'title'        => 'Congratulations! Your loan application is 100% funded.',
+            'instructions' => 'Click <a href=":loanLink">here</a> to accept the lender bids.',
         ]
     ],
     'loan-page'        => 'Loan page',
