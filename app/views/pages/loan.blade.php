@@ -177,11 +177,13 @@
                                             Amount requested:
                                             <strong>{{{ $loan->getUsdAmount() }}}</strong>
                                             <br/>
+                                            @if($loan->isOpen())
                                             Still needed:
                                             <strong>{{{ $loan->getStillNeededUsdAmount() }}}</strong>
                                             <br/>
                                             Application expires:
                                             <strong>{{{ $loan->getExpiresAt()->format('M j, Y') }}}</strong>
+                                            @endif
                                         @endif
                                     </div>
                                     @if($loan->isDisbursed())
@@ -196,6 +198,11 @@
                                         <strong>${{ $totalInterest->add($serviceFee)->getAmount() }}</strong>
                                     </div>
                                     @endif
+                                </div>
+                                <div class="callout callout-info omega">
+                                    <p>
+                                        The loan is accepted, and should be disbursed within one week.
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -406,6 +413,12 @@
                         {{ $borrower->getProfile()->getCity() }},
                         {{ $borrower->getCountry()->getName() }}
                     </p>
+                    
+                    @if($loan->isFunded())
+                    <span class="label label-info">
+                        Pending disbursement
+                    </span>
+                    @endif
 
                     @if($loan->isActive())
                     <div class="panel-heading"><b>Since you last visited...</b></div>
