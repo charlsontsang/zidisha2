@@ -6,7 +6,6 @@ use Zidisha\Borrower\Borrower;
 use Zidisha\Currency\ExchangeRateQuery;
 use Zidisha\Currency\Money;
 use Zidisha\Form\AbstractForm;
-use Zidisha\Loan\Calculator\InstallmentCalculator;
 use Zidisha\Loan\Calculator\ApplicationCalculator;
 use Zidisha\Loan\CategoryQuery;
 use Zidisha\Loan\CategoryTranslationQuery;
@@ -155,15 +154,22 @@ class ApplicationForm extends AbstractForm
     public function getDefaultData()
     {
         if ($this->loan && !\Session::has('loan_data')) {
-            $installmentCalculator = new InstallmentCalculator($this->loan);
-            $installmentCalculator->amount();
+            $estimate = $this->loan->getAmount()->divide($this->loan->getPeriod())->getAmount();
+            $installmentAmount = null;
+            
+            foreach ($this->getInstallmentAmountRange($this->loan->getAmount()) as $_installmentAmount) {
+                if ($_installmentAmount < $estimate) {
+                    break;
+                }
+                $installmentAmount = $_installmentAmount;
+            }
             
             return [
                 'summary'           => $this->loan->getSummary(),
                 'proposal'          => $this->loan->getProposal(),
                 'categoryId'        => $this->loan->getCategoryId(),
                 'amount'            => $this->loan->getAmount()->getAmount(),
-                'installmentAmount' => $installmentCalculator->amount()->getAmount(),
+                'installmentAmount' => $installmentAmount,
                 'installmentDay'    => $this->loan->getInstallmentDay()
             ];
         } else {
