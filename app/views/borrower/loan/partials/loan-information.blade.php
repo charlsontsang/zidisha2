@@ -18,6 +18,7 @@
         </td>
     </tr>
 
+    @if(isset($installmentAmount))
     <tr>
         <td>
             <strong>
@@ -32,6 +33,7 @@
             {{ $installmentAmount }}
         </td>
     </tr>
+    @endif
 
     <tr>
         <td>
