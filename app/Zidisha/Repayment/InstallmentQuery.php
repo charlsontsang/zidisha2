@@ -68,9 +68,9 @@ class InstallmentQuery extends BaseInstallmentQuery
         return $this
             ->filterByLoan($loan)
             ->filterByAmount(0, Criteria::GREATER_THAN)
-            ->where('Installment.PaidAmount IS NULL OR Installment.PaidAmount < Installment.Amount AND Installment.Amount > 0')
+            ->where('(Installment.PaidAmount IS NULL OR Installment.PaidAmount < Installment.Amount)')
             ->where('Installment.DueDate < ?', Carbon::now())
-            ->orderByDueDate()
+            ->orderByDueDate('ASC')
             ->findOne();
     }
 } // InstallmentQuery
