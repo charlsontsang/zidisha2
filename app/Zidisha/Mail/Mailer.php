@@ -61,8 +61,12 @@ class Mailer
         $data['from'] = Utility::clearPost($data['from']);
         $data['subject'] = stripcslashes(Utility::clearPost($data['subject']));
 
-        if (array_get($data, 'templateId') && $this->useSendWithUs) {
-            $this->sendwithusDriver->send($view, $data);
+        if (array_get($data, 'templateId') ) {
+            if ($this->useSendWithUs) {
+                $this->sendwithusDriver->send($view, $data);
+            } else {
+                $this->laravelMailerDriver->send('emails.sendwithus', $data);
+            }
         } elseif (array_get($data, 'label')) {
             $this->laravelMailerDriver->send('emails.label-template', $data);
         } else {
