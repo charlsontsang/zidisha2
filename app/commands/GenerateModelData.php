@@ -1260,12 +1260,12 @@ class GenerateModelData extends Command
         $loan->save();
         $acceptedAt = Carbon::instance($loan->getAppliedAt());
         $acceptedAt->addDays($this->faker->numberBetween(15, 20));
-        $this->loanService->acceptBids($loan, ['acceptedAt' => $acceptedAt]);
+//        $this->loanService->acceptBids($loan, ['acceptedAt' => $acceptedAt]);
 
         $disbursedAt = Carbon::instance($loan->getCreatedAt())->subMonths(3);
         $disbursedAt->addDays($this->faker->numberBetween(1, 10));
-        $disbursedAmount = $loan->getAmount();
-        $this->loanService->disburseLoan($loan, compact('disbursedAt', 'disbursedAmount'));
+//        $disbursedAmount = $loan->getAmount();
+//        $this->loanService->disburseLoan($loan, compact('disbursedAt', 'disbursedAmount'));
 
         $loan
             ->setStatus(Loan::ACTIVE)
