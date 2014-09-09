@@ -715,9 +715,9 @@ class Money
         return $this->getCurrency() . ' ' . $this->format();
     }
 
-    public function format()
+    public function format($decimals = 2 , $dec_point = '.' , $thousands_sep = ',' )
     {
-        return number_format($this->getAmount(), 2, '.', ',');
+        return number_format($this->getAmount(), $decimals, $dec_point, $thousands_sep);
     }
 
     /**
