@@ -136,6 +136,7 @@ class Loan extends BaseLoan implements CommentReceiverInterface
     {
         return $this->getAmount()
             ->multiply(100 - $this->getRaisedPercentage())
+            ->divide(100)
             ->max(Money::create(0));
     }
 
