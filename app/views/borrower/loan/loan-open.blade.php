@@ -4,6 +4,17 @@
 @parent
 
 <div class="row">
+    <div class="col-xs-12">
+        <div class="callout callout-success">
+            <h4>Congratulations, your loan is fully funded!</h4>
+            <p>
+                you can accept the bids below.
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="row">
     <div class="col-sm-6">
         @if($loan->isFullyFunded())
             <h2>Accept bids</h2>
@@ -67,7 +78,7 @@
                     </td>
                     <td>
                         {{ $installmentCalculator->totalInterest()->round(2) }}
-                        ({{ Lang::get($loan->isWeeklyInstallment() ? 'borrower.loan.interest-rate-for-weeks' : 'borrower.loan.interest-rate-for-months', [
+                        ({{ Lang::get($loan->isWeeklyInstallment() ? 'borrower.loan.weekly-interest-rate' : 'borrower.loan.monthly-interest-rate', [
                         'interestRate' => $loan->getLenderInterestRate() + $loan->getServiceFeeRate(),
                         'period' => $loan->getPeriod(),
                         ]) }})
@@ -88,48 +99,18 @@
             <p>
                 @lang('borrower.loan.accept-bids.schedule')
             </p>
-    
-    
-            <table class="table table-striped table-bordered">
-                <thead>
-                <tr>
-                    <th>{{ \Lang::get('borrower.loan-application.publish-loan.table.due-date') }}</th>
-                    <th>{{ \Lang::get('borrower.loan-application.publish-loan.table.repayment-due', ['currencyCode' => $loan->getCurrencyCode()]) }}</th>
-                    <th>{{ \Lang::get('borrower.loan-application.publish-loan.table.balance-remaining') }}</th>
-                </tr>
-                </thead>
-                <tbody>
-                <?php
-                $i = 1;
-                $remainingAmount = $installmentCalculator->totalAmount();
-                ?>
-                @foreach($installments as $installment)
-                <tr>
-                    <td>{{ $i }}</td>
-                    <?php $remainingAmount = $remainingAmount->subtract($installment->getAmount()) ?>
-                    <td>{{ $installment->getAmount()->round(2)->getAmount() }}</td>
-                    <td>{{ $remainingAmount->round(2)->getAmount() }}</td>
-                    <?php $i++; ?>
-                </tr>
-                @endforeach
-    
-                <tr>
-                    <td> <strong>{{ \Lang::get('borrower.loan-application.publish-loan.table.total-repayment') }}</strong> </td>
-                    <td> <strong> {{  $installmentCalculator->totalAmount()->round(2)->getAmount() }} </strong> </td>
-                    <td></td>
-                </tr>
-                </tbody>
-            </table>
-    
+
+            @include('borrower.loan.partials.repayment-schedule-installments', compact('repaymentSchedule'))
+
             {{ BootstrapForm::open([
-            'action' => ['BorrowerLoanController@postAcceptBids', $loan->getId()],
-            'translationDomain' => 'borrower.loan.accept-bids'
+                'action' => ['BorrowerLoanController@postAcceptBids', $loan->getId()],
+                'translationDomain' => 'borrower.loan.accept-bids'
             ]) }}
     
             {{ BootstrapForm::textarea('acceptBidsNote', null, [
-            'label' => false,
-            'description' => $borrower->getCountry()->getAcceptBidsNote() ?: Lang::get('borrower.loan.accept-bids.default-note'),
-            'rows' => 5,
+                'label' => false,
+                'description' => $borrower->getCountry()->getAcceptBidsNote() ?: Lang::get('borrower.loan.accept-bids.default-note'),
+                'rows' => 5,
             ]) }}
     
             {{ BootstrapForm::submit('submit') }}

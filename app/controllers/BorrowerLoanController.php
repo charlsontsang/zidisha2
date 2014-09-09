@@ -55,7 +55,7 @@ class BorrowerLoanController extends BaseController
         $data = compact('loan', 'loans', 'borrower');
         $template = 'borrower.loan.loan-base';
 
-        if ($loan->getStatus() <= Loan::DEFAULTED && $loan->getStatus() >= Loan::FUNDED && !$loan->isNoLoan()) {
+        if ($loan->isFunded() || $loan->isActive() || $loan->isDefaulted() || $loan->isRepaid()) {
             $repaymentSchedule = $this->repaymentService->getRepaymentSchedule($loan);
 
             $data['repaymentSchedule'] = $repaymentSchedule;
@@ -72,14 +72,15 @@ class BorrowerLoanController extends BaseController
             $bidsCalculator = new BidsCalculator();
             $acceptedBids = $bidsCalculator->getAcceptedBids($bids, $loan->getUsdAmount());
             $lenderInterestRate = $bidsCalculator->getLenderInterestRate($acceptedBids, $loan->getUsdAmount());
-            $loan->setLenderInterestRate($lenderInterestRate);
-            $loan->setDisbursedAt(new \DateTime());
+            $loan
+                ->setLenderInterestRate($lenderInterestRate)
+                ->setDisbursedAt(new \DateTime());
             
             $installmentCalculator = new InstallmentCalculator($loan);
-            $installments = $installmentCalculator->generateLoanInstallments();
+            $repaymentSchedule = RepaymentSchedule::createFromInstallments($loan, $installmentCalculator->generateLoanInstallments());
             
             $data['installmentCalculator'] = $installmentCalculator;
-            $data['installments'] = $installments;
+            $data['repaymentSchedule'] = $repaymentSchedule;
 
             $template = 'borrower.loan.loan-open';
         } elseif ($loan->isFunded()) {
