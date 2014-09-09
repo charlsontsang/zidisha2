@@ -17,4 +17,11 @@ return [
         'name'      => 'Name',
         'telephone' => 'Telephone',
     ],
+    'loan-open' => [
+        'title'        => 'Your loan application progress',
+        'tips'         => 'Click <a href=":tipsLink">here</a> for tips on how to ensure your loan is funded in time.',
+        'edit-profile' => 'Click <a href=":editProfileLink">here</a> to edit your photo and profile.',
+    ],
+    'loan-page'        => 'Loan page',
+    'public-loan-page' => 'Public loan page',
 ];

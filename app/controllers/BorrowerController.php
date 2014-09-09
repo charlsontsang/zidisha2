@@ -153,7 +153,7 @@ class BorrowerController extends BaseController
             $feedbackMessages = $this->borrowerActivationService->getFeedbackMessages($borrower);
         }
 
-        return View::make('borrower.dashboard', compact('borrower', 'volunteerMentor', 'feedbackMessages', 'partial'));
+        return View::make('borrower.dashboard', compact('borrower', 'volunteerMentor', 'feedbackMessages', 'partial', 'loan'));
     }
 
     public function getTransactionHistory()
