@@ -40,16 +40,15 @@ class MonthlyLoanArrear extends ScheduledJob
 
     public function getQuery()
     {
-        return DB::table('installments AS i')
-            ->selectRaw(
-                'i.borrower_id AS user_id, i.loan_id, i.due_date AS start_date, i.amount, i.paid_amount'
-            )
+        $amountThreshold = \Setting::get('loan.repaymentDueAmount');
+
+        $query = DB::table('installments AS i')
             ->join('borrowers AS br', 'i.borrower_id', '=', 'br.id')
             ->whereRaw("i.amount > 0")
             ->whereRaw(
                 '(
                     i.paid_amount IS NULL OR i.paid_amount < (
-                        i.amount - 5 * (
+                        i.amount - ' . $amountThreshold . '* (
                             SELECT
                                 rate
                             FROM
@@ -78,6 +77,8 @@ class MonthlyLoanArrear extends ScheduledJob
             )
             ->whereRaw('due_date <= \'' . Carbon::now()->subDays(30) . '\'')
             ->whereRaw('due_date > \'' . Carbon::now()->subDays(31) . '\'');
+
+        return $this->joinQuery($query, 'i.borrower_id', 'i.due_date', 'i.loan_id');
     }
 
     public function process(Job $job)
