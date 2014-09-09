@@ -36,6 +36,7 @@ class FollowService {
                 ->setBorrower($borrower)
                 ->setNotifyComment($lender->getPreferences()->getNotifyComment())
                 ->setNotifyLoanApplication($lender->getPreferences()->getNotifyLoanApplication());
+            $follower->save();
         }
 
         return $follower;
