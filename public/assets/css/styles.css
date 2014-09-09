@@ -9690,7 +9690,7 @@ a.link-dark {
   font-size: 18px;
   margin-bottom: 0 !important;
 }
-#mobile-lend-btn {
+.mobile-bottom-btn {
   font-size: 20px;
   letter-spacing: 1px;
   opacity: 0.9;
@@ -9701,7 +9701,7 @@ a.link-dark {
   border-radius: 1px;
 }
 @media (min-width: 768px) {
-  #mobile-lend-btn {
+  .mobile-bottom-btn {
     display: none;
   }
 }

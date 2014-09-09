@@ -47,6 +47,9 @@ return [
         'confirm'                        => 'Confirm',
         'cancel'                         => 'Go Back And Edit',
     ],
+    'public' => [
+        'loan-page' => 'Go to loan page',
+    ],
     'page' => [
         'public-loan-page' => 'Go to public loan page',
         'your-loans'       => 'Your loans',

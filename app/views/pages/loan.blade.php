@@ -554,13 +554,31 @@
                     ])
                 </div>
                 @endif
+
+                @if(Auth::check() && Auth::user()->isBorrower() && Auth::id() == $loan->getBorrowerId())
+                <div class="panel-body">
+                    <a class="btn btn-primary btn-block" href="{{ route('borrower:loan', $loan->getId()) }}">
+                        @lang('borrower.loan.public.loan-page')
+                    </a>
+                </div>
+                @endif
                 
             </div>
         </div>
 
+        @if(Auth::check() && Auth::user()->isBorrower() && Auth::id() == $loan->getBorrowerId())
         <div class="row">
-            <button id="mobile-lend-btn" type="button" class="btn btn-primary btn-block">Lend</button>
+            <a class="btn btn-primary btn-block mobile-bottom-btn" href="{{ route('borrower:loan', $loan->getId()) }}">
+                @lang('borrower.loan.public.loan-page')
+            </a>
         </div>
+        @endif
+    
+        @if($loan->isOpen() && !(Auth::check() && Auth::user()->isBorrower()))
+        <div class="row">
+            <button id="mobile-lend-btn" type="button" class="btn btn-primary btn-block mobile-bottom-btn">Lend</button>
+        </div>
+        @endif
     </div> <!-- /container -->
 </div> <!-- /container-fluid -->
 @stop
