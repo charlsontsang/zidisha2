@@ -3,6 +3,7 @@
 use Zidisha\Admin\Form\RescheduleLoanForm;
 use Zidisha\Borrower\Borrower;
 use Zidisha\Comment\LoanFeedbackCommentService;
+use Zidisha\Lender\LenderQuery;
 use Zidisha\Loan\BidQuery;
 use Zidisha\Loan\Calculator\BidsCalculator;
 use Zidisha\Loan\Calculator\InstallmentCalculator;
@@ -61,6 +62,8 @@ class BorrowerLoanController extends BaseController
         }
 
         if ($loan->isOpen()) {
+            $data['lenders'] = LenderQuery::create()->findBidOnLoan($loan);
+            
             $bids = BidQuery::create()
                 ->getOrderedBids($loan)
                 ->find();
@@ -74,9 +77,7 @@ class BorrowerLoanController extends BaseController
             
             $installmentCalculator = new InstallmentCalculator($loan);
             $installments = $installmentCalculator->generateLoanInstallments();
-            unset($installments[0]);
             
-            $data['calculator'] = $installmentCalculator;
             $data['installmentCalculator'] = $installmentCalculator;
             $data['installments'] = $installments;
 

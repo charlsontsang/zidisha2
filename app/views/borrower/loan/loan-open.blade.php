@@ -156,26 +156,10 @@
             @include('borrower.dashboard.loan-open-tips')
         @endif
         
-        @if($bids)
-        <h2>Loan Bids</h2>
-
-        <table class="table">
-            <thead>
-            <tr>
-                <th>Lender</th>
-                <th>Amount</th>
-            </tr>
-            </thead>
-            <tbody>
-            <!-- TODO accepted amounts? -->
-            @foreach($bids as $bid)
-            <tr>
-                <td>{{ $bid->getLender()->getName() }}</td>
-                <td>{{ $bid->getBidAmount() }}</td>
-            </tr>
-            @endforeach
-            </tbody>
-        </table>
+        @if($lenders->count())
+            <h2>Lenders</h2>
+            
+            @include('partials.loan-lenders', compact($lenders))
         @endif
 
     </div>
