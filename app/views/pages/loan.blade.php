@@ -394,11 +394,9 @@
                 @else
                 <div class="panel panel-default panel-body">
                 @endif
-                    <div class="loan-title">
-                        <{{ $tag }}>
-                            {{ $loan->getSummary() }}
-                        </{{ $tag }}>
-                    </div>
+                    <{{ $tag }}>
+                        {{ $loan->getSummary() }}
+                    </{{ $tag }}>
                     
                     <p class="text-light">
                         <i class="fa fa-fw fa-user"></i>

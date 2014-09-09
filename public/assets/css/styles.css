@@ -9623,12 +9623,6 @@ a.link-dark {
     padding: 0 15px;
   }
 }
-@media (min-width: 768px) {
-  .loan-title {
-    height: 100px;
-    overflow: hidden;
-  }
-}
 .loan-side h2,
 .loan-side h3,
 .loan-side p {
