@@ -1,14 +1,17 @@
-@extends('layouts.master')
+@extends('layouts.side-menu')
 
 @section('page-title')
 Volunteer Mentor Guidelines
 @stop
 
-@section('content')
+@section('menu-title')
+Quick Links
+@stop
 
-<h1>Volunteer Mentor Guidelines</h1>
+@section('menu-links')
+@include('partials.nav-links.borrower-links')
+@stop
 
-<a href="{{ route('page:volunteer-mentor-code-of-ethics') }}" >Code of Ethics</a>
-<br><br>
-<a href="{{ route('page:volunteer-mentor-faq') }}" >Frequently Asked Questions</a>
+@section('page-content')
+
 @stop
