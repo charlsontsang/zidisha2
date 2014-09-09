@@ -178,6 +178,18 @@ class GenerateModelData extends Command
             return;
         }
 
+        if ($model == "ClearJobs") {
+            $this->line('Deleting all Schedule Jobs');
+
+            $logs = \Zidisha\ScheduledJob\ScheduledJobLogQuery::create()
+                ->doDeleteAll();
+            if ($logs) {
+                $jobs = \Zidisha\ScheduledJob\ScheduledJobQuery::create()
+                    ->doDeleteAll();
+            }
+            $this->line('Done');
+        }
+
         $this->line("Generate $model");
 
         if ($model == "Language") {
