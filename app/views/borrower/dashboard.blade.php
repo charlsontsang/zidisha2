@@ -26,15 +26,9 @@ Quick Links
 @endif
 
 @if($volunteerMentor)
-If you would like help with Zidisha, you may contact your Volunteer Mentor: <a href="{{ route('page:volunteer-mentor-guidelines') }}">here</a>
-<br>
-<br>
-Name: <a href="{{ route('borrower:public-profile', $borrower->getId()) }}">{{ $volunteerMentor->getName() }}</a>
-<br>
-Telephone: {{ $volunteerMentor->getProfile()->getPhoneNumber() }}
+    @include('borrower.dashboard.volunteer-mentor', compact('volunteerMentor'))
 @endif
 
-<br><br>
 @include('borrower.dashboard.feedback', compact('feedbackMessages'))
 
 @include('borrower.dashboard.do-more')

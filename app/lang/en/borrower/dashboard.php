@@ -11,4 +11,10 @@ return [
         'volunteer-mentor' => 'If you are willing to volunteer your time to help other Zidisha members in your country interact with our website, visit our <a href=":volunteerMentorLink">Volunteer Mentor</a> pages to learn how to become a volunteer.',
         'forum'            => 'Create an account in our <a href=":forumLink">Member Forum</a> and join the conversations about how Zidisha works and your vision for Zidisha\'s future.',
     ],
+    'volunteer-mentor' => [
+        'title'     => 'Help',
+        'intro'     => 'If you would like help with Zidisha, you may contact your <a href=":volunteerMentorLink">Volunteer Mentor</a>.',
+        'name'      => 'Name',
+        'telephone' => 'Telephone',
+    ],
 ];
