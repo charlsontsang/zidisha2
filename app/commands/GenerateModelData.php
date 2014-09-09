@@ -365,12 +365,18 @@ class GenerateModelData extends Command
             $data['password'] = '1234567890';
             $data['email'] = 'lender-abandoned@mail.com';
             $data['countryId'] = '1';
+            $data['joinedAt'] = Carbon::create()->subMonths(15);
 
             $lender = $this->lenderService->joinLender($data);
-            $user = $lender->getUser();
 
-            $user->setLastLoginAt(Carbon::create()->subMonths(15));
-            $user->save();
+            $payment = new UploadFundPayment();
+            $payment
+                ->setLender($lender)
+                ->setTotalAmount(Money::create(60, 'USD'))
+                ->setTransactionFee(Money::create(3, 'USD'))
+                ->setPaymentMethod('paypal');
+            $con = PropelDB::getConnection();
+            $this->transactionService->addUploadFundTransaction($con, $payment);
         }
         
         if ($model == 'LoanAboutToExpireReminder') {
@@ -1064,21 +1070,30 @@ class GenerateModelData extends Command
             ->find()
             ->getData();
 
-        $return = [];
-
-        for ($i = 0; $i < $count; $i++) {
-            $lenderId = $this->faker->randomElement($lenderIds);
-            
+        foreach ($lenderIds as $lenderId) {
             $payment = new UploadFundPayment();
             $payment
                 ->setLenderId($lenderId)
-                ->setTotalAmount(Money::create(rand(50, 1000), 'USD'))
+                ->setTotalAmount(Money::create(rand(100, 1000), 'USD'))
                 ->setTransactionFee(Money::create(rand(5, 10), 'USD'))
                 ->setPaymentMethod($this->faker->randomElement(['paypal', 'stripe']));
-            
+
             $this->transactionService->addUploadFundTransaction($con, $payment);
-            if (rand(1, 5) == 1) {
-            }
+        }
+
+//        for ($i = 0; $i < $count; $i++) {
+//            $lenderId = $this->faker->randomElement($lenderIds);
+//
+//            $payment = new UploadFundPayment();
+//            $payment
+//                ->setLenderId($lenderId)
+//                ->setTotalAmount(Money::create(rand(1000, 1000), 'USD'))
+//                ->setTransactionFee(Money::create(rand(5, 10), 'USD'))
+//                ->setPaymentMethod($this->faker->randomElement(['paypal', 'stripe']));
+//
+//            $this->transactionService->addUploadFundTransaction($con, $payment);
+//            if (rand(1, 5) == 1) {
+//            }
 
 //            if ($temp == true) {
 //                $yc = \Zidisha\User\UserQuery::create()
@@ -1092,7 +1107,7 @@ class GenerateModelData extends Command
 //                $transaction->save();
 //                $temp = false;
 //            }
-        }
+//        }
         
         return true;
     }

@@ -5,6 +5,8 @@ namespace Zidisha\ScheduledJob;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Queue\Jobs\Job;
+use Zidisha\Lender\LenderQuery;
+use Zidisha\Lender\LenderService;
 use Zidisha\Mail\LenderMailer;
 use Zidisha\ScheduledJob\Map\ScheduledJobTableMap;
 use Zidisha\User\User;
@@ -42,7 +44,7 @@ class AbandonedUser extends ScheduledJob
 
     public function getQuery()
     {
-        $query =  DB::table('users AS u')
+        $query = DB::table('users AS u')
             ->whereRaw("u.last_login_at < '" . Carbon::now()->subYear() . "'")
             ->whereRaw('u.role = ' . User::LENDER_ROLE_ENUM)
             ->whereRaw('u.active = true');
@@ -59,8 +61,11 @@ class AbandonedUser extends ScheduledJob
             $lenderMailer = \App::make('Zidisha\Mail\LenderMailer');
             $lenderMailer->sendAbandonedUserMail($user);
         } elseif ($user->getLastLoginAt() < Carbon::now()->subYear()->subMonth() && $this->getCount() == 2) {
-            $user->setActive(false);
-            $user->save();
+            $lender = LenderQuery::create()
+                ->findOneById($user->getId());
+            /** @var LenderService $lenderService */
+            $lenderService = \App::make('\Zidisha\Lender\LenderService');
+            $lenderService->deactivateLender($lender);
         }
 
         $job->delete();
