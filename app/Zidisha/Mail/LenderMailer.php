@@ -353,11 +353,18 @@ class LenderMailer
 
     public function sendAbandonedUserMail(User $user)
     {
+        $parameters = [
+            'userName' => $user->getUsername(),
+            'siteUrl' => route('home'),
+        ];
+
         $this->mailer->send(
-            'emails.hero',
+            'emails.label-template',
             [
                 'to'         => $user->getEmail(),
-                'subject'    => 'Abandoned User Notification',
+                'label'      => 'lender.mails.abandoned-user-mail.body',
+                'subject'    => \Lang::get('lender.mails.abandoned-user-mail.subject', $parameters),
+                'parameters' => $parameters,
             ]
         );
     }

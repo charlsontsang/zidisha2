@@ -21,6 +21,7 @@ use Zidisha\Loan\LoanQuery;
 use Zidisha\Loan\LenderRefund;
 use Zidisha\Mail\LenderMailer;
 use Zidisha\User\User;
+use Zidisha\User\UserQuery;
 
 class LenderMailerTester
 {
@@ -289,5 +290,13 @@ class LenderMailerTester
         $images = '.....';
 
         $this->lenderMailer->sendBorrowerCommentNotification($lender, $loan, $comment, $postedBy, $images);
+    }
+
+    public function sendAbandonedUserMail()
+    {
+        $user = UserQuery::create()
+            ->findOne();
+
+        $this->lenderMailer->sendAbandonedUserMail($user);
     }
 }

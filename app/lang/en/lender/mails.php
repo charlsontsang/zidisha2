@@ -324,4 +324,11 @@ Would you like to forgive your share of this loan?<br/><br/>
 Best wishes,<br/><br/>
 The Zidisha Team'
     ],
+    'abandoned-user-mail'                => [
+        'subject' => 'You are not logged in from A year',
+        'body'    => 'Dear :userName,
+        This is to notify that you have not logged in since a year at <a href=":siteUrl">Zidisha</a>
+        If you do not login in one month from now. your account will be Abandoned.
+        '
+    ],
 ];
