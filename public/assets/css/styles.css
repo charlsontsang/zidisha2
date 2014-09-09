@@ -8464,6 +8464,8 @@ form label.control-label,
 form .btn-primary,
 form .btn-default,
 .giftcard .btn-primary {
+  margin-top: 5px;
+  margin-bottom: 30px;
   min-width: 100px;
   max-width: 300px;
 }
