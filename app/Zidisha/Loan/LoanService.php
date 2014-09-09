@@ -111,19 +111,12 @@ class LoanService
             $lenders = LenderQuery::create()
                 ->getLendersForNewLoanNotificationMail($lastLoan);
             
-            $parameters = [
-                'borrowerName' => $loan->getBorrower()->getName(),
-                'loanUrl'      => route('loan:index', ['loanId' => $loan->getId()]),
-                'repayDate'    => $lastLoan->getRepaidAt()->format('F j, Y')
-            ];
-            $subject = \Lang::get('lender.mails.new-loan-notification.subject', $parameters);
-            
             foreach ($lenders['lenders'] as $lender) {
-                $this->lenderMailer->sendNewLoanNotificationMail($lender, $parameters, $subject);
+                $this->lenderMailer->sendNewLoanNotificationMail($lender, $loan, $lastLoan);
             }
 
             foreach ($lenders['followers'] as $lender) {
-                $this->lenderMailer->sendFollowerNewLoanNotificationMail($lender, $parameters, $subject);
+                $this->lenderMailer->sendFollowerNewLoanNotificationMail($lender, $loan);
             }
         }
         

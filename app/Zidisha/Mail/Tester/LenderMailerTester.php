@@ -170,40 +170,26 @@ class LenderMailerTester
 
     public function sendNewLoanNotificationMail()
     {
-        $lastLoan = LoanQuery::create()
-            ->filterByRepaidAt(null, Criteria::NOT_EQUAL)
-            ->findOne();
+        $lastLoan = new Loan();
+        $lastLoan->setRepaidAt(Carbon::create(2014, 5, 1));
+        
         $loan = LoanQuery::create()
             ->findOne();
         $lender = LenderQuery::create()
             ->findOne();
-        $parameters = [
-            'borrowerName' => $loan->getBorrower()->getName(),
-            'loanUrl'      => route('loan:index', ['loanId' => $loan->getId()]),
-            'repayDate'    => $lastLoan->getRepaidAt()->format('F j, Y')
-        ];
-        $subject = \Lang::get('lender.mails.new-loan-notification.subject', $parameters);
         
-        $this->lenderMailer->sendNewLoanNotificationMail($lender, $parameters, $subject);
+        $this->lenderMailer->sendNewLoanNotificationMail($lender, $loan, $lastLoan);
     }
 
     public function sendFollowerNewLoanNotificationMail()
     {
-        $lastLoan = LoanQuery::create()
-            ->filterByRepaidAt(null, Criteria::NOT_EQUAL)
-            ->findOne();
         $loan = LoanQuery::create()
             ->findOne();
+     
         $lender = LenderQuery::create()
-            ->findOne();
-        $parameters = [
-            'borrowerName' => $loan->getBorrower()->getName(),
-            'loanUrl'      => route('loan:index', ['loanId' => $loan->getId()]),
-            'repayDate'    => $lastLoan->getRepaidAt()->format('F j, Y')
-        ];
-        $subject = \Lang::get('lender.mails.new-loan-notification.subject', $parameters);
+            ->findOne();   
 
-        $this->lenderMailer->sendFollowerNewLoanNotificationMail($lender, $parameters, $subject);
+        $this->lenderMailer->sendFollowerNewLoanNotificationMail($lender, $loan);
     }
 
     public function sendDisbursedLoanMail()

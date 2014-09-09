@@ -431,34 +431,39 @@ class LenderMailer
         );
     }
 
-    public function sendNewLoanNotificationMail(Lender $lender, $parameters, $subject)
+    public function sendNewLoanNotificationMail(Lender $lender, Loan $loan, Loan $lastLoan)
     {
-        $data = [
-            'parameters' => $parameters
+        $parameters = [
+            'borrowerName' => $loan->getBorrower()->getName(),
+            'loanUrl'      => route('loan:index', ['loanId' => $loan->getId()]),
+            'repayDate'    => $lastLoan->getRepaidAt()->format('F j, Y')
         ];
 
         $this->mailer->send(
             'emails.label-template',
-            $data + [
+            [
                 'to'         => $lender->getUser()->getEmail(),
+                'subject'    => \Lang::get('lender.mails.new-loan-notification.subject', $parameters),
                 'label'      => 'lender.mails.new-loan-notification.lender-body',
-                'subject'    => $subject
+                'parameters' => $parameters,
             ]
         );
     }
 
-    public function sendFollowerNewLoanNotificationMail(Lender $lender, $parameters, $subject)
+    public function sendFollowerNewLoanNotificationMail(Lender $lender, Loan $loan)
     {
-        $data = [
-            'parameters' => $parameters
+        $parameters = [
+            'borrowerName' => $loan->getBorrower()->getName(),
+            'loanUrl'      => route('loan:index', ['loanId' => $loan->getId()]),
         ];
-
+        
         $this->mailer->send(
             'emails.label-template',
-            $data + [
+            [
                 'to'         => $lender->getUser()->getEmail(),
                 'label'      => 'lender.mails.new-loan-notification.follower-body',
-                'subject'    => $subject
+                'subject'    => \Lang::get('lender.mails.new-loan-notification.subject', $parameters),
+                'parameters' => $parameters,
             ]
         );
     }
