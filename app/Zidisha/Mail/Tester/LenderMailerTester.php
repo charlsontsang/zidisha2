@@ -294,9 +294,9 @@ class LenderMailerTester
 
     public function sendAbandonedUserMail()
     {
-        $user = UserQuery::create()
+        $lender = LenderQuery::create()
             ->findOne();
 
-        $this->lenderMailer->sendAbandonedUserMail($user);
+        $this->lenderMailer->sendAbandonedUserMail($lender->getUser());
     }
 }

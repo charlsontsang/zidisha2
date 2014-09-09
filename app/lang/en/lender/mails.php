@@ -325,10 +325,13 @@ Best wishes,<br/><br/>
 The Zidisha Team'
     ],
     'abandoned-user-mail'                => [
-        'subject' => 'Account Deactivation Notice',
-        'body'    => 'Dear :userName,
-        This is to notify that you have not logged in since a year at <a href=":siteUrl">Zidisha</a>
-        If you do not login in one month from now. your account will be Deactivaed.
+        'subject' => 'Zidisha account expiration notification',
+        'body'    => 'Dear :lenderName,<br/><br/>
+We noticed that you have not logged into your account at Zidisha.org for over one year.  We\'re sorry that lending with Zidisha did not work out for you, and would sincerely welcome any feedback you would care to share regarding why you have not come back.<br/><br/>
+Should you desire to maintain access to your lender credit balance, simply log in to your member account at <a href=":siteLink">Zidisha.org</a> at any time within the next month. If you do not wish to keep your account open, you need not do anything: we will close your account and convert any remaining lender credit to a donation on :expireDate.<br/><br/>
+Thanks so much for having participated in our lending community, and for helping to extend life-changing opportunities to some of the world\'s most marginalized entrepreneurs.<br/><br/>
+Best regards,<br/><br/>
+The Zidisha Team
         '
     ],
 ];
