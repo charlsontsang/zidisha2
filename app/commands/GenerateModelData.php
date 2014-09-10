@@ -190,6 +190,12 @@ class GenerateModelData extends Command
             $this->line('Done');
         }
 
+        if ($model == 'ClearInstallments') {
+            $this->line('clearing installments');
+            $installments = InstallmentQuery::create()
+                ->doDeleteAll();
+        }
+
         $this->line("Generate $model");
 
         if ($model == "Language") {
@@ -452,7 +458,8 @@ class GenerateModelData extends Command
 //        }
         
         if ($model == 'LoanFinalArrear') {
-            $loan = $this->generateLoanForArrear(14, 12);            
+            $loan = $this->generateLoanArrear('final');
+//            $loan = $this->generateLoanForArrear(14, 12);
             $this->info('Loan Generated with id: '.$loan->getId());
         }
 
@@ -462,7 +469,8 @@ class GenerateModelData extends Command
         }
 
         if ($model == 'LoanFirstArrear') {
-            $loan = $this->generateLoanForArrear(4, 12);
+            $loan = $this->generateLoanArrear();
+//            $loan = $this->generateLoanForArrear(4, 12);
             $this->info('Loan Generated with id: '.$loan->getId());
         }
 
@@ -477,7 +485,8 @@ class GenerateModelData extends Command
         }
 
         if ($model == 'CronToRepay') {
-            $loan = $this->generateLoanForArrear(60, 12);
+            $loan = $this->generateLoanArrear('repay');
+//            $loan = $this->generateLoanForArrear(60, 12);
             $this->info('Loan Generated with id: '.$loan->getId());
         }
         
@@ -1302,6 +1311,79 @@ class GenerateModelData extends Command
             }
             $installment->save();
         }
+
+        return $loan;
+    }
+
+    private function generateLoanArrear($type = 'first')
+    {
+        $categoryIds = CategoryQuery::create()
+            ->filterByAdminOnly(false)
+            ->orderByRank()
+            ->select('id')
+            ->find()
+            ->getData();
+
+        $borrowers = BorrowerQuery::create()
+            ->joinWith('Country')
+            ->useCountryQuery()
+            ->filterByInstallmentPeriod(0)
+            ->endUse()
+            ->orderById()
+            ->find()
+            ->getData();
+
+        /** @var Borrower $borrower */
+        $borrower = $borrowers[0];
+        $currency = $borrower->getCountry()->getCurrency();
+
+        if ($type == 'final') {
+            $date = Carbon::now()->subMonths(3)->subDays(11);
+        } elseif ($type == 'repay') {
+            $date = Carbon::now()->subMonths(5)->subDays(1);
+        } else {
+            $date = Carbon::now()->subMonths(2)->subDays(11);
+        }
+        $exchangeRate = $this->currencyService->getExchangeRate($currency, $date);
+        $usdAmount = Money::create(100);
+        $amount = Converter::fromUSD($usdAmount, $currency, $exchangeRate);
+
+        $isWeekly =$borrower->getCountry()->getInstallmentPeriod() == Loan::WEEKLY_INSTALLMENT;
+
+        $data = [
+            'summary'           => $this->faker->sentence(8),
+            'proposal'          => $this->faker->paragraph(7),
+            'amount'            => $amount->getAmount(),
+            'installmentAmount' => $amount->divide($this->faker->numberBetween(6, 16))->getAmount(),
+            'currencyCode'      => $borrower->getCountry()->getCurrencyCode(),
+            'installmentDay'    => $isWeekly ? $this->faker->dayOfWeek : $this->faker->dayOfMonth,
+            'date'              => $date,
+            'exchangeRate'      => $exchangeRate,
+            'categoryId'        => $this->faker->randomElement($categoryIds),
+        ];
+
+        $loan = $this->loanService->applyForLoan($borrower, $data);
+        $loan->save();
+        $acceptedAt = Carbon::instance($loan->getAppliedAt());
+        $acceptedAt->addDays(5);
+        $this->loanService->acceptBids($loan, ['acceptedAt' => $acceptedAt]);
+
+        $disbursedAt = Carbon::instance($loan->getAcceptedAt());
+        $disbursedAt->addDays(15);
+        $disbursedAmount = $loan->getAmount();
+        $this->loanService->disburseLoan($loan, compact('disbursedAt', 'disbursedAmount'));
+
+        $installment = InstallmentQuery::create()
+            ->getDueInstallment($loan);
+        if ($type == 'final') {
+            $installment->setDueDate(Carbon::now()->subDays(14)->subHours(5));
+        } elseif ($type == 'repay') {
+            $installment->setDueDate(Carbon::now()->subDays(60)->subHours(5));
+        } else {
+            $installment->setDueDate(Carbon::now()->subDays(4)->subHours(5));
+        }
+        $installment->save();
+        $this->line('installment iD ' . $installment->getId());
 
         return $loan;
     }

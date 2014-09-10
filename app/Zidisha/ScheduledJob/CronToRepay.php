@@ -5,6 +5,7 @@ namespace Zidisha\ScheduledJob;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Queue\Jobs\Job;
+use Zidisha\Loan\ForgivenessLoanQuery;
 use Zidisha\ScheduledJob\Map\ScheduledJobTableMap;
 use Zidisha\Vendor\SiftScience\SiftScienceService;
 
@@ -35,54 +36,46 @@ class CronToRepay extends ScheduledJob
     {
         $thresholdAmount = \Config::get('constants.repaymentAmountThreshold');
 
-        return DB::table('installments as i')
-            ->selectRaw('i.borrower_id AS user_id, i.loan_id, i.due_date AS start_date, i.amount, i.paid_amount')
+        $query = DB::table('installments as i')
             ->join('borrowers AS br', 'i.borrower_id', '=', 'br.id')
             ->whereRaw("i.amount > 0")
             ->whereRaw(
                 "
                 (
-                        i.paid_amount < (
-                            i.amount - " . $thresholdAmount . " * (
-                                SELECT
-                                    rate
-                                FROM
-                                    exchange_rates
-                                WHERE
-                                    start_date = (
+                        i.paid_amount IS NULL OR i.paid_amount < (
+                        i.amount - (" . $thresholdAmount . " * (
+                            SELECT
+                                rate
+                            FROM
+                                exchange_rates
+                            WHERE
+                                start_date = (
+                                    SELECT
+                                        MAX (start_date)
+                                    FROM
+                                        exchange_rates
+                                    WHERE
+                                        currency_code = (SELECT countries.currency_code FROM countries where countries.id = br.country_id)
+                                )
+                                AND exchange_rates.currency_code = (
                                         SELECT
-                                            MAX (start_date)
+                                            countries.currency_code
                                         FROM
-                                            exchange_rates
+                                            countries
                                         WHERE
-                                            currency_code = (
-                                                SELECT
-                                                    countries.currency_code
-                                                FROM
-                                                    countries
-                                                WHERE
-                                                    countries. ID = br.country_id
-                                            )
+                                            countries.id = br.country_id
                                     )
-                            
-                            AND exchange_rates.currency_code = (
-                                SELECT
-                                    countries.currency_code
-                                FROM
-                                    countries
-                                WHERE
-                                    countries. ID = br.country_id
-                            )
                         )
-                        
+                        )
                     )
-                    OR i.paid_amount IS NULL
                 )
                 "
             )
             ->whereRaw('i.due_date <= \'' . Carbon::now()->subDays(60) . '\'')
             ->whereRaw('i.due_date > \'' . Carbon::now()->subDays(61) . '\'')
             ->orderBy('i.borrower_id', 'asc');
+
+        return $this->joinQuery($query, 'i.borrower_id', 'i.due_date', 'i.loan_id');
     }
 
     public function process(Job $job)
@@ -90,10 +83,15 @@ class CronToRepay extends ScheduledJob
         $user = $this->getUser();
         $loanId = $this->getLoanId();
 
-        /** @var  SiftScienceService $siftScienceService */
-        $siftScienceService = \App::make('Zidisha\Vendor\SiftScience\SiftScienceService');
+        $forgivenessLoan = ForgivenessLoanQuery::create()
+            ->findOneByLoanId($loanId);
 
-        $siftScienceService->loanArrearLabel($user, $loanId);
+        if (!$forgivenessLoan) {
+            /** @var  SiftScienceService $siftScienceService */
+            $siftScienceService = \App::make('Zidisha\Vendor\SiftScience\SiftScienceService');
+
+            $siftScienceService->loanArrearLabel($user, $loanId);
+        }
 
         $job->delete();
     }

@@ -42,7 +42,7 @@ class LoanFirstArrear extends ScheduledJob
 
     public function getQuery()
     {
-        $amountThreshold = \Setting::get('loan.repaymentDueAmount');
+        $thresholdAmount = \Config::get('constants.repaymentAmountThreshold');
 
         $query = DB::table('installments AS i')
             ->join('borrowers AS br', 'i.borrower_id', '=', 'br.id')
@@ -50,7 +50,7 @@ class LoanFirstArrear extends ScheduledJob
             ->whereRaw(
                 '(
                     i.paid_amount IS NULL OR i.paid_amount < (
-                        i.amount - (' . $amountThreshold . '* (
+                        i.amount - (' . $thresholdAmount . '* (
                             SELECT
                                 rate
                             FROM
@@ -99,29 +99,19 @@ class LoanFirstArrear extends ScheduledJob
         $installment = InstallmentQuery::create()
             ->getDueInstallment($loan);
 
-        $missedInstallmentCount =  $repaymentSchedule->getMissedInstallmentCount();
-
-        var_dump($missedInstallmentCount);
-        var_dump($this->getStartDate());
-        var_dump($installment->getId());
-        var_dump($this->getStartDate() == $installment->getDueDate());
-        dd($installment->getDueDate());
+        $missedInstallmentCount = $repaymentSchedule->getMissedInstallmentCount();
 
         if ($installment && $missedInstallmentCount < 1 && $installment->getDueDate() == $this->getStartDate()) {
-            //Check if this is the borrowers first missed installment.                
-            if ($installment) {
-                /** @var  BorrowerMailer $borrowerMailer */
-                $borrowerMailer = \App::make('Zidisha\Mail\BorrowerMailer');
+            /** @var  BorrowerMailer $borrowerMailer */
+            $borrowerMailer = \App::make('Zidisha\Mail\BorrowerMailer');
 
-                /** @var  BorrowerSmsService $borrowerSmsService */
-                $borrowerSmsService = \App::make('Zidisha\Sms\BorrowerSmsService');
+            /** @var  BorrowerSmsService $borrowerSmsService */
+            $borrowerSmsService = \App::make('Zidisha\Sms\BorrowerSmsService');
 
-                $borrowerMailer->sendLoanFirstArrearMail($borrower, $installment);
-                $borrowerSmsService->sendLoanFirstArrearNotification($borrower, $installment);
-            }
+            $borrowerMailer->sendLoanFirstArrearMail($borrower, $installment);
+            $borrowerSmsService->sendLoanFirstArrearNotification($borrower, $installment);
         }
 
         $job->delete();
-
     }
 } // LoanFirstArrear

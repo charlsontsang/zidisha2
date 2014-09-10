@@ -10,10 +10,12 @@ use Zidisha\Borrower\ContactQuery;
 use Zidisha\Borrower\Invite;
 use Zidisha\Borrower\InviteQuery;
 use Zidisha\Borrower\VolunteerMentor;
+use Zidisha\Loan\Calculator\InstallmentCalculator;
 use Zidisha\Loan\ForgivenessLoanQuery;
 use Zidisha\Loan\LoanQuery;
 use Zidisha\Mail\BorrowerMailer;
 use Zidisha\Repayment\InstallmentQuery;
+use Zidisha\Repayment\RepaymentSchedule;
 use Zidisha\ScheduledJob\Map\ScheduledJobTableMap;
 use Zidisha\Sms\BorrowerSmsService;
 
@@ -43,16 +45,15 @@ class LoanFinalArrear extends ScheduledJob
 
     public function getQuery()
     {
-        return DB::table('installments AS i')
-            ->selectRaw(
-                'i.borrower_id AS user_id, i.loan_id AS loan_id, i.due_date AS start_date'
-            )
+        $thresholdAmount = \Config::get('constants.repaymentAmountThreshold');
+
+        $query = DB::table('installments AS i')
             ->join('borrowers AS br', 'i.borrower_id', '=', 'br.id')
             ->whereRaw("i.amount > 0")
             ->whereRaw(
                 '(
                     i.paid_amount IS NULL OR i.paid_amount < (
-                        i.amount - 5 * (
+                        i.amount - (' . $thresholdAmount . ' * (
                             SELECT
                                 rate
                             FROM
@@ -76,10 +77,13 @@ class LoanFinalArrear extends ScheduledJob
                                     )
                         )
                     )
+                    )
                 )'
             )
             ->whereRaw('due_date <= \'' . Carbon::now()->subDays(14) . '\'')
             ->whereRaw('due_date > \'' . Carbon::now()->subDays(15) . '\'');
+
+        return $this->joinQuery($query, 'i.borrower_id', 'i.due_date', 'i.loan_id');
     }
 
     public function process(Job $job)
@@ -94,23 +98,20 @@ class LoanFinalArrear extends ScheduledJob
         $forgivenessLoan = ForgivenessLoanQuery::create()
             ->findOneByLoanId($loanId);
 
-        $missedInstallmentCount =  InstallmentQuery::create()
-            ->filterByLoan($loan)
-            ->filterByAmount(0, Criteria::GREATER_THAN)
-            ->where('Installment.PaidAmount IS NULL OR Installment.PaidAmount < Installment.Amount AND Installment.Amount > 0')
-            ->where('Installment.DueDate < ?', Carbon::now())
-            ->count();
-        
+        $dueInstallment = InstallmentQuery::create()
+            ->getDueInstallment($loan);
 
-        if (!$forgivenessLoan && $missedInstallmentCount < 2) {
+        $calculator = new InstallmentCalculator($loan);
+        $repaymentSchedule = RepaymentSchedule::createFromInstallments($loan, $calculator->generateLoanInstallments());
+
+        $missedInstallmentCount = $repaymentSchedule->getMissedInstallmentCount();
+
+        if (!$forgivenessLoan && $missedInstallmentCount < 2 && $dueInstallment->getDueDate() == $this->getStartDate()) {
             /** @var  BorrowerMailer $borrowerMailer */
             $borrowerMailer = \App::make('Zidisha\Mail\BorrowerMailer');
 
             /** @var  BorrowerSmsService $borrowerSmsService */
             $borrowerSmsService = \App::make('Zidisha\Sms\BorrowerSmsService');
-
-            $dueInstallment =  InstallmentQuery::create()
-                ->getDueInstallment($loan);
 
             $borrowerMailer->sendLoanFinalArrearMail($borrower, $dueInstallment);
             $borrowerSmsService->sendLoanFinalArrearNotification($borrower, $dueInstallment);

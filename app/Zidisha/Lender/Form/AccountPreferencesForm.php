@@ -4,6 +4,7 @@ namespace Zidisha\Lender\Form;
 
 
 use Zidisha\Form\AbstractForm;
+use Zidisha\Lender\Lender;
 use Zidisha\Lender\PreferencesQuery;
 
 class AccountPreferencesForm extends AbstractForm
@@ -12,20 +13,21 @@ class AccountPreferencesForm extends AbstractForm
     public function getRules($data)
     {
         return [
-            'hideLendingActivity'     => 'required|in:' . implode(',', array_keys($this->getBooleanArray())),
-            'hideKarma'               => 'required|in:' . implode(',', array_keys($this->getBooleanArray())),
-            'notifyLoanFullyFunded'   => 'required|in:' . implode(',', array_keys($this->getBooleanArray())),
-            'notifyLoanAboutToExpire' => 'required|in:' . implode(',', array_keys($this->getBooleanArray())),
-            'notifyLoanDisbursed'     => 'required|in:' . implode(',', array_keys($this->getBooleanArray())),
-            'notifyComment'           => 'required|in:' . implode(',', array_keys($this->getBooleanArray())),
-            'notifyLoanApplication'   => 'required|in:' . implode(',', array_keys($this->getBooleanArray())),
-            'notifyInviteAccepted'    => 'required|in:' . implode(',', array_keys($this->getBooleanArray())),
+            'hideLendingActivity'     => 'required|in:' . implode(',', ($this->getBooleanArray())),
+            'hideKarma'               => 'required|in:' . implode(',', ($this->getBooleanArray())),
+            'notifyLoanFullyFunded'   => 'required|in:' . implode(',', ($this->getBooleanArray())),
+            'notifyLoanAboutToExpire' => 'required|in:' . implode(',', ($this->getBooleanArray())),
+            'notifyLoanDisbursed'     => 'required|in:' . implode(',', ($this->getBooleanArray())),
+            'notifyComment'           => 'required|in:' . implode(',', ($this->getBooleanArray())),
+            'notifyLoanApplication'   => 'required|in:' . implode(',', ($this->getBooleanArray())),
+            'notifyInviteAccepted'    => 'required|in:' . implode(',', ($this->getBooleanArray())),
             'notifyLoanRepayment'     => 'required|in:' . implode(',', array_keys($this->getNotifyLoanRepayment())),
         ];
     }
 
     public function getDefaultData()
     {
+        /** @var Lender $lender */
         $lender = \Auth::user()->getLender();
         $preference = $lender->getPreferences();
 
@@ -59,8 +61,8 @@ class AccountPreferencesForm extends AbstractForm
     public function getBooleanArray()
     {
         return [
-            'true'  => 'true',
-            'false' => 'false',
+            'true'  => true,
+            'false' => false,
         ];
     }
 }
