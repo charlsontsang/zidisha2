@@ -98,21 +98,21 @@ class LoanFinalArrear extends ScheduledJob
         $forgivenessLoan = ForgivenessLoanQuery::create()
             ->findOneByLoanId($loanId);
 
+        $dueInstallment = InstallmentQuery::create()
+            ->getDueInstallment($loan);
+
         $calculator = new InstallmentCalculator($loan);
         $repaymentSchedule = RepaymentSchedule::createFromInstallments($loan, $calculator->generateLoanInstallments());
 
         $missedInstallmentCount = $repaymentSchedule->getMissedInstallmentCount();
 
 
-        if (!$forgivenessLoan && $missedInstallmentCount < 2) {
+        if (!$forgivenessLoan && $missedInstallmentCount < 2 && $dueInstallment->getDueDate() == $this->getStartDate()) {
             /** @var  BorrowerMailer $borrowerMailer */
             $borrowerMailer = \App::make('Zidisha\Mail\BorrowerMailer');
 
             /** @var  BorrowerSmsService $borrowerSmsService */
             $borrowerSmsService = \App::make('Zidisha\Sms\BorrowerSmsService');
-
-            $dueInstallment = InstallmentQuery::create()
-                ->getDueInstallment($loan);
 
             $borrowerMailer->sendLoanFinalArrearMail($borrower, $dueInstallment);
             $borrowerSmsService->sendLoanFinalArrearNotification($borrower, $dueInstallment);
