@@ -13,8 +13,8 @@ if (!empty($dollarExchangeRate)) {
 <table class="table">
     <thead>
     <tr>
-        <th colspan="2">Expected Payments</th>
-        <th colspan="2">Actual Payments</th>
+        <th colspan="2">@lang('borrower.loan.repayment-schedule.expected-payments')</th>
+        <th colspan="2">@lang('borrower.loan.repayment-schedule.actual-payments')</th>
     </tr>
     </thead>
     <tbody>
@@ -47,9 +47,9 @@ if (!empty($dollarExchangeRate)) {
     </tbody>
     <tfoot>
     <tr>
-        <td><strong>Total Amount Due</strong></td>
+        <td><strong>@lang('borrower.loan.repayment-schedule.total-amount-due')</strong></td>
         <td><strong>{{ $c($repaymentSchedule->getTotalAmountDue()) }}</strong></td>
-        <td><strong>Total Amount Paid</strong></td>
+        <td><strong>@lang('borrower.loan.repayment-schedule.total-amount-paid')</strong></td>
         <td><strong>{{ $c($repaymentSchedule->getTotalAmountPaid()) }}</strong></td>
     </tr>
     </tfoot>

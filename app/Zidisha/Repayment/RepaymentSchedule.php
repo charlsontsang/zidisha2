@@ -277,7 +277,7 @@ class RepaymentSchedule implements \IteratorAggregate
         foreach ($this as $repaymentScheduleInstallment) {
             $installment = $repaymentScheduleInstallment->getInstallment();
             if ($installment->getDueDate() > $now &&
-                $installment->getPaidAmount()->isZero() &&
+                $installment->getPaidAmount()->lessThan($installment->getAmount()) &&
                 $installment->getAmount()->isPositive()
             ) {
                 return $installment;

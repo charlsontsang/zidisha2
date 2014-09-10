@@ -152,8 +152,22 @@ class BorrowerController extends BaseController
         if ($borrower->isActivationPending()) {
             $feedbackMessages = $this->borrowerActivationService->getFeedbackMessages($borrower);
         }
+        
+        $data = compact(
+            'borrower',
+            'volunteerMentor',
+            'feedbackMessages',
+            'partial',
+            'loan'
+        );
+        
+        if ($loan->isActive() || $loan->isDefaulted() || $loan->isRepaid()) {
+            $repaymentSchedule = $this->repaymentService->getRepaymentSchedule($loan);
 
-        return View::make('borrower.dashboard', compact('borrower', 'volunteerMentor', 'feedbackMessages', 'partial', 'loan'));
+            $data['repaymentSchedule'] = $repaymentSchedule;
+        }
+
+        return View::make('borrower.dashboard', $data);
     }
 
     public function getTransactionHistory()

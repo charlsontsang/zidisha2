@@ -3,29 +3,22 @@
 @section('content')
 @parent
 
-@if($repaymentSchedule->getNextDueInstallment())
-    <?php $nextInstallment = $repaymentSchedule->getNextDueInstallment(); ?>
-    <div>
-        <p>
-            {{ \Lang::get('borrower.loan.active.next-installment') }}:
-            <table class="table">
-                <thead>
-                <tr>
-                    <th colspan="2">Expected Payments</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>{{ $nextInstallment->getDueDate()->format('M j, Y') }}</td>
-                    <td>{{ $nextInstallment->getAmount() }}</td>
-                </tr>
-                </tbody>
-            </table>
-        </p>
+<div class="row">
+    <div class="col-xs-12 col-sm-6">
+        <br/>
+        <br/>
+        @include('loan.partials.repaid-bar', compact('loan'))
+        <br/>
     </div>
-@endif
-<br><br>
+    <div class="col-xs-12 col-sm-6">
+        @include('borrower.loan.next-installment', compact('repaymentSchedule'))     
+    </div>
+</div>
 
-@include('borrower.loan.partials.repayment-schedule')
+<h4>
+    @lang('borrower.loan.repayment-schedule.title')
+</h4>
+
+@include('partials.repayment-schedule-table', compact('repaymentSchedule'))
 
 @stop

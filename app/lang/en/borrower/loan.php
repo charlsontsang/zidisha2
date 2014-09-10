@@ -32,6 +32,10 @@ return [
         'repayment-due'     => 'Repayment Due (:currencyCode)',
         'balance-remaining' => 'Balance Remaining',
         'total-repayment'   => 'Total Repayment',
+        'expected-payments' => 'Expected Payments',
+        'actual-payments'   => 'Actual Payments',
+        'total-amount-due'  => 'Total Amount Due',
+        'total-amount-paid' => 'Total Amount Paid',
     ],
     'reschedule'                 => [
         'title'                          => 'Reschedule Loan',
@@ -66,8 +70,11 @@ return [
         'accept-bids-note' => 'Your instructions for the loan disbursement',
         'message' => 'Your loan is now accepted, and should be disbursed to you within one week. Thank you for your patience.'
     ],
-    'active'                     => [
-        'next-installment' => 'Next Installment'
+    'loan-active'                     => [
+        'next-installment' => [
+            'title'        => 'Next Installment',
+            'instructions' => ':date: :amount',
+        ],
     ],
     'partials'                   => [
         'expected-payments' => 'Expected Payments',

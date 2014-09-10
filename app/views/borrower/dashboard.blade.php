@@ -15,7 +15,7 @@ Quick Links
 
 @section('page-content')
 
-@include('borrower.dashboard.partials.'.$partial)
+@include('borrower.dashboard.partials.'.$partial, compact('repaymentSchedule'))
         
 @if(!$borrower->isVerified())
     <div class="alert alert-warning">
