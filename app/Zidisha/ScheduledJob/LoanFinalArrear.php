@@ -106,7 +106,6 @@ class LoanFinalArrear extends ScheduledJob
 
         $missedInstallmentCount = $repaymentSchedule->getMissedInstallmentCount();
 
-
         if (!$forgivenessLoan && $missedInstallmentCount < 2 && $dueInstallment->getDueDate() == $this->getStartDate()) {
             /** @var  BorrowerMailer $borrowerMailer */
             $borrowerMailer = \App::make('Zidisha\Mail\BorrowerMailer');
