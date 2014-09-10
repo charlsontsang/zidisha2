@@ -1,11 +1,17 @@
-@extends('layouts.master')
+@extends('layouts.side-menu')
 
 @section('page-title')
 Volunteer Mentor Frequently Asked Questions
 @stop
 
-@section('content')
+@section('menu-title')
+Quick Links
+@stop
 
-<h1>VVolunteer Mentor Frequently Asked Questions</h1>
+@section('menu-links')
+@include('partials.nav-links.borrower-links')
+@stop
+
+@section('page-content')
 
 @stop
