@@ -2,26 +2,24 @@
 
 namespace Zidisha\Vendor\SiftScience\Tester;
 
-use Zidisha\Borrower\BorrowerQuery;
-use Zidisha\Borrower\Contact;
-use Zidisha\Sms\BorrowerSmsService;
+use Zidisha\User\User;
+use Zidisha\Vendor\SiftScience\SiftScienceService;
 
 class SiftScienceTester {
 
-    public function __construct(BorrowerSmsService $borrowerSmsService)
+    private $siftScienceService;
+
+    public function __construct(SiftScienceService $siftScienceService)
     {
-        $this->borrowerSmsService = $borrowerSmsService;
+        $this->siftScienceService = $siftScienceService;
     }
 
-    public function sendBorrowerJoinedContactConfirmationSms()
+    public function loanArrearLabel()
     {
-        $borrower = BorrowerQuery::create()
-            ->findOne();
+        $user = new User();
+        $user->setId(5);
+        $loanId = 10;
 
-        $contact = new Contact();
-        $contact->setBorrower($borrower);
-        $contact->setPhoneNumber('123123123');
-
-        $this->borrowerSmsService->sendBorrowerJoinedContactConfirmationSms($contact);
+        $this->siftScienceService->loanArrearLabel($user, $loanId);
     }
 }
