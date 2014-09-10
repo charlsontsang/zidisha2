@@ -1,3 +1,15 @@
+<?php
+if (!empty($dollarExchangeRate)) {
+    $c = function($amount) use($dollarExchangeRate) {
+        return \Zidisha\Currency\Converter::toUSD($amount, $dollarExchangeRate);
+    };
+} else {
+    $c = function($amount) {
+        return $amount;
+    };
+}
+?>
+
 <table class="table">
     <thead>
     <tr>
@@ -9,7 +21,7 @@
     @foreach($repaymentSchedule as $repaymentScheduleInstallment)
     <tr>
         <td>{{ $repaymentScheduleInstallment->getInstallment()->getDueDate()->format('M j, Y') }}</td>
-        <td>{{ $repaymentScheduleInstallment->getInstallment()->getAmount() }}</td>
+        <td>{{ $c($repaymentScheduleInstallment->getInstallment()->getAmount()) }}</td>
         <?php $i = 0; ?>
         @if($repaymentScheduleInstallment->getPayments())
         @foreach($repaymentScheduleInstallment->getPayments() as $repaymentScheduleInstallmentPayment)
@@ -18,11 +30,11 @@
         <td></td>
         <td></td>
         <td>{{ $repaymentScheduleInstallmentPayment->getPayment()->getPaidDate()->format('M j, Y') }}</td>
-        <td>{{ $repaymentScheduleInstallmentPayment->getAmount() }}</td>
+        <td>{{ $c($repaymentScheduleInstallmentPayment->getAmount()) }}</td>
     </tr>
     @else
     <td>{{ $repaymentScheduleInstallmentPayment->getPayment()->getPaidDate()->format('M j, Y') }}</td>
-    <td>{{ $repaymentScheduleInstallmentPayment->getAmount() }}</td>
+    <td>{{ $c($repaymentScheduleInstallmentPayment->getAmount()) }}</td>
     </tr>
     @endif
     <?php $i++; ?>
@@ -36,9 +48,9 @@
     <tfoot>
     <tr>
         <td><strong>Total Amount Due</strong></td>
-        <td><strong>{{ $repaymentSchedule->getTotalAmountDue() }}</strong></td>
+        <td><strong>{{ $c($repaymentSchedule->getTotalAmountDue()) }}</strong></td>
         <td><strong>Total Amount Paid</strong></td>
-        <td><strong>{{ $repaymentSchedule->getTotalAmountPaid() }}</strong></td>
+        <td><strong>{{ $c($repaymentSchedule->getTotalAmountPaid()) }}</strong></td>
     </tr>
     </tfoot>
 </table>

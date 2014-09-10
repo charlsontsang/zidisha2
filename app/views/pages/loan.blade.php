@@ -140,38 +140,28 @@
                                 <span class="text-light">This Loan</span>
                             </div>
                             <div class="loan-section-content">
-                                @if($loan->getStatus() >= Zidisha\Loan\Loan::ACTIVE)
-                                    <div class="row" style="margin-top: 5px; margin-bottom: 30px; !important;">
-                                        <div class="col-xs-9">
-                                            <div class="progress" style="margin: 0 !important;">
-                                                <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="{{ $loan->getRaisedPercentage() }}" aria-valuemin="0"
-                                                     aria-valuemax="100"
-                                                     style="width: 50%;">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xs-3">
-                                            <strong>XX%</strong> Repaid
-                                        </div>
+                                @if($loan->isDisbursed())
+                                    <div class="visible-xs">
+                                        @include('loan.partials.repaid-bar', compact('loan'))
+                                        <br/>
                                     </div>
                                 @endif
                                 <div class="row">
                                     <div class="col-sm-6">
                                         @if($loan->isDisbursed())
-                                            Amount: 
-                                            <strong>{{ $loan->getDisbursedAmount() }}</strong>
+                                            Disbursed Amount: 
+                                            <strong>{{ $disbursedAmount }}</strong>
                                             <br/>
                                             Date Disbursed: 
                                             <strong>{{ $loan->getDisbursedAt()->format('M j, Y') }}</strong>
                                             <br/>
                                             Repayment period:{{ BootstrapHtml::tooltip('borrower.tooltips.loan.repayment-period') }}
                                             <strong>{{ $loan->getPeriod() }}
-                                            @if($loan->getInstallmentPeriod() == 0)
-                                            months
+                                            @if($loan->isWeeklyInstallment())
+                                                weeks
                                             @else
-                                            weeks
+                                                months
                                             @endif
-                                            //TODO check installment period
                                             </strong>
                                         @else
                                             Amount requested:
@@ -189,13 +179,13 @@
                                     @if($loan->isDisbursed())
                                     <div class="col-sm-6">     
                                         Lender interest:{{ BootstrapHtml::tooltip('borrower.tooltips.loan.lender-interest') }}
-                                        <strong>${{ $totalInterest }} TO DO</strong>
+                                        <strong>{{ $lenderInterest }} ({{ $loan->getLenderInterestRate() }}%)</strong>
                                         <br/>
                                         Service fee:{{ BootstrapHtml::tooltip('borrower.tooltips.loan.service-fee') }}
-                                        <strong>${{ $serviceFee->getAmount() }}</strong>
+                                        <strong>{{ $serviceFee }} ({{ $loan->getServiceFeeRate() }}%)</strong>
                                         <br/>
                                         Total cost of loan:{{ BootstrapHtml::tooltip('borrower.tooltips.loan.total-cost-of-loan') }}
-                                        <strong>${{ $totalInterest->add($serviceFee)->getAmount() }}</strong>
+                                        <strong>{{ $totalAmount }}</strong>
                                     </div>
                                     @endif
                                 </div>
@@ -358,39 +348,9 @@
                     </div>
 
                     <div class="tab-pane fade" id="repayment">
-                        @if($loan->getStatus() >= Zidisha\Loan\Loan::ACTIVE)
+                        @if($loan->isDisbursed())
                         <div>
-                            <table class="table">
-                                <thead>
-                                <tr>
-                                    <th colspan="2">Expected Payments</th>
-                                    <th colspan="2">Actual Payments</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                @foreach($repaymentSchedule as $repaymentScheduleInstallment)
-                                <tr>
-                                    <td>{{ $repaymentScheduleInstallment->getInstallment()->getDueDate()->format('M j, Y') }}</td>
-                                    <td>{{ $repaymentScheduleInstallment->getInstallment()->getAmount() }}</td>
-                                    <?php $i = 0; ?>
-                                    @foreach($repaymentScheduleInstallment->getPayments() as $repaymentScheduleInstallmentPayment)
-                                    @if($i > 0)
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td>{{ $repaymentScheduleInstallmentPayment->getPayment()->getPaidDate()->format('M j, Y') }}</td>
-                                    <td>{{ $repaymentScheduleInstallmentPayment->getAmount() }}</td>
-                                </tr>
-                                @else
-                                <td>{{ $repaymentScheduleInstallmentPayment->getPayment()->getPaidDate()->format('M j, Y') }}</td>
-                                <td>{{ $repaymentScheduleInstallmentPayment->getAmount() }}</td>
-                                @endif
-                                <?php $i++; ?>
-                                @endforeach
-                                </tr>
-                                @endforeach
-                                </tbody>
-                            </table>
+                            @include('partials.repayment-schedule-table', ['repaymentSchedule' => $repaymentSchedule, 'dollarExchangeRate' => $disbursedExchangeRate])
                         </div>
                         @endif
                     </div>
@@ -420,18 +380,8 @@
                     </span>
                     @endif
 
-                    @if($loan->isActive())
-                    <div class="panel-heading"><b>Since you last visited...</b></div>
-                    
-                    July 29 &bull; Lucy posted: "And the piglets came!!!!!!! Yesterday the mother pig gave birth to 8 healthy piglets... <a href="#">>>Read more</a>"
-                    <br/><br/>
-                    July 26 &bull; Lucy repaid $5.00
-                    <br/><br/>
-                    July 25 &bull; jkurnia posted: "Thanks for the payment, Lucy!"
-                    <br/><br/>
-                    July 20 &bull; Lucy adjusted the repayment schedule: "School fees were due this week and... <a href="#">>>Read more</a>"
-                    <br/><br/>
-                    July 16 &bull; Lucy repaid $10.00
+                    @if($loan->isDisbursed())
+                        @include('loan.partials.repaid-bar', compact('loan'))
                     @endif
 
                     @if($loan->isOpen() && !(Auth::check() && Auth::user()->isBorrower()))

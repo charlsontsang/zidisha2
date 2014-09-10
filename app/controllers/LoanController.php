@@ -5,9 +5,13 @@ use Zidisha\Borrower\BorrowerService;
 use Zidisha\Comment\BorrowerCommentService;
 use Zidisha\Comment\LoanFeedbackCommentQuery;
 use Zidisha\Comment\LoanFeedbackCommentService;
+use Zidisha\Currency\Converter;
+use Zidisha\Currency\Currency;
+use Zidisha\Currency\CurrencyService;
 use Zidisha\Flash\Flash;
 use Zidisha\Lender\FollowService;
 use Zidisha\Lender\LenderQuery;
+use Zidisha\Loan\Calculator\InstallmentCalculator;
 use Zidisha\Loan\Form\AdminCategoryForm;
 use Zidisha\Loan\Loan;
 use Zidisha\Loan\LoanQuery;
@@ -37,6 +41,11 @@ class LoanController extends BaseController
      * @var Zidisha\Comment\LoanFeedbackCommentService
      */
     private $loanFeedbackCommentService;
+    
+    /**
+     * @var Zidisha\Currency\CurrencyService
+     */
+    private $currencyService;
 
     public function  __construct(
         LoanQuery $loanQuery,
@@ -47,7 +56,8 @@ class LoanController extends BaseController
         BorrowerCommentService $borrowerCommentService,
         FollowService $followService,
         RepaymentService $repaymentService,
-        LoanFeedbackCommentService $loanFeedbackCommentService
+        LoanFeedbackCommentService $loanFeedbackCommentService,
+        CurrencyService $currencyService
     ) {
         $this->loanQuery = $loanQuery;
         $this->bidQuery = $bidQuery;
@@ -58,6 +68,7 @@ class LoanController extends BaseController
         $this->followService = $followService;
         $this->repaymentService = $repaymentService;
         $this->loanFeedbackCommentService = $loanFeedbackCommentService;
+        $this->currencyService = $currencyService;
     }
 
     public function getIndex($loanId)
@@ -111,9 +122,13 @@ class LoanController extends BaseController
         $lenders = LenderQuery::create()->findBidOnLoan($loan);
 
         if ($loan->isDisbursed()) {
-            $calculator = new \Zidisha\Loan\Calculator\InstallmentCalculator($loan);
-            $totalInterest = $calculator->totalInterest();
-            $serviceFee = $calculator->serviceFee();
+            $calculator = new InstallmentCalculator($loan);
+            $disbursedExchangeRate = $this->currencyService->getExchangeRate($loan->getCurrency(), $loan->getDisbursedAt()); 
+            
+            $disbursedAmount = Converter::toUSD($calculator->amount(), $disbursedExchangeRate);
+            $lenderInterest = Converter::toUSD($calculator->lenderInterest(), $disbursedExchangeRate);
+            $serviceFee = Converter::toUSD($calculator->serviceFee(), $disbursedExchangeRate);
+            $totalAmount = Converter::toUSD($calculator->totalAmount(), $disbursedExchangeRate);
         }
         $previousLoans = $this->borrowerService->getPreviousLoans($borrower, $loan);
         
@@ -164,9 +179,12 @@ class LoanController extends BaseController
                 'borrower',
                 'comments',
                 'commentCount',
+                'disbursedExchangeRate',
+                'disbursedAmount',
+                'lenderInterest',
                 'serviceFee',
+                'totalAmount',
                 'previousLoans',
-                'totalInterest',
                 'followersCount',
                 'canPostFeedback',
                 'canReplyFeedback',
