@@ -59,7 +59,7 @@ class SiftScienceService
         );
     }
 
-    public function sendBorrowerDeclinedEvent(Borrower $borrower)
+    public function sendBorrowerDeclinedLabel(Borrower $borrower)
     {
         $userId = $borrower->getId();
 
@@ -100,5 +100,11 @@ class SiftScienceService
                 '$description' => 'loan falls over two months past due'
             ]
         );
+    }
+
+    public function sendBorrowerCommentEvent()
+    {
+
+
     }
 }

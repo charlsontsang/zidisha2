@@ -51,6 +51,6 @@ class SiftScienceTester {
         $borrower = new Borrower();
         $borrower->setId(5);
 
-        $this->siftScienceService->sendBorrowerDeclinedEvent($borrower);
+        $this->siftScienceService->sendBorrowerDeclinedLabel($borrower);
     }
 }
