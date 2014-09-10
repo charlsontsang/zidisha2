@@ -69,7 +69,7 @@ class SiftScienceService
                 '$is_bad'      => true,
                 '$type'        => 'decline',
                 '$user_id'     => $userId,
-                '$reasons'     => 'Declined',
+                'reasons'      => 'Declined',
                 '$description' => 'Borrower application declined',
                 '$time'        => time()
             ]
