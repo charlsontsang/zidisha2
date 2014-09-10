@@ -10,12 +10,18 @@ use Zidisha\User\Exceptions\InvalidUserRoleException;
 
 class User extends BaseUser implements UserInterface, RemindableInterface
 {
+    const LENDER_ROLE_ENUM = 0;
+    const BORROWER_ROLE_ENUM = 1;
+    const PARTNER_ROLE_ENUM = 2;
+    const ADMIN_ROLE_ENUM = 3;
+
     const ROLE_LENDER   = 'lender';
     const ROLE_BORROWER = 'borrower';
     const ROLE_ADMIN    = 'admin';
 
     const SUB_ROLE_VOLUNTEER        = 'volunteer';
     const SUB_ROLE_VOLUNTEER_MENTOR = 'volunteerMentor';
+
 
     public function setPassword($password)
     {

@@ -7,6 +7,7 @@ use DB;
 use Illuminate\Queue\Jobs\Job;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Zidisha\Currency\Money;
+use Zidisha\Loan\LoanQuery;
 use Zidisha\Mail\BorrowerMailer;
 use Zidisha\Repayment\InstallmentQuery;
 use Zidisha\ScheduledJob\Map\ScheduledJobTableMap;
@@ -37,24 +38,26 @@ class RepaymentReminder extends ScheduledJob
 
     public function getQuery()
     {
-        return DB::table('installments')
-            ->selectRaw('borrower_id AS user_id, due_date AS start_date, installments.loan_id AS loan_id')
+        $query = DB::table('installments as i')
             ->whereRaw("amount > 0")
             ->whereRaw("(paid_amount IS NULL OR paid_amount < amount )")
             ->whereRaw("due_date >= '" . Carbon::now()->addDay() . "'")
-            ->whereRaw("due_date <='" . Carbon::now()->addDays(2) . "'"); 
+            ->whereRaw("due_date <='" . Carbon::now()->addDays(2) . "'");
+
+        return $this->joinQuery($query, 'i.borrower_id', 'i.due_date', 'i.loan_id');
     }
 
     public function process(Job $job)
     {
         $user = $this->getUser();
         $borrower = $user->getBorrower();
-        $loan = $borrower->getActiveLoan();
-        
+        $loan = LoanQuery::create()
+            ->findOneById($this->getLoanId());
+
         $installment = InstallmentQuery::create()
             ->filterByLoan($loan)
             ->where('Installment.Amount > 0')
-            ->where('Installment.PaidAmount IS NULL OR Installment.PaidAmount < Installment.Amount')
+            ->where('(Installment.PaidAmount IS NULL OR Installment.PaidAmount < Installment.Amount)')
             ->orderByDueDate('ASC')
             ->findOne();
 
@@ -64,24 +67,29 @@ class RepaymentReminder extends ScheduledJob
         /** @var  BorrowerSmsService $borrowerSmsService */
         $borrowerSmsService = \App::make('Zidisha\Sms\BorrowerSmsService');
 
-        if ($installment  && $installment->getDueDate() == $this->getStartDate()) {
-            if ($installment->getPaidAmount()->isPositive() && $installment->getPaidAmount()->lessThan($installment->getAmount())) {
+        if ($installment && $installment->getDueDate() == $this->getStartDate()) {
+            if ($installment->getPaidAmount()->isPositive() &&
+                $installment->getPaidAmount()->lessThan($installment->getAmount()))
+            {
                 $borrowerMailer->sendRepaymentReminderTomorrow($borrower, $installment);
                 $borrowerSmsService->sendRepaymentReminderTomorrow($borrower, $installment);
             } else {
                 $borrowerMailer->sendRepaymentReminder($borrower, $installment);
                 $borrowerSmsService->sendRepaymentReminder($borrower, $installment);
             }
-        } elseif ($installment  && $installment->getDueDate() < $this->getStartDate()) {
+        } elseif ($installment && $installment->getDueDate() < $this->getStartDate()) {
             $amounts = InstallmentQuery::create()
                 ->filterByLoan($loan)
                 ->filterByDueDate(Carbon::now(), Criteria::LESS_EQUAL)
                 ->select(array('amount_total', 'paid_amount_total'))
                 ->withColumn('SUM(amount)', 'amount_total')
                 ->withColumn('SUM(paid_amount)', 'paid_amount_total')
-                ->find();
-            $dueAmount = Money::create(($amounts['amount_total'] - $amounts['paid_amount_total']), $borrower->getCountry()->getCurrencyCode());
-            //Send mail to borrower
+                ->findOne();
+            $dueAmount = Money::create(
+                ($amounts['amount_total'] - $amounts['paid_amount_total']),
+                $loan->getCurrencyCode()
+            );
+
             $borrowerMailer->sendRepaymentReminderForDueAmount($borrower, $installment, $dueAmount);
             $borrowerSmsService->sendRepaymentReminderForDueAmount($borrower, $installment, $dueAmount);
         }

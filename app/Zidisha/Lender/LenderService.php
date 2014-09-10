@@ -16,8 +16,6 @@ use Zidisha\Currency\Money;
 use Zidisha\Loan\BidQuery;
 use Zidisha\Loan\Loan;
 use Zidisha\Mail\LenderMailer;
-use Zidisha\Notification\Notification;
-use Zidisha\Notification\NotificationQuery;
 use Zidisha\Upload\Upload;
 use Zidisha\User\User;
 use Zidisha\User\UserQuery;
@@ -142,48 +140,6 @@ class LenderService
         return false;
     }
 
-    public function notifyAbandonedLenders()
-    {
-        $c = new Carbon();
-        $lastYear = $c->subYear();
-
-        $abandonedLenders = LenderQuery::create()
-            ->useUserQuery()
-                ->filterAbandoned($lastYear)
-            ->endUse()
-            ->find();
-
-        foreach ($abandonedLenders as $lender) {
-            $this->lenderMailer->sendAbandonedMail($lender);
-            $notification = new Notification();
-            $notification->setType("abandoned")
-                ->setUser($lender->getUser());
-            $notification->save();
-        }
-    }
-
-    public function deactivateAbandonedLenders()
-    {
-        $thirteenMonthsAgo = new Carbon();
-        $thirteenMonthsAgo->subMonths(13);
-        $oneMonthAgo = new Carbon();
-        $oneMonthAgo->subMonth();
-
-        $lenders = LenderQuery::create()
-            ->useUserQuery()
-                ->filterAbandoned($thirteenMonthsAgo)
-                ->useNotificationQuery()
-                    ->filterByType("abandoned")
-                    ->filterByCreatedAt(['max' => $oneMonthAgo])
-                ->endUse()
-            ->endUse()
-            ->find();
-
-        foreach($lenders as $lender) {
-            $this->deactivateLender($lender);
-        }
-    }
-
     public function deactivateLender(Lender $lender)
     {
         if (!$lender->isActive()) {
@@ -193,9 +149,10 @@ class LenderService
             ->filterByUser($lender->getUser())
             ->getTotalAmount();
 
-        if ($currentBalance->isPositive()) {
             PropelDB::transaction(function($con) use ($lender, $currentBalance) {
-                $this->transactionService->addConvertToDonationTransaction($con, $lender, $currentBalance);
+                    if ($currentBalance->isPositive()) {
+                        $this->transactionService->addConvertToDonationTransaction($con, $lender, $currentBalance);
+                    }
                 $lender
                     ->setAdminDonate(true)
                     ->setActive(false);
@@ -203,7 +160,6 @@ class LenderService
                 $lender->getUser()->setActive(false);
                 $lender->getUser()->save($con);
             });
-        }
 
         return true;
     }
@@ -224,6 +180,7 @@ class LenderService
         $user = new User();
         $user
             ->setJoinedAt($data['joinedAt'])
+            ->setLastLoginAt($data['joinedAt'])
             ->setPassword($data['password'])
             ->setEmail($data['email'])
             ->setUsername($data['username'])

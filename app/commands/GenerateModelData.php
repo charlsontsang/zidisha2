@@ -178,6 +178,18 @@ class GenerateModelData extends Command
             return;
         }
 
+        if ($model == "ClearJobs") {
+            $this->line('Deleting all Schedule Jobs');
+
+            $logs = \Zidisha\ScheduledJob\ScheduledJobLogQuery::create()
+                ->doDeleteAll();
+            if ($logs) {
+                $jobs = \Zidisha\ScheduledJob\ScheduledJobQuery::create()
+                    ->doDeleteAll();
+            }
+            $this->line('Done');
+        }
+
         $this->line("Generate $model");
 
         if ($model == "Language") {
@@ -203,6 +215,7 @@ class GenerateModelData extends Command
             $user = new User();
             $user
                 ->setJoinedAt($data['joinedAt'])
+                ->setLastLoginAt($data['joinedAt'])
                 ->setPassword('1234')
                 ->setEmail('lenderfake@fake.com')
                 ->setUsername('fakelender')
@@ -325,9 +338,9 @@ class GenerateModelData extends Command
         }
 
         if ($model == "UnusedFunds") {
-            $data['username'] = 'lender-test';
+            $data['username'] = 'lender-unusedfund';
             $data['password'] = '1234567890';
-            $data['email'] = 'lenderTest@mail.com';
+            $data['email'] = 'singularityguy@fastmail.fm';
             $data['countryId'] = '1';
 
             $lender = $this->lenderService->joinLender($data);
@@ -352,12 +365,18 @@ class GenerateModelData extends Command
             $data['password'] = '1234567890';
             $data['email'] = 'lender-abandoned@mail.com';
             $data['countryId'] = '1';
+            $data['joinedAt'] = Carbon::create()->subMonths(15);
 
             $lender = $this->lenderService->joinLender($data);
-            $user = $lender->getUser();
 
-            $user->setLastLoginAt(Carbon::create()->subMonths(15));
-            $user->save();
+            $payment = new UploadFundPayment();
+            $payment
+                ->setLender($lender)
+                ->setTotalAmount(Money::create(60, 'USD'))
+                ->setTransactionFee(Money::create(3, 'USD'))
+                ->setPaymentMethod('paypal');
+            $con = PropelDB::getConnection();
+            $this->transactionService->addUploadFundTransaction($con, $payment);
         }
         
         if ($model == 'LoanAboutToExpireReminder') {
@@ -410,27 +429,27 @@ class GenerateModelData extends Command
             $data['password'] = '1234567890';
             $data['email'] = 'lender-NewLenderIntro@mail.com';
             $data['countryId'] = '1';
+            $data['joinedAt'] = Carbon::create()->subDay()->subHour(5);
 
             $lender = $this->lenderService->joinLender($data);
             $user = $lender->getUser();
 
-            $user->setCreatedAt(Carbon::create()->subDay());
+            $user->setCreatedAt(Carbon::create()->subDay()->subHour(5));
             $user->save();
         }
 
-
-        if ($model == 'AbandonedUser') {
-            $data['username'] = 'lender-AbandonedUser';
-            $data['password'] = '1234567890';
-            $data['email'] = 'lender-AbandonedUser@mail.com';
-            $data['countryId'] = '1';
-
-            $lender = $this->lenderService->joinLender($data);
-            $user = $lender->getUser();
-
-            $user->setCreatedAt(Carbon::create()->subDay());
-            $user->save();
-        }
+//        if ($model == 'AbandonedUser') {
+//            $data['username'] = 'lender-AbandonedUser';
+//            $data['password'] = '1234567890';
+//            $data['email'] = 'lender-AbandonedUser@mail.com';
+//            $data['countryId'] = '1';
+//
+//            $lender = $this->lenderService->joinLender($data);
+//            $user = $lender->getUser();
+//
+//            $user->setCreatedAt(Carbon::create()->subDay());
+//            $user->save();
+//        }
         
         if ($model == 'LoanFinalArrear') {
             $loan = $this->generateLoanForArrear(14, 12);            
@@ -657,6 +676,7 @@ class GenerateModelData extends Command
             ->setEmail('admin@mail.com')
             ->setRole('admin')
             ->setLastLoginAt(new Carbon())
+            ->setJoinedAt(new Carbon())
             ->save();
         
         $return[] = $user;
@@ -667,6 +687,7 @@ class GenerateModelData extends Command
             ->setPassword('1234567890')
             ->setEmail('yc@mail.com')
             ->setLastLoginAt(new Carbon())
+            ->setJoinedAt(new Carbon())
             ->save();
 
         $return[] = $user;
@@ -1049,21 +1070,30 @@ class GenerateModelData extends Command
             ->find()
             ->getData();
 
-        $return = [];
-
-        for ($i = 0; $i < $count; $i++) {
-            $lenderId = $this->faker->randomElement($lenderIds);
-            
+        foreach ($lenderIds as $lenderId) {
             $payment = new UploadFundPayment();
             $payment
                 ->setLenderId($lenderId)
-                ->setTotalAmount(Money::create(rand(10, 200), 'USD'))
-                ->setTransactionFee(Money::create(rand(1, 3), 'USD'))
+                ->setTotalAmount(Money::create(rand(100, 1000), 'USD'))
+                ->setTransactionFee(Money::create(rand(5, 10), 'USD'))
                 ->setPaymentMethod($this->faker->randomElement(['paypal', 'stripe']));
-            
+
             $this->transactionService->addUploadFundTransaction($con, $payment);
-            if (rand(1, 5) == 1) {
-            }
+        }
+
+//        for ($i = 0; $i < $count; $i++) {
+//            $lenderId = $this->faker->randomElement($lenderIds);
+//
+//            $payment = new UploadFundPayment();
+//            $payment
+//                ->setLenderId($lenderId)
+//                ->setTotalAmount(Money::create(rand(1000, 1000), 'USD'))
+//                ->setTransactionFee(Money::create(rand(5, 10), 'USD'))
+//                ->setPaymentMethod($this->faker->randomElement(['paypal', 'stripe']));
+//
+//            $this->transactionService->addUploadFundTransaction($con, $payment);
+//            if (rand(1, 5) == 1) {
+//            }
 
 //            if ($temp == true) {
 //                $yc = \Zidisha\User\UserQuery::create()
@@ -1077,7 +1107,7 @@ class GenerateModelData extends Command
 //                $transaction->save();
 //                $temp = false;
 //            }
-        }
+//        }
         
         return true;
     }
@@ -1228,12 +1258,14 @@ class GenerateModelData extends Command
 
         $loan = $this->loanService->applyForLoan($borrower, $data);
         $loan->save();
-
         $acceptedAt = Carbon::instance($loan->getAppliedAt());
         $acceptedAt->addDays($this->faker->numberBetween(15, 20));
+//        $this->loanService->acceptBids($loan, ['acceptedAt' => $acceptedAt]);
 
         $disbursedAt = Carbon::instance($loan->getCreatedAt())->subMonths(3);
         $disbursedAt->addDays($this->faker->numberBetween(1, 10));
+//        $disbursedAmount = $loan->getAmount();
+//        $this->loanService->disburseLoan($loan, compact('disbursedAt', 'disbursedAmount'));
 
         $loan
             ->setStatus(Loan::ACTIVE)
@@ -1241,7 +1273,6 @@ class GenerateModelData extends Command
             ->setDisbursedAt($disbursedAt)
             ->calculateExtraDays($disbursedAt)
             ->setServiceFeeRate(Setting::get('loan.serviceFeeRate'));
-
 
         $calculator = new InstallmentCalculator($loan);
         $installmentAmount = $calculator->totalAmount()->divide($loan->getPeriod());

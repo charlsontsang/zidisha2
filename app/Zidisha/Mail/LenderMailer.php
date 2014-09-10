@@ -10,6 +10,7 @@ use Zidisha\Currency\Money;
 use Zidisha\Lender\GiftCard;
 use Zidisha\Lender\Invite;
 use Zidisha\Lender\Lender;
+use Zidisha\Lender\LenderQuery;
 use Zidisha\Loan\Bid;
 use Zidisha\Loan\ForgivenessLoan;
 use Zidisha\Loan\Loan;
@@ -353,11 +354,22 @@ class LenderMailer
 
     public function sendAbandonedUserMail(User $user)
     {
+        $lender = LenderQuery::create()
+            ->findOneById($user->getId());
+        $parameters = [
+            'lenderName' => $lender->getName(),
+            'siteLink'   => route('home'),
+            'expireDate' => Carbon::now()->addMonth()->format('d-m-Y'),
+        ];
+        $message = \Lang::get('lender.mails.abandoned-user-mail.body', $parameters);
+        $data['content'] = $message;
+
         $this->mailer->send(
             'emails.hero',
-            [
+            $data + [
                 'to'         => $user->getEmail(),
-                'subject'    => 'Abandoned User Notification',
+                'subject'    => \Lang::get('lender.mails.abandoned-user-mail.subject', $parameters),
+                'templateId' => \Setting::get('sendwithus.borrower-notifications-template-id'),
             ]
         );
     }

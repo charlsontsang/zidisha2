@@ -7,6 +7,7 @@ use DB;
 use Illuminate\Queue\Jobs\Job;
 use Zidisha\Mail\LenderMailer;
 use Zidisha\ScheduledJob\Map\ScheduledJobTableMap;
+use Zidisha\User\User;
 
 
 /**
@@ -33,12 +34,13 @@ class NewLenderIntro extends ScheduledJob
 
     public function getQuery()
     {
-        return DB::table('users AS u')
-            ->selectRaw('u.id AS user_id, u.created_at as start_date')
-            ->whereRaw('u.role = 0')
+        $query =  DB::table('users AS u')
+            ->whereRaw('u.role = ' . User::LENDER_ROLE_ENUM)
             ->whereRaw('u.active = true')
             ->whereRaw("u.created_at  >'" . Carbon::now()->subDays(2) . "'")
             ->whereRaw("u.created_at <='" . Carbon::now()->subDay() . "'");
+
+        return $this->joinQuery($query, 'u.id', 'u.last_login_at');
     }
 
     public function process(Job $job)

@@ -126,7 +126,7 @@ class LoanService
     public function createLoan(Borrower $borrower, $data)
     {
         if (!isset($data['date'])) {
-            $data['date'] = new \DateTime();
+            $data += ['date' => new \DateTime()];
             $data['exchangeRate'] = ExchangeRateQuery::create()->findCurrent($borrower->getCountry()->getCurrency());
         }
 

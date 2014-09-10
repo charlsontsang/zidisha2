@@ -6,8 +6,8 @@ use Carbon\Carbon;
 use DB;
 use Illuminate\Queue\Jobs\Job;
 use Zidisha\Mail\LenderMailer;
-use Zidisha\Notification\Notification;
 use Zidisha\ScheduledJob\Map\ScheduledJobTableMap;
+use Zidisha\User\User;
 
 
 /**
@@ -22,6 +22,7 @@ use Zidisha\ScheduledJob\Map\ScheduledJobTableMap;
  */
 class UnusedFunds extends ScheduledJob
 {
+    const COUNT = 3;
 
     /**
      * Constructs a new UnusedFunds class, setting the class_key column to ScheduledJobsTableMap::CLASSKEY_6.
@@ -34,22 +35,13 @@ class UnusedFunds extends ScheduledJob
 
     public function getQuery()
     {
-        return DB::table('users AS u')
-            ->selectRaw('u.id AS user_id, u.last_login_at as start_date')
+        $query =  DB::table('users AS u')
             ->whereRaw("u.last_login_at < '" . Carbon::now()->subMonths(2) . "'")
-            ->whereRaw('u.role = 0')
+            ->whereRaw('u.role = ' . User::LENDER_ROLE_ENUM)
             ->whereRaw('u.active = true')
-            ->whereRaw('(SELECT SUM(amount) FROM transactions t WHERE t.user_id = u.id) >= 50')
-            ->whereRaw(
-                '
-                    (
-                        SELECT COUNT(*) 
-                        FROM notifications n
-                        WHERE n.user_id = u.id
-                        AND n.type = ' . Notification::UNUSED_FUNDS_NOTIFICATION . '
-                    ) = 0
-                '
-            );
+            ->whereRaw('(SELECT SUM(amount) FROM transactions t WHERE t.user_id = u.id) >= 50');
+
+        return $this->joinQuery($query, 'u.id', 'u.last_login_at');
     }
 
     public function process(Job $job)

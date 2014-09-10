@@ -42,8 +42,7 @@ class AgainRepaymentReminder extends ScheduledJob
         $dueDays = \Setting::get('loan.repaymentReminderDay');
         $dueAmount = \Setting::get('loan.repaymentDueAmount');
 
-        return DB::table('installments as i')
-            ->selectRaw('i.borrower_id AS user_id, i.loan_id AS loan_id, i.due_date AS start_date')
+        $query = DB::table('installments as i')
             ->join('borrowers AS br', 'i.borrower_id', '=', 'br.id')
             ->whereRaw("i.amount > 0")
             ->whereRaw(
@@ -77,6 +76,8 @@ class AgainRepaymentReminder extends ScheduledJob
             )
             ->whereRaw('i.due_date <= \'' . Carbon::now()->subDays($dueDays) . '\'')
             ->whereRaw('i.due_date > \'' . Carbon::now()->subDays($dueDays + 1) . '\'');
+
+        return $this->joinQuery($query, 'i.borrower_id', 'i.due_date', 'i.loan_id');
     }
 
     public function process(Job $job)
@@ -84,20 +85,19 @@ class AgainRepaymentReminder extends ScheduledJob
         $user = $this->getUser();
         $borrower = $user->getBorrower();
         $loanId = $this->getLoanId();
-        
+
         $loan = LoanQuery::create()
             ->findOneById($loanId);
-        
+
         $forgivenessLoan = ForgivenessLoanQuery::create()
             ->findOneByLoanId($loanId);
 
         $installment = InstallmentQuery::create()
             ->filterByLoan($loan)
             ->where('Installment.Amount > 0')
-            ->where('Installment.PaidAmount IS NULL OR Installment.PaidAmount < Installment.Amount')
+            ->where('(Installment.PaidAmount IS NULL OR Installment.PaidAmount < Installment.Amount)')
             ->orderByDueDate('ASC')
             ->findOne();
-
 
         if (!$forgivenessLoan && $installment) {
             $amounts = InstallmentQuery::create()
@@ -106,14 +106,17 @@ class AgainRepaymentReminder extends ScheduledJob
                 ->select(array('amount_total', 'paid_amount_total'))
                 ->withColumn('SUM(amount)', 'amount_total')
                 ->withColumn('SUM(paid_amount)', 'paid_amount_total')
-                ->find();
-            $dueAmount = Money::create(($amounts['amount_total'] - $amounts['paid_amount_total']), $borrower->getCountry()->getCurrencyCode());
+                ->findOne();
+            $dueAmount = Money::create(
+                ($amounts['amount_total'] - $amounts['paid_amount_total']),
+                $borrower->getCountry()->getCurrencyCode()
+            );
 
             /** @var  BorrowerMailer $borrowerMailer */
             $borrowerMailer = \App::make('Zidisha\Mail\BorrowerMailer');
             $borrowerMailer->sendAgainRepaymentReminder($borrower, $installment, $dueAmount);
         }
-        
+
         $job->delete();
     }
 } // AgainRepaymentReminder

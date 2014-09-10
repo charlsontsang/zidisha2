@@ -5,8 +5,11 @@ namespace Zidisha\ScheduledJob;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Queue\Jobs\Job;
+use Zidisha\Lender\LenderQuery;
+use Zidisha\Lender\LenderService;
 use Zidisha\Mail\LenderMailer;
 use Zidisha\ScheduledJob\Map\ScheduledJobTableMap;
+use Zidisha\User\User;
 
 /**
  * Skeleton subclass for representing a row from one of the subclasses of the 'scheduled_jobs' table.
@@ -20,7 +23,7 @@ use Zidisha\ScheduledJob\Map\ScheduledJobTableMap;
  */
 class AbandonedUser extends ScheduledJob
 {
-    const COUNT = 3;
+    const COUNT = 1;
     /**
      * @var \Zidisha\Mail\LenderMailer
      */
@@ -41,21 +44,28 @@ class AbandonedUser extends ScheduledJob
 
     public function getQuery()
     {
-        return DB::table('users AS u')
-            ->selectRaw('u.id AS user_id, u.last_login_at as start_date')
+        $query = DB::table('users AS u')
             ->whereRaw("u.last_login_at < '" . Carbon::now()->subYear() . "'")
-            ->whereRaw('u.role = 0')
+            ->whereRaw('u.role = ' . User::LENDER_ROLE_ENUM)
             ->whereRaw('u.active = true');
+
+        return $this->joinQuery($query, 'u.id', 'u.last_login_at');
     }
 
     public function process(Job $job)
     {
         $user = $this->getUser();
 
-        if ($user->getLastLoginAt() < Carbon::now()->subYear()) {
+        if ($user->getLastLoginAt() < Carbon::now()->subYear() && $this->getCount() == 1) {
             /** @var  LenderMailer $lenderMailer */
             $lenderMailer = \App::make('Zidisha\Mail\LenderMailer');
             $lenderMailer->sendAbandonedUserMail($user);
+        } elseif ($user->getLastLoginAt() < Carbon::now()->subYear()->subMonth() && $this->getCount() == 2) {
+            $lender = LenderQuery::create()
+                ->findOneById($user->getId());
+            /** @var LenderService $lenderService */
+            $lenderService = \App::make('\Zidisha\Lender\LenderService');
+            $lenderService->deactivateLender($lender);
         }
 
         $job->delete();
