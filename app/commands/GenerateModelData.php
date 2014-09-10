@@ -803,7 +803,7 @@ class GenerateModelData extends Command
         $return = [];
         
         foreach ($currencies as $currencyCode => $baseRate) {
-            for ($i = 16; $i > 0; $i--) {
+            for ($i = 60; $i > 0; $i--) {
                 $startDate = new Carbon();
                 $startDate->subMonths($i);
                 
