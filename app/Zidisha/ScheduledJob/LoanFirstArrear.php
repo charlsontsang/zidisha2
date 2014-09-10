@@ -101,15 +101,7 @@ class LoanFirstArrear extends ScheduledJob
 
         $missedInstallmentCount =  $repaymentSchedule->getMissedInstallmentCount();
 
-        var_dump($missedInstallmentCount);
-        var_dump($this->getStartDate());
-        var_dump($installment->getId());
-        var_dump($this->getStartDate() == $installment->getDueDate());
-        dd($installment->getDueDate());
-
         if ($installment && $missedInstallmentCount < 1 && $installment->getDueDate() == $this->getStartDate()) {
-            //Check if this is the borrowers first missed installment.                
-            if ($installment) {
                 /** @var  BorrowerMailer $borrowerMailer */
                 $borrowerMailer = \App::make('Zidisha\Mail\BorrowerMailer');
 
@@ -118,10 +110,8 @@ class LoanFirstArrear extends ScheduledJob
 
                 $borrowerMailer->sendLoanFirstArrearMail($borrower, $installment);
                 $borrowerSmsService->sendLoanFirstArrearNotification($borrower, $installment);
-            }
         }
 
         $job->delete();
-
     }
 } // LoanFirstArrear
