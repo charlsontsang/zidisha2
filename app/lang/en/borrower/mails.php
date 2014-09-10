@@ -43,7 +43,7 @@ Thank you,<br/><br/>
 The Zidisha Team'
     ],
     'loan-arrear-reminder-first'         => [
-        'subject' => '',
+        'subject' => 'Past Due Loan Notification',
         'body'    => 'Dear :borrowerName,<br/><br/>
 This is notification that we did not receive your loan repayment installment of :dueAmt, which was due on :dueDate.<br/><br/>
 Please make the past due payment immediately following the instructions below.<br/><br/>
