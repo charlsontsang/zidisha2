@@ -4,6 +4,8 @@ namespace Zidisha\Vendor\SiftScience;
 
 use SiftClient;
 use Zidisha\Borrower\Borrower;
+use Zidisha\Borrower\Invite;
+use Zidisha\Comment\Comment;
 use Zidisha\User\User;
 
 class SiftScienceService
@@ -102,9 +104,28 @@ class SiftScienceService
         );
     }
 
-    public function sendBorrowerCommentEvent()
+    public function sendBorrowerCommentEvent(Comment $comment)
     {
+        $this->sift->track(
+            'comment_post',
+            [
+                '$user_id' => $comment->getUserId(),
+                'comment'  => $comment->getMessage(),
+                '$time'    => time()
+            ]
+        );
+    }
 
-
+    public function sendBorrowerInviteAcceptedEvent(Invite $invite)
+    {
+        $this->sift->track(
+            'borrower_invite',
+            [
+                '$user_id'    => $invite->getInviteeId(),
+                '$session_id' => $this->sessionId,
+                'invited_by'  => $invite->getBorrowerId(),
+                '$time'       => time()
+            ]
+        );
     }
 }

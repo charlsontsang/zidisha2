@@ -3,6 +3,9 @@
 namespace Zidisha\Vendor\SiftScience\Tester;
 
 use Zidisha\Borrower\Borrower;
+use Zidisha\Borrower\Invite;
+use Zidisha\Comment\BorrowerComment;
+use Zidisha\Comment\Comment;
 use Zidisha\User\User;
 use Zidisha\Vendor\SiftScience\SiftScienceService;
 
@@ -52,5 +55,23 @@ class SiftScienceTester {
         $borrower->setId(5);
 
         $this->siftScienceService->sendBorrowerDeclinedLabel($borrower);
+    }
+
+    public function sendBorrowerCommentEvent()
+    {
+        $comment = new BorrowerComment();
+        $comment->setUserId(5)
+            ->setMessage('HowDay, Comment!!!');
+
+        $this->siftScienceService->sendBorrowerCommentEvent($comment);
+    }
+
+    public function sendBorrowerInviteAcceptedEvent()
+    {
+        $invite = new Invite();
+        $invite->setInviteeId(10)
+            ->setBorrowerId(5);
+
+        $this->siftScienceService->sendBorrowerInviteAcceptedEvent($invite);
     }
 }
