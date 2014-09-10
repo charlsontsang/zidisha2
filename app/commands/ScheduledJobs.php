@@ -16,13 +16,13 @@ class ScheduledJobs extends Command
     protected $classes = [
 //        'Zidisha\ScheduledJob\AbandonedUser',
 //        'Zidisha\ScheduledJob\LoanAboutToExpireReminder',
-        'Zidisha\ScheduledJob\LoanFinalArrear',
+//        'Zidisha\ScheduledJob\LoanFinalArrear',
 //        'Zidisha\ScheduledJob\AgainRepaymentReminder',
 //        'Zidisha\ScheduledJob\LoanFirstArrear',
 //        'Zidisha\ScheduledJob\RepaymentReminder',
 //        'Zidisha\ScheduledJob\MonthlyLoanArrear',
 //        'Zidisha\ScheduledJob\NewLenderIntro',
-//        'Zidisha\ScheduledJob\CronToRepay',
+        'Zidisha\ScheduledJob\CronToRepay',
 //        'Zidisha\ScheduledJob\UnusedFunds',
     ];
     
