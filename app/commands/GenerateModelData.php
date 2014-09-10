@@ -458,7 +458,8 @@ class GenerateModelData extends Command
 //        }
         
         if ($model == 'LoanFinalArrear') {
-            $loan = $this->generateLoanForArrear(14, 12);            
+            $loan = $this->generateLoanArrear(true);
+//            $loan = $this->generateLoanForArrear(14, 12);
             $this->info('Loan Generated with id: '.$loan->getId());
         }
 
@@ -468,7 +469,7 @@ class GenerateModelData extends Command
         }
 
         if ($model == 'LoanFirstArrear') {
-            $loan = $this->generateLoanFirstArrear();
+            $loan = $this->generateLoanArrear();
 //            $loan = $this->generateLoanForArrear(4, 12);
             $this->info('Loan Generated with id: '.$loan->getId());
         }
@@ -1313,7 +1314,7 @@ class GenerateModelData extends Command
         return $loan;
     }
 
-    private function generateLoanFirstArrear()
+    private function generateLoanArrear($final = false)
     {
         $categoryIds = CategoryQuery::create()
             ->filterByAdminOnly(false)
@@ -1335,7 +1336,11 @@ class GenerateModelData extends Command
         $borrower = $borrowers[0];
         $currency = $borrower->getCountry()->getCurrency();
 
-        $date = Carbon::now()->subMonths(2)->subDays(11);
+        if ($final) {
+            $date = Carbon::now()->subMonths(3)->subDays(11);
+        } else {
+            $date = Carbon::now()->subMonths(2)->subDays(11);
+        }
         $exchangeRate = $this->currencyService->getExchangeRate($currency, $date);
         $usdAmount = Money::create(100);
         $amount = Converter::fromUSD($usdAmount, $currency, $exchangeRate);
@@ -1367,7 +1372,11 @@ class GenerateModelData extends Command
 
         $installment = InstallmentQuery::create()
             ->getDueInstallment($loan);
-        $installment->setDueDate(Carbon::now()->subDays(4)->subHours(5));
+        if ($final) {
+            $installment->setDueDate(Carbon::now()->subDays(14)->subHours(5));
+        } else {
+            $installment->setDueDate(Carbon::now()->subDays(4)->subHours(5));
+        }
         $installment->save();
         $this->line('installment iD ' . $installment->getId());
 
