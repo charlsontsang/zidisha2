@@ -458,7 +458,7 @@ class GenerateModelData extends Command
 //        }
         
         if ($model == 'LoanFinalArrear') {
-            $loan = $this->generateLoanArrear(true);
+            $loan = $this->generateLoanArrear('final');
 //            $loan = $this->generateLoanForArrear(14, 12);
             $this->info('Loan Generated with id: '.$loan->getId());
         }
@@ -485,7 +485,8 @@ class GenerateModelData extends Command
         }
 
         if ($model == 'CronToRepay') {
-            $loan = $this->generateLoanForArrear(60, 12);
+            $loan = $this->generateLoanArrear('repay');
+//            $loan = $this->generateLoanForArrear(60, 12);
             $this->info('Loan Generated with id: '.$loan->getId());
         }
         
@@ -1314,7 +1315,7 @@ class GenerateModelData extends Command
         return $loan;
     }
 
-    private function generateLoanArrear($final = false)
+    private function generateLoanArrear($type = 'first')
     {
         $categoryIds = CategoryQuery::create()
             ->filterByAdminOnly(false)
@@ -1336,8 +1337,10 @@ class GenerateModelData extends Command
         $borrower = $borrowers[0];
         $currency = $borrower->getCountry()->getCurrency();
 
-        if ($final) {
+        if ($type == 'final') {
             $date = Carbon::now()->subMonths(3)->subDays(11);
+        } elseif ($type == 'repay') {
+            $date = Carbon::now()->subMonths(5)->subDays(1);
         } else {
             $date = Carbon::now()->subMonths(2)->subDays(11);
         }
@@ -1372,8 +1375,10 @@ class GenerateModelData extends Command
 
         $installment = InstallmentQuery::create()
             ->getDueInstallment($loan);
-        if ($final) {
+        if ($type == 'final') {
             $installment->setDueDate(Carbon::now()->subDays(14)->subHours(5));
+        } elseif ($type == 'repay') {
+            $installment->setDueDate(Carbon::now()->subDays(60)->subHours(5));
         } else {
             $installment->setDueDate(Carbon::now()->subDays(4)->subHours(5));
         }
