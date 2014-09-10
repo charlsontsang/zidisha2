@@ -792,6 +792,16 @@ Route::group(
                     'test-sms',
                     ['uses' => 'SmsTesterController@postSms', 'as' => 'admin:sms:post:sms']
                 );
+
+                Route::get(
+                    'test-sift-science',
+                    ['uses' => 'SiftScienceTesterController@getAllSiftScienceEvents', 'as' => 'admin:test:sift-science']
+                );
+
+                Route::post(
+                    'test-sift-science',
+                    ['uses' => 'SiftScienceTesterController@postSiftScienceEvent', 'as' => 'admin:post:test:sift-science']
+                );
                 
                 Route::get(
                     'loan-forgiveness/{countryCode?}',
