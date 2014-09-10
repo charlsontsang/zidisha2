@@ -4,6 +4,7 @@ namespace Zidisha\Lender\Form;
 
 
 use Zidisha\Form\AbstractForm;
+use Zidisha\Lender\Lender;
 use Zidisha\Lender\PreferencesQuery;
 
 class AccountPreferencesForm extends AbstractForm
@@ -26,6 +27,7 @@ class AccountPreferencesForm extends AbstractForm
 
     public function getDefaultData()
     {
+        /** @var Lender $lender */
         $lender = \Auth::user()->getLender();
         $preference = $lender->getPreferences();
 

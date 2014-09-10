@@ -48,7 +48,7 @@ class LenderPreferencesController extends BaseController
                 return Redirect::route('lender:public-profile', $user->getUsername());
             }
         }
-        return Redirect::route('lender.account-preference')->withForm($form);
+        return Redirect::route('lender:preference')->withForm($form);
     }
     
     public function getAutoLending()
