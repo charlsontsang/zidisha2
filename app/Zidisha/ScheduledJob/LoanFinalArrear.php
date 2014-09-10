@@ -45,7 +45,7 @@ class LoanFinalArrear extends ScheduledJob
 
     public function getQuery()
     {
-        $amountThreshold = \Setting::get('loan.repaymentDueAmount');
+        $thresholdAmount = \Config::get('constants.repaymentAmountThreshold');
 
         $query = DB::table('installments AS i')
             ->join('borrowers AS br', 'i.borrower_id', '=', 'br.id')
@@ -53,7 +53,7 @@ class LoanFinalArrear extends ScheduledJob
             ->whereRaw(
                 '(
                     i.paid_amount IS NULL OR i.paid_amount < (
-                        i.amount - (' . $amountThreshold . ' * (
+                        i.amount - (' . $thresholdAmount . ' * (
                             SELECT
                                 rate
                             FROM
