@@ -82,4 +82,10 @@ class Installment extends BaseInstallment
         return $copyObj;
     }
 
+    public function isGracePeriod()
+    {
+        // TODO fix this for rescheduled loans
+        return $this->getAmount()->isZero();
+    }
+
 }

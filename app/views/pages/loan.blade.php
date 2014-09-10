@@ -39,7 +39,7 @@
                             Discussion <span class="badge badge-danger">{{ $commentCount }}</span>
                         </a>
                     </li>
-                    @if($loan->isActive())
+                    @if($loan->isDisbursed())
                     <li><a href="#repayment" role="tab" data-toggle="tab">Repayment</a></li>
                     @endif
                 </ul>
@@ -293,7 +293,7 @@
                                 
                                 <div class="loan-section-content">
                                 </div>
-
+                                
                                 @include('partials.comments.comments', [
                                     'comments' => $loanFeedbackComments,
                                     'receiver' => $loan,

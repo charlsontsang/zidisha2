@@ -76,6 +76,12 @@ return [
             'instructions' => ':date: :amount',
         ],
     ],
+    'loan-repaid' => [
+        'loan-application' => [
+            'title'        => 'Congratulations!  Your loan is fully repaid.',
+            'instructions' => '<a href=":applicationLink">Click here</a> to create a new loan application.',
+        ],
+    ],
     'partials'                   => [
         'expected-payments' => 'Expected Payments',
         'actual-payments'   => 'Actual Payments',

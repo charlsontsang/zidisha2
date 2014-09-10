@@ -3,8 +3,6 @@
 @section('content')
 @parent
 
-@include('borrower.loan.partials.repayment-schedule')
-<br><br>
-@include('borrower.loan.partials.feedback')
+@include('borrower.loan.repaid-loan-application')
 
 @stop

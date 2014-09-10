@@ -19,6 +19,7 @@ if (!empty($dollarExchangeRate)) {
     </thead>
     <tbody>
     @foreach($repaymentSchedule as $repaymentScheduleInstallment)
+    @if(!$repaymentScheduleInstallment->getInstallment()->isGracePeriod())
     <tr>
         <td>{{ $repaymentScheduleInstallment->getInstallment()->getDueDate()->format('M j, Y') }}</td>
         <td>{{ $c($repaymentScheduleInstallment->getInstallment()->getAmount()) }}</td>
@@ -26,22 +27,23 @@ if (!empty($dollarExchangeRate)) {
         @if($repaymentScheduleInstallment->getPayments())
         @foreach($repaymentScheduleInstallment->getPayments() as $repaymentScheduleInstallmentPayment)
         @if($i > 0)
-    <tr>
-        <td></td>
-        <td></td>
+        <tr>
+            <td></td>
+            <td></td>
+            <td>{{ $repaymentScheduleInstallmentPayment->getPayment()->getPaidDate()->format('M j, Y') }}</td>
+            <td>{{ $c($repaymentScheduleInstallmentPayment->getAmount()) }}</td>
+        </tr>
+        @else
         <td>{{ $repaymentScheduleInstallmentPayment->getPayment()->getPaidDate()->format('M j, Y') }}</td>
         <td>{{ $c($repaymentScheduleInstallmentPayment->getAmount()) }}</td>
-    </tr>
-    @else
-    <td>{{ $repaymentScheduleInstallmentPayment->getPayment()->getPaidDate()->format('M j, Y') }}</td>
-    <td>{{ $c($repaymentScheduleInstallmentPayment->getAmount()) }}</td>
-    </tr>
-    @endif
-    <?php $i++; ?>
-    @endforeach
-    @else
-    <td></td>
-    <td></td>
+        </tr>
+        @endif
+        <?php $i++; ?>
+        @endforeach
+        @else
+        <td></td>
+        <td></td>
+        @endif
     @endif
     @endforeach
     </tbody>

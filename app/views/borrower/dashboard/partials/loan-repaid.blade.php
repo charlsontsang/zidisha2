@@ -1,3 +1,1 @@
-<div>
- <p>Repaid Loan</p>
-</div>
+@include('borrower.loan.repaid-loan-application')
