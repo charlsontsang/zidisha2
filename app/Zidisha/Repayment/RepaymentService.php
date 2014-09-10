@@ -225,7 +225,7 @@ class RepaymentService
 
             $paidAmount = Money::create(0, $loan->getCurrency());
             foreach ($installments as $installment) {
-                $paidAmount = $paidAmount->add($installment->getAmount());
+                $paidAmount = $paidAmount->add($installment->getPaidAmount());
             }
 
             $loan->setPaidAmount($paidAmount);
