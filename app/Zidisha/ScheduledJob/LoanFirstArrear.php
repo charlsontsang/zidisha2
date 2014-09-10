@@ -99,17 +99,17 @@ class LoanFirstArrear extends ScheduledJob
         $installment = InstallmentQuery::create()
             ->getDueInstallment($loan);
 
-        $missedInstallmentCount =  $repaymentSchedule->getMissedInstallmentCount();
+        $missedInstallmentCount = $repaymentSchedule->getMissedInstallmentCount();
 
         if ($installment && $missedInstallmentCount < 1 && $installment->getDueDate() == $this->getStartDate()) {
-                /** @var  BorrowerMailer $borrowerMailer */
-                $borrowerMailer = \App::make('Zidisha\Mail\BorrowerMailer');
+            /** @var  BorrowerMailer $borrowerMailer */
+            $borrowerMailer = \App::make('Zidisha\Mail\BorrowerMailer');
 
-                /** @var  BorrowerSmsService $borrowerSmsService */
-                $borrowerSmsService = \App::make('Zidisha\Sms\BorrowerSmsService');
+            /** @var  BorrowerSmsService $borrowerSmsService */
+            $borrowerSmsService = \App::make('Zidisha\Sms\BorrowerSmsService');
 
-                $borrowerMailer->sendLoanFirstArrearMail($borrower, $installment);
-                $borrowerSmsService->sendLoanFirstArrearNotification($borrower, $installment);
+            $borrowerMailer->sendLoanFirstArrearMail($borrower, $installment);
+            $borrowerSmsService->sendLoanFirstArrearNotification($borrower, $installment);
         }
 
         $job->delete();
