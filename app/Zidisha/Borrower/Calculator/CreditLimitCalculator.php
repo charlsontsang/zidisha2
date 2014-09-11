@@ -270,11 +270,11 @@ class CreditLimitCalculator
 
     protected function calculateCreditLimit()
     {
-        $loanStatus = $this->borrower->getLoanStatus();
+        $activeLoan = $this->borrower->getActiveLoan();
         
-        if ($loanStatus == Loan::ACTIVE || $loanStatus == Loan::FUNDED) {
+        if ($activeLoan && ($activeLoan->isActive() || $activeLoan->isFunded())) {
             // we calculate credit limit based on current loan amount
-            $loan = $this->borrower->getActiveLoan();
+            $loan = $activeLoan;
             //assume current loan will be repaid on time for purpose of displaying future credit limits
             $onTime = true;
         } else {
