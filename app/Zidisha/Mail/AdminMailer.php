@@ -10,9 +10,6 @@ use Zidisha\User\UserQuery;
 
 class AdminMailer
 {
-    /**
-     * @var Mailer
-     */
     private $mailer;
 
     public function __construct(Mailer $mailer)
@@ -34,7 +31,7 @@ class AdminMailer
         $message = \Lang::get('lender.mails.borrower-comment-notification.body', $parameters);
         $data['content'] = $message;
 
-        $this->mailer->send(
+        $this->mailer->queue(
             'emails.hero',
             $data + [
                 'to'         => $admin->getEmail(),
@@ -91,7 +88,7 @@ class AdminMailer
             $exceptions[] = $_exception;
         }
         
-        $this->mailer->send(
+        $this->mailer->queue(
             'emails.admin.error',
             [
                 'to'         => \Config::get('app.developerEmail'),
