@@ -108,7 +108,7 @@ class LenderMailer
         $data['header'] = \Lang::get('lender.mails.loan-fully-funded.accept-message-1', ['borrowerName' => $bid->getBorrower()->getName()]);
         
         //TODO: confirm 
-        $message = \Lang::get(
+        $data['content'] = \Lang::get(
             'lender.mails.loan-fully-funded.accept-message-2',
             [
                 'borrowerName' => $bid->getBorrower()->getName(),
@@ -216,6 +216,7 @@ class LenderMailer
         );
     }
 
+    //TODO
     public function sendGiftCardMailToSender(GiftCard $giftCard)
     {
         $email = $giftCard->getLender()->getUser()->getEmail();
@@ -231,6 +232,7 @@ class LenderMailer
         );
     }
 
+    //TODO
     public function sendGiftCardMailToRecipient(GiftCard $giftCard)
     {
         $email = $giftCard->getRecipientEmail();
@@ -242,23 +244,6 @@ class LenderMailer
                 'to'      => $email,
                 'from'    => 'service@zidisha.com',
                 'subject' => 'Your Gift Card Order.'
-            ]
-        );
-    }
-
-    public function sendAbandonedMail(Lender $lender)
-    {
-        $subject = \Lang::get('lender.mails.lender-account-abandoned.subject');
-        $message = \Lang::get('lender.mails.lender-account-abandoned.body', ['lenderName' => $lender->getName(), 'siteLink' => \URL::to('/'), 'expiryDate' => Carbon::now()->addMonth()->format('F j, Y')]);
-        $data['header'] = $message;
-
-        $this->mailer->send(
-            'emails.lender.abandoned',
-            [
-                'to'         => $lender->getUser()->getEmail(),
-                'from'       => 'service@zidisha.com',
-                'subject'    => $subject,
-                'templateId' => \setting::get('sendwithus.lender-account-abandoned-template-id')
             ]
         );
     }
@@ -352,10 +337,8 @@ class LenderMailer
         );
     }
 
-    public function sendAbandonedUserMail(User $user)
+    public function sendAbandonedUserMail(Lender $lender)
     {
-        $lender = LenderQuery::create()
-            ->findOneById($user->getId());
         $parameters = [
             'lenderName' => $lender->getName(),
             'siteLink'   => route('home'),
@@ -367,7 +350,7 @@ class LenderMailer
         $this->mailer->send(
             'emails.hero',
             $data + [
-                'to'         => $user->getEmail(),
+                'to'         => $lender->getUser()->getEmail(),
                 'subject'    => \Lang::get('lender.mails.abandoned-user-mail.subject', $parameters),
                 'templateId' => \Setting::get('sendwithus.borrower-notifications-template-id'),
             ]
@@ -405,10 +388,15 @@ class LenderMailer
         );
     }
 
-    public function sendLoanAboutToExpireMail(Bid $bid, $parameters = [])
+    public function sendLoanAboutToExpireMail(Bid $bid)
     {
         $lender = $bid->getLender();
-        $parameters += [
+        $loan = $bid->getLoan();
+        $parameters = [
+            'amountStillNeeded' => Money::create('46', 'USD'),
+            'borrowerName'      => ucwords(strtolower($loan->getBorrower()->getName())),
+            'loanLink'          => route('loan:index', $loan->getId()),
+            'inviteLink'        => route('lender:invite'),
             'recentBidDate' => $bid->getBidAt()->format('d-m-Y'),
         ];
 
@@ -425,11 +413,20 @@ class LenderMailer
         );
     }
 
-    public function sendAllowLoanForgivenessMail(ForgivenessLoan $forgivenessLoan, Lender $lender, $parameters, $subject)
+    public function sendAllowLoanForgivenessMail(Loan $loan, ForgivenessLoan $forgivenessLoan, Lender $lender)
     {        
-        $parameters += [
-            'noLink' => route('loan:index', $forgivenessLoan->getLoanId()).'?v='.$forgivenessLoan->getVerificationCode().'&lid='.$lender->getId()."&dntfrg=1",
+        $parameters = [
+            'borrowerName'      => $loan->getBorrower()->getName(),
+            'disbursedDate'     => $loan->getDisbursedAt()->format('d-m-Y'),
+            'message'           => trim($forgivenessLoan->getComment()),
+            'outstandingAmount' => $loan->getUsdAmount()->multiply($loan->getPaidPercentage())->divide(100),
+            'loanLink'          => route('loan:index', $loan->getId()),
+            'yesLink'           => route('loan:index', $loan->getId()) . '?v=' . $forgivenessLoan->getVerificationCode(),
+            'yesImage'          => '/assets/images/loan-forgive/yes.png',
+            'noImage'           => '/assets/images/loan-forgive.no.png',
+            'noLink'            => route('loan:index', $forgivenessLoan->getLoanId()).'?v='.$forgivenessLoan->getVerificationCode().'&lid='.$lender->getId()."&dntfrg=1",
         ];
+        $subject = \Lang::get('lender.mails.allow-loan-forgiveness.subject', $parameters);
         $message = \Lang::get('lender.mails.allow-loan-forgiveness.body', $parameters);
         $data['content'] = $message;
 
@@ -535,9 +532,25 @@ class LenderMailer
         return $data;
     }
 
-    public function sendDisbursedLoanMail(Lender $lender, $parameters, $data, $subject)
+    public function sendDisbursedLoanMail(Lender $lender, Loan $loan)
     {
-        $this->mailer->send(
+        $borrower = $loan->getBorrower();
+        $parameters = [
+            'borrowerName'    => $borrower->getName(),
+            'borrowFirstName' => $borrower->getFirstName(),
+            'disbursedDate'   => date('F d, Y',  time()),
+            'loanPage'        => route('loan:index', $loan->getId()),
+            'giftCardPage'    => route('lender:gift-cards')
+        ];
+
+        $data['image_src'] = $borrower->getUser()->getProfilePictureUrl();
+        $message = \Lang::get('lender.mails.loan-disbursed.message', $parameters);
+        $data['header'] = $message;
+        $body = \Lang::get('lender.mails.loan-disbursed.body', $parameters);
+        $data['content'] = $body;
+        $subject = \Lang::get('lender.mails.loan-disbursed.subject', $parameters);
+
+        $this->mailer->queue(
             'emails.hero',
             $data + [
                 'to'         => $lender->getUser()->getEmail(),
