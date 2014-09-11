@@ -190,4 +190,12 @@ Now, we'd like to ask for your help. Please log in to your Zidisha website accou
 Best wishes,<br/><br/>
 The Zidisha Team"
     ],
+    'eligible-invite' => [
+        'subject' => 'Zidisha Invite Bonuses',
+        'body' => "Dear :borrowerName,<br/><br/>
+Congratulations! Your on-time repayment rate is high enough to qualify for the Zidisha invite program. You may give and receive credit limit bonuses for each new member you invite to join Zidisha as long as you remain eligible.<br/><br/>
+To learn more, go to <a href=':zidishaLink' target='_blank'>www.zidisha.org</a> and log into your member account.<br/><br/>
+Best wishes,<br/><br/>
+The Zidisha Team"
+    ],
 ];

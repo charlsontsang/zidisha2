@@ -501,4 +501,23 @@ class BorrowerMailer{
             ]
         );
     }
+
+    public function sendEligibleInviteMail(Borrower $borrower)
+    {
+        $parameters = [
+            'borrowerName' => $borrower->getName(),
+            'zidishaLink'  => route('home'),
+        ];
+        $message = \Lang::get('borrower.mails.eligible-invite.body', $parameters);
+        $data['content'] = $message;
+
+        $this->mailer->queue(
+            'emails.hero',
+            $data + [
+                'to'         => $borrower->getUser()->getEmail(),
+                'subject'    => \Lang::get('borrower.mails.eligible-invite.subject'),
+                'templateId' => \Setting::get('sendwithus.borrower-notifications-template-id')
+            ]
+        );
+    }
 }
