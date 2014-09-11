@@ -144,4 +144,17 @@ class SiftScienceService
             ]
         );
     }
+
+    public function sendFacebookEvent(User $user, $facebookId)
+    {
+        $this->sift->track(
+            'facebook_link',
+            [
+                '$user_id'    => $user->getId(),
+                '$session_id' => $this->sessionId,
+                'facebook_id' => $facebookId,
+                '$time'       => time()
+            ]
+        );
+    }
 }

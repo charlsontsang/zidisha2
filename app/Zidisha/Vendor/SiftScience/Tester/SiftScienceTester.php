@@ -85,4 +85,13 @@ class SiftScienceTester {
 
         $this->siftScienceService->sendBorrowerPaymentEvent($eventType, $borrower, $amount);
     }
+
+    public function sendFacebookEvent()
+    {
+        $user = new User();
+        $user->setId(5);
+        $facebookId = 33445566;
+
+        $this->siftScienceService->sendFacebookEvent($user, $facebookId);
+    }
 }
