@@ -10119,6 +10119,11 @@ a.link-dark {
 #donation-amount {
   height: 25px;
 }
+@media (max-width: 767px) {
+  .bid-form h3 {
+    margin-top: 0;
+  }
+}
 .comments textarea {
   max-width: 100% !important;
 }
