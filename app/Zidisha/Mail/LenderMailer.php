@@ -564,13 +564,12 @@ class LenderMailer
         $data['header'] = $message;
         $body = \Lang::get('lender.mails.loan-disbursed.body', $parameters);
         $data['content'] = $body;
-        $subject = \Lang::get('lender.mails.loan-disbursed.subject', $parameters);
 
         $this->mailer->queue(
             'emails.hero',
             $data + [
                 'to'         => $lender->getUser()->getEmail(),
-                'subject'    => $subject,
+                'subject'    => \Lang::get('lender.mails.loan-disbursed.subject', $parameters),
                 'templateId' => \Setting::get('sendwithus.lender-loan-disbursed-template-id'),
             ]
         );
