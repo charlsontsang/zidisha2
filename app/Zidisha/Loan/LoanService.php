@@ -640,6 +640,7 @@ class LoanService
             ->getTotalInviteCreditAmount($lenderIds);
         /** @var LenderRefund $lenderRefund */
         foreach ($lenderRefunds as $lenderRefund) {
+            // TODO add account preference
             if ($lenderRefund->getAmount()->isPositive()) {
                 $this->lenderMailer->sendExpiredLoanMail($loan, $lenderRefund->getLender(), $lenderRefund->getAmount(), $currentCreditArray[$lenderRefund->getLender()->getId()]);
             }

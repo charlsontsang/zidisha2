@@ -20,33 +20,33 @@ Quick Links
 
 <p>Send me an email when:</p>
 
-{{ BootstrapForm::checkbox('notifyLoanFullyFunded', true, null, [
+{{ BootstrapForm::checkbox('notifyLoanFullyFunded', null, null, [
     'label' => 'A loan I have bid on is fully funded',
 ]) }}
 
-{{ BootstrapForm::checkbox('notifyLoanAboutToExpire', true, null, [
+{{ BootstrapForm::checkbox('notifyLoanAboutToExpire', null, null, [
     'label' => 'A loan I have bid on has not been fully funded and is about to expire',
 ]) }}
 
-<!-- TO DO 
-{{ BootstrapForm::checkbox('', true, null, [
+<!-- TODO 
+{{ BootstrapForm::checkbox('', null, null, [
     'label' => 'A loan I have bid on has expired and the funds have been returned to my account',
 ]) }}
 -->
 
-{{ BootstrapForm::checkbox('notifyLoanDisbursed', true, null, [
+{{ BootstrapForm::checkbox('notifyLoanDisbursed', null, null, [
     'label' => 'A loan I have funded is disbursed to a borrower',
 ]) }}
 
-{{ BootstrapForm::checkbox('notifyComment', true, null, [
+{{ BootstrapForm::checkbox('notifyComment', null, null, [
     'label' => 'A borrower I have funded posts a comment',
 ]) }}
 
-{{ BootstrapForm::checkbox('notifyLoanApplication', true, null, [
+{{ BootstrapForm::checkbox('notifyLoanApplication', null, null, [
     'label' => 'A borrower I have funded before posts a new loan application',
 ]) }}
 
-{{ BootstrapForm::checkbox('notifyInviteAccepted', true, null, [
+{{ BootstrapForm::checkbox('notifyInviteAccepted', null, null, [
     'label' => 'One of my new lender invites is accepted',
 ]) }}
 <br/>
@@ -58,11 +58,11 @@ Quick Links
 
 <h4>Display Preferences</h4>
 
-{{ BootstrapForm::checkbox('hideLendingActivity', true, null, [
+{{ BootstrapForm::checkbox('hideLendingActivity', null, null, [
     'label' => 'I would like my loan bids and funded loans to be displayed on my public profile.',
 ]) }}
 
-{{ BootstrapForm::checkbox('hideKarma', true, null, [
+{{ BootstrapForm::checkbox('hideKarma', null, null, [
     'label' => 'I would like my karma score to be displayed on my public profile.',
 ]) }} 
 

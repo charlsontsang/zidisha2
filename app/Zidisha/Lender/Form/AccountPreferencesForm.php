@@ -5,41 +5,49 @@ namespace Zidisha\Lender\Form;
 
 use Zidisha\Form\AbstractForm;
 use Zidisha\Lender\Lender;
-use Zidisha\Lender\PreferencesQuery;
 
 class AccountPreferencesForm extends AbstractForm
 {
 
+    /**
+     * @var \Zidisha\Lender\Lender
+     */
+    private $lender;
+
+    public function __construct(Lender $lender)
+    {
+
+        $this->lender = $lender;
+    }
+
     public function getRules($data)
     {
         return [
-            'hideLendingActivity'     => 'required|in:' . implode(',', ($this->getBooleanArray())),
-            'hideKarma'               => 'required|in:' . implode(',', ($this->getBooleanArray())),
-            'notifyLoanFullyFunded'   => 'required|in:' . implode(',', ($this->getBooleanArray())),
-            'notifyLoanAboutToExpire' => 'required|in:' . implode(',', ($this->getBooleanArray())),
-            'notifyLoanDisbursed'     => 'required|in:' . implode(',', ($this->getBooleanArray())),
-            'notifyComment'           => 'required|in:' . implode(',', ($this->getBooleanArray())),
-            'notifyLoanApplication'   => 'required|in:' . implode(',', ($this->getBooleanArray())),
-            'notifyInviteAccepted'    => 'required|in:' . implode(',', ($this->getBooleanArray())),
+            'hideLendingActivity'     => '',
+            'hideKarma'               => '',
+            'notifyLoanFullyFunded'   => '',
+            'notifyLoanAboutToExpire' => '',
+            'notifyLoanDisbursed'     => '',
+            'notifyComment'           => '',
+            'notifyLoanApplication'   => '',
+            'notifyInviteAccepted'    => '',
             'notifyLoanRepayment'     => 'required|in:' . implode(',', array_keys($this->getNotifyLoanRepayment())),
         ];
     }
 
     public function getDefaultData()
     {
-        /** @var Lender $lender */
-        $lender = \Auth::user()->getLender();
-        $preference = $lender->getPreferences();
+        $preference = $this->lender->getPreferences();
 
         return [
-            'hideLendingActivity'     => $preference->getHideLendingActivity()? 'true' : 'false',
-            'hideKarma'               => $preference->getHideKarma()? 'true' : 'false',
-            'notifyLoanFullyFunded'   => $preference->getNotifyLoanFullyFunded()? 'true' : 'false',
-            'notifyLoanAboutToExpire' => $preference->getNotifyLoanAboutToExpire()? 'true' : 'false',
-            'notifyLoanDisbursed'     => $preference->getNotifyLoanDisbursed()? 'true' : 'false',
-            'notifyComment'           => $preference->getNotifyComment()? 'true' : 'false',
-            'notifyLoanApplication'   => $preference->getNotifyLoanApplication()? 'true' : 'false',
-            'notifyInviteAccepted'    => $preference->getNotifyInviteAccepted()? 'true' : 'false',
+            'hideLendingActivity'     => $preference->getHideLendingActivity(),
+            'hideKarma'               => $preference->getHideKarma(),
+            'notifyLoanFullyFunded'   => $preference->getNotifyLoanFullyFunded(),
+            'notifyLoanAboutToExpire' => $preference->getNotifyLoanAboutToExpire(),
+            'notifyLoanDisbursed'     => $preference->getNotifyLoanDisbursed(),
+            'notifyComment'           => $preference->getNotifyComment(),
+            'notifyLoanApplication'   => $preference->getNotifyLoanApplication(),
+            'notifyInviteAccepted'    => $preference->getNotifyInviteAccepted(),
             'notifyLoanRepayment'     => $preference->getNotifyLoanRepayment(),
         ];
     }
@@ -56,13 +64,5 @@ class AccountPreferencesForm extends AbstractForm
         ];
 
         return $array;
-    }
-
-    public function getBooleanArray()
-    {
-        return [
-            'true'  => true,
-            'false' => false,
-        ];
     }
 }

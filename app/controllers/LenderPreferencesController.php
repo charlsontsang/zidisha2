@@ -7,7 +7,7 @@ use Zidisha\Lender\Lender;
 use Zidisha\Lender\LenderQuery;
 use Zidisha\Lender\LenderService;
 
-class LenderPreferencesController extends BaseController
+class LenderPreferencesController extends BaseLenderController
 {
 
     private $accountPreferencesForm;
@@ -19,15 +19,15 @@ class LenderPreferencesController extends BaseController
     private $autoLendingSettingForm;
     
     public function __construct(
-        AccountPreferencesForm $accountPreferencesForm,
         LenderService $lenderService,
         AutoLendingSettingForm $autoLendingSettingForm
     )
     {
-        $this->accountPreferencesForm = $accountPreferencesForm;
+        $this->accountPreferencesForm = new AccountPreferencesForm($this->getLender());
         $this->lenderService = $lenderService;
         $this->autoLendingSettingForm = $autoLendingSettingForm;
     }
+    
     public function getAccountPreference()
     {
 
@@ -48,7 +48,7 @@ class LenderPreferencesController extends BaseController
                 return Redirect::route('lender:public-profile', $user->getUsername());
             }
         }
-        Flash::success('lender.flash.preferences.error');
+        Flash::error('lender.flash.preferences.error');
         return Redirect::route('lender:preference')->withForm($form);
     }
     
