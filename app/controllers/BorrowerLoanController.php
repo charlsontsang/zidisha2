@@ -88,34 +88,11 @@ class BorrowerLoanController extends BaseController
 
             $template = $loan->isOpen() ? 'borrower.loan.loan-open' : 'borrower.loan.loan-funded';
         } elseif ($loan->isActive()) {
-
             $template = 'borrower.loan.loan-active';
-        } elseif ($loan->isRepaid() || $loan->isDefaulted()) {
-            // TODO, same todo as in LoanController
-            $displayFeedbackComments = ($loan->getStatus() == Loan::DEFAULTED || $loan->getStatus() == Loan::REPAID);
-
-            $canPostFeedback = false;
-            $canReplyFeedback = false;
-            if ($displayFeedbackComments && Auth::check()) {
-                $user = Auth::user();
-
-                if ($user == $loan->getBorrower()->getUser()) {
-                    $canReplyFeedback = true;
-                }
-            }
-
-            //TODO
-            $feedbackCommentPage = Input::get('feedbackPage', 1);
-
-            $loanFeedbackComments = $this->loanFeedbackCommentService->getPaginatedComments($loan, $feedbackCommentPage, 10);
-
-            $data += compact('canPostFeedback', 'canReplyFeedback', 'loanFeedbackComments');
-
-            if ($loan->isRepaid()) {
-                $template = 'borrower.loan.loan-repaid';
-            } else {
-                $template = 'borrower.loan.loan-defaulted';
-            }
+        } elseif ($loan->isRepaid()) {
+            $template = 'borrower.loan.loan-repaid';
+        } elseif ($loan->isDefaulted()) {
+            $template = 'borrower.loan.loan-defaulted';
         } elseif ($loan->isExpired()) {
             $template = 'borrower.loan.loan-expired';
         } elseif ($loan->isCanceled()) {

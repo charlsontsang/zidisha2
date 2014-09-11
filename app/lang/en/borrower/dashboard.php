@@ -26,6 +26,10 @@ return [
             'instructions' => 'Click <a href=":loanLink">here</a> to accept the lender bids.',
         ]
     ],
+    'loan-defaulted' => [
+        'title'   => 'Your loan has been written off',
+        'message' => 'You cannot apply for a new loan.',
+    ],
     'loan-page'        => 'Loan page',
     'public-loan-page' => 'Public loan page',
 ];
