@@ -402,6 +402,19 @@
                     </span>
                     @endif
 
+                    @if($loan->isExpired())
+                    <span class="label label-default">
+                        Loan expired
+                    </span>
+                    @include('partials/loan-progress', [ 'loan' => $loan ])
+                    @endif
+
+                    @if($loan->isCanceled())
+                    <span class="label label-default">
+                        The loan was canceled
+                    </span>
+                    @endif
+
                     @if($loan->isDefaulted())
                     <span class="label label-default">
                         Loan defaulted

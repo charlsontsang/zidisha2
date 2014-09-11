@@ -30,6 +30,14 @@ return [
         'title'   => 'Your loan has been written off',
         'message' => 'You cannot apply for a new loan.',
     ],
+    'loan-expired' => [
+        'title'   => 'Your loan has been expired',
+        'message' => '<a href=":applicationLink">Click here</a> to create a new loan application.',
+    ],
+    'loan-canceled' => [
+        'title'   => 'Your loan has been canceled',
+        'message' => '<a href=":applicationLink">Click here</a> to create a new loan application.',
+    ],
     'loan-page'        => 'Loan page',
     'public-loan-page' => 'Public loan page',
 ];

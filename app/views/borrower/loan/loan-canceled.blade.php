@@ -3,7 +3,6 @@
 @section('content')
 @parent
 
-<p>
-    {{ \Lang::get('borrower.loan.canceled.cancel-message') }}
-</p>
+@include('borrower.dashboard.partials.loan-canceled')
+
 @stop
