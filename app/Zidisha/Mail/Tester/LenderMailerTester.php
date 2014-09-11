@@ -541,6 +541,4 @@ class LenderMailerTester
 
         $this->lenderMailer->sendRepaidLoanGainMail($lender, $loan, $loanAmount, $repaidAmount, $gainAmount, $gainPercent);
     }
-
-
 }
