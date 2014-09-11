@@ -140,12 +140,36 @@
                                 <span class="text-light">This Loan</span>
                             </div>
                             <div class="loan-section-content">
-                                @if($loan->isDisbursed())
-                                    <div class="visible-xs">
-                                        @include('loan.partials.repaid-bar', compact('loan'))
-                                        <br/>
-                                    </div>
-                                @endif
+                                <div class="visible-xs">
+                                    @if($loan->isExpired())
+                                    <span class="label label-default">
+                                        Loan expired
+                                    </span>
+                                    @include('partials/loan-progress', [ 'loan' => $loan ])
+                                    @endif
+
+                                    @if($loan->isCanceled())
+                                    <span class="label label-default">
+                                        The loan was canceled
+                                    </span>
+                                    <br/>
+                                    @endif
+
+                                    @if($loan->isDefaulted())
+                                    <span class="label label-default">
+                                        Loan defaulted
+                                    </span>
+                                    <br/>
+                                    <br/>
+                                    @endif
+
+                                    @if($loan->isDisbursed())
+                                    @include('loan.partials.repaid-bar', compact('loan'))
+                                    <br/>
+                                    @endif
+                                    
+                                    <br/>
+                                </div>
                                 <div class="row">
                                     <div class="col-sm-6">
                                         @if($loan->isDisbursed())
