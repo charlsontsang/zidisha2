@@ -88,7 +88,7 @@ class AdminMailer
             $exceptions[] = $_exception;
         }
         
-        $this->mailer->queue(
+        $this->mailer->send(
             'emails.admin.error',
             [
                 'to'         => \Config::get('app.developerEmail'),
