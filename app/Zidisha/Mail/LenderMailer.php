@@ -39,7 +39,7 @@ class LenderMailer
 
     public function sendFirstBidConfirmationMail(Lender $lender)
     {
-        $this->mailer->send(
+        $this->mailer->queue(
             'emails.hero',
             [
                 'to'         => $lender->getUser()->getEmail(),
@@ -63,7 +63,7 @@ class LenderMailer
             ],
         ];
 
-        $this->mailer->send(
+        $this->mailer->queue(
             'emails.label-template',
             $data + [
                 'to'         => $lender->getUser()->getEmail(),
@@ -87,7 +87,7 @@ class LenderMailer
             ],
         ];
 
-        $this->mailer->send(
+        $this->mailer->queue(
             'emails.label-template',
             $data + [
                 'to'         => $lender->getUser()->getEmail(),
@@ -120,7 +120,7 @@ class LenderMailer
             ]
         );
         
-        $this->mailer->send(
+        $this->mailer->queue(
             'emails.hero',
             $data + [
                 'to'      => $email,
@@ -152,7 +152,7 @@ class LenderMailer
         $message = \Lang::get('lender.mails.lender-invite.body', ['lenderName' => $lender->getName(), 'customMessage' => $customMessage]);
         $data['content'] = $message;
         
-        $this->mailer->send(
+        $this->mailer->queue(
             'emails.hero',
             $data + [
                 'to'         => $email,
@@ -175,7 +175,7 @@ class LenderMailer
         $data['button_text'] = \Lang::get('lender.mails.lender-invite-credit.button-text');
         $data['button_url'] = route('loan:index');
         
-        $this->mailer->send(
+        $this->mailer->queue(
             'emails.hero',
             $data + [
                 'to'      => $email,
@@ -194,7 +194,7 @@ class LenderMailer
             ],
         ];
 
-        $this->mailer->send(
+        $this->mailer->queue(
             'emails.label-template',
             $data + [
                 'to'         => $lender->getUser()->getEmail(),
@@ -206,7 +206,7 @@ class LenderMailer
 
     public function sendIntroductionMail(Lender $lender)
     {
-        $this->mailer->send(
+        $this->mailer->queue(
             'emails.hero',
             [
                 'to'         => $lender->getUser()->getEmail(),
@@ -221,7 +221,7 @@ class LenderMailer
     {
         $email = $giftCard->getLender()->getUser()->getEmail();
 
-        $this->mailer->send(
+        $this->mailer->queue(
             'emails.lender.gift-card-sender',
             [
                 'card'    => $giftCard,
@@ -237,7 +237,7 @@ class LenderMailer
     {
         $email = $giftCard->getRecipientEmail();
 
-        $this->mailer->send(
+        $this->mailer->queue(
             'emails.lender.gift-card-receiver',
             [
                 'card'    => $giftCard,
@@ -260,7 +260,7 @@ class LenderMailer
         $message = \Lang::get('lender.mails.borrower-comment-notification.body', $parameters);
         $data['content'] = $message;
 
-        $this->mailer->send(
+        $this->mailer->queue(
             'emails.hero',
             $data + [
                 'to'         => $lender->getUser()->getEmail(),
@@ -283,7 +283,7 @@ class LenderMailer
 
         $subject = \Lang::get('lender.mails.loan-defaulted.subject');
 
-        $this->mailer->send(
+        $this->mailer->queue(
             'emails.label-template',
             $data + [
                 'to'         => $lender->getUser()->getEmail(),
@@ -305,7 +305,7 @@ class LenderMailer
         $message = \Lang::get('lender.mails.loan-expired.body', $parameters);
         $data['content'] = $message;
 
-        $this->mailer->send(
+        $this->mailer->queue(
             'emails.hero',
             $data + [
                 'to'         => $lender->getUser()->getEmail(),
@@ -327,7 +327,7 @@ class LenderMailer
         $message = \Lang::get('lender.mails.loan-expired-invite.body', $parameters);
         $data['content'] = $message;
 
-        $this->mailer->send(
+        $this->mailer->queue(
             'emails.hero',
             $data + [
                 'to'         => $lender->getUser()->getEmail(),
@@ -347,7 +347,7 @@ class LenderMailer
         $message = \Lang::get('lender.mails.abandoned-user-mail.body', $parameters);
         $data['content'] = $message;
 
-        $this->mailer->send(
+        $this->mailer->queue(
             'emails.hero',
             $data + [
                 'to'         => $lender->getUser()->getEmail(),
@@ -378,7 +378,7 @@ class LenderMailer
         $message = \Lang::get('lender.mails.lender-unused-fund.body', ['lenderBalance' => $currentBalance]);
         $data['content'] = $message;
 
-        $this->mailer->send(
+        $this->mailer->queue(
             'emails.hero',
             $data + [
                 'to'         => $lender->getUser()->getEmail(),
@@ -403,7 +403,7 @@ class LenderMailer
         $body = \Lang::get('lender.mails.loan-about-to-expire.body', $parameters);
         $data['content'] = $body;
 
-        $this->mailer->send(
+        $this->mailer->queue(
             'emails.hero',
             $data + [
                 'to'         => $lender->getUser()->getEmail(),
@@ -430,7 +430,7 @@ class LenderMailer
         $message = \Lang::get('lender.mails.allow-loan-forgiveness.body', $parameters);
         $data['content'] = $message;
 
-        $this->mailer->send(
+        $this->mailer->queue(
             'emails.hero',
             $data + [
                 'to'         => $lender->getUser()->getEmail(),
@@ -448,7 +448,7 @@ class LenderMailer
             'repayDate'    => $lastLoan->getRepaidAt()->format('F j, Y')
         ];
 
-        $this->mailer->send(
+        $this->mailer->queue(
             'emails.label-template',
             [
                 'to'         => $lender->getUser()->getEmail(),
@@ -466,7 +466,7 @@ class LenderMailer
             'loanUrl'      => route('loan:index', ['loanId' => $loan->getId()]),
         ];
         
-        $this->mailer->send(
+        $this->mailer->queue(
             'emails.label-template',
             [
                 'to'         => $lender->getUser()->getEmail(),
@@ -575,7 +575,7 @@ class LenderMailer
         $body = \Lang::get('lender.mails.loan-repayment-received.body', $parameters);
         $data['content'] = $body;
 
-        $this->mailer->send(
+        $this->mailer->queue(
             'emails.hero',
             $data + [
                 'to'         => $lender->getUser()->getEmail(),
@@ -595,7 +595,7 @@ class LenderMailer
         $body = \Lang::get('lender.mails.loan-repayment-received-balance.body', $parameters);
         $data['content'] = $body;
 
-        $this->mailer->send(
+        $this->mailer->queue(
             'emails.hero',
             $data + [
                 'to'         => $lender->getUser()->getEmail(),
@@ -614,7 +614,7 @@ class LenderMailer
             ],
         ];
 
-        $this->mailer->send(
+        $this->mailer->queue(
             'emails.label-template',
             $data + [
                 'to'         => $lender->getUser()->getEmail(),
@@ -647,7 +647,7 @@ class LenderMailer
         $body = \Lang::get('lender.mails.loan-repaid-gain.body', $parameters);
         $data['content'] = $body;
 
-        $this->mailer->send(
+        $this->mailer->queue(
             'emails.hero',
             $data + [
                 'to'         => $lender->getUser()->getEmail(),
