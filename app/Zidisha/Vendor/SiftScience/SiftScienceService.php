@@ -6,6 +6,7 @@ use SiftClient;
 use Zidisha\Borrower\Borrower;
 use Zidisha\Borrower\Invite;
 use Zidisha\Comment\Comment;
+use Zidisha\Currency\Money;
 use Zidisha\User\User;
 
 class SiftScienceService
@@ -13,6 +14,9 @@ class SiftScienceService
     protected $sift;
 
     protected $sessionId;
+
+    const TYPE_REPAYMENT = 'repayment';
+    const TYPE_DISBURSEMENT = 'disbursement';
 
     public function __construct(DummySiftScienceClient $dummySiftScienceClient)
     {
@@ -125,6 +129,18 @@ class SiftScienceService
                 '$session_id' => $this->sessionId,
                 'invited_by'  => $invite->getBorrowerId(),
                 '$time'       => time()
+            ]
+        );
+    }
+
+    public function sendBorrowerPaymentEvent($eventType, Borrower $borrower, Money $amount)
+    {
+        $this->sift->track(
+            $eventType,
+            [
+                '$user_id' => $borrower->getId(),
+                'amount'   => $amount, //TODO , ok to send Money object?
+                '$time'    => time()
             ]
         );
     }

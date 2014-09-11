@@ -23,6 +23,7 @@ use Zidisha\Mail\BorrowerMailer;
 use Zidisha\Mail\LenderMailer;
 use Zidisha\Sms\BorrowerSmsService;
 use Zidisha\Vendor\PropelDB;
+use Zidisha\Vendor\SiftScience\SiftScienceService;
 
 class RepaymentService
 {
@@ -34,10 +35,13 @@ class RepaymentService
     private $lenderMailer;
     private $borrowerMailer;
     private $borrowerSmsService;
+    private $siftScienceService;
+
 
     public function __construct(BorrowerPaymentQuery $paymentQuery, BorrowerQuery $borrowerQuery,
         CurrencyService $currencyService, TransactionService $transactionService,
-        LenderMailer $lenderMailer, BorrowerMailer $borrowerMailer, BorrowerSmsService $borrowerSmsService)
+        LenderMailer $lenderMailer, BorrowerMailer $borrowerMailer, BorrowerSmsService $borrowerSmsService,
+        SiftScienceService $siftScienceService)
     {
 
         $this->paymentQuery = $paymentQuery;
@@ -47,6 +51,7 @@ class RepaymentService
         $this->lenderMailer = $lenderMailer;
         $this->borrowerMailer = $borrowerMailer;
         $this->borrowerSmsService = $borrowerSmsService;
+        $this->siftScienceService = $siftScienceService;
     }
 
     public function addBorrowerPayment(Borrower $borrower, $data)
@@ -328,6 +333,7 @@ class RepaymentService
                 }
             }
         }
+        $this->siftScienceService->sendBorrowerPaymentEvent(SiftScienceService::TYPE_REPAYMENT, $loan->getBorrower(), $amount);
     }
 
     protected function updateInstallmentSchedule($con, $installments, Loan $loan, Money $amount, \Datetime $date)
