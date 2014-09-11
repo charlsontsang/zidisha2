@@ -74,7 +74,7 @@
                                     </div>
                                     <div class="col-sm-6">
                                         Followers: 
-                                        <strong>@choice('lender.follow.count', $followersCount)</strong>
+                                        <strong>$followersCount</strong>
                                         <br/>
 
                                         @if(Auth::check() && Auth::user()->isLender())
@@ -95,9 +95,11 @@
                                         </div>
                                         @endif
 
-                                        Feedback Rating:{{ BootstrapHtml::tooltip('borrower.tooltips.loan.feedback-rating') }}
-                                        <strong>{{ $feedbackRating }} % Positive ({{ $totalFeedback }})</strong>
-                                        <br/>
+                                        @if ($totalFeedback > 0)
+                                            Feedback Rating:{{ BootstrapHtml::tooltip('borrower.tooltips.loan.feedback-rating') }} 
+                                            <strong>{{ $feedbackRating }} % Positive ({{ $totalFeedback }})</strong>
+                                            <br/>
+                                        @endif
 
                                         @if($displayFeedbackComments)
                                             <p><a href="#feedback">View Lender Feedback</a></p>
