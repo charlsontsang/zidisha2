@@ -63,13 +63,13 @@
                                         @if($invitedBy)
                                         <br/>
                                         Invited By:
-                                        <a href="{{ route('borrower:public-profile', $invitedBy->getId()) }}">{{ $invitedBy->getName() }}</a>
+                                        <strong><a href="{{ route('borrower:public-profile', $invitedBy->getId()) }}">{{ $invitedBy->getName() }}</a></strong>
                                         @endif
                                         
                                         @if($volunteerMentor)
                                         <br/>
                                         Volunteer Mentor:
-                                        <a href="{{ route('borrower:public-profile', $volunteerMentor->getId()) }}">{{ $volunteerMentor->getName() }}</a>
+                                        <strong><a href="{{ route('borrower:public-profile', $volunteerMentor->getId()) }}">{{ $volunteerMentor->getName() }}</a></strong>
                                         @endif
                                     </div>
                                     <div class="col-sm-6">
