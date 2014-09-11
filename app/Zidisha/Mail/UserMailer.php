@@ -9,9 +9,6 @@ use Zidisha\User\User;
 class UserMailer
 {
 
-    /**
-     * @var Mailer
-     */
     private $mailer;
 
     public function __construct(Mailer $mailer)
@@ -35,9 +32,12 @@ class UserMailer
         $this->mailer->send(
             'emails.label-template',
             $data + [
-                'to'         => $user->getEmail(),
-                'label'      => 'lender.mails.lending-group-comment-notification.body',
-                'subject'    => \Lang::get('lender.mails.lending-group-comment-notification.subject', ['groupName' => $lendingGroup->getName()]),
+                'to'      => $user->getEmail(),
+                'label'   => 'lender.mails.lending-group-comment-notification.body',
+                'subject' => \Lang::get(
+                    'lender.mails.lending-group-comment-notification.subject',
+                    ['groupName' => $lendingGroup->getName()]
+                ),
             ]
         );
     }

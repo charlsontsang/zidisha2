@@ -1,18 +1,18 @@
 <?php
 namespace Zidisha\Mail\Tester;
 
+use Zidisha\Comment\BorrowerComment;
 use Zidisha\Comment\BorrowerCommentQuery;
 use Zidisha\Comment\CommentQuery;
 use Zidisha\Comment\LendingGroupCommentQuery;
+use Zidisha\Lender\LendingGroup;
 use Zidisha\Lender\LendingGroupQuery;
 use Zidisha\Mail\UserMailer;
+use Zidisha\User\User;
 use Zidisha\User\UserQuery;
 
 class UserMailerTester
 {
-    /**
-     * @var \Zidisha\Mail\UserMailer
-     */
     private $userMailer;
 
     public function __construct(UserMailer $userMailer)
@@ -22,13 +22,19 @@ class UserMailerTester
 
     public function sentLendingGroupCommentNotification()
     {
-        $comment = BorrowerCommentQuery::create()
-            ->findOne();
-        $lendingGroup = LendingGroupQuery::create()
-            ->findOne();
+        $userBorrower = new User();
+        $userBorrower->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+        $comment = new BorrowerComment();
+        $comment->setMessage('comment message')
+            ->setUser($userBorrower)
+            ->setCreatedAt(new \DateTime());
+        $lendingGroup = new LendingGroup();
+        $lendingGroup->setName('test Group')
+            ->setId(5);
+        $user = new User();
+        $user->setEmail('usertest@email.com');
 
-        $user = UserQuery::create()
-            ->findOne();
         $images = 'No Images dude!! it\'s a group not pinterest';
 
         $this->userMailer->sentLendingGroupCommentNotification($lendingGroup, $comment, $user, $images);
