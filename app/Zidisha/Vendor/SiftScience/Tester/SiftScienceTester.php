@@ -6,6 +6,7 @@ use Zidisha\Borrower\Borrower;
 use Zidisha\Borrower\Invite;
 use Zidisha\Comment\BorrowerComment;
 use Zidisha\Comment\Comment;
+use Zidisha\Currency\Money;
 use Zidisha\User\User;
 use Zidisha\Vendor\SiftScience\SiftScienceService;
 
@@ -73,5 +74,15 @@ class SiftScienceTester {
             ->setBorrowerId(5);
 
         $this->siftScienceService->sendBorrowerInviteAcceptedEvent($invite);
+    }
+
+    public function sendBorrowerPaymentEvent()
+    {
+        $eventType = SiftScienceService::TYPE_REPAYMENT;
+        $borrower = new Borrower();
+        $borrower->setId(5);
+        $amount = Money::create(800, 'XOF');
+
+        $this->siftScienceService->sendBorrowerPaymentEvent($eventType, $borrower, $amount);
     }
 }
