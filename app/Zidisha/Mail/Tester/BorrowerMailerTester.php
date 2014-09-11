@@ -45,8 +45,13 @@ class BorrowerMailerTester
 
     public function sendBorrowerJoinedConfirmationMail()
     {
-        $borrower = BorrowerQuery::create()
-            ->findOne();
+        $userBorrower = new User();
+        $userBorrower->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+        $borrower = new Borrower();
+        $borrower->setUser($userBorrower)
+            ->setFirstName('borrowerFirstName')
+            ->setLastName('borrowerLastName');
 
         $this->borrowerMailer->sendBorrowerJoinedConfirmationMail($borrower);
     }
@@ -58,10 +63,24 @@ class BorrowerMailerTester
 
     public function sendBorrowerJoinedVolunteerMentorConfirmationMail()
     {
-        $borrower = BorrowerQuery::create()
-            ->findOne();
-        $volunteerMentor = VolunteerMentorQuery::create()
-            ->findOne();
+        $userBorrower = new User();
+        $userBorrower->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+        $borrower = new Borrower();
+        $borrower->setUser($userBorrower)
+            ->setFirstName('borrowerFirstName')
+            ->setLastName('borrowerLastName');
+
+        $userBorrowerVM = new User();
+        $userBorrowerVM->setUsername('LenderTestvm')
+            ->setEmail('lendertestvm@gmail.com');
+        $borrowerVM = new Borrower();
+        $borrowerVM->setUser($userBorrowerVM)
+            ->setFirstName('borrowerFirstNamevm')
+            ->setLastName('borrowerLastNamevm');
+        $volunteerMentor = new VolunteerMentor();
+        $volunteerMentor->setBorrowerVolunteer($borrowerVM);
+
         $borrower->setVolunteerMentor($volunteerMentor);
 
         $this->borrowerMailer->sendBorrowerJoinedVolunteerMentorConfirmationMail($borrower);
