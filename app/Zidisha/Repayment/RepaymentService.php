@@ -232,8 +232,9 @@ class RepaymentService
             $loan->save();
 
             if ($calculator->isRepaid()) {
-                $loan->setStatus(Loan::REPAID)
-                ->setRepaidAt(new \DateTime());
+                $loan
+                    ->setStatus(Loan::REPAID)
+                    ->setRepaidAt($date);
                 $loan->save($con);
 
                 $borrower
