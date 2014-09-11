@@ -57,8 +57,7 @@
                                         <strong>{{{ $borrower->getName() }}}</strong>
                                         <br/>
                                         <strong>
-                                            <a href="https://www.google.com/maps/place/{{ $borrower->getProfile()->getCity() }},+{{ $borrower->getCountry()->getName() }}/" target="_blank">{{ $borrower->getProfile()->getCity() }}</a>
-                                            {{ $borrower->getCountry()->getName() }}
+                                            <a href="https://www.google.com/maps/place/{{ $borrower->getProfile()->getCity() }},+{{ $borrower->getCountry()->getName() }}/" target="_blank">{{ $borrower->getProfile()->getCity() }}</a>,&nbsp;{{ $borrower->getCountry()->getName() }}
                                         </strong>
                                         
                                         @if($invitedBy)
