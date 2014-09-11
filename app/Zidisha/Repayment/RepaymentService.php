@@ -19,6 +19,7 @@ use Zidisha\Loan\Loan;
 use Zidisha\Loan\LoanService;
 use Zidisha\Mail\BorrowerMailer;
 use Zidisha\Mail\LenderMailer;
+use Zidisha\Sms\BorrowerSmsService;
 use Zidisha\Vendor\PropelDB;
 
 class RepaymentService
@@ -30,8 +31,11 @@ class RepaymentService
     private $transactionService;
     private $lenderMailer;
     private $borrowerMailer;
+    private $borrowerSmsService;
 
-    public function __construct(BorrowerPaymentQuery $paymentQuery, BorrowerQuery $borrowerQuery, CurrencyService $currencyService, TransactionService $transactionService, LenderMailer $lenderMailer, BorrowerMailer $borrowerMailer)
+    public function __construct(BorrowerPaymentQuery $paymentQuery, BorrowerQuery $borrowerQuery,
+        CurrencyService $currencyService, TransactionService $transactionService,
+        LenderMailer $lenderMailer, BorrowerMailer $borrowerMailer, BorrowerSmsService $borrowerSmsService)
     {
 
         $this->paymentQuery = $paymentQuery;
@@ -40,6 +44,7 @@ class RepaymentService
         $this->transactionService = $transactionService;
         $this->lenderMailer = $lenderMailer;
         $this->borrowerMailer = $borrowerMailer;
+        $this->borrowerSmsService = $borrowerSmsService;
     }
 
     public function addBorrowerPayment(Borrower $borrower, $data)
@@ -269,6 +274,7 @@ class RepaymentService
         
         // TODO emails/sms/sift science
         $this->borrowerMailer->sendRepaymentReceiptMail($borrower, $amount);
+        $this->borrowerSmsService->sendRepaymentReceiptSms($borrower, $amount);
     }
 
     protected function updateInstallmentSchedule($con, $installments, Loan $loan, Money $amount, \Datetime $date)
