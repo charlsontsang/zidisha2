@@ -53,7 +53,11 @@
 <hr/>
 
 @foreach($exceptions as $exception)
-    <b>{{ get_class($exception) }}</b>
+    <b>
+        @if(is_object($exception))
+         {{ get_class($exception) }}
+        @endif
+    </b>
     <p style="color:red;">
         {{ $exception->getMessage() }}    
     </p>
