@@ -153,9 +153,16 @@
                                     </span>
                                     <br/>
                                     @endif
+                                
+                                    @if($loan->isFunded())
+                                    <span class="label label-default">
+                                        Pending disbursement
+                                    </span>
+                                    <br/>
+                                    @endif
 
                                     @if($loan->isDisbursed())
-                                    @include('loan.partials.repaid-bar', compact('loan'))
+                                        @include('loan.partials.repaid-bar', compact('loan'))
                                     <br/>
                                     @endif
                                     
@@ -204,13 +211,6 @@
                                     </div>
                                     @endif
                                 </div>
-                                @if($loan->isFunded())
-                                <div class="callout callout-info omega">
-                                    <p>
-                                        The loan is accepted, and should be disbursed within one week.
-                                    </p>
-                                </div>
-                                @endif
                             </div>
                         </div>
 
