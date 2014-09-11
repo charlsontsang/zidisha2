@@ -104,6 +104,7 @@ class BorrowerMailer{
         );
     }
 
+    //TODO
     public function sendFeedbackMail(FeedbackMessage $feedbackMessage)
     {
         $data = [
@@ -442,9 +443,9 @@ class BorrowerMailer{
         }
         $parameters = [
             'borrowerName'         => $borrower->getName(),
-            'disbursedAmount'      => $disbursedAmount->getAmount(),
-            'registrationFee'      => $registrationFee->getAmount(),
-            'netAmount'            => $disbursedAmount->subtract($registrationFee)->getAmount(),
+            'disbursedAmount'      => $disbursedAmount,
+            'registrationFee'      => $registrationFee,
+            'netAmount'            => $disbursedAmount->subtract($registrationFee),
             'zidishaLink'          => route('home'),
             'repaymentInstruction' => $repaymentInstruction
         ];
