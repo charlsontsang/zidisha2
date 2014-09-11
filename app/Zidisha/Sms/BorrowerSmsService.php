@@ -173,7 +173,7 @@ class BorrowerSmsService
         $profile = $borrower->getProfile();
         $data = [
             'parameters'  => [
-                'paidAmount' => $amount,
+                'paidAmount' => $amount, // TODO, not working with this money object
             ],
             'countryCode' => $borrower->getCountry()->getCountryCode(),
             'label'       => 'borrower.sms.payment-receipt'
@@ -186,13 +186,13 @@ class BorrowerSmsService
         }
     }
 
-    public function sendEligibleInviteMail(Borrower $borrower)
+    public function sendEligibleInviteSms(Borrower $borrower)
     {
         $profile = $borrower->getProfile();
         $data = [
             'parameters'  => [],
             'countryCode' => $borrower->getCountry()->getCountryCode(),
-            'label'       => 'borrower.sms.payment-receipt'
+            'label'       => 'borrower.sms.eligible-invite'
         ];
         $this->smsService->queue($profile->getPhoneNumber(), $data);
 

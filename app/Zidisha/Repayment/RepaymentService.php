@@ -13,6 +13,7 @@ use Zidisha\Borrower\BorrowerService;
 use Zidisha\Currency\Converter;
 use Zidisha\Currency\CurrencyService;
 use Zidisha\Currency\Money;
+use Zidisha\Lender\PreferencesQuery;
 use Zidisha\Loan\Base\ForgivenessLoanShareQuery;
 use Zidisha\Loan\BidQuery;
 use Zidisha\Loan\Calculator\RepaymentCalculator;
@@ -276,7 +277,6 @@ class RepaymentService
             }
         }
         
-        // TODO emails/sms/sift science
         $this->borrowerMailer->sendRepaymentReceiptMail($borrower, $amount);
         $this->borrowerSmsService->sendRepaymentReceiptSms($borrower, $amount);
 
@@ -285,6 +285,33 @@ class RepaymentService
             $this->borrowerMailer->sendEligibleInviteMail($borrower);
         }
 
+        $lenderIds = [];
+        /** @var LoanRepayment $loanRepayment */
+        foreach ($loanRepayments as $loanRepayment) {
+            $lender = $loanRepayment->getLender();
+            $lenderIds[] = $lender->getId();
+        }
+        $currentBalances = TransactionQuery::create()
+            ->getCurrentBalance($lenderIds);
+
+        /** @var LoanRepayment $loanRepayment */
+        foreach ($loanRepayments as $loanRepayment) {
+            $lender = $loanRepayment->getLender();
+            $preference = PreferencesQuery::create()
+                ->filterByLender($lender)
+                ->filterByNotifyLoanRepayment(0, Criteria::GREATER_THAN)
+                ->findOne();
+            if ($preference && !$loanRepayment->getLenderInviteCredit()->isPositive()) {
+                if ($preference->getNotifyLoanRepayment() > 1) {
+                    if ($preference->getNotifyLoanRepayment() > $loanRepayment->getAmount()) {
+                        continue;
+                    }
+                    $this->lenderMailer->sendReceivedRepaymentCreditBalanceMail($lender, $currentBalances[$lender->getId()]);
+                } else {
+                    $this->lenderMailer->sendReceivedRepaymentMail($lender, $loan, $loanRepayment->getAmount(), $currentBalances[$lender->getId()]);
+                }
+            }
+        }
     }
 
     protected function updateInstallmentSchedule($con, $installments, Loan $loan, Money $amount, \Datetime $date)

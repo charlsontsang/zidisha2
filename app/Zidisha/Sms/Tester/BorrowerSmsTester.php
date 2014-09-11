@@ -158,7 +158,7 @@ class BorrowerSmsTester
         $this->borrowerSmsService->sendRepaymentReceiptSms($borrower, $amount);
     }
 
-    public function sendEligibleInviteMail()
+    public function sendEligibleInviteSms()
     {
         $profile = new Profile();
         $profile->setPhoneNumber('2345675434')
@@ -173,6 +173,6 @@ class BorrowerSmsTester
                     ->findOne()
             );
 
-        $this->borrowerSmsService->sendEligibleInviteMail($borrower);
+        $this->borrowerSmsService->sendEligibleInviteSms($borrower);
     }
 }
