@@ -262,7 +262,7 @@ class BorrowerMailer{
         $body = \Lang::get('borrower.mails.reminder-again.body', $parameters);
         $data['content'] = $body;
 
-        $this->mailer->queue(
+        $this->mailer->send(
             'emails.hero',
             $data + [
                 'to'         => $borrower->getUser()->getEmail(),
@@ -285,7 +285,7 @@ class BorrowerMailer{
         $body = \Lang::get('borrower.mails.reminder.body', $parameters);
         $data['content'] = $body;
 
-        $this->mailer->queue(
+        $this->mailer->send(
             'emails.hero',
             $data + [
                 'to'         => $borrower->getUser()->getEmail(),
@@ -309,7 +309,7 @@ class BorrowerMailer{
         $body = \Lang::get('borrower.mails.loan-arrear-reminder-final.body', $parameters);
         $data['content'] = $body;
 
-        $this->mailer->queue(
+        $this->mailer->send(
             'emails.hero',
             $data + [
                 'to'         => $borrower->getUser()->getEmail(),
@@ -332,7 +332,7 @@ class BorrowerMailer{
         $body = \Lang::get('borrower.mails.loan-arrear-reminder-first.body', $parameters);
         $data['content'] = $body;
 
-        $this->mailer->queue(
+        $this->mailer->send(
             'emails.hero',
             $data + [
                 'to'         => $borrower->getUser()->getEmail(),
@@ -353,7 +353,7 @@ class BorrowerMailer{
             ],
         ];
 
-        $this->mailer->queue(
+        $this->mailer->send(
             'emails.label-template',
             $data + [
                 'to'         => $email,
@@ -397,7 +397,7 @@ class BorrowerMailer{
         $body = \Lang::get('borrower.mails.reminder-advance.body', $parameters);
         $data['content'] = $body;
 
-        $this->mailer->queue(
+        $this->mailer->send(
             'emails.hero',
             $data + [
                 'to'         => $borrower->getUser()->getEmail(),
@@ -421,7 +421,7 @@ class BorrowerMailer{
         $body = \Lang::get('borrower.mails.reminder-postDue.body', $parameters);
         $data['content'] = $body;
 
-        $this->mailer->queue(
+        $this->mailer->send(
             'emails.hero',
             $data + [
                 'to'         => $borrower->getUser()->getEmail(),

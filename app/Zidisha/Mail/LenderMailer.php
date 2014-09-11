@@ -206,7 +206,7 @@ class LenderMailer
 
     public function sendIntroductionMail(Lender $lender)
     {
-        $this->mailer->queue(
+        $this->mailer->send(
             'emails.hero',
             [
                 'to'         => $lender->getUser()->getEmail(),
@@ -347,7 +347,7 @@ class LenderMailer
         $message = \Lang::get('lender.mails.abandoned-user-mail.body', $parameters);
         $data['content'] = $message;
 
-        $this->mailer->queue(
+        $this->mailer->send(
             'emails.hero',
             $data + [
                 'to'         => $lender->getUser()->getEmail(),
@@ -378,7 +378,7 @@ class LenderMailer
         $message = \Lang::get('lender.mails.lender-unused-fund.body', ['lenderBalance' => $currentBalance]);
         $data['content'] = $message;
 
-        $this->mailer->queue(
+        $this->mailer->send(
             'emails.hero',
             $data + [
                 'to'         => $lender->getUser()->getEmail(),
@@ -403,7 +403,7 @@ class LenderMailer
         $body = \Lang::get('lender.mails.loan-about-to-expire.body', $parameters);
         $data['content'] = $body;
 
-        $this->mailer->queue(
+        $this->mailer->send(
             'emails.hero',
             $data + [
                 'to'         => $lender->getUser()->getEmail(),
