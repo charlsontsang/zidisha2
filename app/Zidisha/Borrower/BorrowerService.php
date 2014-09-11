@@ -259,6 +259,7 @@ class BorrowerService
         if ($picture) {
             $upload = Upload::createFromFile($picture);
             $upload->setUser($user);
+            $upload->save();
 
             $user->setProfilePicture($upload);
         }
