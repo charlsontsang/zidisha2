@@ -451,8 +451,12 @@
                         @include('loan.partials.repaid-bar', compact('loan'))
                     @endif
 
-                    @if($loan->isOpen() && !(Auth::check() && Auth::user()->isBorrower()))
-                        @include('loan.partials.lend-form')
+                    @if($loan->isOpen())
+                        @if(Auth::check() && Auth::user()->isBorrower())
+                            @include('partials/loan-progress', [ 'loan' => $loan ])
+                        @else
+                            @include('loan.partials.lend-form')
+                        @endif
                     @endif
                 </div>
 
