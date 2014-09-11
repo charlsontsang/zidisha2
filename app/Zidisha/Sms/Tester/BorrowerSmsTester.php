@@ -26,8 +26,18 @@ class BorrowerSmsTester
 
     public function sendBorrowerJoinedContactConfirmationSms()
     {
-        $borrower = BorrowerQuery::create()
-            ->findOne();
+        $profile = new Profile();
+        $profile->setPhoneNumber('2345675434')
+            ->setAlternatePhoneNumber('234523453');
+        $borrower = new Borrower();
+        $borrower
+            ->setFirstName('borrowerFirstName')
+            ->setLastName('borrowerLastName')
+            ->setProfile($profile)
+            ->setCountry(
+                CountryQuery::create()
+                    ->findOne()
+            );
 
         $contact = new Contact();
         $contact->setBorrower($borrower);
@@ -132,8 +142,27 @@ class BorrowerSmsTester
     public function sendRepaymentReceiptSms()
     {
         $profile = new Profile();
-        $profile->setPhoneNumber(2345675434)
-            ->setAlternatePhoneNumber(234523453);
+        $profile->setPhoneNumber('2345675434')
+            ->setAlternatePhoneNumber('234523453');
+        $borrower = new Borrower();
+        $borrower
+            ->setFirstName('borrowerFirstName')
+            ->setLastName('borrowerLastName')
+            ->setProfile($profile)
+            ->setCountry(
+                CountryQuery::create()
+                    ->findOne()
+            );
+        $amount = Money::create(250, $borrower->getCountry()->getCurrencyCode());
+
+        $this->borrowerSmsService->sendRepaymentReceiptSms($borrower, $amount);
+    }
+
+    public function sendEligibleInviteMail()
+    {
+        $profile = new Profile();
+        $profile->setPhoneNumber('2345675434')
+            ->setAlternatePhoneNumber('234523453');
         $borrower = new Borrower();
         $borrower
             ->setFirstName('borrowerFirstName')
@@ -144,9 +173,6 @@ class BorrowerSmsTester
                     ->findOne()
             );
 
-        $this->borrowerSmsService->sendRepaymentReceiptSms(
-            $borrower,
-            Money::create(250, $borrower->getCountry()->getCurrencyCode())
-        );
+        $this->borrowerSmsService->sendEligibleInviteMail($borrower);
     }
 }

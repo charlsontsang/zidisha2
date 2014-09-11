@@ -9,6 +9,7 @@ use Zidisha\Balance\TransactionQuery;
 use Zidisha\Balance\TransactionService;
 use Zidisha\Borrower\Borrower;
 use Zidisha\Borrower\BorrowerQuery;
+use Zidisha\Borrower\BorrowerService;
 use Zidisha\Currency\Converter;
 use Zidisha\Currency\CurrencyService;
 use Zidisha\Currency\Money;
@@ -32,10 +33,12 @@ class RepaymentService
     private $lenderMailer;
     private $borrowerMailer;
     private $borrowerSmsService;
+    private $borrowerService;
 
     public function __construct(BorrowerPaymentQuery $paymentQuery, BorrowerQuery $borrowerQuery,
         CurrencyService $currencyService, TransactionService $transactionService,
-        LenderMailer $lenderMailer, BorrowerMailer $borrowerMailer, BorrowerSmsService $borrowerSmsService)
+        LenderMailer $lenderMailer, BorrowerMailer $borrowerMailer, BorrowerSmsService $borrowerSmsService,
+        BorrowerService $borrowerService )
     {
 
         $this->paymentQuery = $paymentQuery;
@@ -45,6 +48,7 @@ class RepaymentService
         $this->lenderMailer = $lenderMailer;
         $this->borrowerMailer = $borrowerMailer;
         $this->borrowerSmsService = $borrowerSmsService;
+        $this->borrowerService = $borrowerService;
     }
 
     public function addBorrowerPayment(Borrower $borrower, $data)
@@ -275,6 +279,12 @@ class RepaymentService
         // TODO emails/sms/sift science
         $this->borrowerMailer->sendRepaymentReceiptMail($borrower, $amount);
         $this->borrowerSmsService->sendRepaymentReceiptSms($borrower, $amount);
+
+        $isEligible = $this->borrowerService->isEligibleToInvite($borrower);
+        if ($isEligible) {
+            $this->borrowerMailer->sendEligibleInviteMail($borrower);
+        }
+
     }
 
     protected function updateInstallmentSchedule($con, $installments, Loan $loan, Money $amount, \Datetime $date)

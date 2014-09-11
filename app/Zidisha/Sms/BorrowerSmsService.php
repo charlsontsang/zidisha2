@@ -167,6 +167,7 @@ class BorrowerSmsService
         }
     }
 
+    //TODO test, not working...
     public function sendRepaymentReceiptSms(Borrower $borrower, Money $amount)
     {
         $profile = $borrower->getProfile();
@@ -174,6 +175,22 @@ class BorrowerSmsService
             'parameters'  => [
                 'paidAmount' => $amount,
             ],
+            'countryCode' => $borrower->getCountry()->getCountryCode(),
+            'label'       => 'borrower.sms.payment-receipt'
+        ];
+        $this->smsService->queue($profile->getPhoneNumber(), $data);
+
+        $alternateNumber = $profile->getAlternatePhoneNumber();
+        if ($alternateNumber) {
+            $this->smsService->queue($alternateNumber, $data);
+        }
+    }
+
+    public function sendEligibleInviteMail(Borrower $borrower)
+    {
+        $profile = $borrower->getProfile();
+        $data = [
+            'parameters'  => [],
             'countryCode' => $borrower->getCountry()->getCountryCode(),
             'label'       => 'borrower.sms.payment-receipt'
         ];
