@@ -373,7 +373,7 @@ class BorrowerMailer{
         $body = \Lang::get('borrower.mails.loan-arrear-reminder-monthly.body', $parameters);
         $data['content'] = $body;
 
-        $this->mailer->queue(
+        $this->mailer->send(
             'emails.hero',
             $data + [
                 'to'         => $borrower->getUser()->getEmail(),
