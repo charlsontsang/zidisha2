@@ -142,23 +142,15 @@
                                 <div class="visible-xs">
                                     @if($loan->isExpired())
                                     <span class="label label-default">
-                                        Loan expired
+                                        Loan application expired
                                     </span>
                                     @include('partials/loan-progress', [ 'loan' => $loan ])
                                     @endif
 
                                     @if($loan->isCanceled())
                                     <span class="label label-default">
-                                        The loan was canceled
+                                        Loan application canceled
                                     </span>
-                                    <br/>
-                                    @endif
-
-                                    @if($loan->isDefaulted())
-                                    <span class="label label-default">
-                                        Loan defaulted
-                                    </span>
-                                    <br/>
                                     <br/>
                                     @endif
 
