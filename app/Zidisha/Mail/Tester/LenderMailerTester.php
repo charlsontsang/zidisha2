@@ -7,6 +7,7 @@ use Propel\Runtime\ActiveQuery\Criteria;
 use Zidisha\Balance\InviteTransactionQuery;
 use Zidisha\Balance\TransactionQuery;
 use Zidisha\Borrower\Borrower;
+use Zidisha\Comment\BorrowerComment;
 use Zidisha\Comment\BorrowerCommentQuery;
 use Zidisha\Currency\Money;
 use Zidisha\Lender\Invite;
@@ -37,17 +38,36 @@ class LenderMailerTester
 
     public function sendFirstBidConfirmationMail()
     {
-        $bid = BidQuery::create()
-            ->findOne();
-        $lender = $bid->getLender();
+        $user = new User();
+        $user->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+        $lender = new Lender();
+        $lender->setUser($user);
 
         $this->lenderMailer->sendFirstBidConfirmationMail($lender);
     }
 
     public function sendOutbidMail()
     {
-        $bid = BidQuery::create()
-            ->findOne();
+        $userBorrower = new User();
+        $userBorrower->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+        $borrower = new Borrower();
+        $borrower->setUser($userBorrower)
+            ->setFirstName('borrowerFirstName')
+            ->setLastName('borrowerLastName');
+        $loan = new Loan();
+        $loan->setBorrower($borrower);
+        $user = new User();
+        $user->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+        $lender = new Lender();
+        $lender->setUser($user);
+        $bid = new Bid();
+        $bid->setInterestRate(5)
+            ->setBidAmount(Money::create(20))
+            ->setLender($lender)
+            ->setLoan($loan);
         $lender = $bid->getLender();
 
         $this->lenderMailer->sendOutbidMail($lender, $bid);
@@ -55,8 +75,25 @@ class LenderMailerTester
 
     public function sendDownBidMail()
     {
-        $bid = BidQuery::create()
-            ->findOne();
+        $userBorrower = new User();
+        $userBorrower->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+        $borrower = new Borrower();
+        $borrower->setUser($userBorrower)
+            ->setFirstName('borrowerFirstName')
+            ->setLastName('borrowerLastName');
+        $loan = new Loan();
+        $loan->setBorrower($borrower);
+        $user = new User();
+        $user->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+        $lender = new Lender();
+        $lender->setUser($user);
+        $bid = new Bid();
+        $bid->setInterestRate(5)
+            ->setBidAmount(Money::create(20))
+            ->setLender($lender)
+            ->setLoan($loan);
         $lender = $bid->getLender();
         $acceptedAmount = $bid->getBidAmount()->divide(2);
         $outBidAmount = $bid->getBidAmount()->subtract($acceptedAmount);
@@ -64,41 +101,161 @@ class LenderMailerTester
         $this->lenderMailer->sendDownBidMail($lender, $bid, $acceptedAmount, $outBidAmount);
     }
 
+    public function sendLoanFullyFundedMail()
+    {
+        $userBorrower = new User();
+        $userBorrower->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+        $borrower = new Borrower();
+        $borrower->setUser($userBorrower)
+            ->setFirstName('borrowerFirstName')
+            ->setLastName('borrowerLastName');
+        $loan = new Loan();
+        $loan->setBorrower($borrower);
+        $user = new User();
+        $user->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+        $lender = new Lender();
+        $lender->setUser($user);
+        $bid = new Bid();
+        $bid->setInterestRate(5)
+            ->setBidAmount(Money::create(20))
+            ->setLender($lender)
+            ->setBorrower($borrower)
+            ->setLoan($loan);
+
+        $this->lenderMailer->sendLoanFullyFundedMail($bid);
+    }
+
     public function sendLenderInvite()
     {
-        $lender = LenderQuery::create()
-            ->findOne();
-        $invite = InviteQuery::create()
-            ->findOne();
-        $invite->setHash('hshshshs');
+        $user = new User();
+        $user->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+        $lender = new Lender();
+        $lender->setFirstName('lenderFirstName')
+            ->setLastName('lenderLastName');
+        $lender->setUser($user);
+        $invite = new Invite();
+        $invite->setHash('invitehash')
+            ->setEmail('lenderinvite@mail.com');
         $subject = '';
-        $message = 'ahdhdhdhd ddjdjd jeeje jdddjdjdd';
+        $message = 'I\'m inviting you as lender at Zidisha';
 
         $this->lenderMailer->sendLenderInvite($lender, $invite, $subject, $message);
     }
 
+    public function sendLenderInviteCredit()
+    {
+        $user = new User();
+        $user->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+        $lender = new Lender();
+        $lender->setFirstName('lenderFirstName')
+            ->setLastName('lenderLastName');
+        $lender->setUser($user);
+        $invite = new Invite();
+        $invite->setHash('invitehash')
+            ->setEmail('lenderinvite@mail.com')
+            ->setLender($lender);
+
+        $this->lenderMailer->sendLenderInviteCredit($invite);
+    }
+
     public function sendLenderWelcomeMail()
     {
-        $lender = LenderQuery::create()
-            ->findOne();
+        $user = new User();
+        $user->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+        $lender = new Lender();
+        $lender->setFirstName('lenderFirstName')
+            ->setLastName('lenderLastName');
+        $lender->setUser($user);
 
         $this->lenderMailer->sendWelcomeMail($lender);
     }
 
     public function sendIntroductionMail()
     {
-        $lender = LenderQuery::create()
-            ->findOne();
+        $user = new User();
+        $user->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+        $lender = new Lender();
+        $lender->setFirstName('lenderFirstName')
+            ->setLastName('lenderLastName')
+            ->setUser($user);
 
         $this->lenderMailer->sendIntroductionMail($lender);
     }
 
+    public function sendBorrowerCommentNotification()
+    {
+        $userBorrower = new User();
+        $userBorrower->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+        $borrower = new Borrower();
+        $borrower->setUser($userBorrower)
+            ->setFirstName('borrowerFirstName')
+            ->setLastName('borrowerLastName');
+        $loan = new Loan();
+        $loan->setBorrower($borrower);
+        $user = new User();
+        $user->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+        $lender = new Lender();
+        $lender->setFirstName('lenderFirstName')
+            ->setLastName('lenderLastName')
+            ->setUser($user);
+        $comment = new BorrowerComment();
+        $comment->setMessage('this is comment for borrower!!');
+        $postedBy = 'dmdm by hddhd on ffjfjfjf';
+        $images = '.....';
+
+        $this->lenderMailer->sendBorrowerCommentNotification($lender, $loan, $comment, $postedBy, $images);
+    }
+
+    public function sendLoanDefaultedMail()
+    {
+        $userBorrower = new User();
+        $userBorrower->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+        $borrower = new Borrower();
+        $borrower->setUser($userBorrower)
+            ->setFirstName('borrowerFirstName')
+            ->setLastName('borrowerLastName');
+        $loan = new Loan();
+        $loan->setBorrower($borrower)
+            ->setUsdAmount(Money::create('400'));
+        $user = new User();
+        $user->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+        $lender = new Lender();
+        $lender->setFirstName('lenderFirstName')
+            ->setLastName('lenderLastName')
+            ->setUser($user);
+
+        $this->lenderMailer->sendLoanDefaultedMail($loan, $lender);
+    }
+
     public function sendExpiredLoanMail()
     {
-        $loan = LoanQuery::create()
-            ->findOne();
-        $lender = LenderQuery::create()
-            ->findOne();
+        $userBorrower = new User();
+        $userBorrower->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+        $borrower = new Borrower();
+        $borrower->setUser($userBorrower)
+            ->setFirstName('borrowerFirstName')
+            ->setLastName('borrowerLastName');
+        $loan = new Loan();
+        $loan->setBorrower($borrower)
+            ->setUsdAmount(Money::create('400'));
+        $user = new User();
+        $user->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+        $lender = new Lender();
+        $lender->setFirstName('lenderFirstName')
+            ->setLastName('lenderLastName')
+            ->setUser($user);
 
         $amount = Money::create(25);
         $currentCredit = Money::create(100);
@@ -108,10 +265,23 @@ class LenderMailerTester
 
     public function sendExpiredLoanWithLenderInviteCreditMail()
     {
-        $loan = LoanQuery::create()
-            ->findOne();
-        $lender = LenderQuery::create()
-            ->findOne();
+        $userBorrower = new User();
+        $userBorrower->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+        $borrower = new Borrower();
+        $borrower->setUser($userBorrower)
+            ->setFirstName('borrowerFirstName')
+            ->setLastName('borrowerLastName');
+        $loan = new Loan();
+        $loan->setBorrower($borrower)
+            ->setUsdAmount(Money::create('400'));
+        $user = new User();
+        $user->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+        $lender = new Lender();
+        $lender->setFirstName('lenderFirstName')
+            ->setLastName('lenderLastName')
+            ->setUser($user);
 
         $amount = Money::create(25);
         $inviteCredit = Money::create(100);
@@ -119,184 +289,256 @@ class LenderMailerTester
         $this->lenderMailer->sendExpiredLoanWithLenderInviteCreditMail($loan, $lender, $amount, $inviteCredit);
     }
 
+    public function sendAbandonedUserMail()
+    {
+        $user = new User();
+        $user->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+        $lender = new Lender();
+        $lender->setFirstName('lenderFirstName')
+            ->setLastName('lenderLastName')
+            ->setUser($user);
+
+        $this->lenderMailer->sendAbandonedUserMail($lender);
+    }
+
     public function sendUnusedFundsNotification()
     {
-        $lender = LenderQuery::create()
-            ->findOne();
+        $user = new User();
+        $user->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+        $lender = new Lender();
+        $lender->setFirstName('lenderFirstName')
+            ->setLastName('lenderLastName')
+            ->setUser($user);
 
         $this->lenderMailer->sendUnusedFundsNotification($lender);
     }
 
     public function sendLoanAboutToExpireMail()
     {
-        $bid = BidQuery::create()
-            ->findOne();
-        $loan = $bid->getLoan();
-        $params = array(
-            'amountStillNeeded' => Money::create('46', 'USD'),
-            'borrowerName'      => ucwords(strtolower($loan->getBorrower()->getName())),
-            'loanLink'          => route('loan:index', $loan->getId()),
-            'inviteLink'        => route('lender:invite'),
-        );
+        $userBorrower = new User();
+        $userBorrower->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+        $borrower = new Borrower();
+        $borrower->setUser($userBorrower)
+            ->setFirstName('borrowerFirstName')
+            ->setLastName('borrowerLastName');
+        $loan = new Loan();
+        $loan->setBorrower($borrower);
+        $user = new User();
+        $user->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+        $lender = new Lender();
+        $lender->setFirstName('lenderFirstName')
+            ->setLastName('lenderLastName')
+            ->setUser($user);
+        $bid = new Bid();
+        $bid->setInterestRate(5)
+            ->setBidAmount(Money::create(20))
+            ->setLender($lender)
+            ->setBorrower($borrower)
+            ->setBidAt(new \DateTime())
+            ->setLoan($loan);
 
-        $this->lenderMailer->sendLoanAboutToExpireMail($bid, $params);
+        $this->lenderMailer->sendLoanAboutToExpireMail($bid);
     }
 
     public function sendAllowLoanForgivenessMail()
     {
-        $loan = LoanQuery::create()
-            ->filterByDisbursedAt(null, Criteria::NOT_EQUAL)
-            ->findOne();
+        $userBorrower = new User();
+        $userBorrower->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+        $borrower = new Borrower();
+        $borrower->setUser($userBorrower)
+            ->setFirstName('borrowerFirstName')
+            ->setLastName('borrowerLastName');
+        $loan = new Loan();
+        $loan->setBorrower($borrower)
+            ->setDisbursedAt(Carbon::now()->subMonths(6));
+        $user = new User();
+        $user->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+        $lender = new Lender();
+        $lender->setFirstName('lenderFirstName')
+            ->setLastName('lenderLastName')
+            ->setUser($user);
         $forgivenessLoan = new ForgivenessLoan();
         $forgivenessLoan->setLoan($loan)
             ->setComment('Forgive this loan comment!')
             ->setVerificationCode(md5(mt_rand(0, 32).time()));
-        $lender = LenderQuery::create()
-            ->findOne();
 
-        $parameters = [
-            'borrowerName'      => $loan->getBorrower()->getName(),
-            'disbursedDate'     => $loan->getDisbursedAt()->format('d-m-Y'),
-            'message'           => trim($forgivenessLoan->getComment()),
-            'outstandingAmount' => $loan->getUsdAmount()->multiply($loan->getPaidPercentage())->divide(100),
-            'loanLink'          => route('loan:index', $loan->getId()),
-            'yesLink'           => route('loan:index', $loan->getId()).'?v='.$forgivenessLoan->getVerificationCode(),
-            'yesImage'          => '/assets/images/loan-forgive/yes.png',
-            'noImage'           => '/assets/images/loan-forgive.no.png',
-        ];
-        $subject = \Lang::get('lender.mails.allow-loan-forgiveness.subject', $parameters);
-            
-        $this->lenderMailer->sendAllowLoanForgivenessMail($forgivenessLoan, $lender, $parameters, $subject);
+        $this->lenderMailer->sendAllowLoanForgivenessMail($loan, $forgivenessLoan, $lender);
     }
 
     public function sendNewLoanNotificationMail()
     {
         $lastLoan = new Loan();
         $lastLoan->setRepaidAt(Carbon::create(2014, 5, 1));
-        
-        $loan = LoanQuery::create()
-            ->findOne();
-        $lender = LenderQuery::create()
-            ->findOne();
+
+        $userBorrower = new User();
+        $userBorrower->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+        $borrower = new Borrower();
+        $borrower->setUser($userBorrower)
+            ->setFirstName('borrowerFirstName')
+            ->setLastName('borrowerLastName');
+        $loan = new Loan();
+        $loan->setBorrower($borrower)
+            ->setDisbursedAt(Carbon::now()->subMonths(6));
+        $user = new User();
+        $user->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+        $lender = new Lender();
+        $lender->setFirstName('lenderFirstName')
+            ->setLastName('lenderLastName')
+            ->setUser($user);
         
         $this->lenderMailer->sendNewLoanNotificationMail($lender, $loan, $lastLoan);
     }
 
     public function sendFollowerNewLoanNotificationMail()
     {
-        $loan = LoanQuery::create()
-            ->findOne();
-     
-        $lender = LenderQuery::create()
-            ->findOne();   
+        $userBorrower = new User();
+        $userBorrower->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+        $borrower = new Borrower();
+        $borrower->setUser($userBorrower)
+            ->setFirstName('borrowerFirstName')
+            ->setLastName('borrowerLastName');
+        $loan = new Loan();
+        $loan->setBorrower($borrower)
+            ->setDisbursedAt(Carbon::now()->subMonths(6));
+        $user = new User();
+        $user->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+        $lender = new Lender();
+        $lender->setFirstName('lenderFirstName')
+            ->setLastName('lenderLastName')
+            ->setUser($user);
 
         $this->lenderMailer->sendFollowerNewLoanNotificationMail($lender, $loan);
     }
 
     public function sendDisbursedLoanMail()
     {
-        $loan = LoanQuery::create()
-            ->filterByDisbursedAt(null, Criteria::NOT_EQUAL)
-            ->filterByRepaidAt(null)
-            ->findOne();
-        $bid = BidQuery::create()
-            ->filterByLoan($loan)
-            ->filterByAcceptedAmount(null, Criteria::NOT_EQUAL)
-            ->findOne();
-        $lender = $bid->getLender();
-        $borrower = $loan->getBorrower();
-        $parameters = [
-            'borrowerName'    => $borrower->getName(),
-            'borrowFirstName' => $borrower->getFirstName(),
-            'disbursedDate'   => date('F d, Y',  time()),
-            'loanPage'        => route('loan:index', $loan->getId()),
-            'giftCardPage'    => route('lender:gift-cards')
-        ];
+        $userBorrower = new User();
+        $userBorrower->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+        $borrower = new Borrower();
+        $borrower->setUser($userBorrower)
+            ->setFirstName('borrowerFirstName')
+            ->setLastName('borrowerLastName');
+        $loan = new Loan();
+        $loan->setBorrower($borrower)
+            ->setDisbursedAt(Carbon::now()->subMonths(6));
+        $user = new User();
+        $user->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+        $lender = new Lender();
+        $lender->setFirstName('lenderFirstName')
+            ->setLastName('lenderLastName')
+            ->setUser($user);
 
-        $data['image_src'] = $borrower->getUser()->getProfilePictureUrl();
-        $message = \Lang::get('lender.mails.loan-disbursed.message', $parameters);
-        $data['header'] = $message;
-        $body = \Lang::get('lender.mails.loan-disbursed.body', $parameters);
-        $data['content'] = $body;
-        $subject = \Lang::get('lender.mails.loan-disbursed.subject', $parameters);
-        $this->lenderMailer->sendDisbursedLoanMail($lender, $parameters, $data, $subject);
+        $this->lenderMailer->sendDisbursedLoanMail($lender, $loan);
     }
 
-    public function sendLoanDefaultedMail()
-    {
-        $loan = LoanQuery::create()
-            ->findOne();
 
-        $lender = LenderQuery::create()
-            ->findOne();
-
-        $this->lenderMailer->sendLoanDefaultedMail($loan, $lender);
-    }
 
     public function sendReceivedRepaymentMail()
     {
-        $loan = LoanQuery::create()
-        ->findOne();
-        $loan
-            ->setAmount(Money::create(800, $loan->getCurrencyCode()))
-            ->setPaidAmount(Money::create(530, $loan->getCurrencyCode()));
-        $lender = LenderQuery::create()
-            ->findOne();
+        $userBorrower = new User();
+        $userBorrower->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+        $borrower = new Borrower();
+        $borrower->setUser($userBorrower)
+            ->setFirstName('borrowerFirstName')
+            ->setLastName('borrowerLastName');
+        $loan = new Loan();
+        $loan->setBorrower($borrower)
+            ->setDisbursedAt(Carbon::now()->subMonths(6));
+        $user = new User();
+        $user->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+        $lender = new Lender();
+        $lender->setFirstName('lenderFirstName')
+            ->setLastName('lenderLastName')
+            ->setUser($user);
 
         $this->lenderMailer->sendReceivedRepaymentMail($lender, $loan, Money::create(10, 'USD'), Money::create(100, 'USD'));
     }
 
     public function sendReceivedRepaymentCreditBalanceMail()
     {
-        $lender = LenderQuery::create()
-            ->findOne();
+        $userBorrower = new User();
+        $userBorrower->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+        $borrower = new Borrower();
+        $borrower->setUser($userBorrower)
+            ->setFirstName('borrowerFirstName')
+            ->setLastName('borrowerLastName');
+        $loan = new Loan();
+        $loan->setBorrower($borrower)
+            ->setDisbursedAt(Carbon::now()->subMonths(6));
+        $user = new User();
+        $user->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+        $lender = new Lender();
+        $lender->setFirstName('lenderFirstName')
+            ->setLastName('lenderLastName')
+            ->setUser($user);
 
         $this->lenderMailer->sendReceivedRepaymentCreditBalanceMail($lender, Money::create(240, 'USD'));
     }
 
     public function sendRepaidLoanMail()
     {
-        $loan = LoanQuery::create()
-            ->findOne();
-        $lender = LenderQuery::create()
-            ->findOne();
+        $userBorrower = new User();
+        $userBorrower->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+        $borrower = new Borrower();
+        $borrower->setUser($userBorrower)
+            ->setFirstName('borrowerFirstName')
+            ->setLastName('borrowerLastName');
+        $loan = new Loan();
+        $loan->setBorrower($borrower)
+            ->setDisbursedAt(Carbon::now()->subMonths(6));
+        $user = new User();
+        $user->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+        $lender = new Lender();
+        $lender->setFirstName('lenderFirstName')
+            ->setLastName('lenderLastName')
+            ->setUser($user);
 
         $this->lenderMailer->sendRepaidLoanMail($lender, $loan);
     }
 
     public function sendRepaidLoanGainMail()
     {
-        $loan = LoanQuery::create()
-            ->findOne();
-        $lender = LenderQuery::create()
-            ->findOne();
+        $userBorrower = new User();
+        $userBorrower->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+        $borrower = new Borrower();
+        $borrower->setUser($userBorrower)
+            ->setFirstName('borrowerFirstName')
+            ->setLastName('borrowerLastName');
+        $loan = new Loan();
+        $loan->setBorrower($borrower)
+            ->setDisbursedAt(Carbon::now()->subMonths(6));
+        $user = new User();
+        $user->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+        $lender = new Lender();
+        $lender->setFirstName('lenderFirstName')
+            ->setLastName('lenderLastName')
+            ->setUser($user);
+
         $loanAmount = Money::create(240, 'USD');
         $repaidAmount = Money::create(240, 'USD');
         $gainAmount = Money::create(20, 'USD');
         $gainPercent = 4;
 
         $this->lenderMailer->sendRepaidLoanGainMail($lender, $loan, $loanAmount, $repaidAmount, $gainAmount, $gainPercent);
-    }
-
-    public function sendBorrowerCommentNotification()
-    {
-        $lender = LenderQuery::create()
-            ->findOne();
-        $loan = LoanQuery::create()
-            ->findOne();
-        $comment = BorrowerCommentQuery::create()
-            ->findOne();
-        $postedBy = 'dmdm by hddhd on ffjfjfjf';
-        $images = '.....';
-
-        $this->lenderMailer->sendBorrowerCommentNotification($lender, $loan, $comment, $postedBy, $images);
-    }
-
-    public function sendAbandonedUserMail()
-    {
-        $lender = LenderQuery::create()
-            ->findOne();
-
-        $this->lenderMailer->sendAbandonedUserMail($lender->getUser());
     }
 }

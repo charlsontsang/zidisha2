@@ -851,23 +851,8 @@ class LoanService
 
         // TODO, lenders + bid amount
         $lenders = [];
-        $borrower = $loan->getBorrower();
-        $parameters = [
-            'borrowerName'    => $borrower->getName(),
-            'borrowFirstName' => $borrower->getFirstName(),
-            'disbursedDate'   => date('F d, Y',  time()),
-            'loanPage'        => route('loan:index', $loan->getId()),
-            'giftCardPage'    => route('lender:gift-cards')
-        ];
-
-        $data['image_src'] = $borrower->getUser()->getProfilePictureUrl();
-        $message = \Lang::get('lender.mails.loan-disbursed.message', $parameters);
-        $data['header'] = $message;
-        $body = \Lang::get('lender.mails.loan-disbursed.body', $parameters);
-        $data['content'] = $body;
-        $subject = \Lang::get('lender.mails.loan-disbursed.subject', $parameters);
-        foreach ($lenders as $lender) { 
-            $this->lenderMailer->sendDisbursedLoanMail($lender, $parameters, $data, $subject);
+        foreach ($lenders as $lender) {
+            $this->lenderMailer->sendDisbursedLoanMail($lender, $loan);
         }
         $this->borrowerMailer->sendDisbursedLoanMail($loan);
         
@@ -1107,20 +1092,9 @@ class LoanService
 
         $lendersForForgive = LenderQuery::create()
             ->getLendersForForgive($loan);
-        $parameters = [
-            'borrowerName'      => $loan->getBorrower()->getName(),
-            'disbursedDate'     => $loan->getDisbursedAt()->format('d-m-Y'),
-            'message'           => trim($forgivenessLoan->getComment()),
-            'outstandingAmount' => $loan->getUsdAmount()->multiply($loan->getPaidPercentage())->divide(100),
-            'loanLink'          => route('loan:index', $loan->getId()),
-            'yesLink'           => route('loan:index', $loan->getId()).'?v='.$forgivenessLoan->getVerificationCode(),
-            'yesImage'          => '/assets/images/loan-forgive/yes.png',
-            'noImage'           => '/assets/images/loan-forgive.no.png',
-        ];
-        $subject = \Lang::get('lender.mails.allow-loan-forgiveness.subject', $parameters);
 
         foreach ($lendersForForgive as $lender) {
-            $this->lenderMailer->sendAllowLoanForgivenessMail($forgivenessLoan, $lender, $parameters, $subject);
+            $this->lenderMailer->sendAllowLoanForgivenessMail($loan, $forgivenessLoan, $lender);
         }
 
         return $forgivenessLoan;

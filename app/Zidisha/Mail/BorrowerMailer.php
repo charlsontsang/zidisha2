@@ -18,9 +18,6 @@ use Zidisha\User\User;
 
 class BorrowerMailer{
 
-    /**
-     * @var Mailer
-     */
     private $mailer;
 
     public function __construct(Mailer $mailer)
@@ -30,16 +27,21 @@ class BorrowerMailer{
 
     public function sendVerificationMail(Borrower $borrower)
     {
-        $data = [
-            'hashCode' => $borrower->getJoinLog()->getVerificationCode(),
-            'to' => $borrower->getUser()->getEmail(),
-            'from' => 'service@zidisha.org',
-            'subject' => 'Zidisha Borrower Account Verification'
+        $hashCode = $borrower->getJoinLog()->getVerificationCode();
+        $parameters = [
+            'verifyLink' => route('home') . 'ident=' . $borrower->getId() . '&activate=' . $hashCode, //TODO check
         ];
 
-        $this->mailer->send(
-            'emails.borrower.verification',
-            $data
+        $body = \Lang::get('borrower.mails.email-verification.body', $parameters);
+        $data['content'] = $body;
+
+        $this->mailer->queue(
+            'emails.hero',
+            $data + [
+                'to'         => $borrower->getUser()->getEmail(),
+                'subject'    => \Lang::get('borrower.mails.email-verification.subject', $parameters),
+                'templateId' => \Setting::get('sendwithus.borrower-notifications-template-id')
+            ]
         );
     }
 
@@ -52,7 +54,7 @@ class BorrowerMailer{
         $body = \Lang::get('borrower.mails.registration-join.body', $parameters);
         $data['content'] = $body;
 
-        $this->mailer->send(
+        $this->mailer->queue(
             'emails.hero',
             $data + [
                 'to'         => $borrower->getUser()->getEmail(),
@@ -71,7 +73,7 @@ class BorrowerMailer{
             ],
         ];
 
-        $this->mailer->send(
+        $this->mailer->queue(
             'emails.label-template',
             $data + [
                 'to'         => $email,
@@ -92,7 +94,7 @@ class BorrowerMailer{
         $body = \Lang::get('borrower.mails.volunteer-mentor-confirmation.body', $parameters);
         $data['content'] = $body;
 
-        $this->mailer->send(
+        $this->mailer->queue(
             'emails.hero',
             $data + [
                 'to'         => $borrower->getUser()->getEmail(),
@@ -102,6 +104,7 @@ class BorrowerMailer{
         );
     }
 
+    //TODO
     public function sendFeedbackMail(FeedbackMessage $feedbackMessage)
     {
         $data = [
@@ -111,12 +114,12 @@ class BorrowerMailer{
             'subject'  => $feedbackMessage->getSubject()
         ];
 
-        $this->mailer->send('emails.borrower.feedback', $data);
+        $this->mailer->queue('emails.borrower.feedback', $data);
 
        // TODO necessary? or just use cc field
         foreach($feedbackMessage->getCcEmails() as $email) {
             $data['to'] = $email;
-            $this->mailer->send('emails.borrower.feedback', $data);
+            $this->mailer->queue('emails.borrower.feedback', $data);
         }
     }
 
@@ -133,7 +136,7 @@ class BorrowerMailer{
             ],
         ];
 
-        $this->mailer->send(
+        $this->mailer->queue(
             'emails.label-template',
             $data + [
                 'to'         => $borrower->getUser()->getEmail(),
@@ -152,7 +155,7 @@ class BorrowerMailer{
             ],
         ];
 
-        $this->mailer->send(
+        $this->mailer->queue(
             'emails.label-template',
             $data + [
                 'to'         => $borrower->getUser()->getEmail(),
@@ -171,7 +174,7 @@ class BorrowerMailer{
         $body = \Lang::get('borrower.mails.declined-confirmation.body', $parameters);
         $data['content'] = $body;
 
-        $this->mailer->send(
+        $this->mailer->queue(
             'emails.hero',
             $data + [
                 'to'         => $borrower->getUser()->getEmail(),
@@ -193,7 +196,7 @@ class BorrowerMailer{
         $body = \Lang::get('borrower.mails.borrower-comment-notification.body', $parameters);
         $data['content'] = $body;
 
-        $this->mailer->send(
+        $this->mailer->queue(
             'emails.hero',
             $data + [
                 'to'          => $borrower->getUser()->getEmail(),
@@ -217,7 +220,7 @@ class BorrowerMailer{
         $body = \Lang::get('borrower.mails.loan-expired.body', $parameters);
         $data['content'] = $body;
 
-        $this->mailer->send(
+        $this->mailer->queue(
             'emails.hero',
             $data + [
                 'to'         => $borrower->getUser()->getEmail(),
@@ -236,7 +239,7 @@ class BorrowerMailer{
         $link = \Lang::get('borrower.mails.invite.link', $parameters);
         $data['content'] = $message."<br/><br/>".$link;;
 
-        $this->mailer->send(
+        $this->mailer->queue(
             'emails.hero',
             $data + [
                 'to'         => $borrowerInvite->getEmail(),
@@ -440,9 +443,9 @@ class BorrowerMailer{
         }
         $parameters = [
             'borrowerName'         => $borrower->getName(),
-            'disbursedAmount'      => $disbursedAmount->getAmount(),
-            'registrationFee'      => $registrationFee->getAmount(),
-            'netAmount'            => $disbursedAmount->subtract($registrationFee)->getAmount(),
+            'disbursedAmount'      => $disbursedAmount,
+            'registrationFee'      => $registrationFee,
+            'netAmount'            => $disbursedAmount->subtract($registrationFee),
             'zidishaLink'          => route('home'),
             'repaymentInstruction' => $repaymentInstruction
         ];
@@ -451,7 +454,7 @@ class BorrowerMailer{
         $body = \Lang::get('borrower.mails.loan-disbursed.body', $parameters);
         $data['content'] = $body;
 
-        $this->mailer->send(
+        $this->mailer->queue(
             'emails.hero',
             $data + [
                 'to'         => $borrower->getUser()->getEmail(),
@@ -470,7 +473,7 @@ class BorrowerMailer{
         $message = \Lang::get('borrower.mails.loan-fully-funded.body', ['borrowerName' => $borrower->getName(), 'loanApplicationPage' => route('loan:index', $loan->getId()), 'expiryDate' => $expireDate->toFormattedDateString()]);
         $data['content'] = $message;
 
-        $this->mailer->send(
+        $this->mailer->queue(
             'emails.hero',
             $data + [
                 'to'         => $loan->getBorrower()->getUser()->getEmail(),

@@ -55,14 +55,13 @@ class AbandonedUser extends ScheduledJob
     public function process(Job $job)
     {
         $user = $this->getUser();
-
+        $lender = LenderQuery::create()
+            ->findOneById($user->getId());
         if ($user->getLastLoginAt() < Carbon::now()->subYear() && $this->getCount() == 1) {
             /** @var  LenderMailer $lenderMailer */
             $lenderMailer = \App::make('Zidisha\Mail\LenderMailer');
-            $lenderMailer->sendAbandonedUserMail($user);
+            $lenderMailer->sendAbandonedUserMail($lender);
         } elseif ($user->getLastLoginAt() < Carbon::now()->subYear()->subMonth() && $this->getCount() == 2) {
-            $lender = LenderQuery::create()
-                ->findOneById($user->getId());
             /** @var LenderService $lenderService */
             $lenderService = \App::make('\Zidisha\Lender\LenderService');
             $lenderService->deactivateLender($lender);
