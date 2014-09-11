@@ -3,6 +3,7 @@
 use Propel\Runtime\ActiveQuery\Criteria;
 use Zidisha\Borrower\BorrowerService;
 use Zidisha\Comment\BorrowerCommentService;
+use Zidisha\Comment\LoanFeedbackComment;
 use Zidisha\Comment\LoanFeedbackCommentQuery;
 use Zidisha\Comment\LoanFeedbackCommentService;
 use Zidisha\Currency\Converter;
@@ -87,7 +88,7 @@ class LoanController extends BaseController
         $canPostFeedback = false;
         $canReplyFeedback = false;
         if ($displayFeedbackComments && Auth::check()) {
-            $user = Auth::user();
+            $user = $this->getUser();
 
             if ($user == $loan->getBorrower()->getUser()) {
                 $canReplyFeedback = true;
@@ -99,7 +100,11 @@ class LoanController extends BaseController
                 ->count();
 
             if ($bidCount) {
-                $hasGivenFeedback = $this->loanFeedbackCommentService->hasGivenFeedback($loan->getId(), $user->getId());
+                $hasGivenFeedback = LoanFeedbackCommentQuery::create()
+                    ->filterByUserId($user->getId())
+                    ->filterByLoan($loan)
+                    ->countFeedback($loan);
+                
                 if (!$hasGivenFeedback) {
                     $canPostFeedback = true;
                 }
@@ -112,12 +117,14 @@ class LoanController extends BaseController
         $feedbackCommentPage = Input::get('feedbackPage', 1);
 
         $borrower = $receiver = $loan->getBorrower();
-        $comments = $this->borrowerCommentService->getPaginatedComments($borrower, $page, 10);
+        $comments = $this->borrowerCommentService->getPaginatedComments($borrower, $page, 50);
         $commentCount = \Zidisha\Comment\BorrowerCommentQuery::create()
             ->filterByBorrower($borrower)
             ->filterByRemoved(false)
             ->count();
-        $loanFeedbackComments = $this->loanFeedbackCommentService->getPaginatedComments($loan, $feedbackCommentPage, 10);
+        $loanFeedbackComments = $this->loanFeedbackCommentService->getPaginatedComments($loan, $feedbackCommentPage, 50);
+        $loanFeedbackCounts = LoanFeedbackCommentQuery::create()
+            ->getFeedbackRatingCounts($loan); 
 
         $lenders = LenderQuery::create()->findBidOnLoan($loan);
 
@@ -156,16 +163,16 @@ class LoanController extends BaseController
         ->getAllLoansForBorrower($borrower);
 
         $totalPositiveFeedback = LoanFeedbackCommentQuery::create()
-            ->filterByReceiverId($loanIds, Criteria::IN)
-            ->filterByRatingType(0, Criteria::EQUAL)
-            ->count();
+            ->filterByLoanId($loanIds, Criteria::IN)
+            ->filterByRating(LoanFeedbackComment::POSITIVE)
+            ->countFeedback();
 
         $totalFeedback = LoanFeedbackCommentQuery::create()
-            ->filterByReceiverId($loanIds, Criteria::IN)
-            ->count();
+            ->filterByLoanId($loanIds, Criteria::IN)
+            ->countFeedback();
         
         if ($totalFeedback > 0) {
-            $feedbackRating = ($totalPositiveFeedback*100)/$totalFeedback;
+            $feedbackRating = round($totalPositiveFeedback * 100 / $totalFeedback);
         } else {
             $feedbackRating = 0;
         }
@@ -192,6 +199,7 @@ class LoanController extends BaseController
                 'repaymentSchedule',
                 'repaymentScore',
                 'loanFeedbackComments',
+                'loanFeedbackCounts',
                 'displayFeedbackComments',
                 'placeBidForm',
                 'categoryForm',

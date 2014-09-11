@@ -7,11 +7,16 @@ class LoanFeedbackEditCommentForm extends EditCommentForm
 {
     public function getRules($data)
     {
-        return [
+        $rules = [
             'message'    => 'required',
-            'rating'     => 'required|in:' . $this->getRatingTypes(),
             'comment_id' => 'required',
         ];
+        
+        if ($this->comment->isRoot()) {
+            $rules['rating'] = 'required|in:' . $this->getRatingTypes();
+        }
+        
+        return $rules;
     }
 
     public function getRatingTypes()

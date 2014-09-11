@@ -106,4 +106,9 @@ return [
         'expired'      => 'Expired',
     ],
     'lenders' => 'Lenders',
+    'feedback' => [
+        'positive' => 'Positive',
+        'negative' => 'Negative',
+        'neutral'  => 'Neutral',
+    ],
 ];

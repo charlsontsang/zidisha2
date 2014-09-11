@@ -3,14 +3,16 @@
     <div class="row">
         <div class="col-sm-10 col-sm-push-2">
             @if($canPostComment)
-                @include('partials.comments.partial.post', [
-                    'controller' => $controller,
-                    'receiver' => $receiver,
-                    'canPostComment' => $canPostComment,
-                    'canReplyComment' => $canReplyComment
-                ])
-            @else
-                <span class="text-light">Please <a href="#">log in</a> to comment.</span>
+                @if(\Auth::check())
+                    @include('partials.comments.partial.post', [
+                        'controller' => $controller,
+                        'receiver' => $receiver,
+                        'canPostComment' => $canPostComment,
+                        'canReplyComment' => $canReplyComment
+                    ])
+                @else
+                    <span class="text-light">Please <a href="#">log in</a> to comment.</span>
+                @endif
             @endif
         </div>
     </div>

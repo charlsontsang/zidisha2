@@ -293,7 +293,26 @@
                                     </div>
 
                                     <div class="loan-section-content">
-                                        No feedback yet / count (TODO)
+                                        @if(count($loanFeedbackComments))
+                                            @foreach($loanFeedbackCounts as $rating => $count)
+                                                <?php
+                                                $labelClass = 'default';
+                                                if ($rating == \Zidisha\Comment\LoanFeedbackComment::POSITIVE) {
+                                                    $labelClass = 'success';
+                                                } elseif ($rating == \Zidisha\Comment\LoanFeedbackComment::NEGATIVE) {
+                                                    $labelClass = 'danger';
+                                                }
+                                                ?>
+                                                <span class="label label-{{ $labelClass }}">
+                                                    @lang('borrower.loan.feedback.' . $rating)
+                                                </span>
+                                                &nbsp;
+                                                {{ $count }}
+                                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                            @endforeach
+                                        @else
+                                            No feedback yet.
+                                        @endif
                                     </div>
                                 </div>
 

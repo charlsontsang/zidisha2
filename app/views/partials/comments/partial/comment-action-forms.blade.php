@@ -1,4 +1,4 @@
-@if($canPostComment)
+@if(\Auth::check())
     @if($canReplyComment)
         @include('partials.comments.partial.reply', ['receiver' => $receiver, 'comment' => $comment] )
     @endif

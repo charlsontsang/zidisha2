@@ -25,9 +25,25 @@
             @endif
             <small>{{ $comment->getCreatedAt()->format('M d, Y') }}</small>
         </h4>
+
+
+        @if($controller == 'LoanFeedbackController' && $comment->isRoot() && !$comment->getRemoved())
+            <?php
+                $labelClass = 'default';
+                if ($comment->getRating() == \Zidisha\Comment\LoanFeedbackComment::POSITIVE) {
+                    $labelClass = 'success';
+                } elseif ($comment->getRating() == \Zidisha\Comment\LoanFeedbackComment::NEGATIVE) {
+                    $labelClass = 'danger';
+                }
+            ?>
+            <span class="label label-{{ $labelClass }}">
+                @lang('borrower.loan.feedback.' . $comment->getRating())
+            </span>
+        @endif
+        
         @if($comment->isTranslated())
             <p>
-                {{{ $comment->getMessageTranslation() }}}
+                {{ nl2br(e($comment->getMessageTranslation())) }}
             </p>
             <p class="clearfix">
                 <small class="pull-right">
@@ -42,22 +58,13 @@
                 </small>
             </p>
             <p style="display: none">
-                {{{ $comment->getMessage() }}}
+                {{ nl2br(e($comment->getMessage())) }}
             </p>
         @else
             <p>
-                {{{ $comment->getMessage() }}}
+                {{ nl2br(e($comment->getMessage())) }}
             </p>
         @endif
-
-        @if($controller == 'LoanFeedbackController' && $comment->isRoot())
-                Rating Type:
-
-                    <b>
-                        {{ $comment->getRating()}}
-                    </b>
-        @endif
-
 
         @if($controller != 'LoanFeedbackController')
             @include("partials.comments.partial.display-uploads", ['comment' => $comment, 'canPostComment' => $canPostComment, 'canReplyComment' => $canReplyComment, 'controller' => $controller, 'receiver' => $receiver ])

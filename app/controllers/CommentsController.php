@@ -87,7 +87,7 @@ abstract class CommentsController extends BaseController
             App::abort(404, 'Bad Request');
         }
 
-        $editCommentForm = $this->getEditCommentForm();
+        $editCommentForm = $this->getEditCommentForm($comment);
         $editCommentForm->handleRequest(Request::instance());
 
         if (!$editCommentForm->isValid()) {
@@ -233,9 +233,9 @@ abstract class CommentsController extends BaseController
         return new PostCommentForm();
     }
 
-    protected function getEditCommentForm()
+    protected function getEditCommentForm($comment)
     {
-        return new EditCommentForm();
+        return new EditCommentForm($comment);
     }
 
     protected function getReplyCommentForm()

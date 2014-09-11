@@ -53,7 +53,7 @@ abstract class CommentService
 
     public function postReply($data, User $user, CommentReceiverInterface $receiver, Comment $parentComment, $files = [])
     {
-        $comment = $this->createComment();
+        $comment = $this->createComment($data);
         $comment->setUserId($user->getId());
         $comment->setMessage($data['message']);
         $comment->setCommentReceiverId($comment, $receiver->getCommentReceiverId());

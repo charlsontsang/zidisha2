@@ -1,13 +1,17 @@
 <?php
 namespace Zidisha\Comment;
 
+use Zidisha\Loan\Loan;
 use Zidisha\User\User;
 
 class LoanFeedbackCommentService extends CommentService
 {
     public function editComment($data, User $user, Comment $comment, $files = [])
     {
-        $comment->setRating($data['rating']);
+        if ($comment->isRoot()) {
+            $comment->setRating($data['rating']);
+        }
+        
         parent::editComment($data, $user, $comment, $files);
     }
 
@@ -24,7 +28,10 @@ class LoanFeedbackCommentService extends CommentService
     protected function createComment($data = [])
     {
         $comment = new LoanFeedbackComment();
-        $comment->setRating($data['rating']);
+        
+        if (!array_get($data, 'parent_id')) {
+            $comment->setRating($data['rating']);
+        };
 
         return $comment;
     }
@@ -45,13 +52,5 @@ class LoanFeedbackCommentService extends CommentService
     public function isUploadsAllowed()
     {
         return false;
-    }
-
-    public function hasGivenFeedback($userId, $loanId)
-    {
-        return LoanFeedbackCommentQuery::create()
-            ->filterByReceiverId($loanId)
-            ->filterByUserId($userId)
-            ->count();
     }
 }

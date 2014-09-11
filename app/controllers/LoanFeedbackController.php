@@ -48,9 +48,9 @@ class LoanFeedbackController extends CommentsController
         return new LoanFeedbackPostCommentForm();
     }
 
-    protected function getEditCommentForm()
+    protected function getEditCommentForm($comment)
     {
-        return new LoanFeedbackEditCommentForm();
+        return new LoanFeedbackEditCommentForm($comment);
     }
 
     protected function getReplyCommentForm()
