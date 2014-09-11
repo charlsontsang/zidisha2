@@ -584,7 +584,10 @@ class LoanService
 
             $this->changeLoanStage($con, $loan, Loan::OPEN, Loan::FUNDED);
 
-            $loan->getBorrower()->setActiveLoan($loan);
+            $borrower = $loan->getBorrower();
+            $borrower
+                ->setLoanStatus(Loan::FUNDED)
+                ->setActiveLoan($loan);
             $loan->save($con);
         });
 
@@ -791,6 +794,7 @@ class LoanService
         $loan
             ->setAuthorizedAt($data['authorizedAt'])
             ->setAuthorizedAmount($data['authorizedAmount']);
+
         $loan->save();
     }
 
@@ -843,6 +847,7 @@ class LoanService
             }
 
             $loan->setTotalAmount($totalAmount);
+            $loan->getBorrower()->setLoanStatus(Loan::ACTIVE);
             $loan->save($con);
 
             $this->changeLoanStage($con, $loan, Loan::FUNDED, Loan::ACTIVE);
@@ -1002,7 +1007,12 @@ class LoanService
     {
         PropelDB::transaction(function($con) use ($loan) {
             $loan->setStatus(Loan::DEFAULTED);
+            $loan->getBorrower()
+                ->setLoanStatus(Loan::DEFAULTED)
+                ->setActiveLoan(null);
+
             $loan->save($con);
+            
             $this->changeLoanStage($con, $loan, Loan::ACTIVE, Loan::DEFAULTED);
         });
 
