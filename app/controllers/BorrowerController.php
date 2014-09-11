@@ -161,7 +161,7 @@ class BorrowerController extends BaseController
             'loan'
         );
         
-        if ($loan->isActive() || $loan->isDefaulted() || $loan->isRepaid()) {
+        if ($loan && ($loan->isActive() || $loan->isDefaulted() || $loan->isRepaid())) {
             $repaymentSchedule = $this->repaymentService->getRepaymentSchedule($loan);
 
             $data['repaymentSchedule'] = $repaymentSchedule;
