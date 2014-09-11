@@ -417,4 +417,21 @@ class BorrowerMailerTester
 
         $this->borrowerMailer->sendRepaymentReceiptMail($borrower, Money::create(360, $borrower->getCountry()->getCurrencyCode()));
     }
+
+    public function sendEligibleInviteMail()
+    {
+        $userBorrower = new User();
+        $userBorrower->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+        $borrower = new Borrower();
+        $borrower->setUser($userBorrower)
+            ->setFirstName('borrowerFirstName')
+            ->setLastName('borrowerLastName')
+            ->setCountry(
+                CountryQuery::create()
+                    ->findOne()
+            );
+
+        $this->borrowerMailer->sendEligibleInviteMail($borrower);
+    }
 }
