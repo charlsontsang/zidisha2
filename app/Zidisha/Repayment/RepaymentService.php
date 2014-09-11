@@ -17,6 +17,8 @@ use Zidisha\Loan\BidQuery;
 use Zidisha\Loan\Calculator\RepaymentCalculator;
 use Zidisha\Loan\Loan;
 use Zidisha\Loan\LoanService;
+use Zidisha\Mail\BorrowerMailer;
+use Zidisha\Mail\LenderMailer;
 use Zidisha\Vendor\PropelDB;
 
 class RepaymentService
@@ -26,14 +28,18 @@ class RepaymentService
     private $borrowerQuery;
     private $currencyService;
     private $transactionService;
+    private $lenderMailer;
+    private $borrowerMailer;
 
-    public function __construct(BorrowerPaymentQuery $paymentQuery, BorrowerQuery $borrowerQuery, CurrencyService $currencyService, TransactionService $transactionService)
+    public function __construct(BorrowerPaymentQuery $paymentQuery, BorrowerQuery $borrowerQuery, CurrencyService $currencyService, TransactionService $transactionService, LenderMailer $lenderMailer, BorrowerMailer $borrowerMailer)
     {
 
         $this->paymentQuery = $paymentQuery;
         $this->borrowerQuery = $borrowerQuery;
         $this->currencyService = $currencyService;
         $this->transactionService = $transactionService;
+        $this->lenderMailer = $lenderMailer;
+        $this->borrowerMailer = $borrowerMailer;
     }
 
     public function addBorrowerPayment(Borrower $borrower, $data)
@@ -251,17 +257,18 @@ class RepaymentService
             
             return [$loanRepayments];
         });
-
+        $borrower = $loan->getBorrower();
 
         if ($calculator->isRepaid()) {
             /** @var LoanRepayment $loanRepayment */
             foreach ($loanRepayments as $loanRepayment) {
                 $lender = $loanRepayment->getLender();
-                // Send email, session.php 838
+                $this->lenderMailer->sendRepaidLoanMail($lender, $loan);
             }
         }
         
         // TODO emails/sms/sift science
+        $this->borrowerMailer->sendRepaymentReceiptMail($borrower, $amount);
     }
 
     protected function updateInstallmentSchedule($con, $installments, Loan $loan, Money $amount, \Datetime $date)

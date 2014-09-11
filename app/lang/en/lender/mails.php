@@ -195,8 +195,8 @@ The Zidisha Team
         '
     ],
     'loan-repayment-feedback'            => [
-        'subject' => 'Hooray! :borrowerName has completely repaid your loan',
-        'header'  => ':borrowerName has completely repaid your loan.',
+        'subject' => 'Hooray! :borrowerName has fully repaid your loan',
+        'header'  => ':borrowerName has fully repaid your loan.',
         'body'    => '
         Hi there,
 <br/><br/>

@@ -482,4 +482,23 @@ class BorrowerMailer{
             ]
         );
     }
+
+    public function sendRepaymentReceiptMail(Borrower $borrower, Money $amount)
+    {
+        $parameters = [
+            'borrowerName' => $borrower->getName(),
+            'repaidAmount' => $amount,
+        ];
+        $message = \Lang::get('borrower.mails.payment-receipt.body', $parameters);
+        $data['content'] = $message;
+
+        $this->mailer->queue(
+            'emails.hero',
+            $data + [
+                'to'         => $borrower->getUser()->getEmail(),
+                'subject'    => \Lang::get('borrower.mails.payment-receipt.subject'),
+                'templateId' => \Setting::get('sendwithus.borrower-notifications-template-id')
+            ]
+        );
+    }
 }
