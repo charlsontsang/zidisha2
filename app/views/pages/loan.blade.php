@@ -285,15 +285,18 @@
                         @if($displayFeedbackComments)
                             <hr/>
                             
-                            <div id="feedback" class="loan-section comments">
+                            <div id="feedback">
+                                <div class="loan-section">
 
-                                <div class="loan-section-title">
-                                    <span class="text-light">Feedback</span>
+                                    <div class="loan-section-title">
+                                        <span class="text-light">Feedback</span>
+                                    </div>
+
+                                    <div class="loan-section-content">
+                                        No feedback yet / count (TODO)
+                                    </div>
                                 </div>
-                                
-                                <div class="loan-section-content">
-                                </div>
-                                
+
                                 @include('partials.comments.comments', [
                                     'comments' => $loanFeedbackComments,
                                     'receiver' => $loan,
@@ -301,7 +304,7 @@
                                     'canPostComment' => $canPostFeedback,
                                     'canReplyComment' => $canReplyFeedback
                                 ])
-                            </div> 
+                            </div>
                         @endif
 
                         @if(count($lenders) > 0)
@@ -342,8 +345,8 @@
                             'comments' => $comments,
                             'receiver' => $borrower,
                             'controller' => 'BorrowerCommentController',
-                            'canPostComment' => \Auth::check(),
-                            'canReplyComment' => \Auth::check()
+                            'canPostComment' => true,
+                            'canReplyComment' => true
                         ])
                     </div>
 
