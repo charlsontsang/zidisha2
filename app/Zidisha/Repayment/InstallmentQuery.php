@@ -40,11 +40,13 @@ class InstallmentQuery extends BaseInstallmentQuery
 
     public function getPaidAmount(Loan $loan)
     {
-        return $this
+        $amount = $this
             ->filterByLoan($loan)
             ->select('paidAmount')
             ->withColumn('SUM(paid_amount)', 'paidAmount')
             ->findOne();
+        
+        return Money::create($amount, $loan->getCurrency());
     }
 
     /**
