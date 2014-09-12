@@ -8985,6 +8985,9 @@ form .btn-default,
   .no-more-tables td:before {
     content: attr(data-title) !important;
   }
+  .no-more-tables .pull-left img {
+    display: none;
+  }
 }
 .dl-horizontal.dl-horizontal-left dt {
   text-align: left;
