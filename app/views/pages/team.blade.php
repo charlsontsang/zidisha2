@@ -311,6 +311,47 @@ Meet the Team
 	        <p><i class="fa fa-fw fa-user"></i><strong>Tricia Wagga</strong>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;Kenya Liaison</p>
 	        <p><i class="fa fa-fw fa-map-marker"></i>New Jersey</p>
 	    </div>
+	</div>	
+	<div class="row">
+		<div class="col-sm-4">
+		    <ul class="img-list">
+			  <li>
+			    <img src="/assets/images/pages/team/shiyu.jpg" width="100%" />
+			    <span class="text-content"><span>
+			    	<strong>Shiyu Xiong</strong><br/>
+					Comes from Shanghai, China. Studies Finance at Johns Hopkins University. Develops an interest in microfinance through Model UN conferences. Enjoys reading mystery fictions and biking.
+				</span></span>
+			  </li>
+			</ul>
+	        <p><i class="fa fa-fw fa-user"></i><strong>Shiyu Xiong</strong>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;Community Manager</p>
+	        <p><i class="fa fa-fw fa-map-marker"></i>Baltimore, Maryland</p>
+	    </div>		
+	    <div class="col-sm-4">
+		    <ul class="img-list">
+			  <li>
+			    <img src="/assets/images/pages/team/andreas.png" width="100%" />
+			    <span class="text-content"><span>
+			    	<strong>Andreas Bernt-Baertl</strong><br/>
+			    	Over 20 years experience in digital marketing and e-commerce. Co-founded a non-commercial radio station and supports a number of organizations aiming for social transformation. Master's degree in sociology from the University of Frankfurt.
+			    </span></span>
+			  </li>
+			</ul>
+	        <p><i class="fa fa-fw fa-user"></i><strong>Andreas Bernt-Baertl</strong>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;Community Manager</p>
+	        <p><i class="fa fa-fw fa-map-marker"></i>Wiesbaden, Germany</p>
+	    </div>		
+	    <div class="col-sm-4">
+		    <ul class="img-list">
+			  <li>
+			    <img src="/assets/images/pages/team/nadia.png" width="100%" />
+			    <span class="text-content"><span>
+			    	<strong>Nadia Maliki</strong><br/>
+			    	Studying chemical and industrial engineering at the University of California. Grew up in Indonesia and has immense interest in solving environmental and economic issues in the country.  Likes travelling, cooking and swimming.
+			    </span></span>
+			  </li>
+			</ul>
+	        <p><i class="fa fa-fw fa-user"></i><strong>Nadia Maliki</strong>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;Kenya Liaison</p>
+	        <p><i class="fa fa-fw fa-map-marker"></i>Berkeley, California</p>
+	    </div>
 	</div>
 </div>
 
