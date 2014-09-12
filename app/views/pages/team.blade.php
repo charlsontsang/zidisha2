@@ -44,7 +44,7 @@ Meet the Team
 			    <div class="col-sm-4">
 				    <ul class="img-list">
 					  <li>
-					    <img src="/assets/images/pages/team/julia.jpg" width="100%" style="border: 1px solid gray;" />
+					    <img src="/assets/images/pages/team/julia.jpg" width="100%" style="border: 1px solid #ddd;" />
 					    <span class="text-content"><span>
 					    	<strong>Julia Kurnia</strong><br/>
 					    	Co-founded the world's first microfinance institution built on capital raised from individuals over the internet. Developed grant projects in Africa for the US government before founding Zidisha. Enjoys practicing Indonesian martial arts.
@@ -378,43 +378,41 @@ Meet the Team
 			    <div class="col-sm-4">
 				    <ul class="img-list">
 					  <li>
-					    <img src="/assets/images/pages/team/julia.jpg" width="100%" style="border: 1px solid gray;" />
+					    <img src="/assets/images/pages/team/john.jpg" width="100%" />
 					    <span class="text-content"><span>
-					    	<strong>Julia Kurnia</strong><br/>
-					    	Co-founded the world's first microfinance institution built on capital raised from individuals over the internet. Developed grant projects in Africa for the US government before founding Zidisha. Enjoys practicing Indonesian martial arts.
+					    	<strong>John Fay</strong><br/>
+					    	Social entrepreneur focused on clean energy solutions for low-income communities. Holds a PhD from University of Cape Town, an MBA from Cornell Johnson School and B.A. from Duke University. Enjoys sports of any kind - particularly ice hockey and lacrosse.
 					    </span></span>
 					  </li>
 					</ul>
-			        <p><i class="fa fa-fw fa-user"></i><strong>Julia Kurnia</strong>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;Director</p>
-			        <p><i class="fa fa-fw fa-map-marker"></i>Sterling, Virginia&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://www.linkedin.com/profile/view?id=89682838"><i class="fa fa-fw fa-linkedin-square"></i>LinkedIn</a></p>
+			        <p><i class="fa fa-fw fa-user"></i><strong>John Fay</strong>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;Trustee</p>
+			        <p><i class="fa fa-fw fa-map-marker"></i>Lusaka, Zambia&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://www.linkedin.com/profile/view?id=15243525"><i class="fa fa-fw fa-linkedin-square"></i>LinkedIn</a></p>
 			    </div>
 			    <div class="col-sm-4">
 				    <ul class="img-list">
 					  <li>
-					    <img src="/assets/images/pages/team/mien.jpg" width="100%" />
+					    <img src="/assets/images/pages/team/ronnie.jpg" width="100%" />
 					    <span class="text-content"><span>
-					    	<strong>Mien De Graeve</strong><br/>
-					    	Born in South Africa and grew up in Belgium. Moved to Burkina Faso to coordinate the Zidisha program in September 2012. Now runs her own sociocultural enterprise in the capital Ouagadougou while continuing to volunteer with Zidisha.
+					    	<strong>Ronald Cheng</strong><br/>
+					    	Software engineer at Dropbox, previously worked at Facebook and Samasource, a social enterprise that connects people living in poverty with life-changing work opportunities via the Internet. Graduate of Computer Science at Columbia University. 
 					    </span></span>
 					  </li>
 					</ul>
-			        <p><i class="fa fa-fw fa-user"></i><strong>Mien De Graeve</strong>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;Burkina Faso Ambassador</p>
-			        <p><i class="fa fa-fw fa-map-marker"></i>Ouagadougou, Burkina Faso</p>
-			        <p><a href="https://www.linkedin.com/profile/view?id=2169854"><i class="fa fa-fw fa-linkedin-square"></i>LinkedIn</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.mo.be/auteur/mien-de-graeve"><i class="fa fa-fw fa-rss-square"></i>Blog</a></p>
+			        <p><i class="fa fa-fw fa-user"></i><strong>Ronald Cheng</strong>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;Trustee</p>
+			        <p><i class="fa fa-fw fa-map-marker"></i>California&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://www.linkedin.com/profile/view?id=20683751"><i class="fa fa-fw fa-linkedin-square"></i>LinkedIn</a></p>
 			    </div>
 			    <div class="col-sm-4">
 				    <ul class="img-list">
 					  <li>
-					    <img src="/assets/images/pages/team/paige.jpg" width="100%" />
+					    <img src="/assets/images/pages/team/whitney.jpg" width="100%" />
 					    <span class="text-content"><span>
-					    	<strong>Paige Klunk</strong><br/>
-					    	Divides her time between Senegal and the United States, where she is pursuing a master's degree in International Development Studies at Ohio University. Plays the balafon (West African xylophone) and follows West African local hip-hop scene.
+					    	<strong>Whitney Holmes</strong><br/>
+					    	Partner with Dorsey & Whitney specializing in securities law. Helped pioneer legalization of P2P lending in the US as legal counsel to Prosper.com. Formerly Chair of the Securities Law Subsection of the Colorado Bar Association's Business Law Counsel.
 					    </span></span>
 					  </li>
 					</ul>
-			        <p><i class="fa fa-fw fa-user"></i><strong>Paige Klunk</strong>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;Senegal Liaison</p>
-			        <p><i class="fa fa-fw fa-map-marker"></i>Athens, Ohio</p>
-			        <p><a href="https://www.linkedin.com/profile/view?id=89784658"><i class="fa fa-fw fa-linkedin-square"></i>LinkedIn</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://klunpa02.blogspot.com/"><i class="fa fa-fw fa-rss-square"></i>Blog</a></p>
+			        <p><i class="fa fa-fw fa-user"></i><strong>Whitney Holmes</strong>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;Legal Adviser</p>
+			        <p><i class="fa fa-fw fa-map-marker"></i>Denver, Colorado&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://www.linkedin.com/profile/view?id=25575714"><i class="fa fa-fw fa-linkedin-square"></i>LinkedIn</a></p>
 			    </div>
 			</div>
 		</div> <!-- /team -->
