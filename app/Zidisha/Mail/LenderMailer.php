@@ -189,7 +189,6 @@ class LenderMailer
             'emails.hero',
             $data + [
                 'to'         => $email,
-                'from'       => 'service@zidisha.com',
                 'subject'    => $subject,
                 'templateId' => \Setting::get('sendwithus.lender-invite-credit-template-id')
             ]
