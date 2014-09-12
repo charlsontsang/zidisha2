@@ -1,7 +1,6 @@
 <?php
 
 use Zidisha\Borrower\Borrower;
-use Zidisha\Borrower\BorrowerGuestQuery;
 use Zidisha\Borrower\BorrowerService;
 use Zidisha\Borrower\Calculator\CreditLimitCalculator;
 use Zidisha\Borrower\Form\InviteForm;
@@ -11,7 +10,7 @@ use Zidisha\Currency\ExchangeRateQuery;
 use Zidisha\Loan\LoanService;
 use Zidisha\Repayment\RepaymentService;
 
-class BorrowerInviteController extends BaseController
+class BorrowerInviteController extends BaseBorrowerController
 {
     private $borrowerService;
     private $loanService;
@@ -26,28 +25,22 @@ class BorrowerInviteController extends BaseController
 
     public function getInvite()
     {
-        if (!Auth::check() || Auth::getUser()->getRole() != 'borrower') {
-            return View::make('lender.invite-guest');
-        }
+        $borrower = $this->getBorrower();
 
-        $borrower = Auth::user()->getBorrower();
-
-        if (!$borrower) {
-            App::abort(404, 'Bad Request');
-        }
         $form = new InviteForm($borrower);
+        
         $maxInviteesWithoutPayment = \Setting::get('invite.maxInviteesWithoutPayment');
 
         $invites = InviteQuery::create()
             ->filterByBorrower($borrower)
             ->find();
 
-        $count_invites = count($invites);
-        $count_joined_invites = 0;
+        $invitesCount = count($invites);
+        $acceptedInvitesCount = 0;
 
         foreach ($invites as $invite) {
             if ($invite->getInviteeId()) {
-                $count_joined_invites += 1;
+                $acceptedInvitesCount += 1;
             }
         }
 
@@ -59,8 +52,8 @@ class BorrowerInviteController extends BaseController
             ,
             compact(
                 'invites',
-                'count_invites',
-                'count_joined_invites',
+                'invitesCount',
+                'acceptedInvitesCount',
                 'isEligible',
                 'maxInviteesWithoutPayment'
             )

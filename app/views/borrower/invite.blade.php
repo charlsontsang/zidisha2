@@ -13,28 +13,32 @@ Quick Links
 @stop
 
 @section('page-content')
-@if($isEligible == 1)
-    {{ BootstrapForm::open(array('route' => 'borrower:post-invite')) }}
+@if($isEligible === true)
+    {{ BootstrapForm::open(array('route' => 'borrower:post-invite', 'translationDomain' => 'borrower.invite')) }}
     {{ BootstrapForm::populate($form) }}
 
     {{ BootstrapForm::text('email') }}
     {{ BootstrapForm::text('borrowerName') }}
     {{ BootstrapForm::text('borrowerEmail') }}
     {{ BootstrapForm::text('subject') }}
-    {{ BootstrapForm::textarea('note', null, ['style' => 'height:100px'], ['placeholder' => 'Add a note']) }}
-    {{ BootstrapForm::submit('Send Invite', ['class' => 'btn btn-primary']) }}
+    {{ BootstrapForm::textarea('note', null, ['style' => 'height:100px']) }}
+    {{ BootstrapForm::submit('sendInvite', ['class' => 'btn btn-primary']) }}
     
     {{ BootstrapForm::close() }}
 @else
     <p>
-    {{ \Lang::get('borrower.invite.not-eligible') }}
+    @lang('borrower.invite.not-eligible')
 
-    @if($isEligible == 2)
-        {{ \Lang::get('borrower.invite.not-eligible-repayRate') }}
-    @elseif($isEligible == 3)
-        {{ \Lang::get('borrower.invite.not-eligible-invitee-repayRate') }}
-    @else
-        {{ \Lang::get('borrower.invite.not-eligible-invitee-quota', ['maxInviteesWithoutPayment' => $maxInviteesWithoutPayment, 'myInvites' => route('borrower:invites')]) }}
+    @if($isEligible == 'insufficientRepaymentRate')
+        @lang('borrower.invite.not-eligible-repayRate')
+    @elseif($isEligible == 'insufficientInviteesRepaymentRate')
+        @lang('borrower.invite.not-eligible-invitee-repayRate')
+    @elseif ($isEligible == 'exceedsMaxInviteesWithoutPayment')
+        @lang('borrower.invite.not-eligible-max-invites-without-payment', ['maxInviteesWithoutPayment' => $maxInviteesWithoutPayment, 'myInvites' => route('borrower:invites')])
+    @elseif ($isEligible == 'noPayments')
+        @lang('borrower.invite.not-eligible-no-payments')
+    @elseif ($isEligible == 'exceedsInviteeQuota')
+        @lang('borrower.invite.not-eligible-invitee-quota')
     @endif
     </p>
 @endif

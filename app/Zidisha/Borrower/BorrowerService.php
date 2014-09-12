@@ -488,7 +488,7 @@ class BorrowerService
         if (!$previousLoan) {
             $activeLoan = $borrower->getActiveLoan();
             if (!$activeLoan || $activeLoan->getPaidAmount($activeLoan)->isZero()) {
-                return false;
+                return 'noPayments';
             }
         }
         
@@ -502,14 +502,14 @@ class BorrowerService
             ->getInvitesWithoutPaymentCount($borrower);
 
         if ($invitesWithoutPaymentCount > $maxInviteesWithoutPayment) {
-            return false;
+            return 'exceedsMaxInviteesWithoutPayment';
         }
 
         $repaymentRate = $this->loanService->getOnTimeRepaymentScore($borrower);
         $minRepaymentRate = Setting::get('invite.minRepaymentRate');
 
         if ($repaymentRate < $minRepaymentRate) {
-            return false;
+            return 'insufficientRepaymentRate';
         }
 
         // count only those invited members who have raised loans
@@ -521,7 +521,7 @@ class BorrowerService
 
         // each person can recruit no more than 100 members with loans via invite function
         if ($invitedMembersWithoutLoanCount >= 100) {
-            return false;
+            return 'exceedsInviteeQuota';
         }
         
         // if more than 10% of invited members do not meet repayment standard
@@ -529,7 +529,7 @@ class BorrowerService
         $inviteesRepaymentRate = $this->getInviteeRepaymentRate($borrower);
 
         if ($inviteesRepaymentRate < 0.9) {
-            return false;
+            return 'insufficientInviteesRepaymentRate';
         }
         
         return true;
