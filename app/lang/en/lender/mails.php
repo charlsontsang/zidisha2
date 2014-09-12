@@ -334,12 +334,25 @@ Best regards,<br/><br/>
 The Zidisha Team
         '
     ],
-    'paypal-withdraw' => [
+    'paypal-withdraw'                    => [
         'subject' => 'Message from Zidisha',
-        'body' => 'Hello :lenderName,
+        'body'    => 'Hello :lenderName,
 <br/><br/>You have successfully withdrawn :withdrawnAmount from your Zidisha account. The funds have been deposited in your PayPal account.
 <br/><br/>Thank you for your generous support and partnership with us,
 <br/><br/>
 Zidisha Team'
+    ],
+    'fund-upload'                        => [
+        'subject' => "You have new lending credit!",
+        'body'    => "
+Hi there,
+<br/><br/>
+Thank you for your lender funds upload of :uploadAmount !  We have just credited your payment to your lending account - which means it’s time to start browsing new borrower projects!
+<br/><br/>
+Use your credit to make a new loan <a href=':lendUrl'>here</a>.  We can't wait to see which life-changing projects you make happen next!
+<br/><br/>
+Happy lending,
+<br/><br/>
+The Zidisha Team",
     ],
 ];

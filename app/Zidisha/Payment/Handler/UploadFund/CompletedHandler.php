@@ -3,26 +3,26 @@ namespace Zidisha\Payment\Handler\UploadFund;
 
 use Propel\Runtime\Propel;
 use Zidisha\Balance\Map\TransactionTableMap;
+use Zidisha\Mail\LenderMailer;
 use Zidisha\Payment\BalanceService;
 use Zidisha\Payment\PaymentHandler;
 
 class CompletedHandler extends PaymentHandler
 {
 
-    /**
-     * @var \Zidisha\Payment\BalanceService
-     */
     private $balanceService;
+    private $lenderMailer;
 
-    public function __construct(BalanceService $balanceService)
+    public function __construct(BalanceService $balanceService, LenderMailer $lenderMailer)
     {
         $this->balanceService = $balanceService;
+        $this->lenderMailer = $lenderMailer;
     }
 
     public function process()
     {
         $this->balanceService->uploadFunds($this->payment);
-
+        $this->lenderMailer->sendFundUploadMail($this->payment->getLender(), $this->payment->getAmount());
         return $this;
     }
 

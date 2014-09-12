@@ -675,4 +675,24 @@ class LenderMailer
             ]
         );
     }
+
+    public function sendFundUploadMail(Lender $lender, Money $uploadAmount)
+    {
+        $parameters = [
+            'uploadAmount'        => $uploadAmount,
+            'lendUrl'              => route('lend:index'),
+        ];
+
+        $body = \Lang::get('lender.mails.fund-upload.body', $parameters);
+        $data['content'] = $body;
+
+        $this->mailer->queue(
+            'emails.hero',
+            $data + [
+                'to'         => $lender->getUser()->getEmail(),
+                'subject'    => \Lang::get('lender.mails.fund-upload.subject', $parameters),
+                'templateId' => \Setting::get('sendwithus.borrower-notifications-template-id'), //TODO which template
+            ]
+        );
+    }
 }

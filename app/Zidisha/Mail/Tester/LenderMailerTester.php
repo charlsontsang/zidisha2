@@ -555,4 +555,18 @@ class LenderMailerTester
 
         $this->lenderMailer->sendPaypalWithdrawMail($lender, $withdrawnAmount);
     }
+
+    public function sendFundUploadMail()
+    {
+        $user = new User();
+        $user->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+        $lender = new Lender();
+        $lender->setFirstName('lenderFirstName')
+            ->setLastName('lenderLastName')
+            ->setUser($user);
+        $uploadAmount = Money::create(60);
+
+        $this->lenderMailer->sendFundUploadMail($lender, $uploadAmount);
+    }
 }
