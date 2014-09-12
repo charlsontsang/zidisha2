@@ -28,7 +28,7 @@ Quick Links
     <tr>
         <th>Borrower</th>
         <th>Location</th>
-        <th>To Do</th>
+        <th>Actions</th>
         <th></th>
     </tr>
     </thead>
@@ -41,13 +41,14 @@ Quick Links
             <p>{{ $borrower->getUser()->getEmail() }}</p>
         </td>
         <td>{{ $borrower->getCountry()->getName() }}</td>
-        <td></td>
         <td>
             <a href="{{ route('admin:borrower', $borrower->getId()) }}">
-                <i class="fa fa-info-circle fa-lg"></i>
+                View Profile
             </a>
+        </td>
+        <td>
             <a href="{{ route('admin:borrower:edit', $borrower->getId()) }}">
-                <i class="fa fa-pencil-square-o fa-lg"></i>
+                Edit Profile
             </a>
         </td>
     </tr>
