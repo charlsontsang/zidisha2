@@ -92,6 +92,8 @@
                 <br/>
                 <strong>{{ $borrower->getProfile()->getAddress() }}</strong>
                 <br/>
+                <strong>{{ $borrower->getProfile()->getAddressInstructions() }}</strong>
+                <br/>
                 <strong>{{ $borrower->getProfile()->getCity() }}, {{ $borrower->getCountry()->getName() }}</strong>
                 <br/>
                 National ID: <strong>{{ $borrower->getProfile()->getNationalIdNumber() }}</strong>
