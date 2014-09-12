@@ -123,6 +123,24 @@ class BorrowerMailer{
         }
     }
 
+    public function sendLoanFeedbackMail(FeedbackMessage $feedbackMessage)
+    {
+        $data = [
+            'feedback' => nl2br($feedbackMessage->getMessage()),
+            'to'       => $feedbackMessage->getBorrowerEmail(),
+            'from'     => $feedbackMessage->getReplyTo(),
+            'subject'  => $feedbackMessage->getSubject()
+        ];
+
+        $this->mailer->queue('emails.borrower.feedback', $data);
+
+        // TODO necessary? or just use cc field
+        foreach($feedbackMessage->getCcEmails() as $email) {
+            $data['to'] = $email;
+            $this->mailer->queue('emails.borrower.feedback', $data);
+        }
+    }
+
     public function sendLoanConfirmationMail(Borrower $borrower, Loan $loan)
     {
         $subject = \Lang::get('borrower.mails.loan-confirmation.subject');
