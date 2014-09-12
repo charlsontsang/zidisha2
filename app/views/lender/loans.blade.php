@@ -82,16 +82,17 @@ My Stats
 <table class="table table-striped no-more-tables">
     <thead>
     <tr>
-        <th colspan="3" width="50%">Project</th>
-        <th>Date Funded</th>
-        <th>Amount Lent</th>
-        <th>Fundraising Progress</th>
+        <th colspan="2" width="25%">Entrepreneur</th>
+        <th width="15%">Project</th>
+        <th width="15%">Date Funded</th>
+        <th width="15%">Amount Lent</th>
+        <th width="30%">Fundraising Progress</th>
     </tr>
     </thead>
     <tbody>
     @foreach($fundraisingLoanBids as $fundraisingLoanBid)
     <tr>
-        <td data-title="Project">
+        <td data-title="Entrepreneur">
             <a class="pull-left" href="{{ route('loan:index', $fundraisingLoanBid->getLoanId()) }}">
                 <img src="{{ $fundraisingLoanBid->getBorrower()->getUser()->getProfilePictureUrl('small-profile-picture') }}" width="100%">
             </a>
@@ -99,10 +100,9 @@ My Stats
         <td>
             {{ $fundraisingLoanBid->getBorrower()->getName() }}
             <br/><br/>
-            {{ $fundraisingLoanBid->getBorrower()->getProfile()->getCity() }},
             {{ $fundraisingLoanBid->getBorrower()->getCountry()->getName() }}
         </td>
-        <td>
+        <td data-title="Project">
             <a href="{{ route('loan:index', $fundraisingLoanBid->getLoanId()) }}">{{ $fundraisingLoanBid->getLoan()->getSummary() }}</a>
         </td>
         <td data-title="Date Funded">{{ $fundraisingLoanBid->getBidAt()->format('M j, Y') }}</td>
@@ -136,14 +136,15 @@ My Stats
 <table class="table table-striped no-more-tables">
     <thead>
     <tr>
-        <th colspan="3" width="50%">Project</th>
-        <th>Date Funded</th>
-        <th>Amount Lent</th>
-        <th>
+        <th colspan="2" width="25%">Entrepreneur</th>
+        <th width="15%">Project</th>
+        <th width="15%">Date Funded</th>
+        <th width="15%">Amount Lent</th>
+        <th width="15%">
             Amount Repaid
             {{ BootstrapHtml::tooltip('lender.tooltips.loans.amount-repaid-active-loans') }}
         </th>
-        <th>
+        <th width="15%">
             Amount Outstanding
             {{ BootstrapHtml::tooltip('lender.tooltips.loans.amount-outstanding-active-loans') }}
         </th>
@@ -152,7 +153,7 @@ My Stats
     <tbody>
     @foreach($activeLoanBids as $activeLoanBid)
     <tr>
-        <td data-title="Project">
+        <td data-title="Entrepreneur">
             <a class="pull-left" href="{{ route('loan:index', $activeLoanBid->getLoanId()) }}">
                 <img src="{{ $activeLoanBid->getBorrower()->getUser()->getProfilePictureUrl('small-profile-picture') }}" width="100%">
             </a>
@@ -160,10 +161,11 @@ My Stats
         <td>
             {{ $activeLoanBid->getBorrower()->getName() }}
             <br/><br/>
-            {{ $activeLoanBid->getBorrower()->getProfile()->getCity() }},
             {{ $activeLoanBid->getBorrower()->getCountry()->getName() }}
         </td>
-        <td><a href="{{ route('loan:index', $activeLoanBid->getLoanId()) }}">{{ $activeLoanBid->getLoan()->getSummary() }}</a></td>
+        <td data-title="Project">
+            <a href="{{ route('loan:index', $activeLoanBid->getLoanId()) }}">{{ $activeLoanBid->getLoan()->getSummary() }}</a>
+        </td>
         <td data-title="Date Funded">
             {{ $activeLoanBid->getFundedAt()->format('M j, Y') }}
         </td>
@@ -208,14 +210,15 @@ My Stats
 <table class="table table-striped no-more-tables">
     <thead>
     <tr>
-        <th colspan="3" width="50%">Project</th>
-        <th>Date Funded</th>
-        <th>Amount Lent</th>
-        <th>
+        <th colspan="2" width="25%">Entrepreneur</th>
+        <th width="15%">Project</th>
+        <th width="15%">Date Funded</th>
+        <th width="15%">Amount Lent</th>
+        <th width="15%">
             Amount Repaid
             {{ BootstrapHtml::tooltip('lender.tooltips.loans.amount-repaid-completed-loans') }}
         </th>
-        <th>
+        <th width="15%">
             Net Change in Loan Fund Value
             {{ BootstrapHtml::tooltip('lender.tooltips.loans.net-change-completed-loans') }}
         </th>
@@ -224,7 +227,7 @@ My Stats
     <tbody>
     @foreach($completedLoansBids as $completedLoansBid)
     <tr>
-        <td data-title="Project">
+        <td data-title="Entrepreneur">
             <a class="pull-left" href="{{ route('loan:index', $completedLoansBid->getLoanId()) }}">
                 <img src="{{ $completedLoansBid->getBorrower()->getUser()->getProfilePictureUrl('small-profile-picture') }}" width="100%">
             </a>
@@ -232,10 +235,9 @@ My Stats
         <td>
             {{ $completedLoansBid->getBorrower()->getName() }}
             <br/><br/>
-            {{ $completedLoansBid->getBorrower()->getProfile()->getCity() }},
             {{ $completedLoansBid->getBorrower()->getCountry()->getName() }}
         </td>
-        <td><a href="{{ route('loan:index', $completedLoansBid->getLoanId()) }}">{{ $completedLoansBid->getLoan()->getSummary() }}</a></td>
+        <td data-title="Project"><a href="{{ route('loan:index', $completedLoansBid->getLoanId()) }}">{{ $completedLoansBid->getLoan()->getSummary() }}</a></td>
         <td data-title="Date Funded">{{ $completedLoansBid->getLoan()->getDisbursedAt()->format('M j, Y') }}</td>
         <td data-title="Amount Lent">{{ $completedLoansBid->getAcceptedAmount()->getAmount() }}</td>
         <td data-title="Amount Repaid">

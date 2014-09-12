@@ -8985,9 +8985,6 @@ form .btn-default,
   .no-more-tables td:before {
     content: attr(data-title) !important;
   }
-  .no-more-tables .pull-left img {
-    display: none;
-  }
 }
 .dl-horizontal.dl-horizontal-left dt {
   text-align: left;
@@ -8998,6 +8995,18 @@ form .btn-default,
 .table.table-borderless th,
 .table.table-borderless td {
   border-top: none;
+}
+.no-more-tables .pull-left img {
+  display: none;
+}
+@media (min-width: 768px) {
+  .no-more-tables .pull-left img {
+    display: block;
+    width: 80px;
+  }
+}
+.no-more-tables .progress {
+  margin-top: 5px;
 }
 .badge-danger {
   background-color: #f15656;

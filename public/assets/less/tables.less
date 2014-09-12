@@ -48,10 +48,6 @@
   .no-more-tables td:before { 
     content: attr(data-title) !important; 
   }
-
-  .no-more-tables .pull-left img {
-    display: none;
-  }
 }
 
 .dl-horizontal.dl-horizontal-left dt {
@@ -65,4 +61,14 @@
   th, td {
     border-top: none;
   }
+}
+.no-more-tables .pull-left img {
+  display: none;
+  @media (min-width: @screen-sm-min) {
+    display: block;
+    width: 80px;
+  }
+}
+.no-more-tables .progress {
+  margin-top: 5px;
 }
