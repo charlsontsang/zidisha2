@@ -14,7 +14,11 @@ Quick Links
 
 @section('page-content')
 @if($isEligible === true)
-    {{ BootstrapForm::open(array('route' => 'borrower:post-invite', 'translationDomain' => 'borrower.invite')) }}
+    {{ BootstrapForm::open([
+        'route' => 'borrower:post-invite',
+        'translationDomain' => 'borrower.invite',
+        'data-disable-submit' => 'on'])
+    }}
     {{ BootstrapForm::populate($form) }}
 
     {{ BootstrapForm::text('email') }}
@@ -22,7 +26,7 @@ Quick Links
     {{ BootstrapForm::text('borrowerEmail') }}
     {{ BootstrapForm::text('subject') }}
     {{ BootstrapForm::textarea('note', null, ['style' => 'height:100px']) }}
-    {{ BootstrapForm::submit('sendInvite', ['class' => 'btn btn-primary']) }}
+    {{ BootstrapForm::submit('send-invite', ['class' => 'btn btn-primary']) }}
     
     {{ BootstrapForm::close() }}
 @else

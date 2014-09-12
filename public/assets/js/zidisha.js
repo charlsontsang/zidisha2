@@ -205,6 +205,10 @@ $(function () {
         $(this).closest('.file-input-block').remove();
         return false;
     });
+    
+    $body.on('submit', 'form[data-disable-submit]', function() {
+        $(this).find(':submit').attr('disabled', 'disabled');
+    });
 
     // Scrollspy
     var $window = $(window);
