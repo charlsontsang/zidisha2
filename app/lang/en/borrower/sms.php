@@ -32,4 +32,8 @@ If you do not reschedule and we do not receive the past due amount, then we will
     'repayment-reminder'                 => 'This is a courtesy reminder that your next loan repayment installment of :dueAmt, which will be due on :dueDate.',
     'payment-receipt'                    => "Your payment of :paidAmount has been credited to your Zidisha account. Thank you!",
     'eligible-invite'                    => "Congratulations! You now qualify for the Zidisha invite program. To participate, login to your account at Zidisha and follow the invite instructions.",
+    'borrower-comment-notification'      => 'You have a new message at Zidisha:
+:postedBy
+:message
+Please log in to your Zidisha account to respond to this message.',
 ];

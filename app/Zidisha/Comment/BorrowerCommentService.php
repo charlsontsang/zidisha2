@@ -6,30 +6,25 @@ use Zidisha\Loan\Base\LoanQuery;
 use Zidisha\Mail\AdminMailer;
 use Zidisha\Mail\BorrowerMailer;
 use Zidisha\Mail\LenderMailer;
+use Zidisha\Sms\BorrowerSmsService;
 use Zidisha\Upload\Upload;
 use Zidisha\User\UserQuery;
 use Zidisha\Vendor\PropelDB;
 
 class BorrowerCommentService extends CommentService
 {
-    /**
-     * @var \Zidisha\Mail\BorrowerMailer
-     */
     private $borrowerMailer;
-    /**
-     * @var LenderMailer
-     */
     private $lenderMailer;
-    /**
-     * @var \Zidisha\Mail\AdminMailer
-     */
     private $adminMailer;
+    private $borrowerSmsService;
 
-    public function __construct(BorrowerMailer $borrowerMailer, LenderMailer $lenderMailer, AdminMailer $adminMailer)
+    public function __construct(BorrowerMailer $borrowerMailer, LenderMailer $lenderMailer,
+        AdminMailer $adminMailer, BorrowerSmsService $borrowerSmsService)
     {
         $this->borrowerMailer = $borrowerMailer;
         $this->lenderMailer = $lenderMailer;
         $this->adminMailer = $adminMailer;
+        $this->borrowerSmsService = $borrowerSmsService;
     }
 
     /**
@@ -89,6 +84,7 @@ class BorrowerCommentService extends CommentService
 
         if ($comment->getUserId() != $borrower->getId()) {
             $this->borrowerMailer->sendBorrowerCommentNotification($borrower, $loan, $comment, $postedBy, $images);
+            $this->borrowerSmsService->sendBorrowerCommentNotificationSms($borrower, $comment, $postedBy);
         }
 
         $this->adminMailer->sendBorrowerCommentNotification($loan, $comment, $postedBy, $images);

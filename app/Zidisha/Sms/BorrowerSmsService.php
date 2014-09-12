@@ -5,6 +5,7 @@ namespace Zidisha\Sms;
 
 use Zidisha\Borrower\Borrower;
 use Zidisha\Borrower\Contact;
+use Zidisha\Comment\Comment;
 use Zidisha\Currency\Money;
 use Zidisha\Loan\Loan;
 use Zidisha\Repayment\Installment;
@@ -193,6 +194,25 @@ class BorrowerSmsService
             'parameters'  => [],
             'countryCode' => $borrower->getCountry()->getCountryCode(),
             'label'       => 'borrower.sms.eligible-invite'
+        ];
+        $this->smsService->queue($profile->getPhoneNumber(), $data);
+
+        $alternateNumber = $profile->getAlternatePhoneNumber();
+        if ($alternateNumber) {
+            $this->smsService->queue($alternateNumber, $data);
+        }
+    }
+
+    public function sendBorrowerCommentNotificationSms(Borrower $borrower , Comment $comment, $postedBy)
+    {
+        $profile = $borrower->getProfile();
+        $data = [
+            'parameters'  => [
+                'postedBy' => $postedBy,
+                'message'  => nl2br($comment->getMessage()),
+            ],
+            'countryCode' => $borrower->getCountry()->getCountryCode(),
+            'label'       => 'borrower.sms.borrower-comment-notification'
         ];
         $this->smsService->queue($profile->getPhoneNumber(), $data);
 

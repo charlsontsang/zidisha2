@@ -5,6 +5,7 @@ use Zidisha\Borrower\Borrower;
 use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Borrower\Contact;
 use Zidisha\Borrower\Profile;
+use Zidisha\Comment\BorrowerComment;
 use Zidisha\Country\CountryQuery;
 use Zidisha\Currency\Money;
 use Zidisha\Loan\LoanQuery;
@@ -174,5 +175,26 @@ class BorrowerSmsTester
             );
 
         $this->borrowerSmsService->sendEligibleInviteSms($borrower);
+    }
+
+    public function sendBorrowerCommentNotificationSms()
+    {
+        $profile = new Profile();
+        $profile->setPhoneNumber('2345675434')
+            ->setAlternatePhoneNumber('234523453');
+        $borrower = new Borrower();
+        $borrower
+            ->setFirstName('borrowerFirstName')
+            ->setLastName('borrowerLastName')
+            ->setProfile($profile)
+            ->setCountry(
+                CountryQuery::create()
+                    ->findOne()
+            );
+        $comment = new BorrowerComment();
+        $comment->setMessage('this is comment for borrower!!');
+        $postedBy = 'dmdm by hddhd on ffjfjfjf';
+
+        $this->borrowerSmsService->sendBorrowerCommentNotificationSms($borrower, $comment, $postedBy);
     }
 }
