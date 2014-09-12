@@ -29,7 +29,7 @@ class UserMailer
             ],
         ];
 
-        $this->mailer->send(
+        $this->mailer->queue(
             'emails.label-template',
             $data + [
                 'to'      => $user->getEmail(),

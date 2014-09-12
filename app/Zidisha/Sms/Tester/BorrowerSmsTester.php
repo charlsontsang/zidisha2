@@ -5,14 +5,18 @@ use Zidisha\Borrower\Borrower;
 use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Borrower\Contact;
 use Zidisha\Borrower\Profile;
+use Zidisha\Comment\BorrowerComment;
+use Zidisha\Country\CountryQuery;
 use Zidisha\Currency\Money;
 use Zidisha\Loan\LoanQuery;
 use Zidisha\Repayment\Installment;
 use Zidisha\Sms\BorrowerSmsService;
 use Zidisha\Sms\dummySms;
 use Zidisha\Sms\SmsService;
+use Zidisha\User\User;
 
-class BorrowerSmsTester {
+class BorrowerSmsTester
+{
 
     private $borrowerSmsService;
 
@@ -23,8 +27,18 @@ class BorrowerSmsTester {
 
     public function sendBorrowerJoinedContactConfirmationSms()
     {
-        $borrower = BorrowerQuery::create()
-            ->findOne();
+        $profile = new Profile();
+        $profile->setPhoneNumber('2345675434')
+            ->setAlternatePhoneNumber('234523453');
+        $borrower = new Borrower();
+        $borrower
+            ->setFirstName('borrowerFirstName')
+            ->setLastName('borrowerLastName')
+            ->setProfile($profile)
+            ->setCountry(
+                CountryQuery::create()
+                    ->findOne()
+            );
 
         $contact = new Contact();
         $contact->setBorrower($borrower);
@@ -124,5 +138,63 @@ class BorrowerSmsTester {
         $dueAmount = Money::create(60, $borrower->getCountry()->getCurrencyCode());
 
         $this->borrowerSmsService->sendRepaymentReminderForDueAmount($borrower, $installment, $dueAmount);
+    }
+
+    public function sendRepaymentReceiptSms()
+    {
+        $profile = new Profile();
+        $profile->setPhoneNumber('2345675434')
+            ->setAlternatePhoneNumber('234523453');
+        $borrower = new Borrower();
+        $borrower
+            ->setFirstName('borrowerFirstName')
+            ->setLastName('borrowerLastName')
+            ->setProfile($profile)
+            ->setCountry(
+                CountryQuery::create()
+                    ->findOne()
+            );
+        $amount = Money::create(250, $borrower->getCountry()->getCurrencyCode());
+
+        $this->borrowerSmsService->sendRepaymentReceiptSms($borrower, $amount);
+    }
+
+    public function sendEligibleInviteSms()
+    {
+        $profile = new Profile();
+        $profile->setPhoneNumber('2345675434')
+            ->setAlternatePhoneNumber('234523453');
+        $borrower = new Borrower();
+        $borrower
+            ->setFirstName('borrowerFirstName')
+            ->setLastName('borrowerLastName')
+            ->setProfile($profile)
+            ->setCountry(
+                CountryQuery::create()
+                    ->findOne()
+            );
+
+        $this->borrowerSmsService->sendEligibleInviteSms($borrower);
+    }
+
+    public function sendBorrowerCommentNotificationSms()
+    {
+        $profile = new Profile();
+        $profile->setPhoneNumber('2345675434')
+            ->setAlternatePhoneNumber('234523453');
+        $borrower = new Borrower();
+        $borrower
+            ->setFirstName('borrowerFirstName')
+            ->setLastName('borrowerLastName')
+            ->setProfile($profile)
+            ->setCountry(
+                CountryQuery::create()
+                    ->findOne()
+            );
+        $comment = new BorrowerComment();
+        $comment->setMessage('this is comment for borrower!!');
+        $postedBy = 'dmdm by hddhd on ffjfjfjf';
+
+        $this->borrowerSmsService->sendBorrowerCommentNotificationSms($borrower, $comment, $postedBy);
     }
 }

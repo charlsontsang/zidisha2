@@ -290,6 +290,8 @@ class LenderService
                 $this->transactionService->addWithdrawFundTransaction($con, $amount, $lender);
                 $withdrawalRequest->save($con);
             });
+        $this->lenderMailer->sendPaypalWithdrawMail($lender, $withdrawalRequest->getAmount());
+
         return $withdrawalRequest;
     }
 

@@ -171,15 +171,31 @@ You may contact us by replying to this email. Thanks very much for your help.<br
 The Zidisha Team'
     ],
     'borrower-comment-notification'      => [
-        'footer' => 'View and respond to the comment here:',
+        'footer'      => 'View and respond to the comment here:',
         'button-text' => 'View Comment',
-        'subject' => 'You Received a Message at Zidisha',
-        'body'    => 'Dear :borrowerName,<br/><br/>
+        'subject'     => 'You Received a Message at Zidisha',
+        'body'        => 'Dear :borrowerName,<br/><br/>
 You have a new message on your Zidisha loan page.<br/><br/>
 :postedBy<br/><br/>
 :message<br/><br/> :images <br/> <br/>' .
             'Please log in to your account at www.zidisha.org and click "Post a comment" to respond to this message.<br/><br/>' .
             'Thank you,<br/><br/>' .
             'Zidisha Team',
+    ],
+    'payment-receipt'                    => [
+        'subject' => 'Zidisha Payment Received',
+        'body'    => "Dear :borrowerName,<br/><br/>
+Thank you for your loan repayment of :repaidAmount. This amount has been credited to your Zidisha account balance.<br/><br/>
+Now, we'd like to ask for your help. Please log in to your Zidisha website account and click \"Post a Comment\" in the Welcome page. Then type a comment to let lenders know what new things have happened in your business, family or your own life, especially if something has improved thanks to the loan.  Add photos if possible!  Regular communication with lenders will help establish good relations such that that they will be happy to lend to you again in the future.<br/><br/>
+Best wishes,<br/><br/>
+The Zidisha Team"
+    ],
+    'eligible-invite' => [
+        'subject' => 'Zidisha Invite Bonuses',
+        'body' => "Dear :borrowerName,<br/><br/>
+Congratulations! Your on-time repayment rate is high enough to qualify for the Zidisha invite program. You may give and receive credit limit bonuses for each new member you invite to join Zidisha as long as you remain eligible.<br/><br/>
+To learn more, go to <a href=':zidishaLink' target='_blank'>www.zidisha.org</a> and log into your member account.<br/><br/>
+Best wishes,<br/><br/>
+The Zidisha Team"
     ],
 ];

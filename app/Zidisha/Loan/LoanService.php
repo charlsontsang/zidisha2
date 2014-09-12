@@ -1152,8 +1152,7 @@ class LoanService
 
         $bidCalculator = new BidsCalculator();
         $lenderInterestAmount = $bidCalculator->getLenderInterestRate($acceptedBids, $loan->getUsdAmount());
-        
-        
+
         $repaymentCalculator = new RepaymentCalculator($loan);
         $lenderRepaymentAmount = $repaymentCalculator->repaymentAmountForLenders();
         
@@ -1174,6 +1173,7 @@ class LoanService
         
         $con = PropelDB::getConnection();
         $this->transactionService->lenderLoanForgivenessTransaction($con, $lender, Money::create($lenderInterestAmount, 'USD'));
+        $this->lenderMailer->sendLoanForgivenessConfirmationMail($lender, $loan, ''); //TODO send reducedAmount
         
         //TODO: updateScheduleAfterForgive
         

@@ -159,9 +159,9 @@ The Zidisha Team'
         'body'     => '
 Hi there,
 <br/><br/>
-You just received a repayment of USD :amount from <a href=":loanUrl">:borrowerName</a>!
+You just received a repayment of :amount from <a href=":loanUrl">:borrowerName</a>!
 <br/><br/>
-This brings your lending credit balance up to USD :currentCredit.  You can re-lend these funds to new entrepreneurs <a href=":lendUrl">here</a>.
+This brings your lending credit balance up to :currentCredit.  You can re-lend these funds to new entrepreneurs <a href=":lendUrl">here</a>.
 <br/><br/>
 Too busy to select new loans manually? Activate automated relending of your repayments <a href=":autoLendingUrl">here</a>.
 <br/><br/>
@@ -174,18 +174,18 @@ The Zidisha Team
 PS:  You can adjust your account to send new lending credit emails only when your balance reaches a specified threshold <a href=:accountPreferenceUrl>here</a>;
 ',
         'message2' => '
-        You received a USD :amount loan repayment from <a href=":loanUrl">:borrowerName</a>!<br/><br/>
-Your lender credit balance is now USD :currentCredit. You may use this balance to make a new loan <a href=":lendUrl">here</a>.<br/><br/>
+        You received a :amount loan repayment from <a href=":loanUrl">:borrowerName</a>!<br/><br/>
+Your lender credit balance is now :currentCredit. You may use this balance to make a new loan <a href=":lendUrl">here</a>.<br/><br/>
 Best wishes,<br/><br/>
 The Zidisha Team <br/><br/>
         '
     ],
     'loan-repayment-received-balance'    => [
-        'subject' => 'Your lending credit has reached USD :currentCredit',
+        'subject' => 'Your lending credit has reached :currentCredit',
         'body'    => '
         Hi there,
 <br/><br/>
-Good news!  Thanks to repayments from entrepreneurs you have supported, your lending credit balance has reached USD :currentCredit.
+Good news!  Thanks to repayments from entrepreneurs you have supported, your lending credit balance has reached :currentCredit.
 <br/><br/>
 You can re-lend these funds to new entrepreneurs <a href=":lendUrl">here</a>.  Spread the opportunity!  We’re thrilled and excited for wonderful stories to unfold soon.
 <br/><br/>
@@ -195,8 +195,8 @@ The Zidisha Team
         '
     ],
     'loan-repayment-feedback'            => [
-        'subject' => 'Hooray! :borrowerName has completely repaid your loan',
-        'header'  => ':borrowerName has completely repaid your loan.',
+        'subject' => 'Hooray! :borrowerName has fully repaid your loan',
+        'header'  => ':borrowerName has fully repaid your loan.',
         'body'    => '
         Hi there,
 <br/><br/>
@@ -219,11 +219,11 @@ Your lending fund gained value from your recent loan to <a href=":loanUrl">:borr
 <br/><br/>
 Loan purpose: :purpose
 <br/>
-Amount lent: $ :loanAmount
+Amount lent: :loanAmount
 <br/>
-Amount repaid: $ :repaidAmount
+Amount repaid: :repaidAmount
 <br/>
-Net gain: $ :gainAmount
+Net gain: :gainAmount
 <br/>
 Percentage gain: :gainPercent %
 <br/><br/>
@@ -333,5 +333,52 @@ Thanks so much for having participated in our lending community, and for helping
 Best regards,<br/><br/>
 The Zidisha Team
         '
+    ],
+    'paypal-withdraw'                    => [
+        'subject' => 'Message from Zidisha',
+        'body'    => 'Hello :lenderName,
+<br/><br/>You have successfully withdrawn :withdrawnAmount from your Zidisha account. The funds have been deposited in your PayPal account.
+<br/><br/>Thank you for your generous support and partnership with us,
+<br/><br/>
+Zidisha Team'
+    ],
+    'fund-upload'                        => [
+        'subject' => "You have new lending credit!",
+        'body'    => "
+Hi there,
+<br/><br/>
+Thank you for your lender funds upload of :uploadAmount !  We have just credited your payment to your lending account - which means it’s time to start browsing new borrower projects!
+<br/><br/>
+Use your credit to make a new loan <a href=':lendUrl'>here</a>.  We can't wait to see which life-changing projects you make happen next!
+<br/><br/>
+Happy lending,
+<br/><br/>
+The Zidisha Team",
+    ],
+    'lender-donation'                    => [
+        'subject' => "Zidisha Donation Receipt",
+        'body'    => "
+Zidisha Inc.
+<br/>
+46835 Muirfield Court #301
+<br/>
+Sterling, Virginia 20164
+<br/><br/>
+Hi, I’m Julia, the Director of Zidisha, and I'm thrilled and humbled that you donated to our nonprofit today.
+<br/><br/>
+This message may be used as a receipt for your donation of :donationAmount on :donationDate.  Zidisha Inc. is a 501(c)(3) charitable organization per the United States Internal Revenue Service, and did not provide any goods or services in exchange for your donation. Our Employment Identification Number (EIN) is 80-049-4876.
+<br/><br/>
+Warmly,
+<br/><br/>
+Julia Kurnia
+<br/>
+Director, Zidisha Inc.
+",
+    ],
+    'loan-forgiveness-confirmation'      => [
+        'subject' => "Forgiveness confirmation",
+        'body'    => "Thank you for forgiving your share in remaining repayments by <a href=':borrowerUrl' target='_blank'>:borrowerName</a>. The remaining amount owed by :borrowerName has been reduced by :reducedAmount.<br/><br/>" .
+            "Best wishes,<br/><br/>" .
+            "The Zidisha Team",
     ],
 ];

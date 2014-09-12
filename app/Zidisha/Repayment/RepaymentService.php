@@ -9,14 +9,19 @@ use Zidisha\Balance\TransactionQuery;
 use Zidisha\Balance\TransactionService;
 use Zidisha\Borrower\Borrower;
 use Zidisha\Borrower\BorrowerQuery;
+use Zidisha\Borrower\BorrowerService;
 use Zidisha\Currency\Converter;
 use Zidisha\Currency\CurrencyService;
 use Zidisha\Currency\Money;
+use Zidisha\Lender\PreferencesQuery;
 use Zidisha\Loan\Base\ForgivenessLoanShareQuery;
 use Zidisha\Loan\BidQuery;
 use Zidisha\Loan\Calculator\RepaymentCalculator;
 use Zidisha\Loan\Loan;
 use Zidisha\Loan\LoanService;
+use Zidisha\Mail\BorrowerMailer;
+use Zidisha\Mail\LenderMailer;
+use Zidisha\Sms\BorrowerSmsService;
 use Zidisha\Vendor\PropelDB;
 
 class RepaymentService
@@ -26,14 +31,22 @@ class RepaymentService
     private $borrowerQuery;
     private $currencyService;
     private $transactionService;
+    private $lenderMailer;
+    private $borrowerMailer;
+    private $borrowerSmsService;
 
-    public function __construct(BorrowerPaymentQuery $paymentQuery, BorrowerQuery $borrowerQuery, CurrencyService $currencyService, TransactionService $transactionService)
+    public function __construct(BorrowerPaymentQuery $paymentQuery, BorrowerQuery $borrowerQuery,
+        CurrencyService $currencyService, TransactionService $transactionService,
+        LenderMailer $lenderMailer, BorrowerMailer $borrowerMailer, BorrowerSmsService $borrowerSmsService)
     {
 
         $this->paymentQuery = $paymentQuery;
         $this->borrowerQuery = $borrowerQuery;
         $this->currencyService = $currencyService;
         $this->transactionService = $transactionService;
+        $this->lenderMailer = $lenderMailer;
+        $this->borrowerMailer = $borrowerMailer;
+        $this->borrowerSmsService = $borrowerSmsService;
     }
 
     public function addBorrowerPayment(Borrower $borrower, $data)
@@ -251,17 +264,70 @@ class RepaymentService
             
             return [$loanRepayments];
         });
+        $borrower = $loan->getBorrower();
 
+        $lenderIds = [];
+        /** @var LoanRepayment $loanRepayment */
+        foreach ($loanRepayments as $loanRepayment) {
+            $lender = $loanRepayment->getLender();
+            $lenderIds[] = $lender->getId();
+        }
 
+        $totalRepaidAmounts = TransactionQuery::create()
+            ->getTotalLoanRepaidAmount($lenderIds, $loan);
+        $totalAcceptedBidsAmounts = BidQuery::create()
+            ->getTotalBidsAcceptedAmount($lenderIds, $loan);
         if ($calculator->isRepaid()) {
             /** @var LoanRepayment $loanRepayment */
             foreach ($loanRepayments as $loanRepayment) {
                 $lender = $loanRepayment->getLender();
-                // Send email, session.php 838
+                $this->lenderMailer->sendRepaidLoanMail($lender, $loan);
+                /** @var Money $repaidAmount */
+                $repaidAmount = $totalRepaidAmounts[$lender->getId()];
+                /** @var Money $bidAmount */
+                $bidAmount = $totalAcceptedBidsAmounts[$lender->getId()];
+
+                if ($bidAmount->isPositive()) {
+                    $gainAmount = $repaidAmount->subtract($bidAmount);
+                    $gainPercentage = ($gainAmount->getAmount()/ $bidAmount->getAmount())/100;
+                    if ($gainAmount->greaterThan(Money::create(1, $loan->getCurrencyCode())) && $gainPercentage > 1) {
+                        $this->lenderMailer->sendRepaidLoanGainMail($lender, $loan, $calculator->getTotalAmount(), $calculator->getPaidAmount(), $gainAmount, $gainPercentage);
+                    }
+                }
             }
         }
         
-        // TODO emails/sms/sift science
+        $this->borrowerMailer->sendRepaymentReceiptMail($borrower, $amount);
+        $this->borrowerSmsService->sendRepaymentReceiptSms($borrower, $amount);
+        /** @var BorrowerService $borrowerService */
+        $borrowerService = \App::make('Zidisha\Borrower\BorrowerService');
+
+        $isEligible = $borrowerService->isEligibleToInvite($borrower);
+        if ($isEligible) {
+            $this->borrowerMailer->sendEligibleInviteMail($borrower);
+        }
+
+        $currentBalances = TransactionQuery::create()
+            ->getCurrentBalance($lenderIds);
+
+        /** @var LoanRepayment $loanRepayment */
+        foreach ($loanRepayments as $loanRepayment) {
+            $lender = $loanRepayment->getLender();
+            $preference = PreferencesQuery::create()
+                ->filterByLender($lender)
+                ->filterByNotifyLoanRepayment(0, Criteria::GREATER_THAN)
+                ->findOne();
+            if ($preference && !$loanRepayment->getLenderInviteCredit()->isPositive()) {
+                if ($preference->getNotifyLoanRepayment() > 1) {
+                    if ($preference->getNotifyLoanRepayment() > $loanRepayment->getAmount()) {
+                        continue;
+                    }
+                    $this->lenderMailer->sendReceivedRepaymentCreditBalanceMail($lender, $currentBalances[$lender->getId()]);
+                } else {
+                    $this->lenderMailer->sendReceivedRepaymentMail($lender, $loan, $loanRepayment->getAmount(), $currentBalances[$lender->getId()]);
+                }
+            }
+        }
     }
 
     protected function updateInstallmentSchedule($con, $installments, Loan $loan, Money $amount, \Datetime $date)

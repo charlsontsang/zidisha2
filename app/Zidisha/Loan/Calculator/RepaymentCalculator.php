@@ -63,6 +63,16 @@ class RepaymentCalculator extends InstallmentCalculator
         return $this;
     }
 
+    public function getTotalAmount()
+    {
+        return $this->totalAmount;
+    }
+
+    public function getPaidAmount()
+    {
+        return $this->paidAmount;
+    }
+
     public function setPaidAmount(Money $totalPaidAmount)
     {
         $this->paidAmount = $totalPaidAmount;

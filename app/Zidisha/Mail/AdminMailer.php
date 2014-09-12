@@ -103,4 +103,8 @@ class AdminMailer
             ]
         );
     }
+
+    public function sendWithdrawalRequestMail()
+    {
+    }
 }

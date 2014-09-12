@@ -187,4 +187,35 @@ class BidQuery extends BaseBidQuery
 
         return Money::create($total, 'USD');
     }
+
+    public function getTotalBidsAcceptedAmount($lenderIds, Loan $loan)
+    {
+        $total = $this
+            ->filterByLenderId($lenderIds)
+            ->filterByLoan($loan)
+            ->select(array('total', 'lenderId'))
+            ->withColumn('SUM(accepted_amount)', 'total')
+            ->withColumn('lender_id', 'lenderId')
+            ->groupByLenderId()
+            ->find();
+
+        $results = $total->toKeyValue('lenderId', 'total');
+        if (count($lenderIds) > 1) {
+            $balanceArray = [];
+            foreach ($lenderIds as $lenderId) {
+                if (isset($results[$lenderId])) {
+                    $balanceArray[$lenderId] = Money::create($results[$lenderId], 'USD');
+                } else {
+                    $balanceArray[$lenderId] = Money::create(0, 'USD');
+                }
+            }
+            return $balanceArray;
+        } else {
+            if (isset($results[$lenderIds])) {
+                return Money::create($results[$lenderIds], 'USD');
+            } else {
+                return Money::create(0, 'USD');
+            }
+        }
+    }
 } // BidQuery

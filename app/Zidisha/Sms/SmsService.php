@@ -25,19 +25,19 @@ class SmsService
         $this->sms->send($phoneNumber, $data);
     }
 
-    public function queue($phoneNumber, $text, $queue = null)
+    public function queue($phoneNumber, array $data, $queue = null)
     {
-        \Queue::push('Zidisha\Sms\SmsService@handleQueuedMessage', compact('phoneNumber', 'text', 'countryCode'), $queue);
+        \Queue::push('Zidisha\Sms\SmsService@handleQueuedMessage', compact('phoneNumber', 'data', 'countryCode'), $queue);
     }
 
-    public function later($delay, $phoneNumber, $text, $queue = null)
+    public function later($delay, $phoneNumber, array $data, $queue = null)
     {
-        \Queue::later($delay, 'Zidisha\Sms\SmsService@handleQueuedMessage', compact('phoneNumber', 'text', 'countryCode'), $queue);
+        \Queue::later($delay, 'Zidisha\Sms\SmsService@handleQueuedMessage', compact('phoneNumber', 'data', 'countryCode'), $queue);
     }
 
     public function handleQueuedMessage($job, $data)
     {
-        $this->send($data['phoneNumber'], $data['text'], $da);
+        $this->send($data['phoneNumber'], $data['data']);
 
         $job->delete();
     }
