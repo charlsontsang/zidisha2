@@ -334,4 +334,12 @@ Best regards,<br/><br/>
 The Zidisha Team
         '
     ],
+    'paypal-withdraw' => [
+        'subject' => 'Message from Zidisha',
+        'body' => 'Hello :lenderName,
+<br/><br/>You have successfully withdrawn :withdrawnAmount from your Zidisha account. The funds have been deposited in your PayPal account.
+<br/><br/>Thank you for your generous support and partnership with us,
+<br/><br/>
+Zidisha Team'
+    ],
 ];

@@ -656,4 +656,23 @@ class LenderMailer
             ]
         );
     }
+
+    public function sendPaypalWithdrawMail(Lender $lender, Money $withdrawnAmount)
+    {
+        $data = [
+            'parameters' => [
+                'lenderName'      => $lender->getName(),
+                'withdrawnAmount' => (string) $withdrawnAmount,
+            ],
+        ];
+
+        $this->mailer->queue(
+            'emails.label-template',
+            $data + [
+                'to'         => $lender->getUser()->getEmail(),
+                'label'      => 'lender.mails.paypal-withdraw.body',
+                'subject'    => \Lang::get('lender.mails.paypal-withdraw.subject')
+            ]
+        );
+    }
 }

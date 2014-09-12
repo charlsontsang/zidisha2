@@ -541,4 +541,18 @@ class LenderMailerTester
 
         $this->lenderMailer->sendRepaidLoanGainMail($lender, $loan, $loanAmount, $repaidAmount, $gainAmount, $gainPercent);
     }
+
+    public function sendPaypalWithdrawMail()
+    {
+        $user = new User();
+        $user->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+        $lender = new Lender();
+        $lender->setFirstName('lenderFirstName')
+            ->setLastName('lenderLastName')
+            ->setUser($user);
+        $withdrawnAmount = Money::create(60);
+
+        $this->lenderMailer->sendPaypalWithdrawMail($lender, $withdrawnAmount);
+    }
 }
