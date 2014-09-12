@@ -6,6 +6,7 @@ use Propel\Runtime\ActiveQuery\Criteria;
 use Zidisha\Balance\Base\TransactionQuery as BaseTransactionQuery;
 use Zidisha\Currency\Currency;
 use Zidisha\Currency\Money;
+use Zidisha\Loan\Loan;
 
 
 /**
@@ -227,6 +228,38 @@ class TransactionQuery extends BaseTransactionQuery
     {
         $total = $this
             ->filterByUserId($userIds)
+            ->select(array('total', 'userId'))
+            ->withColumn('SUM(amount)', 'total')
+            ->withColumn('user_id', 'userId')
+            ->groupByUserId()
+            ->find();
+
+        $results = $total->toKeyValue('userId', 'total');
+        if (count($userIds) > 1) {
+            $balanceArray = [];
+            foreach ($userIds as $userId) {
+                if (isset($results[$userId])) {
+                    $balanceArray[$userId] = Money::create($results[$userId], 'USD');
+                } else {
+                    $balanceArray[$userId] = Money::create(0, 'USD');
+                }
+            }
+            return $balanceArray;
+        } else {
+            if (isset($results[$userIds])) {
+                return Money::create($results[$userIds], 'USD');
+            } else {
+                return Money::create(0, 'USD');
+            }
+        }
+    }
+
+    public function getTotalLoanRepaidAmount($userIds, Loan $loan)
+    {
+        $total = $this
+            ->filterByUserId($userIds)
+            ->filterByLoan($loan)
+            ->filterByType(Transaction::LOAN_BACK_LENDER)
             ->select(array('total', 'userId'))
             ->withColumn('SUM(amount)', 'total')
             ->withColumn('user_id', 'userId')
