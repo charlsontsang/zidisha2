@@ -6,7 +6,7 @@
 
 @section('content')
 <div class="page-header">
-    <h1>Borrower Details <a href="{{ route('admin:borrower:edit', $borrower->getId()) }}"> <i class="fa fa-pencil-square-o fa-lg"></i> </a></h1>
+    <h1>Borrower Details <span class="pull-right"><a href="{{ route('admin:borrower:edit', $borrower->getId()) }}"> <i class="fa fa-pencil-square-o fa-lg"></i></a></span></h1>
 </div>
 
 <div class="row">
@@ -17,6 +17,7 @@
             @if($loans)
                 @foreach($loans as $loan)
                 {{ $loan->getAmount() }} - TODO (show dates) - <a href="{{ route('loan:index', $loan->getId()) }}">View Loan Profile</a>
+                <br/>
                 @endforeach
             @else
                 NO LOANS
