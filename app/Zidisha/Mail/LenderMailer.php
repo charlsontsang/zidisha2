@@ -566,7 +566,7 @@ class LenderMailer
             'borrowerName'         => $loan->getBorrower()->getName(),
             'amount'               => $amount,
             'loanUrl'              => route('loan:index', $loan->getId()),
-            'currentCredit'        => $currentCredit->getAmount(),
+            'currentCredit'        => $currentCredit,
             'lendUrl'              => route('lend:index'),
             'autoLendingUrl'       => route('lender:auto-lending'),
             'accountPreferenceUrl' => route('lender:preference')
@@ -588,7 +588,7 @@ class LenderMailer
     public function sendReceivedRepaymentCreditBalanceMail(Lender $lender, Money $currentCredit)
     {
         $parameters = [
-            'currentCredit'        => $currentCredit->getAmount(),
+            'currentCredit'        => $currentCredit,
             'lendUrl'              => route('lend:index'),
         ];
 
@@ -633,13 +633,13 @@ class LenderMailer
 //        $gainAmount = $repaidAmount->subtract($loanAmount);
 //        $gainPercent = $gainAmount->multiply(100)->divide($loanAmount);
         $parameters = [
-            'gainAmount'   => $gainAmount->getAmount(),
+            'gainAmount'   => $gainAmount,
             'gainPercent'  => $gainPercent,
             'borrowerName' => $borrower->getName(),
             'loanUrl'      => route('loan:index', $loan->getId()),
             'purpose'      => $loan->getProposal(),
-            'loanAmount'   => $loanAmount->getAmount(),
-            'repaidAmount' => $repaidAmount->getAmount(),
+            'loanAmount'   => $loanAmount,
+            'repaidAmount' => $repaidAmount,
             'lendUrl'      => route('lend:index'),
             'myStatsUrl'   => route('lender:loans')
         ];
