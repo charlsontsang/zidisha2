@@ -266,11 +266,34 @@ class RepaymentService
         });
         $borrower = $loan->getBorrower();
 
+        $lenderIds = [];
+        /** @var LoanRepayment $loanRepayment */
+        foreach ($loanRepayments as $loanRepayment) {
+            $lender = $loanRepayment->getLender();
+            $lenderIds[] = $lender->getId();
+        }
+
+        $totalRepaidAmounts = TransactionQuery::create()
+            ->getTotalLoanRepaidAmount($lenderIds, $loan);
+        $totalAcceptedBidsAmounts = BidQuery::create()
+            ->getTotalBidsAcceptedAmount($lenderIds, $loan);
         if ($calculator->isRepaid()) {
             /** @var LoanRepayment $loanRepayment */
             foreach ($loanRepayments as $loanRepayment) {
                 $lender = $loanRepayment->getLender();
                 $this->lenderMailer->sendRepaidLoanMail($lender, $loan);
+                /** @var Money $repaidAmount */
+                $repaidAmount = $totalRepaidAmounts[$lender->getId()];
+                /** @var Money $bidAmount */
+                $bidAmount = $totalAcceptedBidsAmounts[$lender->getId()];
+
+                if ($bidAmount->isPositive()) {
+                    $gainAmount = $repaidAmount->subtract($bidAmount);
+                    $gainPercentage = ($gainAmount->getAmount()/ $bidAmount->getAmount())/100;
+                    if ($gainAmount->greaterThan(Money::create(1, $loan->getCurrencyCode())) && $gainPercentage > 1) {
+                        $this->lenderMailer->sendRepaidLoanGainMail($lender, $loan, $calculator->getTotalAmount(), $calculator->getPaidAmount(), $gainAmount, $gainPercentage);
+                    }
+                }
             }
         }
         
@@ -284,12 +307,6 @@ class RepaymentService
             $this->borrowerMailer->sendEligibleInviteMail($borrower);
         }
 
-        $lenderIds = [];
-        /** @var LoanRepayment $loanRepayment */
-        foreach ($loanRepayments as $loanRepayment) {
-            $lender = $loanRepayment->getLender();
-            $lenderIds[] = $lender->getId();
-        }
         $currentBalances = TransactionQuery::create()
             ->getCurrentBalance($lenderIds);
 
