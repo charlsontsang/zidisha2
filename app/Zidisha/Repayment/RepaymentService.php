@@ -34,12 +34,10 @@ class RepaymentService
     private $lenderMailer;
     private $borrowerMailer;
     private $borrowerSmsService;
-    private $borrowerService;
 
     public function __construct(BorrowerPaymentQuery $paymentQuery, BorrowerQuery $borrowerQuery,
         CurrencyService $currencyService, TransactionService $transactionService,
-        LenderMailer $lenderMailer, BorrowerMailer $borrowerMailer, BorrowerSmsService $borrowerSmsService,
-        BorrowerService $borrowerService )
+        LenderMailer $lenderMailer, BorrowerMailer $borrowerMailer, BorrowerSmsService $borrowerSmsService)
     {
 
         $this->paymentQuery = $paymentQuery;
@@ -49,7 +47,6 @@ class RepaymentService
         $this->lenderMailer = $lenderMailer;
         $this->borrowerMailer = $borrowerMailer;
         $this->borrowerSmsService = $borrowerSmsService;
-        $this->borrowerService = $borrowerService;
     }
 
     public function addBorrowerPayment(Borrower $borrower, $data)
@@ -279,8 +276,10 @@ class RepaymentService
         
         $this->borrowerMailer->sendRepaymentReceiptMail($borrower, $amount);
         $this->borrowerSmsService->sendRepaymentReceiptSms($borrower, $amount);
+        /** @var BorrowerService $borrowerService */
+        $borrowerService = \App::make('Zidisha\Borrower\BorrowerService');
 
-        $isEligible = $this->borrowerService->isEligibleToInvite($borrower);
+        $isEligible = $borrowerService->isEligibleToInvite($borrower);
         if ($isEligible) {
             $this->borrowerMailer->sendEligibleInviteMail($borrower);
         }
