@@ -375,4 +375,10 @@ Julia Kurnia
 Director, Zidisha Inc.
 ",
     ],
+    'loan-forgiveness-confirmation'      => [
+        'subject' => "Forgiveness confirmation",
+        'body'    => "Thank you for forgiving your share in remaining repayments by <a href=':borrowerUrl' target='_blank'>:borrowerName</a>. The remaining amount owed by :borrowerName has been reduced by :reducedAmount.<br/><br/>" .
+            "Best wishes,<br/><br/>" .
+            "The Zidisha Team",
+    ],
 ];

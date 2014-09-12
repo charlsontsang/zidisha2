@@ -583,4 +583,28 @@ class LenderMailerTester
 
         $this->lenderMailer->sendDonationMail($lender, $donationAmount);
     }
+
+    public function sendLoanForgivenessConfirmationMail()
+    {
+        $userBorrower = new User();
+        $userBorrower->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+        $borrower = new Borrower();
+        $borrower->setUser($userBorrower)
+            ->setFirstName('borrowerFirstName')
+            ->setLastName('borrowerLastName');
+        $loan = new Loan();
+        $loan->setBorrower($borrower)
+            ->setDisbursedAt(Carbon::now()->subMonths(6));
+        $user = new User();
+        $user->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+        $lender = new Lender();
+        $lender->setFirstName('lenderFirstName')
+            ->setLastName('lenderLastName')
+            ->setUser($user);
+        $reducedAmount = Money::create(20);
+
+        $this->lenderMailer->sendLoanForgivenessConfirmationMail($lender, $loan, $reducedAmount);
+    }
 }

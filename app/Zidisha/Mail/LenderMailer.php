@@ -5,6 +5,7 @@ namespace Zidisha\Mail;
 use Carbon\Carbon;
 use Zidisha\Balance\InviteTransactionQuery;
 use Zidisha\Balance\TransactionQuery;
+use Zidisha\Borrower\Borrower;
 use Zidisha\Comment\Comment;
 use Zidisha\Currency\Money;
 use Zidisha\Lender\GiftCard;
@@ -742,6 +743,28 @@ class LenderMailer
             $data + [
                 'to'         => $lender->getUser()->getEmail(),
                 'subject'    => \Lang::get('lender.mails.lender-donation.subject', $parameters),
+                'templateId' => \Setting::get('sendwithus.borrower-notifications-template-id'),
+                //TODO for ($templet = "editables/email/hero.html")
+            ]
+        );
+    }
+
+    public function sendLoanForgivenessConfirmationMail(Lender $lender, Loan $loan, Money $reducedAmount)
+    {
+        $parameters = [
+            'borrowerUrl'   => route('loan:index', $loan->getId()),
+            'borrowerName'  => $loan->getBorrower()->getName(),
+            'reducedAmount' => $reducedAmount,
+        ];
+
+        $body = \Lang::get('lender.mails.loan-forgiveness-confirmation.body', $parameters);
+        $data['content'] = $body;
+
+        $this->mailer->queue(
+            'emails.hero',
+            $data + [
+                'to'         => $lender->getUser()->getEmail(),
+                'subject'    => \Lang::get('lender.mails.loan-forgiveness-confirmation.subject', $parameters),
                 'templateId' => \Setting::get('sendwithus.borrower-notifications-template-id'),
                 //TODO for ($templet = "editables/email/hero.html")
             ]

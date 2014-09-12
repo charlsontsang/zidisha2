@@ -24,7 +24,7 @@ class Borrower extends BaseBorrower implements CommentReceiverInterface
     const ACTIVATION_DECLINED   = 'declined';
 
     public function getName(){
-        return $this->getFirstName() . " " . $this->getLastName();
+        return ucwords(strtolower($this->getFirstName() . " " . $this->getLastName()));
     }
     
     public function getCommunityLeader()

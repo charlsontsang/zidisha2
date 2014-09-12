@@ -168,13 +168,12 @@ class BorrowerSmsService
         }
     }
 
-    //TODO test, not working...
     public function sendRepaymentReceiptSms(Borrower $borrower, Money $amount)
     {
         $profile = $borrower->getProfile();
         $data = [
             'parameters'  => [
-                'paidAmount' => $amount, // TODO, not working with this money object
+                'paidAmount' => (string) $amount,
             ],
             'countryCode' => $borrower->getCountry()->getCountryCode(),
             'label'       => 'borrower.sms.payment-receipt'
