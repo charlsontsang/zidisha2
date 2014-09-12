@@ -6,40 +6,39 @@ Meet the Team
 
 
 @section('content')
+<div class="team">
+	<div class="page-header">
+	    <h1>Meet the Team</h1>
+	    <ul class="nav nav-tabs" role="tablist">
+		    <li class="pull-right">
+		        <a href="#advisers" role="tab" data-toggle="tab">
+		            Trustees & Advisers
+		        </a>
+		    </li>
+		    <li class="active pull-right">
+		        <a href="#staff" role="tab" data-toggle="tab">
+		            Staff & Volunteers
+		        </a>
+		    </li>
+		</ul>
+	</div>
 
-<div class="page-header team">
-    <h1>Meet the Team</h1>
-    <ul class="nav nav-tabs" role="tablist">
-	    <li class="pull-right">
-	        <a href="#advisers" role="tab" data-toggle="tab">
-	            Trustees & Advisers
-	        </a>
-	    </li>
-	    <li class="active pull-right">
-	        <a href="#staff" role="tab" data-toggle="tab">
-	            Staff & Volunteers
-	        </a>
-	    </li>
-	</ul>
-</div>
+	<br/>
 
-<br/>
+	<div id="tab-content" class="tab-content">
+	    <div class="tab-pane fade active in" id="staff">
 
-<div id="tab-content" class="tab-content">
-    <div class="tab-pane fade active in" id="staff">
-
-		<div class="row info-page">
-			<div class="col-sm-6">
-				<p>HELLO. JAMBO. CIAO. NA NGA DEF. HOLA. BONJOUR.</p>
-				<p>Greetings — from all corners of the globe! Our team members may not share time zones, but we do share a passion for building a person-to-person microlending community that overcomes the barriers of location and circumstance to help deserving, driven entrepreneurs all over the world.</p>
+			<div class="row info-page">
+				<div class="col-sm-6">
+					<p>HELLO. JAMBO. CIAO. NA NGA DEF. HOLA. BONJOUR.</p>
+					<p>Greetings — from all corners of the globe! Our team members may not share time zones, but we do share a passion for building a person-to-person microlending community that overcomes the barriers of location and circumstance to help deserving, driven entrepreneurs all over the world.</p>
+				</div>
+				<div class="col-sm-6">
+					<p>Some of us are full-time staff, but most of us are volunteers who either work with Zidisha from our own homes around the world or have actually relocated to developing countries to serve as ambassadors to current and prospective borrowers.</p>
+					<p>Check out our <a href="{{ route('page:volunteer') }}">Volunteer</a> page to learn about our volunteer and internship opportunities.</p>
+				</div>
 			</div>
-			<div class="col-sm-6">
-				<p>Some of us are full-time staff, but most of us are volunteers who either work with Zidisha from our own homes around the world or have actually relocated to developing countries to serve as ambassadors to current and prospective borrowers.</p>
-				<p>Check out our <a href="{{ route('page:volunteer') }}">Volunteer</a> page to learn about our volunteer and internship opportunities.</p>
-			</div>
-		</div>
 
-		<div class="team">
 			<div class="row">
 			    <div class="col-sm-4">
 				    <ul class="img-list">
@@ -370,10 +369,8 @@ Meet the Team
 			        <p><i class="fa fa-fw fa-map-marker"></i>Berkeley, California</p>
 			    </div>
 			</div>
-		</div> <!-- /team -->
-	</div> <!-- /staff -->
-	<div class="tab-pane fade" id="advisers">
-		<div class="team">
+		</div> <!-- /staff -->
+		<div class="tab-pane fade" id="advisers">
 			<div class="row">
 			    <div class="col-sm-4">
 				    <ul class="img-list">
@@ -415,8 +412,7 @@ Meet the Team
 			        <p><i class="fa fa-fw fa-map-marker"></i>Denver, Colorado&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="https://www.linkedin.com/profile/view?id=25575714"><i class="fa fa-fw fa-linkedin-square"></i>LinkedIn</a></p>
 			    </div>
 			</div>
-		</div> <!-- /team -->
-	</div> <!-- /advisers -->
-</div> <!-- tab-content -->
-
+		</div> <!-- /advisers -->
+	</div> <!-- tab-content -->
+</div> <!-- /team -->
 @stop
