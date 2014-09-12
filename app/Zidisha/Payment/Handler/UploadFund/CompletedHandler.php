@@ -22,7 +22,10 @@ class CompletedHandler extends PaymentHandler
     public function process()
     {
         $this->balanceService->uploadFunds($this->payment);
-        $this->lenderMailer->sendFundUploadMail($this->payment->getLender(), $this->payment->getAmount());
+
+        if ($this->payment->getAmount()->isPositive()) {
+            $this->lenderMailer->sendFundUploadMail($this->payment->getLender(), $this->payment->getAmount());
+        }
 
         if ($this->payment->getDonationAmount()->isPositive()) {
             $this->lenderMailer->sendDonationMail($this->payment->getLender(), $this->payment->getDonationAmount());

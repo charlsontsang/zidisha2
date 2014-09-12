@@ -2,6 +2,7 @@
 namespace Zidisha\Payment\Handler\Bid;
 
 use Zidisha\Loan\LoanService;
+use Zidisha\Mail\LenderMailer;
 use Zidisha\Payment\BalanceService;
 use Zidisha\Payment\PaymentHandler;
 
@@ -10,11 +11,13 @@ class CompletedHandler extends PaymentHandler
 
     private $loanService;
     private $balanceService;
+    private $lenderMailer;
 
-    public function __construct(BalanceService $balanceService, LoanService $loanService)
+    public function __construct(BalanceService $balanceService, LoanService $loanService, LenderMailer $lenderMailer)
     {
         $this->loanService = $loanService;
         $this->balanceService = $balanceService;
+        $this->lenderMailer = $lenderMailer;
     }
 
     public function process()
@@ -29,6 +32,13 @@ class CompletedHandler extends PaymentHandler
 
         $this->balanceService->uploadFunds($payment);
         $this->loanService->placeBid($payment->getLoan(), $payment->getLender(), $data);
+        if ($this->payment->getAmount()->isPositive()) {
+            $this->lenderMailer->sendFundUploadMail($this->payment->getLender(), $this->payment->getAmount());
+        }
+
+        if ($this->payment->getDonationAmount()->isPositive()) {
+            $this->lenderMailer->sendDonationMail($this->payment->getLender(), $this->payment->getDonationAmount());
+        }
 
         return $this;
     }
