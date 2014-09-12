@@ -355,4 +355,24 @@ Happy lending,
 <br/><br/>
 The Zidisha Team",
     ],
+    'lender-donation'                    => [
+        'subject' => "Zidisha Donation Receipt",
+        'body'    => "
+Zidisha Inc.
+<br/>
+46835 Muirfield Court #301
+<br/>
+Sterling, Virginia 20164
+<br/><br/>
+Hi, I’m Julia, the Director of Zidisha, and I'm thrilled and humbled that you donated to our nonprofit today.
+<br/><br/>
+This message may be used as a receipt for your donation of :donationAmount on :donationDate.  Zidisha Inc. is a 501(c)(3) charitable organization per the United States Internal Revenue Service, and did not provide any goods or services in exchange for your donation. Our Employment Identification Number (EIN) is 80-049-4876.
+<br/><br/>
+Warmly,
+<br/><br/>
+Julia Kurnia
+<br/>
+Director, Zidisha Inc.
+",
+    ],
 ];

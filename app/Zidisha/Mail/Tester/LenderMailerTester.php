@@ -569,4 +569,18 @@ class LenderMailerTester
 
         $this->lenderMailer->sendFundUploadMail($lender, $uploadAmount);
     }
+
+    public function sendDonationMail()
+    {
+        $user = new User();
+        $user->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+        $lender = new Lender();
+        $lender->setFirstName('lenderFirstName')
+            ->setLastName('lenderLastName')
+            ->setUser($user);
+        $donationAmount = Money::create(20);
+
+        $this->lenderMailer->sendDonationMail($lender, $donationAmount);
+    }
 }
