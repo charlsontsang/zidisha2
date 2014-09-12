@@ -28,7 +28,7 @@ Meet the Team
 <div id="tab-content" class="tab-content">
     <div class="tab-pane fade active in" id="staff">
 
-		<div class="row info-page" style="padding-bottom: 30px !important;">
+		<div class="row info-page">
 			<div class="col-sm-6">
 				<p>HELLO. JAMBO. CIAO. NA NGA DEF. HOLA. BONJOUR.</p>
 				<p>Greetings — from all corners of the globe! Our team members may not share time zones, but we do share a passion for building a person-to-person microlending community that overcomes the barriers of location and circumstance to help deserving, driven entrepreneurs all over the world.</p>
@@ -165,7 +165,7 @@ Meet the Team
 			        <p><i class="fa fa-fw fa-map-marker"></i>Austin, Texas</p>
 			    </div>
 			</div>
-			<div class="row" style="margin: 0 -20px 40px -20px !important;">
+			<div class="row">
 				<div class="col-sm-4">
 				    <ul class="img-list">
 					  <li>
