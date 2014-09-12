@@ -6,10 +6,10 @@ My Stats
 
 @section('content')
 <div class="page-header">
-    <h2>Your Loans</h2>
+    <h1>Your Loans</h1>
 </div>
 
-<div class="row">
+<div class="row text-large">
     <div class="col-sm-5">
         <div class="page-header">
             <h3><strong>Lending Totals</strong></h3>
@@ -17,14 +17,14 @@ My Stats
 
         <div class="row">
             <div class="col-sm-7">
-                <p>Funds uploaded:{{ BootstrapHtml::tooltip('lender.tooltips.loans.funds-uploaded') }}</p>
+                <p class="text-light">Funds uploaded:{{ BootstrapHtml::tooltip('lender.tooltips.loans.funds-uploaded') }}</p>
             </div>
             <div class="col-sm-5">
                 <p>{{ $totalFundsUpload }}</p>
             </div>
 
             <div class="col-sm-7">
-                Number of loans made:
+                <p class="text-light">Number of loans made:</p>
             </div>
 
             <div class="col-sm-5">
@@ -32,7 +32,7 @@ My Stats
             </div>
 
             <div class="col-sm-7">
-                <p>Total amount lent:</p>
+                <p class="text-light">Total amount lent:</p>
             </div>
 
             <div class="col-sm-5">
@@ -47,14 +47,14 @@ My Stats
         </div>
         <div class="row">
             <div class="col-sm-7">
-                <p>Loans outstanding:{{ BootstrapHtml::tooltip('lender.tooltips.loans.loans-outstanding') }}</p>
+                <p class="text-light">Loans outstanding:{{ BootstrapHtml::tooltip('lender.tooltips.loans.loans-outstanding') }}</p>
             </div>
             <div class="col-sm-5">
                 <p>{{ $principleOutstanding }}</p>
             </div>
 
             <div class="col-sm-7">
-                <p>Lending credit available:{{ BootstrapHtml::tooltip('lender.tooltips.loans.lending-credit-available') }}</p>
+                <p class="text-light">Lending credit available:{{ BootstrapHtml::tooltip('lender.tooltips.loans.lending-credit-available') }}</p>
             </div>
 
             <div class="col-sm-5">
@@ -63,7 +63,7 @@ My Stats
 
             @if ($lenderInviteCredit)
             <div class="col-sm-7">
-                <p>New member invite credit:</p>
+                <p class="text-light">New member invite credit:</p>
             </div>
 
             <div class="col-sm-5">
