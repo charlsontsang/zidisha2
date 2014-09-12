@@ -290,6 +290,8 @@ class LenderService
                 $this->transactionService->addWithdrawFundTransaction($con, $amount, $lender);
                 $withdrawalRequest->save($con);
             });
+
+
         return $withdrawalRequest;
     }
 

@@ -103,4 +103,28 @@ class AdminMailer
             ]
         );
     }
+
+    public function sendWithdrawalRequestMail()
+    {
+        $borrower = $bid->getLoan()->getBorrower();
+        $data = [
+            'parameters' => [
+                'borrowerLink'      => route('borrower:public-profile', $borrower->getUser()->getUsername()),
+                'borrowerName'      => ucwords(strtolower($borrower->getName())),
+                'bidInterest'       => $bid->getInterestRate(),
+                'bidAmount'         => $bid->getBidAmount(),
+                'outBidAmount'      => $outBidAmount,
+                'remainedBidAmount' => $acceptedAmount,
+            ],
+        ];
+
+        $this->mailer->queue(
+            'emails.label-template',
+            $data + [
+                'to'         => $lender->getUser()->getEmail(),
+                'label'      => 'lender.mails.down-bid-notification.body',
+                'subject'    => \Lang::get('lender.mails.down-bid-notification.subject'),
+            ]
+        );
+    }
 }
