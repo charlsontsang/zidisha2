@@ -4,6 +4,7 @@ namespace Zidisha\Sms\Tester;
 use Zidisha\Borrower\Borrower;
 use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Borrower\Contact;
+use Zidisha\Borrower\Invite;
 use Zidisha\Borrower\Profile;
 use Zidisha\Comment\BorrowerComment;
 use Zidisha\Country\CountryQuery;
@@ -196,5 +197,38 @@ class BorrowerSmsTester
         $postedBy = 'dmdm by hddhd on ffjfjfjf';
 
         $this->borrowerSmsService->sendBorrowerCommentNotificationSms($borrower, $comment, $postedBy);
+    }
+
+    public function sendInviteAlertSms()
+    {
+        $profile = new Profile();
+        $profile->setPhoneNumber('2345675434')
+            ->setAlternatePhoneNumber('234523453');
+        $borrower = new Borrower();
+        $borrower
+            ->setFirstName('borrowerFirstName')
+            ->setLastName('borrowerLastName')
+            ->setProfile($profile)
+            ->setCountry(
+                CountryQuery::create()
+                    ->findOne()
+            );
+        $profile2 = new Profile();
+        $profile2->setPhoneNumber('22345675434')
+            ->setAlternatePhoneNumber('2234523453');
+        $borrower2 = new Borrower();
+        $borrower2
+            ->setFirstName('2borrowerFirstName')
+            ->setLastName('2borrowerLastName')
+            ->setProfile($profile2)
+            ->setCountry(
+                CountryQuery::create()
+                    ->findOne()
+            );
+        $invite = new Invite();
+        $invite->setBorrower($borrower)
+            ->setInvitee($borrower2);
+
+        $this->borrowerSmsService->sendInviteAlertSms($invite);
     }
 }

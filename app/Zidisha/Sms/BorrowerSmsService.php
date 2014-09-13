@@ -5,6 +5,7 @@ namespace Zidisha\Sms;
 
 use Zidisha\Borrower\Borrower;
 use Zidisha\Borrower\Contact;
+use Zidisha\Borrower\Invite;
 use Zidisha\Comment\Comment;
 use Zidisha\Currency\Money;
 use Zidisha\Loan\Loan;
@@ -212,6 +213,29 @@ class BorrowerSmsService
             ],
             'countryCode' => $borrower->getCountry()->getCountryCode(),
             'label'       => 'borrower.sms.borrower-comment-notification'
+        ];
+        $this->smsService->queue($profile->getPhoneNumber(), $data);
+
+        $alternateNumber = $profile->getAlternatePhoneNumber();
+        if ($alternateNumber) {
+            $this->smsService->queue($alternateNumber, $data);
+        }
+    }
+
+    //TODO use it when an borrower invite get accepted
+    public function sendInviteAlertSms(Invite $invite)
+    {
+        $borrower = $invite->getBorrower();
+        $invitee = $invite->getInvitee();
+        $profile = $borrower->getProfile();
+        $data = [
+            'parameters'  => [
+                'borrowerName'      => $borrower->getName(),
+                'newBorrowerName'   => $invitee->getName(),
+                'newBorrowerNumber' => $invitee->getProfile()->getPhoneNumber(),
+            ],
+            'countryCode' => $borrower->getCountry()->getCountryCode(),
+            'label'       => 'borrower.sms.invite-alert'
         ];
         $this->smsService->queue($profile->getPhoneNumber(), $data);
 
