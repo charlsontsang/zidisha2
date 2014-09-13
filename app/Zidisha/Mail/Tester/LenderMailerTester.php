@@ -607,4 +607,23 @@ class LenderMailerTester
 
         $this->lenderMailer->sendLoanForgivenessConfirmationMail($lender, $loan, $reducedAmount);
     }
+
+    public function sendInviteeOwnFundsMail()
+    {
+        $user = new User();
+        $user->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+
+        $userLender = new User();
+        $userLender->setUsername('LenssderTest')
+            ->setEmail('lendertessst@gmail.com');
+        $lender = new Lender();
+        $lender->setFirstName('lenderFirstName')
+            ->setLastName('lenderLastName')
+            ->setUser($user);
+        $invite = new Invite();
+        $invite->setLender($lender);
+
+        $this->lenderMailer->sendInviteeOwnFundsMail($userLender, $invite);
+    }
 }

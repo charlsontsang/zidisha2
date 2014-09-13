@@ -10,6 +10,7 @@ use Zidisha\Comment\Comment;
 use Zidisha\Currency\Money;
 use Zidisha\Lender\GiftCard;
 use Zidisha\Lender\Invite;
+use Zidisha\Lender\InviteQuery;
 use Zidisha\Lender\Lender;
 use Zidisha\Lender\LenderQuery;
 use Zidisha\Loan\Bid;
@@ -766,6 +767,27 @@ class LenderMailer
                 'subject'    => \Lang::get('lender.mails.loan-forgiveness-confirmation.subject', $parameters),
                 'templateId' => \Setting::get('sendwithus.borrower-notifications-template-id'),
                 //TODO for ($templet = "editables/email/hero.html")
+            ]
+        );
+    }
+
+    public function sendInviteeOwnFundsMail(User $user, Invite $invite)
+    {
+        $parameters = [
+            'inviterUsername' => $invite->getLender()->getUser()->getUsername(),
+        ];
+
+        $data = $this->getFeaturedLoansForMail();
+        $data['footer'] = \Lang::get('lender.mails.invitee-own-funds.footer');
+        $body = \Lang::get('lender.mails.invitee-own-funds.body', $parameters);
+        $data['content'] = $body;
+
+        $this->mailer->send(
+            'emails.hero',
+            $data + [
+                'to'         => $user->getEmail(),
+                'subject'    => \Lang::get('lender.mails.invitee-own-funds.subject'),
+                'templateId' => \Setting::get('sendwithus.inactive-invitee-template-id'),
             ]
         );
     }

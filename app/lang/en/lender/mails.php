@@ -386,4 +386,13 @@ Director, Zidisha Inc.
         'body'    => "To reset your password, complete this form: :formLink .<br/>
 			This link will expire in :expireTime minutes.",
     ],
+    'invitee-own-funds'                  => [
+        'subject' => 'Make a new loan happen',
+        'body'    => "Hi there,
+<br/><br/>
+Since :inviterUsername invited you to join Zidisha, you've helped make dreams come true for at least one deserving entrepreneur.  Congrats!
+<br/><br/>
+Ready for round two? You can actually start growing your own loan portfolio for as little as ONE DOLLAR. (Yes, it’s that simple!) And to make things even easier, we’ve picked out a few promising projects you can back right now:",
+        'footer'  => 'View more loan opportunities here:',
+    ],
 ];
