@@ -1072,6 +1072,7 @@
             <inheritance key="9" class="NewLenderIntro"/>
             <inheritance key="10" class="CronToRepay"/>
             <inheritance key="11" class="AutomatedLending"/>
+            <inheritance key="12" class="InviteeOwnFunds"/>
         </column>
         <foreign-key foreignTable="users">
             <reference local="user_id" foreign="id"/>

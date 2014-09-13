@@ -27,5 +27,11 @@ class InviteQuery extends BaseInviteQuery
             ->filterByInviteeId(null, Criteria::NOT_EQUAL)
             ->find();
     }
-    
+
+    public function getInvitee($inviteeId)
+    {
+        return $this
+            ->filterByInviteeId($inviteeId)
+            ->findOne();
+    }
 } // InviteQuery
