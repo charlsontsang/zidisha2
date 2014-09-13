@@ -277,23 +277,6 @@ class LenderService
         return $errors;
     }
 
-    // TODO Move to BalanceService
-    public function addWithdrawRequest(Lender $lender, $data)
-    {
-        $amount = Money::create($data['withdrawAmount']);
-        $withdrawalRequest = new WithdrawalRequest();
-        $withdrawalRequest->setLender($lender)
-            ->setAmount($amount)
-            ->setPaypalEmail($data['paypalEmail']);
-
-        PropelDB::transaction(function($con) use ($lender, $amount, $withdrawalRequest) {
-                $this->transactionService->addWithdrawFundTransaction($con, $amount, $lender);
-                $withdrawalRequest->save($con);
-            });
-
-        return $withdrawalRequest;
-    }
-
     public function updateAccountPreferences(Lender $lender, $data)
     {
             $lender->getPreferences()

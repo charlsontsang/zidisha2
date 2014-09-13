@@ -24,6 +24,7 @@ use Zidisha\Loan\Bid;
 use Zidisha\Loan\BidQuery;
 use Zidisha\Loan\Loan;
 use Zidisha\Loan\LoanQuery;
+use Zidisha\Payment\BalanceService;
 use Zidisha\Payment\Form\UploadFundForm;
 use Zidisha\Payment\Stripe\StripeService;
 use Zidisha\Repayment\RepaymentService;
@@ -39,6 +40,7 @@ class LenderController extends BaseController
     private $uploadFundForm;
     private $withdrawFundsForm;
     private $repaymentService;
+    private $balanceService;
 
 
     public function __construct(
@@ -48,7 +50,8 @@ class LenderController extends BaseController
         GiftCard $cardForm,
         UploadFundForm $uploadFundForm,
         WithdrawFundsForm $withdrawFundsForm,
-        RepaymentService $repaymentService
+        RepaymentService $repaymentService,
+        BalanceService $balanceService
     ) {
         $this->transactionQuery = $transactionQuery;
         $this->fundsForm = $fundsForm;
@@ -57,6 +60,7 @@ class LenderController extends BaseController
         $this->uploadFundForm = $uploadFundForm;
         $this->withdrawFundsForm = $withdrawFundsForm;
         $this->repaymentService = $repaymentService;
+        $this->balanceService = $balanceService;
     }
 
     public function getPublicProfile($username)
@@ -277,7 +281,7 @@ class LenderController extends BaseController
         if ($form->isValid()) {
             $data = $form->getData();
             $lender = Auth::user()->getLender();
-            $withdrawalRequest = $this->lenderService->addWithdrawRequest($lender, $data);
+            $withdrawalRequest = $this->balanceService->addWithdrawRequest($lender, $data);
             if ($withdrawalRequest) {
                 \Flash::success("Your withdrawal has been successfully processed, and the requested amount should be credited to your PayPal account within one week. Thanks for your participation!");
                 return Redirect::route('lender:funds');
