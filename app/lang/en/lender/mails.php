@@ -395,4 +395,17 @@ Since :inviterUsername invited you to join Zidisha, you've helped make dreams co
 Ready for round two? You can actually start growing your own loan portfolio for as little as ONE DOLLAR. (Yes, it’s that simple!) And to make things even easier, we’ve picked out a few promising projects you can back right now:",
         'footer'  => 'View more loan opportunities here:',
     ],
+    'withdraw-request'                   => [
+        'subject' => 'Withdrawal request confirmation',
+        'body'    =>
+            "Greetings,
+<br/><br/>
+We have received your request on :date to withdraw :withdrawAmount from your Zidisha account. You should receive your withdrawal at your PayPal account :paypalEmail within a week.
+<br/><br/>
+Should you have any questions concerning this transaction, please don't hesitate to contact us at service@zidisha.org.
+<br/><br/>
+Best wishes,
+<br/><br/>
+The Zidisha Team",
+    ],
 ];

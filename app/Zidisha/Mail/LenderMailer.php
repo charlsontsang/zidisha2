@@ -5,6 +5,7 @@ namespace Zidisha\Mail;
 use Carbon\Carbon;
 use Zidisha\Balance\InviteTransactionQuery;
 use Zidisha\Balance\TransactionQuery;
+use Zidisha\Balance\WithdrawalRequest;
 use Zidisha\Borrower\Borrower;
 use Zidisha\Comment\Comment;
 use Zidisha\Currency\Money;
@@ -788,6 +789,27 @@ class LenderMailer
                 'to'         => $user->getEmail(),
                 'subject'    => \Lang::get('lender.mails.invitee-own-funds.subject'),
                 'templateId' => \Setting::get('sendwithus.inactive-invitee-template-id'),
+            ]
+        );
+    }
+
+    public function sendWithdrawalRequestMail(lender $lender, WithdrawalRequest $withdrawalRequest)
+    {
+        $parameters = [
+            'date'           => Carbon::now()->format('d-m-Y'),
+            'withdrawAmount' => (string)$withdrawalRequest->getAmount(),
+            'paypalEmail'    => $withdrawalRequest->getPaypalEmail(),
+        ];
+
+        $body = \Lang::get('lender.mails.withdraw-request.body', $parameters);
+        $data['content'] = $body;
+
+        $this->mailer->send(
+            'emails.hero',
+            $data + [
+                'to'         => $lender->getUser()->getEmail(),
+                'subject'    => \Lang::get('lender.mails.withdraw-request.subject'),
+                'templateId' => \Setting::get('sendwithus.borrower-notifications-template-id'),
             ]
         );
     }

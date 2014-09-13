@@ -9,6 +9,7 @@ use Zidisha\Balance\WithdrawalRequest;
 use Zidisha\Currency\Money;
 use Zidisha\Lender\Exceptions\InsufficientLenderBalanceException;
 use Zidisha\Lender\Lender;
+use Zidisha\Mail\AdminMailer;
 use Zidisha\Mail\LenderMailer;
 use Zidisha\Vendor\PropelDB;
 
@@ -16,11 +17,14 @@ class BalanceService
 {
     private $transactionService;
     private $lenderMailer;
+    private $adminMailer;
 
-    public function __construct(TransactionService $transactionService, LenderMailer $lenderMailer)
+    public function __construct(TransactionService $transactionService, LenderMailer $lenderMailer,
+                                AdminMailer $adminMailer)
     {
         $this->transactionService = $transactionService;
         $this->lenderMailer = $lenderMailer;
+        $this->adminMailer = $adminMailer;
     }
 
     public function uploadFunds(Payment $payment)
@@ -64,7 +68,8 @@ class BalanceService
                 $this->transactionService->addWithdrawFundTransaction($con, $amount, $lender);
                 $withdrawalRequest->save($con);
             });
-
+        $this->adminMailer->sendWithdrawalRequestMail($withdrawalRequest->getAmount());
+        $this->lenderMailer->sendWithdrawalRequestMail($lender, $withdrawalRequest);
         return $withdrawalRequest;
     }
 }

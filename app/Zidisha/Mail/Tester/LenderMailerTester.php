@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Zidisha\Balance\InviteTransactionQuery;
 use Zidisha\Balance\TransactionQuery;
+use Zidisha\Balance\WithdrawalRequest;
 use Zidisha\Borrower\Borrower;
 use Zidisha\Comment\BorrowerComment;
 use Zidisha\Comment\BorrowerCommentQuery;
@@ -625,5 +626,22 @@ class LenderMailerTester
         $invite->setLender($lender);
 
         $this->lenderMailer->sendInviteeOwnFundsMail($userLender, $invite);
+    }
+
+    public function sendWithdrawalRequestMail()
+    {
+        $user = new User();
+        $user->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+        $lender = new Lender();
+        $lender->setFirstName('lenderFirstName')
+            ->setLastName('lenderLastName')
+            ->setUser($user);
+        $withdrawRequest = new WithdrawalRequest();
+        $withdrawRequest->setLender($lender)
+            ->setAmount(Money::create(50))
+            ->setPaypalEmail('paypalmail@dd.com');
+
+        $this->lenderMailer->sendWithdrawalRequestMail($lender, $withdrawRequest);
     }
 }
