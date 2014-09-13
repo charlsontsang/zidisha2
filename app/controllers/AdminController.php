@@ -794,6 +794,7 @@ class AdminController extends BaseController
             \Flash::success("Successfully paid!");
             return Redirect::route('admin:get:withdrawal-requests');
         }
+        $this->lenderMailer->sendPaypalWithdrawMail($withdrawalRequest->getLender(), $withdrawalRequest->getAmount());
 
         \Flash::error('Some error occured!');
         return Redirect::route('admin:get:withdrawal-requests')->withForm($form);
