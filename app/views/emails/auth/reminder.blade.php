@@ -4,11 +4,10 @@
 		<meta charset="utf-8">
 	</head>
 	<body>
-		<h2>Password Reset</h2>
+		<h2>{{ \Lang::get('lender.mails.password-reset.subject') }}</h2>
 
 		<div>
-			To reset your password, complete this form: {{ URL::to('password/reset', array($token)) }}.<br/>
-			This link will expire in {{ Config::get('auth.reminder.expire', 60) }} minutes.
+		    {{ \Lang::get('lender.mails.password-reset.body', ['formLink' => URL::to('password/reset', array($token)), 'expireTime' => onfig::get('auth.reminder.expire', 60)]) }}
 		</div>
 	</body>
 </html>

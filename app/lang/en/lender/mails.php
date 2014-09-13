@@ -4,7 +4,7 @@ return [
         'subject'       => ':borrowerName has posted a new loan application!',
         'lender-body'   => ':borrowerName fully repaid the loan you funded on :repayDate, and has just posted a new loan application!
 <br/><br/>
-You may view :borrowerName\'s current loan request at <a href=":loanUrl">:loanUrl</a> 
+You may view :borrowerName\'s current loan request at <a href=":loanUrl">:loanUrl</a>
 <br/><br/>
 Cheers,
 <br/><br/>
@@ -12,7 +12,7 @@ The Zidisha Team',
         'follower-body' => '
 One of the entrepreneurs you are following, :borrowerName, has just posted a new loan application!
 <br/><br/>
-You may view :borrowerName \'s current loan request at <a href=":loanUrl">:loanUrl</a> 
+You may view :borrowerName \'s current loan request at <a href=":loanUrl">:loanUrl</a>
 <br/><br/>
 Cheers,
 <br/><br/>
@@ -64,10 +64,10 @@ You can communicate with your chosen entrepreneur via the Zidisha website as his
     'lender-account-abandoned'           => [
         'body' => 'Dear :lenderName,
 <br/><br/>
-We noticed that you have not logged into your account at Zidisha.org for over one year.  
+We noticed that you have not logged into your account at Zidisha.org for over one year.
 We\'re sorry that lending with Zidisha did not work out for you, and would sincerely welcome any feedback you would care to share regarding why you have not come back.
 <br/><br/>
-Should you desire to maintain access to your lender credit balance, simply log in to your member account at <a href=":siteLink">Zidisha.org</a> at any time within the next month. 
+Should you desire to maintain access to your lender credit balance, simply log in to your member account at <a href=":siteLink">Zidisha.org</a> at any time within the next month.
 If you do not wish to keep your account open, you need not do anything: we will close your account and convert any remaining lender credit to a donation on :expiryDate.
 <br/><br/>
 Thanks so much for having participated in our lending community, and for helping to extend life-changing opportunities to some of the world\'s most marginalized entrepreneurs.
@@ -380,5 +380,10 @@ Director, Zidisha Inc.
         'body'    => "Thank you for forgiving your share in remaining repayments by <a href=':borrowerUrl' target='_blank'>:borrowerName</a>. The remaining amount owed by :borrowerName has been reduced by :reducedAmount.<br/><br/>" .
             "Best wishes,<br/><br/>" .
             "The Zidisha Team",
+    ],
+    'password-reset'                     => [
+        'subject' => 'Password Reset',
+        'body'    => "To reset your password, complete this form: :formLink .<br/>
+			This link will expire in :expireTime minutes.",
     ],
 ];
