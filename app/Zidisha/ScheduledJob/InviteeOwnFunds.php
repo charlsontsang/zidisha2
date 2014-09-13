@@ -68,5 +68,7 @@ class InviteeOwnFunds extends ScheduledJob
         /** @var  LenderMailer $lenderMailer */
         $lenderMailer = \App::make('Zidisha\Mail\LenderMailer');
         $lenderMailer->sendInviteeOwnFundsMail($user, $invitee);
+
+        $job->delete();
     }
 } // InviteeOwnFunds
