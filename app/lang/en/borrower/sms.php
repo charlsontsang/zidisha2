@@ -36,4 +36,5 @@ If you do not reschedule and we do not receive the past due amount, then we will
 :postedBy
 :message
 Please log in to your Zidisha account to respond to this message.',
+    'invite-alert'                       => "Dear :borrowerName, your Zidisha account was used to issue an invite bonus to :newBorrowerName of tel. :newBorrowerNumber . The repayment performance of :newBorrowerName will now affect your own credit limit. If you did not authorize this invite, please inform us by SMS reply to this number. Thank you.",
 ];

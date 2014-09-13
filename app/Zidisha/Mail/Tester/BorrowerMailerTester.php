@@ -3,6 +3,7 @@ namespace Zidisha\Mail\Tester;
 
 use Zidisha\Borrower\Borrower;
 use Zidisha\Borrower\BorrowerQuery;
+use Zidisha\Borrower\FeedbackMessage;
 use Zidisha\Borrower\Invite;
 use Zidisha\Borrower\InviteQuery;
 use Zidisha\Borrower\JoinLog;
@@ -88,6 +89,54 @@ class BorrowerMailerTester
         $borrower->setVolunteerMentor($volunteerMentor);
 
         $this->borrowerMailer->sendBorrowerJoinedVolunteerMentorConfirmationMail($borrower);
+    }
+
+    public function sendFeedbackMail()
+    {
+        $userBorrower = new User();
+        $userBorrower->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+        $borrower = new Borrower();
+        $borrower->setUser($userBorrower)
+            ->setFirstName('borrowerFirstName')
+            ->setLastName('borrowerLastName');
+        $feedbackMessage =  new FeedbackMessage();
+        $feedbackMessage
+            ->setCc('ccmailaddress@cc.com')
+            ->setReplyTo('replayto@fff.com')
+            ->setSubject('Feedback message subject')
+            ->setMessage('feedback message itself')
+            ->setBorrowerEmail('borroweremail@eer.com')
+            ->setSenderName('sendername')
+            ->setSentAt(new \DateTime())
+            ->setBorrower($borrower)
+            ->setType(FeedbackMessage::ACTIVATION_TYPE);
+
+        $this->borrowerMailer->sendFeedbackMail($feedbackMessage);
+    }
+
+    public function sendLoanFeedbackMail()
+    {
+        $userBorrower = new User();
+        $userBorrower->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+        $borrower = new Borrower();
+        $borrower->setUser($userBorrower)
+            ->setFirstName('borrowerFirstName')
+            ->setLastName('borrowerLastName');
+        $feedbackMessage =  new FeedbackMessage();
+        $feedbackMessage
+            ->setCc('ccmailaddress@cc.com')
+            ->setReplyTo('replayto@fff.com')
+            ->setSubject('Feedback message subject')
+            ->setMessage('feedback message itself')
+            ->setBorrowerEmail('borroweremail@eer.com')
+            ->setSenderName('sendername')
+            ->setSentAt(new \DateTime())
+            ->setBorrower($borrower)
+            ->setType(FeedbackMessage::LOAN_TYPE);
+
+        $this->borrowerMailer->sendLoanFeedbackMail($feedbackMessage);
     }
 
     public function sendLoanConfirmationMail()

@@ -4,6 +4,7 @@ namespace Zidisha\Mail;
 
 use Illuminate\Http\Request;
 use Zidisha\Comment\Comment;
+use Zidisha\Currency\Money;
 use Zidisha\Loan\Loan;
 use Zidisha\User\User;
 use Zidisha\User\UserQuery;
@@ -53,22 +54,22 @@ class AdminMailer
             'time'       => date('Y-m-d H:i:s'),
             'ajax'       => $request->ajax(),
         );
-        
+
         if (PHP_SAPI == 'cli') {
             global $argv;
             $request += array(
-                'cli' => true,
+                'cli'  => true,
                 'file' => $argv[0],
             );
             foreach (array_slice($argv, 1) as $i => $arg) {
-                $request['arg' . ($i+1)] = $arg;
+                $request['arg' . ($i + 1)] = $arg;
             }
         }
 
         $session = \Session::all();
         $input = \Input::all();
         $cookies = \Request::cookie();
-        
+
         $user = [];
         if (\Auth::check()) {
             /** @var User $u */
@@ -87,7 +88,7 @@ class AdminMailer
             $_exception = $_exception->getPrevious();
             $exceptions[] = $_exception;
         }
-        
+
         $this->mailer->send(
             'emails.admin.error',
             [
@@ -104,7 +105,23 @@ class AdminMailer
         );
     }
 
-    public function sendWithdrawalRequestMail()
+    public function sendWithdrawalRequestMail(Money $money)
     {
+        $admin = UserQuery::create()
+            ->findOneById(\Setting::get('site.adminId'));
+        $data = [
+            'parameters' => [
+                'withdrawAmount' => (string) $money,
+            ],
+        ];
+
+        $this->mailer->queue(
+            'emails.label-template',
+            $data + [
+                'to'      => $admin->getEmail(),
+                'label'   => 'admin.mails.withdraw-request.body',
+                'subject' => \Lang::get('admin.mails.withdraw-request.subject')
+            ]
+        );
     }
 }

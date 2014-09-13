@@ -104,7 +104,6 @@ class BorrowerMailer{
         );
     }
 
-    //TODO
     public function sendFeedbackMail(FeedbackMessage $feedbackMessage)
     {
         $data = [

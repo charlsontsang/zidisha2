@@ -261,5 +261,8 @@ return [
         'sendwithus.comments-template-id' => [
             'label' => 'Comments template id'
         ],
+        'sendwithus.inactive-invitee-template-id' => [
+            'label' => 'Inactive Invitee template id'
+        ],
     ]
 ];

@@ -327,6 +327,10 @@ class GenerateModelData extends Command
             return $this->generateTransactions($size);
         }
 
+        if ($model == "InviteeOwnFunds") {
+            return $this->generateInviteeOwnFunds();
+        }
+
         if ($model == "fakeOneBorrowerRefund") {
             $payments = BorrowerpaymentQuery::create()
                 ->findPKs(array(1,3));
@@ -1386,5 +1390,40 @@ class GenerateModelData extends Command
         $this->line('installment iD ' . $installment->getId());
 
         return $loan;
+    }
+
+    private function generateInviteeOwnFunds()
+    {
+        $inviteeLender = "SELECT id from users as u
+                          WHERE u.joined_at < :joinedAtMin
+                          AND u.joined_at > :joinedAtMax
+                          AND u.role = " . User::LENDER_ROLE_ENUM . "
+                          AND u.active = TRUE
+                          AND (SELECT COUNT(*) FROM loan_bids lb
+                                  WHERE lb.lender_id = u.id
+                                  AND lb.active = TRUE
+                                  AND lb.is_lender_invite_credit = FALSE) = 0
+                          LIMIT 1";
+
+        $inviteeLenderId = PropelDB::fetchOne($inviteeLender, [
+                'joinedAtMin' =>  Carbon::now()->subMonth(),
+                'joinedAtMax' => Carbon::now()->subMonths(3),
+            ]);
+
+        $this->line('Invitee Lender iD =' . $inviteeLenderId['id']);
+
+        $lenderInviteTransaction = new \Zidisha\Balance\InviteTransaction();
+        $lenderInviteTransaction->setLenderId(247)
+            ->setType(Transaction::LENDER_INVITE_INVITEE)
+            ->setAmount(Money::create(40))
+            ->setDescription('Lender Invitee Transaction')
+            ->setTransactionDate(Carbon::now()->subMonths(4));
+        $lenderInviteTransaction->save();
+//        $invite = new Invite();
+//        $invite->setLenderId($lender)
+
+        $this->line('Lender Invitee Transaction iD =' . $lenderInviteTransaction->getId());
+
+        return $inviteeLenderId;
     }
 }

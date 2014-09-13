@@ -5,20 +5,26 @@ use Propel\Runtime\Propel;
 use Zidisha\Balance\Map\TransactionTableMap;
 use Zidisha\Balance\TransactionQuery;
 use Zidisha\Balance\TransactionService;
+use Zidisha\Balance\WithdrawalRequest;
 use Zidisha\Currency\Money;
 use Zidisha\Lender\Exceptions\InsufficientLenderBalanceException;
+use Zidisha\Lender\Lender;
+use Zidisha\Mail\AdminMailer;
+use Zidisha\Mail\LenderMailer;
+use Zidisha\Vendor\PropelDB;
 
 class BalanceService
 {
-
-    /**
-     * @var \Zidisha\Balance\TransactionService
-     */
     private $transactionService;
+    private $lenderMailer;
+    private $adminMailer;
 
-    public function __construct(TransactionService $transactionService)
+    public function __construct(TransactionService $transactionService, LenderMailer $lenderMailer,
+                                AdminMailer $adminMailer)
     {
         $this->transactionService = $transactionService;
+        $this->lenderMailer = $lenderMailer;
+        $this->adminMailer = $adminMailer;
     }
 
     public function uploadFunds(Payment $payment)
@@ -40,6 +46,30 @@ class BalanceService
         }
 
         $con->commit();
-
     }
-} 
+
+    public function payWithdrawRequest(WithdrawalRequest $withdrawalRequest)
+    {
+        $withdrawalRequest->setPaid(true);
+        $withdrawalRequest->save();
+
+        $this->lenderMailer->sendPaypalWithdrawMail($withdrawalRequest->getLender(), $withdrawalRequest->getAmount());
+    }
+
+    public function addWithdrawRequest(Lender $lender, $data)
+    {
+        $amount = Money::create($data['withdrawAmount']);
+        $withdrawalRequest = new WithdrawalRequest();
+        $withdrawalRequest->setLender($lender)
+            ->setAmount($amount)
+            ->setPaypalEmail($data['paypalEmail']);
+
+        PropelDB::transaction(function($con) use ($lender, $amount, $withdrawalRequest) {
+                $this->transactionService->addWithdrawFundTransaction($con, $amount, $lender);
+                $withdrawalRequest->save($con);
+            });
+        $this->adminMailer->sendWithdrawalRequestMail($withdrawalRequest->getAmount());
+        $this->lenderMailer->sendWithdrawalRequestMail($lender, $withdrawalRequest);
+        return $withdrawalRequest;
+    }
+}

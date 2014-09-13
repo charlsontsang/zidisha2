@@ -36,6 +36,7 @@ use Zidisha\Loan\LoanQuery;
 use Zidisha\Loan\LoanService;
 use Zidisha\Loan\Loan;
 use Zidisha\Mail\LenderMailer;
+use Zidisha\Payment\BalanceService;
 use Zidisha\Payment\Paypal\PaypalMassPaymentException;
 use Zidisha\Payment\Paypal\PayPalService;
 use Zidisha\Repayment\BorrowerPaymentQuery;
@@ -63,10 +64,8 @@ class AdminController extends BaseController
     private $uploadRepaymentsForm;
     private $importService;
     private $repaymentService;
-    /**
-     * @var AllowLoanForgivenessForm
-     */
     private $forgiveLoanForm;
+    private $balanceService;
 
     public function  __construct(
         LenderQuery $lenderQuery,
@@ -89,7 +88,8 @@ class AdminController extends BaseController
         UploadRepaymentsForm $uploadRepaymentsForm,
         ImportService$importService,
         RepaymentService $repaymentService,
-        AllowLoanForgivenessForm $forgiveLoanForm
+        AllowLoanForgivenessForm $forgiveLoanForm,
+        BalanceService $balanceService
     ) {
         $this->lenderQuery = $lenderQuery;
         $this->$borrowerQuery = $borrowerQuery;
@@ -112,6 +112,7 @@ class AdminController extends BaseController
         $this->importService = $importService;
         $this->repaymentService = $repaymentService;
         $this->forgiveLoanForm = $forgiveLoanForm;
+        $this->balanceService = $balanceService;
     }
 
     public
@@ -789,8 +790,7 @@ class AdminController extends BaseController
         $form->handleRequest(Request::instance());
 
         if ($form->isValid()) {
-            $withdrawalRequest->setPaid(true);
-            $withdrawalRequest->save();
+            $this->balanceService->payWithdrawRequest($withdrawalRequest);
             \Flash::success("Successfully paid!");
             return Redirect::route('admin:get:withdrawal-requests');
         }
