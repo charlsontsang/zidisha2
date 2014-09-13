@@ -5,20 +5,20 @@ use Propel\Runtime\Propel;
 use Zidisha\Balance\Map\TransactionTableMap;
 use Zidisha\Balance\TransactionQuery;
 use Zidisha\Balance\TransactionService;
+use Zidisha\Balance\WithdrawalRequest;
 use Zidisha\Currency\Money;
 use Zidisha\Lender\Exceptions\InsufficientLenderBalanceException;
+use Zidisha\Mail\LenderMailer;
 
 class BalanceService
 {
-
-    /**
-     * @var \Zidisha\Balance\TransactionService
-     */
     private $transactionService;
+    private $lenderMailer;
 
-    public function __construct(TransactionService $transactionService)
+    public function __construct(TransactionService $transactionService, LenderMailer $lenderMailer)
     {
         $this->transactionService = $transactionService;
+        $this->lenderMailer = $lenderMailer;
     }
 
     public function uploadFunds(Payment $payment)
@@ -40,6 +40,13 @@ class BalanceService
         }
 
         $con->commit();
-
     }
-} 
+
+    public function payWithdrawRequest(WithdrawalRequest $withdrawalRequest)
+    {
+        $withdrawalRequest->setPaid(true);
+        $withdrawalRequest->save();
+
+        $this->lenderMailer->sendPaypalWithdrawMail($withdrawalRequest->getLender(), $withdrawalRequest->getAmount());
+    }
+}
