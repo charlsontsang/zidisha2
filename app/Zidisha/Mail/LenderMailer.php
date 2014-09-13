@@ -100,9 +100,6 @@ class LenderMailer
         );
     }
 
-    /**
-     * @param Bid $bid
-     */
     public function sendLoanFullyFundedMail(Bid $bid)
     {
         $email = $bid->getLender()->getUser()->getEmail();
@@ -113,7 +110,6 @@ class LenderMailer
             ['borrowerName' => $bid->getBorrower()->getName()]
         );
 
-        //TODO: confirm 
         $data['content'] = \Lang::get(
             'lender.mails.loan-fully-funded.accept-message-2',
             [
@@ -710,64 +706,58 @@ class LenderMailer
 
     public function sendFundUploadMail(Lender $lender, Money $uploadAmount)
     {
-        $parameters = [
-            'uploadAmount' => $uploadAmount,
-            'lendUrl'      => route('lend:index'),
+        $data = [
+            'parameters' => [
+                'uploadAmount' => $uploadAmount,
+                'lendUrl'      => route('lend:index'),
+            ],
         ];
 
-        $body = \Lang::get('lender.mails.fund-upload.body', $parameters);
-        $data['content'] = $body;
-
         $this->mailer->queue(
-            'emails.hero',
+            'emails.label-template',
             $data + [
-                'to'         => $lender->getUser()->getEmail(),
-                'subject'    => \Lang::get('lender.mails.fund-upload.subject', $parameters),
-                'templateId' => \Setting::get('sendwithus.borrower-notifications-template-id'),
-                //TODO for ($templet = "editables/email/hero.html")
+                'to'      => $lender->getUser()->getEmail(),
+                'label'   => 'lender.mails.fund-upload.body',
+                'subject' => \Lang::get('lender.mails.fund-upload.subject')
             ]
         );
     }
 
     public function sendDonationMail(Lender $lender, Money $donationAmount)
     {
-        $parameters = [
-            'donationAmount' => $donationAmount,
-            'donationDate'   => Carbon::now()->format('d-m-Y'),
+        $data = [
+            'parameters' => [
+                'donationAmount' => $donationAmount,
+                'donationDate'   => Carbon::now()->format('d-m-Y'),
+            ],
         ];
 
-        $body = \Lang::get('lender.mails.lender-donation.body', $parameters);
-        $data['content'] = $body;
-
         $this->mailer->queue(
-            'emails.hero',
+            'emails.label-template',
             $data + [
-                'to'         => $lender->getUser()->getEmail(),
-                'subject'    => \Lang::get('lender.mails.lender-donation.subject', $parameters),
-                'templateId' => \Setting::get('sendwithus.borrower-notifications-template-id'),
-                //TODO for ($templet = "editables/email/hero.html")
+                'to'      => $lender->getUser()->getEmail(),
+                'label'   => 'lender.mails.lender-donation.body',
+                'subject' => \Lang::get('lender.mails.lender-donation.subject')
             ]
         );
     }
 
     public function sendLoanForgivenessConfirmationMail(Lender $lender, Loan $loan, Money $reducedAmount)
     {
-        $parameters = [
-            'borrowerUrl'   => route('loan:index', $loan->getId()),
-            'borrowerName'  => $loan->getBorrower()->getName(),
-            'reducedAmount' => $reducedAmount,
+        $data = [
+            'parameters' => [
+                'borrowerUrl'   => route('loan:index', $loan->getId()),
+                'borrowerName'  => $loan->getBorrower()->getName(),
+                'reducedAmount' => $reducedAmount,
+            ],
         ];
 
-        $body = \Lang::get('lender.mails.loan-forgiveness-confirmation.body', $parameters);
-        $data['content'] = $body;
-
         $this->mailer->queue(
-            'emails.hero',
+            'emails.label-template',
             $data + [
-                'to'         => $lender->getUser()->getEmail(),
-                'subject'    => \Lang::get('lender.mails.loan-forgiveness-confirmation.subject', $parameters),
-                'templateId' => \Setting::get('sendwithus.borrower-notifications-template-id'),
-                //TODO for ($templet = "editables/email/hero.html")
+                'to'      => $lender->getUser()->getEmail(),
+                'label'   => 'lender.mails.loan-forgiveness-confirmation.body',
+                'subject' => \Lang::get('lender.mails.loan-forgiveness-confirmation.subject')
             ]
         );
     }
