@@ -115,6 +115,30 @@ class BorrowerMailerTester
         $this->borrowerMailer->sendFeedbackMail($feedbackMessage);
     }
 
+    public function sendLoanFeedbackMail()
+    {
+        $userBorrower = new User();
+        $userBorrower->setUsername('LenderTest')
+            ->setEmail('lendertest@gmail.com');
+        $borrower = new Borrower();
+        $borrower->setUser($userBorrower)
+            ->setFirstName('borrowerFirstName')
+            ->setLastName('borrowerLastName');
+        $feedbackMessage =  new FeedbackMessage();
+        $feedbackMessage
+            ->setCc('ccmailaddress@cc.com')
+            ->setReplyTo('replayto@fff.com')
+            ->setSubject('Feedback message subject')
+            ->setMessage('feedback message itself')
+            ->setBorrowerEmail('borroweremail@eer.com')
+            ->setSenderName('sendername')
+            ->setSentAt(new \DateTime())
+            ->setBorrower($borrower)
+            ->setType(FeedbackMessage::LOAN_TYPE);
+
+        $this->borrowerMailer->sendLoanFeedbackMail($feedbackMessage);
+    }
+
     public function sendLoanConfirmationMail()
     {
         $user = new User();
