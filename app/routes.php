@@ -422,7 +422,11 @@ Route::group(
                     'invite',
                     array('uses' => 'BorrowerInviteController@postInvite', 'as' => 'borrower:post-invite', 'before' => 'csrf')
                 );
-                Route::get('invites/{id?}', array('uses' => 'BorrowerInviteController@getInvites', 'as' => 'borrower:invites'));
+                Route::get('invites', array('uses' => 'BorrowerInviteController@getInvites', 'as' => 'borrower:invites'));
+                Route::post(
+                    'delete-invite/{id}',
+                    array('uses' => 'BorrowerInviteController@postDeleteInvite', 'as' => 'borrower:delete-invite', 'before' => 'csrf')
+                );
                 Route::get('current-credit', [ 'uses' => 'BorrowerController@getCurrentCredit', 'as' => 'borrower:credit']);
 
                 Route::get(

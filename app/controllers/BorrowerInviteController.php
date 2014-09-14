@@ -85,23 +85,9 @@ class BorrowerInviteController extends BaseBorrowerController
         return Redirect::route('borrower:invite')->withForm($form);
     }
 
-    public function getInvites($id = null)
+    public function getInvites()
     {
-        /** @var $borrower Borrower */
-        $borrower = Auth::user()->getBorrower();
-        if (!$borrower) {
-            App::abort(404, 'Bad Request');
-        }
-        if ($id) {
-            $invite = InviteQuery::create()
-                ->filterByBorrower($borrower)
-                ->filterById($id)
-                ->findOne();
-            if ($invite) {
-                $invite->delete();
-            }
-        }
-        $page = Request::query('page') ? : 1;
+        $borrower = $this->getBorrower();
 
         $minRepaymentRate = \Setting::get('invite.minRepaymentRate');
         $inviteesRepaymentRate = $this->borrowerService->getInviteeRepaymentRate($borrower);
@@ -113,9 +99,10 @@ class BorrowerInviteController extends BaseBorrowerController
         $bonusEarned = $calculator->getInviteCredit();
         
         $currencyCode = $borrower->getCountry()->getCurrencyCode();
-        $paginator = InviteQuery::create()
+        $invites = InviteQuery::create()
             ->filterByBorrower($borrower)
-            ->paginate($page, 10);
+            ->find();
+        
         $loanService = $this->loanService;
         $repaymentService = $this->repaymentService;
         $borrowerInviteCredit = CreditSettingQuery::create()
@@ -129,11 +116,28 @@ class BorrowerInviteController extends BaseBorrowerController
                 'successRate',
                 'bonusEarned',
                 'invites',
-                'paginator',
+                'invites',
                 'loanService',
                 'repaymentService',
                 'borrowerInviteCredit'
             )
         );
+    }
+
+    public function postDeleteInvite($id)
+    {
+        $borrower = $this->getBorrower();
+
+        $invite = InviteQuery::create()
+            ->filterByBorrower($borrower)
+            ->filterById($id)
+            ->findOne();
+        
+        if ($invite) {
+            $invite->delete();
+            \Flash::success(\Lang::get('borrower.invite.flash.invite-deleted', ['email' => $invite->getEmail()]));
+        }
+
+        return Redirect::route('borrower:invites');
     }
 }

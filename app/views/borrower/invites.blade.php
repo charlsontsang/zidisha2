@@ -14,41 +14,43 @@ Quick Links
 
 @section('page-content')
 <p>
-    {{ \Lang::get('borrower.invite.invites-message', ['minRepaymentRate' => $minRepaymentRate, 'borrowerInviteCredit' => $borrowerInviteCredit]) }}
+    @lang('borrower.invite.invites-message', ['minRepaymentRate' => $minRepaymentRate, 'borrowerInviteCredit' => $borrowerInviteCredit])
 </p>
 <p>
-    {{ \Lang::get('borrower.invite.success-rate') }}:
-    <i class="fa fa-info-circle successRate" data-toggle="tooltip" data-placement="bottom" title="{{ \Lang::get('borrower.invite.success-rate-tooltip') }}"></i>
-    &nbsp;&nbsp;&nbsp;<strong>{{ $successRate }}%</strong>
+    @lang('borrower.invite.success-rate'):
+    {{ BootstrapHtml::tooltip('borrower.invite.success-rate-tooltip') }}
+    &nbsp;&nbsp;
+    <strong>{{ $successRate }}%</strong>
 </p>
 <p>
-    {{ \Lang::get('borrower.invite.bonus-earned') }}:
-    <i class="fa fa-info-circle successRate" data-toggle="tooltip" data-placement="bottom" title="{{ \Lang::get('borrower.invite.bonus-earned-tooltip') }}"></i>
-    &nbsp;&nbsp;&nbsp;<strong>{{ $bonusEarned }}</strong>
+    @lang('borrower.invite.bonus-earned'):
+    {{ BootstrapHtml::tooltip('borrower.invite.bonus-earned-tooltip') }}
+    &nbsp;&nbsp;
+    <strong>{{ $bonusEarned }}</strong>
 </p>
 
     <table class="table table-striped no-more-tables">
         <thead>
         <tr>
             <th>
-                {{ \Lang::get('borrower.invite.name') }}
+                @lang('borrower.invite.name')
             </th>
             <th>
-                {{ \Lang::get('borrower.invite.email') }}
+                @lang('borrower.invite.email')
             </th>
             <th>
-                {{ \Lang::get('borrower.invite.status') }}
+                @lang('borrower.invite.status')
             </th>
             <th>
-                {{ \Lang::get('borrower.invite.repayment-rate') }}
+                @lang('borrower.invite.repayment-rate')
             </th>
             <th>
-                {{ \Lang::get('borrower.invite.bonus-credit') }}
+                @lang('borrower.invite.bonus-credit')
             </th>
         </tr>
         </thead>
         <tbody>
-        @foreach($paginator as $invite)
+        @foreach($invites as $invite)
         <tr>
             @if(!$invite->getInviteeId())
                <?php $name = ''; ?>
@@ -113,16 +115,17 @@ Quick Links
             <td data-title="BounsCredit">
                 {{ $bonus }}
             </td>
-            <td><a class="btn btn-primary"  href="{{ route('borrower:invites', $invite->getId()) }}">Remove</a></td>
+            <td>
+                {{ BootstrapForm::open([
+                    'route'               => ['borrower:delete-invite', $invite->getId()],
+                    'translationDomain'   => 'borrower.invite',
+                    'data-disable-submit' => 'on'])
+                }}
+                {{ BootstrapForm::submit('delete') }}
+                {{ BootstrapForm::close() }}
+            </td>
         </tr>
         @endforeach
         </tbody>
     </table>
-    {{ BootstrapHtml::paginator($paginator)->links() }}
-@stop
-
-@section('script-footer')
-<script type="text/javascript">
-    $('.successRate').tooltip()
-</script>
 @stop

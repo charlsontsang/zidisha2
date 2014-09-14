@@ -13,6 +13,7 @@ You may view the status of your current invitees and remove inactive invitees he
     'success-rate-tooltip'                      => 'This is the percentage of members you have invited who are meeting the on-time repayment rate standard.',
     'bonus-earned'                              => 'Total Bonus Earned',
     'bonus-earned-tooltip'                      => 'This is the total bonus for inviting new members that will be added to the maximum credit limit when you post your next loan application.  It is the number of your invited members who meet the on-time repayment rate standard, times the current invite bonus amount for your country.',
+    'name'                                      => "Name",
     'email'                                     => "Enter your friend's email address",
     'borrower-name'                             => 'Your name',
     'borrower-email'                            => 'Your email address',
@@ -31,8 +32,10 @@ You may view the status of your current invitees and remove inactive invitees he
     'fundRaising-loan'                          => 'FundRaising Loan',
     'repaying-on-time'                          => 'Repaying On Time',
     'past-due'                                  => 'Past Due',
+    'delete'                                    => 'Delete',
     'flash'                                     => [
         'invite-success' => 'You have successfully invited :email',
         'not-eligible'   => 'You are not currently eligible to send invite credits to new members.',
+        'invite-deleted' => 'Successfully deleted invite :email.',
     ]
 ];
