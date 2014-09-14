@@ -1,20 +1,19 @@
 .home-section {
-  padding: 30px 10px 15px 10px;
+  padding: 30px 0 15px 0;
   @media (min-width: @screen-sm-min) {
     padding: 50px 15px; 
   }
 }
 .home-grey {
   background-color: #f8f8f8;
-  border: 1px solid #e0e0e0; 
+  border-top: 1px solid #e0e0e0; 
+  border-bottom: 1px solid #e0e0e0; 
 }
 .home .result {
-  height: 300px;
-}
-.home .result .col-xs-12 {
   @media (max-width: @screen-xs-max) {
-      margin-left: -30px;
-      width: 118%;
+      margin-left: -20px;
+      margin-right: -20px;
+      padding-bottom: 10px;
   }
 }
 .home h1, .home h2, .home h3 {
@@ -63,7 +62,10 @@
   font-weight: bold;
 }
 .home #funding-tag {
-    display: inline-block !important;
+  display: inline-block !important;
+  @media (max-width: @screen-xs-max) {
+      margin-right: 20px !important;
+  }
 }
 .home img.press-logo {
   @media (max-width: @screen-xs-max) {

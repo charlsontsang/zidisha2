@@ -9490,7 +9490,7 @@ form .btn-default,
   }
 }
 .home-section {
-  padding: 30px 10px 15px 10px;
+  padding: 30px 0 15px 0;
 }
 @media (min-width: 768px) {
   .home-section {
@@ -9499,15 +9499,14 @@ form .btn-default,
 }
 .home-grey {
   background-color: #f8f8f8;
-  border: 1px solid #e0e0e0;
-}
-.home .result {
-  height: 300px;
+  border-top: 1px solid #e0e0e0;
+  border-bottom: 1px solid #e0e0e0;
 }
 @media (max-width: 767px) {
-  .home .result .col-xs-12 {
-    margin-left: -30px;
-    width: 118%;
+  .home .result {
+    margin-left: -20px;
+    margin-right: -20px;
+    padding-bottom: 10px;
   }
 }
 @media (max-width: 767px) {
@@ -9563,6 +9562,11 @@ form .btn-default,
 }
 .home #funding-tag {
   display: inline-block !important;
+}
+@media (max-width: 767px) {
+  .home #funding-tag {
+    margin-right: 20px !important;
+  }
 }
 .home img.press-logo {
   display: block;
@@ -9875,6 +9879,17 @@ ul.filter-bar {
 a.link-dark {
   color: #333;
 }
+.result {
+  height: 300px;
+}
+@media (max-width: 767px) {
+  .result {
+    margin-left: -15px;
+    margin-right: -15px;
+    padding-left: 15px;
+    height: auto;
+  }
+}
 .result .profile-image {
   width: 100%;
   height: 250px;
@@ -9891,9 +9906,8 @@ a.link-dark {
 @media (max-width: 767px) {
   .result .col-xs-12 {
     margin-right: auto;
-    margin-left: auto;
     margin-left: -15px;
-    width: 110%;
+    padding-right: 0;
   }
 }
 .lend .loan-body {
