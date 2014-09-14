@@ -8,9 +8,11 @@
             {{ BootstrapForm::label($key, null, ['style' => 'display:none;']) }}
             <div class="row">
                 <div class="col-md-6">
-                    <p class="well">
-                        {{ $value }}
-                    </p>
+                    {{ BootstrapForm::textarea(str_replace('.', '_', $groupKey) . '-original', $value, [
+                        'label' => false,
+                        'rows' => 5,
+                        'readonly' => 'readonly',
+                    ]) }}
                 </div>
 
                 <div class="col-md-6">
