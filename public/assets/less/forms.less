@@ -1,18 +1,20 @@
-select.form-control, input.form-control, textarea.form-control {
+select.form-control, 
+input.form-control, 
+textarea.form-control,
+.login-form .btn-block,  
+form .btn-primary, 
+.giftcard .btn-primary {
+	width: 100%;
 	@media (min-width: @screen-sm-min) {
-		max-width: 300px;
+		min-width: 100px;
+		max-width: 300px !important;
 	}
 }
 form label.control-label, .giftcard label {
 	color: @gray-light;
 }
 form .btn-primary, form .btn-default, .giftcard .btn-primary {
-	min-width: 100px;
-	max-width: 300px;
-	@media (max-width: @screen-xs-max) {
-		margin-bottom: 15px;
-		width: 100%;
-	}
+	margin-bottom: 15px;
 }
 .form-control-feedback {
 	top: 13px !important;

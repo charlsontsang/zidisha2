@@ -8844,11 +8844,23 @@ hr {
     margin-top: 50px;
   }
 }
+select.form-control,
+input.form-control,
+textarea.form-control,
+.login-form .btn-block,
+form .btn-primary,
+.giftcard .btn-primary {
+  width: 100%;
+}
 @media (min-width: 768px) {
   select.form-control,
   input.form-control,
-  textarea.form-control {
-    max-width: 300px;
+  textarea.form-control,
+  .login-form .btn-block,
+  form .btn-primary,
+  .giftcard .btn-primary {
+    min-width: 100px;
+    max-width: 300px !important;
   }
 }
 form label.control-label,
@@ -8858,16 +8870,7 @@ form label.control-label,
 form .btn-primary,
 form .btn-default,
 .giftcard .btn-primary {
-  min-width: 100px;
-  max-width: 300px;
-}
-@media (max-width: 767px) {
-  form .btn-primary,
-  form .btn-default,
-  .giftcard .btn-primary {
-    margin-bottom: 15px;
-    width: 100%;
-  }
+  margin-bottom: 15px;
 }
 .form-control-feedback {
   top: 13px !important;
