@@ -3,7 +3,7 @@ return [
     'not-eligible'                              => 'You are not currently eligible to send invite credits to new members, because',
     'not-eligible-repayRate'                    => 'your on-time repayment rate is below the minimum required to qualify for participation in the invite program.',
     'not-eligible-invitee-repayRate'            => 'less than 90% of your current invitees are on time with their repayments.',
-    'not-eligible-invitee-quota'                => 'you cannot invite more then a 100 friends.',
+    'not-eligible-invitee-quota'                => 'you have reached the maximum of 100 total invitees.',
     'not-eligible-no-payments'                  => "haven't made any payments yet.",
     'not-eligible-max-invites-without-payment'  => 'you already have :maxInviteesWithoutPayment invitees who have not yet made payments.
 To become eligible to issue more invite credits, you may wait for your current invitees to begin to make repayments, or if any of your invitees do not wish to raise loans, you may remove them from your invitee list to make room for new invitees.<br/><br/>
