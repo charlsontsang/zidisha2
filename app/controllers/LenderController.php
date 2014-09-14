@@ -75,31 +75,10 @@ class LenderController extends BaseController
         }
 
         $karma = $this->lenderService->getKarma($lender);
-        $page = Request::query('page') ? : 1;
-        $page2 = Request::query('page2') ? : 1;
-        $page3 = Request::query('page3') ? : 1;
-
-        $activeBids = BidQuery::create()
-            ->filterFundraisingLoanBids($lender)
-            ->paginate($page , 10);
-        $totalBidAmount = BidQuery::create()
-            ->getTotalFundraisingLoanBidAmount($lender);
-
-        $activeLoansBids = BidQuery::create()
-            ->filterActiveLoanBids($lender)
-            ->paginate($page2, 10);
-        $totalActiveLoansBidsAmount = BidQuery::create()
-            ->getTotalActiveLoanBidsAmount($lender);
-
-        $completedLoansBids = BidQuery::create()
-            ->getCompletedLoansBids($lender, $page3);
-        $totalCompletedLoansBidsAmount = BidQuery::create()
-            ->getTotalCompletedLoansBidsAmount($lender);
 
         return View::make(
             'lender.public-profile',
-            compact('lender', 'karma', 'activeBids', 'totalBidAmount',
-                'activeLoansBids', 'totalActiveLoansBidsAmount', 'completedLoansBids', 'totalCompletedLoansBidsAmount')
+            compact('lender', 'karma')
         );
     }
 
