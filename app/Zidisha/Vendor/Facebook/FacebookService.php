@@ -3,6 +3,7 @@
 namespace Zidisha\Vendor\Facebook;
 
 use Zidisha\Admin\Setting;
+use Zidisha\User\FacebookUserLog;
 
 class FacebookService
 {
@@ -92,5 +93,18 @@ class FacebookService
         $post = $this->facebook->api('/me/posts?limit=1&until='.$minMonthsAgoDate);
 
         return $post['created_time'];
+    }
+
+    public function addFacebookUserLog($facebookData){
+        $facebookUserLog = new FacebookUserLog();
+        $facebookUserLog
+            ->setFacebookId($facebookData['id'])
+            ->setEmail($facebookData['email'])
+            ->setAccountName($facebookData['name'])
+            ->setCity($facebookData['locale'])
+//            ->setBirthDate($facebookData['birthday'] ? : null)
+            ->setFriendsCount($this->getFriendCount());
+//            ->setFirstPostDate($this->getFirstPostDate());
+        $facebookUserLog->save();
     }
 }
