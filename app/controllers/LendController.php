@@ -23,7 +23,7 @@ class LendController extends BaseController
         $this->loanService = $loanService;
     }
 
-    public function getIndex($category = 'null', $country = null)
+    public function getIndex($category = 'featured', $country = null)
     {
         // for categories
         $loanCategories = $this->loanCategoryQuery

@@ -57,25 +57,24 @@
                                         <strong>{{{ $borrower->getName() }}}</strong>
                                         <br/>
                                         <strong>
-                                            <a href="https://www.google.com/maps/place/{{ $borrower->getProfile()->getCity() }},+{{ $borrower->getCountry()->getName() }}/" target="_blank">{{ $borrower->getProfile()->getCity() }}</a>
-                                            {{ $borrower->getCountry()->getName() }}
+                                            <a href="https://www.google.com/maps/place/{{ $borrower->getProfile()->getCity() }},+{{ $borrower->getCountry()->getName() }}/" target="_blank">{{ $borrower->getProfile()->getCity() }}</a>,&nbsp;{{ $borrower->getCountry()->getName() }}
                                         </strong>
                                         
                                         @if($invitedBy)
                                         <br/>
                                         Invited By:
-                                        <a href="{{ route('borrower:public-profile', $invitedBy->getId()) }}">{{ $invitedBy->getName() }}</a>
+                                        <strong><a href="{{ route('borrower:public-profile', $invitedBy->getId()) }}">{{ $invitedBy->getName() }}</a></strong>
                                         @endif
                                         
                                         @if($volunteerMentor)
                                         <br/>
                                         Volunteer Mentor:
-                                        <a href="{{ route('borrower:public-profile', $volunteerMentor->getId()) }}">{{ $volunteerMentor->getName() }}</a>
+                                        <strong><a href="{{ route('borrower:public-profile', $volunteerMentor->getId()) }}">{{ $volunteerMentor->getName() }}</a></strong>
                                         @endif
                                     </div>
                                     <div class="col-sm-6">
                                         Followers: 
-                                        <strong>@choice('lender.follow.count', $followersCount)</strong>
+                                        <strong>{{ $followersCount }}</strong>
                                         <br/>
 
                                         @if(Auth::check() && Auth::user()->isLender())
@@ -96,9 +95,11 @@
                                         </div>
                                         @endif
 
-                                        Feedback Rating:{{ BootstrapHtml::tooltip('borrower.tooltips.loan.feedback-rating') }}
-                                        <strong>{{ $feedbackRating }} % Positive ({{ $totalFeedback }})</strong>
-                                        <br/>
+                                        @if ($totalFeedback > 0)
+                                            Feedback Rating:{{ BootstrapHtml::tooltip('borrower.tooltips.loan.feedback-rating') }} 
+                                            <strong>{{ $feedbackRating }} % Positive ({{ $totalFeedback }})</strong>
+                                            <br/>
+                                        @endif
 
                                         @if($displayFeedbackComments)
                                             <p><a href="#feedback">View Lender Feedback</a></p>
@@ -143,28 +144,27 @@
                                 <div class="visible-xs">
                                     @if($loan->isExpired())
                                     <span class="label label-default">
-                                        Loan expired
+                                        Loan application expired
                                     </span>
                                     @include('partials/loan-progress', [ 'loan' => $loan ])
                                     @endif
 
                                     @if($loan->isCanceled())
                                     <span class="label label-default">
-                                        The loan was canceled
+                                        Loan application canceled
                                     </span>
                                     <br/>
                                     @endif
-
-                                    @if($loan->isDefaulted())
+                                
+                                    @if($loan->isFunded())
                                     <span class="label label-default">
-                                        Loan defaulted
+                                        Pending disbursement
                                     </span>
-                                    <br/>
                                     <br/>
                                     @endif
 
                                     @if($loan->isDisbursed())
-                                    @include('loan.partials.repaid-bar', compact('loan'))
+                                        @include('loan.partials.repaid-bar', compact('loan'))
                                     <br/>
                                     @endif
                                     
@@ -213,13 +213,6 @@
                                     </div>
                                     @endif
                                 </div>
-                                @if($loan->isFunded())
-                                <div class="callout callout-info omega">
-                                    <p>
-                                        The loan is accepted, and should be disbursed within one week.
-                                    </p>
-                                </div>
-                                @endif
                             </div>
                         </div>
 

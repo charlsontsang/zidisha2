@@ -82,14 +82,16 @@
                 </li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        Admin Settings<b class="caret"></b>
+                        Admin<b class="caret"></b>
                     </a>
 
                     <ul class="dropdown-menu">
+                        <li><a href="{{ route('admin:dashboard') }}">Dashboard</a></li>
                         <li><a href="{{ route('admin:translation:index') }}">Translations</a></li>
                         <li><a href="{{ route('admin:mail:test-mails') }}">Test Emails</a></li>
                         <li><a href="{{ route('admin:sms:test-sms') }}">Test SMS</a></li>
                         <li><a href="{{ route('admin:countries') }}">Countries</a></li>
+                        <li><a href="{{ route('admin:exchange-rates') }}">Exchange Rates</a></li>
                         <li><a href="{{ route('admin:settings') }}">Other Settings</a></li>
                         <li><a href="{{ route('logout') }}">Log Out</a></li>
                     </ul>

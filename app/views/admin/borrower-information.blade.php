@@ -6,8 +6,9 @@ Join the global P2P microlending movement
 
 @section('content')
 <div class="page-header">
-    <h1>Borrower Information <a href="{{ route('admin:borrower', $borrower->getId()) }}"> <i class="fa fa-info-circle fa-lg"></i></a></h1>
+    <h1>Edit Borrower Profile</h1>
 </div>
+<p class="pull-right"><a href="{{ route('admin:borrower', $borrower->getId()) }}">View Profile</a></p>
 
 <div class="borrower-personal-information-form">
 {{ BootstrapForm::open(array('route' => ['admin:borrower:edit:post', $borrowerId], 'translationDomain' => 'borrower.personal-information')) }}

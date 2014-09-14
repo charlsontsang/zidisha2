@@ -13,7 +13,4 @@ Quick Links
 @stop
 
 @section('page-content')
-<h2>Settings</h2>
-<a href="{{ route('admin:exchange-rates') }}">2. Exchange Rates </a><br/>
-<a href="{{ route('admin:repayments') }}"> Enter Repayments </a>
 @stop

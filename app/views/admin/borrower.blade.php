@@ -6,230 +6,167 @@
 
 @section('content')
 <div class="page-header">
-    <h1>Borrower Details <a href="{{ route('admin:borrower:edit', $borrower->getId()) }}"> <i class="fa fa-pencil-square-o fa-lg"></i> </a></h1>
+    <h1>{{ $borrower->getName() }}
+        <span class="pull-right">
+            <a href="{{ route('admin:borrower:edit', $borrower->getId()) }}"> <i class="fa fa-pencil-square-o fa-lg"></i></a>
+        </span>
+    </h1>
 </div>
 
 <div class="row">
-    <div class="col-xs-8">
-
-        <div>
-            <h3>Loans Raised</h3>
-            @if($loans)
-                @foreach($loans as $loan)
-                {{ $loan->getAmount() }} - TODO (show dates) - <a href="{{ route('loan:index', $loan->getId()) }}">View Loan Profile</a>
-                @endforeach
-            @else
-                NO LOANS
-            @endif
+    <div class="col-sm-4 pull-right mobile-padding">
+        @if(!$borrower->getUploads()->isEmpty())
+        <div>      
+            @foreach($borrower->getUploads() as $upload)
+                @if($upload->isImage())
+                <a href="{{ $upload->getImageUrl('small-profile-picture') }}">
+                    <img src="{{ $upload->getImageUrl('small-profile-picture') }}" width="100%" />
+                </a>
+                @else
+                <div class="well">
+                    <a href="{{  $upload->getFileUrl()  }}">{{ $upload->getFilename() }}</a>
+                </div>
+                @endif
+            @endforeach
         </div>
-
-        <div>
-            <h2>Borrower Profile</h2>
-            <dl class="dl-horizontal">
-                <dt>Applicant Name</dt>
-                <dd>{{ $borrower->getName() }}</dd>
-
-                <hr/>
-
-                <dt>About Me</dt>
-                <dd>{{ $borrower->getProfile()->getAboutMe() }}</dd>
-
-                <hr/>
-
-                <dt>About Business</dt>
-                <dd>{{ $borrower->getProfile()->getAboutBusiness() }}</dd>
-
-                <hr/>
-
-                <dt>Address</dt>
-                <dd>{{ $borrower->getProfile()->getAddress() }}</dd>
-
-                <hr/>
-
-                <dt>City</dt>
-                <dd>{{ $borrower->getProfile()->getCity() }}</dd>
-
-                <hr/>
-
-
-                <dt>Country</dt>
-                <dd>{{ $borrower->getCountry()->getName() }}</dd>
-
-                <hr/>
-
-                <dt>National Id Number</dt>
-                <dd>{{ $borrower->getProfile()->getNationalIdNumber() }}</dd>
-
-                <hr/>
-
-                <dt>Telephone</dt>
-                <dd>{{ $borrower->getProfile()->getPhoneNumber() }}</dd>
-
-                <hr/>
-
-                <dt>Alternate Phone Number</dt>
-                <dd>{{ $borrower->getProfile()->getAlternatePhoneNumber() }}</dd>
-
-                <hr/>
-
-
-                <dt>Date of Joining</dt>
-                <dd>{{ $borrower->getUser()->getCreatedAt()->format('M d, Y') }}</dd>
-
-                <hr/>
-
-                <dt>Application Status</dt>
-                <dd>{{ $borrower->getActivationStatus() }}</dd>
-
-                <hr/>
-
-                <dt>Email</dt>
-                <dd>{{ $borrower->getUser()->getEmail() }}</dd>
-
-            </dl>
-        </div>
-
-        <div>
-            <h2>Borrower Personal Information</h2>
-
-            <dl class="dl-horizontal">
-                <hr/>
-                <h4>Community Leader</h4>
-                <dt>First Name</dt>
-                <dd>{{ $personalInformation['communityLeader_firstName'] }} </dd>
-
-                <dt>Last Name</dt>
-                <dd>{{ $personalInformation['communityLeader_lastName'] }}</dd>
-
-                <dt>Phone Number</dt>
-                <dd>{{ $personalInformation['communityLeader_phoneNumber'] }}</dd>
-
-                <dt>Description</dt>
-                <dd>{{ $personalInformation['communityLeader_description'] }}</dd>
-
-                <hr/>
-
-                <h4>Family Members</h4>
-                <hr/>
-                <h5>Family Member 1</h5>
-
-                <dt>First Name</dt>
-                <dd>{{ $personalInformation['familyMember_1_firstName'] }} </dd>
-
-                <dt>Last Name</dt>
-                <dd>{{ $personalInformation['familyMember_1_lastName'] }}</dd>
-
-                <dt>Phone Number</dt>
-                <dd>{{ $personalInformation['familyMember_1_phoneNumber'] }}</dd>
-
-                <dt>Description</dt>
-                <dd>{{ $personalInformation['familyMember_1_description'] }}</dd>
-
-                <hr/>
-
-                <h5>Family Member 2</h5>
-
-                <dt>First Name</dt>
-                <dd>{{ $personalInformation['familyMember_2_firstName'] }} </dd>
-
-                <dt>Last Name</dt>
-                <dd>{{ $personalInformation['familyMember_2_lastName'] }}</dd>
-
-                <dt>Phone Number</dt>
-                <dd>{{ $personalInformation['familyMember_2_phoneNumber'] }}</dd>
-
-                <dt>Description</dt>
-                <dd>{{ $personalInformation['familyMember_2_description'] }}</dd>
-
-                <hr/>
-
-                <h5>Family Member 3</h5>
-
-                <dt>First Name</dt>
-                <dd>{{ $personalInformation['familyMember_3_firstName'] }} </dd>
-
-                <dt>Last Name</dt>
-                <dd>{{ $personalInformation['familyMember_3_lastName'] }}</dd>
-
-                <dt>Phone Number</dt>
-                <dd>{{ $personalInformation['familyMember_3_phoneNumber'] }}</dd>
-
-                <dt>Description</dt>
-                <dd>{{ $personalInformation['familyMember_3_description'] }}</dd>
-
-                <hr/>
-
-                <h4>Neighbors</h4>
-                <hr/>
-                <h5>Neighbor 1</h5>
-
-                <dt>First Name</dt>
-                <dd>{{ $personalInformation['neighbor_1_firstName'] }} </dd>
-
-                <dt>Last Name</dt>
-                <dd>{{ $personalInformation['neighbor_1_lastName'] }}</dd>
-
-                <dt>Phone Number</dt>
-                <dd>{{ $personalInformation['neighbor_1_phoneNumber'] }}</dd>
-
-                <dt>Description</dt>
-                <dd>{{ $personalInformation['neighbor_1_description'] }}</dd>
-
-                <hr/>
-
-                <h5>Neighbor 2</h5>
-
-                <dt>First Name</dt>
-                <dd>{{ $personalInformation['neighbor_2_firstName'] }} </dd>
-
-                <dt>Last Name</dt>
-                <dd>{{ $personalInformation['neighbor_2_lastName'] }}</dd>
-
-                <dt>Phone Number</dt>
-                <dd>{{ $personalInformation['neighbor_2_phoneNumber'] }}</dd>
-
-                <dt>Description</dt>
-                <dd>{{ $personalInformation['neighbor_2_description'] }}</dd>
-
-                <hr/>
-
-                <h5>Neighbor 3</h5>
-
-                <dt>First Name</dt>
-                <dd>{{ $personalInformation['neighbor_3_firstName'] }} </dd>
-
-                <dt>Last Name</dt>
-                <dd>{{ $personalInformation['neighbor_3_lastName'] }}</dd>
-
-                <dt>Phone Number</dt>
-                <dd>{{ $personalInformation['neighbor_3_phoneNumber'] }}</dd>
-
-                <dt>Description</dt>
-                <dd>{{ $personalInformation['neighbor_3_description'] }}</dd>
-
-            </dl>
-        </div>
-    </div>
-
-    <div class="col-xs-4">
+        @else
         <img width="200" height="200" src="{{ $borrower->getUser()->getProfilePictureUrl() }}">
+        @endif
+    </div>
+
+    <div class="col-sm-8">
+        <div class="loan-section">
+            <div class="loan-section-title">
+                <span class="text-light">Loan History</span>
+            </div>
+            <div class="loan-section-content">
+                @if($loans)
+                    @foreach($loans as $loan)
+                    {{ $loan->getAmount() }}: TODO (show dates)&nbsp;&nbsp;&nbsp;<a href="{{ route('loan:index', $loan->getId()) }}">View Loan Profile</a>
+                    <br/>
+                    @endforeach
+                @else
+                    No loans
+                @endif
+            </div>
+        </div>
+
+        <hr/>
+
+        <div class="loan-section">
+            <div class="loan-section-title">
+                <span class="text-light">Account</span>
+            </div>
+            <div class="loan-section-content">
+                Registration Date: <strong>{{ $borrower->getUser()->getCreatedAt()->format('M d, Y') }}</strong>
+                <br/>
+                Account Status: <strong>{{ $borrower->getActivationStatus() }}</strong>
+            </div>
+        </div>
+
+        <hr/>
+
+        <div class="loan-section">
+            <div class="loan-section-title">
+                <span class="text-light">Contact Information</span>
+            </div>
+            <div class="loan-section-content">
+                Email: <strong>{{ $borrower->getUser()->getEmail() }}</strong>
+                <br/>
+                Phone: <strong>{{ $borrower->getProfile()->getPhoneNumber() }}</strong>
+                <br/>
+                @if (!empty($borrower->getProfile()->getAlternatePhoneNumber()))
+                    Alternate Phone: <strong>{{ $borrower->getProfile()->getAlternatePhoneNumber() }}</strong>
+                @endif
+            </div>
+        </div>
+
+        <hr/>
+
+        <div class="loan-section">
+            <div class="loan-section-title">
+                <span class="text-light">Location</span>
+            </div>
+            <div class="loan-section-content">
+                Address:
+                <br/>
+                <strong>{{ $borrower->getProfile()->getAddress() }}</strong>
+                <br/>
+                <strong>{{ $borrower->getProfile()->getAddressInstructions() }}</strong>
+                <br/>
+                <strong>{{ $borrower->getProfile()->getCity() }}, {{ $borrower->getCountry()->getName() }}</strong>
+                <br/>
+                National ID: <strong>{{ $borrower->getProfile()->getNationalIdNumber() }}</strong>
+            </div>
+        </div>
+
+        <hr/>
+
+        <div class="loan-section">
+
+            <div class="loan-section-title">
+                <span class="text-light">References</span>
+            </div>
+            <div class="loan-section-content">
+                Community Leader: <strong>{{ $personalInformation['communityLeader_firstName'] }} {{ $personalInformation['communityLeader_lastName'] }}</strong>
+                <br/>
+                Title: <strong>{{ $personalInformation['communityLeader_description'] }}</strong>
+                <br/>
+                Phone Number: <strong>{{ $personalInformation['communityLeader_phoneNumber'] }}</strong>
+                <br/><br/>
+                Family Member: <strong>{{ $personalInformation['familyMember_1_firstName'] }} {{ $personalInformation['familyMember_1_lastName'] }}</strong>
+                <br/>
+                Relationship: <strong>{{ $personalInformation['familyMember_1_description'] }}</strong>
+                <br/>
+                Phone Number: <strong>{{ $personalInformation['familyMember_1_phoneNumber'] }}</strong>
+                <br/><br/>
+                Family Member: <strong>{{ $personalInformation['familyMember_2_firstName'] }} {{ $personalInformation['familyMember_2_lastName'] }}</strong>
+                <br/>
+                Relationship: <strong>{{ $personalInformation['familyMember_2_description'] }}</strong>
+                <br/>
+                Phone Number: <strong>{{ $personalInformation['familyMember_2_phoneNumber'] }}</strong>
+                <br/><br/>
+                Family Member: <strong>{{ $personalInformation['familyMember_3_firstName'] }} {{ $personalInformation['familyMember_3_lastName'] }}</strong>
+                <br/>
+                Relationship: <strong>{{ $personalInformation['familyMember_3_description'] }}</strong>
+                <br/>
+                Phone Number: <strong>{{ $personalInformation['familyMember_3_phoneNumber'] }}</strong>
+                <br/><br/>
+                Neighbor: <strong>{{ $personalInformation['neighbor_1_firstName'] }} {{ $personalInformation['neighbor_1_lastName'] }}</strong>
+                <br/>
+                Relationship: <strong>{{ $personalInformation['neighbor_1_description'] }}</strong>
+                <br/>
+                Phone Number: <strong>{{ $personalInformation['neighbor_1_phoneNumber'] }}</strong>
+                <br/><br/>
+                Neighbor: <strong>{{ $personalInformation['neighbor_2_firstName'] }} {{ $personalInformation['neighbor_2_lastName'] }}</strong>
+                <br/>
+                Relationship: <strong>{{ $personalInformation['neighbor_2_description'] }}</strong>
+                <br/>
+                Phone Number: <strong>{{ $personalInformation['neighbor_2_phoneNumber'] }}</strong>
+                <br/><br/>
+                Neighbor: <strong>{{ $personalInformation['neighbor_3_firstName'] }} {{ $personalInformation['neighbor_3_lastName'] }}</strong>
+                <br/>
+                Relationship: <strong>{{ $personalInformation['neighbor_3_description'] }}</strong>
+                <br/>
+                Phone Number: <strong>{{ $personalInformation['neighbor_3_phoneNumber'] }}</strong>
+                <br/><br/>
+            </div>
+        </div>
+
+        <hr/>
+
+        <div class="loan-section">
+
+            <div class="loan-section-title">
+                <span class="text-light">About</span>
+            </div>
+            <div class="loan-section-content">
+                {{ $borrower->getProfile()->getAboutMe() }}
+                <br/>
+                {{ $borrower->getProfile()->getAboutBusiness() }}
+            </div>
+        </div>
     </div>
 </div>
 
-@if(!$borrower->getUploads()->isEmpty())
-<h4>Borrower Pictures</h4>
-<div>
-    @foreach($borrower->getUploads() as $upload)
-    @if($upload->isImage())
-    <a href="{{ $upload->getImageUrl('small-profile-picture') }}">
-        <img src="{{ $upload->getImageUrl('small-profile-picture') }}" alt=""/>
-    </a>
-    @else
-    <div class="well">
-        <a href="{{  $upload->getFileUrl()  }}">{{ $upload->getFilename() }}</a>
-    </div>
-    @endif
-    @endforeach
-</div>
-@endif
 @stop
