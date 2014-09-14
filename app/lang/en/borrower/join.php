@@ -2,7 +2,11 @@
 
 return [
     'form'   => [
-        'title'                      => 'Join Zidisha',
+        'title'                      => 'New Member Application',
+        'create-account'             => 'CREATE ACCOUNT',
+        'more-info'                  => 'MORE INFORMATION',
+        'contact-info'               => 'CONTACT INFORMATION',
+        'references'                 => 'REFERENCES',
         'country'                    => 'Country',
         'next'                       => 'Next step',
         'resume-code'                => 'Enter code to resume your application',

@@ -19,7 +19,7 @@
 
 <fieldset>
     <legend>
-        CREATE ACCOUNT
+        @lang('borrower.join.form.create-account')
     </legend>
 
     {{ BootstrapForm::text('username') }}
@@ -29,7 +29,7 @@
 
 <fieldset>
     <legend>
-        MORE INFORMATION
+        @lang('borrower.join.form.more-info')
     </legend>
 
     {{ BootstrapForm::text('preferredLoanAmount', null, ['append' => $form->getCountry()->getCurrencyCode()]) }}
@@ -43,7 +43,7 @@
 
 <fieldset>
     <legend>
-        CONTACT INFORMATION
+        @lang('borrower.join.form.contact-info')
     </legend>
 
     {{ BootstrapForm::text('firstName') }}
@@ -62,7 +62,7 @@
 
 <fielset>
     <legend>
-        REFERENCES
+        @lang('borrower.join.form.references')
     </legend>
 
     {{ BootstrapForm::select('referrerId', $form->getBorrowersByCountry()) }}
