@@ -52,72 +52,14 @@ Quick Links
         <tbody>
         @foreach($invites as $invite)
         <tr>
-            @if(!$invite->getInviteeId())
-               <?php $name = ''; ?>
-               <?php $status = \Lang::get('borrower.invite.not-accepted'); ?>
-               <?php $repaymentRate = ''; ?>
-               <?php $bonus = \Zidisha\Currency\Money::create(0, $currencyCode); ?>
-            @else
-                <?php $lastLoan = \Zidisha\Loan\LoanQuery::create()->findLastLoan($invite->getInvitee()) ?>
-                {{-- //TODO endrosement --}}
-                @if(empty($lastLoan))
-                    <?php $flag=1; ?>
-                    <?php $name = $invite->getInvitee()->getName(); ?>
-                    @if(!empty($invite->getInvitee()->getUser()->getFacebookId()))
-                        @if(false)
-                            <?php $flag=0; ?>
-                        @endif
-                    @endif
-                    <?php $volunteerMentorStatus = $invite->getInvitee()->getActivationStatus() ?>
-                    {{-- $BorrowerReports = //TODO; --}}
-                    <?php $borrowerGuest = \Zidisha\Borrower\BorrowerGuestQuery::create()->filterByEmail($invite->getEmail())->findOne(); ?>
-                    @if($borrowerGuest && $flag == 1)
-                        <?php $status =  \Lang::get('borrower.invite.application-not-submitted'); ?>
-                    @elseif($volunteerMentorStatus == \Zidisha\Borrower\Borrower::ACTIVATION_REVIEWED)
-                        <?php $status =  \Lang::get('borrower.invite.application-pending-verification'); ?>
-                    @elseif($volunteerMentorStatus == \Zidisha\Borrower\Borrower::ACTIVATION_APPROVED )
-                        {{-- //TODO --}}
-                        {{-- //TODO one more elseif --}}
-                    @elseif( $volunteerMentorStatus == \Zidisha\Borrower\Borrower::ACTIVATION_DECLINED)
-                        <?php $status =  \Lang::get('borrower.invite.application-decline'); ?>
-                    @elseif($volunteerMentorStatus == \Zidisha\Borrower\Borrower::ACTIVATION_PENDING)
-                        <?php $status =  \Lang::get('borrower.invite.application-pending-review'); ?>
-                    @else
-                        <?php $status =  \Lang::get('borrower.invite.no-loan'); ?>
-                    @endif
-                    <?php $repaymentRate = ''; ?>
-                    <?php $bonus = \Zidisha\Currency\Money::create(0, $currencyCode); ?>
-                @else
-                    <?php $loanStatus = $invite->getInvitee()->getLoanStatus() ?>
-                    <?php $repaymentSchedule = $repaymentService->getRepaymentSchedule($invite->getInvitee()->getActiveLoan()); ?>
-                    <?php $id = $invite->getInvitee()->getActiveLoan()->getId(); ?>
-                    <?php $name = "<a href='route('loan:index', $id)'>".$invite->getInvitee()->getName()."</a>"; ?>
-                    @if($loanStatus == \Zidisha\Loan\Loan::OPEN)
-                        <?php $status =  \Lang::get('borrower.invite.fundRaising-loan'); ?>
-                    @elseif($repaymentSchedule->getMissedInstallmentCount() == 0 && $loanStatus = \Zidisha\Loan\Loan::ACTIVE)
-                        <?php $status =  \Lang::get('borrower.invite.repaying-on-time'); ?>
-                    @elseif($repaymentSchedule->getMissedInstallmentCount() != 0 && $loanStatus = \Zidisha\Loan\Loan::ACTIVE)
-                        <?php $status =  \Lang::get('borrower.invite.past-due'); ?>
-                    @endif
-                    <?php $rate = $loanService->getOnTimeRepaymentScore($invite->getInvitee()); ?>
-                    <?php $repaymentRate = number_format($rate)."%"; ?>
-                    @if($rate >= $minRepaymentRate)
-                        <?php $bonus = $borrowerInviteCredit; ?>
-                    @else
-                        <?php $bonus = \Zidisha\Currency\Money::create(0, $currencyCode); ?>
-                    @endif
-                @endif
-            @endif
-            <td data-title="Name">{{ $name }}</td>
-            <td data-title="Email"><a href="#">{{ $invite->getEmail() }}</a></td>
-            <td data-title="Status">{{ $status }}</td>
-            <td data-title="RepaymentRate">{{ $repaymentRate }}</td>
-            <td data-title="BounsCredit">
-                {{ $bonus }}
-            </td>
+            <td data-title="Name">{{ $invite['name'] }}</td>
+            <td data-title="Email"><a href="#">{{ $invite['email'] }}</a></td>
+            <td data-title="Status">{{ $invite['status'] }}</td>
+            <td data-title="RepaymentRate">{{ $invite['repaymentRate'] }}</td>
+            <td data-title="BonusCredit">{{ $invite['bonusCredit'] }}</td>
             <td>
                 {{ BootstrapForm::open([
-                    'route'               => ['borrower:delete-invite', $invite->getId()],
+                    'route'               => ['borrower:delete-invite', $invite['id']],
                     'translationDomain'   => 'borrower.invite',
                     'data-disable-submit' => 'on'])
                 }}

@@ -7,6 +7,7 @@ use Zidisha\Borrower\Form\InviteForm;
 use Zidisha\Borrower\InviteQuery;
 use Zidisha\Credit\CreditSettingQuery;
 use Zidisha\Currency\ExchangeRateQuery;
+use Zidisha\Currency\Money;
 use Zidisha\Loan\LoanService;
 use Zidisha\Repayment\RepaymentService;
 
@@ -91,7 +92,7 @@ class BorrowerInviteController extends BaseBorrowerController
 
         $minRepaymentRate = \Setting::get('invite.minRepaymentRate');
         $inviteesRepaymentRate = $this->borrowerService->getInviteeRepaymentRate($borrower);
-        $successRate = number_format(($inviteesRepaymentRate)*100);
+        $successRate = number_format($inviteesRepaymentRate * 100);
 
         $exchangeRate = ExchangeRateQuery::create()
             ->findCurrent($borrower->getCountry()->getCurrency());
@@ -99,14 +100,90 @@ class BorrowerInviteController extends BaseBorrowerController
         $bonusEarned = $calculator->getInviteCredit();
         
         $currencyCode = $borrower->getCountry()->getCurrencyCode();
-        $invites = InviteQuery::create()
+        $_invites = InviteQuery::create()
             ->filterByBorrower($borrower)
             ->find();
-        
-        $loanService = $this->loanService;
-        $repaymentService = $this->repaymentService;
+
         $borrowerInviteCredit = CreditSettingQuery::create()
             ->getBorrowerInviteCreditAmount($borrower->getCountry());
+        
+        $invites = [];
+
+        foreach ($_invites as $invite) {
+            $data = [
+                'id'            => $invite->getId(),
+                'name'          => '',
+                'email'          => $invite->getEmail(),
+                'status'        => \Lang::get('borrower.invite.invite-not-accepted'),
+                'repaymentRate' => '',
+                'bonusCredit'   => '',
+            ];
+            
+            if ($invite->getInviteeId()) {
+                $data['name'] = $invite->getInvitee()->getName();
+
+                $lastLoan = \Zidisha\Loan\LoanQuery::create()
+                    ->findLastLoan($invite->getInvitee());
+
+                if (!$lastLoan) {
+                    $activationStatus = $invite->getInvitee()->getActivationStatus();
+
+                    switch ($activationStatus) {
+                        case Borrower::ACTIVATION_REVIEWED:
+                            $data['status'] = \Lang::get('borrower.invite.application-pending-verification');
+                            break;
+
+                        case Borrower::ACTIVATION_DECLINED:
+                            $data['status'] = \Lang::get('borrower.invite.application-decline');
+                            break;
+
+                        case Borrower::ACTIVATION_INCOMPLETE:
+                            // TODO sent report
+                            $data['status'] = \Lang::get('borrower.invite.application-pending-review');
+                            break;
+
+                        case Borrower::ACTIVATION_PENDING:
+                            $data['status'] = \Lang::get('borrower.invite.application-pending-review');
+                            break;
+
+                        default:
+                            $data['status'] = \Lang::get('borrower.invite.no-loan');
+                    }
+                } else {
+                    $repaymentSchedule = $this->repaymentService->getRepaymentSchedule($lastLoan);
+                    
+                    $data['name'] = link_to(route('loan:index', [$lastLoan->getId()]), $data['name']);
+                    if ($lastLoan->isOpen() || $lastLoan->isFunded()) {
+                        $data['status'] = \Lang::get('borrower.invite.fundRaising-loan');
+                    } elseif ($lastLoan->isActive()) {
+                        if ($repaymentSchedule->getMissedInstallmentCount() == 0) {
+                            $data['status'] = \Lang::get('borrower.invite.repaying-on-time');
+                        } else {
+                            $data['status'] = \Lang::get('borrower.invite.past-due');
+                        }
+                    } else {
+                        $data['status'] = \Lang::get('borrower.invite.invite-accepted');
+                    }
+
+                    $repaymentRate = $this->loanService->getOnTimeRepaymentScore($invite->getInvitee());
+                    $data['repaymentRate'] = number_format($repaymentRate) . "%";
+
+                    if ($repaymentRate >= $minRepaymentRate) {
+                        $data['bonusCredit'] = $borrowerInviteCredit->format();
+                    }
+                }
+            } else {
+                $borrowerGuest = \Zidisha\Borrower\BorrowerGuestQuery::create()
+                    ->filterByEmail($invite->getEmail())
+                    ->findOne();
+                
+                if ($borrowerGuest) {
+                    $data['status'] =  \Lang::get('borrower.invite.application-not-submitted');
+                }
+            }
+
+            $invites[] = $data;
+        }
 
         return View::make(
             'borrower.invites',
@@ -116,9 +193,6 @@ class BorrowerInviteController extends BaseBorrowerController
                 'successRate',
                 'bonusEarned',
                 'invites',
-                'invites',
-                'loanService',
-                'repaymentService',
                 'borrowerInviteCredit'
             )
         );
