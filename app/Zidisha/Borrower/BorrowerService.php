@@ -68,28 +68,24 @@ class BorrowerService
                 ->setRole('borrower');
 
             if ($facebookData) {
-                $facebookId = \Session::get('BorrowerJoin.facebookId');
                 $facebookUser = new FacebookUser();
                 $facebookUser
-                    ->setId($facebookId)
                     ->setUser($user)
                     ->setEmail($facebookData['email'])
                     ->setAccountName($facebookData['name'])
-                    ->setCity($facebookData['location'])
+                    ->setCity($facebookData['location']['name'])
                     ->setBirthDate($facebookData['birthday'])
                     ->setFriendsCount($this->facebookService->getFriendCount())
                     ->setFirstPostDate($this->facebookService->getFirstPostDate());
                 $facebookUser->save($con);
                 $facebookUserLog = FacebookUserLogQuery::create()
                     ->orderByCreatedAt('desc')
-                    ->findOneByFacebookId($facebookId);
+                    ->findOneByFacebookId($data['facebookId']);
                 if ($facebookUserLog) {
                     $facebookUserLog->setUser($user);
                     $facebookUserLog->save($con);
                 }
-
-
-                $this->siftScienceService->sendFacebookEvent($user, $facebookId);
+                $this->siftScienceService->sendFacebookEvent($user, $data['facebookId']);
             }
 
             $borrower

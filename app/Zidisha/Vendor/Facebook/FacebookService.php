@@ -21,7 +21,7 @@ class FacebookService
     public function getLoginUrl($route, $params = [])
     {
         $defaults = [
-            'scope' => 'email',
+            'scope' => 'email, user_actions.news, user_birthday, user_location, read_stream',
             'redirect_uri' => strpos($route, '@') === false ? route($route) : action($route),
             'auth_type' => 'reauthenticate',
         ];
@@ -32,7 +32,7 @@ class FacebookService
     public function getLogoutUrl($route, $params = [])
     {
         $defaults = [
-            'scope' => 'email',
+            'scope' => 'email, user_actions.news, user_birthday, user_location, read_stream',
             'redirect_uri' => strpos($route, '@') === false ? route($route) : action($route),
             'auth_type' => 'reauthenticate',
         ];
@@ -92,7 +92,7 @@ class FacebookService
         $minMonthsAgoDate=strtotime(date("Y-m-d H:i:s",time())." -$minimumMonths month");
         $post = $this->facebook->api('/me/posts?limit=1&until='.$minMonthsAgoDate);
 
-        return $post['created_time'];
+        return $post['data'][0]['created_time'];
     }
 
     public function addFacebookUserLog($facebookData){
@@ -101,10 +101,10 @@ class FacebookService
             ->setFacebookId($facebookData['id'])
             ->setEmail($facebookData['email'])
             ->setAccountName($facebookData['name'])
-            ->setCity($facebookData['locale'])
-//            ->setBirthDate($facebookData['birthday'] ? : null)
-            ->setFriendsCount($this->getFriendCount());
-//            ->setFirstPostDate($this->getFirstPostDate());
+            ->setCity($facebookData['location']['name'])
+            ->setBirthDate($facebookData['birthday'])
+            ->setFriendsCount($this->getFriendCount())
+            ->setFirstPostDate($this->getFirstPostDate());
         $facebookUserLog->save();
     }
 }
