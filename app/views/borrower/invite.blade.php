@@ -1,7 +1,7 @@
 @extends('layouts.side-menu')
 
 @section('page-title')
-Send Invites
+@lang('borrower.menu.send-invites')
 @stop
 
 @section('menu-title')
