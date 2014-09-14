@@ -1,7 +1,7 @@
 @extends('layouts.side-menu')
 
 @section('page-title')
-Transaction History
+@lang('borrower.menu.payment-history')
 @stop
 
 @section('menu-title')
