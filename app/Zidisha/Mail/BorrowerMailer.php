@@ -247,11 +247,15 @@ class BorrowerMailer{
         );
     }
 
-    public function sendBorrowerInvite(Borrower $borrower, Invite $borrowerInvite, $subject, $message)
+    public function sendBorrowerInvite(Borrower $borrower, Invite $borrowerInvite, $borrowerName, $borrowerEmail, $subject, $message)
     {
+        // TODO: use borrowerName
         $parameters = [
             'borrowLink' => route('home'),
         ];
+
+        $message = nl2br(stripslashes(strip_tags(trim($message))));
+        $subject = trim($subject);
 
         $link = \Lang::get('borrower.mails.invite.link', $parameters);
         $data['content'] = $message."<br/><br/>".$link;;
@@ -260,6 +264,7 @@ class BorrowerMailer{
             'emails.hero',
             $data + [
                 'to'         => $borrowerInvite->getEmail(),
+                'from'       => $borrowerEmail,
                 'subject'    => $subject,
                 'templateId' => \Setting::get('sendwithus.borrower-invite-template-id')
             ]

@@ -216,17 +216,27 @@ class BorrowerMailerTester
     public function sendBorrowerInvite()
     {
         $userBorrower = new User();
-        $userBorrower->setUsername('LenderTest')
-            ->setEmail('lendertest@gmail.com');
+        $userBorrower
+            ->setUsername('BorrowerTest')
+            ->setEmail('borrower-test@gmail.com');
         $borrower = new Borrower();
-        $borrower->setUser($userBorrower)
+        $borrower
+            ->setUser($userBorrower)
             ->setFirstName('borrowerFirstName')
             ->setLastName('borrowerLastName');
         $invite = new Invite();
-        $invite->setHash('invitehash')
-            ->setEmail('lenderinvite@mail.com');
+        $invite
+            ->setHash('invite-hash')
+            ->setEmail('borrower-invite@mail.com');
 
-        $this->borrowerMailer->sendBorrowerInvite($borrower, $invite, 'join zidisha dude', 'hey...........join here');
+        $this->borrowerMailer->sendBorrowerInvite(
+            $borrower,
+            $invite,
+            'Paul Borrower',
+            'paul@borrower.com',
+            'join zidisha dude',
+            'hey...........join here'
+        );
     }
 
     public function sendAgainRepaymentReminder()

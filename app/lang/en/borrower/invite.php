@@ -17,7 +17,7 @@ You may view the status of your current invitees and remove inactive invitees he
     'borrower-name'                             => 'Your name',
     'borrower-email'                            => 'Your email address',
     'subject'                                   => 'Enter Your Invite Message Title',
-    'note'                                      => 'Enter Your Invite Message',
+    'message'                                   => 'Enter Your Invite Message',
     'send-invite'                               => 'Send Invite',
     'status'                                    => 'Status',
     'repayment-rate'                            => 'On-Time Repayment Rate',
@@ -30,5 +30,9 @@ You may view the status of your current invitees and remove inactive invitees he
     'no-loan'                                   => 'Activated, No Loan Yet',
     'fundRaising-loan'                          => 'FundRaising Loan',
     'repaying-on-time'                          => 'Repaying On Time',
-    'past-due'                                  => 'Past Due'
+    'past-due'                                  => 'Past Due',
+    'flash'                                     => [
+        'invite-success' => 'You have successfully invited :email',
+        'not-eligible'   => 'You are not currently eligible to send invite credits to new members.',
+    ]
 ];

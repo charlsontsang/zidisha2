@@ -62,26 +62,23 @@ class BorrowerInviteController extends BaseBorrowerController
 
     public function postInvite()
     {
-        $borrower = Auth::user()->getBorrower();
-
-        if (!$borrower) {
-            App::abort(404, 'Bad Request');
+        $borrower = $this->getBorrower();
+        
+        $isEligible = $this->borrowerService->isEligibleToInvite($borrower);
+        
+        if ($isEligible !== true) {
+            \Flash::error('borrower.invite.flash.not-eligible');
+            
+            return Redirect::route('borrower:invite');
         }
+        
         $form = new InviteForm($borrower);
         $form->handleRequest(Request::instance());
 
         if ($form->isValid()) {
-            $data = $form->getData();
+            $invite = $this->borrowerService->borrowerInviteViaEmail($borrower, $form->getData());
 
-            $email = $data['email'];
-            $borrowerName = $data['borrowerName'];
-            $borrowerEmail = $data['borrowerEmail'];
-            $subject = $data['subject'];
-            $message = $data['note'];
-
-            $this->borrowerService->borrowerInviteViaEmail($borrower, $email, $subject, $message);
-
-            Flash::success(\Lang::choice('comments.flash.invite-success', 1, array('count' => 1)));
+            Flash::success(\Lang::get('borrower.invite.flash.invite-success', ['email' => $invite->getEmail()]));
             return Redirect::route('borrower:invite');
         }
 

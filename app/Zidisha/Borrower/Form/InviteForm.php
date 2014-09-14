@@ -19,11 +19,11 @@ class InviteForm extends AbstractForm
     public function getRules($data)
     {
         return [
-            'email'  => 'required|email|uniqueEmail|not_in:' . implode(',', $this->getInvitedEmails()),
-            'borrowerName' => 'required',
+            'email'         => 'required|email|uniqueEmail|not_in:' . implode(',', $this->getInvitedEmails()),
+            'borrowerName'  => 'required',
             'borrowerEmail' => 'required|email|uniqueUserEmail:' . $this->borrower->getId(),
-            'subject' => 'required',
-            'note'    => 'required|min:1',
+            'subject'       => 'required',
+            'message'       => 'required',
         ];
     }
 

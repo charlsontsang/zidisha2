@@ -457,21 +457,25 @@ class BorrowerService
         return $params;
     }
     
-    public function borrowerInviteViaEmail(Borrower $borrower, $email, $subject, $message)
+    public function borrowerInviteViaEmail(Borrower $borrower, $data)
     {
-        $borrowerInvite = new Invite();
-        $borrowerInvite->setBorrower($borrower);
-        $borrowerInvite->setEmail($email);
-        $borrowerInvite->isInvited(true);
-        $success = $borrowerInvite->save();
+        $invite = new Invite();
+        $invite
+            ->setBorrower($borrower)
+            ->setEmail($data['email'])
+            ->isInvited(true);
+        $invite->save();
 
-        if ($success) {
-            $message = nl2br(stripslashes(strip_tags(trim($message))));
-            $subject = trim($subject);
-            $this->borrowerMailer->sendBorrowerInvite($borrower, $borrowerInvite, $subject, $message);
-        }
+        $this->borrowerMailer->sendBorrowerInvite(
+            $borrower,
+            $invite,
+            $data['borrowerName'],
+            $data['borrowerEmail'],
+            $data['subject'],
+            $data['message']
+        );
 
-        return $borrowerInvite;
+        return $invite;
     }
 
     public function isEligibleToInvite(Borrower $borrower)

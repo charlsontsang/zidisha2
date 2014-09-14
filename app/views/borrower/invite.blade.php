@@ -25,7 +25,7 @@ Quick Links
     {{ BootstrapForm::text('borrowerName') }}
     {{ BootstrapForm::text('borrowerEmail') }}
     {{ BootstrapForm::text('subject') }}
-    {{ BootstrapForm::textarea('note', null, ['style' => 'height:100px']) }}
+    {{ BootstrapForm::textarea('message', null, ['style' => 'height:100px']) }}
     {{ BootstrapForm::submit('send-invite', ['class' => 'btn btn-primary']) }}
     
     {{ BootstrapForm::close() }}
