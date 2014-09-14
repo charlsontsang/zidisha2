@@ -57,7 +57,9 @@ class TranslationController extends BaseController
             \App::abort(404, 'The given file not found.');
         }
 
-        return View::make('translation.form', compact('file', 'fileLabels', 'defaultValues', 'filename', 'keyToTranslationLabel'));
+        return View::make('translation.form', compact(
+            'file', 'fileLabels', 'defaultValues', 'filename', 'keyToTranslationLabel', 'languageCode'
+        ));
     }
 
     public function postTranslations($filename, $languageCode)

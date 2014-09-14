@@ -9,7 +9,7 @@
 
 <div class="row">
     <div class="col-md-10">
-        {{ BootstrapForm::open() }}
+        {{ BootstrapForm::open(['route' => ['admin:translation:post', $filename, $languageCode], 'id' => 'labels-form']) }}
         {{ BootstrapForm::model($defaultValues) }}
 
         @include('translation.form-section',['labels' => $fileLabels, 'level' => 2, 'group' => '', 'title' => $filename])
@@ -28,8 +28,24 @@
 
 @section('script-footer')
 <script>
-    $("#toggle-label").click(function() {
-        $( "label" ).toggle();
+    $(function() {
+        $("#toggle-label").click(function() {
+            $( "label" ).toggle();
+        });
+        function autoheight(a) {
+            if (!$(a).prop('scrollTop')) {
+                do {
+                    var b = $(a).prop('scrollHeight');
+                    var h = $(a).height();
+                    $(a).height(h - 5);
+                }
+                while (b && (b != $(a).prop('scrollHeight')));
+            };
+            $(a).height($(a).prop('scrollHeight') + 20);
+        }
+        $('#labels-form textarea').each(function() {
+            autoheight(this);
+        }); 
     });
 </script>
 @stop
