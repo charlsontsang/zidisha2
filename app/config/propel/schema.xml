@@ -1175,4 +1175,25 @@
             <reference local="bulk_email_id" foreign="id"/>
         </foreign-key>
     </table>
+
+    <table name="facebook_user_logs" phpName="FacebookUserLog" namespace="User">
+        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="user_id" type="INTEGER" required="false" phpType="string"/>
+        <column name="facebook_id" type="VARCHAR" required="true" phpType="string"/>
+        <column name="account_name" type="VARCHAR"/>
+        <column name="email" type="VARCHAR"/>
+        <column name="birth_date" type="TIMESTAMP"/>
+        <column name="city" type="VARCHAR"/>
+        <column name="first_post_date" type="TIMESTAMP"/>
+        <column name="friends_count" type="INTEGER"/>
+        <column name="ip_address" type="VARCHAR"/>
+        <column name="accept" type="BOOLEAN"/>
+        <behavior name="timestampable"/>
+        <foreign-key foreignTable="users">
+            <reference local="user_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="facebook_users">
+            <reference local="facebook_id" foreign="id"/>
+        </foreign-key>
+    </table>
 </database>

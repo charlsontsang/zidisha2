@@ -14,6 +14,7 @@ use Zidisha\Repayment\RepaymentService;
 use Zidisha\Sms\BorrowerSmsService;
 use Zidisha\Upload\Upload;
 use Zidisha\User\FacebookUser;
+use Zidisha\User\FacebookUserLogQuery;
 use Zidisha\User\User;
 use Zidisha\User\UserQuery;
 use Zidisha\Vendor\Facebook\FacebookService;
@@ -67,20 +68,24 @@ class BorrowerService
                 ->setRole('borrower');
 
             if ($facebookData) {
-                $facebookId = \Session::get('BorrowerJoin.facebookId');
                 $facebookUser = new FacebookUser();
                 $facebookUser
-                    ->setId($facebookId)
                     ->setUser($user)
                     ->setEmail($facebookData['email'])
                     ->setAccountName($facebookData['name'])
-                    ->setCity($facebookData['location'])
+                    ->setCity($facebookData['location']['name'])
                     ->setBirthDate($facebookData['birthday'])
                     ->setFriendsCount($this->facebookService->getFriendCount())
                     ->setFirstPostDate($this->facebookService->getFirstPostDate());
                 $facebookUser->save($con);
-
-                $this->siftScienceService->sendFacebookEvent($user, $facebookId);
+                $facebookUserLog = FacebookUserLogQuery::create()
+                    ->orderByCreatedAt('desc')
+                    ->findOneByFacebookId($data['facebookId']);
+                if ($facebookUserLog) {
+                    $facebookUserLog->setUser($user);
+                    $facebookUserLog->save($con);
+                }
+                $this->siftScienceService->sendFacebookEvent($user, $data['facebookId']);
             }
 
             $borrower

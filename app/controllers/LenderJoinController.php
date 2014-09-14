@@ -71,6 +71,7 @@ class LenderJoinController extends BaseController
         $facebookUser = $this->getFacebookUser();
 
         if ($facebookUser) {
+            $this->facebookService->addFacebookUserLog($facebookUser);
             $country = Utility::getCountryCodeByIP();
             return View::make('lender.facebook-join',
                 compact('country'), ['form' => $this->joinForm,]);

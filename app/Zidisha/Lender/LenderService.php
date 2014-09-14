@@ -17,6 +17,7 @@ use Zidisha\Loan\BidQuery;
 use Zidisha\Loan\Loan;
 use Zidisha\Mail\LenderMailer;
 use Zidisha\Upload\Upload;
+use Zidisha\User\FacebookUserLogQuery;
 use Zidisha\User\User;
 use Zidisha\User\UserQuery;
 use Zidisha\Vendor\PropelDB;
@@ -204,6 +205,14 @@ class LenderService
         $lender->setPreferences($preferences);
         
         $lender->save();
+
+        $facebookUserLog = FacebookUserLogQuery::create()
+            ->orderByCreatedAt('desc')
+            ->findOneByFacebookId($data['facebookId']);
+        if ($facebookUserLog) {
+            $facebookUserLog->setUser($user);
+            $facebookUserLog->save();
+        }
 
         $this->mixpanelService->trackLenderJoined($lender);
         
