@@ -30,7 +30,7 @@ You may view the status of your current invitees and remove inactive invitees he
     'application-decline'                       => 'Declined',
     'application-pending-review'                => 'Application Pending Review',
     'no-loan'                                   => 'Activated, No Loan Yet',
-    'fundRaising-loan'                          => 'FundRaising Loan',
+    'fundRaising-loan'                          => 'Fundraising Loan',
     'repaying-on-time'                          => 'Repaying On Time',
     'past-due'                                  => 'Past Due',
     'delete'                                    => 'Delete',
