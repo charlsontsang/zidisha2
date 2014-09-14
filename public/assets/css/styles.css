@@ -8903,6 +8903,17 @@ form .btn-default,
 #login-modal {
   z-index: 2000;
 }
+@media (max-width: 767px) {
+  .modal-backdrop.in {
+    opacity: 1;
+    filter: none;
+    background-color: #fff;
+    z-index: 100;
+  }
+}
+.modal-body {
+  background-color: #fff;
+}
 .modal-body .btn {
   margin-bottom: 11px;
 }

@@ -46,6 +46,17 @@ form .btn-primary, form .btn-default, .giftcard .btn-primary {
 #join-modal, #login-modal {
 	z-index: 2000;
 }
+.modal-backdrop.in {
+	@media (max-width: @screen-xs-max) {
+  		opacity: 1;
+  		filter: none;
+  		background-color: #fff;
+  		z-index: 100;
+	}
+}
+.modal-body {
+	background-color: #fff;
+}
 .modal-body .btn {
  	margin-bottom: 11px;
  }
