@@ -5,7 +5,9 @@ namespace Zidisha\Borrower;
 use Propel\Runtime\Propel;
 use Zidisha\Balance\Map\TransactionTableMap;
 use Zidisha\Borrower\Base\VolunteerMentorQuery as BaseVolunteerMentorQuery;
+use Zidisha\Country\Country;
 use Zidisha\Country\CountryQuery;
+use Zidisha\Vendor\PropelDB;
 
 
 /**
@@ -21,34 +23,32 @@ use Zidisha\Country\CountryQuery;
 class VolunteerMentorQuery extends BaseVolunteerMentorQuery
 {
 
-    public function getVolunteerMentorCity()
+    public function getVolunteerMentorCities(Country $country)
     {
-        $countryCode = \Session::get('BorrowerJoin.countryCode');
-        $country = CountryQuery::create()
-            ->filterByCountryCode($countryCode)
-            ->findOne();
-
-        $con = Propel::getWriteConnection(TransactionTableMap::DATABASE_NAME);
+        // TODO fix mentee_count?
         $sql = "SELECT DISTINCT city FROM borrower_profiles WHERE borrower_id IN "
-            . "(SELECT borrower_id FROM volunteer_mentor WHERE country_id = :country_id AND status = :status
+            . "(SELECT borrower_id FROM volunteer_mentors WHERE country_id = :country_id AND active = true
             AND mentee_count < :mentee_count)";
-        $stmt = $con->prepare($sql);
-        //TODO to make mentee_count = 50
-        $stmt->execute(array(':country_id' => $country->getId(), ':status' => '1', ':mentee_count' => '25'));
-        $cities = $stmt->fetchAll(\PDO::FETCH_COLUMN);
-        return array_combine($cities, $cities);
+        $_cities = PropelDB::fetchAll($sql, [':country_id' => $country->getId(), ':mentee_count' => '25']);
+
+        $cities = [];
+        foreach ($_cities as $city) {
+            $cities[$city['city']] = $city['city'];
+        }
+        
+        return $cities;
     }
 
-    public function getVolunteerMentorByCity($city)
+    public function getVolunteerMentorsByCity($city)
     {
         $list = [];
         $volunteerMentors = VolunteerMentorQuery::create()
             ->filterByActive(true)
             ->filterByMenteeCount(array('max' => '25'))
             ->useBorrowerVolunteerQuery()
-            ->useProfileQuery()
-            ->filterByCity($city)
-            ->endUse()
+                ->useProfileQuery()
+                    ->filterByCity($city)
+                ->endUse()
             ->endUse()
             ->joinWith('VolunteerMentor.BorrowerVolunteer')
             ->find();

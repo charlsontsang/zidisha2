@@ -7,7 +7,6 @@ use Zidisha\Borrower\VolunteerMentorQuery;
 use Zidisha\Country\CountryQuery;
 use Zidisha\Form\AbstractForm;
 use Zidisha\Loan\CategoryQuery;
-use Zidisha\Vendor\PropelDB;
 
 class ProfileForm extends AbstractForm
 {
@@ -77,7 +76,7 @@ class ProfileForm extends AbstractForm
             'volunteerMentorCity'          => 'required|in:' . implode(',', array_keys($this->getVolunteerMentorCities())),
             'volunteerMentorId'            => 'required|in:' . implode(
                     ',',
-                    array_keys(VolunteerMentorQuery::create()->getVolunteerMentorByCity($data['volunteerMentorCity']))
+                    array_keys(VolunteerMentorQuery::create()->getVolunteerMentorsByCity($data['volunteerMentorCity']))
                 ),
             'referrerId'                      => 'in:' . implode(',', array_keys($this->getBorrowersByCountry())),
         ];
@@ -106,18 +105,8 @@ class ProfileForm extends AbstractForm
     public function getVolunteerMentorCities()
     {
         if ($this->cities === null) {
-            $country = $this->getCountry();
-
-            //TODO to make mentee_count = 50
-            $sql = "SELECT DISTINCT city FROM borrower_profiles WHERE borrower_id IN "
-                . "(SELECT borrower_id FROM volunteer_mentors WHERE country_id = :country_id AND active = true
-            AND mentee_count < :mentee_count)";
-            $cities = PropelDB::fetchAll($sql, [':country_id' => $country->getId(), ':mentee_count' => '25']);
-            
-            $this->cities = [];
-            foreach ($cities as $city) {
-                $this->cities[$city['city']] = $city['city'];
-            }
+            $this->cities = VolunteerMentorQuery::create()
+                ->getVolunteerMentorCities($this->getCountry());
         }
         
         return $this->cities;
@@ -158,7 +147,7 @@ class ProfileForm extends AbstractForm
             $city = $cities ? reset($cities) : null;
         }
 
-        return $city ? VolunteerMentorQuery::create()->getVolunteerMentorByCity($city) : [];
+        return $city ? VolunteerMentorQuery::create()->getVolunteerMentorsByCity($city) : [];
     }
 
     public function setIsSaveLater($state = true)

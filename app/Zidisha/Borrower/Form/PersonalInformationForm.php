@@ -134,7 +134,7 @@ class PersonalInformationForm extends AbstractForm
             $city = $cities ? reset($cities) : null;
         }
 
-        return $city ? VolunteerMentorQuery::create()->getVolunteerMentorByCity($city) : [];
+        return $city ? VolunteerMentorQuery::create()->getVolunteerMentorsByCity($city) : [];
     }
 
     public function getVolunteerMentorCities()

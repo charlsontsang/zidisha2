@@ -199,23 +199,8 @@ class BorrowerJoinController extends BaseController
 
     public function getVolunteerMentorByCity($city)
     {
-        $list = [];
-        $volunteerMentors = VolunteerMentorQuery::create()
-            ->filterByStatus(1)
-            ->filterByMenteeCount(array('max' => '25'))
-            ->useBorrowerVolunteerQuery()
-            ->useProfileQuery()
-            ->filterByCity($city)
-            ->endUse()
-            ->endUse()
-            ->joinWith('VolunteerMentor.BorrowerVolunteer')
-            ->find();
-
-        foreach ($volunteerMentors as $volunteerMentor) {
-            $list[$volunteerMentor->getBorrowerId()] = $volunteerMentor->getBorrowerVolunteer()->getName();
-        }
-
-        return $list;
+        return VolunteerMentorQuery::create()
+            ->getVolunteerMentorsByCity($city);
     }
 
 }
