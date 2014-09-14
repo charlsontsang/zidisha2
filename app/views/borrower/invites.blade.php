@@ -1,7 +1,7 @@
 @extends('layouts.side-menu')
 
 @section('page-title')
-Your Invites
+@lang('borrower.menu.your-invites')
 @stop
 
 @section('menu-title')
