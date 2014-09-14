@@ -43,7 +43,7 @@ class VolunteerMentorQuery extends BaseVolunteerMentorQuery
     {
         $list = [];
         $volunteerMentors = VolunteerMentorQuery::create()
-            ->filterByStatus(1)
+            ->filterByActive(true)
             ->filterByMenteeCount(array('max' => '25'))
             ->useBorrowerVolunteerQuery()
             ->useProfileQuery()

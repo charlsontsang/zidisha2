@@ -156,7 +156,7 @@ class BorrowerJoinController extends BaseController
             return Redirect::action('BorrowerJoinController@getProfile')->withForm($form);
         }
 
-        if (Input::has('save_later')) {
+        if (Input::has('save-later')) {
             $form = $this->profileForm;
             $form->setIsSaveLater();
 
@@ -173,12 +173,14 @@ class BorrowerJoinController extends BaseController
 
             return Redirect::action('BorrowerJoinController@getProfile')->withForm($form);
         }
-
-        if (Input::has('disconnect_facebook_account')) {
+        
+        if (Input::has('disconnect-facebook')) {
             Session::set('BorrowerJoin.disconnect-facebook', Input::all());
             $url = $this->facebookService->getLogoutUrl('BorrowerJoinController@getFacebook');
             return Redirect::away($url);
         }
+        
+        return Redirect::back();
     }
 
     public function getSkipFacebook()

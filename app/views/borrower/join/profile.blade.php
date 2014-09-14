@@ -1,141 +1,178 @@
 @extends('layouts.master')
 
 @section('content')
-{{ BootstrapForm::open(array('controller' => 'BorrowerJoinController@postProfile', 'translationDomain' => 'borrowerJoin.form', 'id' => 'borrowerRegistrationForm')) }}
+<div class="page-header">
+    <h1>
+        @lang('borrower.join.form.title')
+    </h1>
+</div>
+
+{{ BootstrapForm::open(array('controller' => 'BorrowerJoinController@postProfile', 'translationDomain' => 'borrower.join.form', 'id' => 'borrowerRegistrationForm')) }}
 {{ BootstrapForm::populate($form) }}
 
-<p>CREATE ACCOUNT</p>
-{{ BootstrapForm::text('username') }}
-{{ BootstrapForm::password('password') }}
-{{ BootstrapForm::text('email') }}
-
-<p>MORE INFORMATION</p>
-{{ BootstrapForm::text('preferredLoanAmount') }} USD
-{{ BootstrapForm::text('preferredInterestRate') }} %
-{{ BootstrapForm::text('preferredRepaymentAmount') }}
-{{ BootstrapForm::select('businessCategoryId', $form->getCategories()) }}
-{{ BootstrapForm::select('businessYears', $form->getBusinessYears()) }}
-{{ BootstrapForm::select('loanUsage', $form->getLoanUsage()) }}
-{{--{{ TODO }}--}}
-<input data-date-format="mm/dd/yyyy" data-provide="datepicker" id="birthDate">
-
-
-
-<br><br>
-<p>CONTACT INFORMATION</p>
-{{ BootstrapForm::text('firstName') }}
-{{ BootstrapForm::text('lastName') }}
-{{ BootstrapForm::text('address') }}
-<br>
-{{ BootstrapForm::label(\Lang::get('borrowerJoin.form.addressInstructions')) }}
-<br><br>
-{{ BootstrapForm::textArea('addressInstructions') }}
-{{ BootstrapForm::text('city') }}
-{{ BootstrapForm::text('nationalIdNumber') }}
-{{ BootstrapForm::text('phoneNumber', null, ['prepend' => $form->getDialingCode()]) }}
-{{ BootstrapForm::text('alternatePhoneNumber', null, [
-    'prepend' => $form->getDialingCode(),
-    'description' => \Lang::get('borrowerJoin.form.optional')
-]) }}
-
-<br><br>
-<p>REFERENCES</p>
-{{ BootstrapForm::select('referrerId', $form->getBorrowersByCountry()) }}
-{{ BootstrapForm::select('volunteerMentorCity', $form->getVolunteerMentorCities()) }}
-{{ BootstrapForm::select('volunteerMentorId', $form->getVolunteerMentors()) }}
-
-<br><br>
-<label>@lang('borrowerJoin.form.communityLeaderDescription')</label>
+<p>
+    <button type="submit" class="btn btn-facebook" name="disconnect-facebook" value="disconnect-facebook">
+        <span class="fa fa-facebook fa-lg fa-fw"></span>
+        @lang('borrower.join.form.disconnect-facebook')
+    </button>
+</p>
 
 <fieldset>
-    <legend>@lang('borrowerJoin.form.communityLeader')</legend>
+    <legend>
+        CREATE ACCOUNT
+    </legend>
 
-    {{ BootstrapForm::text('communityLeader_firstName', null, ['label' => 'borrowerJoin.form.contact.firstName']) }}
-    {{ BootstrapForm::text('communityLeader_lastName', null, ['label' => 'borrowerJoin.form.contact.lastName']) }}
-    {{ BootstrapForm::text('communityLeader_phoneNumber', null, ['label' => 'borrowerJoin.form.contact.phoneNumber', 'prepend' => $form->getDialingCode()]) }}
-    {{ BootstrapForm::text('communityLeader_description', null, ['label' => 'borrowerJoin.form.contact.organizationTitle']) }}
-</fieldset>
-
-<label>@lang('borrowerJoin.form.familyMemberDescription')</label>
-
-<fieldset>
-    <legend>@lang('borrowerJoin.form.familyMember') 1</legend>
-
-    {{ BootstrapForm::text('familyMember_1_firstName', null, ['label' => 'borrowerJoin.form.contact.firstName']) }}
-    {{ BootstrapForm::text('familyMember_1_lastName', null, ['label' => 'borrowerJoin.form.contact.lastName']) }}
-    {{ BootstrapForm::text('familyMember_1_phoneNumber', null, ['label' => 'borrowerJoin.form.contact.phoneNumber', 'prepend' => $form->getDialingCode()]) }}
-    {{ BootstrapForm::text('familyMember_1_description', null, ['label' => 'borrowerJoin.form.contact.relationship']) }}
+    {{ BootstrapForm::text('username') }}
+    {{ BootstrapForm::password('password') }}
+    {{ BootstrapForm::text('email') }}
 </fieldset>
 
 <fieldset>
-    <legend>@lang('borrowerJoin.form.familyMember') 2</legend>
+    <legend>
+        MORE INFORMATION
+    </legend>
 
-    {{ BootstrapForm::text('familyMember_2_firstName', null, ['label' => 'borrowerJoin.form.contact.firstName']) }}
-    {{ BootstrapForm::text('familyMember_2_lastName', null, ['label' => 'borrowerJoin.form.contact.lastName']) }}
-    {{ BootstrapForm::text('familyMember_2_phoneNumber', null, ['label' => 'borrowerJoin.form.contact.phoneNumber', 'prepend' => $form->getDialingCode()]) }}
-    {{ BootstrapForm::text('familyMember_2_description', null, ['label' => 'borrowerJoin.form.contact.relationship']) }}
+    {{ BootstrapForm::text('preferredLoanAmount', null, ['append' => $form->getCountry()->getCurrencyCode()]) }}
+    {{ BootstrapForm::text('preferredInterestRate', null, ['append' => '%']) }}
+    {{ BootstrapForm::text('preferredRepaymentAmount') }}
+    {{ BootstrapForm::select('businessCategoryId', $form->getCategories()) }}
+    {{ BootstrapForm::select('businessYears', $form->getBusinessYears()) }}
+    {{ BootstrapForm::select('loanUsage', $form->getLoanUsage()) }}
+    {{ BootstrapForm::datepicker('birthDate') }}
 </fieldset>
 
 <fieldset>
-    <legend>@lang('borrowerJoin.form.familyMember') 3</legend>
+    <legend>
+        CONTACT INFORMATION
+    </legend>
 
-    {{ BootstrapForm::text('familyMember_3_firstName', null, ['label' => 'borrowerJoin.form.contact.firstName']) }}
-    {{ BootstrapForm::text('familyMember_3_lastName', null, ['label' => 'borrowerJoin.form.contact.lastName']) }}
-    {{ BootstrapForm::text('familyMember_3_phoneNumber', null, ['label' => 'borrowerJoin.form.contact.phoneNumber', 'prepend' => $form->getDialingCode()]) }}
-    {{ BootstrapForm::text('familyMember_3_description', null, ['label' => 'borrowerJoin.form.contact.relationship']) }}
+    {{ BootstrapForm::text('firstName') }}
+    {{ BootstrapForm::text('lastName') }}
+    {{ BootstrapForm::text('address') }}
+
+    {{ BootstrapForm::textArea('addressInstructions') }}
+    {{ BootstrapForm::text('city') }}
+    {{ BootstrapForm::text('nationalIdNumber') }}
+    {{ BootstrapForm::text('phoneNumber', null, ['prepend' => $form->getDialingCode()]) }}
+    {{ BootstrapForm::text('alternatePhoneNumber', null, [
+        'prepend' => $form->getDialingCode(),
+        'description' => \Lang::get('borrower.join.form.alternate-phone-number-description')
+    ]) }}
 </fieldset>
 
-<label>@lang('borrowerJoin.form.neighborDescription')</label>
+<fielset>
+    <legend>
+        REFERENCES
+    </legend>
+
+    {{ BootstrapForm::select('referrerId', $form->getBorrowersByCountry()) }}
+    {{ BootstrapForm::select('volunteerMentorCity', $form->getVolunteerMentorCities()) }}
+    {{ BootstrapForm::select('volunteerMentorId', $form->getVolunteerMentors()) }}
+</fielset>
+
+<p class="well">
+    @lang('borrower.join.form.community-leader-description')
+</p>
 
 <fieldset>
-    <legend>@lang('borrowerJoin.form.neighbor') 1</legend>
+    <legend>@lang('borrower.join.form.community-leader')</legend>
 
-    {{ BootstrapForm::text('neighbor_1_firstName', null, ['label' => 'borrowerJoin.form.contact.firstName']) }}
-    {{ BootstrapForm::text('neighbor_1_lastName', null, ['label' => 'borrowerJoin.form.contact.lastName']) }}
-    {{ BootstrapForm::text('neighbor_1_phoneNumber', null, ['label' => 'borrowerJoin.form.contact.phoneNumber', 'prepend' => $form->getDialingCode()]) }}
-    {{ BootstrapForm::text('neighbor_1_description', null, ['label' => 'borrowerJoin.form.contact.relationship']) }}
+    {{ BootstrapForm::text('communityLeader_firstName', null, ['label' => 'borrower.join.form.contact.first-name']) }}
+    {{ BootstrapForm::text('communityLeader_lastName', null, ['label' => 'borrower.join.form.contact.last-name']) }}
+    {{ BootstrapForm::text('communityLeader_phoneNumber', null, ['label' => 'borrower.join.form.contact.phone-number', 'prepend' => $form->getDialingCode()]) }}
+    {{ BootstrapForm::text('communityLeader_description', null, ['label' => 'borrower.join.form.contact.organization-title']) }}
+</fieldset>
+
+<p class="well">
+    @lang('borrower.join.form.family-member-description')
+</p>
+
+<fieldset>
+    <legend>@lang('borrower.join.form.family-member') 1</legend>
+
+    {{ BootstrapForm::text('familyMember_1_firstName', null, ['label' => 'borrower.join.form.contact.first-name']) }}
+    {{ BootstrapForm::text('familyMember_1_lastName', null, ['label' => 'borrower.join.form.contact.last-name']) }}
+    {{ BootstrapForm::text('familyMember_1_phoneNumber', null, ['label' => 'borrower.join.form.contact.phone-number', 'prepend' => $form->getDialingCode()]) }}
+    {{ BootstrapForm::text('familyMember_1_description', null, ['label' => 'borrower.join.form.contact.relationship']) }}
 </fieldset>
 
 <fieldset>
-    <legend>@lang('borrowerJoin.form.neighbor') 2</legend>
+    <legend>@lang('borrower.join.form.family-member') 2</legend>
 
-    {{ BootstrapForm::text('neighbor_2_firstName', null, ['label' => 'borrowerJoin.form.contact.firstName']) }}
-    {{ BootstrapForm::text('neighbor_2_lastName', null, ['label' => 'borrowerJoin.form.contact.lastName']) }}
-    {{ BootstrapForm::text('neighbor_2_phoneNumber', null, ['label' => 'borrowerJoin.form.contact.phoneNumber', 'prepend' => $form->getDialingCode()]) }}
-    {{ BootstrapForm::text('neighbor_2_description', null, ['label' => 'borrowerJoin.form.contact.relationship']) }}
+    {{ BootstrapForm::text('familyMember_2_firstName', null, ['label' => 'borrower.join.form.contact.first-name']) }}
+    {{ BootstrapForm::text('familyMember_2_lastName', null, ['label' => 'borrower.join.form.contact.last-name']) }}
+    {{ BootstrapForm::text('familyMember_2_phoneNumber', null, ['label' => 'borrower.join.form.contact.phone-number', 'prepend' => $form->getDialingCode()]) }}
+    {{ BootstrapForm::text('familyMember_2_description', null, ['label' => 'borrower.join.form.contact.relationship']) }}
 </fieldset>
 
 <fieldset>
-    <legend>@lang('borrowerJoin.form.neighbor') 3</legend>
+    <legend>@lang('borrower.join.form.family-member') 3</legend>
 
-    {{ BootstrapForm::text('neighbor_3_firstName', null, ['label' => 'borrowerJoin.form.contact.firstName']) }}
-    {{ BootstrapForm::text('neighbor_3_lastName', null, ['label' => 'borrowerJoin.form.contact.lastName']) }}
-    {{ BootstrapForm::text('neighbor_3_phoneNumber', null, ['label' => 'borrowerJoin.form.contact.phoneNumber', 'prepend' => $form->getDialingCode()]) }}
-    {{ BootstrapForm::text('neighbor_3_description', null, ['label' => 'borrowerJoin.form.contact.relationship']) }}
+    {{ BootstrapForm::text('familyMember_3_firstName', null, ['label' => 'borrower.join.form.contact.first-name']) }}
+    {{ BootstrapForm::text('familyMember_3_lastName', null, ['label' => 'borrower.join.form.contact.last-name']) }}
+    {{ BootstrapForm::text('familyMember_3_phoneNumber', null, ['label' => 'borrower.join.form.contact.phone-number', 'prepend' => $form->getDialingCode()]) }}
+    {{ BootstrapForm::text('familyMember_3_description', null, ['label' => 'borrower.join.form.contact.relationship']) }}
 </fieldset>
 
-{{ BootstrapForm::checkbox('termsAndCondition', null, null, ['id' => 'termsAndConditionCheckbox']) }} {{ \Lang::get('borrowerJoin.terms-and-condition.confirmation') }}
+<label>@lang('borrower.join.form.neighbor-description')</label>
+
+<fieldset>
+    <legend>@lang('borrower.join.form.neighbor') 1</legend>
+
+    {{ BootstrapForm::text('neighbor_1_firstName', null, ['label' => 'borrower.join.form.contact.first-name']) }}
+    {{ BootstrapForm::text('neighbor_1_lastName', null, ['label' => 'borrower.join.form.contact.last-name']) }}
+    {{ BootstrapForm::text('neighbor_1_phoneNumber', null, ['label' => 'borrower.join.form.contact.phone-number', 'prepend' => $form->getDialingCode()]) }}
+    {{ BootstrapForm::text('neighbor_1_description', null, ['label' => 'borrower.join.form.contact.relationship']) }}
+</fieldset>
+
+<fieldset>
+    <legend>@lang('borrower.join.form.neighbor') 2</legend>
+
+    {{ BootstrapForm::text('neighbor_2_firstName', null, ['label' => 'borrower.join.form.contact.first-name']) }}
+    {{ BootstrapForm::text('neighbor_2_lastName', null, ['label' => 'borrower.join.form.contact.last-name']) }}
+    {{ BootstrapForm::text('neighbor_2_phoneNumber', null, ['label' => 'borrower.join.form.contact.phone-number', 'prepend' => $form->getDialingCode()]) }}
+    {{ BootstrapForm::text('neighbor_2_description', null, ['label' => 'borrower.join.form.contact.relationship']) }}
+</fieldset>
+
+<fieldset>
+    <legend>@lang('borrower.join.form.neighbor') 3</legend>
+
+    {{ BootstrapForm::text('neighbor_3_firstName', null, ['label' => 'borrower.join.form.contact.first-name']) }}
+    {{ BootstrapForm::text('neighbor_3_lastName', null, ['label' => 'borrower.join.form.contact.last-name']) }}
+    {{ BootstrapForm::text('neighbor_3_phoneNumber', null, ['label' => 'borrower.join.form.contact.phone-number', 'prepend' => $form->getDialingCode()]) }}
+    {{ BootstrapForm::text('neighbor_3_description', null, ['label' => 'borrower.join.form.contact.relationship']) }}
+</fieldset>
+
+<fieldset>
+    <legend>
+        @lang('borrower.join.form.terms-and-condition.legend')
+    </legend>
+</fieldset>
+
+<div class="checkbox">
+    <label>
+        <input id="termsAndConditionCheckbox" name="termsAndCondition" type="checkbox">
+            {{ \Lang::get('borrower.join.form.terms-and-condition.confirmation') }}
             <a data-toggle="modal" data-target="#termsAndConditionModal">
-                {{ \Lang::get('borrowerJoin.terms-and-condition.confirmation-link') }}
+                {{ \Lang::get('borrower.join.form.terms-and-condition.link') }}
             </a>
-<br/>
-{{ BootstrapForm::submit('submit') }} -
-{{ BootstrapForm::submit('save_later') }} -
-{{ BootstrapForm::submit('disconnect_facebook_account') }}
+    </label>
+</div>
 
+<br/>
+<br/>
+
+{{ BootstrapForm::submit('submit') }}
+{{ BootstrapForm::submit('save-later', ['class' => 'btn btn-default']) }}
 
 {{ BootstrapForm::close() }}
-<br/>
-<br/>
-{{ link_to_route('lender:join', 'Join as lender') }}
-@stop
 
 @include('partials._modal', [
-            'id' => 'termsAndConditionModal',
-            'title' => \Lang::get('borrowerJoin.terms-and-condition.title'),
-            'body' => \Lang::get('borrowerJoin.terms-and-condition.body')
-            ]
-        )
+    'id' => 'termsAndConditionModal',
+    'title' => \Lang::get('borrower.join.form.terms-and-condition.title'),
+    'body' => \Lang::get('borrower.join.form.terms-and-condition.body')
+])
+@stop
 
 @section('script-footer')
 <script type="text/javascript">
@@ -150,13 +187,19 @@
             });
         });
 
-        $('#borrowerRegistrationForm').submit(function(){
-            if(!$('#termsAndConditionCheckbox').is(":checked")){
-                alert(" {{ \Lang::get('borrowerJoin.form.please-agree-to-t&c') }}");
+        $('[name=submit], [name=save-later]').click(function() {
+            if (!$('#termsAndConditionCheckbox').is(":checked")){
+                alert("@lang('borrower.join.form.terms-and-condition.please-agree')");
                 return false;
             }
         });
 
+        $('input').on('keyup keypress', function(e) {
+            if (e.which  == 13) {
+                e.preventDefault();
+                return false;
+            }
+        });
     });
 </script>
 @stop

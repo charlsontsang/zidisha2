@@ -1,21 +1,21 @@
 <?php
 namespace Zidisha\Borrower\Form\Join;
 
-use Illuminate\Routing\Route;
-use Propel\Runtime\Propel;
-use Zidisha\Balance\Map\TransactionTableMap;
-use Zidisha\Borrower\Form\Validator\NumberValidator;
+
 use Zidisha\Borrower\BorrowerQuery;
 use Zidisha\Borrower\VolunteerMentorQuery;
 use Zidisha\Country\CountryQuery;
 use Zidisha\Form\AbstractForm;
 use Zidisha\Loan\CategoryQuery;
+use Zidisha\Vendor\PropelDB;
 
 class ProfileForm extends AbstractForm
 {
     protected $country;
     protected $cities;
     protected $isSaveLater;
+    
+    protected $validatorClass = 'Zidisha\Borrower\Form\Validator\NumberValidator';
 
     public function getRules($data)
     {
@@ -108,30 +108,19 @@ class ProfileForm extends AbstractForm
         if ($this->cities === null) {
             $country = $this->getCountry();
 
-            $con = Propel::getWriteConnection(TransactionTableMap::DATABASE_NAME);
-            $sql = "SELECT DISTINCT city FROM borrower_profiles WHERE borrower_id IN "
-                . "(SELECT borrower_id FROM volunteer_mentors WHERE country_id = :country_id AND status = :status
-            AND mentee_count < :mentee_count)";
-            $stmt = $con->prepare($sql);
             //TODO to make mentee_count = 50
-            $stmt->execute(array(':country_id' => $country->getId(), ':status' => '1', ':mentee_count' => '25'));
-            $cities = $stmt->fetchAll(\PDO::FETCH_COLUMN);
-
-            $this->cities = array_combine($cities, $cities);
-        }
-
-        return $this->cities;
-    }
-
-    protected function validate($data, $rules)
-    {
-        \Validator::resolver(
-            function ($translator, $data, $rules, $messages, $parameters) {
-                return new NumberValidator($translator, $data, $rules, $messages, $parameters);
+            $sql = "SELECT DISTINCT city FROM borrower_profiles WHERE borrower_id IN "
+                . "(SELECT borrower_id FROM volunteer_mentors WHERE country_id = :country_id AND active = true
+            AND mentee_count < :mentee_count)";
+            $cities = PropelDB::fetchAll($sql, [':country_id' => $country->getId(), ':mentee_count' => '25']);
+            
+            $this->cities = [];
+            foreach ($cities as $city) {
+                $this->cities[$city['city']] = $city['city'];
             }
-        );
-
-        parent::validate($data, $this->getRules($data));
+        }
+        
+        return $this->cities;
     }
 
     public function getDialingCode()

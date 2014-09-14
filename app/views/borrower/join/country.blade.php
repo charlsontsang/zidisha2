@@ -1,23 +1,30 @@
 @extends('layouts.master')
 
 @section('content')
-    {{ BootstrapForm::open(array('controller' => 'BorrowerJoinController@postCountry', 'translationDomain' => 'borrower.join.select-country')) }}
+<div class="page-header">
+    <h1>
+        @lang('borrower.join.form.title')
+    </h1>
+</div>
 
-    {{ BootstrapForm::select('country', $form->getCountries()->toKeyValue('id', 'name'), ['id' => $country['id'],
-'name' =>$country['name']]) }}
+<div class="row">
+    <div class="col-sm-6">
+        {{ BootstrapForm::open(['controller' => 'BorrowerJoinController@postCountry', 'translationDomain' => 'borrower.join.form']) }}
 
-    {{ BootstrapForm::submit('continue') }}
+        {{ BootstrapForm::select('country', $form->getCountries()->toKeyValue('id', 'name'), ['id' => $country['id'],
+        'name' =>$country['name']]) }}
 
-    {{ BootstrapForm::close() }}
-    <br/>
-    <br/>
-    {{ link_to_route('lender:join', 'Join as lender') }}
-    <br/>
-    <br/>
-    {{ BootstrapForm::open(array('route' => 'borrower:post:resumeApplication', 'translationDomain' => 'borrower.join.resume')) }}
-    {{ BootstrapForm::text('code') }}
+        {{ BootstrapForm::submit('next') }}
 
-    {{ BootstrapForm::submit('submit') }}
+        {{ BootstrapForm::close() }}
+    </div>
+    <div class="col-sm-6">
+        {{ BootstrapForm::open(['route' => 'borrower:post:resumeApplication', 'translationDomain' => 'borrower.join.form']) }}
+        {{ BootstrapForm::text('resumeCode') }}
 
-    {{ BootstrapForm::close() }}
+        {{ BootstrapForm::submit('resume-submit') }}
+
+        {{ BootstrapForm::close() }}
+    </div>
+</div>
 @stop
