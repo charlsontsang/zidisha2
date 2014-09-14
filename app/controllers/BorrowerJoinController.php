@@ -203,5 +203,4 @@ class BorrowerJoinController extends BaseController
         return VolunteerMentorQuery::create()
             ->getVolunteerMentorsByCity($city);
     }
-
 }

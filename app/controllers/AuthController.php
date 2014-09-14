@@ -7,6 +7,7 @@ use Zidisha\Borrower\BorrowerGuestQuery;
 use Zidisha\Borrower\BorrowerService;
 use Zidisha\Borrower\JoinLogQuery;
 use Zidisha\Country\CountryQuery;
+use Zidisha\User\FacebookUserLogQuery;
 use Zidisha\User\User;
 use Zidisha\User\UserQuery;
 use Zidisha\Utility\Utility;
@@ -97,11 +98,20 @@ class AuthController extends BaseController
         $facebookUserId = $this->facebookService->getUserId();
 
         if ($facebookUserId) {
+            $facebookUser = $this->facebookService->getUserProfile();
             $checkUser = UserQuery::create()
                 ->filterByFacebookId($facebookUserId)
                 ->findOne();
+            $this->facebookService->addFacebookUserLog($facebookUser);
 
             if ($checkUser) {
+                $facebookUserLog = FacebookUserLogQuery::create()
+                    ->orderByCreatedAt('desc')
+                    ->findOneByFacebookId($facebookUser['id']);
+                if ($facebookUserLog) {
+                    $facebookUserLog->setUser($checkUser);
+                    $facebookUserLog->save();
+                }
                 Auth::loginUsingId($checkUser->getId());
             } else {
                 Flash::error('borrower.login.flash.not-registered-facebook');
