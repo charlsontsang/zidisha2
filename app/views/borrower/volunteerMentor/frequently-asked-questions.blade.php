@@ -1,7 +1,7 @@
 @extends('layouts.side-menu')
 
 @section('page-title')
-Volunteer Mentor Frequently Asked Questions
+@lang('borrower.vm-guide.vm-faq-title')
 @stop
 
 @section('menu-title')
@@ -13,5 +13,5 @@ Volunteer Mentor Frequently Asked Questions
 @stop
 
 @section('page-content')
-
+@lang('borrower.vm-guide.vm-faq-content')
 @stop
