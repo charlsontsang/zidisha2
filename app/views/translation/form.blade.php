@@ -20,7 +20,7 @@
 
     <div class="col-md-2">
         <nav>
-            @include('translation.form-menu', ['labels' => $fileLabels, 'group' => $filename])
+            @include('translation.form-menu', ['labels' => $fileLabels, 'group' => ''])
         </nav>
     </div>
 </div>
