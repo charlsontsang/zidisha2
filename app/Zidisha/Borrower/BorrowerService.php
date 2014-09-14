@@ -1,34 +1,24 @@
 <?php
 namespace Zidisha\Borrower;
 
-use Carbon\Carbon;
 use DateTime;
 use Propel\Runtime\ActiveQuery\Criteria;
 use Zidisha\Admin\Setting;
 use Zidisha\Comment\BorrowerCommentQuery;
-use Zidisha\Credit\CreditsEarnedQuery;
-use Zidisha\Credit\CreditSetting;
-use Zidisha\Credit\CreditSettingQuery;
-use Zidisha\Currency\Converter;
-use Zidisha\Currency\ExchangeRate;
-use Zidisha\Currency\ExchangeRateQuery;
-use Zidisha\Currency\Money;
-use Zidisha\Borrower\InviteQuery;
 use Zidisha\Loan\Loan;
 use Zidisha\Loan\LoanQuery;
 use Zidisha\Loan\LoanService;
 use Zidisha\Mail\BorrowerMailer;
 use Zidisha\Repayment\InstallmentQuery;
-use Zidisha\Repayment\RepaymentSchedule;
 use Zidisha\Repayment\RepaymentService;
 use Zidisha\Sms\BorrowerSmsService;
 use Zidisha\Upload\Upload;
 use Zidisha\User\FacebookUser;
 use Zidisha\User\User;
 use Zidisha\User\UserQuery;
-use Zidisha\Utility\Utility;
 use Zidisha\Vendor\Facebook\FacebookService;
 use Zidisha\Vendor\PropelDB;
+use Zidisha\Vendor\SiftScience\SiftScienceService;
 
 class BorrowerService
 {
@@ -38,9 +28,10 @@ class BorrowerService
     private $borrowerSmsService;
     private $loanService;
     private $repaymentService;
+    private $siftScienceService;
 
     public function __construct(FacebookService $facebookService, UserQuery $userQuery, BorrowerMailer $borrowerMailer,
-        BorrowerSmsService $borrowerSmsService, LoanService $loanService, RepaymentService $repaymentService)
+        BorrowerSmsService $borrowerSmsService, LoanService $loanService, RepaymentService $repaymentService, SiftScienceService $siftScienceService)
     {
         $this->facebookService = $facebookService;
         $this->userQuery = $userQuery;
@@ -48,6 +39,7 @@ class BorrowerService
         $this->borrowerSmsService = $borrowerSmsService;
         $this->loanService = $loanService;
         $this->repaymentService = $repaymentService;
+        $this->siftScienceService = $siftScienceService;
     }
 
     public function joinBorrower($data)
@@ -75,8 +67,10 @@ class BorrowerService
                 ->setRole('borrower');
 
             if ($facebookData) {
+                $facebookId = \Session::get('BorrowerJoin.facebookId');
                 $facebookUser = new FacebookUser();
                 $facebookUser
+                    ->setId($facebookId)
                     ->setUser($user)
                     ->setEmail($facebookData['email'])
                     ->setAccountName($facebookData['name'])
@@ -85,6 +79,8 @@ class BorrowerService
                     ->setFriendsCount($this->facebookService->getFriendCount())
                     ->setFirstPostDate($this->facebookService->getFirstPostDate());
                 $facebookUser->save($con);
+
+                $this->siftScienceService->sendFacebookEvent($user, $facebookId);
             }
 
             $borrower

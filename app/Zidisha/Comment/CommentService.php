@@ -25,9 +25,10 @@ abstract class CommentService
     public function postComment($data, User $user,CommentReceiverInterface $receiver, $files = [])
     {
         //Abstract
+        $message = stripslashes(strip_tags(trim($data['message'])));
         $comment = $this->createComment($data);
         $comment->setUserId($user->getId());
-        $comment->setMessage($data['message']);
+        $comment->setMessage($message);
         $comment->setCommentReceiverId($comment, $receiver->getCommentReceiverId());
         $comment->setParentId(null);
         $comment->setLevel(0);
@@ -54,8 +55,10 @@ abstract class CommentService
     public function postReply($data, User $user, CommentReceiverInterface $receiver, Comment $parentComment, $files = [])
     {
         $comment = $this->createComment($data);
+        $message = stripslashes(strip_tags(trim($data['message'])));
+        $comment = $this->createComment();
         $comment->setUserId($user->getId());
-        $comment->setMessage($data['message']);
+        $comment->setMessage($message);
         $comment->setCommentReceiverId($comment, $receiver->getCommentReceiverId());
         $comment->setParentId($parentComment->getId());
         $comment->setLevel($parentComment->getLevel() + 1);

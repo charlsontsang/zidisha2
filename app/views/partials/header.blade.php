@@ -90,6 +90,7 @@
                         <li><a href="{{ route('admin:translation:index') }}">Translations</a></li>
                         <li><a href="{{ route('admin:mail:test-mails') }}">Test Emails</a></li>
                         <li><a href="{{ route('admin:sms:test-sms') }}">Test SMS</a></li>
+                        <li><a href="{{ route('admin:test:sift-science') }}">Test Sift Science</a></li>
                         <li><a href="{{ route('admin:countries') }}">Countries</a></li>
                         <li><a href="{{ route('admin:exchange-rates') }}">Exchange Rates</a></li>
                         <li><a href="{{ route('admin:settings') }}">Other Settings</a></li>

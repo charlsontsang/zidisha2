@@ -10,6 +10,7 @@ use Zidisha\Sms\BorrowerSmsService;
 use Zidisha\Upload\Upload;
 use Zidisha\User\UserQuery;
 use Zidisha\Vendor\PropelDB;
+use Zidisha\Vendor\SiftScience\SiftScienceService;
 
 class BorrowerCommentService extends CommentService
 {
@@ -17,14 +18,17 @@ class BorrowerCommentService extends CommentService
     private $lenderMailer;
     private $adminMailer;
     private $borrowerSmsService;
+    private $siftScienceService;
 
     public function __construct(BorrowerMailer $borrowerMailer, LenderMailer $lenderMailer,
-        AdminMailer $adminMailer, BorrowerSmsService $borrowerSmsService)
+        AdminMailer $adminMailer, siftScienceService $siftScienceService,
+        BorrowerSmsService $borrowerSmsService)
     {
         $this->borrowerMailer = $borrowerMailer;
         $this->lenderMailer = $lenderMailer;
         $this->adminMailer = $adminMailer;
         $this->borrowerSmsService = $borrowerSmsService;
+        $this->siftScienceService = $siftScienceService;
     }
 
     /**
@@ -88,6 +92,7 @@ class BorrowerCommentService extends CommentService
         }
 
         $this->adminMailer->sendBorrowerCommentNotification($loan, $comment, $postedBy, $images);
+        $this->siftScienceService->sendBorrowerCommentEvent($comment);
     }
 
     protected function getPostedBy(Borrower $borrower, Comment $comment)

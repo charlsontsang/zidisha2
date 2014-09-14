@@ -177,6 +177,11 @@ class ProfileForm extends AbstractForm
         $this->isSaveLater = $state;
     }
 
+    public function getIsSaveLater()
+    {
+        return $this->isSaveLater;
+    }
+
     public function getCategories()
     {
         $categories = CategoryQuery::create()

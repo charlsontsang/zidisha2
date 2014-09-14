@@ -862,7 +862,7 @@ class LoanService
         }
         $this->borrowerMailer->sendDisbursedLoanMail($loan);
         
-        // TODO sift science event
+        $this->siftScienceService->sendBorrowerPaymentEvent(SiftScienceService::TYPE_DISBURSEMENT, $loan->getBorrower(), $loan->getDisbursedAmount());
     }
 
     protected function getLenderRefunds($transactions)
