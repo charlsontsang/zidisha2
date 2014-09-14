@@ -31,7 +31,6 @@ return [
         'phone-number'               => 'Your Mobile Phone Number',
         'alternate-phone-number-description' => 'Optional: if you have any other phone number besides the one above, please enter it here.',
         'alternate-phone-number'     => 'Alternate Mobile Phone Number',
-        'members'                    => 'Please select the name of the member who referred you to Zidisha:',
         'volunteer-mentor-city'      => 'Please choose the town or village where you are located, or nearest to you:',
         'volunteer-mentor'           => 'Please choose one person from this list to serve as your Volunteer Mentor:',
 

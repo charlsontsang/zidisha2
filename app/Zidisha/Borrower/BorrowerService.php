@@ -52,8 +52,6 @@ class BorrowerService
         PropelDB::transaction(function($con) use($data, $borrower) {
             $volunteerMentor = VolunteerMentorQuery::create()
                 ->findOneByBorrowerId($data['volunteerMentorId']);
-            $referrer = BorrowerQuery::create()
-                ->findOneById($data['referrerId']);
             $facebookData = \Session::get('BorrowerJoin.facebookData');
 
             $user = new User();
