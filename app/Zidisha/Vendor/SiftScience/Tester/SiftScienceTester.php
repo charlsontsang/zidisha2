@@ -2,6 +2,7 @@
 
 namespace Zidisha\Vendor\SiftScience\Tester;
 
+use Zidisha\Borrower\Base\BorrowerQuery;
 use Zidisha\Borrower\Borrower;
 use Zidisha\Borrower\Invite;
 use Zidisha\Comment\BorrowerComment;
@@ -93,5 +94,23 @@ class SiftScienceTester {
         $facebookId = 33445566;
 
         $this->siftScienceService->sendFacebookEvent($user, $facebookId);
+    }
+
+    public function sendNewBorrowerAccountEvent()
+    {
+        $borrower = BorrowerQuery::create()
+            ->findOne();
+
+        $this->siftScienceService->sendNewBorrowerAccountEvent($borrower, SiftScienceService::NEW_ACCOUNT_TYPE_CREATE);
+    }
+
+    public function sendOnTimePaymentLabel()
+    {
+        $borrower = new Borrower();
+        $borrower->setId(5)
+            ->setFirstName('borrowerFirstName')
+            ->setLastName('borrowerLastName');
+
+        $this->siftScienceService->sendOnTimePaymentLabel($borrower);
     }
 }

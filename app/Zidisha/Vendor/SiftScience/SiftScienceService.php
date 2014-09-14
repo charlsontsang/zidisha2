@@ -4,6 +4,7 @@ namespace Zidisha\Vendor\SiftScience;
 
 use SiftClient;
 use Zidisha\Borrower\Borrower;
+use Zidisha\Borrower\Contact;
 use Zidisha\Borrower\Invite;
 use Zidisha\Comment\Comment;
 use Zidisha\Currency\Money;
@@ -17,6 +18,8 @@ class SiftScienceService
 
     const TYPE_REPAYMENT = 'repayment';
     const TYPE_DISBURSEMENT = 'disbursement';
+    const NEW_ACCOUNT_TYPE_CREATE = '$create_account';
+    const NEW_ACCOUNT_TYPE_EDIT = '$update_account';
 
     public function __construct(DummySiftScienceClient $dummySiftScienceClient)
     {
@@ -139,7 +142,7 @@ class SiftScienceService
             $eventType,
             [
                 '$user_id' => $borrower->getId(),
-                'amount'   => $amount, //TODO , ok to send Money object?
+                'amount'   => $amount->getAmount(),
                 '$time'    => time()
             ]
         );
@@ -154,6 +157,74 @@ class SiftScienceService
                 '$session_id' => $this->sessionId,
                 'facebook_id' => $facebookId,
                 '$time'       => time()
+            ]
+        );
+    }
+
+    public function sendNewBorrowerAccountEvent(Borrower $borrower, $type)
+    {
+        $user = $borrower->getUser();
+        $profile = $borrower->getProfile();
+        $familyMembers = $borrower->getFamilyMembers();
+        $neighbors = $borrower->getNeighbors();
+        $i = 1;
+        $data = [];
+        /** @var Contact $familyMember */
+        foreach ($familyMembers as $familyMember) {
+            $data['family_contact_' . $i] = $familyMember->getName() . ' (' . $familyMember->getPhoneNumber() . ')';
+        }
+        for ($j = 1; $j <= (3 - count($familyMembers)); $j++) {
+            $data['family_contact_' . (count($familyMembers) + $j)] = '';
+        }
+        $i = 1;
+        /** @var Contact $neighbor */
+        foreach ($neighbors as $neighbor) {
+            $data['neighbor_contact_' . $i] = $neighbor->getName() . ' (' . $neighbor->getPhoneNumber() . ')';
+        }
+        for ($j = 1; $j <= (3 - count($neighbors)); $j++) {
+            $data['neighbor_contact_' . (count($neighbors) + $j)] = '';
+        }
+        $communityLeader = $borrower->getCommunityLeader();
+        $this->sift->track(
+            $type,
+            $data + [
+                '$user_id'               => $user->getId(),
+                '$session_id'            => $this->sessionId,
+                'username'               => $user->getUsername(),
+                'first_name'             => $borrower->getFirstName(),
+                'last_name'              => $borrower->getLastName(),
+                '$billing_address'       => array(
+                    'address'  => $profile->getAddress(),
+                    '$city'    => $profile->getCity(),
+                    '$country' => $borrower->getCountry()->getName()
+                ),
+                'national_id'            => $profile->getNationalIdNumber(),
+                '$user_email'            => $user->getEmail(),
+                '$phone'                 => $profile->getPhoneNumber(),
+                'community_leader'       => $communityLeader->getName(),
+                'community_leader_phone' => $communityLeader->getPhoneNumber(),
+                'about_me'               => $profile->getAboutMe(),
+                'about_business'         => $profile->getAboutBusiness(),
+                'hear_about_zidisha'     => '', //TODO it's for reffered_by column in old DB
+                '$time'                  => time(),
+            ]
+        );
+    }
+
+    //TODO usage
+    public function sendOnTimePaymentLabel(Borrower $borrower)
+    {
+        $userId = $borrower->getId();
+
+        $this->sift->label(
+            $userId,
+            [
+                '$is_bad'      => false,
+                '$type'        => 'ontime_payment',
+                '$user_id'     => $userId,
+                'reasons'      => 'High on-time repayment rate',
+                '$description' => 'Made payment and historic on-time repayment rate is high',
+                '$time'        => time()
             ]
         );
     }

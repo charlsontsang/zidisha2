@@ -3,6 +3,7 @@
 use Zidisha\Borrower\VolunteerMentorQuery;
 use Zidisha\Country\CountryQuery;
 use Zidisha\Utility\Utility;
+use Zidisha\Vendor\SiftScience\SiftScienceService;
 
 class BorrowerJoinController extends BaseController
 {
@@ -25,6 +26,7 @@ class BorrowerJoinController extends BaseController
     protected $authService;
 
     private $borrowerMailer;
+    private $siftScienceService;
 
     public function __construct(
         \Zidisha\Vendor\Facebook\FacebookService $facebookService,
@@ -32,7 +34,8 @@ class BorrowerJoinController extends BaseController
         \Zidisha\Borrower\Form\Join\CountryForm $countryForm,
         \Zidisha\Borrower\BorrowerService $borrowerService,
         \Zidisha\Auth\AuthService $authService,
-        \Zidisha\Mail\BorrowerMailer $borrowerMailer
+        \Zidisha\Mail\BorrowerMailer $borrowerMailer,
+        SiftScienceService $siftScienceService
     ) {
         $this->beforeFilter('@stepsBeforeFilter');
         $this->facebookService = $facebookService;
@@ -41,6 +44,7 @@ class BorrowerJoinController extends BaseController
         $this->borrowerService = $borrowerService;
         $this->authService = $authService;
         $this->borrowerMailer = $borrowerMailer;
+        $this->siftScienceService = $siftScienceService;
 
         $this->stepsSessionKey = 'BorrowerJoin';
     }
@@ -136,6 +140,12 @@ class BorrowerJoinController extends BaseController
 
                 $this->flushStepsSession();
                 Session::forget('BorrowerJoin');
+
+                if ($form->getIsSaveLater()) {
+                    $this->siftScienceService->sendNewBorrowerAccountEvent($borrower, SiftScienceService::NEW_ACCOUNT_TYPE_EDIT);
+                } else {
+                    $this->siftScienceService->sendNewBorrowerAccountEvent($borrower, SiftScienceService::NEW_ACCOUNT_TYPE_CREATE);
+                }
 
                 $this->authService->login($borrower->getUser());
 

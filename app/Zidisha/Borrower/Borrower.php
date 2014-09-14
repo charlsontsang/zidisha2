@@ -38,6 +38,10 @@ class Borrower extends BaseBorrower implements CommentReceiverInterface
         return null;
     }
 
+    /**
+     * @return array
+     * @throws \Propel\Runtime\Exception\PropelException
+     */
     public function getFamilyMembers()
     {
         $familyMembers = [];
