@@ -5,7 +5,7 @@ Your Invites
 @stop
 
 @section('menu-title')
-Quick Links
+@lang('borrower.menu.links-title')
 @stop
 
 @section('menu-links')

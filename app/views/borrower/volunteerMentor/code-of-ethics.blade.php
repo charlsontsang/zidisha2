@@ -5,7 +5,7 @@ Volunteer Mentor Code of Ethics
 @stop
 
 @section('menu-title')
-Quick Links
+@lang('borrower.menu.links-title')
 @stop
 
 @section('menu-links')

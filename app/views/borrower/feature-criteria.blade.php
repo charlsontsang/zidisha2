@@ -5,7 +5,7 @@ How To Have Your Loan Featured
 @stop
 
 @section('menu-title')
-Quick Links
+@lang('borrower.menu.links-title')
 @stop
 
 @section('menu-links')
