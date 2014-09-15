@@ -220,4 +220,13 @@ Once again thank you for your application to join Zidisha.
 Best regards,
 Zidisha Team',
     ],
+    'profile-suggestions' => [
+        'suggestion-default-message' =>
+'Dear :name,
+I was reviewing your loan request, and wanted to help by sharing some suggestions. I think you could make your application more attractive to lenders if you make some of these improvements:
+You may make these changes using the "Edit Profile" page of your member account.
+Best of luck,
+Zidisha team',
+        'suggestion-default-subject' => 'Suggestions to help your loan be funded',
+    ]
 ];
