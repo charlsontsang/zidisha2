@@ -181,7 +181,7 @@ class BorrowerController extends BaseController
 
         $this->borrowerService->sendVerificationCode($borrower);
 
-        \Flash::info('A verification code has been sent to your email. Please check your email.');
+        \Flash::info('borrower.dashboard.pending-confirmation');
         return \Redirect::action('BorrowerController@getDashboard');
     }
 
@@ -253,7 +253,7 @@ class BorrowerController extends BaseController
 
             $this->borrowerService->updatePersonalInformation($borrower, $data);
 
-            \Flash::success('Your profile has been updated.');
+            \Flash::success('borrower.loan-application.info-saved');
             return Redirect::route('borrower:personal-information');
         }
 
@@ -307,7 +307,7 @@ class BorrowerController extends BaseController
         $user->setFacebookId($facebookId);
         $user->save();
 
-        \Flash::success('Your facebook account is linked successfully.');
+        \Flash::success('common.validation.link-account.facebook-account-linked');
         return Redirect::route('borrower:personal-information');
     }
 

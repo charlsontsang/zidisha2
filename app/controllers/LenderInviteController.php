@@ -114,11 +114,7 @@ class LenderInviteController extends BaseController
                 }
             }
 
-            Flash::success(\Lang::choice('common.comments.flash.
-
-@section('menu-links')
-@include('partials.nav-links.borrower-links')
-@stopinvite-success', $countInvites, array('count' => $countInvites)));
+            Flash::success(\Lang::choice('common.comments.flash.invite-success', $countInvites, array('count' => $countInvites)));
             return Redirect::route('lender:invite');
         }
 
