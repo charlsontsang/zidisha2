@@ -106,7 +106,7 @@
     </div>
 
     <div class="col-xs-4">
-        @if(Auth::check() && Auth::getUser()->isLender())
+        @if(!(Auth::check() && Auth::user()->isBorrower()))
             @if($group->isMember(Auth::User()->getLender()))
             <a href="{{ route('lender:group:leave', $group->getId()) }}">
                 Leave this group
