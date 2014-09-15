@@ -77,7 +77,11 @@ class LenderJoinController extends BaseController
                 compact('country'), ['form' => $this->joinForm,]);
         }
 
-        Flash::error('lender.join.flash.facebook-no-account-connected');
+        Flash::error('common.validation.link-account.
+
+@section('menu-links')
+@include('partials.nav-links.borrower-links')
+@stopfacebook-no-account-connected');
         return Redirect::route('lender:join');
     }
 
@@ -179,7 +183,11 @@ class LenderJoinController extends BaseController
             }
         }
 
-        Flash::error('lender.join.flash.facebook-no-account-connected');
+        Flash::error('common.validation.link-account.
+
+@section('menu-links')
+@include('partials.nav-links.borrower-links')
+@stopfacebook-no-account-connected');
         return Redirect::route('lender:join');
     }
 
