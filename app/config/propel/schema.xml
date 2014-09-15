@@ -1390,8 +1390,5 @@
         <foreign-key foreignTable="users">
             <reference local="user_id" foreign="id"/>
         </foreign-key>
-        <foreign-key foreignTable="facebook_users">
-            <reference local="facebook_id" foreign="id"/>
-        </foreign-key>
     </table>
 </database>
