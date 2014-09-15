@@ -9487,10 +9487,12 @@ form .btn-default,
 }
 .group-image {
   height: 200px;
+  margin-bottom: 22px;
 }
 @media (min-width: 768px) {
   .group-image {
     height: 400px;
+    margin-bottom: 50px;
   }
 }
 .home-section {
