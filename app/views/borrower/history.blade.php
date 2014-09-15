@@ -1,11 +1,11 @@
 @extends('layouts.side-menu')
 
 @section('page-title')
-Transaction History
+@lang('borrower.menu.payment-history')
 @stop
 
 @section('menu-title')
-Quick Links
+@lang('borrower.menu.links-title')
 @stop
 
 @section('menu-links')

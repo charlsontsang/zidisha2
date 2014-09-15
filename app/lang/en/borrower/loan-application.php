@@ -1,6 +1,7 @@
 <?php
 return [
     'title' => [
+        'step'  => 'Step',
         'instructions-page' => 'Instructions',
         'profile-page' => 'Complete your profile',
         'application-page' => 'Loan application',

@@ -5,7 +5,7 @@ Dashboard
 @stop
 
 @section('menu-title')
-Quick Links
+@lang('borrower.menu.links-title')
 @stop
 
 @section('menu-links')
@@ -19,9 +19,7 @@ Quick Links
         
 @if(!$borrower->isVerified())
     <div class="alert alert-warning">
-        A confirmation message has been sent the email address registered with your Zidisha account. Please click the confirmation link in the message in order to verify your email address.
-        <br/><br/>
-		If you did not receive the confirmation message, please click {{ link_to_route('borrower:resend:verification', 'here') }} to resend it.
+    	@lang('borrower.dashboard.pending-confirmation', ['resendLink' => link_to_route('borrower:resend:verification')])
     </div>
 @endif
 

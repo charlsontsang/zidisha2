@@ -1,11 +1,11 @@
 @extends('layouts.side-menu')
 
 @section('page-title')
-Your Invites
+@lang('borrower.menu.your-invites')
 @stop
 
 @section('menu-title')
-Quick Links
+@lang('borrower.menu.links-title')
 @stop
 
 @section('menu-links')

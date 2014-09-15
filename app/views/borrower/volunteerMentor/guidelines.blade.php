@@ -1,11 +1,11 @@
 @extends('layouts.side-menu')
 
 @section('page-title')
-Volunteer Mentor Guidelines
+@lang('borrower.vm-guide.vm-guidelines-title')
 @stop
 
 @section('menu-title')
-Quick Links
+@lang('borrower.menu.links-title')
 @stop
 
 @section('menu-links')
@@ -13,5 +13,5 @@ Quick Links
 @stop
 
 @section('page-content')
-
+@lang('borrower.vm-guide.vm-guidelines-content')
 @stop
