@@ -7,6 +7,25 @@
 .team .nav-tabs {
   border-bottom: 1px solid #f2f2f2;
   margin-bottom: -20px;
+  @media (max-width: @screen-xs-max) {
+    margin-top: 50px;
+  }
+}
+.team .nav-tabs > li {
+  @media (min-width: @screen-sm-min) {
+    float: right;
+  }
+}
+.team .nav-tabs > li:first-child {
+  @media (max-width: @screen-xs-max) {
+    float: right;
+  }
+}
+.team .nav-tabs > li > a {
+  @media (max-width: @screen-xs-max) {
+    padding-right: 5px;
+    padding-left: 5px;
+  }
 }
 .team .row {
   margin: 0 -20px 0 -20px !important;

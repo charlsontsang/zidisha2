@@ -10,12 +10,12 @@ Meet the Team
 	<div class="page-header">
 	    <h1>Meet the Team</h1>
 	    <ul class="nav nav-tabs" role="tablist">
-		    <li class="pull-right">
+		    <li>
 		        <a href="#advisers" role="tab" data-toggle="tab">
 		            Trustees & Advisers
 		        </a>
 		    </li>
-		    <li class="active pull-right">
+		    <li class="active">
 		        <a href="#staff" role="tab" data-toggle="tab">
 		            Staff & Volunteers
 		        </a>
