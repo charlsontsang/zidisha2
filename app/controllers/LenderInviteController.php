@@ -103,14 +103,22 @@ class LenderInviteController extends BaseController
             $countInvites = 0;
             foreach ($emails as $email) {
                 if (in_array($email, $allInvites->getData())) {
-                    Flash::info(\Lang::get('common.comments.flash.already-invited', array('email' => $email)));
+                    Flash::info(\Lang::get('common.comments.flash.
+
+@section('menu-links')
+@include('partials.nav-links.borrower-links')
+@stopalready-invited', array('email' => $email)));
                 } else {
                     $countInvites += 1;
                     $this->lenderService->lenderInviteViaEmail($lender, $email, $subject, $custom_message);
                 }
             }
 
-            Flash::success(\Lang::choice('common.comments.flash.invite-success', $countInvites, array('count' => $countInvites)));
+            Flash::success(\Lang::choice('common.comments.flash.
+
+@section('menu-links')
+@include('partials.nav-links.borrower-links')
+@stopinvite-success', $countInvites, array('count' => $countInvites)));
             return Redirect::route('lender:invite');
         }
 
