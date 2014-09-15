@@ -170,7 +170,6 @@ class LendingGroupController extends BaseController
 
         $this->lendingGroupService->joinLendingGroup($group, $lender);
 
-        \Flash::success("You're now a member!");
         return Redirect::route('lender:group:join:success', $group->getId());
     }
 
