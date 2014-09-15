@@ -14,7 +14,7 @@ class ScheduledJobs extends Command
     protected $description = 'This command is to run scheduled cron jobs';
 
     protected $classes = [
-//        'Zidisha\ScheduledJob\AbandonedUser',
+        'Zidisha\ScheduledJob\AbandonedUser',
 //        'Zidisha\ScheduledJob\LoanAboutToExpireReminder',
 //        'Zidisha\ScheduledJob\LoanFinalArrear',
 //        'Zidisha\ScheduledJob\AgainRepaymentReminder',
@@ -24,7 +24,7 @@ class ScheduledJobs extends Command
 //        'Zidisha\ScheduledJob\NewLenderIntro',
 //        'Zidisha\ScheduledJob\CronToRepay',
 //        'Zidisha\ScheduledJob\UnusedFunds',
-        'Zidisha\ScheduledJob\InviteeOwnFunds',
+//        'Zidisha\ScheduledJob\InviteeOwnFunds',
     ];
     
     protected $classesWithLoan = [

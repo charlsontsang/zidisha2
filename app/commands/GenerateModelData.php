@@ -591,8 +591,8 @@ class GenerateModelData extends Command
         }
 
         $this->line('Rebuild database');
-        DB::statement('drop schema public cascade');
-        DB::statement('create schema public');
+        DB::statement('DROP DATABASE IF EXISTS homestead');
+        DB::statement('CREATE DATABASE IF NOT EXISTS homestead');
         exec('rm -rf app/database/migrations');
         exec('./propel diff');
         exec('./propel migrate');
