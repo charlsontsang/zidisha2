@@ -82,7 +82,7 @@ class AdminLoanForgivenessController extends BaseController
             return Redirect::route('admin:loan-forgiveness:index', $form->getCountry()->getCountryCode());
         }
 
-        \Flash::error('Please enter valid inputs');
+        \Flash::error('common.validation.error');
         $countryCode = \Input::get('countryCode', 'KE');
         $countryCode = $form->isValidCountryCode($countryCode) ? $countryCode : 'KE';
         return Redirect::route('admin:loan-forgiveness:allow', $countryCode)->withForm($form);

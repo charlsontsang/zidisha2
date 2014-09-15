@@ -26,7 +26,7 @@ class TestController extends BaseController
             $data = $form->getData();
 
         }else{
-            \Zidisha\Flash\Flash::error('Form Not valid');
+            \Zidisha\Flash\Flash::error('common.validation.incomplete-profile');
             return Redirect::back();
         }
     }

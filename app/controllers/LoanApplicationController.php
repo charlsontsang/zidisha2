@@ -45,7 +45,6 @@ class LoanApplicationController extends BaseBorrowerController
         $borrower = $this->getBorrower();
         
         if (!$borrower->isNewLoanAllowed()) {
-            \Flash::error('You are not allowed to make new loan right now.');
             return Redirect::route('borrower:dashboard');
         }
     }
@@ -61,7 +60,7 @@ class LoanApplicationController extends BaseBorrowerController
                 //if validation fails, remove this from the session, flash an error and redirect to first step   
                 Session::forget('borrower.openLoanId');
                 
-                \Flash::error('The loan is not valid.');
+                \Flash::error('common.validation.incomplete-profile');
                 return Redirect::action('LoanApplicationController@getInstructions');
             }
             
@@ -96,14 +95,14 @@ class LoanApplicationController extends BaseBorrowerController
         $valid = true;
         
         if (!$form->isValid()) {
-            \Flash::error('Your profile has some errors. Please fix them in order to continue the loan application.');
+            \Flash::error('common.validation.incomplete-profile');
             $valid = false;
         }
 
         $isFacebookRequired = $this->borrowerService->isFacebookRequired($borrower);
         
         if ($isFacebookRequired) {
-            \Flash::error('Facebook verification required.');
+            \Flash::error('borrower.join.facebook-intro');
             $valid = false;
         }
         
