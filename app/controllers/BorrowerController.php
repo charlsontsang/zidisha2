@@ -224,7 +224,7 @@ class BorrowerController extends BaseController
         );
 
         if ($isFacebookRequired) {
-            \Flash::error('Facebook verification required.');
+            \Flash::error('join.form.facebook-intro');
         }
 
         return \View::make(
@@ -250,7 +250,7 @@ class BorrowerController extends BaseController
             return Redirect::route('borrower:personal-information');
         }
 
-        \Flash::error('Your profile has some errors.');
+        \Flash::error('common.validation.incomplete-profile');
         return Redirect::route('borrower:personal-information')->withForm($form);
     }
 

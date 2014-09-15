@@ -84,7 +84,7 @@ class LenderPreferencesController extends BaseLenderController
             return \Redirect::route('lender:auto-lending');
         }
 
-        \Flash::error('Please use proper options.');
+        \Flash::error('common.validation.error');
         return \Redirect::route('lender:auto-lending');
     }
 }

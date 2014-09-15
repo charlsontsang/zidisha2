@@ -21,7 +21,6 @@ return [
     ],
 
     'flash' => [
-        'oops'                          => 'Oops, something went wrong',
         'facebook-no-account-connected' => 'Please connect your Facebook account to continue.',
         'google-no-account-connected'   => 'Please connect your Google account to continue.',
     ],

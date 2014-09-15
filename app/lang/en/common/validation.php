@@ -73,6 +73,8 @@ return array(
     "emails"               => "The :attribute must contains valid email addresses.",
 
     "error"				   => "Sorry, there was an error. Please try again, and notify us at service@zidisha.org in case of further difficulty.",
+	"incomplete-profile"   => "Please complete the fields highlighted below.",
+	"session-expired"	   => "Your session has expired. Please log in to continue."
 	/*
 	|--------------------------------------------------------------------------
 	| Custom Validation Language Lines

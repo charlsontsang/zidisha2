@@ -191,7 +191,7 @@ class AdminController extends BaseController
             return Redirect::route('admin:borrower:edit', $borrowerId);
         }
 
-        Flash::error('Please submit correct data.');
+        Flash::error('The data format is invalid.');
         return Redirect::route('admin:borrower:edit', $borrowerId)->withForm($form);
     }
 
@@ -288,7 +288,7 @@ class AdminController extends BaseController
             ->count();
 
         if ($userTransactionCount > 0 || $lenderInviteTransactionCount > 0) {
-            \Flash::error('can\'t delete Lender has invite or has done transactions');
+            \Flash::error('This account cannot be deleted, because it is linked to invites or transactions.');
         }else {
             $user->delete();
             \Flash::success('Lender Deleted');
@@ -550,7 +550,7 @@ class AdminController extends BaseController
             return Redirect::route('loan:index', $loanId);
         }
 
-        \Flash::error("Couldn't set categories!");
+        \Flash::error('common.validation.error');
         return Redirect::route('loan:index', $loanId)->withForm($form);
     }
     
@@ -576,7 +576,7 @@ class AdminController extends BaseController
             return Redirect::route('admin:settings');
         }
 
-        \Flash::error('Please correct the errors.');
+        \Flash::error('common.validation.error');
         return Redirect::route('admin:settings')->withForm($settingsForm);
     }
 
@@ -616,7 +616,7 @@ class AdminController extends BaseController
             return Redirect::route('loan:index', $loanId);
         }
 
-        \Flash::error("Couldn't save Translations!");
+        \Flash::error('common.validation.error');
         return Redirect::route('loan:index', $loanId)->withForm($form);
     }
 
@@ -795,7 +795,7 @@ class AdminController extends BaseController
             return Redirect::route('admin:get:withdrawal-requests');
         }
 
-        \Flash::error('Some error occured!');
+        \Flash::error('common.validation.error');
         return Redirect::route('admin:get:withdrawal-requests')->withForm($form);
     }
 
@@ -809,7 +809,7 @@ class AdminController extends BaseController
         try{
             $this->payPalService->processMassPayment($ids);
         }catch (PaypalMassPaymentException $e) {
-            \Flash::error('Some error occured!' . $e->getMessage());
+            \Flash::error('Error:' . $e->getMessage());
             return Redirect::route('admin:get:withdrawal-requests');
         }
         \Flash::success("Successfully processed!");
@@ -885,7 +885,7 @@ class AdminController extends BaseController
                 $file = Input::file('inputFile');
                 $importPayments =  $this->importService->importBorrowerPayments($data['countryCode'], $file);
                 if ( !$importPayments) {
-                    Flash::error('Import error.');
+                    Flash::error('common.validation.error');
                     return Redirect::route('admin:repayments')->withForm($form);
                 }
                 Flash::success('Repayments Added.');
@@ -893,7 +893,7 @@ class AdminController extends BaseController
             }
         }
 
-        Flash::error('Please submit correct data.');
+        Flash::error('common.validation.error');
         return Redirect::route('admin:repayments')->withForm($form);
     }
 
@@ -932,7 +932,7 @@ class AdminController extends BaseController
             Flash::success('Successfully Deleted.');
             return Redirect::route('admin:repayment-process', compact('status'));
         }
-        Flash::error('error occured.');
+        Flash::error('common.validation.error');
         return Redirect::route('admin:repayment-process', compact('status'));
     }
 
@@ -954,7 +954,7 @@ class AdminController extends BaseController
             Flash::success('Successful.');
             return Redirect::route('admin:repayments-refunds');
         }
-        Flash::error('error occured.');
+        Flash::error('common.validation.error');
         return Redirect::route('admin:repayments-refunds');
     }
 
@@ -1025,7 +1025,7 @@ class AdminController extends BaseController
             
             \Flash::success('Successfully made repayment.');
         } else {
-            \Flash::error('Invalid input values.');
+            \Flash::error('common.validation.error');
             $redirect->withForm($form);
         }
 

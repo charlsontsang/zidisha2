@@ -241,7 +241,7 @@ class LenderController extends BaseController
             $blockedCountries = explode(',', $blockedCountries);
 
             if (in_array($country['code'], $blockedCountries)) {
-                \Flash::error("Something went wrong!");
+                \Flash::error('common.validation.error');
                 return Redirect::route('lender:funds')->withForm($form);
             }
 
@@ -267,7 +267,7 @@ class LenderController extends BaseController
             }
         }
 
-        \Flash::error("Entered Values are invalid!");
+        \Flash::error("Please enter the amount as a number.");
         return Redirect::route('lender:funds')->withForm($form);
     }
 

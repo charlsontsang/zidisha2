@@ -228,8 +228,7 @@ class LoanController extends BaseController
             return $form->makePayment();
         }
 
-        // TODO error message
-        Flash::error("Something went wrong");
+        Flash::error('common.validation.error');
         return Redirect::route('loan:index', $loanId)->withForm($form);
     }
 

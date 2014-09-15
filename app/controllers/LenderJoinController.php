@@ -43,7 +43,7 @@ class LenderJoinController extends BaseController
                 return Redirect::back()->withForm($form);
             }
             
-            Flash::error('lender.join.flash.oops');
+            Flash::error('common.validation.error');
             return Redirect::route('lender:join')->withForm($form);
         }
         

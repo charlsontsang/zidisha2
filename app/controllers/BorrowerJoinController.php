@@ -73,7 +73,7 @@ class BorrowerJoinController extends BaseController
             return Redirect::action('BorrowerJoinController@getFacebook');
         }
 
-        Flash::error('You can only select from list of available countries.');
+        Flash::error('common.validation.incomplete-profile');
         return Redirect::action('BorrowerJoinController@getCountry');
     }
 
@@ -114,7 +114,7 @@ class BorrowerJoinController extends BaseController
             return Redirect::action('BorrowerJoinController@getProfile');
         }
 
-        Flash::error('You need to provide a valid Facebook profile');
+        Flash::error('borrower.join.facebook-intro');
         return Redirect::action('BorrowerJoinController@getFacebook');
     }
 
@@ -198,7 +198,7 @@ class BorrowerJoinController extends BaseController
             return Redirect::action('BorrowerJoinController@getProfile');
         }
 
-        Flash::error('Not Allowed.');
+        Flash::error('borrower.join.facebook-intro');
         return Redirect::action('BorrowerJoinController@getCountry');
     }
 
