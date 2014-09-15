@@ -72,6 +72,7 @@ return array(
 	"url"                  => "The :attribute format is invalid.",
     "emails"               => "The :attribute must contains valid email addresses.",
 
+    "error"				   => "Sorry, there was an error. Please try again, and notify us at service@zidisha.org in case of further difficulty.",
 	/*
 	|--------------------------------------------------------------------------
 	| Custom Validation Language Lines

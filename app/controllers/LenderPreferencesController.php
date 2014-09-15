@@ -48,7 +48,7 @@ class LenderPreferencesController extends BaseLenderController
                 return Redirect::route('lender:public-profile', $user->getUsername());
             }
         }
-        Flash::error('lender.flash.preferences.error');
+        Flash::error('common.validation.error');
         return Redirect::route('lender:preference')->withForm($form);
     }
     
