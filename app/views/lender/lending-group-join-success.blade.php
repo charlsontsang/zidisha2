@@ -46,13 +46,6 @@
     </div>
 </div>
 
-@include('partials._modal', [
-    'title' => 'Thanks for sharing!',
-    'body' => 'Know someone else who might like to try direct microlending?
-               Send them $25 to lend at Zidisha for free!<br/>
-               <a href="' . route('lender:invite') . '" class="btn btn-primary">Learn more</a>',
-    'id' => 'share-invite-modal'
-])
 @stop
 
 @section('script-footer')
@@ -66,13 +59,6 @@ $(function() {
             'fbShareWindow',
             'height=450, width=550, top=' + ($(window).height() / 2 - 275) + ', left=' + ($(window).width() / 2 - 225) + ', toolbar=0, location=0, menubar=0, directories=0, scrollbars=0'
         );
-
-        var pollTimer = window.setInterval(function() {
-            if (shareWindow.closed !== false) {
-                window.clearInterval(pollTimer);
-                $('#share-invite-modal').modal();
-            }
-        }, 200);
 
         return false;
     });
