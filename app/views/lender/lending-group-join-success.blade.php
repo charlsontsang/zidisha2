@@ -25,7 +25,7 @@
                 You just joined {{{ $group->getName() }}}!
             </p>
             <p>
-                Increase members in {{{ $group->getName() }}} by sharing with your friends:
+                Want to recruit more members for {{{ $group->getName() }}}?  Share the group page:
             </p>
             <p>
                 <a href="{{$facebookUrl}}" class="btn btn-facebook btn-social share-window">
@@ -41,7 +41,7 @@
         </div>
         <p style="font-size: 18px !important;">
             <br/>
-            <a href="{{ route('lender:group', $group->getId()) }}">Go to Group</a>
+            <a href="{{ route('lender:group', $group->getId()) }}">Go to group page</a>
         </p>
     </div>
 </div>

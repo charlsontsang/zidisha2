@@ -90,7 +90,7 @@ class LendingGroupController extends BaseController
 
         $twitterParams = array(
             "url" => $groupUrl,
-            "text" => "Just joined a group $groupName via @ZidishaInc",
+            "text" => "Just joined $groupName lending group via @ZidishaInc",
         );
         $twitterUrl = "http://twitter.com/share?" . http_build_query($twitterParams);
 
