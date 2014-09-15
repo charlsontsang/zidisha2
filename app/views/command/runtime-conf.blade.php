@@ -8,6 +8,8 @@
                     <dsn>mysql:host={{$databaseHost}};port={{$databasePortNumber}};dbname={{$databaseName}};user={{$databaseUsername}};password={{$databasePassword}}</dsn>
                     @if($environment == 'local')
                     <classname>Zidisha\Vendor\DebugBarPDO</classname>
+                    <user>{{$databaseUsername}}</user>
+                    <password>{{$databasePassword}}</password>
                     @endif
                 </connection>
             </datasource>
