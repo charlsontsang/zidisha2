@@ -13,7 +13,7 @@
             </div>
         @else
             <div class="pull-left profile-image" href="{{ route('lender:group', $group->getId()) }}"
-                style="background-image:url("/assets/images/carousel/mary.jpg" width="100%">
+                style="background-image:url('/assets/images/carousel/mary.jpg')" width="100%">
             </div>
         @endif
     </div>
