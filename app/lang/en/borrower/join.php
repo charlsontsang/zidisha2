@@ -31,7 +31,6 @@ return [
         'phone-number'               => 'Your Mobile Phone Number',
         'alternate-phone-number-description' => 'Optional: if you have any other phone number besides the one above, please enter it here.',
         'alternate-phone-number'     => 'Alternate Mobile Phone Number',
-        'members'                    => 'Please select the name of the member who referred you to Zidisha:',
         'volunteer-mentor-city'      => 'Please choose the town or village where you are located, or nearest to you:',
         'volunteer-mentor'           => 'Please choose one person from this list to serve as your Volunteer Mentor:',
 
@@ -65,7 +64,7 @@ return [
     'emails' => [
         'subject' => [
             'confirmation'                  => 'Zidisha application submitted',
-            'volunteer-mentor-confirmation' => 'New assigned member :name',
+            'volunteer-mentor-confirmation' => 'New member: :name',
 
         ]
     ],
@@ -75,8 +74,7 @@ return [
             'Dear :contactName, :borrowerName of tel. :borrowerPhoneNumber has shared
             your contacts in an application to join the Zidisha.org online lending community.
 
-            We would like to confirm with you that :borrowerName
-            can be trusted to repay loans. If you do not know or do not recommend
+            If you know and recommend :borrowerName as a trustworthy person, you do not need to respond. If you do not know or do not recommend
             :borrowerName, please inform us by SMS reply to this number. Thank you.'
     ]
 ];

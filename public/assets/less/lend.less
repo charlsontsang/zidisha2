@@ -139,6 +139,15 @@
 a.link-dark {
     color: #333;
 }
+.result {
+  height: 300px;
+  @media (max-width: @screen-xs-max) {
+      margin-left: -15px;
+      margin-right: -15px;
+      padding-left: 15px;
+      height: auto;
+  }
+}
 .result .profile-image {
     width: 100%;
     height: 250px;
@@ -153,8 +162,7 @@ a.link-dark {
 .result .col-xs-12 {
   @media (max-width: @screen-xs-max) {
       margin-right: auto;
-      margin-left: auto;
       margin-left: -15px;
-      width: 110%;
+      padding-right: 0;
   }
 }

@@ -1,4 +1,4 @@
-<div class="panel panel-default login-form">
+<div class="panel-default login-form">
 
     <?php $loginForm = App::make('\Zidisha\Auth\Form\LoginForm') ?>
 

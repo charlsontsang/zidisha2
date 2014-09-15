@@ -65,7 +65,6 @@
         REFERENCES
     </legend>
 
-    {{ BootstrapForm::select('referrerId', $form->getBorrowersByCountry()) }}
     {{ BootstrapForm::select('volunteerMentorCity', $form->getVolunteerMentorCities()) }}
     {{ BootstrapForm::select('volunteerMentorId', $form->getVolunteerMentors()) }}
 </fielset>

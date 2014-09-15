@@ -78,7 +78,6 @@ class ProfileForm extends AbstractForm
                     ',',
                     array_keys(VolunteerMentorQuery::create()->getVolunteerMentorsByCity($data['volunteerMentorCity']))
                 ),
-            'referrerId'                      => 'in:' . implode(',', array_keys($this->getBorrowersByCountry())),
         ];
     }
 
