@@ -101,7 +101,11 @@ class LenderJoinController extends BaseController
 
             return $this->join($user);
         } else {
-            Flash::error('comments.flash.welcome');
+            Flash::error('common.comments.flash.
+
+@section('menu-links')
+@include('partials.nav-links.borrower-links')
+@stopwelcome');
             return Redirect::route('lender:join');
         }
     }
@@ -142,7 +146,11 @@ class LenderJoinController extends BaseController
             Session::forget('lenderInviteVisitId');
             Flash::modal(View::make('lender.invite-new-account', compact('inviter'))->render());
         } else {
-            Flash::success('comments.flash.welcome');
+            Flash::success('common.comments.flash.
+
+@section('menu-links')
+@include('partials.nav-links.borrower-links')
+@stopwelcome');
         }
         if (Session::get('lenderJoin')) {
             $params = Session::get('lenderJoin');
@@ -204,7 +212,11 @@ class LenderJoinController extends BaseController
             }
             return $response;
         } else {
-            Flash::error('comments.flash.welcome');
+            Flash::error('common.comments.flash.
+
+@section('menu-links')
+@include('partials.nav-links.borrower-links')
+@stopwelcome');
             return Redirect::route('lender:join');
         }
     }
@@ -228,7 +240,11 @@ class LenderJoinController extends BaseController
             $this->lenderService->lenderInviteViaEmail($lender, $email, $subject, $custom_message);
         }
 
-        Flash::success(\Lang::choice('comments.flash.invite-success', $countInvites, array('count' => $countInvites)));
+        Flash::success(\Lang::choice('common.comments.flash.
+
+@section('menu-links')
+@include('partials.nav-links.borrower-links')
+@stopinvite-success', $countInvites, array('count' => $countInvites)));
         return Redirect::route('lender:invite');
     }
 }
