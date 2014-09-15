@@ -128,4 +128,10 @@
     </div>
 </div>
 
+@if(!(Auth::check() && Auth::user()->isBorrower()))          
+    <a href="{{ route('lender:group:join', $group->getId()) }}" class="btn btn-primary btn-block mobile-bottom-btn">
+        Join this group
+    </a>
+@endif
+
 @stop
