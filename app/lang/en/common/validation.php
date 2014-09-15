@@ -87,6 +87,7 @@ return array(
                 Zidisha account.',
 		'facebook-no-account-connected' => 'Please connect your Facebook account to continue.',
         'google-no-account-connected'   => 'Please connect your Google account to continue.',
+        'facebook-account-linked'		=> 'Your Facebook account has been linked.',
     ],
 
 	/*

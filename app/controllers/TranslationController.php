@@ -78,7 +78,10 @@ class TranslationController extends BaseController
 
         $this->translationService->updateTranslations($filename, $languageCode, $data);
 
-        \Flash::success('Your updates have been saved.');
+        $thankyous = array('Thanks', 'Merci beaucoup', 'Terima kasih', 'Gracias', 'Obrigados', 'Jerejef', 'Asante sana', 'Danke schön', 'Shukran');
+        $thanks = $thankyous[array_rand($thankyous)];
+
+        \Flash::success('Your translation has been published. '.$thanks.'!');
         return Redirect::action('TranslationController@getTranslations', compact('filename', 'languageCode'));
     }
 

@@ -262,7 +262,7 @@ class LenderController extends BaseController
             $lender = Auth::user()->getLender();
             $withdrawalRequest = $this->balanceService->addWithdrawRequest($lender, $data);
             if ($withdrawalRequest) {
-                \Flash::success("Your withdrawal has been successfully processed, and the requested amount should be credited to your PayPal account within one week. Thanks for your participation!");
+                \Flash::success("Your withdrawal request has been submitted, and should be processed within one week. Thanks for your participation!");
                 return Redirect::route('lender:funds');
             }
         }

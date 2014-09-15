@@ -83,11 +83,7 @@ class GiftCardController extends BaseController
 
         $this->giftCardService->redeemGiftCard($lender, $redemptionCode);
 
-        Flash::success(\Lang::get('common.comments.flash.
-
-@section('menu-links')
-@include('partials.nav-links.borrower-links')
-@stopredemption-success'));
+        Flash::success(\Lang::get('common.comments.flash.redemption-success'));
         return Redirect::route('lender:gift-cards:track');
     }
 
