@@ -44,7 +44,7 @@ class LenderPreferencesController extends BaseLenderController
             $data = $form->getData();
             $preferences = $this->lenderService->updateAccountPreferences($user->getLender(), $data);
             if ($preferences) {
-                Flash::success('lender.flash.preferences.success');
+                Flash::success('Success! Your account settings are updated.');
                 return Redirect::route('lender:public-profile', $user->getUsername());
             }
         }
