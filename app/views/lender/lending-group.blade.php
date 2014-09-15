@@ -5,6 +5,14 @@
 @stop
 
 @section('content-top')
+    <div class="loan-titlebar">
+        <span class="text-light">
+            Lending Group
+        </span>
+        <p class="alpha">
+            <strong>{{ $group->getName() }}</strong>
+        </p>
+    </div>
     <div id="carousel-example-generic" class="carousel">
         <div class="carousel-inner group-image">
             <div class="item active">
@@ -24,6 +32,7 @@
 @section('content')
 <div class="row">
     <div class="col-sm-8 loan-body">
+
         <div class="loan-section">
             <div class="loan-section-title">
                 <span class="text-light">Impact</span>

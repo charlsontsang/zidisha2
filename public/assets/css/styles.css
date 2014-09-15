@@ -9418,12 +9418,11 @@ form .btn-default,
   text-align: right !important;
 }
 .caption-group {
-  display: inline-block;
-  top: 15px;
-  width: 100%;
+  display: none;
 }
 @media (min-width: 768px) {
   .caption-group {
+    display: inline-block;
     top: 280px;
     left: 30px;
     width: 90%;
@@ -9955,7 +9954,7 @@ a.link-dark {
   vertical-align: middle;
 }
 .loan-titlebar {
-  padding: 15px;
+  padding: 15px 15px 10px 15px;
   background-color: #f8f8f8;
 }
 @media (min-width: 768px) {
