@@ -7,7 +7,7 @@ return [
     'login'        => 'Please <a href=":link">log in</a> to follow :name.',
     'flash' => [
         'update-settings-success' => 'Your preference has been saved.',
-    ]
+    ],
     'projects' => [
         'stats-projects' => ':count Project|:count Projects',
     ],

@@ -115,7 +115,7 @@ My Stats
         <tr>
             <td colspan="3"><strong>Total</strong></td>
             <td>{{ \Lang::choice(
-                       'lender.follow.projects
+                       'lender.shared-labels.projects
 
 @section('menu-links')
 @include('partials.nav-links.borrower-links')
@@ -193,7 +193,7 @@ My Stats
         <tr>
             <td colspan="3"><strong>Total</strong></td>
             <td>{{ \Lang::choice(
-                       'lender.follow.projects
+                       'lender.shared-labels.projects
 
 @section('menu-links')
 @include('partials.nav-links.borrower-links')
