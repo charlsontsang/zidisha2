@@ -1,13 +1,6 @@
 <?php
 
 return [
-    'form' => [
-        'username'              => 'Create display name',
-        'email'                 => 'Your email',
-        'password'              => 'Create password',
-        'submit'                => 'Join',
-        'country-id'            => 'Your country'
-    ],
 
     'validation' => [
         'facebook-account-exists' => 'This Facebook account is already linked to another
