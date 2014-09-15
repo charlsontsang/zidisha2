@@ -10266,12 +10266,11 @@ a.link-dark {
   }
 }
 .team .row {
-  margin: 0 -20px 0 -20px !important;
-  padding-bottom: 40px !important;
+  margin: 0 -20px !important;
 }
 .team .col-sm-4,
 .team .col-sm-6 {
-  padding: 0 20px 0 20px !important;
+  padding: 0 20px 40px 20px !important;
 }
 .team p,
 .team a {
