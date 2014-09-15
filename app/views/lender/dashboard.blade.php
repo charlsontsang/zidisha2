@@ -58,7 +58,7 @@ Quick Links
          </tbody>
     </table>
 @else
-    <p>"Your comment feed is empty."</p>
+    <p>Your comment feed is empty.</p>
     <p><strong><a href="{{ route('lend:index') }}">Make a Loan</a></strong></p>
 @endif
 </div>
