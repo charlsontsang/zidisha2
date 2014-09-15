@@ -6,7 +6,7 @@
 
 @section('content')
 <div class="row">
-    <div class="col-sm-6 group-body">
+    <div class="col-sm-6 loan-body">
         @if($group->getGroupProfilePicture())
             <div class="pull-left profile-image" href="{{ route('lender:group', $group->getId()) }}"
                 style="background-image:url({{ $group->getGroupProfilePicture()->getImageUrl('small-profile-picture') }})" width="100%">
