@@ -115,7 +115,11 @@ My Stats
         <tr>
             <td colspan="3"><strong>Total</strong></td>
             <td>{{ \Lang::choice(
-                       'lender.shared-labels.projects.stats-projects',
+                       'lender.follow.projects
+
+@section('menu-links')
+@include('partials.nav-links.borrower-links')
+@stop.stats-projects',
                        $fundraisingLoanBids->getTotal(),
                        ['count' => $fundraisingLoanBids->getTotal()]
                 ) }}
@@ -189,7 +193,11 @@ My Stats
         <tr>
             <td colspan="3"><strong>Total</strong></td>
             <td>{{ \Lang::choice(
-                       'lender.shared-labels.projects.stats-projects',
+                       'lender.follow.projects
+
+@section('menu-links')
+@include('partials.nav-links.borrower-links')
+@stop.stats-projects',
                        $activeLoanBids->getTotal(),
                        ['count' => $activeLoanBids->getTotal()]
                 ) }}

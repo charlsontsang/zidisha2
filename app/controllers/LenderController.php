@@ -335,7 +335,11 @@ class LenderController extends BaseController
         $totalCompletedLoansBidsAmount = BidQuery::create()
             ->getTotalCompletedLoansBidsAmount($lender);
         $numberOfCompletedBids = $completedLoansBids->getNbResults();
-        $numberOfCompletedProjects = \Lang::choice('lender.shared-labels.projects.stats-projects', $numberOfCompletedBids, array('count' => $numberOfCompletedBids));
+        $numberOfCompletedProjects = \Lang::choice('lender.follow.projects
+
+@section('menu-links')
+@include('partials.nav-links.borrower-links')
+@stop.stats-projects', $numberOfCompletedBids, array('count' => $numberOfCompletedBids));
 
         $completedLoansIds = [];
         /** @var $completedLoansBid Bid */
