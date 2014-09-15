@@ -62,7 +62,7 @@ return [
         
         'submit'              => 'Submit final application',
         'save-later'          => 'Save and Complete Later',
-        'disconnect-facebook' => 'Disconnect facebook account',
+        'disconnect-facebook' => 'Disconnect Facebook account',
     ],
 
     'emails' => [
