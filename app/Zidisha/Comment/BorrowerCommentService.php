@@ -1,8 +1,11 @@
 <?php namespace Zidisha\Comment;
 
+use Propel\Runtime\Propel;
 use Zidisha\Borrower\Borrower;
+use Zidisha\Lender\Lender;
 use Zidisha\Lender\LenderQuery;
 use Zidisha\Loan\Base\LoanQuery;
+use Zidisha\Loan\Loan;
 use Zidisha\Mail\AdminMailer;
 use Zidisha\Mail\BorrowerMailer;
 use Zidisha\Mail\LenderMailer;
@@ -140,5 +143,30 @@ class BorrowerCommentService extends CommentService
         }
         
         return $images;
+    }
+
+    public function getAllCommentForLender(Lender $lender)
+    {
+        $bidsQuery = "SELECT DISTINCT(l.borrower_id) FROM loans as l JOIN loan_bids as lb ON l.id = lb.loan_id WHERE lb.lender_id = :lenderId AND l.status IN (:openStatus, :fundedStatus, :activeStatus) AND l.deleted_by_admin = FALSE ";
+        $bids = PropelDB::fetchAll(
+            $bidsQuery,
+            [
+                'lenderId'     => $lender->getId(),
+                'openStatus'   => Loan::OPEN,
+                'fundedStatus' => Loan::FUNDED,
+                'activeStatus' => Loan::ACTIVE,
+            ]
+        );
+        $ids = array();
+        if (!empty($bids)) {
+            $ids = [] ;
+            foreach ($bids as $bid) {
+                array_push($ids, $bid['borrower_id']);
+            }
+        }
+        $comments = BorrowerCommentQuery::create()
+            ->filterByBorrowerId($ids)
+            ->find();
+        return $comments;
     }
 }
