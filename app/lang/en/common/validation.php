@@ -75,6 +75,20 @@ return array(
     "error"				   => "Sorry, there was an error. Please try again, and notify us at service@zidisha.org in case of further difficulty.",
 	"incomplete-profile"   => "Please complete the fields highlighted below.",
 	"session-expired"	   => "Your session has expired. Please log in to continue."
+
+    'link-account' 		   => [
+        'facebook-account-exists' => 'This Facebook account is already linked to another
+                Zidisha account.',
+        'facebook-email-exists'   => 'This Facebook account\'s email address is already linked to another
+                Zidisha account.',
+        'google-account-exists'   => 'This Google account is already linked to another
+                Zidisha account.',
+        'google-email-exists'     => 'This Google address is already linked to another
+                Zidisha account.',
+		'facebook-no-account-connected' => 'Please connect your Facebook account to continue.',
+        'google-no-account-connected'   => 'Please connect your Google account to continue.',
+    ],
+
 	/*
 	|--------------------------------------------------------------------------
 	| Custom Validation Language Lines
