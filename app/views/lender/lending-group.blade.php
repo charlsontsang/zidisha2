@@ -120,7 +120,7 @@
         <div>
             @if($group->isLeader(Auth::User()->getLender()))
                 <a href="{{ route('lender:groups:edit', $group->getId()) }}">
-                    Edit Group
+                    Edit group
                 </a>
             @endif
         </div>
