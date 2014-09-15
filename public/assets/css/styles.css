@@ -9179,6 +9179,11 @@ form .btn-default,
   }
 }
 @media (max-width: 767px) {
+  .navbar-nav > li > a {
+    padding-top: 12px;
+  }
+}
+@media (max-width: 767px) {
   li.dropdown {
     display: block;
   }
