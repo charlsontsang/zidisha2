@@ -7,16 +7,41 @@
 
     @if($controller != 'LoanFeedbackController')
         <a href="#" data-display='display' target='.reply-comment-upload-inputs'>
-            <i class="fa fa-camera"></i> @lang('common.comments.add-photo')
+
+            <i class="fa fa-camera"></i> @lang('common.comments.
+@lang('borrower.menu.links-title')
+@stop
+
+@section('menu-links')
+@include('partials.nav-links.borrower-links')
+@stopadd-photo')
         </a>
         <div class="comment-upload-inputs reply-comment-upload-inputs" style="display: none;">
-            {{ BootstrapForm::file('file[]', ['label' => 'common.comments.upload-file']) }}
-            <button class="btn btn-primary btn-success comment-upload-add-more">@lang('common.comments.add-more')</button>
+            {{ BootstrapForm::file('file[]', ['label' => 'common.comments.
+@lang('borrower.menu.links-title')
+@stop
+
+@section('menu-links')
+@include('partials.nav-links.borrower-links')
+@stopupload-file']) }}
+            <button class="btn btn-primary btn-success comment-upload-add-more">@lang('common.comments.
+@lang('borrower.menu.links-title')
+@stop
+
+@section('menu-links')
+@include('partials.nav-links.borrower-links')
+@stopadd-more')</button>
         </div>
     @endif
     
     <div class="pull-right">
-        {{ BootstrapForm::submit('actions.reply', ['data-loading-text' => \Lang::get('common.comments.loading-text.reply')]) }}
+        {{ BootstrapForm::submit('actions.reply', ['data-loading-text' => \Lang::get('common.comments.
+@lang('borrower.menu.links-title')
+@stop
+
+@section('menu-links')
+@include('partials.nav-links.borrower-links')
+@stoploading-text.reply')]) }}
     </div>
     
     {{ BootstrapForm::close() }}
