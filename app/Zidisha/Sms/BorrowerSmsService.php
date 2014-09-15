@@ -222,7 +222,6 @@ class BorrowerSmsService
         }
     }
 
-    //TODO use it when an borrower invite get accepted
     public function sendInviteAlertSms(Invite $invite)
     {
         $borrower = $invite->getBorrower();

@@ -50,7 +50,7 @@ class BorrowerService
         ];
         $borrower = new Borrower();
 
-        PropelDB::transaction(function($con) use($data, $borrower) {
+        $invite = PropelDB::transaction(function($con) use($data, $borrower) {
             $volunteerMentor = VolunteerMentorQuery::create()
                 ->findOneByBorrowerId($data['volunteerMentorId']);
             $facebookData = \Session::get('BorrowerJoin.facebookData');
@@ -149,7 +149,15 @@ class BorrowerService
                 ->setPreferredRepaymentAmount($data['preferredRepaymentAmount'])
                 ->setBorrower($borrower);
             $joinLog->save($con);
-        });
+
+            $invite = $this->isBorrowerInvited($borrower, $con);
+                return $invite;
+            });
+
+        if ($invite) {
+            $this->borrowerSmsService->sendInviteAlertSms($invite);
+            $this->siftScienceService->sendBorrowerInviteAcceptedEvent($invite);
+        }
 
         $this->sendVerificationCode($borrower);
 
@@ -669,5 +677,18 @@ class BorrowerService
             ->filterByReceiverId($borrower->getId())
             ->filterByBorrowerId($volunteerMentor->getId())
             ->count();
+    }
+
+    private function isBorrowerInvited(Borrower $borrower, $con)
+    {
+        $invite = InviteQuery::create()
+            ->filterByInviteeId(null)
+            ->findOneByEmail($borrower->getUser()->getEmail());
+        if ($invite) {
+            $invite->setInvitee($borrower);
+            $invite->save($con);
+            return $invite;
+        }
+        return null;
     }
 }

@@ -146,12 +146,13 @@ class GenerateModelData extends Command
             $this->call('fake', array('model' => 'Lender', 'size' => 100));
             $this->call('fake', array('model' => 'VolunteerMentor', 'size' => 20));
             $this->call('fake', array('model' => 'Borrower', 'size' => 80));
-            
+
             $this->call('fake', array('model' => 'LendingGroup', 'size' => 50));
             $this->call('fake', array('model' => 'LendingGroupMember', 'size' => 200));
 
             $this->call('fake', array('model' => 'Transaction', 'size' => 200));
 
+            $this->call('fake', array('model' => 'BorrowerInvite', 'size' => 200));
             $this->call('fake', array('model' => 'LenderInvite', 'size' => 200));
             $this->call('fake', array('model' => 'GiftCard', 'size' => 100));
             
@@ -163,8 +164,6 @@ class GenerateModelData extends Command
             $this->call('fake', array('model' => 'RepaidLoan', 'size' => 1));
 
             $this->call('fake', array('model' => 'Repayment', 'size' => 1));
-
-            $this->call('fake', array('model' => 'BorrowerInvite', 'size' => 200));
 
             $this->call('fake', array('model' => 'Comment', 'size' => 200));
             $this->call('fake', array('model' => 'WithdrawalRequest', 'size' => 200));
