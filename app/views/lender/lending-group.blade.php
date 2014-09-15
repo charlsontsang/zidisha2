@@ -112,7 +112,7 @@
                 Leave this group
             </a>
             @else
-            <a href="{{ route('lender:group:join', $group->getId()) }}" class="btn btn-block btn-primary">
+            <a href="{{ route('lender:group:join', $group->getId()) }}" class="btn btn-block btn-primary join-group">
                 Join this group
             </a>
             @endif

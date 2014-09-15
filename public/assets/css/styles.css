@@ -9149,6 +9149,11 @@ form .btn-default,
   background-color: #f36e6e;
   color: white;
 }
+@media (max-width: 767px) {
+  .join-group {
+    display: none;
+  }
+}
 .navbar-brand {
   padding: 15px 10px 15px 15px;
 }
