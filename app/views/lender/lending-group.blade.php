@@ -108,7 +108,7 @@
     <div class="col-xs-4">
         @if(Auth::check() && Auth::getUser()->isLender())
             @if($group->isMember(Auth::User()->getLender()))
-            <a href="{{ route('lender:group:leave', $group->getId()) }}" class="btn btn-primary">
+            <a href="{{ route('lender:group:leave', $group->getId()) }}">
                 Leave this group
             </a>
             @else
@@ -119,14 +119,12 @@
         <br><br>
         <div>
             @if($group->isLeader(Auth::User()->getLender()))
-                <a href="{{ route('lender:groups:edit', $group->getId()) }}" class="btn btn-primary">
+                <a href="{{ route('lender:groups:edit', $group->getId()) }}">
                     Edit Group
                 </a>
             @endif
         </div>
         @endif
-        <a href="{{ route('lender:groups') }}">Back to Lending Groups</a>
-        <br>
     </div>
 </div>
 
