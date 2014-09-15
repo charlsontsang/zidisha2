@@ -22,7 +22,7 @@
         <div class="lead">
             <p>
                 <br/><br/>
-                You just joined {{{ $group->getName() }}}!
+                {{{ $successMessage }}}
             </p>
             <p>
                 Want to recruit more members for {{{ $group->getName() }}}?  Share the group page:
