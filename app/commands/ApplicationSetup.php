@@ -41,7 +41,7 @@ class ApplicationSetup extends Command
 
         $databaseConfig ['databasePassword'] = $this->secret('Enter your database password [Default=secret] : ') ?: 'secret';
 
-        $databaseConfig['databasePortNumber'] = $this->ask('Enter your database port number [Default=5432] : ', '5432');
+        $databaseConfig['databasePortNumber'] = $this->ask('Enter your database port number [Default=3306] : ', '3306');
 
         $file = new \Illuminate\Filesystem\Filesystem();
         $contents = <<<ENV
@@ -69,19 +69,19 @@ ENV;
 <?php
 
 return array(
-    'default' => 'pgsql',
+    'default' => 'mysql',
 
     'connections' => array(
 
-        'pgsql' => array(
-            'driver'   => 'pgsql',
+        'mysql' => array(
+            'driver'   => 'mysql',
             'host'     => '{$databaseConfig['databaseHost']}',
             'database' => '{$databaseConfig ['databaseName']}',
             'username' => '{$databaseConfig['databaseUsername']}',
             'password' => '{$databaseConfig ['databasePassword']}',
             'charset'  => 'utf8',
+            'collation' => 'utf8_unicode_ci',
             'prefix'   => '',
-            'schema'   => 'public',
         ),
 
     ),
