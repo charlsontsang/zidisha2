@@ -49,17 +49,20 @@
             </div>
         </div>
 
-        <div class="loan-section">
+        <hr/>
 
+        <div class="loan-section">
             <div class="loan-section-title">
                 <span class="text-light">About</span>
             </div>
             <div class="loan-section-content">
                 <p>{{ $group->getAbout() }}</p>
             </div>
+        </div>
 
-            <hr/>
+        <hr/>
 
+        <div class="loan-section">
             <div class="loan-section-title">
                 <span class="text-light">Members</span>
             </div>
@@ -85,9 +88,11 @@
                 </div>
                 @endif
             </div>
+        </div>
 
-            <hr/>
+        <hr/>
 
+        <div class="loan-section">
             <div class="loan-section-title">
                 <span class="text-light">Discussion</span>
             </div>
