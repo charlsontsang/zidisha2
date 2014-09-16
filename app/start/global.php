@@ -53,7 +53,7 @@ App::error(
 
         if (\Config::get('app.developerEmail')) {
             $adminMailer = App::make('Zidisha\Mail\AdminMailer');
-            $adminMailer->sendErrorMail($exception);   
+            $adminMailer->sendErrorMail($exception);
         }
     }
 );
