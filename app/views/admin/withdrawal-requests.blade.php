@@ -8,11 +8,12 @@ Withdraw Requests
 <div class="page-header">
     <h1>Withdraw Requests</h1>
 </div>
-{{ BootstrapForm::open(['route' => ['admin:post:paypal-withdrawal-requests'], 'id' => 'paypal-mass-payment-form']) }}
-{{ BootstrapForm::populate($form) }}
-<button id="paypal-mass-payment" class="btn btn-primary" type="submit">Process payments</button>
-{{ BootstrapForm::close() }}
-
+@if(Auth::getUser()->isAdmin())
+    {{ BootstrapForm::open(['route' => ['admin:post:paypal-withdrawal-requests'], 'id' => 'paypal-mass-payment-form']) }}
+    {{ BootstrapForm::populate($form) }}
+    <button id="paypal-mass-payment" class="btn btn-primary" type="submit">Process payments</button>
+    {{ BootstrapForm::close() }}
+@endif
 <table class="table table-striped">
     <thead>
     <tr>
@@ -46,12 +47,20 @@ Withdraw Requests
         <td>{{ $request->getPaypalEmail() }}</td>
         <td>{{ $request->getAmount() }}</td>
         <td>
-            {{ BootstrapForm::open(['route' => ['admin:post:withdrawal-requests', $request->getId()]]) }}
-            {{ BootstrapForm::populate($form) }}
-            @if($request->isPaid())
-                Paid
+            @if(Auth::getUser()->isAdmin())
+                {{ BootstrapForm::open(['route' => ['admin:post:withdrawal-requests', $request->getId()]]) }}
+                {{ BootstrapForm::populate($form) }}
+                @if($request->isPaid())
+                    Paid
+                @else
+                {{ BootstrapForm::submit('Pay') }}
+                @endif
             @else
-            {{ BootstrapForm::submit('Pay') }}
+                @if($request->isPaid())
+                    Paid
+                @else
+                    Not yet paid
+                @endif
             @endif
         </td>
     </tr>
