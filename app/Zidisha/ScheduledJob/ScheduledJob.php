@@ -33,7 +33,7 @@ abstract class ScheduledJob extends BaseScheduledJob
                 });
 
         if ($this::COUNT >= 1) {
-            $query->whereRaw("s.id IS NULL OR (s.last_processed_at IS NOT NULL AND DATEADD(month, s.count, s.created_at) < NOW() AND s.count <= ".$this::COUNT . ")");
+            $query->whereRaw("s.id IS NULL OR (s.last_processed_at IS NOT NULL AND DATE_ADD(s.created_at, INTERVAL s.count MONTH) < NOW() AND s.count <= ".$this::COUNT . ")");
         } else {
             $query->whereRaw("s.id IS NULL");
         }
