@@ -160,4 +160,9 @@ class User extends BaseUser implements UserInterface, RemindableInterface
         }
         return null;
     }
+
+    public function isVolunteerOrAdmin()
+    {
+        return ($this->isVolunteer() || $this->isAdmin());
+    }
 }

@@ -50,7 +50,7 @@
                     </ul>
                 </li>
                 @endif
-                @if(Auth::check() && Auth::getUser()->isAdmin())
+                @if(Auth::check() && Auth::getUser()->isVolunteerOrAdmin())
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         Manage Borrowers <b class="caret"></b>
@@ -88,7 +88,9 @@
                     <ul class="dropdown-menu">
                         <li><a href="{{ route('admin:dashboard') }}">Dashboard</a></li>
                         <li><a href="{{ route('admin:translation:index') }}">Translations</a></li>
-                        <li><a href="{{ route('admin:mail:test-mails') }}">Test Emails</a></li>
+                        @if(Auth::getUser()->isAdmin())
+                            <li><a href="{{ route('admin:mail:test-mails') }}">Test Emails</a></li>
+                        @endif
                         <li><a href="{{ route('admin:sms:test-sms') }}">Test SMS</a></li>
                         <li><a href="{{ route('admin:test:sift-science') }}">Test Sift Science</a></li>
                         <li><a href="{{ route('admin:countries') }}">Countries</a></li>
