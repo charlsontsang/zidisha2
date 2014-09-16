@@ -47,8 +47,8 @@ class BorrowerService
     public function joinBorrower($data)
     {
         $data += [
-            'joinedAt'   => new DateTime(),
-            'referrerId' => null,
+            'joinedAt'     => new DateTime(),
+            'referrerId'   => null,
             'facebookData' => null,
         ];
         $borrower = new Borrower();
