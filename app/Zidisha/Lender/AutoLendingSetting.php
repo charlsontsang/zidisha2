@@ -14,7 +14,11 @@ class AutoLendingSetting extends BaseAutoLendingSetting
     const LOAN_RANDOM = 5;
     const AUTO_LEND_AS_PREV_LOAN  = 6;
 
-    public function setLenderCredit(Money $money)
+    /**
+     * @param Money $money
+     * @return $this|AutoLendingSetting
+     */
+    public function setLenderCredit($money)
     {
         return parent::setLenderCredit($money->getAmount());        
     }
