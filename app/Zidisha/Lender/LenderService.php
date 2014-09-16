@@ -244,17 +244,7 @@ class LenderService
         $errors = array();
         if ($checkUser) {
             if ($checkUser->getFacebookId() == $facebookUser['id']) {
-                $errors[] = 'common.validation.link-account.
-
-@section('menu-links')
-@include('partials.nav-links.borrower-links')
-@stopfacebook-account-exists';
-            } else {
-                $errors[] = 'common.validation.link-account.
-
-@section('menu-links')
-@include('partials.nav-links.borrower-links')
-@stopfacebook-email-exists';
+                $errors[] = 'common.validation.link-account.facebook-email-exists';
             }
         }
 
@@ -285,17 +275,9 @@ class LenderService
         $errors = array();
         if ($checkUser) {
             if ($checkUser->getGoogleId() == $googleUser->getId()) {
-                $errors[] = 'common.validation.link-account.
-
-@section('menu-links')
-@include('partials.nav-links.borrower-links')
-@stopgoogle-account-exists';
+                $errors[] = 'common.validation.link-account.google-account-exists';
             } else {
-                $errors[] = 'common.validation.link-account.
-
-@section('menu-links')
-@include('partials.nav-links.borrower-links')
-@stopgoogle-email-exists';
+                $errors[] = 'common.validation.link-account.google-email-exists';
             }
         }
 
