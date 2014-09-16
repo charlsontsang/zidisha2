@@ -63,13 +63,7 @@ abstract class CommentsController extends BaseController
                     {
                         $files[] = $file;
                     } else {
-                        Flash::error(\Lang::get('common.comments.
-@lang('borrower.menu.links-title')
-@stop
-
-@section('menu-links')
-@include('partials.nav-links.borrower-links')
-@stopflash.file-not-valid'));
+                        Flash::error(\Lang::get('common.comments.flash.file-not-valid'));
                     }
                 }
             }

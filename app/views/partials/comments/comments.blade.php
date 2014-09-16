@@ -35,14 +35,7 @@
     <script type="text/html" id="comment-upload-input-template">
         <div class="file-input-block">
             <div style="display: inline-block;">
-                {{ BootstrapForm::file('file[]', ['label' => 'common.comments.
-@lang('borrower.menu.links-title')
-@stop
-
-@section('menu-links')
-@include('partials.nav-links.borrower-links')
-@stopupload-file', 'class' => 'upload-file']) }}
->>>>>>> a157f98... move comment labels from borrower to common directory
+                {{ BootstrapForm::file('file[]', ['label' => 'common.comments.upload-file', 'class' => 'upload-file']) }}
             </div>
             <div style="display: inline-block;">
                 <a href="#" data-dismiss='removeFile'>
