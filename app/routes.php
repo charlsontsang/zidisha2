@@ -483,12 +483,56 @@ Route::group(
          */
         Route::controller('lendinggroupcomment/{id}', 'LendingGroupCommentController');
 
-
         /**
          * Routes for Admin
          */
         Route::group(
             array('prefix' => 'admin', 'before' => 'auth|hasRole:admin'),
+            function () {
+                Route::get(
+                    'test-mails',
+                    ['uses' => 'MailTesterController@getAllMails', 'as' => 'admin:mail:test-mails']
+                );
+
+                Route::post(
+                    'test-mails',
+                    ['uses' => 'MailTesterController@postMail', 'as' => 'admin:mail:post:mail']
+                );
+
+                Route::post(
+                    'withdrawal-requests/paypal/pay',
+                    array('uses' => 'AdminController@postPaypalWithdrawalRequests',
+                          'as' => 'admin:post:paypal-withdrawal-requests')
+
+                );
+                Route::post(
+                    'withdrawal-requests/{withdrawalRequestId}/pay',
+                    array('uses' => 'AdminController@postWithdrawalRequests', 'as' => 'admin:post:withdrawal-requests')
+
+                );
+                Route::get(
+                    'countries/edit/{id}',
+                    array('uses' => 'CountryController@editCountry', 'as' => 'admin:edit:country')
+                );
+                Route::post(
+                    'countries/edit/{id}',
+                    array('uses' => 'CountryController@postEditCountry', 'as' => 'admin:post:edit:country')
+                );
+                Route::post(
+                    '/settings/exchange-rates/{countryName?}',
+                    array(
+                        'uses'   => 'AdminController@postExchangeRates',
+                        'as'     => 'admin:post-exchange-rates',
+                        'before' => 'csrf'
+                    )
+                );
+            }
+        );
+        /**
+         * Routes for Admin|Volunteer
+         */
+        Route::group(
+            array('prefix' => 'admin', 'before' => 'auth|isVolunteerOrAdmin'),
             function () {
                 Route::get('dashboard', array('uses' => 'AdminController@getDashboard', 'as' => 'admin:dashboard'));
                 Route::get('volunteers', array('uses' => 'AdminController@getVolunteers', 'as' => 'admin:volunteers'));
@@ -539,14 +583,7 @@ Route::group(
                         'as'   => 'admin:exchange-rates'
                     )
                 );
-                Route::post(
-                    '/settings/exchange-rates/{countryName?}',
-                    array(
-                        'uses'   => 'AdminController@postExchangeRates',
-                        'as'     => 'admin:post-exchange-rates',
-                        'before' => 'csrf'
-                    )
-                );
+
                 Route::get(
                     '/repayments',
                     array(
@@ -677,14 +714,6 @@ Route::group(
                     array('uses' => 'AdminController@postAdminCategory', 'as' => 'admin:post-category')
                 );
                 Route::get('countries', array('uses' => 'CountryController@getCountries', 'as' => 'admin:countries'));
-                Route::get(
-                    'countries/edit/{id}',
-                    array('uses' => 'CountryController@editCountry', 'as' => 'admin:edit:country')
-                );
-                Route::post(
-                    'countries/edit/{id}',
-                    array('uses' => 'CountryController@postEditCountry', 'as' => 'admin:post:edit:country')
-                );
 
                 Route::get('settings', array('uses' => 'AdminController@getSettings', 'as' => 'admin:settings'));
                 Route::post('settings', array('uses' => 'AdminController@postSettings', 'as' => 'admin:settings'));
@@ -755,17 +784,6 @@ Route::group(
                     'withdrawal-requests',
                     array('uses' => 'AdminController@getWithdrawalRequests', 'as' => 'admin:get:withdrawal-requests')
                 );
-                Route::post(
-                    'withdrawal-requests/paypal/pay',
-                    array('uses' => 'AdminController@postPaypalWithdrawalRequests',
-                          'as' => 'admin:post:paypal-withdrawal-requests')
-
-                );
-                Route::post(
-                    'withdrawal-requests/{withdrawalRequestId}/pay',
-                    array('uses' => 'AdminController@postWithdrawalRequests', 'as' => 'admin:post:withdrawal-requests')
-
-                );
 
                 Route::get(
                     'publish-comments',
@@ -775,16 +793,6 @@ Route::group(
                 Route::post(
                     'publish-comments',
                     array('uses' => 'AdminController@postPublishComments', 'as' => 'admin:post:moderate-comments')
-                );
-
-                Route::get(
-                    'test-mails',
-                    ['uses' => 'MailTesterController@getAllMails', 'as' => 'admin:mail:test-mails']
-                );
-
-                Route::post(
-                    'test-mails',
-                    ['uses' => 'MailTesterController@postMail', 'as' => 'admin:mail:post:mail']
                 );
 
                 Route::get(

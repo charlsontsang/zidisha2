@@ -9,20 +9,23 @@ Exchange rates
     <h1>Exchange Rates</h1>
 </div>
 
-<p> Add Exchange Rate for current period </p>
+@if(Auth::getUser()->isAdmin())
+    <p> Add Exchange Rate for current period </p>
 
-<br>
+    <br>
 
-{{ BootstrapForm::open(array('controller' => 'AdminController@postExchangeRates', 'translationDomain' => 'exchange-rate')) }}
-{{ BootstrapForm::populate($form) }}
+    {{ BootstrapForm::open(array('controller' => 'AdminController@postExchangeRates', 'translationDomain' => 'exchange-rate')) }}
+    {{ BootstrapForm::populate($form) }}
 
-{{ BootstrapForm::select('countrySlug', $form->getCountrySlug(), $countrySlug) }}
-{{ BootstrapForm::text('newRate') }}
+    {{ BootstrapForm::select('countrySlug', $form->getCountrySlug(), $countrySlug) }}
+    {{ BootstrapForm::text('newRate') }}
 
-{{ BootstrapForm::submit('Save') }}
+    {{ BootstrapForm::submit('Save') }}
 
-{{ BootstrapForm::close() }}
-
+    {{ BootstrapForm::close() }}
+@else
+    <p>Exchange Rates for previous periods </p>
+@endif
 <table class="table table-striped">
     <thead>
     <tr>

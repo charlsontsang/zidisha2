@@ -28,11 +28,13 @@ Countries
         <td>{{ $country->getDialingCode() }}</td>
         <td>{{ $country->getRegistrationFee() }}</td>
         <td>{{ $country->getInstallmentPeriod() }}</td>
-        <td>
-            <a href="{{ route('admin:edit:country', $country->getId()) }}">
-                <i class="fa fa-pencil-square-o fa-lg"></i>
-            </a>
-        </td>
+        @if(Auth::getUser()->isAdmin())
+            <td>
+                <a href="{{ route('admin:edit:country', $country->getId()) }}">
+                    <i class="fa fa-pencil-square-o fa-lg"></i>
+                </a>
+            </td>
+        @endif
     </tr>
     @endforeach
     </tbody>
