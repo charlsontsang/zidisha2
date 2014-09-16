@@ -56,7 +56,7 @@ class AgainRepaymentReminder extends ScheduledJob
                         WHERE
                             start_date = (
                                 SELECT
-                                    MAX (start_date)
+                                    MAX(start_date)
                                 FROM
                                     exchange_rates
                                 WHERE
