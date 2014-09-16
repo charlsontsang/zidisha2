@@ -94,6 +94,7 @@ class BorrowerCommentService extends CommentService
             $this->borrowerSmsService->sendBorrowerCommentNotificationSms($borrower, $comment, $postedBy);
         }
 
+        $this->adminMailer->sendBorrowerCommentNotification($loan, $comment, $postedBy, $images);
         $this->siftScienceService->sendBorrowerCommentEvent($comment);
     }
 

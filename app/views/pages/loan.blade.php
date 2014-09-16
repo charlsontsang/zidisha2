@@ -85,7 +85,7 @@
                                                 style="{{ $follower ? 'display:none' : '' }}"
                                                 data-follow="follow"
                                                 data-toggle="tooltip">
-                                                Follow {{ $borrower->getFirstName() }}
+                                                @lang('lender.follow.title', ['name' => $borrower->getFirstName()])
                                             </a>
                                             
                                                 @include('lender.follow.follower', [
@@ -464,7 +464,7 @@
                         data-toggle="tooltip">
                         
                         <i class="fa fa-fw fa-bookmark"></i>
-                        Follow {{ $borrower->getFirstName() }}
+                        @lang('lender.follow.title', ['name' => $borrower->getFirstName()])
                     </a>
                     @include('lender.follow.follower', [
                         'lender' => Auth::user()->getLender(),

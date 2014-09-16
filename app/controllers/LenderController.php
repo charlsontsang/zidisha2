@@ -248,7 +248,7 @@ class LenderController extends BaseController
             $blockedCountries = explode(',', $blockedCountries);
 
             if (in_array($country['code'], $blockedCountries)) {
-                \Flash::error('common.validation.error');
+                \Flash::error("Something went wrong!");
                 return Redirect::route('lender:funds')->withForm($form);
             }
 
@@ -269,12 +269,12 @@ class LenderController extends BaseController
             $lender = Auth::user()->getLender();
             $withdrawalRequest = $this->balanceService->addWithdrawRequest($lender, $data);
             if ($withdrawalRequest) {
-                \Flash::success("Your withdrawal request has been submitted, and should be processed within one week. Thanks for your participation!");
+                \Flash::success("Your withdrawal has been successfully processed, and the requested amount should be credited to your PayPal account within one week. Thanks for your participation!");
                 return Redirect::route('lender:funds');
             }
         }
 
-        \Flash::error("Please enter the amount as a number.");
+        \Flash::error("Entered Values are invalid!");
         return Redirect::route('lender:funds')->withForm($form);
     }
 
@@ -336,11 +336,7 @@ class LenderController extends BaseController
         $totalCompletedLoansBidsAmount = BidQuery::create()
             ->getTotalCompletedLoansBidsAmount($lender);
         $numberOfCompletedBids = $completedLoansBids->getNbResults();
-        $numberOfCompletedProjects = \Lang::choice('lender.shared-labels.projects
-
-@section('menu-links')
-@include('partials.nav-links.borrower-links')
-@stop.stats-projects', $numberOfCompletedBids, array('count' => $numberOfCompletedBids));
+        $numberOfCompletedProjects = \Lang::choice('lender.flash.preferences.stats-projects', $numberOfCompletedBids, array('count' => $numberOfCompletedBids));
 
         $completedLoansIds = [];
         /** @var $completedLoansBid Bid */

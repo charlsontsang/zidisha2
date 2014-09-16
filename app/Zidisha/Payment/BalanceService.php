@@ -68,6 +68,7 @@ class BalanceService
                 $this->transactionService->addWithdrawFundTransaction($con, $amount, $lender);
                 $withdrawalRequest->save($con);
             });
+        $this->adminMailer->sendWithdrawalRequestMail($withdrawalRequest->getAmount());
         $this->lenderMailer->sendWithdrawalRequestMail($lender, $withdrawalRequest);
         return $withdrawalRequest;
     }

@@ -44,11 +44,11 @@ class LenderPreferencesController extends BaseLenderController
             $data = $form->getData();
             $preferences = $this->lenderService->updateAccountPreferences($user->getLender(), $data);
             if ($preferences) {
-                Flash::success('Success! Your account settings are updated.');
+                Flash::success('lender.flash.preferences.success');
                 return Redirect::route('lender:public-profile', $user->getUsername());
             }
         }
-        Flash::error('common.validation.error');
+        Flash::error('lender.flash.preferences.error');
         return Redirect::route('lender:preference')->withForm($form);
     }
     
@@ -84,7 +84,7 @@ class LenderPreferencesController extends BaseLenderController
             return \Redirect::route('lender:auto-lending');
         }
 
-        \Flash::error('common.validation.error');
+        \Flash::error('Please use proper options.');
         return \Redirect::route('lender:auto-lending');
     }
 }

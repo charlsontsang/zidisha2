@@ -44,7 +44,7 @@ class CompletedHandler extends PaymentHandler
     public function redirect()
     {
         \Session::forget('giftCard');
-        \Flash::success("Thanks for your purchase!");
+        \Flash::success("GiftCard Successfully Made.");
         return \Redirect::route('lender:gift-cards:track');
     }
 }

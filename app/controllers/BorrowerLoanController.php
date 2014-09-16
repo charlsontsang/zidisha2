@@ -164,7 +164,7 @@ class BorrowerLoanController extends BaseController
             return Redirect::route('borrower:reschedule-loan-confirmation');
         }
         
-        \Flash::error('common.validation.incomplete-profile');
+        \Flash::error('Invalid input values.');
         
         return Redirect::route('borrower:reschedule-loan')->withForm($form);
     }
@@ -213,7 +213,7 @@ class BorrowerLoanController extends BaseController
         $rescheduleDetails = $this->extractRescheduleDetails($repaymentSchedule);
 
         if ($rescheduleDetails != $rescheduleDetailsSession) {
-            Flash::error('common.validation.session-expired');
+            Flash::error('Session is expired.');
             return Redirect::route('borrower:reschedule-loan');
         }
         
@@ -222,7 +222,7 @@ class BorrowerLoanController extends BaseController
         \Session::forget('reschedule');
         \Session::forget('rescheduleDetails');
 
-        Flash::success('borrower.loan.reschedule-success');
+        Flash::success('Successfully rescheduled loan');
         return Redirect::route('borrower:loan', $loan->getId());
     }
 

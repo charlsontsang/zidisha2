@@ -104,7 +104,7 @@ class BorrowerActivationController extends BaseController
 
             $this->borrowerActivationService->addActivationFeedback($borrower, $data);
 
-            \Flash::success("Email sent. Thanks!");
+            \Flash::success("Feedback successfully sent!");
             return Redirect::route('admin:borrower-activation:edit', [$borrower->getId(), '#review']);
         }
 

@@ -191,7 +191,7 @@ class AdminController extends BaseController
             return Redirect::route('admin:borrower:edit', $borrowerId);
         }
 
-        Flash::error('The data format is invalid.');
+        Flash::error('Please submit correct data.');
         return Redirect::route('admin:borrower:edit', $borrowerId)->withForm($form);
     }
 
@@ -264,7 +264,7 @@ class AdminController extends BaseController
         $lender->setLastCheckInEmail($lastCheckInEmailDate);
         $lender->save();
         
-        \Flash::success('Last check-in email date added.');
+        \Flash::success('Last check in email date added.');
         return Redirect::back();
     }
     
@@ -274,7 +274,7 @@ class AdminController extends BaseController
             ->findOneById($lenderId);
         
         if(!$lender) {
-            App::abort(404, 'Lender not found.');
+            App::abort(404, 'Lender with this ID not found.');
         }
         
         $user = $lender->getUser();
@@ -288,10 +288,10 @@ class AdminController extends BaseController
             ->count();
 
         if ($userTransactionCount > 0 || $lenderInviteTransactionCount > 0) {
-            \Flash::error('This account cannot be deleted, because it is linked to invites or transactions.');
+            \Flash::error('can\'t delete Lender has invite or has done transactions');
         }else {
             $user->delete();
-            \Flash::success('Lender deleted.');
+            \Flash::success('Lender Deleted');
         }
         
         return Redirect::back();
@@ -304,7 +304,7 @@ class AdminController extends BaseController
             ->findOneById($lenderId);
 
         if(!$lender) {
-            App::abort(404, 'Lender not found.');
+            App::abort(404, 'Lender with this ID not found.');
         }
         
         $user = $lender->getUser();
@@ -314,7 +314,7 @@ class AdminController extends BaseController
         $lender->setActive(false);
         $lender->save();
         
-        \Flash::success('Lender deactivated');
+        \Flash::success('Lender Deactivated');
         return Redirect::back();
     }
 
@@ -324,7 +324,7 @@ class AdminController extends BaseController
             ->findOneById($lenderId);
 
         if(!$lender) {
-            App::abort(404, 'Lender not found.');
+            App::abort(404, 'Lender with this ID not found.');
         }
 
         $user = $lender->getUser();
@@ -334,7 +334,7 @@ class AdminController extends BaseController
         $lender->setActive(true);
         $lender->save();
 
-        \Flash::success('Lender activated.');
+        \Flash::success('Lender Activated');
         return Redirect::back();
     }
 
@@ -488,7 +488,7 @@ class AdminController extends BaseController
 
             $this->currencyService->updateExchangeRateForCountry($data);
 
-            \Flash::success("Exchange rate updated.");
+            \Flash::success("Exchange rate Successfully updated!");
             return Redirect::route('admin:exchange-rates', $countrySlug);
         }
 
@@ -523,7 +523,7 @@ class AdminController extends BaseController
             $this->borrowerService->addLoanFeedback($loanId, $data);
             Session::forget('loanId');
 
-            \Flash::success("Message sent. Thanks!");
+            \Flash::success("Suggestion successfully sent!");
             return Redirect::route('loan:index', $loanId);
         }
 
@@ -546,11 +546,11 @@ class AdminController extends BaseController
             $data = $form->getData();
             $this->loanService->updateLoanCategories($loan, $data);
 
-            \Flash::success("Categories successfully set.");
+            \Flash::success("Categories successfully set!");
             return Redirect::route('loan:index', $loanId);
         }
 
-        \Flash::error('common.validation.error');
+        \Flash::error("Couldn't set categories!");
         return Redirect::route('loan:index', $loanId)->withForm($form);
     }
     
@@ -572,11 +572,11 @@ class AdminController extends BaseController
             
             Setting::updateSettings($data);
             
-            \Flash::success("Setting updated.");
+            \Flash::success("Successfully updated the setting.");
             return Redirect::route('admin:settings');
         }
 
-        \Flash::error('common.validation.error');
+        \Flash::error('Please correct the errors.');
         return Redirect::route('admin:settings')->withForm($settingsForm);
     }
 
@@ -612,11 +612,11 @@ class AdminController extends BaseController
 
             $this->loanService->addTranslations($loan, $data);
 
-            \Flash::success("Your translation has been published. Thanks!");
+            \Flash::success("Translations successfully saved!");
             return Redirect::route('loan:index', $loanId);
         }
 
-        \Flash::error('common.validation.error');
+        \Flash::error("Couldn't save Translations!");
         return Redirect::route('loan:index', $loanId)->withForm($form);
     }
 
@@ -694,7 +694,7 @@ class AdminController extends BaseController
 
         $this->lenderMailer->sendGiftCardMailToRecipient($giftCard);
 
-        \Flash::success("Email sent.");
+        \Flash::success("Email successfully sent!");
         return Redirect::route('admin:get:gift-cards');
     }
 
@@ -705,7 +705,7 @@ class AdminController extends BaseController
         $user->setSubRole(User::SUB_ROLE_VOLUNTEER);
         $user->save();
 
-        \Flash::success("Volunteer added.");
+        \Flash::success("Volunteer Added!");
         return Redirect::back();
     }
 
@@ -717,10 +717,10 @@ class AdminController extends BaseController
             App::abort(404);
         }
         if ($this->borrowerService->removeVolunteerMentor($user)) {
-            \Flash::success("Volunteer removed.");
+            \Flash::success("Volunteer Removed!");
             return Redirect::back();
         }
-        \Flash::success('common.validation.error');
+        \Flash::success("Error occurred!");
         return Redirect::back();
     }
 
@@ -734,7 +734,7 @@ class AdminController extends BaseController
 
         $this->borrowerService->addVolunteerMentor($user);
 
-        \Flash::success("Volunteer added.");
+        \Flash::success("Volunteer Added!");
         return Redirect::back();
     }
 
@@ -745,7 +745,7 @@ class AdminController extends BaseController
         $user->setSubRole(null);
         $user->save();
 
-        \Flash::success("Volunteer removed.");
+        \Flash::success("Volunteer Removed!");
         return Redirect::back();
     }
 
@@ -791,11 +791,11 @@ class AdminController extends BaseController
 
         if ($form->isValid()) {
             $this->balanceService->payWithdrawRequest($withdrawalRequest);
-            \Flash::success('Payments sent.');
+            \Flash::success("Successfully paid!");
             return Redirect::route('admin:get:withdrawal-requests');
         }
 
-        \Flash::error('common.validation.error');
+        \Flash::error('Some error occured!');
         return Redirect::route('admin:get:withdrawal-requests')->withForm($form);
     }
 
@@ -809,10 +809,10 @@ class AdminController extends BaseController
         try{
             $this->payPalService->processMassPayment($ids);
         }catch (PaypalMassPaymentException $e) {
-            \Flash::error('Error:' . $e->getMessage());
+            \Flash::error('Some error occured!' . $e->getMessage());
             return Redirect::route('admin:get:withdrawal-requests');
         }
-        \Flash::success('Successfully processed.');
+        \Flash::success("Successfully processed!");
         return Redirect::route('admin:get:withdrawal-requests');
     }
 
@@ -838,13 +838,13 @@ class AdminController extends BaseController
             ->findOneById($borrowerCommentId);
 
         if (!$comment) {
-            App::abort(404, 'Comment not found.');
+            App::abort(404, 'No comment with this id found.');
         }
 
         $comment->setPublished(true);
         $comment->save();
 
-        \Flash::success('common.comments.flash.post');
+        \Flash::success('Comment is published');
 
         return Redirect::back();
     }
@@ -885,15 +885,15 @@ class AdminController extends BaseController
                 $file = Input::file('inputFile');
                 $importPayments =  $this->importService->importBorrowerPayments($data['countryCode'], $file);
                 if ( !$importPayments) {
-                    Flash::error('common.validation.error');
+                    Flash::error('Import error.');
                     return Redirect::route('admin:repayments')->withForm($form);
                 }
-                Flash::success('Repayments successfully posted. Thanks!');
+                Flash::success('Repayments Added.');
                 return Redirect::route('admin:repayments');
             }
         }
 
-        Flash::error('common.validation.error');
+        Flash::error('Please submit correct data.');
         return Redirect::route('admin:repayments')->withForm($form);
     }
 
@@ -929,10 +929,10 @@ class AdminController extends BaseController
             ->updateStatusToDeleted($paymentIds);
 
         if ($payments) {
-            Flash::success('Successfully deleted.');
+            Flash::success('Successfully Deleted.');
             return Redirect::route('admin:repayment-process', compact('status'));
         }
-        Flash::error('common.validation.error');
+        Flash::error('error occured.');
         return Redirect::route('admin:repayment-process', compact('status'));
     }
 
@@ -951,10 +951,10 @@ class AdminController extends BaseController
             ->updateRefundToTrue($refundsIds);
 
         if ($refunds) {
-            Flash::success('Transaction processed.');
+            Flash::success('Successful.');
             return Redirect::route('admin:repayments-refunds');
         }
-        Flash::error('common.validation.error');
+        Flash::error('error occured.');
         return Redirect::route('admin:repayments-refunds');
     }
 
@@ -1023,9 +1023,9 @@ class AdminController extends BaseController
                 'amount' => $data['amount'],
             ]);
             
-            \Flash::success('Repayment successfully entered. Thanks!');
+            \Flash::success('Successfully made repayment.');
         } else {
-            \Flash::error('common.validation.error');
+            \Flash::error('Invalid input values.');
             $redirect->withForm($form);
         }
 

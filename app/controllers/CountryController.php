@@ -75,7 +75,7 @@ class CountryController extends BaseController
             return Redirect::route('admin:edit:country', $id);
         }
 
-        \Flash::error('common.validation.incomplete-profile');
+        \Flash::error('Please use proper options.');
         return Redirect::route('admin:edit:country', $id)->withForm($form);
     }
 }

@@ -198,7 +198,7 @@ class BorrowerController extends BaseController
 
         $this->borrowerService->sendVerificationCode($borrower);
 
-        \Flash::info('borrower.dashboard.pending-confirmation');
+        \Flash::info('A verification code has been sent to your email. Please check your email.');
         return \Redirect::action('BorrowerController@getDashboard');
     }
 
@@ -224,7 +224,7 @@ class BorrowerController extends BaseController
         );
 
         if ($isFacebookRequired) {
-            \Flash::error('join.form.facebook-intro');
+            \Flash::error('Facebook verification required.');
         }
 
         return \View::make(
@@ -246,11 +246,11 @@ class BorrowerController extends BaseController
 
             $this->borrowerService->updatePersonalInformation($borrower, $data);
 
-            \Flash::success('borrower.loan-application.info-saved');
+            \Flash::success('Your profile has been updated.');
             return Redirect::route('borrower:personal-information');
         }
 
-        \Flash::error('common.validation.incomplete-profile');
+        \Flash::error('Your profile has some errors.');
         return Redirect::route('borrower:personal-information')->withForm($form);
     }
 
@@ -276,7 +276,7 @@ class BorrowerController extends BaseController
         $user->setFacebookId($facebookId);
         $user->save();
 
-        \Flash::success('common.validation.link-account.facebook-account-linked');
+        \Flash::success('Your facebook account is linked successfully.');
         return Redirect::route('borrower:personal-information');
     }
 
