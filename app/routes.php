@@ -483,12 +483,40 @@ Route::group(
          */
         Route::controller('lendinggroupcomment/{id}', 'LendingGroupCommentController');
 
-
         /**
          * Routes for Admin
          */
         Route::group(
             array('prefix' => 'admin', 'before' => 'auth|hasRole:admin'),
+            function () {
+                Route::get(
+                    'test-mails',
+                    ['uses' => 'MailTesterController@getAllMails', 'as' => 'admin:mail:test-mails']
+                );
+
+                Route::post(
+                    'test-mails',
+                    ['uses' => 'MailTesterController@postMail', 'as' => 'admin:mail:post:mail']
+                );
+
+                Route::post(
+                    'withdrawal-requests/paypal/pay',
+                    array('uses' => 'AdminController@postPaypalWithdrawalRequests',
+                          'as' => 'admin:post:paypal-withdrawal-requests')
+
+                );
+                Route::post(
+                    'withdrawal-requests/{withdrawalRequestId}/pay',
+                    array('uses' => 'AdminController@postWithdrawalRequests', 'as' => 'admin:post:withdrawal-requests')
+
+                );
+            }
+        );
+        /**
+         * Routes for Admin|Volunteer
+         */
+        Route::group(
+            array('prefix' => 'admin', 'before' => 'auth|isAdminOrVolunteer'),
             function () {
                 Route::get('dashboard', array('uses' => 'AdminController@getDashboard', 'as' => 'admin:dashboard'));
                 Route::get('volunteers', array('uses' => 'AdminController@getVolunteers', 'as' => 'admin:volunteers'));
@@ -755,17 +783,6 @@ Route::group(
                     'withdrawal-requests',
                     array('uses' => 'AdminController@getWithdrawalRequests', 'as' => 'admin:get:withdrawal-requests')
                 );
-                Route::post(
-                    'withdrawal-requests/paypal/pay',
-                    array('uses' => 'AdminController@postPaypalWithdrawalRequests',
-                          'as' => 'admin:post:paypal-withdrawal-requests')
-
-                );
-                Route::post(
-                    'withdrawal-requests/{withdrawalRequestId}/pay',
-                    array('uses' => 'AdminController@postWithdrawalRequests', 'as' => 'admin:post:withdrawal-requests')
-
-                );
 
                 Route::get(
                     'publish-comments',
@@ -775,16 +792,6 @@ Route::group(
                 Route::post(
                     'publish-comments',
                     array('uses' => 'AdminController@postPublishComments', 'as' => 'admin:post:moderate-comments')
-                );
-
-                Route::get(
-                    'test-mails',
-                    ['uses' => 'MailTesterController@getAllMails', 'as' => 'admin:mail:test-mails']
-                );
-
-                Route::post(
-                    'test-mails',
-                    ['uses' => 'MailTesterController@postMail', 'as' => 'admin:mail:post:mail']
                 );
 
                 Route::get(
