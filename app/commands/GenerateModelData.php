@@ -178,6 +178,17 @@ class GenerateModelData extends Command
             return;
         }
 
+        if ($model == "ClearFbData") {
+            $this->line('Deleting all Facebook Data');
+            $logs = \Zidisha\User\Base\FacebookUserLogQuery::create()
+                ->doDeleteAll();
+            if ($logs) {
+                $Fb = \Zidisha\User\FacebookUserQuery::create()
+                    ->doDeleteAll();
+            }
+            $this->line('done');
+        }
+
         if ($model == "ClearJobs") {
             $this->line('Deleting all Schedule Jobs');
 
