@@ -567,6 +567,8 @@ class DatabaseMigration extends Command {
                     ->join('borrowers', 'borrowers.userid', '=', 'loanapplic.borrowerid') // TODO check missing borrowers
                     ->join('currency', 'borrowers.country', '=', 'currency.country_code')
                     ->skip($offset)
+                    ->where('loanapplic.loanid', '>', 0)
+                    ->orderBy('id')
                     ->take($limit)
                     ->get();
                 
@@ -589,19 +591,19 @@ class DatabaseMigration extends Command {
                         'usd_amount'            => $loan->reqdamt,
                         'installment_day'       => $loan->installment_day,
                         'max_interest_rate'     => $loan->interest,
-                        'lender_interest_rate'  => $loan->finalrate,
+                        'lender_interest_rate'  => $loan->finalrate ?: null,
                         'category_id'           => $loan->loan_category_id ?: null,
                         'secondary_category_id' => $loan->secondary_loan_category_id ?: null,
                         'status'                => $loan->active,
-                        'applied_at'            => date("Y-m-d H:i:s", $loan->applydate),
-                        'accepted_at'           => date("Y-m-d H:i:s", $loan->AcceptDate),
-                        'expired_at'            => date("Y-m-d H:i:s", $loan->expires),
+                        'applied_at'            => $loan->applydate ? date("Y-m-d H:i:s", $loan->applydate) : null,
+                        'accepted_at'           => $loan->AcceptDate ? date("Y-m-d H:i:s", $loan->AcceptDate) : null,
+                        'expired_at'            => $loan->expires ? date("Y-m-d H:i:s", $loan->expires) : null,
                         'canceled_at'           => null, // nobody ever cancelled a loan
-                        'repaid_at'             => date("Y-m-d H:i:s", $loan->RepaidDate),
-                        'authorized_at'         => date("Y-m-d H:i:s", $loan->auth_date),
-                        'authorized_amount'     => $loan->p_amount,
+                        'repaid_at'             => $loan->RepaidDate ? date("Y-m-d H:i:s", $loan->RepaidDate) : null,
+                        'authorized_at'         => $loan->auth_date ? date("Y-m-d H:i:s", $loan->auth_date) : null,
+                        'authorized_amount'     => $loan->p_amount ?: null,
                         'disbursed_at'          => null, // TODO missing loans
-                        'disbursed_amount'      => $loan->AmountGot,
+                        'disbursed_amount'      => $loan->AmountGot ?: null,
                         'forgiven_amount'       => null, // TODO calculate in new code
                         'registration_fee'      => '0',
                         'raised_usd_amount'     => null, // TODO calculate in new code
@@ -612,7 +614,7 @@ class DatabaseMigration extends Command {
                         'currency_code'         => $loan->Currency,
                         'installment_period'    => $loan->weekly_inst ? 1 : 0, // 'weekly' : 'monthly',
                         'period'                => $loan->period,
-                        'accept_bids_note'      => $loan->accept_bid_note,
+                        'accept_bids_note'      => $loan->accept_bid_note ?: null,
                         'sift_science_score'    => null, // new
                         'deleted_by_admin'      => $loan->adminDelete,
                     ];
@@ -710,6 +712,7 @@ class DatabaseMigration extends Command {
             for ($offset = 0; $offset < $count; $offset += $limit) {
                 $stages = $this->con->table('loanstage')
                     ->join('loanapplic', 'loanapplic.loanid', '=', 'loanstage.loanid') // TODO missing loans
+                    ->where('loanstage.loanid', '>', '0')
                     ->skip($offset)->take($limit)->get();
                 $stageArray = [];
 
