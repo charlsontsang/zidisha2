@@ -28,7 +28,7 @@ class FollowController extends BaseController
         $this->followService->follow(\Auth::user()->getLender(), $borrower);
         
         return [
-            'message' => Lang::get('lender.shared-labels.update-preference-success'),
+            'message' => Lang::get('lender.follow.flash.follow-success'),
         ];
     }
 
@@ -43,7 +43,7 @@ class FollowController extends BaseController
         $this->followService->unfollow(\Auth::user()->getLender(), $borrower);
 
         return [
-            'message' => Lang::get('lender.shared-labels.update-preference-success'),
+            'message' => Lang::get('lender.follow.flash.unfollow-success'),
         ];
     }
 
@@ -66,7 +66,7 @@ class FollowController extends BaseController
         $this->followService->updateFollower(\Auth::user()->getLender(), $borrower, $data);
 
         return [
-            'message' => Lang::get('lender.shared-labels.update-preference-success'),
+            'message' => Lang::get('lender.follow.flash.update-settings'),
         ];
     }
 

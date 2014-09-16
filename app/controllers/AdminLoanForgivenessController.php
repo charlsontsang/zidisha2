@@ -78,11 +78,11 @@ class AdminLoanForgivenessController extends BaseController
             $loan = LoanQuery::create()->findOneById($data['loanId']);
             $forgivenessLoan = $this->loanService->allowLoanForgiveness($loan, $data);
 
-            \Flash::success('Forgiveness enabled.');
+            \Flash::success('Allowed loan forgiveness.');
             return Redirect::route('admin:loan-forgiveness:index', $form->getCountry()->getCountryCode());
         }
 
-        \Flash::error('common.validation.error');
+        \Flash::error('Please enter valid inputs');
         $countryCode = \Input::get('countryCode', 'KE');
         $countryCode = $form->isValidCountryCode($countryCode) ? $countryCode : 'KE';
         return Redirect::route('admin:loan-forgiveness:allow', $countryCode)->withForm($form);

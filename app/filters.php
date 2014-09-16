@@ -99,7 +99,7 @@ Route::filter(
         $roles = explode(':', $role);
         $isAllowed = in_array(Auth::getUser()->getRole(), $roles);
         if (!$isAllowed) {
-            Flash::error("The account you are logged into does not have permission to view this page");
+            Flash::error("You do not have proper permission to view this page");
             return Redirect::route('login');
         }
     }
@@ -110,7 +110,7 @@ Route::filter(
     function ($route, $request, $role) {
         $isAllowed = Auth::getUser()->getSubRole() == $role;
         if (!$isAllowed) {
-            Flash::error("The account you are logged into does not have permission to view this page");
+            Flash::error("You do not have proper permission to view this page");
             return Redirect::route('login');
         }
     }

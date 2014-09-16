@@ -43,7 +43,7 @@ class LenderJoinController extends BaseController
                 return Redirect::back()->withForm($form);
             }
             
-            Flash::error('common.validation.error');
+            Flash::error('lender.join.flash.oops');
             return Redirect::route('lender:join')->withForm($form);
         }
         
@@ -77,11 +77,7 @@ class LenderJoinController extends BaseController
                 compact('country'), ['form' => $this->joinForm,]);
         }
 
-        Flash::error('common.validation.link-account.
-
-@section('menu-links')
-@include('partials.nav-links.borrower-links')
-@stopfacebook-no-account-connected');
+        Flash::error('lender.join.flash.facebook-no-account-connected');
         return Redirect::route('lender:join');
     }
 
@@ -105,11 +101,7 @@ class LenderJoinController extends BaseController
 
             return $this->join($user);
         } else {
-            Flash::error('common.comments.flash.
-
-@section('menu-links')
-@include('partials.nav-links.borrower-links')
-@stopwelcome');
+            Flash::error('comments.flash.welcome');
             return Redirect::route('lender:join');
         }
     }
@@ -150,11 +142,7 @@ class LenderJoinController extends BaseController
             Session::forget('lenderInviteVisitId');
             Flash::modal(View::make('lender.invite-new-account', compact('inviter'))->render());
         } else {
-            Flash::success('common.comments.flash.
-
-@section('menu-links')
-@include('partials.nav-links.borrower-links')
-@stopwelcome');
+            Flash::success('comments.flash.welcome');
         }
         if (Session::get('lenderJoin')) {
             $params = Session::get('lenderJoin');
@@ -183,11 +171,7 @@ class LenderJoinController extends BaseController
             }
         }
 
-        Flash::error('common.validation.link-account.
-
-@section('menu-links')
-@include('partials.nav-links.borrower-links')
-@stopfacebook-no-account-connected');
+        Flash::error('lender.join.flash.facebook-no-account-connected');
         return Redirect::route('lender:join');
     }
 
@@ -220,11 +204,7 @@ class LenderJoinController extends BaseController
             }
             return $response;
         } else {
-            Flash::error('common.comments.flash.
-
-@section('menu-links')
-@include('partials.nav-links.borrower-links')
-@stopwelcome');
+            Flash::error('comments.flash.welcome');
             return Redirect::route('lender:join');
         }
     }
@@ -248,11 +228,7 @@ class LenderJoinController extends BaseController
             $this->lenderService->lenderInviteViaEmail($lender, $email, $subject, $custom_message);
         }
 
-        Flash::success(\Lang::choice('common.comments.flash.
-
-@section('menu-links')
-@include('partials.nav-links.borrower-links')
-@stopinvite-success', $countInvites, array('count' => $countInvites)));
+        Flash::success(\Lang::choice('comments.flash.invite-success', $countInvites, array('count' => $countInvites)));
         return Redirect::route('lender:invite');
     }
 }

@@ -42,28 +42,28 @@
 
     {{ BootstrapForm::text('username', null, [
         'label'         => false,
-        'placeholder'   => 'Create display name',
-        'sr-only'       => 'Create display name',
+        'placeholder'   => \Lang::get('lender.join.form.username'),
+        'sr-only'       => \Lang::get('lender.join.form.username'),
         'feedback-icon' => 'fa-user',
     ]) }}
 
     {{ BootstrapForm::text('email', null, [
         'label'         => false,
-        'placeholder'   => 'Your email',
-        'sr-only'       => 'Your email',
+        'placeholder'   => \Lang::get('lender.join.form.email'),
+        'sr-only'       => \Lang::get('lender.join.form.email'),
         'feedback-text' => '@',
     ]) }}
 
     {{ BootstrapForm::password('password', [
         'label'         => false,
-        'placeholder'   => 'Create password',
-        'sr-only'       => 'Create password',
+        'placeholder'   => \Lang::get('lender.join.form.password'),
+        'sr-only'       => \Lang::get('lender.join.form.password'),
         'feedback-icon' => 'fa-lock',
     ]) }}
 
     {{ BootstrapForm::select('countryId', $joinForm->getCountries()->toKeyValue('id', 'name'), null, [
         'label' => false,
-        'sr-only' => 'Your country',
+        'sr-only' => \Lang::get('lender.join.form.country-id'),
     ]) }}
 
     <p>By signing up, I agree to Zidisha's <a target="_blank" href="{{ route('page:terms-of-use') }}">Terms of Use
@@ -73,7 +73,7 @@
         {{ BootstrapForm::hidden('modal', 1) }}
     @endif
 
-    {{ BootstrapForm::submit('Join', ['class' => 'btn btn-primary btn-block']) }}
+    {{ BootstrapForm::submit('submit', ['class' => 'btn btn-primary btn-block']) }}
 
     {{ BootstrapForm::close() }}
 </div>

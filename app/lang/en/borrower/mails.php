@@ -197,36 +197,5 @@ Congratulations! Your on-time repayment rate is high enough to qualify for the Z
 To learn more, go to <a href=':zidishaLink' target='_blank'>www.zidisha.org</a> and log into your member account.<br/><br/>
 Best wishes,<br/><br/>
 The Zidisha Team"
-    ],    
-    'application-feedback' => [
-        'borrowerEmail' => 'Recipient Email',
-        'cc' => 'CC',
-        'replyTo' => 'Reply To',
-        'subject' => 'Subject',
-        'message' => 'Message',
-        'message-description' => 'Please modify the default text as necessary to indicate what is needed to complete the application,
-                                  and add your name to the signature line. You may change the language in the footer of this page
-                                  to display the default message in French or Indonesian.',
-        'senderName' => 'Enter your name here',
-        'sender' => 'Sender',
-        'send' => 'Send',
-        'default-subject' => 'Your Zidisha Application', 
-        'default-message' =>
-'Dear :borrowerName,
-Thank you for your application to join Zidisha.  We will need the following information in order to complete your application:
-A precise residential address, including house number or plot number and detailed directions to your home.
-Please add this information directly to your profile by logging into your member account and using the "Edit Profile" page, then resubmit the profile to Zidisha.
-Once again thank you for your application to join Zidisha.
-Best regards,
-Zidisha Team',
     ],
-    'profile-suggestions' => [
-        'suggestion-default-message' =>
-'Dear :name,
-I was reviewing your loan request, and wanted to help by sharing some suggestions. I think you could make your application more attractive to lenders if you make some of these improvements:
-You may make these changes using the "Edit Profile" page of your member account.
-Best of luck,
-Zidisha team',
-        'suggestion-default-subject' => 'Suggestions to help your loan be funded',
-    ]
 ];

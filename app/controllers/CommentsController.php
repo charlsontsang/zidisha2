@@ -37,7 +37,7 @@ abstract class CommentsController extends BaseController
         $postCommentForm->handleRequest(Request::instance());
 
         if (!$postCommentForm->isValid()) {
-            Flash::error('common.validation.error');
+            Flash::success('Input not valid');
             return \Redirect::back();
         }
 
@@ -45,7 +45,7 @@ abstract class CommentsController extends BaseController
 
         $comment = $this->service->postComment($postCommentForm->getData(), $user, $receiver, $files);
 
-        Flash::success(\Lang::get('common.comments.flash.post-success'));
+        Flash::success(\Lang::get('borrower.comments.flash.post-success'));
         return $this->redirect($comment);
     }
 
@@ -63,13 +63,7 @@ abstract class CommentsController extends BaseController
                     {
                         $files[] = $file;
                     } else {
-                        Flash::error(\Lang::get('common.comments.
-@lang('borrower.menu.links-title')
-@stop
-
-@section('menu-links')
-@include('partials.nav-links.borrower-links')
-@stopflash.file-not-valid'));
+                        Flash::error(\Lang::get('borrower.comments.flash.file-not-valid'));
                     }
                 }
             }
@@ -105,7 +99,7 @@ abstract class CommentsController extends BaseController
 
         $this->service->editComment($editCommentForm->getData(), $user, $comment, $files);
 
-        Flash::success(\Lang::get('common.comments.flash.edit-success'));
+        Flash::success(\Lang::get('borrower.comments.flash.edit-success'));
         return $this->redirect($comment);
     }
 
@@ -134,7 +128,7 @@ abstract class CommentsController extends BaseController
         $replyCommentForm->handleRequest(Request::instance());
 
         if (!$replyCommentForm->isValid()) {
-            Flash::error('common.validation.error');
+            Flash::success('Input not valid');
             return Redirect::back();
         }
 
@@ -142,7 +136,7 @@ abstract class CommentsController extends BaseController
 
         $comment = $this->service->postReply($replyCommentForm->getData(), $user, $receiver, $parentComment, $files);
 
-        Flash::success(\Lang::get('common.comments.flash.reply-success'));
+        Flash::success(\Lang::get('borrower.comments.flash.reply-success'));
         return $this->redirect($comment);
     }
 
@@ -163,7 +157,7 @@ abstract class CommentsController extends BaseController
 
         $this->service->deleteComment($comment);
 
-        Flash::success(\Lang::get('common.comments.flash.delete-success'));
+        Flash::success(\Lang::get('borrower.comments.flash.delete-success'));
         return Redirect::back();
     }
 
@@ -186,13 +180,13 @@ abstract class CommentsController extends BaseController
         $translateCommentForm->handleRequest(Request::instance());
 
         if (!$translateCommentForm->isValid()) {
-            Flash::error('common.validation.error');
+            Flash::success('Input not proper.');
             return Redirect::back();
         }
 
         $this->service->translateComment($translateCommentForm->getData(), $comment, $user);
 
-        Flash::success(\Lang::get('common.comments.flash.translate-success'));
+        Flash::success(\Lang::get('borrower.comments.flash.translate-success'));
         return $this->redirect($comment);
     }
 
@@ -212,7 +206,7 @@ abstract class CommentsController extends BaseController
 
         $this->service->deleteUpload($comment, $upload);
 
-        Flash::success(\Lang::get('common.comments.flash.file-deleted'));
+        Flash::success(\Lang::get('borrower.comments.flash.file-deleted'));
         return Redirect::back();
     }
 

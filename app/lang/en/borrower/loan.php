@@ -111,5 +111,4 @@ return [
         'negative' => 'Negative',
         'neutral'  => 'Neutral',
     ],
-    'reschedule-success' => 'Your installment amount has been successfully modified.',
 ];
