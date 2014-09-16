@@ -135,8 +135,9 @@ class BorrowerJoinController extends BaseController
 
             if ($form->isValid()) {
                 $data = $form->getNestedData();
+                $email = $data['email'];
                 $data = array_merge($data, Session::get('BorrowerJoin'));
-
+                $data['email'] = $email;
                 $borrower = $this->borrowerService->joinBorrower($data);
 
                 $this->flushStepsSession();
