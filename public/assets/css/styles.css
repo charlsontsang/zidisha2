@@ -9149,6 +9149,11 @@ form .btn-default,
   background-color: #f36e6e;
   color: white;
 }
+@media (max-width: 767px) {
+  .join-group {
+    display: none;
+  }
+}
 .navbar-brand {
   padding: 15px 10px 15px 15px;
 }
@@ -9176,6 +9181,11 @@ form .btn-default,
   .navbar-right > p:last-child {
     margin-right: 0;
     padding-right: 0;
+  }
+}
+@media (max-width: 767px) {
+  .navbar-nav > li > a {
+    padding-top: 12px;
   }
 }
 @media (max-width: 767px) {
@@ -9413,12 +9423,11 @@ form .btn-default,
   text-align: right !important;
 }
 .caption-group {
-  display: inline-block;
-  top: 15px;
-  width: 100%;
+  display: none;
 }
 @media (min-width: 768px) {
   .caption-group {
+    display: inline-block;
     top: 280px;
     left: 30px;
     width: 90%;
@@ -9483,10 +9492,12 @@ form .btn-default,
 }
 .group-image {
   height: 200px;
+  margin-bottom: 22px;
 }
 @media (min-width: 768px) {
   .group-image {
     height: 400px;
+    margin-bottom: 50px;
   }
 }
 .home-section {
@@ -9950,7 +9961,7 @@ a.link-dark {
   vertical-align: middle;
 }
 .loan-titlebar {
-  padding: 15px;
+  padding: 15px 15px 10px 15px;
   background-color: #f8f8f8;
 }
 @media (min-width: 768px) {
@@ -10244,13 +10255,33 @@ a.link-dark {
   border-bottom: 1px solid #f2f2f2;
   margin-bottom: -20px;
 }
+@media (max-width: 767px) {
+  .team .nav-tabs {
+    margin-top: 50px;
+  }
+}
+@media (min-width: 768px) {
+  .team .nav-tabs > li {
+    float: right;
+  }
+}
+@media (max-width: 767px) {
+  .team .nav-tabs > li:first-child {
+    float: right;
+  }
+}
+@media (max-width: 767px) {
+  .team .nav-tabs > li > a {
+    padding-right: 5px;
+    padding-left: 5px;
+  }
+}
 .team .row {
-  margin: 0 -20px 0 -20px !important;
-  padding-bottom: 40px !important;
+  margin: 0 -20px !important;
 }
 .team .col-sm-4,
 .team .col-sm-6 {
-  padding: 0 20px 0 20px !important;
+  padding: 0 20px 40px 20px !important;
 }
 .team p,
 .team a {
@@ -10281,7 +10312,7 @@ span.text-content {
   width: 100%;
   position: absolute;
   top: 0;
-  height: 197px;
+  height: 192px;
   opacity: 0;
   -webkit-transition: opacity 500ms;
   -moz-transition: opacity 500ms;

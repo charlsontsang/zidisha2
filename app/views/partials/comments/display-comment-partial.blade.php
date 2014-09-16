@@ -2,11 +2,11 @@
     <a class="pull-left" href="#">
         @if($comment->getUser() && !$comment->getUser()->isAdmin())
         <a class="pull-left" href="{{ $comment->getUser()->getProfileUrl() }}">
-            <img class="media-object" width="100px" height="100px" src="{{ $comment->getUser()->getProfilePictureUrl() }}" alt="">
+            <img class="media-object" width="100px" src="{{ $comment->getUser()->getProfilePictureUrl() }}" alt="">
         </a>
         @else
         <a class="pull-left">
-            <img class="media-object" width="100px" height="100px" src="{{ asset('/assets/images/default.jpg') }}" alt="">
+            <img class="media-object" width="100px" src="{{ asset('/assets/images/default.jpg') }}" alt="">
         </a>
         @endif
     </a>

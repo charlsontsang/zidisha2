@@ -6,14 +6,14 @@
 
 @section('content')
 <div class="row">
-    <div class="col-sm-6 group-body">
+    <div class="col-sm-6 loan-body">
         @if($group->getGroupProfilePicture())
             <div class="pull-left profile-image" href="{{ route('lender:group', $group->getId()) }}"
                 style="background-image:url({{ $group->getGroupProfilePicture()->getImageUrl('small-profile-picture') }})" width="100%">
             </div>
         @else
             <div class="pull-left profile-image" href="{{ route('lender:group', $group->getId()) }}"
-                style="background-image:url("/assets/images/carousel/mary.jpg" width="100%">
+                style="background-image:url('/assets/images/carousel/mary.jpg')" width="100%">
             </div>
         @endif
     </div>
@@ -22,10 +22,10 @@
         <div class="lead">
             <p>
                 <br/><br/>
-                You just joined {{{ $group->getName() }}}!
+                {{{ $successMessage }}}
             </p>
             <p>
-                Increase members in {{{ $group->getName() }}} by sharing with your friends:
+                Want to recruit more members for {{{ $group->getName() }}}?  Share the group page:
             </p>
             <p>
                 <a href="{{$facebookUrl}}" class="btn btn-facebook btn-social share-window">
@@ -41,18 +41,11 @@
         </div>
         <p style="font-size: 18px !important;">
             <br/>
-            <a href="{{ route('lender:group', $group->getId()) }}">Go to Group</a>
+            <a href="{{ route('lender:group', $group->getId()) }}">Go to group page</a>
         </p>
     </div>
 </div>
 
-@include('partials._modal', [
-    'title' => 'Thanks for sharing!',
-    'body' => 'Know someone else who might like to try direct microlending?
-               Send them $25 to lend at Zidisha for free!<br/>
-               <a href="' . route('lender:invite') . '" class="btn btn-primary">Learn more</a>',
-    'id' => 'share-invite-modal'
-])
 @stop
 
 @section('script-footer')
@@ -66,13 +59,6 @@ $(function() {
             'fbShareWindow',
             'height=450, width=550, top=' + ($(window).height() / 2 - 275) + ', left=' + ($(window).width() / 2 - 225) + ', toolbar=0, location=0, menubar=0, directories=0, scrollbars=0'
         );
-
-        var pollTimer = window.setInterval(function() {
-            if (shareWindow.closed !== false) {
-                window.clearInterval(pollTimer);
-                $('#share-invite-modal').modal();
-            }
-        }, 200);
 
         return false;
     });

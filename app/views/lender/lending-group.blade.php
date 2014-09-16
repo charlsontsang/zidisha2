@@ -5,6 +5,14 @@
 @stop
 
 @section('content-top')
+    <div class="loan-titlebar">
+        <span class="text-light">
+            Lending Group
+        </span>
+        <p class="alpha">
+            <strong>{{ $group->getName() }}</strong>
+        </p>
+    </div>
     <div id="carousel-example-generic" class="carousel">
         <div class="carousel-inner group-image">
             <div class="item active">
@@ -24,6 +32,7 @@
 @section('content')
 <div class="row">
     <div class="col-sm-8 loan-body">
+
         <div class="loan-section">
             <div class="loan-section-title">
                 <span class="text-light">Impact</span>
@@ -40,17 +49,20 @@
             </div>
         </div>
 
-        <div class="loan-section">
+        <hr/>
 
+        <div class="loan-section">
             <div class="loan-section-title">
                 <span class="text-light">About</span>
             </div>
             <div class="loan-section-content">
                 <p>{{ $group->getAbout() }}</p>
             </div>
+        </div>
 
-            <hr/>
+        <hr/>
 
+        <div class="loan-section">
             <div class="loan-section-title">
                 <span class="text-light">Members</span>
             </div>
@@ -76,9 +88,11 @@
                 </div>
                 @endif
             </div>
+        </div>
 
-            <hr/>
+        <hr/>
 
+        <div class="loan-section">
             <div class="loan-section-title">
                 <span class="text-light">Discussion</span>
             </div>
@@ -92,28 +106,32 @@
     </div>
 
     <div class="col-xs-4">
-        @if(Auth::check() && Auth::getUser()->isLender())
+        @if(!(Auth::check() && Auth::user()->isBorrower()))
             @if($group->isMember(Auth::User()->getLender()))
-            <a href="{{ route('lender:group:leave', $group->getId()) }}" class="btn btn-primary">
+            <a href="{{ route('lender:group:leave', $group->getId()) }}">
                 Leave this group
             </a>
             @else
-            <a href="{{ route('lender:group:join', $group->getId()) }}" class="btn btn-primary">
+            <a href="{{ route('lender:group:join', $group->getId()) }}" class="btn btn-block btn-primary join-group">
                 Join this group
             </a>
             @endif
         <br><br>
         <div>
             @if($group->isLeader(Auth::User()->getLender()))
-                <a href="{{ route('lender:groups:edit', $group->getId()) }}" class="btn btn-primary">
-                    Edit Group
+                <a href="{{ route('lender:groups:edit', $group->getId()) }}">
+                    Edit group
                 </a>
             @endif
         </div>
         @endif
-        <a href="{{ route('lender:groups') }}">Back to Lending Groups</a>
-        <br>
     </div>
 </div>
+
+@if(!(Auth::check() && Auth::user()->isBorrower()))          
+    <a href="{{ route('lender:group:join', $group->getId()) }}" class="btn btn-primary btn-block mobile-bottom-btn">
+        Join this group
+    </a>
+@endif
 
 @stop

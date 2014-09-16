@@ -46,7 +46,6 @@ class LendingGroupController extends BaseController
 
             $group =  $this->lendingGroupService->addLendingGroup($creator, $data, $image);
 
-            \Flash::success("Group created!");
             return Redirect::route('lender:group:create:success', $group->getId());
         }
         return Redirect::route('lender:groups:create')->withForm($form);
@@ -65,7 +64,7 @@ class LendingGroupController extends BaseController
 
         $twitterParams = array(
             "url" => $groupUrl,
-            "text" => "Just made a group $groupName via @ZidishaInc",
+            "text" => "Just started a $groupName lending group @ZidishaInc",
         );
         $twitterUrl = "http://twitter.com/share?" . http_build_query($twitterParams);
 
@@ -74,7 +73,9 @@ class LendingGroupController extends BaseController
         $facebookUrl = "http://www.facebook.com/sharer.php?s=100&p[url]=" . urlencode($relativeInviteUrl);
         $mailUrl = "mailto:?body=%0D%0A%0D%0A%0D%0A".$groupUrl;
 
-        return View::make('lender.lending-group-create-success', compact('group', 'twitterUrl', 'facebookUrl', 'mailUrl'));
+        $successMessage = "You just created the " . $groupName . " lending group!";
+
+        return View::make('lender.lending-group-success', compact('group', 'twitterUrl', 'facebookUrl', 'mailUrl', 'successMessage'));
     }
 
     public function getJoinSuccess($id)
@@ -90,7 +91,7 @@ class LendingGroupController extends BaseController
 
         $twitterParams = array(
             "url" => $groupUrl,
-            "text" => "Just joined a group $groupName via @ZidishaInc",
+            "text" => "Just joined $groupName lending group via @ZidishaInc",
         );
         $twitterUrl = "http://twitter.com/share?" . http_build_query($twitterParams);
 
@@ -99,7 +100,9 @@ class LendingGroupController extends BaseController
         $facebookUrl = "http://www.facebook.com/sharer.php?s=100&p[url]=" . urlencode($relativeInviteUrl);
         $mailUrl = "mailto:?body=%0D%0A%0D%0A%0D%0A".$groupUrl;
 
-        return View::make('lender.lending-group-join-success', compact('group', 'twitterUrl', 'facebookUrl', 'mailUrl'));
+        $successMessage = "You just joined the " . $groupName . " lending group!";
+
+        return View::make('lender.lending-group-success', compact('group', 'twitterUrl', 'facebookUrl', 'mailUrl', 'successMessage'));
     }
 
     public function getGroups()
@@ -170,7 +173,6 @@ class LendingGroupController extends BaseController
 
         $this->lendingGroupService->joinLendingGroup($group, $lender);
 
-        \Flash::success("You're now a member!");
         return Redirect::route('lender:group:join:success', $group->getId());
     }
 
