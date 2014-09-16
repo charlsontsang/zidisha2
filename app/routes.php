@@ -532,7 +532,7 @@ Route::group(
          * Routes for Admin|Volunteer
          */
         Route::group(
-            array('prefix' => 'admin', 'before' => 'auth|isAdminOrVolunteer'),
+            array('prefix' => 'admin', 'before' => 'auth|isVolunteerOrAdmin'),
             function () {
                 Route::get('dashboard', array('uses' => 'AdminController@getDashboard', 'as' => 'admin:dashboard'));
                 Route::get('volunteers', array('uses' => 'AdminController@getVolunteers', 'as' => 'admin:volunteers'));

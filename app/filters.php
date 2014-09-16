@@ -117,7 +117,7 @@ Route::filter(
 );
 
 Route::filter(
-    'isAdminOrVolunteer',
+    'isVolunteerOrAdmin',
     function ($route, $request) {
         $isAllowed = Auth::getUser()->isVolunteerOrAdmin();
         if (!$isAllowed) {
