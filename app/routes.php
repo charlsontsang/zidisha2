@@ -462,6 +462,19 @@ Route::group(
         );
 
         /**
+         * Routes for Volunteer Mentor
+         */
+        Route::group(
+            array('prefix' => 'volunteer-mentor', 'before' => 'auth|hasSubRole:volunteerMentor'),
+            function () {
+                Route::get(
+                    'assigned-members',
+                    ['uses' => 'VolunteerMentorController@getAssignedMembers', 'as' => 'volunteer-mentor:get:assigned-members']
+                );
+            }
+        );
+
+        /**
          * Routes for loan page
          */
         Route::get('loan/{loanId}', array('uses' => 'LoanController@getIndex', 'as' => 'loan:index'));

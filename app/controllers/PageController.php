@@ -58,15 +58,15 @@ class PageController extends BaseController {
     }
 
     public function getVolunteerMentorGuidelines(){
-        return View::make('borrower.volunteerMentor.guidelines');
+        return View::make('borrower.volunteer-mentor.guidelines');
     }
 
     public function getVolunteerMentorCodeOfEthics(){
-        return View::make('borrower.volunteerMentor.code-of-ethics');
+        return View::make('borrower.volunteer-mentor.code-of-ethics');
     }
 
     public function getVolunteerMentorFaq(){
-        return View::make('borrower.volunteerMentor.frequently-asked-questions');
+        return View::make('borrower.volunteer-mentor.frequently-asked-questions');
     }
 
     public function getFeatureCriteria()
