@@ -116,6 +116,17 @@ Route::filter(
     }
 );
 
+Route::filter(
+    'isAdminOrVolunteer',
+    function ($route, $request) {
+        $isAllowed = Auth::getUser()->isVolunteerOrAdmin();
+        if (!$isAllowed) {
+            Flash::error("You do not have proper permission to view this page");
+            return Redirect::route('login');
+        }
+    }
+);
+
 Route::filter('loggedIn', function()
     {
         if (Auth::check()) {
