@@ -3,7 +3,7 @@
 return [
     'pending-confirmation' => 'A confirmation message has been sent the email address registered with your Zidisha account. Please click the confirmation link in the message in order to verify your email address.
         <br/><br/>
-        If you did not receive the confirmation message, please click <a href=":resendLink">here</a> to resend it.'
+        If you did not receive the confirmation message, please click <a href=":resendLink">here</a> to resend it.',
     'do-more' => [
         'title'            => 'Do more',
         'intro'            => "Join us in overcoming barriers of location and circumstance.  Help us build the world's first online microlending community that connects people directly across previously impregnable barriers of country, language and culture.",
