@@ -44,12 +44,10 @@ class LenderService
 
     public function editProfile(Lender $lender, $data)
     {
-        $lender->setFirstName($data['firstName']);
-        $lender->setLastName($data['lastName']);
-        $lender->getUser()->setEmail($data['email']);
-        $lender->getUser()->setUsername($data['username']);
-        $lender->getProfile()->setCity($data['city']);
-        $lender->getProfile()->setAboutMe($data['aboutMe']);
+        $lender->getUser()->setEmail($data['email'])
+            ->setUsername($data['username']);
+        $lender->getProfile()->setAboutMe($data['aboutMe'])
+            ->setCity($data['city']);
 
         if (!empty($data['password'])) {
             $lender->getUser()->setPassword($data['password']);

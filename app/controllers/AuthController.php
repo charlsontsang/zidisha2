@@ -59,7 +59,7 @@ class AuthController extends BaseController
     public function postLogin()
     {
         $rememberMe = Input::has('remember_me');
-        $credentials = Input::only('username', 'password');
+        $credentials = Input::only('email', 'password');
         
         $form = new LoginForm($this->facebookService, $this->googleService);
         $form->handleRequest(Request::instance());
