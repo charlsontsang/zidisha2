@@ -24,9 +24,7 @@ class EditProfile extends AbstractForm
     public function getRules($data)
     {
         return [
-            'username'  => 'required|alpha_num',
-            'firstName' => 'required|alpha_num',
-            'lastName'  => 'required|alpha_num',
+            'username'  => 'required|alpha_num_space',
             'email'     => 'required|email|uniqueUserEmail:' . $this->lender->getId(),
             'password'  => 'confirmed',
             'city'      => 'required|alpha_num',
@@ -49,8 +47,6 @@ class EditProfile extends AbstractForm
         
         return [
             'username'  => $lender->getUser()->getUsername(),
-            'firstName' => $lender->getFirstName(),
-            'lastName'  => $lender->getLastName(),
             'email'     => $lender->getUser()->getEmail(),
             'city'      => $lender->getProfile()->getCity(),
             'aboutMe'   => $lender->getProfile()->getAboutMe(),

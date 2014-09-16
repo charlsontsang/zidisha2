@@ -50,6 +50,16 @@ class ZidishaValidator extends Validator
         return true;
     }
 
+    public function validateAlphaNumSpace($attribute, $value)
+    {
+        return preg_match('/^[a-z\d\s]+$/i', $value);
+    }
+
+    protected function replaceAlphaNumSpace($message, $attribute, $rule, $parameters)
+    {
+        return 'the ' . $attribute . ' may only contain letters, numbers and spaces.';
+    }
+
     public function validateGreaterThan($attribute, $value, $parameters)
     {
         return $value > $parameters[0];
