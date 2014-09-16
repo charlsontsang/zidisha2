@@ -18,6 +18,8 @@ Thumbs.db
 /app/config/propel/config.php
 /app/Zidisha/*/Map
 /app/Zidisha/*/Base
+/app/Zidisha/*/*/Map
+/app/Zidisha/*/*/Base
 
 /bootstrap/env.php
 _ide_helper.php

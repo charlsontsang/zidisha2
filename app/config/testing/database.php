@@ -1,12 +1,12 @@
 <?php
 
 return array(
-    'default' => 'pgsql',
+    'default' => 'mysql',
 
     'connections' => array(
 
-        'pgsql' => array(
-            'driver'   => 'pgsql',
+        'mysql' => array(
+            'driver'   => 'mysql',
             'host'     => 'localhost',
             'database' => 'homestead',
             'username' => 'homestead',

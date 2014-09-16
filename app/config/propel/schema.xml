@@ -2,6 +2,9 @@
 <database name="zidisha" defaultIdMethod="native" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:noNamespaceSchemaLocation="http://xsd.propelorm.org/1.6/database.xsd" namespace="Zidisha\">
     <table name="users" phpName="User" namespace="User">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="username" type="VARCHAR" size="20" required="true"/>
         <column name="email" type="VARCHAR" size="100" required="false"/>
@@ -29,6 +32,9 @@
     </table>
 
     <table name="loan_categories" phpName="Category" namespace="Loan">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="name" type="VARCHAR" size="100" required="true"/>
         <column name="slug" type="VARCHAR" size="100" required="true"/>
@@ -41,6 +47,9 @@
     </table>
 
     <table name="countries" phpName="Country" namespace="Country">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="name" type="VARCHAR" size="100" required="true"/>
         <column name="slug" type="VARCHAR" size="100" required="true"/>
@@ -71,6 +80,9 @@
     </table>
 
     <table name="loans" phpName="Loan" namespace="Loan">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="borrower_id" type="INTEGER"/>"
         <column name="summary" type="LONGVARCHAR"/>
@@ -123,6 +135,9 @@
     </table>
 
     <table name="loan_bids" phpName="Bid" namespace="Loan">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="loan_id" type="INTEGER" required="true"/>
         <column name="lender_id" type="INTEGER" required="true"/>
@@ -148,6 +163,9 @@
     </table>
 
     <table name="admin_notes" phpName="AdminNote" namespace="Admin">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="user_id" type="INTEGER" required="true" phpType="string"/>
         <column name="loan_id" type="INTEGER" phpType="string"/>
@@ -167,6 +185,9 @@
     </table>
 
     <table name="password_reminders" phpName="PasswordReminder" namespace="Auth">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="email" type="VARCHAR" size="100" required="true"/>
         <column name="token" type="VARCHAR" size="100" required="true"/>
         <behavior name="timestampable"/>
@@ -179,6 +200,9 @@
     </table>
 
     <table name="lenders" phpName="Lender" namespace="Lender">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="id" type="INTEGER" primaryKey="true"/>
         <column name="country_id" type="INTEGER" required="true"/>
         <column name="first_name" type="VARCHAR" size="50" required="false"/>
@@ -196,6 +220,9 @@
     </table>
 
     <table name="borrowers" phpName="Borrower" namespace="Borrower">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="id" type="INTEGER" primaryKey="true"/>
         <column name="country_id" type="INTEGER" required="true"/>
         <column name="first_name" type="VARCHAR" size="50" required="true"/>
@@ -226,6 +253,9 @@
     </table>
 
     <table name="borrower_profiles" phpName="Profile" namespace="Borrower">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="borrower_id" type="INTEGER" primaryKey="true"/>
         <column name="about_me" type="LONGVARCHAR" required="false"/>
         <column name="about_me_translation" type="LONGVARCHAR" required="false"/>
@@ -251,6 +281,9 @@
     </table>
 
     <table name="lender_profiles" phpName="Profile" namespace="Lender">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="lender_id" type="INTEGER" primaryKey="true"/>
         <column name="city" type="VARCHAR" size="100"/>
         <column name="about_me" type="LONGVARCHAR"/>
@@ -261,6 +294,9 @@
     </table>
 
     <table name="loan_stages" phpName="Stage" namespace="Loan">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="loan_id" type="INTEGER" required="true"/>
         <column name="borrower_id" type="INTEGER" required="true"/>
@@ -277,6 +313,9 @@
     </table>
 
     <table name="transactions" phpName="Transaction" namespace="Balance">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="user_id" type="INTEGER" required="true" phpType="string"/>
         <column name="amount" type="DECIMAL" size="12" scale="4" required="true"/>
@@ -319,6 +358,9 @@
     </table>
 
     <table name="comments" phpName="Comment" namespace="Comment">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="id" type="INTEGER" autoIncrement="true" primaryKey="true"/>
         <column name="user_id" type="INTEGER" required="false"/>
         <column name="message" type="LONGVARCHAR"/>
@@ -338,6 +380,9 @@
     </table>
 
     <table name="borrower_comments" phpName="BorrowerComment" namespace="Comment">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <behavior name="concrete_inheritance">
             <parameter name="extends" value="comments" />
             <parameter name="copy_data_to_parent" value="false" />
@@ -357,6 +402,9 @@
     </table>
 
     <table name="lending_group_comments" phpName="LendingGroupComment" namespace="Comment">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <behavior name="concrete_inheritance">
             <parameter name="extends" value="comments" />
             <parameter name="copy_data_to_parent" value="false" />
@@ -374,6 +422,9 @@
     </table>
 
     <table name="loan_feedback_comments" phpName="LoanFeedbackComment" namespace="Comment">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <behavior name="concrete_inheritance">
             <parameter name="extends" value="comments" />
             <parameter name="copy_data_to_parent" value="false" />
@@ -391,6 +442,9 @@
     </table>
 
     <table name="uploads" phpName="Upload" namespace="Upload">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="id" type="INTEGER" autoIncrement="true" primaryKey="true"/>
         <column name="extension" type="VARCHAR" required="true"/>
         <column name="user_id" type="INTEGER" required="true"/>
@@ -403,6 +457,9 @@
     </table>
 
     <table name="borrower_comment_uploads" namespace="Comment" isCrossRef="true">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="comment_id" type="INTEGER" required="true" primaryKey="true"/>
         <column name="upload_id" type="INTEGER" required="true" primaryKey="true"/>
         <foreign-key foreignTable="borrower_comments" phpName="BorrowerComment">
@@ -414,6 +471,9 @@
     </table>
 
     <table name="lending_group_comment_uploads" namespace="Comment" isCrossRef="true">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="comment_id" type="INTEGER" required="true" primaryKey="true"/>
         <column name="upload_id" type="INTEGER" required="true" primaryKey="true"/>
         <foreign-key foreignTable="lending_group_comments" phpName="Comment">
@@ -425,6 +485,9 @@
     </table>
 
     <table name="borrower_uploads" namespace="Borrower" isCrossRef="true">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="borrower_id" type="INTEGER" required="true" primaryKey="true"/>
         <column name="upload_id" type="INTEGER" required="true" primaryKey="true"/>
         <foreign-key foreignTable="borrowers" phpName="Borrower">
@@ -436,6 +499,9 @@
     </table>
 
     <table name="exchange_rates" phpName="ExchangeRate" namespace="Currency">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="rate" type="DECIMAL" size="10" scale="5" required="true" phpType="string"/>
         <column name="start_date" type="TIMESTAMP"/>
@@ -444,12 +510,18 @@
     </table>
 
     <table name="settings" phpName="Setting" namespace="Admin">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="name" type="VARCHAR" size="128" required="true" primaryKey="true"/>
         <column name="value" type="VARCHAR" size="255" required="true" defaultValue="0"/>
         <behavior name="timestampable"/>
     </table>
 
     <table name="installments" phpName="Installment" namespace="Repayment">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="borrower_id" type="INTEGER" required="true"/>
         <column name="loan_id" type="INTEGER" required="true"/>
@@ -467,6 +539,9 @@
     </table>
 
     <table name="installment_payments" phpName="InstallmentPayment" namespace="Repayment">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="installment_id" type="INTEGER" required="true"/>
         <column name="borrower_id" type="INTEGER" required="true"/>
@@ -494,6 +569,9 @@
     </table>
 
     <table name="borrower_payments" phpName="BorrowerPayment" namespace="Repayment">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="country_code" type="VARCHAR" size="2" required="true"/>
         <column name="receipt" type="VARCHAR" size="32" required="true"/>
@@ -514,6 +592,9 @@
     </table>
 
     <table name="lender_invites" phpName="Invite" namespace="Lender">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="lender_id" type="INTEGER" required="true"/>
         <column name="email" type="VARCHAR" size="100" required="true"/>
@@ -530,6 +611,9 @@
     </table>
 
     <table name="lender_invite_visits" phpName="InviteVisit" namespace="Lender">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="lender_id" type="INTEGER" required="true"/>
         <column name="lender_invite_id" type="INTEGER"/>
@@ -546,6 +630,9 @@
     </table>
 
     <table name="lender_invite_transactions" phpName="InviteTransaction" namespace="Balance">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="lender_id" type="INTEGER" required="true" phpType="string"/>
         <column name="amount" type="DECIMAL" size="12" scale="4" required="true"/>
@@ -565,7 +652,7 @@
             <reference local="loan_bid_id" foreign="id"/>
         </foreign-key>
         <index name="lender_id">
-            <index-column name="user_id"/>
+            <index-column name="lender_id"/>
         </index>
         <index name="transaction_date">
             <index-column name="transaction_date"/>
@@ -576,12 +663,18 @@
     </table>
 
     <table name="paypal_ipn_log" phpName="PayPalIpnLog" namespace="Payment\Paypal">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="id" type="INTEGER" required="true" autoIncrement="true" primaryKey="true"/>
         <column name="log" required="true" type="VARCHAR" size="255"/>
         <behavior name="timestampable"/>
     </table>
 
     <table name="paypal_transactions" phpName="PaypalTransaction" namespace="Payment\Paypal">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="transaction_id" type="VARCHAR" size="255" defaultValue="null" required="false"/>
         <column name="transaction_type" type="VARCHAR" size="255" required="false"/>
@@ -600,6 +693,9 @@
     </table>
 
     <table name="stripe_transactions" phpName="StripeTransaction" namespace="Payment\Stripe">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="stripe_id" type="VARCHAR" required="false"/>
         <column name="amount" type="DECIMAL" size="10" scale="2" required="true" phpType="string"/>
@@ -615,12 +711,18 @@
     </table>
 
     <table name="stripe_logs" phpName="StripeLog" namespace="Payment\Stripe">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="log" type="VARCHAR" required="false"/>
         <behavior name="timestampable"/>
     </table>
 
     <table name="payments" phpName="Payment" namespace="Payment" abstract="true">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="credit_amount" type="DECIMAL" size="10" scale="2" required="true" phpType="string"/>
         <column name="amount" type="DECIMAL" size="10" scale="2" required="true" phpType="string"/>
@@ -652,6 +754,9 @@
     </table>
 
     <table name="gift_cards" phpName="GiftCard" namespace="Lender">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="lender_id" type="INTEGER" size="10"/>
         <column name="template" type="INTEGER"/>
@@ -682,6 +787,9 @@
     </table>
 
     <table name="gift_card_transaction" phpName="GiftCardTransaction" namespace="Lender">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="transaction_id" type="INTEGER" size="10"/>
         <column name="transaction_type" type="VARCHAR" size="50"/>
@@ -699,6 +807,9 @@
     </table>
 
     <table name="forgiveness_loan_shares" phpName="ForgivenessLoanShare" namespace="Loan">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="loan_id" type="INTEGER"/>
         <column name="lender_id" type="INTEGER"/>
@@ -718,7 +829,7 @@
             <reference local="lender_id" foreign="id"/>
         </foreign-key>
         <index name="borrower">
-            <index-column name="borrower"/>
+            <index-column name="borrower_id"/>
         </index>
         <index name="loan_date">
             <index-column name="loan_id"/>
@@ -731,6 +842,9 @@
     </table>
 
     <table name="forgiveness_loans" phpName="ForgivenessLoan" namespace="Loan">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="loan_id" type="INTEGER" required="true" primaryKey="true"/>
         <column name="borrower_id" type="INTEGER"/>
         <column name="comment" type="LONGVARCHAR" required="false"/>
@@ -746,13 +860,16 @@
         <index name="borrower">
             <index-column name="borrower_id"/>
         </index>
-        <index name="loan_created">
+        <index name="loan_created_at">
             <index-column name="loan_id"/>
-            <index-column name="created"/>
+            <index-column name="created_at"/>
         </index>
     </table>
     
     <table name="borrower_refunds" phpName="BorrowerRefund" namespace="Repayment">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="amount" type="DECIMAL" size="10" scale="2" required="true"/>
         <column name="borrower_id" type="INTEGER" required="true"/>
@@ -772,6 +889,9 @@
     </table>
 
     <table name="volunteer_mentors" phpName="VolunteerMentor" namespace="Borrower">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="borrower_id" type="INTEGER" primaryKey="true"/>
         <column name="country_id" type="INTEGER" required="true"/>
         <column name="grant_date" type="TIMESTAMP" required="true"/>
@@ -792,6 +912,9 @@
     </table>
 
     <table name="borrower_join_logs" phpName="JoinLog" namespace="Borrower">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="borrower_id" type="INTEGER" required="true" primaryKey="true" />
         <column name="ip_address" type="VARCHAR" size="256" required="true"/>
         <column name="verification_code" type="VARCHAR" required="false" />
@@ -809,6 +932,9 @@
     </table>
 
     <table name="borrower_contacts" phpName="Contact" namespace="Borrower">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="borrower_id" type="INTEGER" required="true"/>
         <column name="first_name" type="VARCHAR" size="100" required="true"/>
@@ -823,6 +949,9 @@
     </table>
 
     <table name="borrower_guests" phpName="BorrowerGuest" namespace="Borrower">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="id" type="INTEGER" required="true" primaryKey="true"  autoIncrement="true"/>
         <column name="session" type="LONGVARCHAR" />
         <column name="form" type="LONGVARCHAR" />
@@ -831,6 +960,9 @@
     </table>
 
     <table name="borrower_feedback_messages" phpName="FeedbackMessage" namespace="Borrower">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="borrower_id" type="INTEGER" required="true"/>
         <column name="type" type="ENUM" valueSet="loan, activation"/>
@@ -852,6 +984,9 @@
     </table>
     
     <table name="borrower_reviews" phpName="Review" namespace="Borrower">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="borrower_id" type="INTEGER" primaryKey="true"/>
         <column name="is_photo_clear" type="LONGVARCHAR" required="false" />
         <column name="is_desc_clear" type="LONGVARCHAR" required="false" />
@@ -871,12 +1006,18 @@
     </table>
 
     <table name="languages" phpName="Language" namespace="Country">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="language_code" type="VARCHAR" size="10" primaryKey="true" required="true"/>
         <column name="name" type="VARCHAR" required="true"/>
         <column name="active" type="BOOLEAN" defaultValue="false"/>
     </table>
 
     <table name="loan_category_translations" phpName="CategoryTranslation" namespace="Loan">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="category_id" type="INTEGER" required="true"/>
         <column name="language_code" type="VARCHAR" size="10"/>
@@ -894,6 +1035,9 @@
     </table>
 
     <table name="lending_groups" phpName="LendingGroup" namespace="Lender">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="name" type="VARCHAR" size="50" required="true"/>
         <column name="website" type="VARCHAR"/>
@@ -920,6 +1064,9 @@
     </table>
 
     <table name="lending_group_notifications" phpName="LendingGroupNotification" namespace="Lender">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="lending_group_id" type="INTEGER" required="true" primaryKey="true"/>
         <column name="user_id" type="INTEGER" required="true" primaryKey="true"/>
         <behavior name="timestampable"/>
@@ -932,6 +1079,9 @@
     </table>
 
     <table name="lending_group_members" phpName="LendingGroupMember" namespace="Lender">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="group_id" type="INTEGER" required="true"/>
         <column name="member_id" type="INTEGER" required="true"/>
@@ -946,8 +1096,11 @@
     </table>
 
     <table name="translation_labels" phpName="TranslationLabel" namespace="Translation">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
-        <column name="key" type="VARCHAR" required="true"/>
+        <column name="name" type="VARCHAR" required="true" phpName="key"/>
         <column name="value" type="LONGVARCHAR" required="false"/>
         <column name="language_code" type="CHAR" size="5" required="true"/>
         <column name="filename" type="VARCHAR" required="true"/>
@@ -961,6 +1114,9 @@
     </table>
 
     <table name="withdrawal_requests" phpName="WithdrawalRequest" namespace="Balance">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="lender_id" type="INTEGER" required="true"/>
         <column name="amount" type="DECIMAL" size="10" scale="2" phpType="string" required="true"/>
@@ -973,6 +1129,9 @@
     </table>
 
     <table name="followers" phpName="Follower" namespace="Lender">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="lender_id" type="INTEGER" required="true"/>
         <column name="borrower_id" type="INTEGER" required="true"/>
@@ -989,6 +1148,9 @@
     </table>
 
     <table name="lender_preferences" phpName="Preferences" namespace="Lender">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="lender_id" type="INTEGER" primaryKey="true"/>
         <column name="hide_lending_activity" type="BOOLEAN" defaultValue="false"/>
         <column name="hide_karma" type="BOOLEAN" defaultValue="false"/>
@@ -1007,6 +1169,9 @@
     </table>
     
     <table name="borrower_invites" phpName="Invite" namespace="Borrower">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="borrower_id" type="INTEGER" required="true"/>
         <column name="email" type="VARCHAR" size="100" required="true"/>
@@ -1024,6 +1189,9 @@
     </table>
     
     <table name="credit_settings" phpName="CreditSetting" namespace="Credit">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="country_code" type="VARCHAR" size="2" required="true"/>
         <column name="loan_amount_limit" type="INTEGER" required="true"/>
@@ -1037,6 +1205,9 @@
     </table>
 
     <table name="credits_earned" phpName="CreditsEarned" namespace="Credit">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="borrower_id" type="INTEGER" required="true"/>
         <column name="loan_id" type="INTEGER" required="true"/>
@@ -1053,6 +1224,9 @@
     </table>
     
     <table name="scheduled_jobs" phpName="ScheduledJob" namespace="ScheduledJob">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="user_id" type="INTEGER" required="true"/>
         <column name="loan_id" type="INTEGER" required="false"/>
@@ -1083,6 +1257,9 @@
     </table>
 
     <table name="scheduled_jobs_logs" phpName="ScheduledJobLog" namespace="ScheduledJob">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="scheduled_jobs_id" type="INTEGER" required="true"/>
         <column name="processed_at" type="TIMESTAMP" required="false"/>
@@ -1094,6 +1271,9 @@
     </table>
 
     <table name="facebook_users" phpName="FacebookUser" namespace="User">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="user_id" type="INTEGER" required="true" phpType="string"/>
         <column name="account_name" type="VARCHAR"/>
@@ -1110,6 +1290,9 @@
     </table>
 
     <table name="auto_lending_settings" phpName="AutoLendingSetting" namespace="Lender">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="lender_id" type="INTEGER" required="true"/>
         <column name="preference" type="SMALLINT" required="true"/>
@@ -1126,6 +1309,9 @@
     </table>
 
     <table name="statistics" phpName="Statistic" namespace="Statistic">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="name" type="VARCHAR" required="true"/>
         <column name="value" type="LONGVARCHAR" required="true"/>
@@ -1137,6 +1323,9 @@
     </table>
 
     <table name="reschedules" phpName="Reschedule" namespace="Loan">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="loan_id" type="INTEGER" required="true"/>
         <column name="borrower_id" type="INTEGER" required="true"/>
@@ -1152,6 +1341,9 @@
     </table>
 
     <table name="bulk_emails" phpName="BulkEmail" namespace="Mail">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="sender_email" type="VARCHAR" size="100" required="true"/>
         <column name="subject" type="VARCHAR" required="true"/>
@@ -1166,6 +1358,9 @@
     </table>
 
     <table name="bulk_email_recipients" phpName="BulkEmailRecipient" namespace="Mail">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="bulk_email_id" type="INTEGER" required="true"/>
         <column name="email" type="VARCHAR" size="100" required="true"/>
@@ -1177,6 +1372,9 @@
     </table>
 
     <table name="facebook_user_logs" phpName="FacebookUserLog" namespace="User">
+        <vendor type="mysql">
+            <parameter name="Engine" value="InnoDB"/>
+        </vendor>
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="user_id" type="INTEGER" required="false" phpType="string"/>
         <column name="facebook_id" type="VARCHAR" required="true" phpType="string"/>
@@ -1191,9 +1389,6 @@
         <behavior name="timestampable"/>
         <foreign-key foreignTable="users">
             <reference local="user_id" foreign="id"/>
-        </foreign-key>
-        <foreign-key foreignTable="facebook_users">
-            <reference local="facebook_id" foreign="id"/>
         </foreign-key>
     </table>
 </database>

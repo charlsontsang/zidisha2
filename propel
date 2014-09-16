@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PLATFORM=--platform=PgsqlPlatform
+PLATFORM=--platform=MysqlPlatform
 INPUT_DIR=--input-dir='app/config/propel'
 MODELS_DIR=--output-dir="app"
 MIGRATIONS_DIR=--output-dir='app/database/migrations'

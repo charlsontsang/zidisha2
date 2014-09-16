@@ -177,6 +177,17 @@ class GenerateModelData extends Command
             return;
         }
 
+        if ($model == "ClearFbData") {
+            $this->line('Deleting all Facebook Data');
+            $logs = \Zidisha\User\Base\FacebookUserLogQuery::create()
+                ->doDeleteAll();
+            if ($logs) {
+                $Fb = \Zidisha\User\FacebookUserQuery::create()
+                    ->doDeleteAll();
+            }
+            $this->line('done');
+        }
+
         if ($model == "ClearJobs") {
             $this->line('Deleting all Schedule Jobs');
 
@@ -590,8 +601,8 @@ class GenerateModelData extends Command
         }
 
         $this->line('Rebuild database');
-        DB::statement('drop schema public cascade');
-        DB::statement('create schema public');
+        DB::statement('DROP DATABASE IF EXISTS homestead');
+        DB::statement('CREATE DATABASE IF NOT EXISTS homestead');
         exec('rm -rf app/database/migrations');
         exec('./propel diff');
         exec('./propel migrate');
