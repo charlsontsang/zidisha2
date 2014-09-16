@@ -4,7 +4,7 @@ return [
     'facebook-login' => 'Log in with Facebook',
     'google-login'   => 'Log in with Google',
     'form' => [
-        'username'    => 'Username or email',
+        'email'       => 'email',
         'password'    => 'Password',
         'remember-me' => 'Remember me',
         'submit'      => 'Log in',

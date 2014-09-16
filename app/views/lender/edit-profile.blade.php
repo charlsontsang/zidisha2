@@ -18,6 +18,8 @@ Quick Links
 
 <h4>Account Information</h4>
 
+{{ BootstrapForm::text('username', null, ['label' => 'Change Username']) }}
+
 {{ BootstrapForm::text('email', null, ['label' => 'Email']) }}
 
 {{ BootstrapForm::password('password', ['label' => 'Change Password']) }}

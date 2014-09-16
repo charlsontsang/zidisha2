@@ -30,9 +30,9 @@
 
     <div class="form-group has-feedback">
         <div class="sr-only">@lang('borrower.login.form.username')</div>
-        {{ BootstrapForm::text('username', null, [
+        {{ BootstrapForm::text('email', null, [
             'class'       => 'form-control',
-            'placeholder' => Lang::get('borrower.login.form.username'),
+            'placeholder' => Lang::get('borrower.login.form.email'),
             'label' => false,
         ]) }}
         <span class="fa-lg form-control-feedback text-muted" style="top: 0;">@</span>

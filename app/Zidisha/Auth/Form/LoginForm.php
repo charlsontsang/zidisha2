@@ -34,7 +34,7 @@ class LoginForm extends AbstractForm
     public function getRules($data)
     {
         return [
-            'username' => 'required',
+            'email'    => 'required',
             'password' => 'required',
         ];
     }

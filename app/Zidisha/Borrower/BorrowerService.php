@@ -15,6 +15,7 @@ use Zidisha\Sms\BorrowerSmsService;
 use Zidisha\Upload\Upload;
 use Zidisha\User\FacebookUser;
 use Zidisha\User\FacebookUserLogQuery;
+use Zidisha\User\FacebookUserQuery;
 use Zidisha\User\User;
 use Zidisha\User\UserQuery;
 use Zidisha\Vendor\Facebook\FacebookService;
@@ -46,14 +47,18 @@ class BorrowerService
     public function joinBorrower($data)
     {
         $data += [
-            'joinedAt' => new DateTime(),
+            'joinedAt'     => new DateTime(),
+            'referrerId'   => null,
+            'facebookData' => null,
         ];
         $borrower = new Borrower();
 
         $invite = PropelDB::transaction(function($con) use($data, $borrower) {
             $volunteerMentor = VolunteerMentorQuery::create()
                 ->findOneByBorrowerId($data['volunteerMentorId']);
-            $facebookData = \Session::get('BorrowerJoin.facebookData');
+            $referrer = BorrowerQuery::create()
+                ->findOneById($data['referrerId']);
+            $facebookData = $data['facebookData'];
 
             $user = new User();
             $user
@@ -150,7 +155,7 @@ class BorrowerService
                 ->setBorrower($borrower);
             $joinLog->save($con);
 
-            $invite = $this->isBorrowerInvited($borrower, $con);
+            $invite = $this->isBorrowerInvited($borrower, $facebookData, $con);
                 return $invite;
             });
 
@@ -679,11 +684,13 @@ class BorrowerService
             ->count();
     }
 
-    private function isBorrowerInvited(Borrower $borrower, $con)
+    private function isBorrowerInvited(Borrower $borrower, $facebookData, $con)
     {
         $invite = InviteQuery::create()
             ->filterByInviteeId(null)
-            ->findOneByEmail($borrower->getUser()->getEmail());
+            ->filterByEmail([$borrower->getUser()->getEmail(), $facebookData['email']])
+            ->findOne();
+
         if ($invite) {
             $invite->setInvitee($borrower);
             $invite->save($con);
