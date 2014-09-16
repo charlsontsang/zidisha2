@@ -510,6 +510,22 @@ Route::group(
                     array('uses' => 'AdminController@postWithdrawalRequests', 'as' => 'admin:post:withdrawal-requests')
 
                 );
+                Route::get(
+                    'countries/edit/{id}',
+                    array('uses' => 'CountryController@editCountry', 'as' => 'admin:edit:country')
+                );
+                Route::post(
+                    'countries/edit/{id}',
+                    array('uses' => 'CountryController@postEditCountry', 'as' => 'admin:post:edit:country')
+                );
+                Route::post(
+                    '/settings/exchange-rates/{countryName?}',
+                    array(
+                        'uses'   => 'AdminController@postExchangeRates',
+                        'as'     => 'admin:post-exchange-rates',
+                        'before' => 'csrf'
+                    )
+                );
             }
         );
         /**
@@ -567,14 +583,7 @@ Route::group(
                         'as'   => 'admin:exchange-rates'
                     )
                 );
-                Route::post(
-                    '/settings/exchange-rates/{countryName?}',
-                    array(
-                        'uses'   => 'AdminController@postExchangeRates',
-                        'as'     => 'admin:post-exchange-rates',
-                        'before' => 'csrf'
-                    )
-                );
+
                 Route::get(
                     '/repayments',
                     array(
@@ -705,14 +714,6 @@ Route::group(
                     array('uses' => 'AdminController@postAdminCategory', 'as' => 'admin:post-category')
                 );
                 Route::get('countries', array('uses' => 'CountryController@getCountries', 'as' => 'admin:countries'));
-                Route::get(
-                    'countries/edit/{id}',
-                    array('uses' => 'CountryController@editCountry', 'as' => 'admin:edit:country')
-                );
-                Route::post(
-                    'countries/edit/{id}',
-                    array('uses' => 'CountryController@postEditCountry', 'as' => 'admin:post:edit:country')
-                );
 
                 Route::get('settings', array('uses' => 'AdminController@getSettings', 'as' => 'admin:settings'));
                 Route::post('settings', array('uses' => 'AdminController@postSettings', 'as' => 'admin:settings'));
