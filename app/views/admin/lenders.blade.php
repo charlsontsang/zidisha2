@@ -13,17 +13,13 @@ Quick Links
 @stop
 
 @section('page-content')
-
-<div class="page-header">
-    <h1>Lenders</h1>
-</div>
 <div>
-    {{ BootstrapForm::open(array('route' => 'admin:lenders', 'translationDomain' => 'lenders', 'method' => 'get')) }}
+    {{ BootstrapForm::open(array('route' => 'admin:lenders')) }}
     {{ BootstrapForm::populate($form) }}
 
-    {{ BootstrapForm::select('country', $form->getCountries(), Request::query('country')) }}
-    {{ BootstrapForm::text('search', Request::query('search')) }}
-    {{ BootstrapForm::submit('Search') }}
+    {{ BootstrapForm::select('country', $form->getCountries(), Request::query('country'), ['label' => 'Country']) }}
+    {{ BootstrapForm::text('search', Request::query('search'), ['label' => 'Search']) }}
+    {{ BootstrapForm::submit('Submit') }}
 
     {{ BootstrapForm::close() }}
 </div>
@@ -35,7 +31,7 @@ Quick Links
         <th>Location</th>
         <th>Date Joined</th>
         <th>Last Login</th>
-        <th>Last check in email</th>
+        <th>Last Check-In Email</th>
         <th>Status</th>
     </tr>
     </thead>
@@ -57,24 +53,24 @@ Quick Links
             @if($lender->getUser()->getLastLoginAt())
                 {{ $lender->getUser()->getLastLoginAt()->format('M d, Y') }}
             @else
-                Lender has not logged in yet
+                {{ $lender->getUser()->getCreatedAt()->format('M d, Y') }}
             @endif
         </td>
         
         <td>
-         {{ BootstrapForm::open(array('route' => ['admin:last-check-in-email:lender', $lender->getId() ])) }}
-         {{ BootstrapForm::datepicker('lastCheckInEmail') }}
-         {{ BootstrapForm::submit('Submit') }}
-         {{ BootstrapForm::close() }}
-         
-         <br/>
-         <hr/>
-         Last check in email :
          @if($lender->getLastCheckInEmail())
             {{ $lender->getLastCheckInEmail()->format('m/d/Y') }}         
          @else
-          Not available 
+            None
          @endif
+
+         <br/><br/>
+
+         {{ BootstrapForm::open(array('route' => ['admin:last-check-in-email:lender', $lender->getId() ])) }}
+         {{ BootstrapForm::datepicker('lastCheckInEmail', null, ['label' => '', 'placeholder' => 'Last check-in']) }}
+         {{ BootstrapForm::submit('Save') }}
+         {{ BootstrapForm::close() }}
+
         </td>
         <td>
             <p>
@@ -86,18 +82,20 @@ Quick Links
             </p>
             
             @if($lender->getUser()->getActive())
-               {{ BootstrapForm::open(array('route' => ['admin:deactivate:lender', $lender->getId() ])) }}
-               {{ BootstrapForm::submit('Deactivate') }}
-               {{ BootstrapForm::close() }}
+            <a href="{{ route('admin:deactivate:lender', $lender->getId()) }}">
+                Deactivate
+            </a>
             @else
-               {{ BootstrapForm::open(array('route' => ['admin:activate:lender', $lender->getId() ])) }}
-               {{ BootstrapForm::submit('Activate') }}
-               {{ BootstrapForm::close() }}
+            <a href="{{ route('admin:activate:lender', $lender->getId()) }}">
+                Activate
+            </a>
             @endif             
             <br/>
-           {{ BootstrapForm::open(array('route' => ['admin:delete:lender', $lender->getId() ])) }}
-           {{ BootstrapForm::submit('Delete') }}
-           {{ BootstrapForm::close() }}
+            @if(Auth::getUser()->isAdmin())
+            <a href="{{ route('admin:delete:lender', $lender->getId()) }}">
+                Delete
+            </a>
+            @endif
         </td>
     </tr>
     @endforeach
