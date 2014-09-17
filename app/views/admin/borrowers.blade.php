@@ -13,13 +13,13 @@ Quick Links
 @stop
 
 @section('page-content')
-{{ BootstrapForm::open(array('route' => 'admin:borrowers', 'translationDomain' => 'borrowers', 'method' => 'get')) }}
+{{ BootstrapForm::open(array('route' => 'admin:borrowers', 'method' => 'get')) }}
 {{ BootstrapForm::populate($form) }}
 
-{{ BootstrapForm::select('country', $form->getCountries(), Request::query('country')) }}
-{{ BootstrapForm::select('status', $form->getStatus(), Request::query('status')) }}
-{{ BootstrapForm::text('search', Request::query('search')) }}
-{{ BootstrapForm::submit('Search') }}
+{{ BootstrapForm::select('country', $form->getCountries(), Request::query('country'), ['label' => 'Country']) }}
+{{ BootstrapForm::select('status', $form->getStatus(), Request::query('status'), ['label' => 'Account Status']) }}
+{{ BootstrapForm::text('Search', Request::query('search')) }}
+{{ BootstrapForm::submit('Submit') }}
 
 {{ BootstrapForm::close() }}
 
@@ -29,7 +29,6 @@ Quick Links
         <th>Borrower</th>
         <th>Location</th>
         <th>Actions</th>
-        <th></th>
     </tr>
     </thead>
     <tbody>
@@ -40,16 +39,19 @@ Quick Links
             <p>{{ $borrower->getUser()->getUsername() }}</p>
             <p>{{ $borrower->getUser()->getEmail() }}</p>
         </td>
-        <td>{{ $borrower->getCountry()->getName() }}</td>
+        <td>
+            {{ $borrower->getProfile()->getCity() }}, {{ $borrower->getCountry()->getName() }}
+        </td>
         <td>
             <a href="{{ route('admin:borrower', $borrower->getId()) }}">
                 View Profile
             </a>
-        </td>
-        <td>
+            <br/><br/>
+            @if(Auth::getUser()->isAdmin())
             <a href="{{ route('admin:borrower:edit', $borrower->getId()) }}">
                 Edit Profile
             </a>
+            @endif
         </td>
     </tr>
     @endforeach
