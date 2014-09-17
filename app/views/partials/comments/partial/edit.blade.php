@@ -1,5 +1,5 @@
 <div class="comment-form" data-comment-action="edit" style="display: none;">
-{{ BootstrapForm::open(array('action' => [ $controller.'@postEdit', 'id' => $receiver->getId()  ], 'translationDomain' => 'borrower.comments', 'files' => true)) }}
+{{ BootstrapForm::open(array('action' => [ $controller.'@postEdit', 'id' => $receiver->getId()  ], 'translationDomain' => 'common.comments', 'files' => true)) }}
 
 @if($controller == 'LoanFeedbackController' && $comment->isRoot())
     {{ BootstrapForm::select('rating', array('positive' => 'Positive', 'neutral' => 'Neutral', 'negative' => 'Negative'), $comment->getRating()) }}

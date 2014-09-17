@@ -1,5 +1,5 @@
 <div class="comment-form clearfix" style="display: none;" data-comment-action="translate" >
-    {{ BootstrapForm::open(array('action' => [ $controller.'@postTranslate', 'id' => $receiver->getId()  ], 'translationDomain' => 'borrower.comments')) }}
+    {{ BootstrapForm::open(array('action' => [ $controller.'@postTranslate', 'id' => $receiver->getId()  ], 'translationDomain' => 'common.comments')) }}
 
     {{ BootstrapForm::textarea('message', $comment->getMessageTranslation(), ['label' => 'common.comments.translation', 'required' => 'required', 'rows' => 5]) }}
     {{ BootstrapForm::hidden('comment_id', $comment->getId()) }}

@@ -1,5 +1,5 @@
 <div class="comment">
-    {{ BootstrapForm::open(array('action' => [ $controller.'@postComment', 'id' => $receiver->getId()  ], 'translationDomain' => 'borrower.comments', 'files' => true)) }}
+    {{ BootstrapForm::open(array('action' => [ $controller.'@postComment', 'id' => $receiver->getId()  ], 'translationDomain' => 'common.comments', 'files' => true)) }}
     {{ BootstrapForm::hidden('receiver_id', $receiver->getId()) }}
 
     @if($controller == 'LoanFeedbackController')
