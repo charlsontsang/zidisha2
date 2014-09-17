@@ -25,14 +25,14 @@
 
 <div class="progress-group">
     <div class="progress">
-        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="{{ $loan->getRaisedPercentage() }}" aria-valuemin="0"
+        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="{{ floor($loan->getRaisedPercentage()) }}" aria-valuemin="0"
              aria-valuemax="100"
              style="width: {{ $loan->getRaisedPercentage() }}%;">
         </div>
     </div>
     <div class="row">
         <div class="col-xs-4 text-center gutter-xs">
-            <span class="text-large">{{ $loan->getRaisedPercentage() }}%&nbsp;</span>
+            <span class="text-large">{{ floor($loan->getRaisedPercentage()) }}%&nbsp;</span>
             <br/>
             <span class="text-light">
                 @lang('borrower.loan.progress.funded')
