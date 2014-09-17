@@ -134,6 +134,10 @@ class BorrowerGenerator extends Generator
         $borrower = $this->borrowerService->joinBorrower($data);
         // TODO
         $borrower->setActivationStatus(Borrower::ACTIVATION_APPROVED);
+        
+        $borrower->getProfile()
+            ->setAboutBusiness($this->faker->paragraph(4))
+            ->setAboutMe($this->faker->paragraph(4));
         $borrower->save();
         
         if ($this->verified) {
