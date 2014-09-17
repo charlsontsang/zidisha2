@@ -118,7 +118,41 @@ class AdminController extends BaseController
     public
     function getDashboard()
     {
-        return View::make('admin.dashboard');
+        $totalLenders = LenderQuery::create()
+            ->count();
+        
+        $activeLenders = LenderQuery::create()
+            ->useUserQuery()
+                ->filterByActive(true)
+            ->endUse()
+            ->count();
+        
+        $activeLendersInPastTwoMonths = LenderQuery::create()
+            ->useUserQuery()
+                ->filterByLastLoginAt(Carbon::now()->subMonths(2), Criteria::GREATER_THAN)
+            ->endUse()
+            ->count();
+        
+        
+        $lenderUsingAutomatedLending = LenderQuery::create()
+            ->useAutoLendingSettingQuery()
+                ->filterByActive(true)
+            ->endUse()
+            ->count();
+        
+        $totalLenderCredit  = DB::select(
+            'SELECT SUM(amount) AS total
+             FROM transactions
+             WHERE user_id IN (SELECT id FROM users WHERE users.sub_role = 0)'
+        );
+        $totalLenderCredit = $totalLenderCredit[0]->total;
+
+        return View::make('admin.dashboard', compact(
+            'totalLenders',
+            'activeLenders',
+            'activeLendersInPastTwoMonths',
+            'lenderUsingAutomatedLending',
+            'totalLenderCredit'));
     }
 
     public function getBorrowers()
@@ -203,46 +237,12 @@ class AdminController extends BaseController
         $paginator = $form->getQuery()
             ->orderById()
             ->paginate($page, 3);
-
-        $totalLenders = LenderQuery::create()
-            ->count();
-        
-        $activeLenders = LenderQuery::create()
-            ->useUserQuery()
-                ->filterByActive(true)
-            ->endUse()
-            ->count();
-        
-        $activeLendersInPastTwoMonths = LenderQuery::create()
-            ->useUserQuery()
-                ->filterByLastLoginAt(Carbon::now()->subMonths(2), Criteria::GREATER_THAN)
-            ->endUse()
-            ->count();
-        
-        
-        $lenderUsingAutomatedLending = LenderQuery::create()
-            ->useAutoLendingSettingQuery()
-                ->filterByActive(true)
-            ->endUse()
-            ->count();
-        
-        $totalLenderCredit  = DB::select(
-            'SELECT SUM(amount) AS total
-             FROM transactions
-             WHERE user_id IN (SELECT id FROM users WHERE users.sub_role = 0)'
-        );
-        $totalLenderCredit = $totalLenderCredit[0]->total;
         
         return View::make(
             'admin.lenders',
             compact(
                 'paginator',
-                'form',
-                'totalLenders',
-                'activeLenders',
-                'activeLendersInPastTwoMonths',
-                'lenderUsingAutomatedLending',
-                'totalLenderCredit'
+                'form'
             )
         );
     }
