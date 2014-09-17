@@ -32,7 +32,7 @@
                     <ul class="dropdown-menu">
                         @include('partials.nav-links.community-links')
                     </ul>
-                </li>
+                </li>                
                 @if(Auth::check() && Auth::getUser()->isAdmin())
                 <li class="dropdown dropdown-large">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -80,7 +80,7 @@
                             </ul>
                         </li>
                     </ul>
-                </li>
+                </li> 
                 @elseif(Auth::check())
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -97,6 +97,17 @@
                         <li><a href="{{ route('logout') }}">Log Out</a></li>
                     </ul>
                 </li>
+                @if(Auth::getUser()->isVolunteer())
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        Staff Links <b class="caret"></b>
+                    </a>
+
+                    <ul class="dropdown-menu">
+                        @include('partials.nav-links.staff-links')
+                    </ul>
+                </li>
+                @endif
                 @else
                 <li>
                     <a href="{{ route('login') }}" data-toggle="modal" data-target="#login-modal">
