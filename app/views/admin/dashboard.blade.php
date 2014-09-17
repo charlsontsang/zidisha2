@@ -13,6 +13,7 @@ Quick Links
 @stop
 
 @section('page-content')
+<h4>Lender Stats</h4>
 <p>
     Total lenders : {{ $totalLenders }}
     <br/>
