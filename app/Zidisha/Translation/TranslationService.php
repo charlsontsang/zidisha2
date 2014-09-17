@@ -4,6 +4,7 @@ namespace Zidisha\Translation;
 
 
 use Illuminate\Filesystem\Filesystem;
+use Propel\Runtime\ActiveQuery\Criteria;
 use Zidisha\Country\LanguageQuery;
 use Zidisha\Translation\TranslationLabelQuery;
 use Zidisha\Vendor\PropelDB;
@@ -23,76 +24,89 @@ class TranslationService
 
     public function loadLanguageFilesToDatabase()
     {
-        $files = $this->filesystem->allFiles(app_path() . '/lang/en/borrower/');
+        $languageCodes = LanguageQuery::create()
+            ->filterBorrowerLanguages()
+            ->filterByLanguageCode('EN', Criteria::NOT_EQUAL)
+            ->find()
+            ->toKeyValue('LanguageCode', 'LanguageCode');
 
-        foreach ($files as $file) {
-            $filename = str_replace('.php', '', $file->getRelativePathname());
-            $fileLabels = $this->getFlattenedFileLabels($filename);
+        array_unshift($languageCodes, "en");
 
-            PropelDB::transaction(function($con) use($filename, $fileLabels) {
-                $updatedKeys = [];
+        foreach (['borrower', 'common'] as $folder) {
+            $files = $this->filesystem->allFiles(app_path() . "/lang/en/$folder/");
 
-                $languageCodes = LanguageQuery::create()
-                    ->filterBorrowerLanguages()
-                    ->find()->toKeyValue('LanguageCode', 'LanguageCode');
+            foreach ($files as $file) {
+                $filename = str_replace(
+                    '.php',
+                    '',
+                    $file->getRelativePathname()
+                );
+                $fileLabels = $this->getFlattenedFileLabels($folder, $filename);
 
-                array_unshift($languageCodes, "en");
+                PropelDB::transaction(
+                    function ($con) use ($folder, $filename, $fileLabels, $languageCodes) {
+                        $updatedNames = [];
 
-                foreach ($languageCodes as $languageCode) {
-                    $_labels = TranslationLabelQuery::create()
-                        ->filterByFilename($filename)
-                        ->filterByLanguageCode($languageCode)
-                        ->find();
-
-                    $labels = [];
-                    foreach ($_labels as $label) {
-                        $labels[$label->getKey()] = $label;
-                    }
-
-                    foreach ($fileLabels as $key => $value) {
-                        if (!isset($labels[$key])) {
-                            $translationLabel = new TranslationLabel();
-                            $translationLabel
-                                ->setFileName($filename)
-                                ->setKey($key)
-                                ->setLanguageCode($languageCode);
-
-                            if ($languageCode == 'en') {
-                                $translationLabel->setValue($value);
-                            }
-
-                            $translationLabel->save($con);
-                            continue;
-                        }
-
-                        /** @var TranslationLabel $translationLabel */
-                        $translationLabel = $labels[$key];
-
-                        if ($languageCode == 'en') {
-                            if ($translationLabel->getValue() != $fileLabels[$key]) {
-                                $updatedKeys[$key] = $key;
-                            }
-                            $translationLabel->setValue($value);
-                        } elseif(isset($updatedKeys[$translationLabel->getKey()])) {
-                            $translationLabel->setUpdated(true);
-                        }
-                        $translationLabel->save($con);
-                    }
-
-                    foreach ($labels as $label) {
-                        if (!isset($fileLabels[$label->getKey()])){
-                            $deprecatedLabel = TranslationLabelQuery::create()
-                                ->filterByKey($label->getKey())
+                        foreach ($languageCodes as $languageCode) {
+                            $_labels = TranslationLabelQuery::create()
+                                ->filterByFolder($folder)
                                 ->filterByFilename($filename)
                                 ->filterByLanguageCode($languageCode)
-                                ->findOne();
+                                ->find();
 
-                            $deprecatedLabel->delete();
+                            $labels = [];
+                            foreach ($_labels as $label) {
+                                $labels[$label->getName()] = $label;
+                            }
+
+                            foreach ($fileLabels as $name => $value) {
+                                if (!isset($labels[$name])) {
+                                    $translationLabel = new TranslationLabel();
+                                    $translationLabel
+                                        ->setFolder($folder)
+                                        ->setFileName($filename)
+                                        ->setName($name)
+                                        ->setLanguageCode($languageCode);
+
+                                    if ($languageCode == 'en') {
+                                        $translationLabel->setValue($value);
+                                    }
+
+                                    $translationLabel->save($con);
+                                    continue;
+                                }
+
+                                /** @var TranslationLabel $translationLabel */
+                                $translationLabel = $labels[$name];
+
+                                if ($languageCode == 'en') {
+                                    if ($translationLabel->getValue() != $fileLabels[$name]) {
+                                        $updatedNames[$name] = $name;
+                                    }
+                                    $translationLabel->setValue($value);
+                                } elseif (isset($updatedNames[$translationLabel->getName()])) {
+                                    $translationLabel->setUpdated(true);
+                                }
+                                $translationLabel->save($con);
+                            }
+
+                            foreach ($labels as $label) {
+                                if (!isset($fileLabels[$label->getName()])) {
+                                    $deprecatedLabel = TranslationLabelQuery::create()
+                                        ->filterByName($label->getName())
+                                        ->filterByFolder($folder)
+                                        ->filterByFilename($filename)
+                                        ->filterByLanguageCode($languageCode)
+                                        ->findOne();
+
+                                    $deprecatedLabel->delete();
+                                }
+                            }
                         }
                     }
-                }
-            });
-        }
+                );
+            }
+        }    
     }
 
     public function getAllFiles($languageCode)
@@ -117,14 +131,14 @@ class TranslationService
         return $this->filesystem->getRequire($fullPath);
     }
 
-    public function getFileLabels($filename)
+    public function getFileLabels($folder, $filename)
     {
-        return $this->getRequire(app_path() . '/lang/en/borrower/' . $filename . '.php');
+        return $this->getRequire(app_path() . "/lang/en/$folder/$filename.php");
     }
 
-    public function getFlattenedFileLabels($filename)
+    public function getFlattenedFileLabels($folder, $filename)
     {
-        return array_dot($this->getFileLabels($filename));
+        return array_dot($this->getFileLabels($folder, $filename));
     }
 
     protected function getAssociativeLabels($labels)
@@ -132,15 +146,16 @@ class TranslationService
         $defaultValues = [];
 
         foreach ($labels as $label) {
-            $defaultValues[str_replace('.', '_', $label->getKey())] = $label->getValue();
+            $defaultValues[str_replace('.', '_', $label->getName())] = $label->getValue();
         }
 
         return $defaultValues;
     }
 
-    public function updateTranslations($filename, $languageCode, $data)
+    public function updateTranslations($folder, $filename, $languageCode, $data)
     {
         $translationLabels = TranslationLabelQuery::create()
+            ->filterByFolder($folder)
             ->filterByFilename($filename)
             ->filterByLanguageCode($languageCode)
             ->find();
@@ -148,11 +163,11 @@ class TranslationService
         PropelDB::transaction(
             function ($con) use ($translationLabels, $data) {
                 foreach ($translationLabels as $translationLabel) {
-                    if (!isset($data[$translationLabel->getKey()])) {
+                    if (!isset($data[$translationLabel->getName()])) {
                         continue;
                     }
 
-                    $value = $data[$translationLabel->getKey()];
+                    $value = $data[$translationLabel->getName()];
 
                     if ($value) {
                         $translationLabel->setTranslated(true);
@@ -167,8 +182,8 @@ class TranslationService
         );
     }
 
-    public function fileExists($filename)
+    public function fileExists($folder, $filename)
     {
-        return $this->filesystem->exists(app_path() . '/lang/en/borrower/' . $filename . '.php');
+        return $this->filesystem->exists(app_path() . "/lang/en/$folder/$filename.php");
     }
 }

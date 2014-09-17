@@ -1103,9 +1103,10 @@
             <parameter name="Engine" value="InnoDB"/>
         </vendor>
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
-        <column name="name" type="VARCHAR" required="true" phpName="key"/>
+        <column name="name" type="VARCHAR" required="true"/>
         <column name="value" type="LONGVARCHAR" required="false"/>
         <column name="language_code" type="CHAR" size="5" required="true"/>
+        <column name="folder" type="VARCHAR" required="true"/>
         <column name="filename" type="VARCHAR" required="true"/>
         <column name="translated" type="BOOLEAN" required="false" defaultValue="false"/>
         <column name="updated" type="BOOLEAN" defaultValue="false"/>

@@ -1,15 +1,21 @@
 @extends('layouts.master')
 
 @section('content')
-<div class="row">
-    <a href=" {{ route('admin:translation:index') }} ">Translation Index</a>
-    <br/>
-    <a href="#" id="toggle-label">Toggle Labels</a>
+<div class="page-header">
+    <h1>
+        {{ ucfirst($folder) }}: {{ ucfirst($filename) }} <small>{{ $languageCode }}</small>
+    </h1>
+</div>
+
+
+<div class="clearfix">
+    <a href=" {{ route('admin:translation:index') }} " class="btn btn-primary">Back to Translations</a>
+    <a href="#" id="toggle-label" class="btn btn-default pull-right">Toggle Labels</a>
 </div>
 
 <div class="row">
     <div class="col-md-10">
-        {{ BootstrapForm::open(['route' => ['admin:translation:post', $filename, $languageCode], 'id' => 'labels-form']) }}
+        {{ BootstrapForm::open(['route' => ['admin:translation:post', $folder, $filename, $languageCode], 'id' => 'labels-form']) }}
         {{ BootstrapForm::model($defaultValues) }}
 
         @include('translation.form-section',['labels' => $fileLabels, 'level' => 2, 'group' => '', 'title' => $filename])
@@ -19,6 +25,8 @@
     </div>
 
     <div class="col-md-2">
+        <br/>
+        <br/>
         <nav>
             @include('translation.form-menu', ['labels' => $fileLabels, 'group' => ''])
         </nav>

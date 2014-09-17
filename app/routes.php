@@ -741,12 +741,12 @@ Route::group(
                 );
 
                 Route::get(
-                    'translation/{filename}/{languageCode}',
+                    'translation/{folder}/{filename}/{languageCode}',
                     ['uses' => 'TranslationController@getTranslations', 'as' => 'admin:translation']
                 );
 
                 Route::post(
-                    'translation/{filename}/{languageCode}',
+                    'translation/{folder}/{filename}/{languageCode}',
                     ['uses' => 'TranslationController@postTranslations', 'as' => 'admin:translation:post']
                 );
                 

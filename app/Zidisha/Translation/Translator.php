@@ -226,8 +226,8 @@ class Translator extends NamespacedItemResolver implements TranslatorInterface {
         // The loader is responsible for returning the array of language lines for the
         // given namespace, group, and locale. We'll set the lines in this array of
         // lines that have already been loaded so that we can easily access them.
-        if ($locale != 'en' && $folder == 'borrower') {
-            $lines = $this->loadFromDb($locale, $group);
+        if ($locale != 'en' && ($folder == 'borrower' || $folder == 'common')) {
+            $lines = $this->loadFromDb($locale, $folder, $group);
         } else {
             $lines = $this->loader->load($locale, $folder, $group, $namespace);
         }
@@ -235,13 +235,14 @@ class Translator extends NamespacedItemResolver implements TranslatorInterface {
         $this->loaded[$namespace][$folder][$group][$locale] = $lines;
     }
 
-    private function loadFromDb($locale, $group)
+    private function loadFromDb($locale, $folder, $group)
     {
         $labels = TranslationLabelQuery::create()
             ->filterByLanguageCode($locale)
+            ->filterByFolder($folder)
             ->filterByFilename($group)
             ->find()
-            ->toKeyValue('key', 'value');
+            ->toKeyValue('name', 'value');
 
         $nestedLabels = Utility::nestedArray($labels, '.');
 

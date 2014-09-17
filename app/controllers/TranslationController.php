@@ -1,5 +1,6 @@
 <?php
 
+use Propel\Runtime\ActiveQuery\Criteria;
 use Zidisha\Country\LanguageQuery;
 use Zidisha\Translation\TranslationLabelQuery;
 use Zidisha\Translation\TranslationService;
@@ -13,6 +14,8 @@ class TranslationController extends BaseController
     private $translationService;
 
     private $languageCodes;
+    
+    private $folders = ['borrower', 'common'];
 
     private $borrowerLanguages;
 
@@ -22,53 +25,63 @@ class TranslationController extends BaseController
 
         $this->borrowerLanguages = LanguageQuery::create()
             ->filterBorrowerLanguages()
+            ->filterByLanguageCode('EN', Criteria::NOT_EQUAL)
             ->find();
 
         $this->languageCodes = $this->borrowerLanguages->toKeyValue('LanguageCode', 'LanguageCode');
     }
 
-    public function getTranslations($filename, $languageCode)
+    public function getTranslations($folder, $filename, $languageCode)
     {
         if (!in_array($languageCode, $this->languageCodes)) {
             \App::abort(404, 'Given language not found.');
         }
 
-        $fileLabels = $this->translationService->getFileLabels($filename);
+        if (!in_array($folder, $this->folders)) {
+            \App::abort(404, 'Given folder not found.');
+        }
+
+        $fileLabels = $this->translationService->getFileLabels($folder, $filename);
 
         if (!$fileLabels) {
             \App::abort(404, 'The given file not found.');
         }
 
         $translationLabels = TranslationLabelQuery::create()
+            ->filterByFolder($folder)
             ->filterByFilename($filename)
             ->filterByLanguageCode($languageCode)
             ->find();
 
-        $keyToTranslationLabel = [];
+        $nameToTranslationLabel = [];
         foreach ($translationLabels as $translationLabel) {
-            $keyToTranslationLabel[$translationLabel->getKey()] = $translationLabel;
+            $nameToTranslationLabel[$translationLabel->getName()] = $translationLabel;
         }
 
-        $keyToValue = $translationLabels->toKeyValue('key', 'value');
-        $defaultValues = Utility::toInputNames($keyToValue);
-        $keyToTranslationLabel = Utility::toInputNames($keyToTranslationLabel);
+        $nameToValue = $translationLabels->toKeyValue('name', 'value');
+        $defaultValues = Utility::toInputNames($nameToValue);
+        $nameToTranslationLabel = Utility::toInputNames($nameToTranslationLabel);
 
         if (!$defaultValues) {
             \App::abort(404, 'The given file not found.');
         }
 
         return View::make('translation.form', compact(
-            'file', 'fileLabels', 'defaultValues', 'filename', 'keyToTranslationLabel', 'languageCode'
+            'folder', 'file', 'fileLabels', 'defaultValues', 'filename', 'nameToTranslationLabel', 'languageCode'
         ));
     }
 
-    public function postTranslations($filename, $languageCode)
+    public function postTranslations($folder, $filename, $languageCode)
     {
         if (!in_array($languageCode, $this->languageCodes)) {
             \App::abort(404, 'Given language not found.');
         }
 
-        $fileExists = $this->translationService->fileExists($filename);
+        if (!in_array($folder, $this->folders)) {
+            \App::abort(404, 'Given folder not found.');
+        }
+
+        $fileExists = $this->translationService->fileExists($folder, $filename);
 
         if (!$fileExists) {
             \App::abort(404, 'Given file not found.');
@@ -76,10 +89,10 @@ class TranslationController extends BaseController
 
         $data = Utility::fromInputNames(Input::all());
 
-        $this->translationService->updateTranslations($filename, $languageCode, $data);
+        $this->translationService->updateTranslations($folder, $filename, $languageCode, $data);
 
         \Flash::success('Your updates have been saved.');
-        return Redirect::action('TranslationController@getTranslations', compact('filename', 'languageCode'));
+        return Redirect::action('TranslationController@getTranslations', compact('folder', 'filename', 'languageCode'));
     }
 
     public function getTranslation()
@@ -89,11 +102,19 @@ class TranslationController extends BaseController
         }
 
         $languageCode = Input::get('languageCode', reset($this->languageCodes));
+        
+        $folders = [
+            'borrower' => [],
+            'common' => [],
+        ];
+        
+        foreach ($folders as $folder => $_) {
+            $folders[$folder] = TranslationLabelQuery::create()
+                ->filterByLanguageCode(strtolower($languageCode))
+                ->filterByFolder($folder)
+                ->getTotals();
+        }       
 
-        $files = TranslationLabelQuery::create()
-            ->filterByLanguageCode(strtolower($languageCode))
-            ->getTotals();
-
-        return View::make('translation.index', ['languageCode' => $languageCode, 'borrowerLanguages' => $this->borrowerLanguages, 'files' => $files]);
+        return View::make('translation.index', ['languageCode' => $languageCode, 'borrowerLanguages' => $this->borrowerLanguages, 'folders' => $folders]);
     }
 }
