@@ -601,8 +601,10 @@ class GenerateModelData extends Command
         }
 
         $this->line('Rebuild database');
+        DB::statement('SET storage_engine=INNODB;');
+        DB::statement('SET storage_engine=INNODB;');
         DB::statement('DROP DATABASE IF EXISTS homestead');
-        DB::statement('CREATE DATABASE IF NOT EXISTS homestead');
+        DB::statement('CREATE DATABASE homestead CHARACTER SET utf8 COLLATE utf8_general_ci;');
         exec('rm -rf app/database/migrations');
         exec('./propel diff');
         exec('./propel migrate');
