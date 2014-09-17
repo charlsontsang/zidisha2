@@ -555,6 +555,14 @@ Route::group(
                         'as'   => 'admin:borrower:personal-information'
                     )
                 );
+
+                Route::get(
+                    'vm/repayments/schedule/{borrowerId}/{loanId?}',
+                    array(
+                        'uses' => 'AdminController@getRepaymentSchedule',
+                        'as'   => 'admin:vm:repayment-schedule'
+                    )
+                );
             }
         );
 
