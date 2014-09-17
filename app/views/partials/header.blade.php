@@ -33,24 +33,7 @@
                         @include('partials.nav-links.community-links')
                     </ul>
                 </li>
-                @if(Auth::check() && Auth::getUser()->getRole() != 'admin')
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        {{ Auth::getUser()->getUsername() }} <b class="caret"></b>
-                    </a>
-
-                    <ul class="dropdown-menu">
-                        @if(Auth::getUser()->isLender())
-                            @include('partials.nav-links.lender-links')
-                        @endif
-                        @if(Auth::getUser()->isBorrower())
-                            @include('partials.nav-links.borrower-links')
-                        @endif
-                        <li><a href="{{ route('logout') }}">Log Out</a></li>
-                    </ul>
-                </li>
-                @endif
-                @if(Auth::check() && Auth::getUser()->isVolunteerOrAdmin())
+                @if(Auth::check() && Auth::getUser()->isAdmin())
                 <li class="dropdown dropdown-large">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         Admin <b class="caret"></b>
@@ -98,14 +81,29 @@
                         </li>
                     </ul>
                 </li>
-                @endif
+                @elseif(Auth::check())
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        {{ Auth::getUser()->getUsername() }} <b class="caret"></b>
+                    </a>
+
+                    <ul class="dropdown-menu">
+                        @if(Auth::getUser()->isLender())
+                            @include('partials.nav-links.lender-links')
+                        @endif
+                        @if(Auth::getUser()->isBorrower())
+                            @include('partials.nav-links.borrower-links')
+                        @endif
+                        <li><a href="{{ route('logout') }}">Log Out</a></li>
+                    </ul>
+                </li>
+                @else
                 <li>
-                    @if(!Auth::check())
                     <a href="{{ route('login') }}" data-toggle="modal" data-target="#login-modal">
                         Log In
                     </a>
-                    @endif
                 </li>
+                @endif
             </ul>
             @if(Auth::check() && Auth::getUser()->isLender())
             <?php
