@@ -11,6 +11,7 @@ return [
       'translate'  => 'Translate',
       'edit'  => 'Edit',
       'delete'  => 'Delete',
+      'delete-confirm'  => 'Yes',
       'reply'  => 'Reply',
       'share'  => 'Share',
     ],
@@ -30,7 +31,7 @@ return [
     'submit' => 'Post message',
     'message' => 'Message',
     'translation' => 'Translation',
-    'delete-comment' => 'Do you really want to delete this comment'
+    'delete-comment' => 'Do you really want to delete this comment?',
     'translated-by' => 'Translated by',
     'show-original' => 'Show original',
 ];
