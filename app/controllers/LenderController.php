@@ -6,6 +6,7 @@ use Zidisha\Admin\Setting;
 use Zidisha\Balance\InviteTransactionQuery;
 use Zidisha\Balance\Transaction;
 use Zidisha\Balance\TransactionQuery;
+use Zidisha\Comment\BorrowerCommentService;
 use Zidisha\Lender\Lender;
 use Zidisha\Loan\Paginator\ActiveLoanBids;
 use Zidisha\Loan\Paginator\FundraisingLoanBids;
@@ -41,6 +42,7 @@ class LenderController extends BaseController
     private $withdrawFundsForm;
     private $repaymentService;
     private $balanceService;
+    private $borrowerCommentService;
 
 
     public function __construct(
@@ -51,7 +53,8 @@ class LenderController extends BaseController
         UploadFundForm $uploadFundForm,
         WithdrawFundsForm $withdrawFundsForm,
         RepaymentService $repaymentService,
-        BalanceService $balanceService
+        BalanceService $balanceService,
+        BorrowerCommentService $borrowerCommentService
     ) {
         $this->transactionQuery = $transactionQuery;
         $this->fundsForm = $fundsForm;
@@ -61,6 +64,7 @@ class LenderController extends BaseController
         $this->withdrawFundsForm = $withdrawFundsForm;
         $this->repaymentService = $repaymentService;
         $this->balanceService = $balanceService;
+        $this->borrowerCommentService = $borrowerCommentService;
     }
 
     public function getPublicProfile($username)
@@ -174,10 +178,13 @@ class LenderController extends BaseController
         $totalLentAmountByRecipients = $myImpact->subtract($totalLentAmountByInvitees);
         $totalImpact = $myImpact->add($totalLentAmount);
 
+        $comments = $this->borrowerCommentService->getAllCommentForLender($lender);
+
        return View::make('lender.dashboard', compact('currentBalance', 'totalFundsUpload', 'lendingGroups',
                 'numberOfInvitesSent', 'numberOfInvitesAccepted', 'numberOfGiftedGiftCards', 'numberOfRedeemedGiftCards', 
                 'totalLentAmount', 'totalImpact' , 'loans', 'newMemberInviteCredit',
-                'totalLentAmountByInvitees', 'totalLentAmountByRecipients'
+                'totalLentAmountByInvitees', 'totalLentAmountByRecipients',
+                'comments'
             ));
     }
 
