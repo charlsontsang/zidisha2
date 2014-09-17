@@ -33,7 +33,7 @@
     <script type="text/html" id="comment-upload-input-template">
         <div class="file-input-block">
             <div style="display: inline-block;">
-                {{ BootstrapForm::file('file[]', ['label' => 'borrower.comments.upload-file', 'class' => 'upload-file']) }}
+                {{ BootstrapForm::file('file[]', ['label' => 'common.comments.upload-file', 'class' => 'upload-file']) }}
             </div>
             <div style="display: inline-block;">
                 <a href="#" data-dismiss='removeFile'>

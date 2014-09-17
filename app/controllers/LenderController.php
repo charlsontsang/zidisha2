@@ -6,7 +6,6 @@ use Zidisha\Admin\Setting;
 use Zidisha\Balance\InviteTransactionQuery;
 use Zidisha\Balance\Transaction;
 use Zidisha\Balance\TransactionQuery;
-use Zidisha\Comment\BorrowerCommentService;
 use Zidisha\Lender\Lender;
 use Zidisha\Loan\Paginator\ActiveLoanBids;
 use Zidisha\Loan\Paginator\FundraisingLoanBids;
@@ -42,7 +41,6 @@ class LenderController extends BaseController
     private $withdrawFundsForm;
     private $repaymentService;
     private $balanceService;
-    private $borrowerCommentService;
 
 
     public function __construct(
@@ -53,8 +51,7 @@ class LenderController extends BaseController
         UploadFundForm $uploadFundForm,
         WithdrawFundsForm $withdrawFundsForm,
         RepaymentService $repaymentService,
-        BalanceService $balanceService,
-        BorrowerCommentService $borrowerCommentService
+        BalanceService $balanceService
     ) {
         $this->transactionQuery = $transactionQuery;
         $this->fundsForm = $fundsForm;
@@ -64,7 +61,6 @@ class LenderController extends BaseController
         $this->withdrawFundsForm = $withdrawFundsForm;
         $this->repaymentService = $repaymentService;
         $this->balanceService = $balanceService;
-        $this->borrowerCommentService = $borrowerCommentService;
     }
 
     public function getPublicProfile($username)
@@ -178,13 +174,10 @@ class LenderController extends BaseController
         $totalLentAmountByRecipients = $myImpact->subtract($totalLentAmountByInvitees);
         $totalImpact = $myImpact->add($totalLentAmount);
 
-        $comments = $this->borrowerCommentService->getAllCommentForLender($lender);
-
        return View::make('lender.dashboard', compact('currentBalance', 'totalFundsUpload', 'lendingGroups',
                 'numberOfInvitesSent', 'numberOfInvitesAccepted', 'numberOfGiftedGiftCards', 'numberOfRedeemedGiftCards', 
                 'totalLentAmount', 'totalImpact' , 'loans', 'newMemberInviteCredit',
-                'totalLentAmountByInvitees', 'totalLentAmountByRecipients',
-                'comments'
+                'totalLentAmountByInvitees', 'totalLentAmountByRecipients'
             ));
     }
 
@@ -248,7 +241,7 @@ class LenderController extends BaseController
             $blockedCountries = explode(',', $blockedCountries);
 
             if (in_array($country['code'], $blockedCountries)) {
-                \Flash::error("Something went wrong!");
+                \Flash::error('common.validation.error');
                 return Redirect::route('lender:funds')->withForm($form);
             }
 
@@ -269,12 +262,12 @@ class LenderController extends BaseController
             $lender = Auth::user()->getLender();
             $withdrawalRequest = $this->balanceService->addWithdrawRequest($lender, $data);
             if ($withdrawalRequest) {
-                \Flash::success("Your withdrawal has been successfully processed, and the requested amount should be credited to your PayPal account within one week. Thanks for your participation!");
+                \Flash::success("Your withdrawal request has been submitted, and should be processed within one week. Thanks for your participation!");
                 return Redirect::route('lender:funds');
             }
         }
 
-        \Flash::error("Entered Values are invalid!");
+        \Flash::error("Please enter the amount as a number.");
         return Redirect::route('lender:funds')->withForm($form);
     }
 
@@ -336,7 +329,7 @@ class LenderController extends BaseController
         $totalCompletedLoansBidsAmount = BidQuery::create()
             ->getTotalCompletedLoansBidsAmount($lender);
         $numberOfCompletedBids = $completedLoansBids->getNbResults();
-        $numberOfCompletedProjects = \Lang::choice('lender.flash.preferences.stats-projects', $numberOfCompletedBids, array('count' => $numberOfCompletedBids));
+        $numberOfCompletedProjects = \Lang::choice('lender.shared-labels.projects.stats-projects', $numberOfCompletedBids, array('count' => $numberOfCompletedBids));
 
         $completedLoansIds = [];
         /** @var $completedLoansBid Bid */

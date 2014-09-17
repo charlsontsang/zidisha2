@@ -12,16 +12,16 @@
         
     @if($controller != 'LoanFeedbackController')
     <a href="" data-display='display' target='#edit-comment-{{ $comment->getId() }}-upload-inputs'>
-        <i class="fa fa-camera"></i> @lang('borrower.comments.add-photo')
+        <i class="fa fa-camera"></i> @lang('common.comments.add-photo')
     </a>
     <div class="comment-upload-inputs" id="edit-comment-{{ $comment->getId() }}-upload-inputs" style="display: none;">
-        {{ BootstrapForm::file('file[]', ['label' => 'borrower.comments.upload-file']) }}
-        <button class="btn btn-primary btn-success comment-upload-add-more">@lang('borrower.comments.add-more')</button>
+        {{ BootstrapForm::file('file[]', ['label' => 'common.comments.upload-file']) }}
+        <button class="btn btn-primary btn-success comment-upload-add-more">@lang('common.comments.add-more')</button>
     </div>
     @endif
     
     <div class="pull-right">
-        {{ BootstrapForm::submit('actions.edit', ['data-loading-text' => \Lang::get('borrower.comments.loading-text.edit')]) }}
+        {{ BootstrapForm::submit('actions.edit', ['data-loading-text' => \Lang::get('common.comments.loading-text.edit')]) }}
     </div>
 
 </div>

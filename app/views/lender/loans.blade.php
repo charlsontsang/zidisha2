@@ -115,7 +115,7 @@ My Stats
         <tr>
             <td colspan="3"><strong>Total</strong></td>
             <td>{{ \Lang::choice(
-                       'lender.flash.preferences.stats-projects',
+                       'lender.shared-labels.projects.stats-projects',
                        $fundraisingLoanBids->getTotal(),
                        ['count' => $fundraisingLoanBids->getTotal()]
                 ) }}
@@ -189,7 +189,7 @@ My Stats
         <tr>
             <td colspan="3"><strong>Total</strong></td>
             <td>{{ \Lang::choice(
-                       'lender.flash.preferences.stats-projects',
+                       'lender.shared-labels.projects.stats-projects',
                        $activeLoanBids->getTotal(),
                        ['count' => $activeLoanBids->getTotal()]
                 ) }}

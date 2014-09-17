@@ -151,7 +151,8 @@ class BorrowerJoinController extends BaseController
 
                 $this->authService->login($borrower->getUser());
 
-                Flash::success(\Lang::get('comments.flash.borrower-join-email-sent'));
+                Flash::success(\Lang::get('common.comments.flash.borrower-join-email-sent'));
+                
                 return Redirect::route('borrower:dashboard');
             }
 

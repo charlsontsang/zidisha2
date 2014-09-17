@@ -44,10 +44,12 @@ class LenderService
 
     public function editProfile(Lender $lender, $data)
     {
-        $lender->getUser()->setEmail($data['email'])
-            ->setUsername($data['username']);
-        $lender->getProfile()->setAboutMe($data['aboutMe'])
-            ->setCity($data['city']);
+        $lender->setFirstName($data['firstName']);
+        $lender->setLastName($data['lastName']);
+        $lender->getUser()->setEmail($data['email']);
+        $lender->getUser()->setUsername($data['username']);
+        $lender->getProfile()->setCity($data['city']);
+        $lender->getProfile()->setAboutMe($data['aboutMe']);
 
         if (!empty($data['password'])) {
             $lender->getUser()->setPassword($data['password']);
@@ -242,9 +244,7 @@ class LenderService
         $errors = array();
         if ($checkUser) {
             if ($checkUser->getFacebookId() == $facebookUser['id']) {
-                $errors[] = 'lender.join.validation.facebook-account-exists';
-            } else {
-                $errors[] = 'lender.join.validation.facebook-email-exists';
+                $errors[] = 'common.validation.link-account.facebook-email-exists';
             }
         }
 
@@ -275,9 +275,9 @@ class LenderService
         $errors = array();
         if ($checkUser) {
             if ($checkUser->getGoogleId() == $googleUser->getId()) {
-                $errors[] = 'lender.join.validation.google-account-exists';
+                $errors[] = 'common.validation.link-account.google-account-exists';
             } else {
-                $errors[] = 'lender.join.validation.google-email-exists';
+                $errors[] = 'common.validation.link-account.google-email-exists';
             }
         }
 

@@ -31,13 +31,13 @@ class GiftCardService
             ->filterByCardCode($redemptionCode)
             ->count();
         if ($count > 1) {
-            return 'comments.flash.duplicate-code';
+            return 'common.comments.flash.duplicate-code';
         }
         $giftCard = GiftCardQuery::create()
             ->filterByCardCode($redemptionCode)
             ->findOne();
         if (!$giftCard) {
-            return 'comments.flash.invalid-code';
+            return 'common.comments.flash.invalid-code';
         }
 
         if ($giftCard->getStatus() == 1) {
@@ -45,15 +45,15 @@ class GiftCardService
                 ->filterByCardCode($redemptionCode)
                 ->findOne();
             if ($giftCard->getClaimed() == 1) {
-                return 'comments.flash.redeemed-code';
+                return 'common.comments.flash.redeemed-code';
             } else {
                 $currentDate = new \DateTime();
                 if ($giftCard->getExpireDate() < $currentDate) {
-                    return 'comments.flash.expired-code';
+                    return 'common.comments.flash.expired-code';
                 }
             }
         } elseif ($giftCard->getStatus() == 0) {
-            return 'comments.flash.invalid-code';
+            return 'common.comments.flash.invalid-code';
         }
     }
 
