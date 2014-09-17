@@ -13,5 +13,6 @@ return [
 Once a member has paid the amount past due or has rescheduled, then their name will no longer appear in this section.",
         'current'              => "Current",
         'current-instructions' => "This is a list of all other members who have chosen you as a Volunteer Mentor.",
+        'review-profile'       => 'Review Profile',
     ],
 ];

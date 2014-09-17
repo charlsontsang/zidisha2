@@ -14,6 +14,23 @@
 <h3>@lang('borrower.text.assigned-members.pending')</h3>
 <p>@lang('borrower.text.assigned-members.pending-instructions')</p>
 <br/>
+<table class="table table-striped">
+	<tbody>
+		@foreach ($data['pendingMembers'] as $pendingMember)
+				<tr>
+					<td>
+						{{ $pendingMember->getName() }}
+					</td>
+					<td>
+					    <a href="{{ route('borrower:public-profile', $pendingMember->getUser()->getUsername()) }}">
+					    @lang('borrower.text.assigned-members.review-profile')
+					    </a>
+					</td>
+				</tr>
+            @endforeach
+	</tbody>
+</table>
+<br/>
 <table class="table-striped">
 	<tbody>
 
