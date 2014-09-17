@@ -22,6 +22,7 @@ class VolunteerMentorController extends BaseController
         }
 
         $data['pendingMembers'] = $this->volunteerMentorService->getMentorPendingMembers($borrower);
+        $data['assignedMembers'] = $this->volunteerMentorService->getMentorAssignedMembers($borrower);
 
         return View::make('borrower.volunteer-mentor.assigned-members', compact('data'));
     }

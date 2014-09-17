@@ -127,6 +127,17 @@ Route::filter(
     }
 );
 
+Route::filter(
+    'isVolunteerMentorOrAdmin',
+    function ($route, $request) {
+        $isAllowed = Auth::getUser()->isVolunteerMentorOrAdmin();
+        if (!$isAllowed) {
+            Flash::error("You do not have proper permission to view this page");
+            return Redirect::route('login');
+        }
+    }
+);
+
 Route::filter('loggedIn', function()
     {
         if (Auth::check()) {

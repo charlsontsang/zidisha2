@@ -354,7 +354,6 @@ Route::group(
         Route::group(
             array('prefix' => 'borrower', 'before' => 'auth|hasRole:borrower'),
             function () {
-
                 Route::get(
                     'personal-information',
                     array(
@@ -362,6 +361,7 @@ Route::group(
                         'as'   => 'borrower:personal-information'
                     )
                 );
+
                 Route::post(
                     'personal-information',
                     array(
@@ -541,6 +541,23 @@ Route::group(
                 );
             }
         );
+
+        /**
+         * Routes for Admin|VolunteerMentor
+         */
+        Route::group(
+            array('prefix' => 'admin', 'before' => 'auth|isVolunteerMentorOrAdmin'),
+            function () {
+                Route::get(
+                    'personal-information/{username?}',
+                    array(
+                        'uses' => 'BorrowerController@getPersonalInformation',
+                        'as'   => 'admin:borrower:personal-information'
+                    )
+                );
+            }
+        );
+
         /**
          * Routes for Admin|Volunteer
          */

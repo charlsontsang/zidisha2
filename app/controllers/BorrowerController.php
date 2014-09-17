@@ -202,14 +202,29 @@ class BorrowerController extends BaseController
         return \Redirect::action('BorrowerController@getDashboard');
     }
 
-    public function getPersonalInformation()
+    public function getPersonalInformation($username = null)
     {
-        /** @var Borrower $borrower */
-        $borrower = \Auth::user()->getBorrower();
-
+        $isVisitor = false;
+        if ($username) {
+            $borrower = BorrowerQuery::create()
+                ->useUserQuery()
+                ->filterByUsername($username)
+                ->endUse()
+                ->findOne();
+            $isVisitor = true;
+        } else {
+            /** @var Borrower $borrower */
+            $borrower = \Auth::user()->getBorrower();
+        }
+        if (!$borrower) {
+            App::abort(404);
+        }
         $personalInformation = $borrower->getPersonalInformation();
 
         $form = new PersonalInformationForm($borrower);
+        if ($isVisitor) {
+            $form->setVisitor(true);
+        }
         $form->handleData($form->getDefaultData());
 
         $errors = new ViewErrorBag();
@@ -229,7 +244,7 @@ class BorrowerController extends BaseController
 
         return \View::make(
             'borrower.personal-information',
-            ['personalInformation' => $personalInformation, 'form' => $form, 'facebookJoinUrl' => $facebookJoinUrl, 'borrower' => $borrower, 'isFacebookRequired' => $isFacebookRequired]
+            compact('personalInformation', 'form', 'facebookJoinUrl', 'borrower', 'isFacebookRequired', 'isVisitor')
         );
     }
 

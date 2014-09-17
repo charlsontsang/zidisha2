@@ -50,4 +50,21 @@ class VolunteerMentorService {
 
         return $members;
     }
+
+    public function getMentorAssignedMembers(Borrower $borrower)
+    {
+        return BorrowerQuery::create()
+            ->filterByActive(true)
+            ->filterByVolunteerMentorId($borrower->getId())
+            ->orderById('DESC')
+            ->find();
+    }
+
+    function getMentorAssignedmember($userid){
+        global $db;
+        $q="SELECT b.userid, b.FirstName, b.LastName FROM ! as b, ! as bext
+WHERE b.userid=bext.userid AND b.Active=? AND bext.mentor_id=? ORDER BY b.userid DESC";
+        $result=$db->getAll($q, array('borrowers','borrowers_extn', 1, $userid));
+        return $result;
+    }
 }

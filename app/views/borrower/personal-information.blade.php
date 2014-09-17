@@ -9,20 +9,22 @@ Join the global P2P microlending movement
     <h1>Personal Information</h1>
 </div>
 
-@if($facebookJoinUrl)
-<div class="has-error">
-    <div>
-        <a href="{{ $facebookJoinUrl }}" class="btn btn-facebook">
-            <span class="fa fa-facebook fa-lg fa-fw"></span>
-            Connect With Facebook
-        </a>
-    </div>
+@if(!$isVisitor)
+    @if($facebookJoinUrl)
+    <div class="has-error">
+        <div>
+            <a href="{{ $facebookJoinUrl }}" class="btn btn-facebook">
+                <span class="fa fa-facebook fa-lg fa-fw"></span>
+                Connect With Facebook
+            </a>
+        </div>
 
-    @if($isFacebookRequired)
-        <span class="help-block">Please Connect your facebook account.</span>
+        @if($isFacebookRequired)
+            <span class="help-block">Please Connect your facebook account.</span>
+        @endif
+    </div>
+    <br/>
     @endif
-</div>
-<br/>
 @endif
 
 <div class="borrower-personal-information-form">
@@ -316,7 +318,9 @@ Join the global P2P microlending movement
         @endif
     </fieldset>
 
-    {{ BootstrapForm::submit('update') }}
+    @if(!$isVisitor)
+        {{ BootstrapForm::submit('update') }}
+    @endif
     {{ BootstrapForm::close() }}
 </div>
 @stop
