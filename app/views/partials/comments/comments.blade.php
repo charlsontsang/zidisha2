@@ -11,7 +11,9 @@
                         'canReplyComment' => $canReplyComment
                     ])
                 @else
-                    <span class="text-light">Please <a href="#">log in</a> to comment.</span>
+                    <span class="text-light">
+                        @lang('common.comments.login', ['link' => route('login')])
+                    </span>
                 @endif
             @endif
         </div>

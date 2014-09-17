@@ -34,4 +34,5 @@ return [
     'delete-comment' => 'Do you really want to delete this comment?',
     'translated-by' => 'Translated by',
     'show-original' => 'Show original',
+    'login' => 'Please <a href=":link">log in</a> to comment.',
 ];
