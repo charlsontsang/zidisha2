@@ -47,14 +47,16 @@
             </p>
             <p class="clearfix">
                 <small class="pull-right">
-                    <em>Translated by </em>
+                    <em>@lang('common.comments.translated-by')</em>
                     @if(!$comment->getTranslator()->isAdmin())
                         {{ link_to($comment->getTranslator()->getProfileUrl(), $comment->getTranslator()->getUsername()) }}
                     @else
                         {{ $comment->getTranslator()->getUsername() }}
                     @endif
                     &nbsp;&nbsp;&nbsp;
-                    <a href="#" class="comment-original-message">Show original</a>
+                    <a href="#" class="comment-original-message">
+                        @lang('common.comments.show-original')
+                    </a>
                 </small>
             </p>
             <p style="display: none">

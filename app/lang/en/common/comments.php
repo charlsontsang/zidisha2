@@ -31,4 +31,6 @@ return [
     'message' => 'Message',
     'translation' => 'Translation',
     'delete-comment' => 'Do you really want to delete this comment'
+    'translated-by' => 'Translated by',
+    'show-original' => 'Show original',
 ];
