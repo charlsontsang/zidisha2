@@ -20,7 +20,7 @@ class VolunteerMentorService {
                     (b.activation_status = 1 || b.activation_status = 0 || b.loan_status = 4)
                     AND log.verified_at > :date)
                     || b.loan_status = 0 || b.loan_status = 1)
-                    AND b.activation_status < 2
+                    AND b.activation_status != 4
                     AND b.id = bp.borrower_id
                     AND b.id = log.borrower_id
                     AND b.volunteer_mentor_id = :mentorId";
