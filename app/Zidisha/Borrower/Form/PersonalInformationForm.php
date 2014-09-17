@@ -18,6 +18,7 @@ class PersonalInformationForm extends AbstractForm
      * @var \Zidisha\Borrower\Borrower
      */
     private $borrower;
+    private $isVisitor = false;
 
     /**
      * @var $country
@@ -196,6 +197,9 @@ class PersonalInformationForm extends AbstractForm
 
     public function isEditable($fieldName)
     {
+        if ($this->isVisitor) {
+            return false;
+        }
         return $this->fields[$fieldName];
     }
 
@@ -219,5 +223,10 @@ class PersonalInformationForm extends AbstractForm
         $data = $this->getData() + $this->borrower->getPersonalInformation();
 
         return Utility::nestedArray($data);
+    }
+
+    public function setVisitor($isVisitor = true)
+    {
+        $this->isVisitor = $isVisitor;
     }
 }

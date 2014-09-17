@@ -354,7 +354,6 @@ Route::group(
         Route::group(
             array('prefix' => 'borrower', 'before' => 'auth|hasRole:borrower'),
             function () {
-
                 Route::get(
                     'personal-information',
                     array(
@@ -362,6 +361,7 @@ Route::group(
                         'as'   => 'borrower:personal-information'
                     )
                 );
+
                 Route::post(
                     'personal-information',
                     array(
@@ -462,6 +462,19 @@ Route::group(
         );
 
         /**
+         * Routes for Volunteer Mentor
+         */
+        Route::group(
+            array('prefix' => 'volunteer-mentor', 'before' => 'auth|hasSubRole:volunteerMentor'),
+            function () {
+                Route::get(
+                    'assigned-members',
+                    ['uses' => 'VolunteerMentorController@getAssignedMembers', 'as' => 'volunteer-mentor:get:assigned-members']
+                );
+            }
+        );
+
+        /**
          * Routes for loan page
          */
         Route::get('loan/{loanId}', array('uses' => 'LoanController@getIndex', 'as' => 'loan:index'));
@@ -528,6 +541,31 @@ Route::group(
                 );
             }
         );
+
+        /**
+         * Routes for Admin|VolunteerMentor
+         */
+        Route::group(
+            array('prefix' => 'admin', 'before' => 'auth|isVolunteerMentorOrAdmin'),
+            function () {
+                Route::get(
+                    'personal-information/{username?}',
+                    array(
+                        'uses' => 'BorrowerController@getPersonalInformation',
+                        'as'   => 'admin:borrower:personal-information'
+                    )
+                );
+
+                Route::get(
+                    'vm/repayments/schedule/{borrowerId}/{loanId?}',
+                    array(
+                        'uses' => 'AdminController@getRepaymentSchedule',
+                        'as'   => 'admin:vm:repayment-schedule'
+                    )
+                );
+            }
+        );
+
         /**
          * Routes for Admin|Volunteer
          */

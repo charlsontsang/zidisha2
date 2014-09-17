@@ -680,7 +680,7 @@ class BorrowerService
     {
         return BorrowerCommentQuery::create()
             ->filterByReceiverId($borrower->getId())
-            ->filterByBorrowerId($volunteerMentor->getId())
+            ->filterByUserId($volunteerMentor->getId())
             ->count();
     }
 

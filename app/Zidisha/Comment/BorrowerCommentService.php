@@ -159,7 +159,6 @@ class BorrowerCommentService extends CommentService
         );
         $ids = array();
         if (!empty($bids)) {
-            $ids = [] ;
             foreach ($bids as $bid) {
                 array_push($ids, $bid['borrower_id']);
             }
