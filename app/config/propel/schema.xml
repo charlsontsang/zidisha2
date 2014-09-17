@@ -396,7 +396,7 @@
         <foreign-key foreignTable="borrower_comments" phpName="Parent">
             <reference local="parent_id" foreign="id"/>
         </foreign-key>
-        <foreign-key foreignTable="borrower_comments" phpName="Root">
+        <foreign-key foreignTable="borrower_comments" phpName="Root" skipSql="true">
             <reference local="root_id" foreign="id"/>
         </foreign-key>
     </table>
@@ -416,7 +416,7 @@
         <foreign-key foreignTable="lending_group_comments" phpName="Parent">
             <reference local="parent_id" foreign="id"/>
         </foreign-key>
-        <foreign-key foreignTable="lending_group_comments" phpName="Root">
+        <foreign-key foreignTable="lending_group_comments" phpName="Root" skipSql="true">
             <reference local="root_id" foreign="id"/>
         </foreign-key>
     </table>
@@ -438,6 +438,9 @@
         </foreign-key>
         <foreign-key foreignTable="loan_feedback_comments" phpName="Parent">
             <reference local="parent_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="loan_feedback_comments" phpName="Root" skipSql="true">
+            <reference local="root_id" foreign="id"/>
         </foreign-key>
     </table>
 
