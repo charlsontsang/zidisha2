@@ -77,8 +77,9 @@
                                         <strong>{{ $followersCount }}</strong>
                                         <br/>
 
-                                        @if(Auth::check() && Auth::user()->isLender())
                                         <div id="follow-link">
+                                        @if(Auth::check())
+                                            @if(Auth::user()->isLender())
                                             <a
                                                 href="{{ route('lender:follow', $borrower->getId()) }}"
                                                 class="followBorrower"
@@ -92,8 +93,11 @@
                                                     'lender' => Auth::user()->getLender(),
                                                     'follower' => $follower,
                                                 ])
-                                        </div>
+                                            @endif
+                                        @else
+                                            @lang('lender.follow.login', ['name' => $borrower->getFirstName(), 'link' => route('login')])                                           
                                         @endif
+                                        </div>
 
                                         @if ($totalFeedback > 0)
                                             Feedback Rating:{{ BootstrapHtml::tooltip('borrower.tooltips.loan.feedback-rating') }} 
@@ -453,8 +457,10 @@
                     @endif
                 </div>
 
-                @if(Auth::check() && Auth::user()->isLender())
+
                 <div class="panel-body">
+                @if(Auth::check())
+                    @if(Auth::user()->isLender())
                     <a
                         id="follow-button"
                         href="{{ route('lender:follow', $borrower->getId()) }}"
@@ -470,8 +476,13 @@
                         'lender' => Auth::user()->getLender(),
                         'follower' => $follower,
                     ])
-                </div>
+                    @endif
+                @else
+                    <div class="text-center">
+                        @lang('lender.follow.login', ['name' => $borrower->getFirstName(), 'link' => route('login')])                        
+                    </div>
                 @endif
+                </div>
 
                 @if(Auth::check() && Auth::user()->isBorrower() && Auth::id() == $loan->getBorrowerId())
                 <div class="panel-body">
