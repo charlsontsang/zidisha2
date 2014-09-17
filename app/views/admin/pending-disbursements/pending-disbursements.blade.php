@@ -8,40 +8,42 @@
 </div>
 
 <div class="row">
-    <div class="col-sm-6">
+    <div class="col-sm-5">
         {{ BootstrapForm::open(['action' => ['PendingDisbursementsController@postPendingDisbursements'], 'class' => 'form-inline']) }}
 
         {{ BootstrapForm::select('countryCode', $countries->toKeyValue('countryCode', 'name'), $country->getCountryCode(), ['label' => false]) }}
 
-        {{ BootstrapForm::submit('Select') }}
+        {{ BootstrapForm::submit('Select Country') }}
 
         {{ BootstrapForm::close() }}
         <br/>
     </div>
-    <div class="col-sm-6">
-        {{ BootstrapForm::open([
-            'action' => ['PendingDisbursementsController@getPendingDisbursements', $country->getCountryCode()],
-            'method' => 'get',
-            'class' => 'form-inline',
-        ]) }}
+    <div class="col-sm-7">
+        <div class="pull-right">
+            {{ BootstrapForm::open([
+                'action' => ['PendingDisbursementsController@getPendingDisbursements', $country->getCountryCode()],
+                'method' => 'get',
+                'class' => 'form-inline',
+            ]) }}
 
-        {{ BootstrapForm::select(
-            'orderBy',
-            ['acceptedAt' => 'Bids Accepted Date', 'borrowerName' => 'Borrower Name'],
-            $orderBy,
-            ['label' => false]
-        ) }}
-        {{ BootstrapForm::select(
-            'orderDirection',
-            ['asc' => 'ascending', 'desc' => 'descending'],
-            $orderDirection,
-            ['label' => false]
-        ) }}
+            {{ BootstrapForm::select(
+                'orderBy',
+                ['acceptedAt' => 'Bids Accepted Date', 'borrowerName' => 'Borrower Name'],
+                $orderBy,
+                ['label' => false]
+            ) }}
+            {{ BootstrapForm::select(
+                'orderDirection',
+                ['asc' => 'Oldest First', 'desc' => 'Most Recent First'],
+                $orderDirection,
+                ['label' => false]
+            ) }}
 
-        {{ BootstrapForm::submit('Sort') }}
+            {{ BootstrapForm::submit('Sort') }}
 
-        {{ BootstrapForm::close() }}
-        <br/>
+            {{ BootstrapForm::close() }}
+            <br/>
+        </div>
     </div>
 </div>
 
@@ -74,8 +76,11 @@
                                 <dt>Phone Number</dt>
                                 <dd>{{ $loan->getBorrower()->getProfile()->getPhoneNumber() }}</dd>
                                 
-                                <dt>Location</dt>
-                                <dd>{{ $loan->getBorrower()->getProfile()->getAddress() }}</dd>
+                                <dt>Email</dt>
+                                <dd>{{ $loan->getBorrower()->getUser()->getEmail() }}</dd>
+                                
+                                <dt>City</dt>
+                                <dd>{{ $loan->getBorrower()->getProfile()->getCity() }}</dd>
                                 
                                 <dt>National ID</dt>
                                 <dd>{{ $loan->getBorrower()->getProfile()->getNationalIdNumber() }}</dd>
