@@ -29,7 +29,7 @@
     </div>
 
     <div class="form-group has-feedback">
-        <div class="sr-only">@lang('borrower.login.form.username')</div>
+        <div class="sr-only">@lang('borrower.login.form.email')</div>
         {{ BootstrapForm::text('email', null, [
             'class'       => 'form-control',
             'placeholder' => Lang::get('borrower.login.form.email'),
