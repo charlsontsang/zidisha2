@@ -8737,6 +8737,16 @@ body {
 .info-page img {
   margin: 15px 0;
 }
+.how-it-works img {
+  width: 62%;
+  float: right;
+  padding-left: 15px;
+  margin-top: 0;
+  margin-bottom: 45px;
+}
+.how-it-works hr {
+  clear: both;
+}
 .text-light {
   font-weight: 300;
 }
