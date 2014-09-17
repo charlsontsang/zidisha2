@@ -89,6 +89,32 @@
                                 <dt>Special Instructions</dt>
                                 <dd>{{ $loan->getAcceptBidsNote() }}</dd>
                                 @endif
+
+                                <dt>Notes</dt>
+                                <dd>
+                                    @if(isset($adminNotes[$loan->getId()]))
+                                        <ul>
+                                            @foreach($adminNotes[$loan->getId()] as $adminNote)
+                                                <li>
+                                                    <span class="text-muted">
+                                                        {{ $adminNote->getCreatedAt('M j, Y') }} by {{ $adminNote->getUser()->getUserName() }}
+                                                    </span>
+                                                    <p> {{ $adminNote->getNote() }} </p>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    @endif
+                                    <a href="#" class="add-note-toggle">Add note</a>
+                                    
+                                    <div id="add-note" class="collapse">                                   
+                                        {{ BootstrapForm::open(array('action' => 'PendingDisbursementsController@postLoanNote')) }}
+                                            {{ BootstrapForm::textarea('note', null, ['rows' => '5', 'label' => false]) }}
+                                            {{ BootstrapForm::hidden('loanId', $loan->getId()) }}
+                                            {{ BootstrapForm::submit('Submit') }}
+                                        {{ BootstrapForm::close() }}
+                                    </div>
+
+                                </dd>
                             </dl>
 
                             @if($siftScienceScore > 50 && $siftScienceScore <75)
@@ -180,30 +206,6 @@
                                 @endif
                              </dl>
                             {{ BootstrapForm::close() }}
-
-                            <!-- Loan Notes -->
-                           <hr/>
-                            <strong>Notes</strong>
-                            <br/>
-                            @if(isset($adminNotes[$loan->getId()]))
-                                <ul>
-                                    @foreach($adminNotes[$loan->getId()] as $adminNote)
-                                        <li>
-                                            <span class="text-muted">
-                                                {{ $adminNote->getCreatedAt('M j, Y') }} by {{ $adminNote->getUser()->getUserName() }}
-                                            </span>
-                                            <p> {{ $adminNote->getNote() }} </p>
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            @endif
-
-                            {{ BootstrapForm::open(array('action' => 'PendingDisbursementsController@postLoanNote')) }}
-                                {{ BootstrapForm::textarea('note', null, ['rows' => '5', 'label' => false]) }}
-                                {{ BootstrapForm::hidden('loanId', $loan->getId()) }}
-                                {{ BootstrapForm::submit('Submit') }}
-                            {{ BootstrapForm::close() }}
-                        </div>
                         </div>
                     </td>
                 </tr>
@@ -220,6 +222,12 @@
 
 @section('script-footer')
 <script type="text/javascript">
+    $(document).ready(function () {
+        $('.add-note-toggle').click(function () {
+            $("#add-note").collapse('toggle');
+            return false;
+        });
+    });
     $(function () {
         $('[name=registrationFee], [data-principal-amount]').on('keyup', function() {
             var $this = $(this),
