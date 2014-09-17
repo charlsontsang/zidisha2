@@ -52,13 +52,24 @@
     }
 }
 .result {
-    background-color: #f8f8f8;
+  background-color: #f8f8f8;
+  height: auto;
+  @media (max-width: @screen-xs-max) {
+      margin-left: -15px;
+      margin-right: -15px;
+      padding-left: 15px;
+  }
     @media (min-width: @screen-sm-min) {
         background-color: #fff;
         border: 1px solid #e5e5e5;
         box-shadow: 1px 1px 2px #e5e5e5;
         padding: 10px;
         height: 460px;
+    }
+}
+.home .result {
+    @media (min-width: @screen-sm-min) {
+        height: 309px;
     }
 }
 .loan-category {
@@ -138,15 +149,6 @@
 }
 a.link-dark {
     color: #333;
-}
-.result {
-  height: 300px;
-  @media (max-width: @screen-xs-max) {
-      margin-left: -15px;
-      margin-right: -15px;
-      padding-left: 15px;
-      height: auto;
-  }
 }
 .result .profile-image {
     width: 100%;
