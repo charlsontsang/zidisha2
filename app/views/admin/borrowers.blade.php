@@ -18,7 +18,7 @@ Quick Links
 
 {{ BootstrapForm::select('country', $form->getCountries(), Request::query('country'), ['label' => 'Country']) }}
 {{ BootstrapForm::select('status', $form->getStatus(), Request::query('status'), ['label' => 'Account Status']) }}
-{{ BootstrapForm::text('Search', Request::query('search')) }}
+{{ BootstrapForm::text('search', Request::query('search'), ['label' => 'Search']) }}
 {{ BootstrapForm::submit('Submit') }}
 
 {{ BootstrapForm::close() }}
