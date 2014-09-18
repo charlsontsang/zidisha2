@@ -19,6 +19,7 @@ class PersonalInformationForm extends AbstractForm
      */
     private $borrower;
     private $isVisitor = false;
+    private $isAdmin = false;
 
     /**
      * @var $country
@@ -199,6 +200,8 @@ class PersonalInformationForm extends AbstractForm
     {
         if ($this->isVisitor) {
             return false;
+        } elseif ($this->isAdmin) {
+            return true;
         }
         return $this->fields[$fieldName];
     }
@@ -228,5 +231,20 @@ class PersonalInformationForm extends AbstractForm
     public function setVisitor($isVisitor = true)
     {
         $this->isVisitor = $isVisitor;
+    }
+
+    public function setAdmin($isAdmin = true)
+    {
+        $this->isAdmin = $isAdmin;
+    }
+
+    public function isVisitor()
+    {
+        return $this->isVisitor;
+    }
+
+    public function isAdmin()
+    {
+        return $this->isAdmin;
     }
 }

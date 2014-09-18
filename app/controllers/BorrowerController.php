@@ -188,13 +188,20 @@ class BorrowerController extends BaseController
     public function getPersonalInformation($username = null)
     {
         $isVisitor = false;
+        $isAdmin = false;
         if ($username) {
             $borrower = BorrowerQuery::create()
                 ->useUserQuery()
                 ->filterByUsername($username)
                 ->endUse()
                 ->findOne();
-            $isVisitor = true;
+            /** @var User $user */
+            $user = \Auth::user();
+            if ($user->isVolunteerMentor()) {
+                $isVisitor = true;
+            } else {
+                $isAdmin = true;
+            }
         } else {
             /** @var Borrower $borrower */
             $borrower = \Auth::user()->getBorrower();
@@ -207,6 +214,8 @@ class BorrowerController extends BaseController
         $form = new PersonalInformationForm($borrower);
         if ($isVisitor) {
             $form->setVisitor(true);
+        } elseif ($isAdmin) {
+            $form->setAdmin(true);
         }
         $form->handleData($form->getDefaultData());
 
@@ -250,6 +259,30 @@ class BorrowerController extends BaseController
 
         \Flash::error('Your profile has some errors.');
         return Redirect::route('borrower:personal-information')->withForm($form);
+    }
+
+    public function getPersonalInformationAdmin($username)
+    {
+        $borrower = BorrowerQuery::create()
+            ->useUserQuery()
+            ->filterByUsername($username)
+            ->endUse()
+            ->findOne();
+
+        $form = new PersonalInformationForm($borrower);
+
+        $form->handleRequest(\Request::instance());
+
+        if ($form->isValid()) {
+            $data = $form->getNestedData();
+
+            $this->borrowerService->updatePersonalInformation($borrower, $data);
+
+            \Flash::success('Profile has been updated.');
+            return Redirect::route('admin:borrower:personal-information', $borrower->getUser()->getUsername());
+        }
+        \Flash::error('Profile has some errors.');
+        return Redirect::route('admin:borrower:personal-information', $borrower->getUser()->getUsername())->withForm($form);
     }
 
     public function getFacebookRedirect()
