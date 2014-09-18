@@ -68,7 +68,7 @@ class LenderJoinController extends BaseController
 
     public function getFacebookJoin()
     {
-        $facebookUser = $this->getFacebookUser();
+        $facebookUser = $this->lenderService->getFacebookUser();
 
         if ($facebookUser) {
             $this->facebookService->addFacebookUserLog($facebookUser);
@@ -83,7 +83,7 @@ class LenderJoinController extends BaseController
 
     public function postFacebookJoin()
     {
-        $facebookUser = $this->getFacebookUser();
+        $facebookUser = $this->lenderService->getFacebookUser();
 
         if ($facebookUser) {
             $form = $this->joinForm;
@@ -105,29 +105,6 @@ class LenderJoinController extends BaseController
             return Redirect::route('lender:join');
         }
     }
-
-    private function getFacebookUser()
-    {
-        $facebookUser = $this->facebookService->getUserProfile();
-
-        if ($facebookUser) {
-            $errors = $this->lenderService->validateConnectingFacebookUser(
-                $facebookUser
-            );
-
-            if ($errors) {
-                foreach ($errors as $error) {
-                    Flash::error($error);
-                }
-                return false;
-            }
-
-            return $facebookUser;
-        }
-
-        return false;
-    }
-
 
     protected function join(Lender $user)
     {

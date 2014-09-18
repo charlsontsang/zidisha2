@@ -7,6 +7,8 @@ use Zidisha\Borrower\BorrowerGuestQuery;
 use Zidisha\Borrower\BorrowerService;
 use Zidisha\Borrower\JoinLogQuery;
 use Zidisha\Country\CountryQuery;
+use Zidisha\Lender\Form\JoinForm;
+use Zidisha\Lender\LenderService;
 use Zidisha\User\FacebookUserLogQuery;
 use Zidisha\User\User;
 use Zidisha\User\UserQuery;
@@ -24,15 +26,10 @@ class AuthController extends BaseController
     private $siftScienceService;
     private $googleService;
     
-    /**
-     * @var Zidisha\Vendor\Mixpanel
-     */
     private $mixpanel;
-    
-    /**
-     * @var Zidisha\Borrower\BorrowerService
-     */
     private $borrowerService;
+    private $joinForm;
+    private $lenderService;
 
     public function __construct(
         FacebookService $facebookService,
@@ -40,7 +37,9 @@ class AuthController extends BaseController
         siftScienceService $siftScienceService,
         GoogleService $googleService,
         MixpanelService $mixpanel,
-        BorrowerService $borrowerService
+        BorrowerService $borrowerService,
+        LenderService $lenderService,
+        JoinForm $joinForm
     )
     {
         $this->facebookService = $facebookService;
@@ -49,6 +48,8 @@ class AuthController extends BaseController
         $this->googleService = $googleService;
         $this->mixpanel = $mixpanel;
         $this->borrowerService = $borrowerService;
+        $this->joinForm = $joinForm;
+        $this->lenderService = $lenderService;
     }
 
     public function getLogin()
@@ -114,10 +115,10 @@ class AuthController extends BaseController
                 }
                 Auth::loginUsingId($checkUser->getId());
             } else {
-                Flash::error('borrower.login.flash.not-registered-facebook');
-                return Redirect::to('login');
+                $country = Utility::getCountryCodeByIP();
+                return View::make('lender.facebook-join',
+                    compact('country'), ['form' => $this->joinForm,]);
             }
-
             return $this->login();
         } else {
             return Redirect::to('login');
