@@ -252,8 +252,9 @@ class AuthController extends BaseController
                         if ($checkUser) {
                             Auth::loginUsingId($checkUser->getId());
                         } else {
-                            \Flash::error('borrower.login.flash.not-registered-google');
-                            return Redirect::to('login');
+                            $country = Utility::getCountryCodeByIP();
+                            return View::make('lender.google-join',
+                                compact('country'), ['form' => $this->joinForm,]);
                         }
                         return $this->login();
                     }
