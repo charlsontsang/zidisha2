@@ -13,12 +13,12 @@ Quick Links
 @stop
 
 @section('page-content')
-{{ BootstrapForm::open(array('route' => 'admin:volunteers', 'translationDomain' => 'volunteers', 'method' => 'get')) }}
+{{ BootstrapForm::open(array('route' => 'admin:volunteers', 'method' => 'get')) }}
 {{ BootstrapForm::populate($form) }}
 
-{{ BootstrapForm::select('country', $form->getCountries(), Request::query('country')) }}
-{{ BootstrapForm::text('search', Request::query('search')) }}
-{{ BootstrapForm::submit('Search') }}
+{{ BootstrapForm::select('country', $form->getCountries(), Request::query('country'), ['label' => 'Country']) }}
+{{ BootstrapForm::text('search', Request::query('search'), ['label' => 'Search']) }}
+{{ BootstrapForm::submit('Submit') }}
 
 {{ BootstrapForm::close() }}
 
