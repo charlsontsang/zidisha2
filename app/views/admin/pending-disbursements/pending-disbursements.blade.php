@@ -3,7 +3,7 @@
 @section('content')
 <div class="page-header">
     <h1>
-        Pending Disbursements: {{ $country->getName() }}
+        Pending Disbursements
     </h1>
 </div>
 
@@ -12,8 +12,6 @@
         {{ BootstrapForm::open(['action' => ['PendingDisbursementsController@postPendingDisbursements'], 'class' => 'form-inline']) }}
 
         {{ BootstrapForm::select('countryCode', $countries->toKeyValue('countryCode', 'name'), $country->getCountryCode(), ['label' => false, 'id' => 'country']) }}
-
-        {{ BootstrapForm::submit('Select Country') }}
 
         {{ BootstrapForm::close() }}
         <br/>
