@@ -373,7 +373,7 @@ class AdminController extends BaseController
 
         $paginator = $form->getQuery($query)
             ->orderById()
-            ->paginate($page, 3);
+            ->paginate($page, 100);
 
         $paginator->populateRelation('AdminNote');
 
