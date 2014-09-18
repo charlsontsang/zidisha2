@@ -16,33 +16,6 @@
         {{ BootstrapForm::close() }}
         <br/>
     </div>
-    <div class="col-sm-7">
-        <div class="pull-right">
-            {{ BootstrapForm::open([
-                'action' => ['PendingDisbursementsController@getPendingDisbursements', $country->getCountryCode()],
-                'method' => 'get',
-                'class' => 'form-inline',
-            ]) }}
-
-            {{ BootstrapForm::select(
-                'orderBy',
-                ['acceptedAt' => 'Bids Accepted Date', 'borrowerName' => 'Borrower Name'],
-                $orderBy,
-                ['label' => false]
-            ) }}
-            {{ BootstrapForm::select(
-                'orderDirection',
-                ['asc' => 'Oldest First', 'desc' => 'Most Recent First'],
-                $orderDirection,
-                ['label' => false]
-            ) }}
-
-            {{ BootstrapForm::submit('Sort') }}
-
-            {{ BootstrapForm::close() }}
-            <br/>
-        </div>
-    </div>
 </div>
 
     @if(!$loans->isEmpty())
