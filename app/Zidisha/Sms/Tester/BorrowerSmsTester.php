@@ -20,10 +20,14 @@ class BorrowerSmsTester
 {
 
     private $borrowerSmsService;
+    private $borrowerCountry;
 
     public function __construct(BorrowerSmsService $borrowerSmsService)
     {
         $this->borrowerSmsService = $borrowerSmsService;
+        $this->borrowerCountry = CountryQuery::create()
+            ->filterByBorrowerCountry(true)
+            ->findOne();
     }
 
     public function sendBorrowerJoinedContactConfirmationSms()
@@ -35,11 +39,8 @@ class BorrowerSmsTester
         $borrower
             ->setFirstName('borrowerFirstName')
             ->setLastName('borrowerLastName')
-            ->setProfile($profile)
-            ->setCountry(
-                CountryQuery::create()
-                    ->findOne()
-            );
+            ->setCountry($this->borrowerCountry)
+            ->setProfile($profile);
 
         $contact = new Contact();
         $contact->setBorrower($borrower);
@@ -50,8 +51,16 @@ class BorrowerSmsTester
 
     public function sendLoanFinalArrearNotification()
     {
-        $borrower = BorrowerQuery::create()
-            ->findOne();
+        $profile = new Profile();
+        $profile->setPhoneNumber('2345675434')
+            ->setAlternatePhoneNumber('234523453');
+        $borrower = new Borrower();
+        $borrower
+            ->setFirstName('borrowerFirstName')
+            ->setLastName('borrowerLastName')
+            ->setCountry($this->borrowerCountry)
+            ->setProfile($profile);
+
         $installment = new Installment();
         $installment->setDueDate(new \DateTime())
             ->setAmount(Money::create(340, $borrower->getCountry()->getCurrencyCode()))
@@ -63,8 +72,16 @@ class BorrowerSmsTester
 
     public function sendLoanFirstArrearNotification()
     {
-        $borrower = BorrowerQuery::create()
-            ->findOne();
+        $profile = new Profile();
+        $profile->setPhoneNumber('2345675434')
+            ->setAlternatePhoneNumber('234523453');
+        $borrower = new Borrower();
+        $borrower
+            ->setFirstName('borrowerFirstName')
+            ->setLastName('borrowerLastName')
+            ->setCountry($this->borrowerCountry)
+            ->setProfile($profile);
+
         $installment = new Installment();
         $installment->setDueDate(new \DateTime())
             ->setAmount(Money::create(340, $borrower->getCountry()->getCurrencyCode()))
@@ -76,8 +93,16 @@ class BorrowerSmsTester
 
     public function sendLoanMonthlyArrearNotificationToContact()
     {
-        $borrower = BorrowerQuery::create()
-            ->findOne();
+        $profile = new Profile();
+        $profile->setPhoneNumber('2345675434')
+            ->setAlternatePhoneNumber('234523453');
+        $borrower = new Borrower();
+        $borrower
+            ->setFirstName('borrowerFirstName')
+            ->setLastName('borrowerLastName')
+            ->setCountry($this->borrowerCountry)
+            ->setProfile($profile);
+
         $installment = new Installment();
         $installment->setDueDate(new \DateTime())
             ->setAmount(Money::create(340, $borrower->getCountry()->getCurrencyCode()))
@@ -94,16 +119,31 @@ class BorrowerSmsTester
 
     public function sendLoanMonthlyArrearNotification()
     {
-        $borrower = BorrowerQuery::create()
-            ->findOne();
+        $profile = new Profile();
+        $profile->setPhoneNumber('2345675434')
+            ->setAlternatePhoneNumber('234523453');
+        $borrower = new Borrower();
+        $borrower
+            ->setFirstName('borrowerFirstName')
+            ->setLastName('borrowerLastName')
+            ->setCountry($this->borrowerCountry)
+            ->setProfile($profile);
 
         $this->borrowerSmsService->sendLoanMonthlyArrearNotification($borrower);
     }
 
     public function sendRepaymentReminderTomorrow()
     {
-        $borrower = BorrowerQuery::create()
-            ->findOne();
+        $profile = new Profile();
+        $profile->setPhoneNumber('2345675434')
+            ->setAlternatePhoneNumber('234523453');
+        $borrower = new Borrower();
+        $borrower
+            ->setFirstName('borrowerFirstName')
+            ->setLastName('borrowerLastName')
+            ->setCountry($this->borrowerCountry)
+            ->setProfile($profile);
+
         $installment = new Installment();
         $installment->setDueDate(new \DateTime())
             ->setAmount(Money::create(340, $borrower->getCountry()->getCurrencyCode()))
@@ -116,8 +156,16 @@ class BorrowerSmsTester
 
     public function sendRepaymentReminder()
     {
-        $borrower = BorrowerQuery::create()
-            ->findOne();
+        $profile = new Profile();
+        $profile->setPhoneNumber('2345675434')
+            ->setAlternatePhoneNumber('234523453');
+        $borrower = new Borrower();
+        $borrower
+            ->setFirstName('borrowerFirstName')
+            ->setLastName('borrowerLastName')
+            ->setCountry($this->borrowerCountry)
+            ->setProfile($profile);
+
         $installment = new Installment();
         $installment->setDueDate(new \DateTime())
             ->setAmount(Money::create(340, $borrower->getCountry()->getCurrencyCode()))
@@ -129,8 +177,16 @@ class BorrowerSmsTester
 
     public function sendRepaymentReminderForDueAmount()
     {
-        $borrower = BorrowerQuery::create()
-            ->findOne();
+        $profile = new Profile();
+        $profile->setPhoneNumber('2345675434')
+            ->setAlternatePhoneNumber('234523453');
+        $borrower = new Borrower();
+        $borrower
+            ->setFirstName('borrowerFirstName')
+            ->setLastName('borrowerLastName')
+            ->setCountry($this->borrowerCountry)
+            ->setProfile($profile);
+
         $installment = new Installment();
         $installment->setDueDate(new \DateTime())
             ->setAmount(Money::create(340, $borrower->getCountry()->getCurrencyCode()))
@@ -150,11 +206,9 @@ class BorrowerSmsTester
         $borrower
             ->setFirstName('borrowerFirstName')
             ->setLastName('borrowerLastName')
-            ->setProfile($profile)
-            ->setCountry(
-                CountryQuery::create()
-                    ->findOne()
-            );
+            ->setCountry($this->borrowerCountry)
+            ->setProfile($profile);
+
         $amount = Money::create(250, $borrower->getCountry()->getCurrencyCode());
 
         $this->borrowerSmsService->sendRepaymentReceiptSms($borrower, $amount);
@@ -169,11 +223,8 @@ class BorrowerSmsTester
         $borrower
             ->setFirstName('borrowerFirstName')
             ->setLastName('borrowerLastName')
-            ->setProfile($profile)
-            ->setCountry(
-                CountryQuery::create()
-                    ->findOne()
-            );
+            ->setCountry($this->borrowerCountry)
+            ->setProfile($profile);
 
         $this->borrowerSmsService->sendEligibleInviteSms($borrower);
     }
@@ -187,11 +238,9 @@ class BorrowerSmsTester
         $borrower
             ->setFirstName('borrowerFirstName')
             ->setLastName('borrowerLastName')
-            ->setProfile($profile)
-            ->setCountry(
-                CountryQuery::create()
-                    ->findOne()
-            );
+            ->setCountry($this->borrowerCountry)
+            ->setProfile($profile);
+
         $comment = new BorrowerComment();
         $comment->setMessage('this is comment for borrower!!');
         $postedBy = 'dmdm by hddhd on ffjfjfjf';
@@ -208,11 +257,8 @@ class BorrowerSmsTester
         $borrower
             ->setFirstName('borrowerFirstName')
             ->setLastName('borrowerLastName')
-            ->setProfile($profile)
-            ->setCountry(
-                CountryQuery::create()
-                    ->findOne()
-            );
+            ->setCountry($this->borrowerCountry)
+            ->setProfile($profile);
         $profile2 = new Profile();
         $profile2->setPhoneNumber('22345675434')
             ->setAlternatePhoneNumber('2234523453');
@@ -221,10 +267,8 @@ class BorrowerSmsTester
             ->setFirstName('2borrowerFirstName')
             ->setLastName('2borrowerLastName')
             ->setProfile($profile2)
-            ->setCountry(
-                CountryQuery::create()
-                    ->findOne()
-            );
+            ->setCountry($this->borrowerCountry);
+
         $invite = new Invite();
         $invite->setBorrower($borrower)
             ->setInvitee($borrower2);
