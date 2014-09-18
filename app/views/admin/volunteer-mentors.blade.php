@@ -1,23 +1,16 @@
-@extends('layouts.side-menu')
+@extends('layouts.master')
 
-@section('page-title')
-Volunteer Mentors
-@stop
+@section('content')
+<div class="page-header">
+    <h1>
+        Manage Volunteer Mentors
+    </h1>
+</div>
 
-@section('menu-title')
-Quick Links
-@stop
-
-@section('menu-links')
-@include('partials.nav-links.staff-links')
-@stop
-
-@section('page-content')
 {{ BootstrapForm::open(array('route' => 'admin:volunteer-mentors', 'translationDomain' => 'volunteer-mentors', 'method' => 'get')) }}
 {{ BootstrapForm::populate($form) }}
 
 {{ BootstrapForm::select('country', $form->getCountries(), Request::query('country')) }}
-{{ BootstrapForm::text('search', Request::query('search')) }}
 {{ BootstrapForm::submit('Search') }}
 
 {{ BootstrapForm::close() }}
@@ -27,21 +20,6 @@ Quick Links
     'method' => 'get',
     'class' => 'form-inline',
 ]) }}
-
-{{ BootstrapForm::select(
-    'orderBy',
-    ['numberOfAssignedMembers' => 'Number of Assigned Members', 'repaymentStatus' => 'Repayment Status'],
-    $orderBy,
-    ['label' => false]
-) }}
-{{ BootstrapForm::select(
-    'orderDirection',
-    ['asc' => 'ascending', 'desc' => 'descending'],
-    $orderDirection,
-    ['label' => false]
-) }}
-
-{{ BootstrapForm::submit('Sort') }}
 
 {{ BootstrapForm::close() }}
 
