@@ -51,6 +51,10 @@ Quick Links
             <a href="{{ route('admin:borrower:edit', $borrower->getId()) }}">
                 Edit Profile
             </a>
+            <br/>
+            <a href="{{ route('admin:add:volunteer-mentor', $borrower->getId()) }}">
+                Add volunteer mentor status
+            </a>
             @endif
         </td>
     </tr>
