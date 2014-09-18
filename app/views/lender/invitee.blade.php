@@ -15,11 +15,11 @@ You're invited!
         <div class="col-md-10 col-md-offset-1">
             
             @if($lender->getUser()->hasProfilePicture())
-            <img class="profile-image" style="width:100px" src="{{ $lender->getUser()->getProfilePictureUrl() }}"/>
+            <img class="profile-image" style="width:100px" src="{{ $lender->getId() }}"/>
             @endif
             <h2 class="alpha">
                 You have received a $25 lending credit from 
-                <a href="{{ route('lender:public-profile', $lender->getUser()->getUsername()) }} ">
+                <a href="{{ route('lender:public-profile', $lender->getId()) }} ">
                     {{ $lender->getUser()->getUsername()}}
                 </a>.
             </h2>

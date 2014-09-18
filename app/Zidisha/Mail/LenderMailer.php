@@ -139,7 +139,7 @@ class LenderMailer
         $data['header'] = \Lang::get('lender.mails.lender-invite.header');
         $data['footer'] = \Lang::get('lender.mails.lender-invite.footer');
         $data['button_text'] = \Lang::get('lender.mails.lender-invite.button-text');
-        $data['button_url'] = route('lender:invitee', $lender->getUser()->getUsername()) . '?h=' . $lender_invite->getHash();
+        $data['button_url'] = route('lender:invitee', $lender->getId()) . '?h=' . $lender_invite->getHash();
         $profilePicture = $lender->getUser()->getProfilePictureUrl();
 
         $table = '<table cellspacing="0" cellpadding="10" border="0">';

@@ -105,7 +105,7 @@ Invite Friends
                     @endif
                 </td>
                 <td>@if($invite->getInvitee())
-                    <a href="{{ route('lender:public-profile', $invite->getInvitee()->getUser()->getUsername()) }} ">
+                    <a href="{{ route('lender:public-profile', $invite->getId()) }} ">
                         {{ $invite->getInvitee()->getUser()->getUsername()}}
                     </a>
                     @endif

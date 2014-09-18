@@ -10,7 +10,7 @@
                 @endif
             </a>
             <h3>
-                <a href="{{ route('lender:public-profile', $lender->getUser()->getUserName()) }}">
+                <a href="{{ route('lender:public-profile', $lender->getId()) }}">
                     {{ $lender->getUser()->getUserName() }}</a>
             </h3>
             <p>

@@ -5,6 +5,7 @@ use Zidisha\Balance\TransactionQuery;
 use Zidisha\Lender\Form\Invite;
 use Zidisha\Lender\InviteQuery;
 use Zidisha\Lender\InviteVisitQuery;
+use Zidisha\Lender\Lender;
 use Zidisha\Lender\LenderQuery;
 use Zidisha\Lender\LenderService;
 use Zidisha\Loan\Loan;
@@ -32,9 +33,10 @@ class LenderInviteController extends BaseController
             return View::make('lender.invite-guest');
         }
 
+        /** @var Lender $lender */
         $lender = Auth::user()->getLender();
 
-        $invite_url = route('lender:invitee', ['username' => $lender->getUser()->getUserName()]);
+        $invite_url = route('lender:invitee', ['username' => $lender->getId()]);
 
         $twitterParams = array(
             "url" => $invite_url . "?s=2",
@@ -115,12 +117,10 @@ class LenderInviteController extends BaseController
         return Redirect::route('lender:invite')->withForm($form);
     }
 
-    public function getInvitee($username)
+    public function getInvitee($id)
     {
         $lender = LenderQuery::create()
-            ->useUserQuery()
-                ->filterByUsername($username)
-            ->endUse()
+            ->filterById($id)
             ->findOne();
 
         $lenderInviteVisit = InviteVisitQuery::create()
@@ -159,7 +159,7 @@ class LenderInviteController extends BaseController
                     $lenderInvite
                 );
                 Session::put('lenderInviteVisitId', $lenderInviteVisit->getId());
-                return Redirect::route('lender:invitee', ['username' => $lender->getUser()->getUsername()]);
+                return Redirect::route('lender:invitee', ['username' => $lender->getId()]);
             }
         }
 

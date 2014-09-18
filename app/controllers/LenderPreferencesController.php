@@ -6,6 +6,7 @@ use Zidisha\Lender\Form\AutoLendingSettingForm;
 use Zidisha\Lender\Lender;
 use Zidisha\Lender\LenderQuery;
 use Zidisha\Lender\LenderService;
+use Zidisha\User\User;
 
 class LenderPreferencesController extends BaseLenderController
 {
@@ -40,12 +41,13 @@ class LenderPreferencesController extends BaseLenderController
         $form->handleRequest(Request::instance());
 
         if ($form->isValid()) {
+            /** @var User $user */
             $user = \Auth::user();
             $data = $form->getData();
             $preferences = $this->lenderService->updateAccountPreferences($user->getLender(), $data);
             if ($preferences) {
                 Flash::success('lender.flash.preferences.success');
-                return Redirect::route('lender:public-profile', $user->getUsername());
+                return Redirect::route('lender:public-profile', $user->getId());
             }
         }
         Flash::error('lender.flash.preferences.error');
