@@ -1,6 +1,5 @@
 @extends('layouts.master')
 
-
 @section('page-title')
 @lang('borrower.text.assigned-members.title')
 @stop
