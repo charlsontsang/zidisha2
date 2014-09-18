@@ -25,7 +25,7 @@ class PendingDisbursementsController extends BaseController
     public function postPendingDisbursements()
     {
         if (!\Input::get('countryCode')) {
-            \App::abort(404, 'Please select proper country');
+            \App::abort(404, 'Please select country');
         }
 
         $countryCode = \Input::get('countryCode');
@@ -51,7 +51,7 @@ class PendingDisbursementsController extends BaseController
         $currency = $country->getCurrency();
 
         if (!$country || !$country->isBorrowerCountry()) {
-            \App::abort(404, 'please select proper country');
+            \App::abort(404, 'Please select country');
         }
 
         $loansQuery = \Zidisha\Loan\LoanQuery::create()
