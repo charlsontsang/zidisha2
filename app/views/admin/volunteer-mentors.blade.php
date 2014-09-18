@@ -1,5 +1,9 @@
 @extends('layouts.master')
 
+@section('page-title')
+Manage Volunteer Mentors
+@stop
+
 @section('content')
 <div class="page-header">
     <h1>

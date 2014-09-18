@@ -1,5 +1,9 @@
 @extends('layouts.master')
 
+@section('page-title')
+Pending Disbursements
+@stop
+
 @section('content')
 <div class="page-header">
     <h1>
