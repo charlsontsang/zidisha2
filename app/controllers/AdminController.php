@@ -357,7 +357,9 @@ class AdminController extends BaseController
             ->orderById()
             ->paginate($page, 100);
 
-        return View::make('admin.volunteers', compact('paginator', 'form'));
+        $count = count($paginator);
+
+        return View::make('admin.volunteers', compact('paginator', 'form', 'count'));
     }
 
     public function getVolunteerMentors()
