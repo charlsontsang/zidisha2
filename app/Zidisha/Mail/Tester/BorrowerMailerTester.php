@@ -27,10 +27,14 @@ class BorrowerMailerTester
      * @var \Zidisha\Mail\BorrowerMailer
      */
     private $borrowerMailer;
+    private $borrowerCountry;
 
     public function __construct(BorrowerMailer $borrowerMailer)
     {
         $this->borrowerMailer = $borrowerMailer;
+        $this->borrowerCountry = CountryQuery::create()
+            ->filterByBorrowerCountry(true)
+            ->findOne();
     }
 
     public function sendVerificationMail()
@@ -42,8 +46,9 @@ class BorrowerMailerTester
         $joinLog->setVerificationCode('test-verification-code');
 
         $borrower = new Borrower();
-        $borrower->setUser($user);
-        $borrower->setJoinLog($joinLog);
+        $borrower->setUser($user)
+            ->setCountry($this->borrowerCountry)
+            ->setJoinLog($joinLog);
 
         $this->borrowerMailer->sendVerificationMail($borrower);
     }
@@ -55,6 +60,7 @@ class BorrowerMailerTester
             ->setEmail('lendertest@gmail.com');
         $borrower = new Borrower();
         $borrower->setUser($userBorrower)
+            ->setCountry($this->borrowerCountry)
             ->setFirstName('borrowerFirstName')
             ->setLastName('borrowerLastName');
 
@@ -73,6 +79,7 @@ class BorrowerMailerTester
             ->setEmail('lendertest@gmail.com');
         $borrower = new Borrower();
         $borrower->setUser($userBorrower)
+            ->setCountry($this->borrowerCountry)
             ->setFirstName('borrowerFirstName')
             ->setLastName('borrowerLastName');
 
@@ -81,6 +88,7 @@ class BorrowerMailerTester
             ->setEmail('lendertestvm@gmail.com');
         $borrowerVM = new Borrower();
         $borrowerVM->setUser($userBorrowerVM)
+            ->setCountry($this->borrowerCountry)
             ->setFirstName('borrowerFirstNamevm')
             ->setLastName('borrowerLastNamevm');
         $volunteerMentor = new VolunteerMentor();
@@ -98,6 +106,7 @@ class BorrowerMailerTester
             ->setEmail('lendertest@gmail.com');
         $borrower = new Borrower();
         $borrower->setUser($userBorrower)
+            ->setCountry($this->borrowerCountry)
             ->setFirstName('borrowerFirstName')
             ->setLastName('borrowerLastName');
         $feedbackMessage =  new FeedbackMessage();
@@ -122,6 +131,7 @@ class BorrowerMailerTester
             ->setEmail('lendertest@gmail.com');
         $borrower = new Borrower();
         $borrower->setUser($userBorrower)
+            ->setCountry($this->borrowerCountry)
             ->setFirstName('borrowerFirstName')
             ->setLastName('borrowerLastName');
         $feedbackMessage =  new FeedbackMessage();
@@ -145,9 +155,10 @@ class BorrowerMailerTester
         $user->setEmail('test@test.com');
 
         $borrower = new Borrower();
-        $borrower->setUser($user);
-        $borrower->setFirstName('First Name');
-        $borrower->setLastName('Last Name');
+        $borrower->setUser($user)
+            ->setCountry($this->borrowerCountry)
+            ->setFirstName('First Name')
+            ->setLastName('Last Name');
 
         $loan = new Loan();
         $loan->setId(14);
@@ -162,6 +173,7 @@ class BorrowerMailerTester
             ->setEmail('lendertest@gmail.com');
         $borrower = new Borrower();
         $borrower->setUser($userBorrower)
+            ->setCountry($this->borrowerCountry)
             ->setFirstName('borrowerFirstName')
             ->setLastName('borrowerLastName');
 
@@ -175,6 +187,7 @@ class BorrowerMailerTester
             ->setEmail('lendertest@gmail.com');
         $borrower = new Borrower();
         $borrower->setUser($userBorrower)
+            ->setCountry($this->borrowerCountry)
             ->setFirstName('borrowerFirstName')
             ->setLastName('borrowerLastName');
 
@@ -188,6 +201,7 @@ class BorrowerMailerTester
             ->setEmail('lendertest@gmail.com');
         $borrower = new Borrower();
         $borrower->setUser($userBorrower)
+            ->setCountry($this->borrowerCountry)
             ->setFirstName('borrowerFirstName')
             ->setLastName('borrowerLastName');
         $loan = new Loan();
@@ -207,6 +221,7 @@ class BorrowerMailerTester
             ->setEmail('lendertest@gmail.com');
         $borrower = new Borrower();
         $borrower->setUser($userBorrower)
+            ->setCountry($this->borrowerCountry)
             ->setFirstName('borrowerFirstName')
             ->setLastName('borrowerLastName');
 
@@ -222,6 +237,7 @@ class BorrowerMailerTester
         $borrower = new Borrower();
         $borrower
             ->setUser($userBorrower)
+            ->setCountry($this->borrowerCountry)
             ->setFirstName('borrowerFirstName')
             ->setLastName('borrowerLastName');
         $invite = new Invite();
@@ -246,6 +262,7 @@ class BorrowerMailerTester
             ->setEmail('lendertest@gmail.com');
         $borrower = new Borrower();
         $borrower->setUser($userBorrower)
+            ->setCountry($this->borrowerCountry)
             ->setFirstName('borrowerFirstName')
             ->setLastName('borrowerLastName')
             ->setCountry(
@@ -269,6 +286,7 @@ class BorrowerMailerTester
             ->setEmail('lendertest@gmail.com');
         $borrower = new Borrower();
         $borrower->setUser($userBorrower)
+            ->setCountry($this->borrowerCountry)
             ->setFirstName('borrowerFirstName')
             ->setLastName('borrowerLastName')
             ->setCountry(
@@ -291,6 +309,7 @@ class BorrowerMailerTester
             ->setEmail('lendertest@gmail.com');
         $borrower = new Borrower();
         $borrower->setUser($userBorrower)
+            ->setCountry($this->borrowerCountry)
             ->setFirstName('borrowerFirstName')
             ->setLastName('borrowerLastName')
             ->setCountry(
@@ -313,6 +332,7 @@ class BorrowerMailerTester
             ->setEmail('lendertest@gmail.com');
         $borrower = new Borrower();
         $borrower->setUser($userBorrower)
+            ->setCountry($this->borrowerCountry)
             ->setFirstName('borrowerFirstName')
             ->setLastName('borrowerLastName')
             ->setCountry(
@@ -335,6 +355,7 @@ class BorrowerMailerTester
             ->setEmail('lendertest@gmail.com');
         $borrower = new Borrower();
         $borrower->setUser($userBorrower)
+            ->setCountry($this->borrowerCountry)
             ->setFirstName('borrowerFirstName')
             ->setLastName('borrowerLastName')
             ->setCountry(
@@ -362,6 +383,7 @@ class BorrowerMailerTester
             ->setEmail('lendertest@gmail.com');
         $borrower = new Borrower();
         $borrower->setUser($userBorrower)
+            ->setCountry($this->borrowerCountry)
             ->setFirstName('borrowerFirstName')
             ->setLastName('borrowerLastName')
             ->setCountry(
@@ -379,6 +401,7 @@ class BorrowerMailerTester
             ->setEmail('lendertest@gmail.com');
         $borrower = new Borrower();
         $borrower->setUser($userBorrower)
+            ->setCountry($this->borrowerCountry)
             ->setFirstName('borrowerFirstName')
             ->setLastName('borrowerLastName')
             ->setCountry(
@@ -402,6 +425,7 @@ class BorrowerMailerTester
             ->setEmail('lendertest@gmail.com');
         $borrower = new Borrower();
         $borrower->setUser($userBorrower)
+            ->setCountry($this->borrowerCountry)
             ->setFirstName('borrowerFirstName')
             ->setLastName('borrowerLastName')
             ->setCountry(
@@ -425,6 +449,7 @@ class BorrowerMailerTester
             ->setEmail('lendertest@gmail.com');
         $borrower = new Borrower();
         $borrower->setUser($userBorrower)
+            ->setCountry($this->borrowerCountry)
             ->setFirstName('borrowerFirstName')
             ->setLastName('borrowerLastName')
             ->setCountry(
@@ -447,9 +472,10 @@ class BorrowerMailerTester
         $user->setEmail('test@test.com');
 
         $borrower = new Borrower();
-        $borrower->setUser($user);
-        $borrower->setFirstName('First Name');
-        $borrower->setLastName('Last Name');
+        $borrower->setUser($user)
+            ->setFirstName('First Name')
+            ->setCountry($this->borrowerCountry)
+            ->setLastName('Last Name');
 
         $loan = new Loan();
         $loan->setId(14);
@@ -467,6 +493,7 @@ class BorrowerMailerTester
             ->setEmail('lendertest@gmail.com');
         $borrower = new Borrower();
         $borrower->setUser($userBorrower)
+            ->setCountry($this->borrowerCountry)
             ->setFirstName('borrowerFirstName')
             ->setLastName('borrowerLastName')
             ->setCountry(
@@ -484,6 +511,7 @@ class BorrowerMailerTester
             ->setEmail('lendertest@gmail.com');
         $borrower = new Borrower();
         $borrower->setUser($userBorrower)
+            ->setCountry($this->borrowerCountry)
             ->setFirstName('borrowerFirstName')
             ->setLastName('borrowerLastName')
             ->setCountry(
