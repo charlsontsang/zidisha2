@@ -41,7 +41,6 @@ Quick Links
 {{ BootstrapForm::populate($filterForm) }}
 
 {{ BootstrapForm::select('country', $filterForm->getCountries(), Request::query('country'), ['label' => 'Choose country']) }}
-{{ BootstrapForm::select('status', $filterForm->getStatus(), Request::query('status')) }}
 {{ BootstrapForm::text('search', Request::query('search'), ['label' => 'Search for name, phone or email']) }}
 {{ BootstrapForm::submit('Find Borrower') }}
 
