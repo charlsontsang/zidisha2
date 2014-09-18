@@ -55,7 +55,7 @@
                 </a>
                 <div id="members" class="collapse">
                     <br/>
-                    <table class="table">
+                    <table class="table" id="member-table">
                         <thead>
                             <tr>
                                 <th>Name</th>
@@ -70,7 +70,6 @@
                                             <td><a href="{{ route('admin:borrower', $assignedMember->getId()) }}">{{
                                                 $assignedMember->getName() }}</a></td>
                                             <td>
-                                            TODO (Activate date)
                                             {{ $borrowerService->printLoanInArrears($assignedMember) }}
                                             </td>
                                             <td>
@@ -129,6 +128,11 @@
             'searching': true,
             'info': true
         });
+        $('#member-table').dataTable();
+    });
+    $(function() {
+        $('#country').change(function() {
+            this.form.submit();
         $('.members-toggle').click(function () {
             $("#members").collapse('toggle');
             return false;
@@ -137,10 +141,6 @@
             $("#add-note").collapse('toggle');
             return false;
         });
-    });
-    $(function() {
-        $('#country').change(function() {
-            this.form.submit();
     });
 });
 </script>
