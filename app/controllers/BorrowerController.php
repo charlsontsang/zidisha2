@@ -45,24 +45,6 @@ class BorrowerController extends BaseController
         $this->loanService = $loanService;
     }
 
-    public function getPublicProfile($username)
-    {
-        $borrower = BorrowerQuery::create()
-            ->useUserQuery()
-            ->filterByUsername($username)
-            ->endUse()
-            ->findOne();
-
-        if (!$borrower) {
-            App::abort(404);
-        }
-
-        return View::make(
-            'borrower.public-profile',
-            compact('borrower')
-        );
-    }
-
     public function getEditProfile()
     {
         $borrower = \Auth::user()->getBorrower();
