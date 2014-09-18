@@ -34,13 +34,21 @@ Quick Links
     <tbody>
     @foreach($paginator as $borrower)
     <tr>
-        <td><a href="{{ route('admin:borrower', $borrower->getUser()->getId()) }}">{{
+        <td>
+            <p>
+                <a href="{{ route('admin:borrower', $borrower->getUser()->getId()) }}">{{
                 $borrower->getFirstName() }} {{ $borrower->getLastName() }}</a>
-            <p>{{ $borrower->getUser()->getUsername() }}</p>
+            </p>
+            <p>Tel. {{ $borrower->getProfile()->getPhoneNumber() }}</p>
             <p>{{ $borrower->getUser()->getEmail() }}</p>
         </td>
         <td>
-            {{ $borrower->getProfile()->getCity() }}, {{ $borrower->getCountry()->getName() }}
+            <p>
+                {{ $borrower->getProfile()->getCity() }}
+            </p>
+            <p>
+                {{ $borrower->getCountry()->getName() }}
+            </p>
         </td>
         <td>
             <p>
