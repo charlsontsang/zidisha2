@@ -7,4 +7,4 @@
 <li class="@if (Request::segment(1) == 'repayments') active @else '' @endif "><a href="{{ route('admin:repayments') }}">Enter Repayments</a></li>
 <li><a href="{{ route('admin:borrower-activation') }}">Activate Borrowers</a></li>
 <li class="@if (Request::segment(1) == 'volunteer-mentors') active @else '' @endif "><a href="{{ route('admin:volunteer-mentors') }}">Manage Volunteer Mentors</a></li>
-<li class="@if (Request::segment(1) == 'volunteers') active @else '' @endif "><a href="{{ route('admin:volunteers') }}">View Active Staff</a></li>
+<li class="@if (Request::segment(2) == 'volunteers') active @else '' @endif "><a href="{{ route('admin:volunteers') }}">View Active Staff</a></li>
