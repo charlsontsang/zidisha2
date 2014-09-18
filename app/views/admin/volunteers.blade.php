@@ -52,7 +52,16 @@ Quick Links
         </a></p>
         <p>{{ $lender->getUser()->getEmail() }}</p>
     </td>
-    <td>{{ $lender->getCountry()->getName() }}</td>
+    <td>
+        @if (!empty($lender->getProfile()->getCity()))
+        <p>
+            {{ $lender->getProfile()->getCity() }}
+        </p>
+        @endif
+        <p>
+            {{ $lender->getCountry()->getName() }}
+        </p>
+    </td>
     <td>{{ $lender->getUser()->getJoinedAt()->format('M j, Y') }}</td>
     <td>
         @if($lender->getUser()->getSubRole() == \Zidisha\User\User::SUB_ROLE_VOLUNTEER)
