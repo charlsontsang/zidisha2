@@ -8988,6 +8988,16 @@ form label.control-label,
 .login-form .btn-primary {
   margin-bottom: 10px;
 }
+table {
+  border-color: #ddd !important;
+  border-collapse: collapse !important;
+}
+table.dataTable thead th,
+table.dataTable thead td,
+table.dataTable.no-footer {
+  border-bottom: 2px solid #ddd !important;
+}
+/* no more tables styling for mobile */
 @media (max-width: 767px) {
   /* Force table to not be like tables anymore */
   .no-more-tables table,
