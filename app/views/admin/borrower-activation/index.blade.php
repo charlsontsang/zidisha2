@@ -21,7 +21,6 @@ Activate Borrowers
         <th>Completed On</th>
         <th>Last Modified</th>
         <th>Status</th>
-        <th></th>
     </tr>
     </thead>
     <tbody>
@@ -55,8 +54,7 @@ Activate Borrowers
         </td>
         <td>
             TODO
-        </td>
-        <td>
+            <br/>
             <a href="{{ route('admin:borrower-activation:edit', $borrower->getId()) }}">
                 <i class="fa fa-pencil-square-o fa-lg"></i>
             </a>
@@ -72,7 +70,8 @@ Activate Borrowers
 <script type="text/javascript">
     $(document).ready(function() {
             $('#pending-activation').dataTable({
-                searching: true
+                searching: true,
+                'order': [[ 5, 'asc' ]]
             });
     });
 </script>
