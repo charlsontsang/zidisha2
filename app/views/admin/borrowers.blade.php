@@ -43,18 +43,32 @@ Quick Links
             {{ $borrower->getProfile()->getCity() }}, {{ $borrower->getCountry()->getName() }}
         </td>
         <td>
-            <a href="{{ route('admin:borrower', $borrower->getId()) }}">
-                View Profile
-            </a>
-            <br/><br/>
+            <p>
+                <a href="{{ route('admin:borrower', $borrower->getId()) }}">
+                    View profile
+                </a>
+            </p>
+            
             @if(Auth::getUser()->isAdmin())
-            <a href="{{ route('admin:borrower:edit', $borrower->getId()) }}">
-                Edit Profile
-            </a>
-            <br/>
-            <a href="{{ route('admin:add:volunteer-mentor', $borrower->getId()) }}">
-                Add volunteer mentor status
-            </a>
+            <p>
+                <a href="{{ route('admin:borrower:edit', $borrower->getId()) }}">
+                    Edit Profile
+                </a>
+            </p>
+            @endif
+
+            @if($borrower->getUser()->isVolunteerMentor())
+                <p>
+                    Volunteer Mentor
+                </p>
+            @else
+                @if(Auth::getUser()->isAdmin())
+                    <p>
+                        <a href="{{ route('admin:add:volunteer-mentor', $borrower->getId()) }}">
+                        Make Volunteer Mentor
+                        </a>
+                    </p>
+                @endif
             @endif
         </td>
     </tr>
