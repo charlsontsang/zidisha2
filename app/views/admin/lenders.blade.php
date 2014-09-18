@@ -24,7 +24,7 @@ Quick Links
     {{ BootstrapForm::close() }}
 </div>
 
-<table class="table table-striped">
+<table class="table table-striped" id="lenders">
     <thead>
     <tr>
         <th>Lender</th>
@@ -102,4 +102,12 @@ Quick Links
     </tbody>
 </table>
 {{ BootstrapHtml::paginator($paginator)->appends(['country' => Request::query('country'), 'search' => Request::query('search')])->links() }}
+@stop
+
+@section('script-footer')
+<script type="text/javascript">
+    $(document).ready(function() {
+            $('#lenders').dataTable();
+    });
+</script>
 @stop
