@@ -38,16 +38,17 @@
         <tr>
             <td><p><a href="{{ route('admin:borrower', $borrower->getId()) }}">{{
                     $borrower->getName() }}</a></p>
-                <p>{{ $borrower->getProfile()->getPhoneNumber() }}</p>
+                <p>Tel. {{ $borrower->getProfile()->getPhoneNumber() }}</p>
                 <p>{{ $borrower->getUser()->getEmail() }}</p>
                 <p>{{ $borrower->getProfile()->getCity() }}, {{ $borrower->getCountry()->getName() }}</p>
             </td>
             <td>
                 {{ $menteeCounts[$borrower->getId()] }}
 
-                <br/><br/>
-                <a href="{{ route('admin:remove:volunteer-mentor', $borrower->getId()) }}">Remove mentor status</a>
-            
+                @if(Auth::getUser()->isAdmin())
+                    <br/><br/>
+                    <a href="{{ route('admin:remove:volunteer-mentor', $borrower->getId()) }}">Remove mentor status</a>
+                @endif
             </td>
             <td>
                 <a href="#" id="toggle-members" data-toggle="collapse" data-target="#members" data-toggle-text="Hide members">
