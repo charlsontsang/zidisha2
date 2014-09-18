@@ -87,11 +87,6 @@ return [
             'default' => '12',
             'rule'    => 'numeric'
         ],
-        'loan.firstLoanPercentage' => [
-            'label' => 'Maximum amount for first loan (without invite bonus)',
-            'default' => '50',
-            'rule' => 'numeric'
-        ],
         'loan.secondLoanPercentage' => [
             'label' => 'Credit limit increase after on-time repayment of loans up to $200 (% of largest previous loan)',
             'default' => '300',
@@ -105,16 +100,6 @@ return [
         'loan.firstLoanValue' => [
             'label' => 'Maximum amount for first loan (without bonus)',
             'default' => '50',
-            'rule' => 'numeric'
-        ],
-        'loan.secondLoanValue' => [
-            'label' => 'Maximum amount for second loan (without bonus)',
-            'default' => '750',
-            'rule' => 'numeric'
-        ],
-        'loan.thirdLoanValue' => [
-            'label' => 'Maximum amount for third loan (without bonus)',
-            'default' => '1125',
             'rule' => 'numeric'
         ],
         'loan.nextLoanValue' => [
