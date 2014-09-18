@@ -193,8 +193,7 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $('#disbursements').dataTable({
-            'paging': false,
-            'info': false
+            'searching': true
         });
         $('.add-note-toggle').click(function () {
             $("#add-note").collapse('toggle');

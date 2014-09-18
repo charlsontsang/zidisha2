@@ -35,7 +35,7 @@ Quick Links
 
 <hr/>
 
-<h4>Enter Repayment Manually</h4>
+<h4>Enter Repayments Manually</h4>
 
 {{ BootstrapForm::open(array('route' => 'admin:repayments', 'method' => 'get')) }}
 {{ BootstrapForm::populate($filterForm) }}
@@ -88,10 +88,7 @@ Quick Links
 @section('script-footer')
 <script type="text/javascript">
     $(document).ready(function() {
-            $('#find').dataTable({
-            'paging': false,
-            'searching': false
-        });
+            $('#find').dataTable();
     });
 </script>
 @stop

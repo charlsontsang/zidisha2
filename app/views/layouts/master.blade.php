@@ -53,6 +53,11 @@
             $(function() {
                 $('.flash-modal').modal();
             });
+            $.extend( $.fn.dataTable.defaults, {
+                searching: false,
+                paging: false,
+                info: false
+            } );
         </script>
         @yield('script-footer')
         @include('partials/_flash')
