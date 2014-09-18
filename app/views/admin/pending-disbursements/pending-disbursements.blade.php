@@ -11,7 +11,7 @@
     <div class="col-sm-5">
         {{ BootstrapForm::open(['action' => ['PendingDisbursementsController@postPendingDisbursements'], 'class' => 'form-inline']) }}
 
-        {{ BootstrapForm::select('countryCode', $countries->toKeyValue('countryCode', 'name'), $country->getCountryCode(), ['label' => false]) }}
+        {{ BootstrapForm::select('countryCode', $countries->toKeyValue('countryCode', 'name'), $country->getCountryCode(), ['label' => false, 'id' => 'country']) }}
 
         {{ BootstrapForm::submit('Select Country') }}
 
@@ -235,5 +235,10 @@
             $netAmount.text($principalAmount.val() - $registrationFee.val());
         });
     });
+    $(function() {
+        $('#country').change(function() {
+            this.form.submit();
+    });
+});
 </script>
 @stop
