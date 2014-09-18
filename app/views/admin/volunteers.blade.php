@@ -13,16 +13,24 @@ Quick Links
 @stop
 
 @section('page-content')
-{{ BootstrapForm::open(array('route' => 'admin:volunteers', 'method' => 'get')) }}
-{{ BootstrapForm::populate($form) }}
 
-{{ BootstrapForm::select('country', $form->getCountries(), Request::query('country'), ['label' => 'Country']) }}
-{{ BootstrapForm::text('search', Request::query('search'), ['label' => 'Search']) }}
-{{ BootstrapForm::submit('Submit') }}
+<p>
+    We have {{ $count }} active staff!&nbsp;&nbsp;&nbsp;
+    <a href="#" id="toggle-filter">Filter results</a>
+</p>
 
-{{ BootstrapForm::close() }}
+<div id="filter" class="collapse">
+    {{ BootstrapForm::open(array('route' => 'admin:volunteers', 'method' => 'get')) }}
+    {{ BootstrapForm::populate($form) }}
 
-<table class="table table-striped">
+    {{ BootstrapForm::select('country', $form->getCountries(), Request::query('country'), ['label' => 'Country']) }}
+    {{ BootstrapForm::text('search', Request::query('search'), ['label' => 'Search']) }}
+    {{ BootstrapForm::submit('Submit') }}
+
+    {{ BootstrapForm::close() }}
+</div>
+
+<table class="table table-striped" id="staff">
 <thead>
 <tr>
     <th>Lender</th>
@@ -34,9 +42,14 @@ Quick Links
 <tbody>
 @foreach($paginator as $lender)
 <tr>
-    <td><a href="{{ route('lender:public-profile', $lender->getId()) }}">{{
-            $lender->getFirstName() }} {{ $lender->getLastName() }}</a>
-        <p>{{ $lender->getUser()->getUsername() }}</p>
+    <td>
+        <p><a href="{{ route('lender:public-profile', $lender->getUser()->getUserName()) }}">
+            @if (!empty($lender->getFirstName()))
+                {{ $lender->getFirstName() }} {{ $lender->getLastName() }}
+            @else
+                {{ $lender->getUser()->getUsername() }}
+            @endif
+        </a></p>
         <p>{{ $lender->getUser()->getEmail() }}</p>
     </td>
     <td>{{ $lender->getCountry()->getName() }}</td>
@@ -53,4 +66,16 @@ Quick Links
 </tbody>
 </table>
 {{ BootstrapHtml::paginator($paginator)->appends(['country' => Request::query('country'), 'search' => Request::query('search')])->links() }}
+@stop
+
+@section('script-footer')
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#staff').dataTable();
+    });
+    $('#toggle-filter').click(function () {
+        $('#filter').collapse('toggle');
+        return false;
+    });
+</script>
 @stop
