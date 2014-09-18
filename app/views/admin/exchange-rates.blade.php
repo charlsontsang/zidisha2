@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('page-title')
-Exchange rates
+Exchange Rates
 @stop
 
 @section('content')
@@ -10,42 +10,37 @@ Exchange rates
 </div>
 
 @if(Auth::getUser()->isAdmin())
-    <p> Add Exchange Rate for current period </p>
-
-    <br>
-
-    {{ BootstrapForm::open(array('controller' => 'AdminController@postExchangeRates', 'translationDomain' => 'exchange-rate')) }}
+    {{ BootstrapForm::open(array('controller' => 'AdminController@postExchangeRates')) }}
     {{ BootstrapForm::populate($form) }}
 
-    {{ BootstrapForm::select('countrySlug', $form->getCountrySlug(), $countrySlug) }}
-    {{ BootstrapForm::text('newRate') }}
+    {{ BootstrapForm::select('countrySlug', $form->getCountrySlug(), $countrySlug, ['label' => 'Currency']) }}
+    {{ BootstrapForm::text('newRate', '', ['label' => 'New Exchange Rate']) }}
 
     {{ BootstrapForm::submit('Save') }}
 
     {{ BootstrapForm::close() }}
-@else
-    <p>Exchange Rates for previous periods </p>
 @endif
+
 <table class="table table-striped">
     <thead>
     <tr>
-        <th>S. No.</th>
-        <th>Rate</th>
         <th>From</th>
         <th>To</th>
+        <th>Rate</th>
     </tr>
     </thead>
     <tbody>
     @foreach($paginator as $i => $rate)
     <tr>
-        <td>{{ $i + 1 + $offset }}</td>
-        <td>{{ $rate->getRate() }}</td>
-        <td>{{ $rate->getStartDate()->format('d-m-Y') }}</td>
+        <td>{{ $rate->getStartDate()->format('M j, Y') }}</td>
         <td>
             @if($rate->getEndDate())
-            {{ $rate->getEndDate()->format('d-m-Y') }}
+                {{ $rate->getEndDate()->format('M j, Y') }}
+            @else
+                Present
             @endif
         </td>
+        <td>{{ $rate->getRate() }}</td>
     </tr>
     @endforeach
     </tbody>
