@@ -162,7 +162,7 @@ class AdminController extends BaseController
 
         $paginator = $form->getQuery()
             ->orderById()
-            ->paginate($page, 3);
+            ->paginate($page, 100);
 
         return View::make('admin.borrowers', compact('paginator', 'form'));
     }
@@ -236,7 +236,7 @@ class AdminController extends BaseController
 
         $paginator = $form->getQuery()
             ->orderById()
-            ->paginate($page, 3);
+            ->paginate($page, 100);
         
         return View::make(
             'admin.lenders',
