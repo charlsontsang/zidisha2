@@ -44,13 +44,12 @@
                             <ul>
                                 <li class="dropdown-header">Manage Borrowers</li>
                                 <li><a href="{{ route('admin:borrowers') }}">Look Up Borrower Account</a></li>
-                                <li><a href="{{ route('admin:volunteer-mentors') }}">Volunteer Mentors</a></li>
-                                <li><a href="{{ route('admin:add:volunteer-mentors') }}">Add Volunteer Mentors</a></li>
-                                <li><a href="{{ route('admin:borrower-activation') }}">Pending Activation</a></li>
-                                <li><a href="{{ route('admin:pending-disbursements') }}">Pending Disbursements</a></li>
-                                <li><a href="{{ route('admin:loans') }}">Find Loans</a></li>
+                                <li><a href="{{ route('admin:pending-disbursements') }}">Disburse Loans</a></li>
                                 <li><a href="{{ route('admin:repayments') }}">Enter Repayments</a></li>
-                                <li><a href="{{ route('admin:loan-forgiveness:index') }}">Forgiven Loans</a></li>
+                                <li><a href="{{ route('admin:borrower-activation') }}">Activate Borrowers</a></li>
+                                <li><a href="{{ route('admin:volunteer-mentors') }}">Manage Volunteer Mentors</a></li>
+                                <li><a href="{{ route('admin:loans') }}">Manage Loans</a></li>
+                                <li><a href="{{ route('admin:loan-forgiveness:index') }}">Enable Forgiveness</a></li>
                                 <li><a href="{{ route('admin:get:translation-feed') }}">Translation Feed</a></li>
                             </ul>
                         </li>
@@ -58,7 +57,7 @@
                             <ul>
                                 <li class="dropdown-header">Manage Lenders</li>
                                 <li><a href="{{ route('admin:lenders') }}">Look Up Lender Account</a></li>
-                                <li><a href="{{ route('admin:volunteers') }}">Active Staff</a></li>
+                                <li><a href="{{ route('admin:volunteers') }}">View Active Staff</a></li>
                                 <li><a href="{{ route('admin:get:gift-cards') }}">Manage Gift Cards</a></li>
                                 <li><a href="{{ route('admin:get:withdrawal-requests') }}">Withdraw Requests</a></li>
                             </ul>
