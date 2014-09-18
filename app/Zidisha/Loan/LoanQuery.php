@@ -87,11 +87,15 @@ class LoanQuery extends BaseLoanQuery
     }
 
     public function findLastLoan(Borrower $borrower) {
-        return $this
-            ->filterByBorrower($borrower)
-            ->filterByDeletedByAdmin(false)
-            ->orderById('DESC')
-            ->findOne();
+        if ($borrower->hasActiveLoan()) {
+            return $borrower->getActiveLoan();
+        } else {
+            return $this
+                ->filterByBorrower($borrower)
+                ->filterByDeletedByAdmin(false)
+                ->orderById('DESC')
+                ->findOne();
+        }
     }
 
     public function findLastCompletedLoan(Borrower $borrower)

@@ -125,13 +125,9 @@ class BorrowerController extends BaseController
         $volunteerMentor = $borrower->getVolunteerMentor() ? $borrower->getVolunteerMentor()->getBorrowerVolunteer() : null;
         $feedbackMessages = [];
 
-        $loan = $borrower->getActiveLoan();
-
-        if (!$loan) {
             $loan = LoanQuery::create()
                 ->findLastLoan($borrower);
-        }
-        
+
         $partial = 'loan-no-loan';
         
         $partials = [

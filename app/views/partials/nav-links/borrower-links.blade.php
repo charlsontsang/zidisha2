@@ -1,6 +1,8 @@
 @if(Auth::check() && Auth::getUser()->isBorrower())
 <li class="@if (Request::segment(2) == 'dashboard') active @else '' @endif "><a href="{{ route('borrower:dashboard') }}">@lang('borrower.menu.dashboard')</a></li>
+@if(Auth::getUser()->getBorrower()->hasLastLoan())
 <li><a href="{{ route('loan:index', Auth::getUser()->getBorrower()->getActiveLoanId()) }}">@lang('borrower.menu.loan-page')</a></li>
+@endif
 <li class="@if (Request::segment(2) == 'edit-profile') active @else '' @endif "><a href="{{ route('borrower:edit-profile') }}">@lang('borrower.menu.edit-profile')</a></li>
 <li class="@if (Request::segment(2) == 'invite') active @else '' @endif "><a href="{{ route('borrower:invite') }}">@lang('borrower.menu.send-invites')</a></li>
 <li class="@if (Request::segment(2) == 'invites') active @else '' @endif "><a href="{{ route('borrower:invites') }}">@lang('borrower.menu.your-invites')</a></li>
