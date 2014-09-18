@@ -43,7 +43,7 @@ class Setting extends BaseSetting
         
         if (!isset(static::$nameToValue[$name])) {
             // TODO log
-            //throw new \Exception("Setting with name $name doesn't exists.");
+            //throw new \Exception("Setting with name $name doesn't exist.");
             return null;
         }
         
