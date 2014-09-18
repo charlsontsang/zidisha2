@@ -613,7 +613,6 @@ Route::group(
                 
                 Route::post('lender/last-check-in-email/{lenderId}', array('uses' => 'AdminController@postLastCheckInEmail', 'as' => 'admin:last-check-in-email:lender'));
                 
-                Route::get('loans', array('uses' => 'AdminController@getLoans', 'as' => 'admin:loans'));
                 Route::get(
                     '/settings/exchange-rates/{countryName?}',
                     array(

@@ -404,44 +404,6 @@ class AdminController extends BaseController
         return View::make('admin.volunteer-mentors', compact('paginator', 'form', 'menteeCounts', 'assignedMembers', 'adminNotes', 'borrowerService'));
     }
 
-    public function getLoans()
-    {
-        $page = Request::query('page') ? : 1;
-        $countryName = Request::query('country') ? : null;
-        $status = Request::query('status') ? : null;
-
-        $selectedCountry = $this->countryQuery->findOneBySlug($countryName);
-
-        $conditions = [];
-
-        $routeParams = [
-            'stage' => 'fund-raising',
-            'country' => 'everywhere'
-        ];
-
-        if ($selectedCountry) {
-            $conditions['countryId'] = $selectedCountry->getId();
-            $routeParams['country'] = $selectedCountry->getSlug();
-        }
-
-        if ($status) {
-            if ($status == 'completed') {
-                $routeParams['stage'] = 'completed';
-                $conditions['status'] = [Loan::DEFAULTED, Loan::REPAID];
-            } elseif ($status == 'active') {
-                $routeParams['stage'] = 'active';
-                $conditions['status'] = [Loan::ACTIVE, Loan::FUNDED];
-            } else {
-                $routeParams['stage'] = 'fund-raising';
-                $conditions['status'] = Loan::OPEN;
-            }
-        }
-
-        $paginator = $this->loanService->searchLoans($conditions, $page);
-
-        return View::make('admin.loans', compact('paginator'), ['form' => $this->loansForm,]);
-    }
-
     public function getExchangeRates($countrySlug = null)
     {
         $page = Request::query('page') ? : 1;
