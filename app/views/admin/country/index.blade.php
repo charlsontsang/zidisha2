@@ -5,7 +5,9 @@ Countries
 @stop
 
 @section('content')
-<h1>Countries</h1>
+<div class="page-header">
+    <h1>Countries</h1>
+</div>
 <hr/>
     <ul class="nav nav-tabs" role="tablist">
         <li class="{{ $otherCountries ? '' : 'active' }}"><a href="{{ route('admin:countries') }}">Borrower Countries</a></li>
