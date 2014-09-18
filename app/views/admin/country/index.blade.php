@@ -8,11 +8,11 @@ Countries
 <div class="page-header">
     <h1>Countries</h1>
 </div>
-<hr/>
-    <ul class="nav nav-tabs" role="tablist">
-        <li class="{{ $otherCountries ? '' : 'active' }}"><a href="{{ route('admin:countries') }}">Borrower Countries</a></li>
-        <li class="{{ !$otherCountries ? '' : 'active' }}"><a href="{{ route('admin:countries') . '?other_countries=true' }}">Other Countries</a></li>
-    </ul>
+
+<ul class="nav nav-tabs" role="tablist">
+    <li class="{{ $otherCountries ? '' : 'active' }}"><a href="{{ route('admin:countries') }}">Borrower Countries</a></li>
+    <li class="{{ !$otherCountries ? '' : 'active' }}"><a href="{{ route('admin:countries') . '?other_countries=true' }}">Other Countries</a></li>
+</ul>
 
 <table class="table table-striped">
     <thead>
@@ -21,6 +21,7 @@ Countries
         <th>Dialing Code</th>
         <th>Registration Fee</th>
         <th>Installment Period</th>
+        <th>Edit</th>
     </tr>
     </thead>
     <tbody>
