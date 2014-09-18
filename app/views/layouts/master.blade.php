@@ -8,7 +8,7 @@
         <meta name="author" content="">
         <link rel="shortcut icon" href="favicon.ico">
 
-        <title>Zidisha |  @yield('page-title')</title>
+        <title>Zidisha | @yield('page-title')</title>
 
 
         <!-- Bootstrap core CSS -->
