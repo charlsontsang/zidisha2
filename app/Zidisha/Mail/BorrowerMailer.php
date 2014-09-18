@@ -509,7 +509,7 @@ class BorrowerMailer{
             'emails.hero',
             $data + [
                 'to'         => $loan->getBorrower()->getUser()->getEmail(),
-                'subject'    => \Lang::get('borrower.mails.loan-fully-funded.subject', $local),
+                'subject'    => \Lang::get('borrower.mails.loan-fully-funded.subject', [], $local),
                 'templateId' => \Setting::get('sendwithus.borrower-notifications-template-id')
             ]
         );

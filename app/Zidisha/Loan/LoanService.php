@@ -91,6 +91,7 @@ class LoanService
         
         $borrower
             ->setActiveLoan($loan)
+            ->setLastLoan($loan)
             ->setLoanStatus(Loan::OPEN);
         
         PropelDB::transaction(function($con) use ($loan, $borrower) {
@@ -587,6 +588,7 @@ class LoanService
             $borrower = $loan->getBorrower();
             $borrower
                 ->setLoanStatus(Loan::FUNDED)
+                ->setLastLoan($loan)
                 ->setActiveLoan($loan);
             $loan->save($con);
         });
