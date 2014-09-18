@@ -47,7 +47,7 @@ Quick Links
 {{ BootstrapForm::close() }}
 
 @if($borrowers)
-<table class="table table-striped">
+<table class="table table-striped" id="find">
     <thead>
     <tr>
         <th>Borrower</th>
@@ -72,7 +72,7 @@ Quick Links
         </td>
         <td>
             @if($borrower->getActiveLoanId())
-            <a href="{{ route('admin:repayment-schedule', $borrower->getId()) }}">View Repayment Schedule</a>
+            <a href="{{ route('admin:repayment-schedule', $borrower->getId()) }}">Enter Payment</a>
             @else
             No active loan
             @endif
@@ -83,4 +83,15 @@ Quick Links
 </table>
 {{ BootstrapHtml::paginator($borrowers)->appends($filterForm->getPaginatorParams())->links() }}
 @endif
+@stop
+
+@section('script-footer')
+<script type="text/javascript">
+    $(document).ready(function() {
+            $('#find').dataTable({
+            'paging': false,
+            'searching': false
+        });
+    });
+</script>
 @stop
