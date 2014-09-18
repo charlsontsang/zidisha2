@@ -17,7 +17,8 @@
         "siftscience/sift-php" : "1.*",
         "google/apiclient": "1.0.*@beta",
         "sendwithus/api": "dev-master",
-        "telerivet/telerivet-php-client": "dev-master"
+        "telerivet/telerivet-php-client": "dev-master",
+        "guzzlehttp/guzzle": "4.*"
     },
 	"autoload": {
 		"classmap": [
