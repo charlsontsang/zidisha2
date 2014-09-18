@@ -13,15 +13,15 @@ Quick Links
 @stop
 
 @section('page-content')
-<h4>Upload Repayments</h4>
+<h4>Upload Repayments Spreadsheet</h4>
 
-{{ BootstrapForm::open(array('route' => 'admin:upload-repayments', 'translationDomain' => 'repayments', 'files' => true)) }}
+{{ BootstrapForm::open(array('route' => 'admin:upload-repayments', 'files' => true)) }}
 {{ BootstrapForm::populate($form) }}
 
-{{ BootstrapForm::select('countryCode', $form->getCountrySlug()) }}
-{{ BootstrapForm::file('inputFile') }}
+{{ BootstrapForm::select('countryCode', $form->getCountrySlug(), 'null', ['label' => 'Choose country']) }}
+{{ BootstrapForm::file('inputFile', ['label' => 'Choose spreadsheet']) }}
 
-{{ BootstrapForm::submit('Save') }}
+{{ BootstrapForm::submit('Upload Repayments') }}
 
 {{ BootstrapForm::close() }}
 
@@ -35,15 +35,15 @@ Quick Links
 
 <hr/>
 
-<h4>Find Borrower</h4>
+<h4>Enter Repayment Manually</h4>
 
 {{ BootstrapForm::open(array('route' => 'admin:repayments', 'method' => 'get')) }}
 {{ BootstrapForm::populate($filterForm) }}
 
-{{ BootstrapForm::select('country', $filterForm->getCountries(), Request::query('country')) }}
+{{ BootstrapForm::select('country', $filterForm->getCountries(), Request::query('country'), ['label' => 'Choose country']) }}
 {{ BootstrapForm::select('status', $filterForm->getStatus(), Request::query('status')) }}
-{{ BootstrapForm::text('search', Request::query('search')) }}
-{{ BootstrapForm::submit('Search') }}
+{{ BootstrapForm::text('search', Request::query('search'), ['label' => 'Search for name, phone or email']) }}
+{{ BootstrapForm::submit('Find Borrower') }}
 
 {{ BootstrapForm::close() }}
 
