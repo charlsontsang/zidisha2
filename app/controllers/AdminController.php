@@ -697,7 +697,7 @@ class AdminController extends BaseController
             ->joinWith('Lender')
             ->joinWith('Lender.User')
             ->orderByUpdatedAt('desc')
-            ->paginate($page, 10);
+            ->paginate($page, 100);
 
         $userIds = $paginator->toKeyValue('lenderId', 'lenderId');
 
