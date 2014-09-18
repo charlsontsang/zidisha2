@@ -622,7 +622,7 @@ class AdminController extends BaseController
 
         $paginator = GiftCardQuery::create()
             ->orderByDate('desc')
-            ->paginate($page, 10);
+            ->paginate($page, 100);
 
         return View::make('admin.gift-cards', compact('paginator'));
     }
