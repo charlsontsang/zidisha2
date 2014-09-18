@@ -24,30 +24,32 @@ class BorrowerSmsService
 
     public function sendBorrowerJoinedContactConfirmationSms(Contact $contact)
     {
+        $local = $contact->getBorrower()->getCountry()->getLanguageCode();
+        $parameters = [
+            'borrowerName'        => $contact->getBorrower()->getName(),
+            'borrowerPhoneNumber' => $contact->getBorrower()->getProfile()->getPhoneNumber(),
+            'contactName'         => $contact->getName(),
+        ];
         $data = [
-            'parameters'  => [
-                'borrowerName'        => $contact->getBorrower()->getName(),
-                'borrowerPhoneNumber' => $contact->getBorrower()->getProfile()->getPhoneNumber(),
-                'contactName'         => $contact->getName(),
-            ],
             'countryCode' => $contact->getBorrower()->getCountry()->getCountryCode(),
-            'label'       => 'borrower.sms.contact-confirmation'
+            'content'     => \Lang::get('borrower.sms.contact-confirmation', $parameters, $local),
         ];
         $this->smsService->queue($contact->getPhoneNumber(), $data);
     }
 
     public function sendLoanFinalArrearNotification(Borrower $borrower, Installment $dueInstallment)
     {
+        $local = $borrower->getCountry()->getLanguageCode();
         $profile = $borrower->getProfile();
+        $parameters = [
+            'borrowerName' => $borrower->getName(),
+            'contacts'     => nl2br($borrower->getContactsList()),
+            'dueAmt'       => $dueInstallment->getAmount(),
+            'dueDate'      => $dueInstallment->getDueDate()->format('d-m-Y'),
+        ];
         $data = [
-            'parameters'  => [
-                'borrowerName' => $borrower->getName(),
-                'contacts'     => nl2br($borrower->getContactsList()),
-                'dueAmt'       => $dueInstallment->getAmount(),
-                'dueDate'      => $dueInstallment->getDueDate()->format('d-m-Y'),
-            ],
             'countryCode' => $borrower->getCountry()->getCountryCode(),
-            'label'       => 'borrower.sms.final-arrear-notification'
+            'content'     => \Lang::get('borrower.sms.final-arrear-notification', $parameters, $local),
         ];
         $this->smsService->send($profile->getPhoneNumber(), $data);
 
@@ -59,15 +61,16 @@ class BorrowerSmsService
 
     public function sendLoanFirstArrearNotification(Borrower $borrower, Installment $dueInstallment)
     {
+        $local = $borrower->getCountry()->getLanguageCode();
         $profile = $borrower->getProfile();
+        $parameters = [
+            'borrowerName' => $borrower->getName(),
+            'dueAmt'       => $dueInstallment->getAmount(),
+            'dueDate'      => $dueInstallment->getDueDate()->format('d-m-Y'),
+        ];
         $data = [
-            'parameters'  => [
-                'borrowerName' => $borrower->getName(),
-                'dueAmt'       => $dueInstallment->getAmount(),
-                'dueDate'      => $dueInstallment->getDueDate()->format('d-m-Y'),
-            ],
             'countryCode' => $borrower->getCountry()->getCountryCode(),
-            'label'       => 'borrower.sms.first-arrear-notification'
+            'content'     => \Lang::get('borrower.sms.first-arrear-notification', $parameters, $local)
         ];
         $this->smsService->send($profile->getPhoneNumber(), $data);
 
@@ -79,30 +82,32 @@ class BorrowerSmsService
 
     public function sendLoanMonthlyArrearNotificationToContact(Contact $contact, Borrower $borrower, Installment $dueInstallment)
     {
+        $local = $borrower->getCountry()->getLanguageCode();
         $profile = $borrower->getProfile();
+        $parameters = [
+            'contactName'    => $contact->getName(),
+            'borrowerName'   => $borrower->getName(),
+            'dueDays'        => round((time() - $dueInstallment->getDueDate()->getTimestamp()) / (60 * 60 * 24)),
+            'borrowerNumber' => $profile->getPhoneNumber(),
+        ];
         $data = [
-            'parameters'  => [
-                'contactName'    => $contact->getName(),
-                'borrowerName'   => $borrower->getName(),
-                'dueDays'        => round((time() - $dueInstallment->getDueDate()->getTimestamp()) / (60 * 60 * 24)),
-                'borrowerNumber' => $profile->getPhoneNumber(),
-            ],
             'countryCode' => $borrower->getCountry()->getCountryCode(),
-            'label'       => 'borrower.sms.loan-arrear-mediation-notification'
+            'content'       => \Lang::get('borrower.sms.loan-arrear-mediation-notification', $parameters, $local)
         ];
         $this->smsService->send($contact->getPhoneNumber(), $data);
     }
 
     public function sendLoanMonthlyArrearNotification(Borrower $borrower)
     {
+        $local = $borrower->getCountry()->getLanguageCode();
         $profile = $borrower->getProfile();
+        $parameters = [
+            'borrowerName' => $borrower->getName(),
+            'contacts'     => nl2br($borrower->getContactsList()),
+        ];
         $data = [
-            'parameters'  => [
-                'borrowerName' => $borrower->getName(),
-                'contacts'     => nl2br($borrower->getContactsList()),
-            ],
             'countryCode' => $borrower->getCountry()->getCountryCode(),
-            'label'       => 'borrower.sms.loan-arrear-reminder-monthly'
+            'content'     => \lang::get('borrower.sms.loan-arrear-reminder-monthly', $parameters, $local)
         ];
         $this->smsService->send($profile->getPhoneNumber(), $data);
 
@@ -114,14 +119,15 @@ class BorrowerSmsService
 
     public function sendRepaymentReminderTomorrow(Borrower $borrower, Installment $dueInstallment)
     {
+        $local = $borrower->getCountry()->getLanguageCode();
         $profile = $borrower->getProfile();
+        $parameters = [
+            'dueAmt'  => $dueInstallment->getAmount()->subtract($dueInstallment->getPaidAmount()),
+            'dueDate' => $dueInstallment->getDueDate()->format('d-m-Y'),
+        ];
         $data = [
-            'parameters'  => [
-                'dueAmt'  => $dueInstallment->getAmount()->subtract($dueInstallment->getPaidAmount()),
-                'dueDate' => $dueInstallment->getDueDate()->format('d-m-Y'),
-            ],
             'countryCode' => $borrower->getCountry()->getCountryCode(),
-            'label'       => 'borrower.sms.repayment-reminder'
+            'content'     => \Lang::get('borrower.sms.repayment-reminder', $parameters, $local),
         ];
         $this->smsService->send($profile->getPhoneNumber(), $data);
 
@@ -133,14 +139,15 @@ class BorrowerSmsService
 
     public function sendRepaymentReminder(Borrower $borrower, Installment $dueInstallment)
     {
+        $local = $borrower->getCountry()->getLanguageCode();
         $profile = $borrower->getProfile();
+        $parameters = [
+            'dueAmt'  => $dueInstallment->getAmount()->subtract($dueInstallment->getPaidAmount()),
+            'dueDate' => $dueInstallment->getDueDate()->format('d-m-Y'),
+        ];
         $data = [
-            'parameters'  => [
-                'dueAmt'  => $dueInstallment->getAmount(),
-                'dueDate' => $dueInstallment->getDueDate()->format('d-m-Y'),
-            ],
             'countryCode' => $borrower->getCountry()->getCountryCode(),
-            'label'       => 'borrower.sms.repayment-reminder'
+            'content'     => \Lang::get('borrower.sms.repayment-reminder', $parameters, $local)
         ];
         $this->smsService->send($profile->getPhoneNumber(), $data);
 
@@ -152,14 +159,15 @@ class BorrowerSmsService
 
     public function sendRepaymentReminderForDueAmount(Borrower $borrower, Installment $dueInstallment, Money $dueAmount)
     {
+        $local = $borrower->getCountry()->getLanguageCode();
         $profile = $borrower->getProfile();
+        $parameters = [
+            'dueAmt'  => $dueAmount,
+            'dueDate' => $dueInstallment->getDueDate()->format('d-m-Y'),
+        ];
         $data = [
-            'parameters'  => [
-                'dueAmt'  => $dueAmount,
-                'dueDate' => $dueInstallment->getDueDate()->format('d-m-Y'),
-            ],
             'countryCode' => $borrower->getCountry()->getCountryCode(),
-            'label'       => 'borrower.sms.repayment-reminder'
+            'content'     => \Lang::get('borrower.sms.repayment-reminder', $parameters, $local)
         ];
         $this->smsService->send($profile->getPhoneNumber(), $data);
 
@@ -171,13 +179,14 @@ class BorrowerSmsService
 
     public function sendRepaymentReceiptSms(Borrower $borrower, Money $amount)
     {
+        $local = $borrower->getCountry()->getLanguageCode();
         $profile = $borrower->getProfile();
+        $parameters = [
+            'paidAmount' => (string) $amount,
+        ];
         $data = [
-            'parameters'  => [
-                'paidAmount' => (string) $amount,
-            ],
             'countryCode' => $borrower->getCountry()->getCountryCode(),
-            'label'       => 'borrower.sms.payment-receipt'
+            'content'     => \Lang::get('borrower.sms.payment-receipt', $parameters, $local)
         ];
         $this->smsService->queue($profile->getPhoneNumber(), $data);
 
@@ -189,11 +198,11 @@ class BorrowerSmsService
 
     public function sendEligibleInviteSms(Borrower $borrower)
     {
+        $local = $borrower->getCountry()->getLanguageCode();
         $profile = $borrower->getProfile();
         $data = [
-            'parameters'  => [],
             'countryCode' => $borrower->getCountry()->getCountryCode(),
-            'label'       => 'borrower.sms.eligible-invite'
+            'content'     => \Lang::get('borrower.sms.eligible-invite', [], $local)
         ];
         $this->smsService->queue($profile->getPhoneNumber(), $data);
 
@@ -205,14 +214,15 @@ class BorrowerSmsService
 
     public function sendBorrowerCommentNotificationSms(Borrower $borrower , Comment $comment, $postedBy)
     {
+        $local = $borrower->getCountry()->getLanguageCode();
         $profile = $borrower->getProfile();
+        $parameters = [
+            'postedBy' => $postedBy,
+            'message'  => nl2br($comment->getMessage()),
+        ];
         $data = [
-            'parameters'  => [
-                'postedBy' => $postedBy,
-                'message'  => nl2br($comment->getMessage()),
-            ],
             'countryCode' => $borrower->getCountry()->getCountryCode(),
-            'label'       => 'borrower.sms.borrower-comment-notification'
+            'content'     => \Lang::get('borrower.sms.borrower-comment-notification', $parameters, $local)
         ];
         $this->smsService->queue($profile->getPhoneNumber(), $data);
 
@@ -226,15 +236,16 @@ class BorrowerSmsService
     {
         $borrower = $invite->getBorrower();
         $invitee = $invite->getInvitee();
+        $local = $borrower->getCountry()->getLanguageCode();
         $profile = $borrower->getProfile();
+        $parameters = [
+            'borrowerName'      => $borrower->getName(),
+            'newBorrowerName'   => $invitee->getName(),
+            'newBorrowerNumber' => $invitee->getProfile()->getPhoneNumber(),
+        ];
         $data = [
-            'parameters'  => [
-                'borrowerName'      => $borrower->getName(),
-                'newBorrowerName'   => $invitee->getName(),
-                'newBorrowerNumber' => $invitee->getProfile()->getPhoneNumber(),
-            ],
             'countryCode' => $borrower->getCountry()->getCountryCode(),
-            'label'       => 'borrower.sms.invite-alert'
+            'content'     => \Lang::get('borrower.sms.invite-alert', $parameters, $local)
         ];
         $this->smsService->queue($profile->getPhoneNumber(), $data);
 

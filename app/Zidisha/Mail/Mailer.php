@@ -67,8 +67,6 @@ class Mailer
             } else {
                 $this->laravelMailerDriver->send('emails.sendwithus', $data);
             }
-        } elseif (array_get($data, 'label')) {
-            $this->laravelMailerDriver->send('emails.label-template', $data);
         } else {
             $this->laravelMailerDriver->send($view, $data);
         }

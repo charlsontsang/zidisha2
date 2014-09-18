@@ -76,7 +76,7 @@
                     <div id="toggle-example" class="collapse">
                         @foreach($members as $member)
                         <p>
-                            <a href="{{ route('lender:public-profile', $member->getMember()->getUser()->getUserName()) }}">
+                            <a href="{{ route('lender:public-profile', $member->getMember()->getId()) }}">
                                 {{ $member->getMember()->getUser()->getUserName() }}
                             </a>
                             @if($group->isLeader($member->getMember()))

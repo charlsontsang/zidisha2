@@ -1,1 +1,1 @@
-@lang($label, $parameters)
+{{ $content }}

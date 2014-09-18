@@ -20,9 +20,8 @@ class Telerivet
     public function send($phoneNumber, $data)
     {
         $this->client->sendMessage(
-            [
+            $data + [
                 'to_number' => Utility::formatNumber($phoneNumber, $data['countryCode']),
-                'content'   => \Lang::get($data['label'], $data)
             ]
         );
     }

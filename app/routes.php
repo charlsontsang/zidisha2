@@ -136,7 +136,7 @@ Route::group(
          */
 
         Route::get(
-            'lender/profile/view/{username}',
+            'lender/profile/view/{id}',
             array('uses' => 'LenderController@getPublicProfile', 'as' => 'lender:public-profile')
         );
 
@@ -889,7 +889,7 @@ Route::group(
          * Routes for Invite
          */
         Route::get('invite', array('uses' => 'LenderInviteController@getInvite', 'as' => 'lender:invite'));
-        Route::get('i/{username}', array('uses' => 'LenderInviteController@getInvitee', 'as' => 'lender:invitee'));
+        Route::get('i/{id}', array('uses' => 'LenderInviteController@getInvitee', 'as' => 'lender:invitee'));
         Route::get(
             'invite/how-it-works',
             array('uses' => 'LenderInviteController@getHowItWorks', 'as' => 'lender:how-it-works')

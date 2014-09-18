@@ -20,6 +20,7 @@ use Zidisha\Upload\Upload;
 use Zidisha\User\FacebookUserLogQuery;
 use Zidisha\User\User;
 use Zidisha\User\UserQuery;
+use Zidisha\Vendor\Facebook\FacebookService;
 use Zidisha\Vendor\PropelDB;
 
 class LenderService
@@ -29,17 +30,20 @@ class LenderService
     private $mixpanelService;
     private $userQuery;
     private $transactionService;
+    private $facebookService;
 
     public function __construct(
         LenderMailer $lenderMailer,
         MixpanelService $mixpanelService,
         UserQuery $userQuery,
-        TransactionService $transactionService
+        TransactionService $transactionService,
+        FacebookService $facebookService
     ) {
         $this->lenderMailer = $lenderMailer;
         $this->mixpanelService = $mixpanelService;
         $this->userQuery = $userQuery;
         $this->transactionService = $transactionService;
+        $this->facebookService = $facebookService;
     }
 
     public function editProfile(Lender $lender, $data)
@@ -520,5 +524,27 @@ class LenderService
 
         $autoLendingSetting->setPreference($data['preference']);
         $autoLendingSetting->save();
+    }
+
+    public function getFacebookUser()
+    {
+        $facebookUser = $this->facebookService->getUserProfile();
+
+        if ($facebookUser) {
+            $errors = $this->validateConnectingFacebookUser(
+                $facebookUser
+            );
+
+            if ($errors) {
+                foreach ($errors as $error) {
+                    Flash::error($error);
+                }
+                return false;
+            }
+
+            return $facebookUser;
+        }
+
+        return false;
     }
 }

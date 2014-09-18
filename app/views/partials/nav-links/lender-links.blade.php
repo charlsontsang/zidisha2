@@ -1,7 +1,7 @@
 <li class="@if (Request::segment(2) == 'dashboard') active @else '' @endif "><a href="{{ route('lender:dashboard') }}">Dashboard</a></li>
 <li><a href="{{ route('lender:loans') }}">Your Loans</a></li>
 <li class="@if (Request::segment(2) == 'following') active @else '' @endif "><a href="{{ route('lender:following') }}">Following</a></li>
-<li><a href="{{ route('lender:public-profile', Auth::getUser()->getUsername()) }}">View Profile</a></li>
+<li><a href="{{ route('lender:public-profile', Auth::getUser()->getId()) }}">View Profile</a></li>
 <li class="@if (Request::segment(3) == 'edit') active @else '' @endif "><a href="{{ route('lender:edit-profile') }}">Edit Profile</a></li>
 <li class="@if (Request::segment(2) == 'preferences') active @else '' @endif "><a href="{{ route('lender:preference') }}">Account Preferences</a></li>
 <li><a href="{{ route('lender:gift-cards') }}">Gift Cards</a></li>

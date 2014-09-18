@@ -6,7 +6,6 @@ use DOMDocument;
 use DOMXPath;
 use Google_Service_Oauth2;
 use Google_Service_Oauth2_Userinfoplus;
-use GuzzleHttp\Client;
 use Zidisha\Admin\Setting;
 use Zidisha\Lender\LenderService;
 
@@ -91,7 +90,7 @@ class GoogleService
         $contacts = [];
         $i = 0;
         if ($accessToken) {
-            $client = new Client();
+            $client = new \GuzzleHttp\Client();
             $tokenData = json_decode($accessToken);
 
             $url = 'https://www.google.com/m8/feeds/contacts/'. urlencode($googleUser->getEmail()) .'/full';

@@ -56,22 +56,20 @@ class LenderMailer
     public function sendOutbidMail(Lender $lender, Bid $bid)
     {
         $borrower = $bid->getLoan()->getBorrower();
-        $data = [
-            'parameters' => [
-                'borrowerLink' => route('borrower:public-profile', $borrower->getUser()->getUsername()),
-                'borrowerName' => ucwords(strtolower($borrower->getName())),
-                'bidInterest'  => $bid->getInterestRate(),
-                'bidAmount'    => $bid->getBidAmount(),
-                'outBidAmount' => $bid->getBidAmount(),
-            ],
+        $parameters = [
+            'borrowerLink' => route('borrower:public-profile', $borrower->getUser()->getUsername()),
+            'borrowerName' => ucwords(strtolower($borrower->getName())),
+            'bidInterest'  => $bid->getInterestRate(),
+            'bidAmount'    => $bid->getBidAmount(),
+            'outBidAmount' => $bid->getBidAmount(),
         ];
 
         $this->mailer->queue(
             'emails.label-template',
-            $data + [
+            [
                 'to'      => $lender->getUser()->getEmail(),
-                'label'   => 'lender.mails.out-bid-notification.body',
-                'subject' => \Lang::get('lender.mails.out-bid-notification.subject'),
+                'content' => \Lang::get('lender.mails.out-bid-notification.body', $parameters, 'en'),
+                'subject' => \Lang::get('lender.mails.out-bid-notification.subject', [], 'en'),
             ]
         );
     }
@@ -79,23 +77,21 @@ class LenderMailer
     public function sendDownBidMail(Lender $lender, Bid $bid, Money $acceptedAmount, Money $outBidAmount)
     {
         $borrower = $bid->getLoan()->getBorrower();
-        $data = [
-            'parameters' => [
-                'borrowerLink'      => route('borrower:public-profile', $borrower->getUser()->getUsername()),
-                'borrowerName'      => ucwords(strtolower($borrower->getName())),
-                'bidInterest'       => $bid->getInterestRate(),
-                'bidAmount'         => $bid->getBidAmount(),
-                'outBidAmount'      => $outBidAmount,
-                'remainedBidAmount' => $acceptedAmount,
-            ],
+        $parameters = [
+            'borrowerLink'      => route('borrower:public-profile', $borrower->getUser()->getUsername()),
+            'borrowerName'      => ucwords(strtolower($borrower->getName())),
+            'bidInterest'       => $bid->getInterestRate(),
+            'bidAmount'         => $bid->getBidAmount(),
+            'outBidAmount'      => $outBidAmount,
+            'remainedBidAmount' => $acceptedAmount,
         ];
 
         $this->mailer->queue(
             'emails.label-template',
-            $data + [
+            [
                 'to'      => $lender->getUser()->getEmail(),
-                'label'   => 'lender.mails.down-bid-notification.body',
-                'subject' => \Lang::get('lender.mails.down-bid-notification.subject'),
+                'content' => \Lang::get('lender.mails.down-bid-notification.body', $parameters, 'en'),
+                'subject' => \Lang::get('lender.mails.down-bid-notification.subject', [], 'en'),
             ]
         );
     }
@@ -104,10 +100,10 @@ class LenderMailer
     {
         $email = $bid->getLender()->getUser()->getEmail();
 
-        $subject = \Lang::get('lender.mails.loan-fully-funded.subject', ['borrowerName' => $bid->getBorrower()->getName()]);
         $data['header'] = \Lang::get(
             'lender.mails.loan-fully-funded.accept-message-1',
-            ['borrowerName' => $bid->getBorrower()->getName()]
+            ['borrowerName' => $bid->getBorrower()->getName()],
+            'en'
         );
 
         $data['content'] = \Lang::get(
@@ -119,7 +115,8 @@ class LenderMailer
                     ['username' => $bid->getBorrower()->getUser()->getUsername()]
                 ),
                 'lendingGroupLink'    => route('lender:groups')
-            ]
+            ],
+            'en'
         );
 
         $this->mailer->queue(
@@ -127,7 +124,7 @@ class LenderMailer
             $data + [
                 'to'         => $email,
                 'from'       => 'service@zidisha.com',
-                'subject'    => $subject,
+                'subject'    => \Lang::get('lender.mails.loan-fully-funded.subject', ['borrowerName' => $bid->getBorrower()->getName()], 'en'),
                 'templateId' => \Setting::get('sendwithus.lender-loan-fully-funded-template-id'),
             ]
         );
@@ -136,10 +133,10 @@ class LenderMailer
     public function sendLenderInvite(Lender $lender, Invite $lender_invite, $subject, $customMessage)
     {
         $email = $lender_invite->getEmail();
-        $data['header'] = \Lang::get('lender.mails.lender-invite.header');
-        $data['footer'] = \Lang::get('lender.mails.lender-invite.footer');
-        $data['button_text'] = \Lang::get('lender.mails.lender-invite.button-text');
-        $data['button_url'] = route('lender:invitee', $lender->getUser()->getUsername()) . '?h=' . $lender_invite->getHash();
+        $data['header'] = \Lang::get('lender.mails.lender-invite.header', [], 'en');
+        $data['footer'] = \Lang::get('lender.mails.lender-invite.footer', [], 'en');
+        $data['button_text'] = \Lang::get('lender.mails.lender-invite.button-text', [], 'en');
+        $data['button_url'] = route('lender:invitee', $lender->getId()) . '?h=' . $lender_invite->getHash();
         $profilePicture = $lender->getUser()->getProfilePictureUrl();
 
         $table = '<table cellspacing="0" cellpadding="10" border="0">';
@@ -150,12 +147,12 @@ class LenderMailer
         $table .= "</table>";
         $customMessage = $table;
 
-        $subject = $subject ?: \Lang::get('lender.mails.lender-invite.subject', ['lenderName' => $lender->getName()]);
-        $message = \Lang::get(
+        $subject = $subject ?: \Lang::get('lender.mails.lender-invite.subject', ['lenderName' => $lender->getName()], 'en');
+        $data['content'] = \Lang::get(
             'lender.mails.lender-invite.body',
-            ['lenderName' => $lender->getName(), 'customMessage' => $customMessage]
+            ['lenderName' => $lender->getName(), 'customMessage' => $customMessage],
+            'en'
         );
-        $data['content'] = $message;
 
         $this->mailer->queue(
             'emails.hero',
@@ -172,22 +169,21 @@ class LenderMailer
         $email = $invite->getLender()->getUser()->getEmail();
         $inviteeEmail = $invite->getEmail();
 
-        $subject = \Lang::get('lender.mails.lender-invite-credit.subject');
-        $message = \Lang::get(
+        $data['content'] = \Lang::get(
             'lender.mails.lender-invite-credit.body',
-            ['inviteeMail' => $inviteeEmail, 'lendingPage' => route('loan:index')]
+            ['inviteeMail' => $inviteeEmail, 'lendingPage' => route('loan:index')],
+            'en'
         );
-        $data['content'] = $message;
 
-        $data['footer'] = \Lang::get('lender.mails.lender-invite-credit.footer');
-        $data['button_text'] = \Lang::get('lender.mails.lender-invite-credit.button-text');
+        $data['footer'] = \Lang::get('lender.mails.lender-invite-credit.footer', [], 'en');
+        $data['button_text'] = \Lang::get('lender.mails.lender-invite-credit.button-text', [], 'en');
         $data['button_url'] = route('loan:index');
 
         $this->mailer->queue(
             'emails.hero',
             $data + [
                 'to'         => $email,
-                'subject'    => $subject,
+                'subject'    => \Lang::get('lender.mails.lender-invite-credit.subject', [], 'en'),
                 'templateId' => \Setting::get('sendwithus.lender-invite-credit-template-id')
             ]
         );
@@ -195,18 +191,16 @@ class LenderMailer
 
     public function sendWelcomeMail(Lender $lender)
     {
-        $data = [
-            'parameters' => [
-                'lendLink' => route('lend:index'),
-            ],
+        $parameters = [
+            'lendLink' => route('lend:index'),
         ];
 
         $this->mailer->queue(
             'emails.label-template',
-            $data + [
+            [
                 'to'      => $lender->getUser()->getEmail(),
-                'label'   => 'lender.mails.register-welcome.body',
-                'subject' => \Lang::get('lender.mails.register-welcome.subject'),
+                'content' => \Lang::get('lender.mails.register-welcome.body', $parameters, 'en'),
+                'subject' => \Lang::get('lender.mails.register-welcome.subject', [], 'en'),
             ]
         );
     }
@@ -264,14 +258,13 @@ class LenderMailer
             'postedBy'     => $postedBy,
             'images'       => $images,
         ];
-        $message = \Lang::get('lender.mails.borrower-comment-notification.body', $parameters);
-        $data['content'] = $message;
+        $data['content'] = \Lang::get('lender.mails.borrower-comment-notification.body', $parameters, 'en');
 
         $this->mailer->queue(
             'emails.hero',
             $data + [
                 'to'         => $lender->getUser()->getEmail(),
-                'subject'    => \Lang::get('lender.mails.borrower-comment-notification.subject', $parameters),
+                'subject'    => \Lang::get('lender.mails.borrower-comment-notification.subject', $parameters, 'en'),
                 'templateId' => \Setting::get('sendwithus.comments-template-id'),
             ]
         );
@@ -279,23 +272,19 @@ class LenderMailer
 
     public function sendLoanDefaultedMail(Loan $loan, Lender $lender)
     {
-        $data = [
-            'parameters' => [
-                'borrowerName'     => $loan->getBorrower()->getName(),
-                'loanUrl'          => route('loan:index', $loan->getId()),
-                'repaidPercentage' => $loan->getRepaidPercent(),
-                'requestedAmount'  => $loan->getUsdAmount()
-            ],
+        $parameters = [
+            'borrowerName'     => $loan->getBorrower()->getName(),
+            'loanUrl'          => route('loan:index', $loan->getId()),
+            'repaidPercentage' => $loan->getRepaidPercent(),
+            'requestedAmount'  => $loan->getUsdAmount()
         ];
-
-        $subject = \Lang::get('lender.mails.loan-defaulted.subject');
 
         $this->mailer->queue(
             'emails.label-template',
-            $data + [
+            [
                 'to'      => $lender->getUser()->getEmail(),
-                'label'   => 'lender.mails.loan-defaulted.body',
-                'subject' => $subject
+                'content' => \Lang::get('lender.mails.loan-defaulted.body', $parameters, 'en'),
+                'subject' => \Lang::get('lender.mails.loan-defaulted.subject', [], 'en')
             ]
         );
     }
@@ -309,14 +298,13 @@ class LenderMailer
             'creditBalance' => $currentBalance,
             'lendLink'      => route('lend:index')
         ];
-        $message = \Lang::get('lender.mails.loan-expired.body', $parameters);
-        $data['content'] = $message;
+        $data['content'] = \Lang::get('lender.mails.loan-expired.body', $parameters, 'en');
 
         $this->mailer->queue(
             'emails.hero',
             $data + [
                 'to'         => $lender->getUser()->getEmail(),
-                'subject'    => \Lang::get('lender.mails.loan-expired.subject', $parameters),
+                'subject'    => \Lang::get('lender.mails.loan-expired.subject', $parameters, 'en'),
                 'templateId' => \Setting::get('sendwithus.lender-expired-loan-template-id'),
             ]
         );
@@ -335,14 +323,13 @@ class LenderMailer
             'lenderInviteCreditBalance' => $inviteCreditBalance,
             'lendLink'                  => route('lend:index')
         ];
-        $message = \Lang::get('lender.mails.loan-expired-invite.body', $parameters);
-        $data['content'] = $message;
+        $data['content'] = \Lang::get('lender.mails.loan-expired-invite.body', $parameters, 'en');
 
         $this->mailer->queue(
             'emails.hero',
             $data + [
                 'to'         => $lender->getUser()->getEmail(),
-                'subject'    => \Lang::get('lender.mails.loan-expired-invite.subject', $parameters),
+                'subject'    => \Lang::get('lender.mails.loan-expired-invite.subject', $parameters, 'en'),
                 'templateId' => \Setting::get('sendwithus.lender-expired-loan-template-id'),
             ]
         );
@@ -355,14 +342,13 @@ class LenderMailer
             'siteLink'   => route('home'),
             'expireDate' => Carbon::now()->addMonth()->format('d-m-Y'),
         ];
-        $message = \Lang::get('lender.mails.abandoned-user-mail.body', $parameters);
-        $data['content'] = $message;
 
         $this->mailer->send(
             'emails.hero',
-            $data + [
+             [
                 'to'         => $lender->getUser()->getEmail(),
-                'subject'    => \Lang::get('lender.mails.abandoned-user-mail.subject', $parameters),
+                'subject'    => \Lang::get('lender.mails.abandoned-user-mail.subject', $parameters, 'en'),
+                'content'    => \Lang::get('lender.mails.abandoned-user-mail.body', $parameters, 'en'),
                 'templateId' => \Setting::get('sendwithus.borrower-notifications-template-id'),
             ]
         );
@@ -375,25 +361,22 @@ class LenderMailer
 
         $data = $this->getFeaturedLoansForMail();
 
-        $data['footer'] = \Lang::get('lender.mails.lender-unused-fund.footer');
+        $data['footer'] = \Lang::get('lender.mails.lender-unused-fund.footer', [], 'en');
         $data['available_amount'] = $currentBalance;
         $data['header'] = (string)$currentBalance;
 
         $data['extra'] = \Lang::get(
             'lender.mails.lender-unused-fund.body',
-            ['automaticLendingLink' => route('lender:auto-lending')]
+            ['automaticLendingLink' => route('lender:auto-lending')],
+            'en'
         );
-
-        $subject = \Lang::get('lender.mails.lender-unused-fund.subject');
-
-        $message = \Lang::get('lender.mails.lender-unused-fund.body', ['lenderBalance' => $currentBalance]);
-        $data['content'] = $message;
 
         $this->mailer->send(
             'emails.hero',
             $data + [
                 'to'         => $lender->getUser()->getEmail(),
-                'subject'    => $subject,
+                'subject'    => \Lang::get('lender.mails.lender-unused-fund.subject', [], 'en'),
+                'content'    => \Lang::get('lender.mails.lender-unused-fund.body', ['lenderBalance' => $currentBalance], 'en'),
                 'templateId' => \Setting::get('sendwithus.lender-unused-funds-template-id'),
             ]
         );
@@ -418,7 +401,8 @@ class LenderMailer
             'emails.hero',
             $data + [
                 'to'         => $lender->getUser()->getEmail(),
-                'subject'    => \Lang::get('lender.mails.loan-about-to-expire.subject', $parameters),
+                'subject'    => \Lang::get('lender.mails.loan-about-to-expire.subject', $parameters, 'en'),
+                'content'    => \Lang::get('lender.mails.loan-about-to-expire.body', $parameters, 'en'),
                 'templateId' => \Setting::get('sendwithus.loan-about-to-expire-mail-template-id')
             ]
         );
@@ -440,15 +424,13 @@ class LenderMailer
                     $forgivenessLoan->getLoanId()
                 ) . '?v=' . $forgivenessLoan->getVerificationCode() . '&lid=' . $lender->getId() . "&dntfrg=1",
         ];
-        $subject = \Lang::get('lender.mails.allow-loan-forgiveness.subject', $parameters);
-        $message = \Lang::get('lender.mails.allow-loan-forgiveness.body', $parameters);
-        $data['content'] = $message;
 
         $this->mailer->queue(
             'emails.hero',
-            $data + [
+            [
                 'to'         => $lender->getUser()->getEmail(),
-                'subject'    => $subject,
+                'subject'    => \Lang::get('lender.mails.allow-loan-forgiveness.subject', $parameters, 'en'),
+                'content'    => \Lang::get('lender.mails.allow-loan-forgiveness.body', $parameters, 'en'),
                 'templateId' => \Setting::get('sendwithus.borrower-notifications-template-id'),
             ]
         );
@@ -466,9 +448,8 @@ class LenderMailer
             'emails.label-template',
             [
                 'to'         => $lender->getUser()->getEmail(),
-                'subject'    => \Lang::get('lender.mails.new-loan-notification.subject', $parameters),
-                'label'      => 'lender.mails.new-loan-notification.lender-body',
-                'parameters' => $parameters,
+                'subject'    => \Lang::get('lender.mails.new-loan-notification.subject', $parameters, 'en'),
+                'content'    => \lang::get('lender.mails.new-loan-notification.lender-body', $parameters, 'en'),
             ]
         );
     }
@@ -483,10 +464,9 @@ class LenderMailer
         $this->mailer->queue(
             'emails.label-template',
             [
-                'to'         => $lender->getUser()->getEmail(),
-                'label'      => 'lender.mails.new-loan-notification.follower-body',
-                'subject'    => \Lang::get('lender.mails.new-loan-notification.subject', $parameters),
-                'parameters' => $parameters,
+                'to'      => $lender->getUser()->getEmail(),
+                'content' => \Lang::get('lender.mails.new-loan-notification.follower-body', $parameters, 'en'),
+                'subject' => \Lang::get('lender.mails.new-loan-notification.subject', $parameters, 'en'),
             ]
         );
     }
@@ -560,16 +540,14 @@ class LenderMailer
         ];
 
         $data['image_src'] = $borrower->getUser()->getProfilePictureUrl();
-        $message = \Lang::get('lender.mails.loan-disbursed.message', $parameters);
-        $data['header'] = $message;
-        $body = \Lang::get('lender.mails.loan-disbursed.body', $parameters);
-        $data['content'] = $body;
+        $data['header'] = \Lang::get('lender.mails.loan-disbursed.message', $parameters, 'en');
+        $data['content'] = \Lang::get('lender.mails.loan-disbursed.body', $parameters, 'en');
 
         $this->mailer->queue(
             'emails.hero',
             $data + [
                 'to'         => $lender->getUser()->getEmail(),
-                'subject'    => \Lang::get('lender.mails.loan-disbursed.subject', $parameters),
+                'subject'    => \Lang::get('lender.mails.loan-disbursed.subject', $parameters, 'en'),
                 'templateId' => \Setting::get('sendwithus.lender-loan-disbursed-template-id'),
             ]
         );
@@ -587,14 +565,12 @@ class LenderMailer
             'accountPreferenceUrl' => route('lender:preference')
         ];
 
-        $body = \Lang::get('lender.mails.loan-repayment-received.body', $parameters);
-        $data['content'] = $body;
-
         $this->mailer->queue(
             'emails.hero',
-            $data + [
+            [
                 'to'         => $lender->getUser()->getEmail(),
-                'subject'    => \Lang::get('lender.mails.loan-repayment-received.subject', $parameters),
+                'subject'    => \Lang::get('lender.mails.loan-repayment-received.subject', $parameters, 'en'),
+                'content'    => \Lang::get('lender.mails.loan-repayment-received.body', $parameters, 'en'),
                 'templateId' => \Setting::get('sendwithus.lender-loan-repayment-template-id'),
             ]
         );
@@ -607,14 +583,12 @@ class LenderMailer
             'lendUrl'       => route('lend:index'),
         ];
 
-        $body = \Lang::get('lender.mails.loan-repayment-received-balance.body', $parameters);
-        $data['content'] = $body;
-
         $this->mailer->queue(
             'emails.hero',
-            $data + [
+            [
                 'to'         => $lender->getUser()->getEmail(),
-                'subject'    => \Lang::get('lender.mails.loan-repayment-received-balance.subject', $parameters),
+                'subject'    => \Lang::get('lender.mails.loan-repayment-received-balance.subject', $parameters, 'en'),
+                'content'    => \Lang::get('lender.mails.loan-repayment-received-balance.body', $parameters, 'en'),
                 'templateId' => \Setting::get('sendwithus.lender-loan-repayment-template-id'),
             ]
         );
@@ -622,25 +596,25 @@ class LenderMailer
 
     public function sendRepaidLoanMail(Lender $lender, Loan $loan)
     {
-        $data = [
-            'parameters' => [
-                'borrowerName' => $loan->getBorrower()->getName(),
-                'reviewUrl'    => route('loan:index', $loan->getId()) . '#feedback',
-            ],
+        $parameters = [
+            'borrowerName' => $loan->getBorrower()->getName(),
+            'reviewUrl'    => route('loan:index', $loan->getId()) . '#feedback',
         ];
 
         $this->mailer->queue(
             'emails.label-template',
-            $data + [
+            [
                 'to'      => $lender->getUser()->getEmail(),
                 'header'  => \Lang::get(
                     'lender.mails.loan-repayment-feedback.body.header',
-                    ['borrowerName' => $loan->getBorrower()->getName()]
+                    ['borrowerName' => $loan->getBorrower()->getName()],
+                    'en'
                 ),
-                'label'   => 'lender.mails.loan-repayment-feedback.body',
+                'content'   => \Lang::get('lender.mails.loan-repayment-feedback.body', $parameters, 'en'),
                 'subject' => \Lang::get(
                     'lender.mails.loan-repayment-feedback.subject',
-                    ['borrowerName' => $loan->getBorrower()->getName()]
+                    ['borrowerName' => $loan->getBorrower()->getName()],
+                    'en'
                 )
             ]
         );
@@ -671,14 +645,12 @@ class LenderMailer
             'myStatsUrl'   => route('lender:loans')
         ];
 
-        $body = \Lang::get('lender.mails.loan-repaid-gain.body', $parameters);
-        $data['content'] = $body;
-
         $this->mailer->queue(
             'emails.hero',
-            $data + [
+            [
                 'to'         => $lender->getUser()->getEmail(),
-                'subject'    => \Lang::get('lender.mails.loan-repaid-gain.subject', $parameters),
+                'subject'    => \Lang::get('lender.mails.loan-repaid-gain.subject', $parameters, 'en'),
+                'content'    => \Lang::get('lender.mails.loan-repaid-gain.body', $parameters, 'en'),
                 'templateId' => \Setting::get('sendwithus.lender-loan-repayment-template-id'), //TODO template for REPAID_GAIN_TAG
             ]
         );
@@ -686,77 +658,69 @@ class LenderMailer
 
     public function sendPaypalWithdrawMail(Lender $lender, Money $withdrawnAmount)
     {
-        $data = [
-            'parameters' => [
-                'lenderName'      => $lender->getName(),
-                'withdrawnAmount' => (string)$withdrawnAmount,
-            ],
+        $parameters = [
+            'lenderName'      => $lender->getName(),
+            'withdrawnAmount' => (string)$withdrawnAmount,
         ];
 
         $this->mailer->queue(
             'emails.label-template',
-            $data + [
+            [
                 'to'      => $lender->getUser()->getEmail(),
-                'label'   => 'lender.mails.paypal-withdraw.body',
-                'subject' => \Lang::get('lender.mails.paypal-withdraw.subject')
+                'content' => \Lang::get('lender.mails.paypal-withdraw.body', $parameters, 'en'),
+                'subject' => \Lang::get('lender.mails.paypal-withdraw.subject', [], 'en')
             ]
         );
     }
 
     public function sendFundUploadMail(Lender $lender, Money $uploadAmount)
     {
-        $data = [
-            'parameters' => [
-                'uploadAmount' => $uploadAmount,
-                'lendUrl'      => route('lend:index'),
-            ],
+        $parameters = [
+            'uploadAmount' => $uploadAmount,
+            'lendUrl'      => route('lend:index'),
         ];
 
         $this->mailer->queue(
             'emails.label-template',
-            $data + [
+            [
                 'to'      => $lender->getUser()->getEmail(),
-                'label'   => 'lender.mails.fund-upload.body',
-                'subject' => \Lang::get('lender.mails.fund-upload.subject')
+                'content' => \Lang::get('lender.mails.fund-upload.body', $parameters, 'en'),
+                'subject' => \Lang::get('lender.mails.fund-upload.subject', [], 'en')
             ]
         );
     }
 
     public function sendDonationMail(Lender $lender, Money $donationAmount)
     {
-        $data = [
-            'parameters' => [
-                'donationAmount' => $donationAmount,
-                'donationDate'   => Carbon::now()->format('d-m-Y'),
-            ],
+        $parameters = [
+            'donationAmount' => $donationAmount,
+            'donationDate'   => Carbon::now()->format('d-m-Y'),
         ];
 
         $this->mailer->queue(
             'emails.label-template',
-            $data + [
+            [
                 'to'      => $lender->getUser()->getEmail(),
-                'label'   => 'lender.mails.lender-donation.body',
-                'subject' => \Lang::get('lender.mails.lender-donation.subject')
+                'content' => \Lang::get('lender.mails.lender-donation.body', $parameters, 'en'),
+                'subject' => \Lang::get('lender.mails.lender-donation.subject', [], 'en')
             ]
         );
     }
 
     public function sendLoanForgivenessConfirmationMail(Lender $lender, Loan $loan, Money $reducedAmount)
     {
-        $data = [
-            'parameters' => [
-                'borrowerUrl'   => route('loan:index', $loan->getId()),
-                'borrowerName'  => $loan->getBorrower()->getName(),
-                'reducedAmount' => $reducedAmount,
-            ],
+        $parameters = [
+            'borrowerUrl'   => route('loan:index', $loan->getId()),
+            'borrowerName'  => $loan->getBorrower()->getName(),
+            'reducedAmount' => $reducedAmount,
         ];
 
         $this->mailer->queue(
             'emails.label-template',
-            $data + [
+            [
                 'to'      => $lender->getUser()->getEmail(),
-                'label'   => 'lender.mails.loan-forgiveness-confirmation.body',
-                'subject' => \Lang::get('lender.mails.loan-forgiveness-confirmation.subject')
+                'content' => \Lang::get('lender.mails.loan-forgiveness-confirmation.body', $parameters, 'en'),
+                'subject' => \Lang::get('lender.mails.loan-forgiveness-confirmation.subject', [], 'en')
             ]
         );
     }
@@ -769,14 +733,13 @@ class LenderMailer
 
         $data = $this->getFeaturedLoansForMail();
         $data['footer'] = \Lang::get('lender.mails.invitee-own-funds.footer');
-        $body = \Lang::get('lender.mails.invitee-own-funds.body', $parameters);
-        $data['content'] = $body;
+        $data['content'] = \Lang::get('lender.mails.invitee-own-funds.body', $parameters, 'en');
 
         $this->mailer->send(
             'emails.hero',
             $data + [
                 'to'         => $user->getEmail(),
-                'subject'    => \Lang::get('lender.mails.invitee-own-funds.subject'),
+                'subject'    => \Lang::get('lender.mails.invitee-own-funds.subject', [], 'en'),
                 'templateId' => \Setting::get('sendwithus.inactive-invitee-template-id'),
             ]
         );
@@ -790,14 +753,12 @@ class LenderMailer
             'paypalEmail'    => $withdrawalRequest->getPaypalEmail(),
         ];
 
-        $body = \Lang::get('lender.mails.withdraw-request.body', $parameters);
-        $data['content'] = $body;
-
         $this->mailer->send(
             'emails.hero',
-            $data + [
+            [
                 'to'         => $lender->getUser()->getEmail(),
-                'subject'    => \Lang::get('lender.mails.withdraw-request.subject'),
+                'subject'    => \Lang::get('lender.mails.withdraw-request.subject', [], 'en'),
+                'content'    => \Lang::get('lender.mails.withdraw-request.body', $parameters, 'en'),
                 'templateId' => \Setting::get('sendwithus.borrower-notifications-template-id'),
             ]
         );

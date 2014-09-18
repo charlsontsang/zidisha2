@@ -36,7 +36,7 @@ Withdraw Requests
             @endif
         </td>
         <td>{{ $request->getCreatedAt()->format('d-m-Y') }}</td>
-        <td><p><a href="{{ route('lender:public-profile', $request->getLender()->getUser()->getUserName()) }}">
+        <td><p><a href="{{ route('lender:public-profile', $request->getLender()->getId()) }}">
                 {{ $request->getLender()->getName() }}</a></p>
         <p>{{ $request->getLender()->getUser()->getEmail() }}</p>
         </td>

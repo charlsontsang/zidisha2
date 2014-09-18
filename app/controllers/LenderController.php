@@ -67,12 +67,10 @@ class LenderController extends BaseController
         $this->borrowerCommentService = $borrowerCommentService;
     }
 
-    public function getPublicProfile($username)
+    public function getPublicProfile($id)
     {
         $lender = LenderQuery::create()
-            ->useUserQuery()
-            ->filterByUsername($username)
-            ->endUse()
+            ->filterById($id)
             ->findOne();
         if (!$lender) {
             \App::abort(404);
@@ -119,6 +117,7 @@ class LenderController extends BaseController
         if ($form->isValid()) {
             $data = $form->getData();
 
+            /** @var Lender $lender */
             $lender = Auth::user()->getLender();
 
             $this->lenderService->editProfile($lender, $data);
@@ -128,7 +127,7 @@ class LenderController extends BaseController
                 $this->lenderService->uploadPicture($lender, $image);
             }
 
-            return Redirect::route('lender:public-profile', $data['username']);
+            return Redirect::route('lender:public-profile', $lender->getId());
         }
 
         return Redirect::route('lender:edit-profile')->withForm($form);

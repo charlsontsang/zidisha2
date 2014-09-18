@@ -29,14 +29,13 @@ class AdminMailer
             'postedBy'     => $postedBy,
             'images'       => $images,
         ];
-        $message = \Lang::get('lender.mails.borrower-comment-notification.body', $parameters);
-        $data['content'] = $message;
 
         $this->mailer->queue(
             'emails.hero',
-            $data + [
+            [
                 'to'         => $admin->getEmail(),
-                'subject'    => \Lang::get('lender.mails.borrower-comment-notification.subject', $parameters),
+                'subject'    => \Lang::get('lender.mails.borrower-comment-notification.subject', $parameters, 'en'),
+                'content'    => \Lang::get('lender.mails.borrower-comment-notification.body', $parameters, 'en'),
                 'templateId' => \Setting::get('sendwithus.comments-template-id'),
             ]
         );
@@ -109,18 +108,16 @@ class AdminMailer
     {
         $admin = UserQuery::create()
             ->findOneById(\Setting::get('site.adminId'));
-        $data = [
-            'parameters' => [
-                'withdrawAmount' => (string) $money,
-            ],
+        $parameters = [
+            'withdrawAmount' => (string)$money,
         ];
 
         $this->mailer->queue(
             'emails.label-template',
-            $data + [
+            [
                 'to'      => $admin->getEmail(),
-                'label'   => 'admin.mails.withdraw-request.body',
-                'subject' => \Lang::get('admin.mails.withdraw-request.subject')
+                'content' => \Lang::get('admin.mails.withdraw-request.body', $parameters, 'en'),
+                'subject' => \Lang::get('admin.mails.withdraw-request.subject', [], 'en')
             ]
         );
     }
