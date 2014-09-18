@@ -14,7 +14,7 @@ Withdraw Requests
     <button id="paypal-mass-payment" class="btn btn-primary" type="submit">Process payments</button>
     {{ BootstrapForm::close() }}
 @endif
-<table class="table table-striped">
+<table class="table table-striped" id="withdrawals">
     <thead>
     <tr>
         <th>Request Date</th>
@@ -76,6 +76,11 @@ Withdraw Requests
 
 @section('script-footer')
 <script type="text/javascript">
+    $(document).ready(function () {
+        $('#withdrawals').dataTable({
+            'searching': true
+        });
+    });
     $(function() {
         $('#paypal-mass-payment-form').submit(function() {
             if (!confirm('Are you sure you want to process the selected withdrawal requests?')) {
