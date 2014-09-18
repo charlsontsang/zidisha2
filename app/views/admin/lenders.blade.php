@@ -80,21 +80,31 @@ Quick Links
                     Inactive         
                 @endif             
             </p>
-            
-            @if($lender->getUser()->getActive())
-            <a href="{{ route('admin:deactivate:lender', $lender->getId()) }}">
-                Deactivate
-            </a>
-            @else
-            <a href="{{ route('admin:activate:lender', $lender->getId()) }}">
-                Activate
-            </a>
-            @endif             
-            <br/>
+
             @if(Auth::getUser()->isAdmin())
-            <a href="{{ route('admin:delete:lender', $lender->getId()) }}">
-                Delete
-            </a>
+            <p>
+                @if($lender->getUser()->getSubRole() == \Zidisha\User\User::SUB_ROLE_VOLUNTEER)
+                    <a href="{{ route('admin:remove:volunteer', $lender->getId()) }}">Remove Volunteer</a>
+                @else
+                    <a href="{{ route('admin:add:volunteer', $lender->getId()) }}">Make Volunteer</a>
+                @endif
+            </p>
+            <p>
+                @if($lender->getUser()->getActive())
+                <a href="{{ route('admin:deactivate:lender', $lender->getId()) }}">
+                    Deactivate lender account
+                </a>
+                @else
+                <a href="{{ route('admin:activate:lender', $lender->getId()) }}">
+                    Activate lender account
+                </a>
+                @endif
+            </p>
+            <p> 
+                <a href="{{ route('admin:delete:lender', $lender->getId()) }}">
+                    Delete account
+                </a>
+            </p>
             @endif
         </td>
     </tr>
