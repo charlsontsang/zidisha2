@@ -58,19 +58,23 @@ Quick Links
         </td>
         
         <td>
-         @if($lender->getLastCheckInEmail())
-            {{ $lender->getLastCheckInEmail()->format('m/d/Y') }}         
-         @else
-            None
-         @endif
+            <p>
+                 @if($lender->getLastCheckInEmail())
+                    {{ $lender->getLastCheckInEmail()->format('m/d/Y') }}         
+                 @else
+                    None
+                 @endif
+            </p>
+            <p>
+                <a href="#" id="check-in-toggle">Update</a>
+            </p>
 
-         <br/><br/>
-
-         {{ BootstrapForm::open(array('route' => ['admin:last-check-in-email:lender', $lender->getId() ])) }}
-         {{ BootstrapForm::datepicker('lastCheckInEmail', null, ['label' => '', 'placeholder' => 'Last check-in']) }}
-         {{ BootstrapForm::submit('Save') }}
-         {{ BootstrapForm::close() }}
-
+            <div id="check-in" class="collapse">
+                 {{ BootstrapForm::open(array('route' => ['admin:last-check-in-email:lender', $lender->getId() ])) }}
+                 {{ BootstrapForm::datepicker('lastCheckInEmail', null, ['label' => '', 'placeholder' => 'Date']) }}
+                 {{ BootstrapForm::submit('Save') }}
+                 {{ BootstrapForm::close() }}
+            </div>
         </td>
         <td>
             <p>
@@ -117,7 +121,11 @@ Quick Links
 @section('script-footer')
 <script type="text/javascript">
     $(document).ready(function() {
-            $('#lenders').dataTable();
+        $('#lenders').dataTable();
+    });
+    $('#check-in-toggle').click(function () {
+        $("#check-in").collapse('toggle');
+        return false;
     });
 </script>
 @stop
