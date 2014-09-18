@@ -48,7 +48,7 @@
                                 <li><a href="{{ route('admin:repayments') }}">Enter Repayments</a></li>
                                 <li><a href="{{ route('admin:borrower-activation') }}">Activate Borrowers</a></li>
                                 <li><a href="{{ route('admin:volunteer-mentors') }}">Manage Volunteer Mentors</a></li>
-                                <li><a href="{{ route('admin:loan-forgiveness:index') }}">Enable Forgiveness</a></li>
+                                <li><a href="{{route('admin:loan-forgiveness:allow', 'KE')}}">Enable Forgiveness</a></li>
                                 <li><a href="{{ route('admin:get:translation-feed') }}">Translation Feed</a></li>
                             </ul>
                         </li>
