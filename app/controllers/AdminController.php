@@ -402,23 +402,6 @@ class AdminController extends BaseController
         return View::make('admin.volunteer-mentors', compact('paginator', 'form', 'menteeCounts', 'assignedMembers', 'adminNotes', 'borrowerService'));
     }
 
-    public function getAddVolunteerMentors()
-    {
-        $form = $this->borrowersForm;
-        $page = Request::query('page') ? : 1;
-
-        $query = BorrowerQuery::create()
-            ->useUserQuery()
-            ->filterBySubRole(null)
-            ->endUse();
-
-        $paginator = $form->getQuery($query)
-            ->orderById()
-            ->paginate($page, 3);
-
-        return View::make('admin.add-volunteer-mentors', compact('paginator', 'form'));
-    }
-
     public function getLoans()
     {
         $page = Request::query('page') ? : 1;
