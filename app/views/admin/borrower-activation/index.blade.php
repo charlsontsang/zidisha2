@@ -1,12 +1,17 @@
 @extends('layouts.master')
 
 @section('page-title')
-Pending Activation
+Activate Borrowers
 @stop
 
 @section('content')
+<div class="page-header">
+    <h1>
+        Activate Borrowers
+    </h1>
+</div>
 
-<table class="table table-striped">
+<table class="table table-striped" id="pending-activation">
     <thead>
     <tr>
         <th>Name</th>
@@ -63,3 +68,12 @@ Pending Activation
 {{ BootstrapHtml::paginator($paginator)->links() }}
 @stop
 
+@section('script-footer')
+<script type="text/javascript">
+    $(document).ready(function() {
+            $('#pending-activation').dataTable({
+                searching: true
+            });
+    });
+</script>
+@stop
