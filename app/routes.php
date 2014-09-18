@@ -343,14 +343,6 @@ Route::group(
             }
         );
 
-        /**
-         * Routes for borrower page
-         */
-        Route::get(
-            'borrower/profile/view/{username}',
-            array('uses' => 'BorrowerController@getPublicProfile', 'as' => 'borrower:public-profile')
-        );
-
         Route::group(
             array('prefix' => 'borrower', 'before' => 'auth|hasRole:borrower'),
             function () {

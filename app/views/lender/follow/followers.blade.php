@@ -6,11 +6,12 @@
     <div class="col-xs-10">
         <div class="row">
             <div class="col-sm-6">
-                <a href="{{ $follower->getBorrower()->getActiveLoan() ? 
-                route('loan:index', $follower->getBorrower()->getActiveLoanId()) :
-                route('borrower:public-profile', $follower->getBorrower()->getId()) }}">
-                    {{ $follower->getBorrower()->getName() }}
-                </a>
+                @if($follower->getBorrower()->getLastLoanId())
+                    <a href="{{ route('loan:index', $follower->getBorrower()->getLastLoanId()) }}">
+                     {{ $follower->getBorrower()->getName() }}</a>
+                 @else
+                     {{ $follower->getBorrower()->getName() }}
+                @endif
                 <br/>
                 {{ $follower->getBorrower()->getCountry()->getName() }}
                 <br/>

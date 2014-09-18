@@ -89,7 +89,9 @@ Quick Links
                                     </td>
                                     <td>
                                         @if($borrowerService->hasVMComment($borrower, $assignedMember))
-                                            <a href="{{ route('borrower:public-profile', $assignedMember->getUser()->getUsername()) }}">View Comment</a>
+                                            <a href="{{ route('admin:borrower:personal-information', $assignedMember->getUser()->getUsername()) }}">
+                                            View Comment
+                                            </a>
                                         @else
                                             No Comment
                                         @endif

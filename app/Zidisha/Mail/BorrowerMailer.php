@@ -89,7 +89,7 @@ class BorrowerMailer{
         $parameters = [
             'borrowerName' => $borrower->getName(),
             'vmName'       => $borrower->getVolunteerMentor()->getBorrowerVolunteer()->getName(),
-            'profileUrl'   => route('borrower:public-profile', $borrower->getUser()->getUsername())
+            'profileUrl'   => route('loan:index', $borrower->getLastLoanId())
         ];
 
         $body = \Lang::get('borrower.mails.volunteer-mentor-confirmation.body', $parameters, $local);

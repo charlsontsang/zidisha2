@@ -16,6 +16,7 @@ use Zidisha\Loan\LoanService;
 use Zidisha\Mail\BorrowerMailer;
 use Zidisha\Repayment\RepaymentService;
 use Zidisha\Upload\UploadQuery;
+use Zidisha\User\User;
 use Zidisha\Vendor\Facebook\FacebookService;
 
 class BorrowerController extends BaseController
@@ -76,6 +77,7 @@ class BorrowerController extends BaseController
 
     public function postEditProfile()
     {
+        /** @var User $user */
         $user = \Auth::user();
         $borrower = $user->getBorrower();
         $username = $user->getUsername();
@@ -90,7 +92,10 @@ class BorrowerController extends BaseController
 
             $this->borrowerService->editBorrower($borrower, $data, \Input::file('picture'), $files);
 
-            return Redirect::route('borrower:public-profile', $username);
+            if ($borrower->getLastLoanId()) {
+                return Redirect::route('loan:index', $borrower->getLastLoanId());
+            }
+            return Redirect::route('borrower:dashboard');
         }
 
         return Redirect::route('borrower:edit-profile')->withForm($form);
