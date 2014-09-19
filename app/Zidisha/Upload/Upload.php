@@ -145,9 +145,4 @@ class Upload extends BaseUpload
         }
         return public_path() . '/uploads/cache/' . $format . '/' . $this->getUserId() . '/';
     }
-
-    public function getFilename()
-    {
-        return $this->getId() . '.' . $this->getExtension();
-    }
 }
