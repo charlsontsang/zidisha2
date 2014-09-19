@@ -24,85 +24,96 @@ Gift Cards
     </div>
 </div>
 <div class="container">
-    <div class="row giftcard">
+    <div class="row">
         <div class="col-sm-6">
-            <h4>Step One: Choose An Image</h4>
 
-            <div class="row templates">
-                <div class="col-sm-6">
-                    <div id="giftcard-4-1" class="giftcard-thumbnail">
-                        <label for="giftcard_template_radio-4-1" ><img src="{{ asset('assets/images/gift-card/image4.png'); }}"></label>
-                        <input name="template" id="giftcard_template_radio-4-1" value="4" checked="checked" type="radio">
-                    </div>
-                    <div id="giftcard-3-1" class="giftcard-thumbnail">
-                        <label for="giftcard_template_radio-3-1" ><img src="{{ asset('assets/images/gift-card/image3.png'); }}"></label>
-                        <input name="template" id="giftcard_template_radio-3-1" value="3" type="radio">
-                    </div>
-                    <div id="giftcard-2-1" class="giftcard-thumbnail">
-                        <label for="giftcard_template_radio-2-1" ><img src="{{ asset('assets/images/gift-card/image2.png'); }}"/></label>
-                        <input name="template" id="giftcard_template_radio-2-1" value="2" type="radio">
-                    </div>
-                    <div id="giftcard-8-1" class="giftcard-thumbnail">
-                        <label for="giftcard_template_radio-8-1" ><img src="{{ asset('assets/images/gift-card/image8.png'); }}"/></label>
-                        <input name="template" id="giftcard_template_radio-8-1" value="8" type="radio">
-                    </div>
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        Step One: Choose An Image
+                    </h3>
                 </div>
-                <div class="col-sm-6">
-                    <div id="giftcard-5-1" class="giftcard-thumbnail">
-                        <label for="giftcard_template_radio-5-1" ><img src="{{ asset('assets/images/gift-card/image5.png'); }}"/></label>
-                        <input name="template" id="giftcard_template_radio-5-1" value="5" type="radio">
-                    </div>
-                    <div id="giftcard-7-1" class="giftcard-thumbnail">
-                        <label for="giftcard_template_radio-7-1" ><img src="{{ asset('assets/images/gift-card/image7.png'); }}"/></label>
-                        <input name="template" id="giftcard_template_radio-7-1" value="7" type="radio">
-                    </div>
-                    <div id="giftcard-6-1" class="giftcard-thumbnail">
-                        <label for="giftcard_template_radio-6-1" ><img src="{{ asset('assets/images/gift-card/image6.png'); }}"/></label>
-                        <input name="template" id="giftcard_template_radio-6-1" value="6" type="radio">
-                    </div>
-                    <div id="giftcard-9-1" class="giftcard-thumbnail">
-                        <label for="giftcard_template_radio-9-1" ><img src="{{ asset('assets/images/gift-card/image9.png'); }}"/></label>
-                        <input name="template" id="giftcard_template_radio-9-1" value="9" type="radio">
+                <div class="panel-body">
+                    <div class="row templates">
+                        <div class="col-sm-6">
+                            <div id="giftcard-4-1" class="giftcard-thumbnail">
+                                <label for="giftcard_template_radio-4-1" ><img src="{{ asset('assets/images/gift-card/image4.png'); }}"></label>
+                                <input name="template" id="giftcard_template_radio-4-1" value="4" checked="checked" type="radio">
+                            </div>
+                            <div id="giftcard-3-1" class="giftcard-thumbnail">
+                                <label for="giftcard_template_radio-3-1" ><img src="{{ asset('assets/images/gift-card/image3.png'); }}"></label>
+                                <input name="template" id="giftcard_template_radio-3-1" value="3" type="radio">
+                            </div>
+                            <div id="giftcard-2-1" class="giftcard-thumbnail">
+                                <label for="giftcard_template_radio-2-1" ><img src="{{ asset('assets/images/gift-card/image2.png'); }}"/></label>
+                                <input name="template" id="giftcard_template_radio-2-1" value="2" type="radio">
+                            </div>
+                            <div id="giftcard-8-1" class="giftcard-thumbnail">
+                                <label for="giftcard_template_radio-8-1" ><img src="{{ asset('assets/images/gift-card/image8.png'); }}"/></label>
+                                <input name="template" id="giftcard_template_radio-8-1" value="8" type="radio">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div id="giftcard-5-1" class="giftcard-thumbnail">
+                                <label for="giftcard_template_radio-5-1" ><img src="{{ asset('assets/images/gift-card/image5.png'); }}"/></label>
+                                <input name="template" id="giftcard_template_radio-5-1" value="5" type="radio">
+                            </div>
+                            <div id="giftcard-7-1" class="giftcard-thumbnail">
+                                <label for="giftcard_template_radio-7-1" ><img src="{{ asset('assets/images/gift-card/image7.png'); }}"/></label>
+                                <input name="template" id="giftcard_template_radio-7-1" value="7" type="radio">
+                            </div>
+                            <div id="giftcard-6-1" class="giftcard-thumbnail">
+                                <label for="giftcard_template_radio-6-1" ><img src="{{ asset('assets/images/gift-card/image6.png'); }}"/></label>
+                                <input name="template" id="giftcard_template_radio-6-1" value="6" type="radio">
+                            </div>
+                            <div id="giftcard-9-1" class="giftcard-thumbnail">
+                                <label for="giftcard_template_radio-9-1" ><img src="{{ asset('assets/images/gift-card/image9.png'); }}"/></label>
+                                <input name="template" id="giftcard_template_radio-9-1" value="9" type="radio">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-
-            <!--
-            {{ BootstrapForm::select('template', $form->getTemplates()) }}
-            -->
         </div>
         <div class="col-sm-6">
 
-            <h4>Step Two: Customize Your Card</h4>
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        Step Two: Customize Your Card
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    {{ BootstrapForm::select('amount', $form->getAmounts(), null, ['label' => 'Amount']) }}
 
-            {{ BootstrapForm::select('amount', $form->getAmounts(), null, ['label' => 'Amount']) }}
+                    {{ BootstrapForm::label('Delivery Method:') }}
 
-            {{ BootstrapForm::label('Delivery Method:') }}
+                    {{ BootstrapForm::radio('orderType', 'Email', null, [
+                        'label' => 'Email', 'id' => 'email'
+                    ]) }}
 
-            {{ BootstrapForm::radio('orderType', 'Email', null, [
-                'label' => 'Email', 'id' => 'email'
-            ]) }}
+                    {{ BootstrapForm::radio('orderType', 'Self-Print', null, [
+                        'label' => 'Self-Print', 'id' => 'print'
+                    ]) }}
 
-            {{ BootstrapForm::radio('orderType', 'Self-Print', null, [
-                'label' => 'Self-Print', 'id' => 'print'
-            ]) }}
+                    {{ BootstrapForm::text('recipientEmail', null, ['label' => 'Recipient Email', 'id' => 'recipient']) }}
 
-            {{ BootstrapForm::text('recipientEmail', null, ['label' => 'Recipient Email', 'id' => 'recipient']) }}
+                    <br/>
+                    <strong>Optional Fields</strong>
+                  
+                    {{ BootstrapForm::text('recipientName', null, ['label' => 'To']) }}
 
-            <br/>
-            <strong>Optional Fields</strong>
-          
-            {{ BootstrapForm::text('recipientName', null, ['label' => 'To']) }}
+                    {{ BootstrapForm::text('fromName', null, ['label' => 'From']) }}
 
-            {{ BootstrapForm::text('fromName', null, ['label' => 'From']) }}
+                    {{ BootstrapForm::textarea('message', null, ['label' => 'Add a Note', 'style' => 'height: 150px;']) }}
 
-            {{ BootstrapForm::textarea('message', null, ['label' => 'Add a Note', 'style' => 'height: 150px;']) }}
+                    {{ BootstrapForm::text('confirmationEmail', null, ['label' => 'Your Email (for purchase confirmation)']) }}
 
-            {{ BootstrapForm::text('confirmationEmail', null, ['label' => 'Your Email (for purchase confirmation)']) }}
+                    {{ BootstrapForm::submit('Next >>') }}
 
-            {{ BootstrapForm::submit('Next >>') }}
-
-            {{ BootstrapForm::close() }}
+                    {{ BootstrapForm::close() }}
+                </div>
+            </div>
         </div>
     </div>
 @stop

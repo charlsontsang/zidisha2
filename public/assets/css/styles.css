@@ -8687,6 +8687,7 @@ body {
   background-color: #fff;
   border-bottom: 1px solid #dddddd;
   padding-bottom: 45px;
+  margin-bottom: 30px;
 }
 .footer {
   margin-top: 15px;
@@ -10371,6 +10372,9 @@ span.text-content span {
   margin-right: -15px;
   margin-bottom: 10px;
 }
+.row.templates {
+  padding-right: 15px;
+}
 .giftcard-thumbnail label {
   width: auto !important;
 }
@@ -10389,20 +10393,6 @@ span.text-content span {
 .giftcard-thumbnail img:hover,
 .giftcard-thumbnail.selected img {
   border-color: #2e9df7;
-}
-.giftcard {
-  margin-top: 15px;
-  margin-bottom: -50px;
-  padding: 15px 0 50px 0;
-}
-@media (min-width: 768px) {
-  .giftcard {
-    margin-top: 40px;
-    padding: 40px;
-  }
-}
-.giftcard > div > div {
-  padding: 0 40px;
 }
 .pay-giftcard {
   width: 100%;
