@@ -8696,6 +8696,9 @@ body {
   margin-top: 15px;
   padding: 0 30px;
 }
+.highlight-panel .page-header {
+  margin-top: 29px;
+}
 .container-fluid.highlight {
   border-right: none;
   border-left: none;
