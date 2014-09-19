@@ -276,12 +276,12 @@ class BorrowerService
             $user->setProfilePicture($upload);
         }
 
-        foreach ($files as $file) {
-            $upload = Upload::createFromFile($file);
-            $upload->setUser($user);
-            
-            $borrower->addUpload($upload);
-        }
+//        foreach ($files as $file) {
+//            $upload = Upload::createFromFile($file);
+//            $upload->setUser($user);
+//
+//            $borrower->addUpload($upload);
+//        }
         $borrower->save();
     }
 

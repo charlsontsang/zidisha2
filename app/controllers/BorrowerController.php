@@ -70,7 +70,8 @@ class BorrowerController extends BaseController
         if ($form->isValid()) {
             $data = $form->getData();
 
-            $files = $this->getInputFiles();
+            $files = [];
+//            $files = $this->getInputFiles();
 
             $this->borrowerService->editBorrower($borrower, $data, \Input::file('picture'), $files);
 
@@ -83,23 +84,23 @@ class BorrowerController extends BaseController
         return Redirect::route('borrower:edit-profile')->withForm($form);
     }
 
-    protected function getInputFiles()
-    {
-        $files = [];
-        if (\Input::hasFile('images')) {
-            foreach (\Input::file('images') as $file) {
-                if (!empty($file)) {
-                    if ($file->isValid() && $file->getSize() < Config::get('image.allowed-file-size')) {
-                        $files[] = $file;
-                    } else {
-                        Flash::error(\Lang::get('borrower.flash.file-not-valid'));
-                    }
-                }
-            }
-            return $files;
-        }
-        return $files;
-    }
+//    protected function getInputFiles()
+//    {
+//        $files = [];
+//        if (\Input::hasFile('images')) {
+//            foreach (\Input::file('images') as $file) {
+//                if (!empty($file)) {
+//                    if ($file->isValid() && $file->getSize() < Config::get('image.allowed-file-size')) {
+//                        $files[] = $file;
+//                    } else {
+//                        Flash::error(\Lang::get('borrower.flash.file-not-valid'));
+//                    }
+//                }
+//            }
+//            return $files;
+//        }
+//        return $files;
+//    }
 
     public function getDashboard()
     {
