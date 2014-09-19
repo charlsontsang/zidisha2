@@ -65,9 +65,11 @@ class LenderService
         $user = $lender->getUser();
 
         if ($image) {
-            $upload = Upload::createFromFile($image);
-            $upload->setUser($user)
-                ->setFileName('profile.jpg');
+            $upload = new Upload();
+            $upload->setUser($user);
+            $upload->setProfileUpload(true);
+            $upload->createFromFile($image);
+
             $user->setProfilePicture($upload);
             $user->save();
         }
