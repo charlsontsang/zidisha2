@@ -8703,12 +8703,12 @@ body {
   padding-bottom: 22px;
 }
 .panel-info {
-  border-color: #e5e5e5;
+  border-color: #dddddd;
 }
 .panel-info > .panel-heading {
-  color: #31708f;
-  background-color: #d9edf7;
-  border-color: #404040;
+  color: #404040;
+  background-color: #f8f8f8;
+  border-color: #dddddd;
 }
 .page-section-inverted {
   background-color: #333232;
