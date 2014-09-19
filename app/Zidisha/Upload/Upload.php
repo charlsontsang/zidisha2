@@ -72,6 +72,9 @@ class Upload extends BaseUpload
 
         $fileType = in_array($extension, static::$image_types) ? 'image' : 'document';
 
+        //TODO convert to jpg for profile pics
+//        $picture = new File(imagejpeg(imagecreatefromstring(file_get_contents($file))));
+
         $upload->setExtension($extension)
             ->setType($fileType)
             ->setMimeType($mimeType);
