@@ -26,6 +26,7 @@ return [
     ],
     'profile' => [
         'picture' => 'Choose A Public Profile Photo',
+        'more-pictures' => 'Upload additional profile photos (optional)',
         'picture-description' => 'This must be a photo of yourself. Please do not use a photo of someone else. You may choose to use the Facebook profile image displayed here (if it is a photo of yourself), or you may change it to use another photo.',
         'picture-tip' => 'Tip: Your loan application will be more attractive to lenders if your photo is close, well lit, smiling photo and shows your face clearly. If you are investing the loan in a business it is nice to use a photo of yourself working with your business.',
         'picture-example' => 'The photo in <a href="https://www.zidisha.org/microfinance/loan/rahabwangari/2148.html" target="blank">this profile</a> is a good example.',

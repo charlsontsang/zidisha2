@@ -15,30 +15,8 @@ Edit Profile
 @section('page-content')
 <div class="borrower-edit-form">
 
-    <img src="{{ $borrower->getUser()->getProfilePictureUrl() }}" alt=""/>
-
-    {{ BootstrapForm::open(array('route' => 'borrower:post-profile', 'translationDomain' => 'borrower.loan-application.profile', 'files' => true)) }}
-    
-    {{ BootstrapForm::populate($form) }}
-
-    {{ BootstrapForm::file('picture') }}
-
-    {{ BootstrapForm::password('changePassword') }}
-
-    {{ BootstrapForm::password('confirmChangePassword') }}
-
-    {{ BootstrapForm::text('changeEmail') }}
-
-    {{ BootstrapForm::textarea('aboutMe') }}
-
-    {{ BootstrapForm::textarea('aboutBusiness') }}
-
-    {{ BootstrapForm::submit('save') }}
-
-    {{ BootstrapForm::close() }}
-
     @if(!$borrower->getUploads()->isEmpty())
-    <h4>Borrower Pictures</h4>
+    <h4>Your Pictures</h4>
     <div>
         @foreach($borrower->getUploads() as $upload)
 
@@ -62,6 +40,33 @@ Edit Profile
         @endforeach
     </div>
     @endif
+
+    <img src="{{ $borrower->getUser()->getProfilePictureUrl() }}" alt=""/>
+
+    {{ BootstrapForm::open(array('route' => 'borrower:post-profile', 'translationDomain' => 'borrower.loan-application.profile', 'files' => true)) }}
+    
+    {{ BootstrapForm::populate($form) }}
+
+    {{ BootstrapForm::file('picture') }}
+
+    <div class="borrower-upload-inputs">
+        {{ BootstrapForm::file('morePictures') }}
+    </div>
+
+    {{ BootstrapForm::password('changePassword') }}
+
+    {{ BootstrapForm::password('confirmChangePassword') }}
+
+    {{ BootstrapForm::text('changeEmail') }}
+
+    {{ BootstrapForm::textarea('aboutMe') }}
+
+    {{ BootstrapForm::textarea('aboutBusiness') }}
+
+    {{ BootstrapForm::submit('save') }}
+
+    {{ BootstrapForm::close() }}
+
 </div>
 
 <script type="text/html" id="borrower-upload-input-template">
