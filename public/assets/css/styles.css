@@ -9543,7 +9543,8 @@ table.dataTable.no-footer {
   }
 }
 .home-section {
-  padding: 30px 0 15px 0;
+  padding-top: 30px;
+  padding-bottom: 15px;
 }
 @media (min-width: 768px) {
   .home-section {
@@ -9562,16 +9563,19 @@ table.dataTable.no-footer {
     padding-bottom: 10px;
   }
 }
-.home .container-fluid:first-child {
-  margin-top: -30px;
-}
 @media (min-width: 768px) {
   .home .container-fluid:first-child {
+    margin-top: -30px;
     padding-top: 20px;
   }
 }
 .home .container-fluid:last-child {
-  margin-bottom: -50px;
+  margin-bottom: -15px;
+}
+@media (min-width: 768px) {
+  .home .container-fluid:last-child {
+    margin-bottom: -50px;
+  }
 }
 @media (max-width: 767px) {
   .home h1,

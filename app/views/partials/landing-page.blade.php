@@ -1,11 +1,9 @@
 <div class="container home-section">
+  <h3 class="lead alpha">
+    <span>Trending Projects</span>
+    <span class="pull-right"><a href="{{ route('lend:index') }}" id="see-all">See All</a></span>
+  </h3>
   <div class="row">
-      <div class="col-sm-12">
-        <h3 class="lead alpha">
-          <span>Trending Projects</span>
-          <span class="pull-right"><a href="{{ route('lend:index') }}" id="see-all">See All</a></span>
-        </h3>
-      </div>
       @foreach($projects as $loan)
       <div class="col-sm-4" style="padding:10px;">
           <div class="result">
