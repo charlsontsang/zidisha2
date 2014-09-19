@@ -9,7 +9,7 @@
             @lang('borrower.dashboard.do-more.intro')
         </p>
         <p>
-            @lang('borrower.dashboard.do-more.how')
+            @lang('borrower.dashboard.do-more.how'):
         </p>
 
         <ol class="omega">
