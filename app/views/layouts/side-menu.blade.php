@@ -9,7 +9,7 @@
         </ul>
     </div>
 
-    <div class="col-sm-9 col-md-8">
+    <div class="col-sm-9 col-md-8 highlight highlight-panel">
     	<div class="page-header">
             <h1>@yield('page-title')</h1>
       </div>
