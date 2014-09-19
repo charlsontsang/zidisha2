@@ -15,8 +15,13 @@ body {
   margin-bottom: 30px;
 }
 .highlight-panel {
-  margin-top: 15px;
-  padding: 0 30px;
+  margin-top: -5px;
+  margin-bottom: -15px;
+  padding: 0 15px 22px 15px;
+  @media (min-width: @screen-sm-min) {
+    margin-top: 15px;
+    padding: 0 30px 22px 30px;
+  }
 }
 .highlight-panel .page-header {
   margin-top: 29px;
