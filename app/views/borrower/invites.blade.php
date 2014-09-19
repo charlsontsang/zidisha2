@@ -58,13 +58,9 @@
             <td data-title="RepaymentRate">{{ $invite['repaymentRate'] }}</td>
             <td data-title="BonusCredit">{{ $invite['bonusCredit'] }}</td>
             <td>
-                {{ BootstrapForm::open([
-                    'route'               => ['borrower:delete-invite', $invite['id']],
-                    'translationDomain'   => 'borrower.invite',
-                    'data-disable-submit' => 'on'])
-                }}
-                {{ BootstrapForm::submit('delete') }}
-                {{ BootstrapForm::close() }}
+                <a href="{{ route('borrower:delete-invite', $invite['id']) }}">
+                    @lang('borrower.invite.delete')
+                </a>
             </td>
         </tr>
         @endforeach
