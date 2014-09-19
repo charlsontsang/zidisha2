@@ -33,7 +33,7 @@ You may view the status of your current invitees and remove inactive invitees he
     'fundRaising-loan'                          => 'Fundraising Loan',
     'repaying-on-time'                          => 'Repaying On Time',
     'past-due'                                  => 'Past Due',
-    'delete'                                    => 'Delete',
+    'delete'                                    => 'Remove this invitee',
     'flash'                                     => [
         'invite-success' => 'You have successfully invited :email',
         'not-eligible'   => 'You are not currently eligible to send invite credits to new members.',
