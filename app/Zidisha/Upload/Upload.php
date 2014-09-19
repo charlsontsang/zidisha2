@@ -35,7 +35,7 @@ class Upload extends BaseUpload
         $file = new Filesystem();
 
         if ($file->exists($this->getCachePath($format))) {
-            return asset('uploads/cache/' . $format . '/' . $this->getFilename());
+            return asset('uploads/cache/' . $format . '/' . $this->getUserId() . '/' . $this->getFilename());
         } else {
             return route('image:resize', ['upload_id' => $this->getId(), 'format' => $format]);
         }
@@ -43,7 +43,7 @@ class Upload extends BaseUpload
 
     public function getFileUrl()
     {
-        return asset('uploads/' . $this->getFilename());
+        return asset('uploads/' .  $this->getUserId() . '/' . $this->getFilename());
     }
 
     public function getPath()
@@ -51,9 +51,9 @@ class Upload extends BaseUpload
         return $this->getBasePath() . $this->getFilename();
     }
 
-    protected function getBasePath($userId)
+    protected function getBasePath()
     {
-        return public_path() . '/uploads/' . $userId;
+        return public_path() . '/uploads/' . $this->getUserId() . '/';
     }
 
     public function postDelete(ConnectionInterface $con = null)
@@ -88,7 +88,7 @@ class Upload extends BaseUpload
 
     public function postSave(ConnectionInterface $con = null)
     {
-        $this->file = $this->file->move($this->getBasePath($this->getUserId()), $this->getFilename());
+        $this->file = $this->file->move($this->getBasePath(), $this->getFilename());
     }
 
     public function getFile()
@@ -135,7 +135,7 @@ class Upload extends BaseUpload
             throw new ConfigurationNotFoundException();
         }
 
-        return public_path() . '/uploads/cache/' . $format . '/' . $this->getFilename();
+        return public_path() . '/uploads/cache/' . $format . '/' . $this->getUserId() . '/' . $this->getFilename();
     }
 
     protected function getCacheBasePath($format)
@@ -143,7 +143,7 @@ class Upload extends BaseUpload
         if (!Config::get('image.formats.' . $format)) {
             throw new ConfigurationNotFoundException();
         }
-        return public_path() . '/uploads/cache/' . $format . '/';
+        return public_path() . '/uploads/cache/' . $format . '/' . $this->getUserId() . '/';
     }
 
     public function getFilename()
