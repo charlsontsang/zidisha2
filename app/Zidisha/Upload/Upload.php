@@ -72,9 +72,9 @@ class Upload extends BaseUpload
 
         $fileType = in_array($extension, static::$image_types) ? 'image' : 'document';
 
-        $upload->setExtension($extension);
-        $upload->setType($fileType);
-        $upload->setMimeType($mimeType);
+        $upload->setExtension($extension)
+            ->setType($fileType)
+            ->setMimeType($mimeType);
 
         $upload->file = $file;
 

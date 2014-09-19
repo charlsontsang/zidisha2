@@ -453,6 +453,7 @@
             <parameter name="Engine" value="InnoDB"/>
         </vendor>
         <column name="id" type="INTEGER" autoIncrement="true" primaryKey="true"/>
+        <column name="file_name" type="VARCHAR" required="true"/>
         <column name="extension" type="VARCHAR" required="true"/>
         <column name="user_id" type="INTEGER" required="true"/>
         <column name="type" type="VARCHAR" required="true"/>
