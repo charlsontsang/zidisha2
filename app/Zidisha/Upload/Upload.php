@@ -17,6 +17,7 @@ class Upload extends BaseUpload
 
     protected $file = null;
     protected $isProfileUpload = false;
+    protected $isPostSave = true;
 
     public function isImage()
     {
@@ -75,11 +76,14 @@ class Upload extends BaseUpload
         if ($this->isProfileUpload){
 //          $picture = new File(imagejpeg(imagecreatefromstring(file_get_contents($file))));
         }
-        $fileName = \Illuminate\Support\Str::slug($file->getClientOriginalName());
+        $fileName = substr(\Illuminate\Support\Str::slug($file->getClientOriginalName()), 0, -3);
         if ($this->isProfileUpload) {
             $this->setFileName('profile.jpg');
         } else {
-            $this->setFileName($this->getUserId() . substr($fileName, 32). '.' . $extension);
+            $this->setFileName('-' . substr($fileName, 0, 32). '.' . $extension);
+            $this->isPostSave = false;
+            var_dump('saving');
+            $this->save();
         }
 
         $this->setExtension($extension)
@@ -98,8 +102,11 @@ class Upload extends BaseUpload
 
     public function postSave(ConnectionInterface $con = null)
     {
-
-        $this->file = $this->file->move($this->getBasePath(), $this->getFilename());
+        if ($this->isPostSave) {
+            $this->file = $this->file->move($this->getBasePath(), $this->getFilename());
+        } else {
+            $this->isPostSave = true;
+        }
     }
 
     public function getFile()
@@ -161,5 +168,14 @@ class Upload extends BaseUpload
     {
         $this->isProfileUpload = $upload;
         return $this->isProfileUpload;
+    }
+
+    public function save(ConnectionInterface $con = null)
+    {
+        $return = parent::save($con);
+        if (!$this->isProfileUpload) {
+            $this->postSave();
+        }
+        return $return;
     }
 }

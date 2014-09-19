@@ -273,7 +273,6 @@ class BorrowerService
             $upload->setUser($user);
             $upload->setProfileUpload(true);
             $upload->createFromFile($picture);
-
             $user->setProfilePicture($upload);
             $upload->save();
         }

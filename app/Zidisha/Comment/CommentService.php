@@ -39,8 +39,11 @@ abstract class CommentService
 
         if ($files) {
             foreach ($files as $file) {
-                $upload = Upload::createFromFile($file);
+                $upload = new Upload();
                 $upload->setUser($user);
+                $upload->createFromFile($file);
+                $upload->save();
+                $upload->setFileName( $upload->getId() . $upload->getFileName());
                 $upload->save();
                 $comment->addUpload($upload);
             }
@@ -67,11 +70,13 @@ abstract class CommentService
 
         if ($files) {
             foreach ($files as $file) {
-                $upload = Upload::createFromFile($file);
+                $upload = new Upload();
                 $upload->setUser($user);
+                $upload->createFromFile($file);
+                $upload->save();
+                $upload->setFileName( $upload->getId() . $upload->getFileName());
                 $upload->save();
                 $comment->addUpload($upload);
-
             }
             $comment->save();
         }
@@ -88,10 +93,13 @@ abstract class CommentService
 
         if ($files) {
             foreach ($files as $file) {
-                $upload = Upload::createFromFile($file);
+                $upload = new Upload();
                 $upload->setUser($user);
+                $upload->createFromFile($file);
+                $upload->save();
+                $upload->setFileName( $upload->getId() . $upload->getFileName());
+                $upload->save();
                 $comment->addUpload($upload);
-
             }
             $comment->save();
         }

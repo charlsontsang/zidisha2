@@ -28,8 +28,12 @@ class LendingGroupService
 
         if ($image) {
             $user = $group->getCreator()->getUser();
-            $upload = Upload::createFromFile($image);
+            $upload = new Upload();
             $upload->setUser($user);
+            $upload->createFromFile($image);
+            $upload->save();
+            $upload->setFileName( $upload->getId() . $upload->getFileName());
+            $upload->save();
             $group->setGroupProfilePicture($upload);
         }
 
@@ -51,8 +55,12 @@ class LendingGroupService
 
         if ($image) {
             $user = $group->getCreator()->getUser();
-            $upload = Upload::createFromFile($image);
+            $upload = new Upload();
             $upload->setUser($user);
+            $upload->createFromFile($image);
+            $upload->save();
+            $upload->setFileName( $upload->getId() . $upload->getFileName());
+            $upload->save();
             $group->setGroupProfilePicture($upload);
         }
         $group->save();
