@@ -74,7 +74,7 @@ return array(
 
     "error"				   => "Sorry, there was an error. Please try again, and notify us at service@zidisha.org in case of further difficulty.",
 	"incomplete-profile"   => "Please complete the fields highlighted below.",
-	"session-expired"	   => "Your session has expired. Please log in to continue."
+	"session-expired"	   => "Your session has expired. Please log in to continue.",
 
     'link-account' 		   => [
         'facebook-account-exists' => 'This Facebook account is already linked to another
