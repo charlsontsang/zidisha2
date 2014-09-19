@@ -9255,6 +9255,7 @@ table.dataTable.no-footer {
   .navbar-nav > li > a:last-child,
   .navbar-right > p:last-child {
     margin-right: -15px;
+    padding-right: 15px;
   }
 }
 @media (max-width: 767px) {
