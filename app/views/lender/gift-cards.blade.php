@@ -6,7 +6,7 @@ Gift Cards
 
 @section('content')
 </div> <!-- /container -->
-<div class="container-fluid top-highlight">
+<div class="container-fluid highlight highlight-top">
     <div class="container">
         <div class="row">
             <div class="col-sm-8 col-sm-offset-2 text-center">

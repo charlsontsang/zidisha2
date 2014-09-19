@@ -8683,11 +8683,22 @@ body {
   /* enable scrollspy http://stackoverflow.com/questions/12095579/twitter-bootstrap-scrollspy-always-selecting-last-element */
   height: 100%;
 }
-.top-highlight {
+.highlight {
   background-color: #fff;
-  border-bottom: 1px solid #dddddd;
+  border: 1px solid #dddddd;
+}
+.highlight-top {
+  border-top: none;
   padding-bottom: 45px;
   margin-bottom: 30px;
+}
+.highlight-panel {
+  margin-top: 15px;
+  padding: 0 30px;
+}
+.container-fluid.highlight {
+  border-right: none;
+  border-left: none;
 }
 .footer {
   margin-top: 15px;
@@ -9561,11 +9572,6 @@ table.dataTable.no-footer {
   .home-section {
     padding: 50px 15px;
   }
-}
-.highlight {
-  background-color: #fff;
-  border-top: 1px solid #dddddd;
-  border-bottom: 1px solid #dddddd;
 }
 @media (max-width: 767px) {
   .home .result {
