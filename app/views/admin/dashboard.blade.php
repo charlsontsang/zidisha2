@@ -13,4 +13,16 @@ Quick Links
 @stop
 
 @section('page-content')
+<h4>Lender Stats</h4>
+<p>
+    Total lenders : {{ $totalLenders }}
+    <br/>
+    Active lenders : {{ $activeLenders }}
+    <br/>
+    Logged in during past 2 months : {{ $activeLendersInPastTwoMonths }}
+    <br/>
+    Number of lenders using automated lending : {{ $lenderUsingAutomatedLending }}
+    <br/>
+    Total lender credit available : {{ $totalLenderCredit }}
+</p>
 @stop

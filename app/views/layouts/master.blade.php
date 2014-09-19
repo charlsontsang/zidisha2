@@ -8,11 +8,12 @@
         <meta name="author" content="">
         <link rel="shortcut icon" href="favicon.ico">
 
-        <title>Zidisha |  @yield('page-title')</title>
+        <title>Zidisha | @yield('page-title')</title>
 
 
         <!-- Bootstrap core CSS -->
         <link href="{{ asset('assets/css/styles.css') }}" rel="stylesheet">
+        <link href="//cdn.datatables.net/1.10.2/css/jquery.dataTables.css" rel="stylesheet">
 
         <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!--[if lt IE 9]>
@@ -47,10 +48,16 @@
         <script src="{{ asset('assets/vendor/bootstrap-3-datepicker/js/bootstrap-datepicker.js') }}"></script>
         <script src="{{ asset('assets/js/zidisha.js') }}"></script>
         <script src="{{ asset('assets/vendor/remarkable-bootstrap-growl/bootstrap-growl.min.js') }}"></script>
+        <script src="//cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>
         <script>
             $(function() {
                 $('.flash-modal').modal();
             });
+            $.extend( $.fn.dataTable.defaults, {
+                searching: false,
+                paging: false,
+                info: false
+            } );
         </script>
         @yield('script-footer')
         @include('partials/_flash')

@@ -1,20 +1,15 @@
-@extends('layouts.side-menu')
+@extends('layouts.master')
 
 @section('page-title')
 Forgiven Loans
 @stop
 
-@section('menu-title')
-Quick Links
-@stop
-
-@section('menu-links')
-@include('partials.nav-links.staff-links')
-@stop
-
-@section('page-content')
-<a href="{{route('admin:loan-forgiveness:allow', $countryCode)}}">Enable Loan Forgiveness</a>
-<hr/>
+@section('content')
+<div class="page-header">
+    <h1>
+        Forgiven Loans
+    </h1>
+</div>
 
 <ul class="nav nav-tabs" role="tablist">
     @foreach($borrowerCountries as $borrowerCountry)
@@ -26,14 +21,12 @@ Quick Links
     @endforeach
 </ul>
 
-<table class="table table-striped">
+<table class="table table-striped" id="forgiven-loans">
     <thead>
         <tr>
             <th>Borrower</th>
-            <th>Loan Id</th>
             <th>Comment</th>
             <th>Date</th>
-            <th>Detail</th>
         </tr>
     </thead>
     <tbody>
@@ -43,18 +36,12 @@ Quick Links
                      {{ $loan->getBorrower()->getFirstName() }} {{ $loan->getBorrower()->getLastName() }}
                 </td>
                 <td>
-                    {{ $loan->getLoanId() }}
-                </td>
-                <td>
                    <p>
                         {{{ $loan->getComment() }}}
                    </p> 
                 </td>
                 <td>
-                    {{ $loan->getCreatedAt()->format('M DD, YY') }}
-                </td>
-                <td>
-                    //TODO
+                    {{ $loan->getCreatedAt()->format('M j, Y') }}
                 </td>
             </tr>
         @endforeach    
@@ -64,3 +51,12 @@ Quick Links
 {{ BootstrapHtml::paginator($forgivenessLoans)->links() }}
 @stop
 
+@section('script-footer')
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#forgiven-loans').dataTable({
+            'searching': true
+        });
+    });
+</script>
+@stop

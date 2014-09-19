@@ -10,6 +10,18 @@ form .btn-primary,
 		max-width: 300px !important;
 	}
 }
+form .btn-primary {
+	@media (min-width: @screen-sm-min) {
+		margin-bottom: 50px;
+	}
+}
+.form-inline .btn-primary, td .btn-primary {
+	width: auto;
+	margin: 0;
+}
+.form-inline .btn-primary {
+	margin-left: 15px;
+}
 form label.control-label, .giftcard label {
 	color: @gray-light;
 }

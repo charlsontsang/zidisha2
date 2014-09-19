@@ -1,3 +1,13 @@
+table {
+  border-color: #ddd !important;
+  border-collapse: collapse !important;
+}
+table.dataTable thead th, table.dataTable thead td, table.dataTable.no-footer {
+  border-bottom: 2px solid #ddd !important;
+}
+
+/* no more tables styling for mobile */
+
 @media (max-width: @screen-xs-max) {
     
   /* Force table to not be like tables anymore */
@@ -53,7 +63,9 @@
 .dl-horizontal.dl-horizontal-left dt {
   text-align: left;
 }
-
+.dl-horizontal dt, .dl-horizontal dd {
+  line-height: 1.75em;
+}
 .table.table-2-col td {
   width: 50%;
 }

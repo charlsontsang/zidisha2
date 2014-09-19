@@ -1,10 +1,15 @@
 @extends('layouts.master')
 
 @section('page-title')
-Pending Borrower Activation
+Activate Borrower
 @stop
 
 @section('content')
+<div class="page-header">
+    <h1>
+        Activate Borrower
+    </h1>
+</div>
 <div class="row">
     <div class="col-xs-8">
 

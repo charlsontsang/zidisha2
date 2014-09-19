@@ -25,7 +25,7 @@ class PendingDisbursementsController extends BaseController
     public function postPendingDisbursements()
     {
         if (!\Input::get('countryCode')) {
-            \App::abort(404, 'Please select proper country');
+            \App::abort(404, 'Please select country');
         }
 
         $countryCode = \Input::get('countryCode');
@@ -39,8 +39,6 @@ class PendingDisbursementsController extends BaseController
     public function getPendingDisbursements($countryCode = 'KE')
     {
         $page = Input::get('page', 1);
-        $orderBy = Input::get('orderBy', 'acceptedAt');
-        $orderDirection = Input::get('orderDirection', 'asc');
 
         $country = CountryQuery::create()
             ->findOneByCountryCode(strtoupper($countryCode));
@@ -51,7 +49,7 @@ class PendingDisbursementsController extends BaseController
         $currency = $country->getCurrency();
 
         if (!$country || !$country->isBorrowerCountry()) {
-            \App::abort(404, 'please select proper country');
+            \App::abort(404, 'Please select country');
         }
 
         $loansQuery = \Zidisha\Loan\LoanQuery::create()
@@ -60,13 +58,8 @@ class PendingDisbursementsController extends BaseController
             ->useBorrowerQuery()
                 ->filterByCountry($country)
             ->endUse()
-            ->filterByStatus(Loan::FUNDED);
-        
-        if ($orderBy == 'borrowerName') {
-            $loansQuery->orderBy('Borrower.FirstName', $orderDirection);
-        } else {
-           $loansQuery->orderByAcceptedAt($orderDirection);
-        }
+            ->filterByStatus(Loan::FUNDED)
+            ->orderByAcceptedAt('asc');
         
         $loans = $loansQuery
             ->paginate($page, 10);
@@ -94,8 +87,7 @@ class PendingDisbursementsController extends BaseController
             'admin.pending-disbursements.pending-disbursements',
             compact(
                 'loans', 'adminNotes', 'exchangeRate',
-                'currency', 'country', 'countries',
-                'orderBy', 'orderDirection'
+                'currency', 'country', 'countries'
             )
         );
     }

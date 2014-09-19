@@ -13,47 +13,83 @@ Quick Links
 @stop
 
 @section('page-content')
-{{ BootstrapForm::open(array('route' => 'admin:borrowers', 'translationDomain' => 'borrowers', 'method' => 'get')) }}
+{{ BootstrapForm::open(array('route' => 'admin:borrowers', 'method' => 'get')) }}
 {{ BootstrapForm::populate($form) }}
 
-{{ BootstrapForm::select('country', $form->getCountries(), Request::query('country')) }}
-{{ BootstrapForm::select('status', $form->getStatus(), Request::query('status')) }}
-{{ BootstrapForm::text('search', Request::query('search')) }}
-{{ BootstrapForm::submit('Search') }}
+{{ BootstrapForm::select('country', $form->getCountries(), Request::query('country'), ['label' => 'Country']) }}
+{{ BootstrapForm::select('status', $form->getStatus(), Request::query('status'), ['label' => 'Account status']) }}
+{{ BootstrapForm::text('search', Request::query('search'), ['label' => 'Search for city, name, phone or email']) }}
+{{ BootstrapForm::submit('Submit') }}
 
 {{ BootstrapForm::close() }}
 
-<table class="table table-striped">
+<table class="table table-striped" id="borrowers">
     <thead>
     <tr>
         <th>Borrower</th>
         <th>Location</th>
         <th>Actions</th>
-        <th></th>
     </tr>
     </thead>
     <tbody>
     @foreach($paginator as $borrower)
     <tr>
-        <td><a href="{{ route('admin:borrower', $borrower->getUser()->getId()) }}">{{
+        <td>
+            <p>
+                <a href="{{ route('admin:borrower', $borrower->getUser()->getId()) }}">{{
                 $borrower->getFirstName() }} {{ $borrower->getLastName() }}</a>
-            <p>{{ $borrower->getUser()->getUsername() }}</p>
+            </p>
+            <p>Tel. {{ $borrower->getProfile()->getPhoneNumber() }}</p>
             <p>{{ $borrower->getUser()->getEmail() }}</p>
         </td>
-        <td>{{ $borrower->getCountry()->getName() }}</td>
         <td>
-            <a href="{{ route('admin:borrower', $borrower->getId()) }}">
-                View Profile
-            </a>
+            <p>
+                {{ $borrower->getProfile()->getCity() }}
+            </p>
+            <p>
+                {{ $borrower->getCountry()->getName() }}
+            </p>
         </td>
         <td>
-            <a href="{{ route('admin:borrower:edit', $borrower->getId()) }}">
-                Edit Profile
-            </a>
+            <p>
+                <a href="{{ route('admin:borrower', $borrower->getId()) }}">
+                    View profile
+                </a>
+            </p>
+            
+            @if(Auth::getUser()->isAdmin())
+            <p>
+                <a href="{{ route('admin:borrower:edit', $borrower->getId()) }}">
+                    Edit Profile
+                </a>
+            </p>
+            @endif
+
+            @if($borrower->getUser()->isVolunteerMentor())
+                <p>
+                    Volunteer Mentor
+                </p>
+            @else
+                @if(Auth::getUser()->isAdmin())
+                    <p>
+                        <a href="{{ route('admin:add:volunteer-mentor', $borrower->getId()) }}">
+                        Make Volunteer Mentor
+                        </a>
+                    </p>
+                @endif
+            @endif
         </td>
     </tr>
     @endforeach
     </tbody>
 </table>
 {{ BootstrapHtml::paginator($paginator)->appends(['country' => Request::query('country'), 'search' => Request::query('search'), 'status' => Request::query('status')])->links() }}
+@stop
+
+@section('script-footer')
+<script type="text/javascript">
+    $(document).ready(function() {
+            $('#borrowers').dataTable();
+    });
+</script>
 @stop
