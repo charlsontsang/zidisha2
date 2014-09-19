@@ -33,11 +33,6 @@ Edit Profile
 
     {{ BootstrapForm::textarea('aboutBusiness') }}
 
-    <div class="borrower-upload-inputs">
-        {{ BootstrapForm::file('images[]', ['label' => 'borrower.edit-profile.upload-file']) }}
-        <button class="btn btn-primary btn-success borrower-upload-add-more">@lang('borrower.add-more')</button>
-    </div>
-
     {{ BootstrapForm::submit('save') }}
 
     {{ BootstrapForm::close() }}
