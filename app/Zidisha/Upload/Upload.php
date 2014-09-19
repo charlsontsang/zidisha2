@@ -16,6 +16,7 @@ class Upload extends BaseUpload
     protected static $image_types = ['jpeg', 'png', 'jpg'];
 
     protected $file = null;
+    protected $isProfileUpload = false;
 
     public function isImage()
     {
@@ -63,25 +64,31 @@ class Upload extends BaseUpload
         return true;
     }
 
-    public static function createFromFile(UploadedFile $file)
+    public function createFromFile(UploadedFile $file)
     {
-        $upload = new Upload();
-
         $extension = $file->getClientOriginalExtension();
         $mimeType = $file->getMimeType();
 
         $fileType = in_array($extension, static::$image_types) ? 'image' : 'document';
 
         //TODO convert to jpg for profile pics
-//        $picture = new File(imagejpeg(imagecreatefromstring(file_get_contents($file))));
+        if ($this->isProfileUpload){
+//          $picture = new File(imagejpeg(imagecreatefromstring(file_get_contents($file))));
+        }
+        $fileName = \Illuminate\Support\Str::slug($file->getClientOriginalName());
+        if ($this->isProfileUpload) {
+            $this->setFileName('profile.jpg');
+        } else {
+            $this->setFileName($this->getUserId() . substr($fileName, 32). '.' . $extension);
+        }
 
-        $upload->setExtension($extension)
+        $this->setExtension($extension)
             ->setType($fileType)
             ->setMimeType($mimeType);
 
-        $upload->file = $file;
+        $this->file = $file;
 
-        return $upload;
+        return $this;
     }
 
     public function preSave(ConnectionInterface $con = null)
@@ -91,6 +98,7 @@ class Upload extends BaseUpload
 
     public function postSave(ConnectionInterface $con = null)
     {
+
         $this->file = $this->file->move($this->getBasePath(), $this->getFilename());
     }
 
@@ -147,5 +155,11 @@ class Upload extends BaseUpload
             throw new ConfigurationNotFoundException();
         }
         return public_path() . '/uploads/cache/' . $format . '/' . $this->getUserId() . '/';
+    }
+
+    public function setProfileUpload($upload = true)
+    {
+        $this->isProfileUpload = $upload;
+        return $this->isProfileUpload;
     }
 }
