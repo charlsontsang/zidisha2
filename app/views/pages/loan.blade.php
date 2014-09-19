@@ -135,7 +135,7 @@
 
                                             <div id="toggle-example" class="collapse">
                                                 @foreach($previousLoans as $oneLoan)
-                                                <p><a href="{{ route('loan:index', $oneLoan->getId()) }}">${{ $oneLoan->getAmount() }}
+                                                <p><a href="{{ route('loan:index', $oneLoan->getId()) }}">{{ $oneLoan->getUsdAmount() }}
                                                         {{ $oneLoan->getAppliedAt()->format('d-m-Y') }}
                                                         {{-- TODO $oneLoan->getAcceptedAt()->format('d-m-Y')
                                                         $oneLoan->getExpiredDate()->format('d-m-Y')
