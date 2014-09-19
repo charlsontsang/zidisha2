@@ -15,53 +15,84 @@ Edit Profile
 @section('page-content')
 <div class="borrower-edit-form">
 
-    @if(!$borrower->getUploads()->isEmpty())
-    <h4>Your Pictures</h4>
-    <div>
-        @foreach($borrower->getUploads() as $upload)
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                @lang('borrower.loan-application.profile.your-pictures')
+            </h3>
+        </div>
+        <div class="panel-body">
+            @if(!$borrower->getUploads()->isEmpty())
+            <div>
+                @foreach($borrower->getUploads() as $upload)
 
-                <div class="borrower-upload-form" data-comment-action="delete-upload">
-                    {{ BootstrapForm::open(array('route' => 'borrower:delete-upload', 'translationDomain' => 'borrower.edit-uploads')) }}
-                    @if($upload->isImage())
-                        <a href="{{ $upload->getImageUrl('small-profile-picture') }}">
-                            <img src="{{ $upload->getImageUrl('small-profile-picture') }}" width="100px" height="100px" alt=""/>
-                        </a>
-                    @else
-                        <div class="well">
-                            <a href="{{  $upload->getFileUrl()  }}">{{ $upload->getFilename() }}</a>
+                        <div class="borrower-upload-form" data-comment-action="delete-upload">
+                            {{ BootstrapForm::open(array('route' => 'borrower:delete-upload', 'translationDomain' => 'borrower.edit-uploads')) }}
+                            @if($upload->isImage())
+                                <a href="{{ $upload->getImageUrl('small-profile-picture') }}">
+                                    <img src="{{ $upload->getImageUrl('small-profile-picture') }}" width="100px" height="100px" alt=""/>
+                                </a>
+                            @else
+                                <div class="well">
+                                    <a href="{{  $upload->getFileUrl()  }}">{{ $upload->getFilename() }}</a>
+                                </div>
+                            @endif
+                            {{ BootstrapForm::hidden('borrower_id', $borrower->getId()) }}
+                            {{ BootstrapForm::hidden('upload_id', $upload->getId()) }}
+                            {{ BootstrapForm::submit('delete') }}
+                            {{ BootstrapForm::close() }}
                         </div>
-                    @endif
-                    {{ BootstrapForm::hidden('borrower_id', $borrower->getId()) }}
-                    {{ BootstrapForm::hidden('upload_id', $upload->getId()) }}
-                    {{ BootstrapForm::submit('delete') }}
-                    {{ BootstrapForm::close() }}
-                </div>
 
-        @endforeach
-    </div>
-    @endif
+                @endforeach
+            </div>
+            @endif
 
-    <img src="{{ $borrower->getUser()->getProfilePictureUrl() }}" alt=""/>
+            <img src="{{ $borrower->getUser()->getProfilePictureUrl() }}" alt=""/>
 
-    {{ BootstrapForm::open(array('route' => 'borrower:post-profile', 'translationDomain' => 'borrower.loan-application.profile', 'files' => true)) }}
-    
-    {{ BootstrapForm::populate($form) }}
+            {{ BootstrapForm::open(array('route' => 'borrower:post-profile', 'translationDomain' => 'borrower.loan-application.profile', 'files' => true)) }}
+            
+            {{ BootstrapForm::populate($form) }}
 
-    {{ BootstrapForm::file('picture') }}
+            {{ BootstrapForm::file('picture') }}
 
-    <div class="borrower-upload-inputs">
-        {{ BootstrapForm::file('morePictures') }}
+            <div class="borrower-upload-inputs">
+                {{ BootstrapForm::file('morePictures') }}
+            </div>
+
+        </div>
     </div>
 
-    {{ BootstrapForm::password('changePassword') }}
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                @lang('borrower.loan-application.profile.your-intro')
+            </h3>
+        </div>
+        <div class="panel-body">
 
-    {{ BootstrapForm::password('confirmChangePassword') }}
+            {{ BootstrapForm::textarea('aboutMe') }}
 
-    {{ BootstrapForm::text('changeEmail') }}
+            {{ BootstrapForm::textarea('aboutBusiness') }}
 
-    {{ BootstrapForm::textarea('aboutMe') }}
+        </div>
+    </div>
 
-    {{ BootstrapForm::textarea('aboutBusiness') }}
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                @lang('borrower.loan-application.profile.your-account')
+            </h3>
+        </div>
+        <div class="panel-body">
+
+            {{ BootstrapForm::password('changePassword') }}
+
+            {{ BootstrapForm::password('confirmChangePassword') }}
+
+            {{ BootstrapForm::text('changeEmail') }}
+
+        </div>
+    </div>
 
     {{ BootstrapForm::submit('save') }}
 

@@ -4,8 +4,8 @@
     padding: 50px 15px; 
   }
 }
-.home-grey {
-  background-color: @panel-default-bg;
+.highlight {
+  background-color: #fff;
   border-top: 1px solid @panel-default-border; 
   border-bottom: 1px solid @panel-default-border; 
 }
@@ -15,6 +15,15 @@
       margin-right: -20px;
       padding-bottom: 10px;
   }
+}
+.home .container-fluid:first-child {
+  margin-top: -30px;
+  @media (min-width: @screen-sm-min) {
+    padding-top: 20px;
+  }
+}
+.home .container-fluid:last-child {
+  margin-bottom: -50px;
 }
 .home h1, .home h2, .home h3 {
   @media (max-width: @screen-xs-max) {
@@ -85,12 +94,6 @@
   font-weight: bold;
   @media (min-width: @screen-sm-min) {
     font-size: 24px;
-  }
-}
-.btn-home-bottom {
-  margin-bottom: -15px;
-  @media (min-width: @screen-sm-min) {
-    margin-bottom: -50px;
   }
 }
 .btn-home:hover {
