@@ -8968,14 +8968,14 @@ form label.control-label,
   -webkit-box-shadow: none;
   box-shadow: none;
 }
-.container-fluid .login-form {
+.full-page .login-form {
   padding: 15px;
   margin-bottom: -15px;
 }
 @media (min-width: 768px) {
-  .container-fluid .login-form {
+  .full-page .login-form {
     max-width: 330px;
-    margin: 5px auto;
+    margin: 30px auto 0 auto;
   }
 }
 .login-form .btn,
