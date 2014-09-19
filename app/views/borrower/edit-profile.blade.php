@@ -14,18 +14,20 @@ Edit Profile
 
 @section('page-content')
 <div class="borrower-edit-form">
-    <h3>Current Profile Picture</h3>
+
     <img src="{{ $borrower->getUser()->getProfilePictureUrl() }}" alt=""/>
-    {{ BootstrapForm::open(array('route' => 'borrower:post-profile', 'translationDomain' => 'borrower.edit-profile', 'files' => true)) }}
+
+    {{ BootstrapForm::open(array('route' => 'borrower:post-profile', 'translationDomain' => 'borrower.loan-application.profile', 'files' => true)) }}
+    
     {{ BootstrapForm::populate($form) }}
 
     {{ BootstrapForm::file('picture') }}
 
-    {{ BootstrapForm::password('password') }}
+    {{ BootstrapForm::password('changePassword') }}
 
-    {{ BootstrapForm::password('password_confirmation') }}
+    {{ BootstrapForm::password('confirmChangePassword') }}
 
-    {{ BootstrapForm::text('email') }}
+    {{ BootstrapForm::text('changeEmail') }}
 
     {{ BootstrapForm::textarea('aboutMe') }}
 

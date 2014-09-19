@@ -35,6 +35,9 @@ return [
         'about-business' => 'About Your Business or Income Source',
         'about-business-description' => '(Minimum 300 characters)<br/><br/>This will display in your public profile page to inform potential lenders of the source of income that will be used to repay the loan.  If your source of income is a personal business, you may describe the goods or services your business provides, why there is demand for these goods or services, why your customers prefer your business to the competition, why the business is profitable, the risks your business faces, your typical monthly costs, sales revenue and profits, etc.  If you will not use the loan to invest in a business, please describe the source of income that will allow you to repay the loan.',
         'about-business-tip' => 'Tip: Make sure to use US Dollars for money amounts so that lenders can understand how much it is. Use this website to convert your currency amounts to dollar amounts: <a href="http://www.oanda.com/currency/converter/" target="blank">http://www.oanda.com/currency/converter/</a></i>',
+        'change-password' => 'Change password',
+        'confirm-change-password' => 'Enter new password again',
+        'change-email' => 'Change email',
     ],
     'application' => [
         'intro' => 'This page will allow you to publish a loan application for funding on the <a href=":link" target="blank">Lend</a> page of our website.<br/><br/>You will have the chance to review and modify your loan repayment schedule before your application is published.',
