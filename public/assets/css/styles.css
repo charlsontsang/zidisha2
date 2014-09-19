@@ -8698,9 +8698,17 @@ body {
 }
 .page-section {
   background-color: #f8f8f8;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid #dddddd;
   margin-bottom: 22px;
   padding-bottom: 22px;
+}
+.panel-info {
+  border-color: #e5e5e5;
+}
+.panel-info > .panel-heading {
+  color: #31708f;
+  background-color: #d9edf7;
+  border-color: #404040;
 }
 .page-section-inverted {
   background-color: #333232;
@@ -9544,8 +9552,8 @@ table.dataTable.no-footer {
 }
 .home-grey {
   background-color: #f8f8f8;
-  border-top: 1px solid #e0e0e0;
-  border-bottom: 1px solid #e0e0e0;
+  border-top: 1px solid #dddddd;
+  border-bottom: 1px solid #dddddd;
 }
 @media (max-width: 767px) {
   .home .result {
@@ -9661,7 +9669,7 @@ table.dataTable.no-footer {
 }
 .page-section-filter {
   background-color: #f8f8f8;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid #dddddd;
   padding: 12px 0;
 }
 @media (min-width: 768px) {
