@@ -9669,11 +9669,6 @@ table.dataTable.no-footer {
     display: block !important;
   }
 }
-@media (max-width: 767px) {
-  .page-section-filter {
-    margin-bottom: -15px;
-  }
-}
 .page-section-filter {
   background-color: #f8f8f8;
   border-bottom: 1px solid #dddddd;
@@ -9769,26 +9764,12 @@ ul.filter-bar {
     display: inline;
   }
 }
+#results-info {
+  padding-top: 20px;
+}
 @media (min-width: 768px) {
   #results-info {
     margin: 0;
-  }
-}
-.lend {
-  background-color: #f8f8f8;
-  padding: 0 0 15px 0 !important;
-  margin-bottom: -15px;
-}
-@media (min-width: 768px) {
-  .lend {
-    margin-bottom: -30px;
-    padding: 22px 0 30px 0 !important;
-  }
-}
-@media (min-width: 768px) {
-  .lend {
-    margin-bottom: -50px;
-    padding: 22px 0 50px 0 !important;
   }
 }
 #mobile-results-desc {
