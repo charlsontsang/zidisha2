@@ -7,7 +7,6 @@ return array(
             lenders when they visit our website. Loans that make it into the Featured category are usually funded in less than a day.</p>
 
         <p>Here are the criteria that we use to decide which loan applications to feature:</p>
-        <br/>
 
         <h4>1. Repayment Record</h4>
 
