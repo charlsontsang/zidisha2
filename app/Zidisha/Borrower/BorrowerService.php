@@ -284,6 +284,7 @@ class BorrowerService
 //
 //            $borrower->addUpload($upload);
 //        }
+        $user->save();
         $borrower->save();
     }
 
