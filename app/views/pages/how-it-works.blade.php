@@ -13,7 +13,7 @@ About
 @stop
 
 @section('page-content')
-<div class="info-page">
+<div class="info-page how-it-works">
     <p>Can “pocket change” really make a change?  We’re absolutely sure of it.  In fact, you’d be amazed at how far a microloan can take someone with all the motivation in the world, but little to no resources.  Here's how it all works.</p>
 
     <hr/>
