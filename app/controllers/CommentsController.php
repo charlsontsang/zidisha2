@@ -37,7 +37,7 @@ abstract class CommentsController extends BaseController
         $postCommentForm->handleRequest(Request::instance());
 
         if (!$postCommentForm->isValid()) {
-            Flash::success('Input not valid');
+            Flash::error('common.validation.error');
             return \Redirect::back();
         }
 
@@ -128,7 +128,7 @@ abstract class CommentsController extends BaseController
         $replyCommentForm->handleRequest(Request::instance());
 
         if (!$replyCommentForm->isValid()) {
-            Flash::success('Input not valid');
+            Flash::error('common.validation.error');
             return Redirect::back();
         }
 
@@ -180,7 +180,7 @@ abstract class CommentsController extends BaseController
         $translateCommentForm->handleRequest(Request::instance());
 
         if (!$translateCommentForm->isValid()) {
-            Flash::success('Input not proper.');
+            Flash::error('common.validation.error');
             return Redirect::back();
         }
 

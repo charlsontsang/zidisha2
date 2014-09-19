@@ -35,7 +35,7 @@ class CompletedHandler extends PaymentHandler
 
     public function redirect()
     {
-        \Flash::success("Successfully uploaded USD " . $this->payment->getCreditAmount()->getAmount());
+        \Flash::success("You have successfully added $ " . $this->payment->getCreditAmount()->getAmount()) . " to your lending account.";
         return \Redirect::route('lender:history');
     }
 }

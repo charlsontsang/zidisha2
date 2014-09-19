@@ -72,4 +72,5 @@ return [
     ],
     'next' => 'Next',
     'previous' => 'Previous',
+    'info-saved' => 'Successfully saved'
 ];

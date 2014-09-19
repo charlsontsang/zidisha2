@@ -37,7 +37,7 @@ class FeatureFeedbackForm extends AbstractForm
 
     public function getMessage($name)
     {
-        return  \Lang::get('text.admin.suggestion-default-message', array('name' => $name));
+        return  \Lang::get('borrower.mails.profile-suggestions', array('name' => $name));
     }
 
 }
