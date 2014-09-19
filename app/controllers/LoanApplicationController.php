@@ -137,8 +137,8 @@ class LoanApplicationController extends BaseBorrowerController
             
             if (\Input::hasFile('picture')) {
                 $upload = Upload::createFromFile(\Input::file('picture'));
-                $upload->setUser($user);
-
+                $upload->setUser($user)
+                    ->setFileName('profile.jpg');
                 $user->setProfilePicture($upload);
                 $user->save();
             }

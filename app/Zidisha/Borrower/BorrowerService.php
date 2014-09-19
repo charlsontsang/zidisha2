@@ -270,8 +270,8 @@ class BorrowerService
 
         if ($picture) {
             $upload = Upload::createFromFile($picture);
-            $upload->setUser($user);
-            $upload->save();
+            $upload->setUser($user)
+                ->setFileName('profile.jpg');
 
             $user->setProfilePicture($upload);
         }
@@ -282,7 +282,6 @@ class BorrowerService
             
             $borrower->addUpload($upload);
         }
-
         $borrower->save();
     }
 
