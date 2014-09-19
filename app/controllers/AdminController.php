@@ -118,7 +118,41 @@ class AdminController extends BaseController
     public
     function getDashboard()
     {
-        return View::make('admin.dashboard');
+        $totalLenders = LenderQuery::create()
+            ->count();
+        
+        $activeLenders = LenderQuery::create()
+            ->useUserQuery()
+                ->filterByActive(true)
+            ->endUse()
+            ->count();
+        
+        $activeLendersInPastTwoMonths = LenderQuery::create()
+            ->useUserQuery()
+                ->filterByLastLoginAt(Carbon::now()->subMonths(2), Criteria::GREATER_THAN)
+            ->endUse()
+            ->count();
+        
+        
+        $lenderUsingAutomatedLending = LenderQuery::create()
+            ->useAutoLendingSettingQuery()
+                ->filterByActive(true)
+            ->endUse()
+            ->count();
+        
+        $totalLenderCredit  = DB::select(
+            'SELECT SUM(amount) AS total
+             FROM transactions
+             WHERE user_id IN (SELECT id FROM users WHERE users.sub_role = 0)'
+        );
+        $totalLenderCredit = $totalLenderCredit[0]->total;
+
+        return View::make('admin.dashboard', compact(
+            'totalLenders',
+            'activeLenders',
+            'activeLendersInPastTwoMonths',
+            'lenderUsingAutomatedLending',
+            'totalLenderCredit'));
     }
 
     public function getBorrowers()
@@ -128,7 +162,7 @@ class AdminController extends BaseController
 
         $paginator = $form->getQuery()
             ->orderById()
-            ->paginate($page, 3);
+            ->paginate($page, 100);
 
         return View::make('admin.borrowers', compact('paginator', 'form'));
     }
@@ -202,47 +236,13 @@ class AdminController extends BaseController
 
         $paginator = $form->getQuery()
             ->orderById()
-            ->paginate($page, 3);
-
-        $totalLenders = LenderQuery::create()
-            ->count();
-        
-        $activeLenders = LenderQuery::create()
-            ->useUserQuery()
-                ->filterByActive(true)
-            ->endUse()
-            ->count();
-        
-        $activeLendersInPastTwoMonths = LenderQuery::create()
-            ->useUserQuery()
-                ->filterByLastLoginAt(Carbon::now()->subMonths(2), Criteria::GREATER_THAN)
-            ->endUse()
-            ->count();
-        
-        
-        $lenderUsingAutomatedLending = LenderQuery::create()
-            ->useAutoLendingSettingQuery()
-                ->filterByActive(true)
-            ->endUse()
-            ->count();
-        
-        $totalLenderCredit  = DB::select(
-            'SELECT SUM(amount) AS total
-             FROM transactions
-             WHERE user_id IN (SELECT id FROM users WHERE users.sub_role = 0)'
-        );
-        $totalLenderCredit = $totalLenderCredit[0]->total;
+            ->paginate($page, 100);
         
         return View::make(
             'admin.lenders',
             compact(
                 'paginator',
-                'form',
-                'totalLenders',
-                'activeLenders',
-                'activeLendersInPastTwoMonths',
-                'lenderUsingAutomatedLending',
-                'totalLenderCredit'
+                'form'
             )
         );
     }
@@ -355,17 +355,17 @@ class AdminController extends BaseController
 
         $paginator = $form->getQuery($query)
             ->orderById()
-            ->paginate($page, 3);
+            ->paginate($page, 100);
 
-        return View::make('admin.volunteers', compact('paginator', 'form'));
+        $count = count($paginator);
+
+        return View::make('admin.volunteers', compact('paginator', 'form', 'count'));
     }
 
     public function getVolunteerMentors()
     {
         $form = $this->borrowersForm;
         $page = Request::query('page') ? : 1;
-        $orderBy = Input::get('orderBy', 'numberOfAssignedMembers');
-        $orderDirection = Input::get('orderDirection', 'asc');
         $borrowerService = $this->borrowerService;
 
         $query = BorrowerQuery::create()
@@ -373,14 +373,9 @@ class AdminController extends BaseController
             ->filterBySubRole(User::SUB_ROLE_VOLUNTEER_MENTOR)
             ->endUse();
 
-        //TODO sorting
-        if ($orderBy == 'repaymentStatus') {
-        } else {
-        }
-
         $paginator = $form->getQuery($query)
             ->orderById()
-            ->paginate($page, 3);
+            ->paginate($page, 100);
 
         $paginator->populateRelation('AdminNote');
 
@@ -406,62 +401,7 @@ class AdminController extends BaseController
             $adminNotes[$VmNote->getBorrowerId()][] = $VmNote;
         }
 
-        return View::make('admin.volunteer-mentors', compact('paginator', 'form', 'menteeCounts', 'assignedMembers', 'adminNotes', 'orderBy', 'orderDirection', 'borrowerService'));
-    }
-
-    public function getAddVolunteerMentors()
-    {
-        $form = $this->borrowersForm;
-        $page = Request::query('page') ? : 1;
-
-        $query = BorrowerQuery::create()
-            ->useUserQuery()
-            ->filterBySubRole(null)
-            ->endUse();
-
-        $paginator = $form->getQuery($query)
-            ->orderById()
-            ->paginate($page, 3);
-
-        return View::make('admin.add-volunteer-mentors', compact('paginator', 'form'));
-    }
-
-    public function getLoans()
-    {
-        $page = Request::query('page') ? : 1;
-        $countryName = Request::query('country') ? : null;
-        $status = Request::query('status') ? : null;
-
-        $selectedCountry = $this->countryQuery->findOneBySlug($countryName);
-
-        $conditions = [];
-
-        $routeParams = [
-            'stage' => 'fund-raising',
-            'country' => 'everywhere'
-        ];
-
-        if ($selectedCountry) {
-            $conditions['countryId'] = $selectedCountry->getId();
-            $routeParams['country'] = $selectedCountry->getSlug();
-        }
-
-        if ($status) {
-            if ($status == 'completed') {
-                $routeParams['stage'] = 'completed';
-                $conditions['status'] = [Loan::DEFAULTED, Loan::REPAID];
-            } elseif ($status == 'active') {
-                $routeParams['stage'] = 'active';
-                $conditions['status'] = [Loan::ACTIVE, Loan::FUNDED];
-            } else {
-                $routeParams['stage'] = 'fund-raising';
-                $conditions['status'] = Loan::OPEN;
-            }
-        }
-
-        $paginator = $this->loanService->searchLoans($conditions, $page);
-
-        return View::make('admin.loans', compact('paginator'), ['form' => $this->loansForm,]);
+        return View::make('admin.volunteer-mentors', compact('paginator', 'form', 'menteeCounts', 'assignedMembers', 'adminNotes', 'borrowerService'));
     }
 
     public function getExchangeRates($countrySlug = null)
@@ -682,7 +622,7 @@ class AdminController extends BaseController
 
         $paginator = GiftCardQuery::create()
             ->orderByDate('desc')
-            ->paginate($page, 10);
+            ->paginate($page, 100);
 
         return View::make('admin.gift-cards', compact('paginator'));
     }
@@ -757,7 +697,7 @@ class AdminController extends BaseController
             ->joinWith('Lender')
             ->joinWith('Lender.User')
             ->orderByUpdatedAt('desc')
-            ->paginate($page, 10);
+            ->paginate($page, 100);
 
         $userIds = $paginator->toKeyValue('lenderId', 'lenderId');
 

@@ -5,32 +5,32 @@
 return [
     'Site' => [
         'site.replyToEmailAddress' => [
-            'label'   => 'Reply To Email Address',
+            'label'   => 'Reply to email address',
             'default' => 'service@zidisha.org',
             'rule'    => 'email',
         ],
         'site.fromEmailAddress' => [
-            'label'   => 'Reply To Email Address',
+            'label'   => 'From email address',
             'default' => 'service@zidisha.org',
             'rule'    => 'email',
         ],
         'site.adminId' => [
             'default' => 1,
-            'label' => 'Admin id',
+            'label' => 'Admin ID',
             'rule'  => 'numeric',
         ],
         'site.YCAccountId' => [
             'default' => 2,
-            'label' => 'YCAccount id',
+            'label' => 'YC account ID',
             'rule'  => 'numeric',
         ],
         'site.countriesCodesBlockedFromUploadFunds' =>[
             'default' => 'CN,ID,SG',
-            'label'   => 'Countries Codes Blocked From Upload Funds',
+            'label'   => 'Blocked countries',
             'rule'    => ['regex:/^[A-Z,]+$/'],
         ],
         'site.paymentTransactionFeeRate' =>[
-            'label'   => 'Payment Transaction Fee Rate',
+            'label'   => 'Transaction fee rate',
             'default' => '3.5',
             'rule'    => 'numeric',
         ],
@@ -40,7 +40,7 @@ return [
             'label'   => 'Minimum loan amount',
             'default' => '10',
             'rule'    => 'numeric',
-            'prepend' => 'USD',
+            'prepend' => '$',
         ],
         'loan.maximumPeriod' => [
             'label'   => 'Maximum loan period for applications (months)',
@@ -53,7 +53,7 @@ return [
             'rule'    => 'numeric',
         ],
         'loan.expireThreshold' => [
-            'label'   => 'Number of days after which an unfunded loan application will expire automatically.',
+            'label'   => 'Number of days after which an unfunded loan application will expire automatically',
             'default' => '14',
             'rule'    => 'numeric'
         ],
@@ -87,80 +87,65 @@ return [
             'default' => '12',
             'rule'    => 'numeric'
         ],
-        'loan.firstLoanPercentage' => [
-            'label' => 'Maximum amount for first Zidisha loan (As percentage of largest previous loan)',
-            'default' => '50',
-            'rule' => 'numeric'
-        ],
         'loan.secondLoanPercentage' => [
-            'label' => 'Credit limits increase after on-time repayment of loans up to USD 200 (Percentage of largest previous loan)',
+            'label' => 'Credit limit increase after on-time repayment of loans up to $200 (% of largest previous loan)',
             'default' => '300',
             'rule' => 'numeric'
         ],
         'loan.nextLoanPercentage' => [
-            'label' => 'Credit limits increase after on-time repayment of loans over USD 200 (Percentage of largest previous loan)',
+            'label' => 'Credit limit increase after on-time repayment of loans over $200 (% of largest previous loan)',
             'default' => '150',
             'rule' => 'numeric'
         ],
         'loan.firstLoanValue' => [
-            'label' => 'First Loan Max Value (USD)',
+            'label' => 'Maximum amount for first loan (without bonus)',
             'default' => '50',
             'rule' => 'numeric'
         ],
-        'loan.secondLoanValue' => [
-            'label' => 'Second Loan Max Value (USD)',
-            'default' => '750',
-            'rule' => 'numeric'
-        ],
-        'loan.thirdLoanValue' => [
-            'label' => 'Third Loan Max Value (USD)',
-            'default' => '1125',
-            'rule' => 'numeric'
-        ],
         'loan.nextLoanValue' => [
-            'label' => 'Third and Subsequent Loans Max Value (USD)',
+            'label' => 'Maximum amount for subsequent loans',
             'default' => '10000',
             'rule' => 'numeric'
         ],
         'loan.repaymentReminderDay' => [
-            'label' => 'Number of days after which an repayment reminder will be sent.',
+            'label' => 'Number of past due days after which a repayment reminder will be sent',
             'default' => '14',
             'rule' => 'numeric'
         ],
         'loan.repaymentDueAmount' => [
-            'label' => 'Loan Due amount',
+            'label' => 'Loan past due threshold amount',
             'default' => '5',
             'rule' => 'numeric'
         ],
         'loan.deadline' => [
-            'label' => 'Loan DeadLine Date',
+            'label' => 'Loan deadline date',
             'default' => '15',
             'rule' => 'numeric'
         ],
         'loan.maxExtraPeriodRescheduledLoan' => [
-            'label' => 'Maximum repayment period for rescheduled loans (from the date of rescheduling).',
+            'label' => 'Maximum repayment period for rescheduled loans (from the date of rescheduling)',
             'default' => '60',
             'rule' => 'numeric'
         ],
     ],
     'Borrower' => [
         'invite.maxInviteesWithoutPayment' => [
-            'label'   => 'Maximum Invites Without Payments',
+            'label'   => 'Maximum invitees without payments',
             'default' => '3',
             'rule'    => 'numeric',
         ],
         'invite.minRepaymentRate' => [
-            'label'   => 'Minimum Repayment Rate to send Invites',
+            'label'   => 'Minimum repayment rate to send invites',
             'default' => '95',
             'rule'    => 'numeric',
         ],
         'facebook.minimumFriends' => [
-            'label'   => 'Minimum facebook friends required',
+            'label'   => 'Minimum Facebook friends required',
             'default' => '20',
             'rule'    => 'numeric',
         ],
         'facebook.minimumMonths' => [
-            'label'   => 'Minimum months account should be old',
+            'label'   => 'Minimum age of Facebook account (months)',
             'default' => '3',
             'rule'    => 'numeric',
         ]
@@ -188,7 +173,7 @@ return [
             'label' => 'Stripe Secret Key',
         ],
         'sift-science.api-key' => [
-            'label' => 'Sift Science Api Key'
+            'label' => 'Sift Science API Key'
         ],
         'paypal.mode' => [
             'label' => 'PayPal Process Mode'
@@ -203,66 +188,66 @@ return [
             'label' => 'PayPal Signature'
         ],
         'sendwithus.apiKey' => [
-            'label' => 'Sendwithus api key'
+            'label' => 'Sendwithus API Key'
         ],
         'telerivet.apiKey' => [
-            'label' => 'Telerivet Api Key'
+            'label' => 'Telerivet API Key'
         ],
         'telerivet.projectId' => [
-            'label' => 'Telerivet Project Id'
+            'label' => 'Telerivet Project ID'
         ]
     ],
     'Sendwithus' => [
         'sendwithus.introduction-template-id' => [
-            'label' => 'Introduction template id'
+            'label' => 'Introduction template ID'
         ],
         'sendwithus.lender-expired-loan-template-id' => [
-            'label' => 'Loan expired notification template id'
+            'label' => 'Loan expired notification template ID'
         ],
         'sendwithus.borrower-notifications-template-id' => [
-            'label' => 'Borrower account notifications template id'
+            'label' => 'Borrower account notifications template ID'
         ],
         'sendwithus.lender-unused-funds-template-id' => [
-            'label' => 'Lender\'s unused Funds notification template id'
+            'label' => 'Lender unused funds notification template ID'
         ],
         'sendwithus.loan-about-to-expire-mail-template-id' => [
-            'label' => 'Loan about to expire mail template id'
+            'label' => 'Loan about to expire mail template ID'
         ],
         'sendwithus.borrower-again-repayment-instruction-template-id' => [
-            'label' => 'Borrower again repayment instructions template id'
+            'label' => 'Borrower repayment instructions template ID'
         ],
         'sendwithus.lender-loan-forgiveness-mail-template-id' => [
-            'label' => 'Lender loan forgiveness template id'
+            'label' => 'Lender loan forgiveness template ID'
         ],
         'sendwithus.lender-loan-first-bid-confirmation-template-id' => [
-            'label' => 'Lender loan first bid confirmation template id'
+            'label' => 'Lender loan first bid confirmation template ID'
         ],
         'sendwithus.lender-account-abandoned-template-id' => [
-            'label' => 'Lender account abandoned template id'
+            'label' => 'Lender account abandoned template ID'
         ],
         'sendwithus.lender-invite-credit-template-id' => [
-            'label' => 'Lender invite credit template id'            
+            'label' => 'Lender invite credit template ID'            
         ],
         'sendwithus.lender-loan-fully-funded-template-id' => [
-            'label' => 'Lender loan fully funded template id'            
+            'label' => 'Lender loan fully funded template ID'            
         ],
         'sendwithus.lender-loan-disbursed-template-id' => [
-            'label' => 'Lender loan disbursed template id'
+            'label' => 'Lender loan disbursed template ID'
         ],
         'sendwithus.lender-loan-repayment-template-id' => [
-            'label' => 'Lender loan repayment template id'
+            'label' => 'Lender loan repayment template ID'
         ],
         'sendwithus.borrower-invite-template-id' => [
-            'label' => 'Borrower Invite template id'
+            'label' => 'Borrower invite template ID'
         ],
         'sendwithus.comments-borrower-template-id' => [
-            'label' => 'Comments Borrower template id'
+            'label' => 'Comments borrower template ID'
         ],
         'sendwithus.comments-template-id' => [
-            'label' => 'Comments template id'
+            'label' => 'Comments template ID'
         ],
         'sendwithus.inactive-invitee-template-id' => [
-            'label' => 'Inactive Invitee template id'
+            'label' => 'Inactive invitee template ID'
         ],
     ]
 ];

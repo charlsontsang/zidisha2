@@ -381,11 +381,6 @@ Director, Zidisha Inc.
             "Best wishes,<br/><br/>" .
             "The Zidisha Team",
     ],
-    'password-reset'                     => [
-        'subject' => 'Password Reset',
-        'body'    => "To reset your password, complete this form: :formLink .<br/>
-			This link will expire in :expireTime minutes.",
-    ],
     'invitee-own-funds'                  => [
         'subject' => 'Make a new loan happen',
         'body'    => "Hi there,

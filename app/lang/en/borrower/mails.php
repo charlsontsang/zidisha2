@@ -1,6 +1,11 @@
 <?php
 
 return [
+    'password-reset'                     => [
+        'subject' => 'Password Reset',
+        'body'    => "To reset your password, complete this form: :formLink .<br/>
+            This link will expire in :expireTime minutes.",
+    ],
     'loan-confirmation'                  => [
         'subject' => 'Your Loan Application Has Been Published',
         'body'    => 'Dear :borrowerName,<br/><br/>

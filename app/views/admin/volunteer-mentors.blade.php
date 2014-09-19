@@ -1,107 +1,98 @@
-@extends('layouts.side-menu')
+@extends('layouts.master')
 
 @section('page-title')
-Volunteer Mentors
+Manage Volunteer Mentors
 @stop
 
-@section('menu-title')
-Quick Links
-@stop
+@section('content')
+<div class="page-header">
+    <h1>
+        Manage Volunteer Mentors
+    </h1>
+</div>
 
-@section('menu-links')
-@include('partials.nav-links.staff-links')
-@stop
-
-@section('page-content')
-{{ BootstrapForm::open(array('route' => 'admin:volunteer-mentors', 'translationDomain' => 'volunteer-mentors', 'method' => 'get')) }}
+{{ BootstrapForm::open(array('route' => 'admin:volunteer-mentors')) }}
 {{ BootstrapForm::populate($form) }}
 
-{{ BootstrapForm::select('country', $form->getCountries(), Request::query('country')) }}
-{{ BootstrapForm::text('search', Request::query('search')) }}
-{{ BootstrapForm::submit('Search') }}
+{{ BootstrapForm::select('country', $form->getCountries(), Request::query('country'), ['label' => false, 'id' => 'country']) }}
 
 {{ BootstrapForm::close() }}
 
 {{ BootstrapForm::open([
-    'action' => ['AdminController@getVolunteerMentors', 'country' => Request::query('country'), 'search' => Request::query('search')],
+    'action' => ['AdminController@getVolunteerMentors', 'country' => Request::query('country')],
     'method' => 'get',
     'class' => 'form-inline',
 ]) }}
 
-{{ BootstrapForm::select(
-    'orderBy',
-    ['numberOfAssignedMembers' => 'Number of Assigned Members', 'repaymentStatus' => 'Repayment Status'],
-    $orderBy,
-    ['label' => false]
-) }}
-{{ BootstrapForm::select(
-    'orderDirection',
-    ['asc' => 'ascending', 'desc' => 'descending'],
-    $orderDirection,
-    ['label' => false]
-) }}
-
-{{ BootstrapForm::submit('Sort') }}
-
 {{ BootstrapForm::close() }}
 
 @if($paginator)
-    <table class="table table-striped">
+    <table class="table table-striped" id="mentors">
         <thead>
         <tr>
-            <th>Borrower</th>
-            <th>City / Village</th>
+            <th>Volunteer Mentor</th>
             <th>Number of Assigned Members</th>
             <th>Assigned Member Status</th>
-            <th>VM Repayment Status</th>
+            <th>Mentor Repayment Status</th>
             <th>Notes</th>
-            <th>Volunteer Mentor Status</th>
         </tr>
         </thead>
         <tbody>
         @foreach($paginator as $borrower)
         <tr>
-            <td><a href="{{ route('admin:borrower', $borrower->getId()) }}">{{
-                    $borrower->getName() }}</a>
-                <p>{{ $borrower->getProfile()->getPhoneNumber() }}</p>
+            <td><p><a href="{{ route('admin:borrower', $borrower->getId()) }}">{{
+                    $borrower->getName() }}</a></p>
+                <p>Tel. {{ $borrower->getProfile()->getPhoneNumber() }}</p>
                 <p>{{ $borrower->getUser()->getEmail() }}</p>
+                <p>{{ $borrower->getProfile()->getCity() }}, {{ $borrower->getCountry()->getName() }}</p>
             </td>
-            <td>{{ $borrower->getProfile()->getCity() }}</td>
-            <td>{{ $menteeCounts[$borrower->getId()] }}</td>
             <td>
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th>Assigned Member Name</th>
-                        <th>Assigned Member Status</th>
-                        <th>Assigned Member Comment Posted</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($assignedMembers as $assignedMember)
-                            @if($assignedMember->getVolunteerMentorId() == $borrower->getId())
-                                <tr>
-                                    <td><a href="{{ route('admin:borrower', $assignedMember->getId()) }}">{{
-                                                        $assignedMember->getName() }}</a></td>
-                                    <td>
-                                    TODO (Activate date)
-                                    {{ $borrowerService->printLoanInArrears($assignedMember) }}
-                                    </td>
-                                    <td>
-                                        @if($borrowerService->hasVMComment($borrower, $assignedMember))
-                                            <a href="{{ route('admin:borrower:personal-information', $assignedMember->getUser()->getUsername()) }}">
-                                            View Comment
-                                            </a>
-                                        @else
-                                            No Comment
-                                        @endif
-                                    </td>
-                                </tr>
-                                <?php unset($assignedMember) ?>
-                            @endif
-                @endforeach
-                </tbody>
-                </table>
+                {{ $menteeCounts[$borrower->getId()] }}
+
+                @if(Auth::getUser()->isAdmin())
+                    <br/><br/>
+                    <a href="{{ route('admin:remove:volunteer-mentor', $borrower->getId()) }}">Remove mentor status</a>
+                @endif
+            </td>
+            <td>
+                <a href="#" id="toggle-members" data-toggle="collapse" data-target="#members" data-toggle-text="Hide members">
+                    View members
+                </a>
+                <div id="members" class="collapse">
+                    <br/>
+                    <table class="table" id="member-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Status</th>
+                                <th>Mentor Comment</th>
+                            </tr>
+                        </thead>
+                            <tbody>
+                                @foreach($assignedMembers as $assignedMember)
+                                    @if($assignedMember->getVolunteerMentorId() == $borrower->getId())
+                                        <tr>
+                                            <td><a href="{{ route('admin:borrower', $assignedMember->getId()) }}">{{
+                                                $assignedMember->getName() }}</a></td>
+                                            <td>
+                                            {{ $borrowerService->printLoanInArrears($assignedMember) }}
+                                            </td>
+                                            <td>
+                                                @if($borrowerService->hasVMComment($borrower, $assignedMember))
+                                                    <a href="{{ route('admin:borrower:personal-information', $assignedMember->getUser()->getUsername()) }}">
+                                                    View Comment
+                                                    </a>
+                                                @else
+                                                    No Comment
+                                                @endif
+                                            </td>
+                                        </tr>
+                                        <?php unset($assignedMember) ?>
+                                    @endif
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </td>
             <td> {{ $borrowerService->printLoanInArrears($borrower) }} </td>
             <td>
@@ -117,20 +108,47 @@ Quick Links
                         @endforeach
                     </ul>
                 @endif
-                <br/>
-                {{ BootstrapForm::open(array('action' => 'AdminController@postVmNote')) }}
-                    {{ BootstrapForm::textarea('note', null, ['rows' => '5', 'label' => false]) }}
-                    {{ BootstrapForm::hidden('borrowerId', $borrower->getId()) }}
-                    {{ BootstrapForm::submit('Submit') }}
-                {{ BootstrapForm::close() }}
-            </td>
-            <td>
-                <a href="{{ route('admin:remove:volunteer-mentor', $borrower->getId()) }}">Remove Volunteer Mentor</a>
+
+                <a href="#" class="add-note-toggle">Add note</a>
+                
+                <div id="add-note" class="collapse">  
+                    {{ BootstrapForm::open(array('action' => 'AdminController@postVmNote')) }}
+                        {{ BootstrapForm::textarea('note', null, ['rows' => '5', 'label' => false]) }}
+                        {{ BootstrapForm::hidden('borrowerId', $borrower->getId()) }}
+                        {{ BootstrapForm::submit('Save') }}
+                    {{ BootstrapForm::close() }}
+                </div>
+
             </td>
         </tr>
         @endforeach
         </tbody>
     </table>
 @endif
-{{ BootstrapHtml::paginator($paginator)->appends(['country' => Request::query('country'), 'search' => Request::query('search')])->links() }}
+{{ BootstrapHtml::paginator($paginator)->appends(['country' => Request::query('country')])->links() }}
+@stop
+
+@section('script-footer')
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#mentors').dataTable({
+            'searching': true,
+            'info': true
+        });
+        $('#member-table').dataTable();
+    });
+    $(function() {
+        $('#country').change(function() {
+            this.form.submit();
+        $('.members-toggle').click(function () {
+            $("#members").collapse('toggle');
+            return false;
+        });
+        $('.add-note-toggle').click(function () {
+            $("#add-note").collapse('toggle');
+            return false;
+        });
+    });
+});
+</script>
 @stop

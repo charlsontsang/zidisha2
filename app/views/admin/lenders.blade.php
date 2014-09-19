@@ -13,40 +13,25 @@ Quick Links
 @stop
 
 @section('page-content')
-<p>
-    Total lenders : {{ $totalLenders }}
-    <br/>
-    Active lenders : {{ $activeLenders }}
-    <br/>
-    Logged in during past 2 months : {{ $activeLendersInPastTwoMonths }}
-    <br/>
-    Number of lenders using automated lending : {{ $lenderUsingAutomatedLending }}
-    <br/>
-    Total lender credit available : {{ $totalLenderCredit }}
-</p>
-
-<div class="page-header">
-    <h1>Lenders</h1>
-</div>
 <div>
-    {{ BootstrapForm::open(array('route' => 'admin:lenders', 'translationDomain' => 'lenders', 'method' => 'get')) }}
+    {{ BootstrapForm::open(array('route' => 'admin:lenders')) }}
     {{ BootstrapForm::populate($form) }}
 
-    {{ BootstrapForm::select('country', $form->getCountries(), Request::query('country')) }}
-    {{ BootstrapForm::text('search', Request::query('search')) }}
-    {{ BootstrapForm::submit('Search') }}
+    {{ BootstrapForm::select('country', $form->getCountries(), Request::query('country'), ['label' => 'Country']) }}
+    {{ BootstrapForm::text('search', Request::query('search'), ['label' => 'Search']) }}
+    {{ BootstrapForm::submit('Submit') }}
 
     {{ BootstrapForm::close() }}
 </div>
 
-<table class="table table-striped">
+<table class="table table-striped" id="lenders">
     <thead>
     <tr>
         <th>Lender</th>
         <th>Location</th>
         <th>Date Joined</th>
         <th>Last Login</th>
-        <th>Last check in email</th>
+        <th>Last Check-In Email</th>
         <th>Status</th>
     </tr>
     </thead>
@@ -68,24 +53,28 @@ Quick Links
             @if($lender->getUser()->getLastLoginAt())
                 {{ $lender->getUser()->getLastLoginAt()->format('M d, Y') }}
             @else
-                Lender has not logged in yet
+                {{ $lender->getUser()->getCreatedAt()->format('M d, Y') }}
             @endif
         </td>
         
         <td>
-         {{ BootstrapForm::open(array('route' => ['admin:last-check-in-email:lender', $lender->getId() ])) }}
-         {{ BootstrapForm::datepicker('lastCheckInEmail') }}
-         {{ BootstrapForm::submit('Submit') }}
-         {{ BootstrapForm::close() }}
-         
-         <br/>
-         <hr/>
-         Last check in email :
-         @if($lender->getLastCheckInEmail())
-            {{ $lender->getLastCheckInEmail()->format('m/d/Y') }}         
-         @else
-          Not available 
-         @endif
+            <p>
+                 @if($lender->getLastCheckInEmail())
+                    {{ $lender->getLastCheckInEmail()->format('m/d/Y') }}         
+                 @else
+                    None
+                 @endif
+            </p>
+            <p>
+                <a href="#" id="check-in-toggle">Update</a>
+            </p>
+
+            <div id="check-in" class="collapse">
+                 {{ BootstrapForm::open(array('route' => ['admin:last-check-in-email:lender', $lender->getId() ])) }}
+                 {{ BootstrapForm::datepicker('lastCheckInEmail', null, ['label' => '', 'placeholder' => 'Date']) }}
+                 {{ BootstrapForm::submit('Save') }}
+                 {{ BootstrapForm::close() }}
+            </div>
         </td>
         <td>
             <p>
@@ -95,24 +84,48 @@ Quick Links
                     Inactive         
                 @endif             
             </p>
-            
-            @if($lender->getUser()->getActive())
-               {{ BootstrapForm::open(array('route' => ['admin:deactivate:lender', $lender->getId() ])) }}
-               {{ BootstrapForm::submit('Deactivate') }}
-               {{ BootstrapForm::close() }}
-            @else
-               {{ BootstrapForm::open(array('route' => ['admin:activate:lender', $lender->getId() ])) }}
-               {{ BootstrapForm::submit('Activate') }}
-               {{ BootstrapForm::close() }}
-            @endif             
-            <br/>
-           {{ BootstrapForm::open(array('route' => ['admin:delete:lender', $lender->getId() ])) }}
-           {{ BootstrapForm::submit('Delete') }}
-           {{ BootstrapForm::close() }}
+
+            @if(Auth::getUser()->isAdmin())
+            <p>
+                @if($lender->getUser()->getSubRole() == \Zidisha\User\User::SUB_ROLE_VOLUNTEER)
+                    <a href="{{ route('admin:remove:volunteer', $lender->getId()) }}">Remove Volunteer</a>
+                @else
+                    <a href="{{ route('admin:add:volunteer', $lender->getId()) }}">Make Volunteer</a>
+                @endif
+            </p>
+            <p>
+                @if($lender->getUser()->getActive())
+                <a href="{{ route('admin:deactivate:lender', $lender->getId()) }}">
+                    Deactivate lender account
+                </a>
+                @else
+                <a href="{{ route('admin:activate:lender', $lender->getId()) }}">
+                    Activate lender account
+                </a>
+                @endif
+            </p>
+            <p> 
+                <a href="{{ route('admin:delete:lender', $lender->getId()) }}">
+                    Delete account
+                </a>
+            </p>
+            @endif
         </td>
     </tr>
     @endforeach
     </tbody>
 </table>
 {{ BootstrapHtml::paginator($paginator)->appends(['country' => Request::query('country'), 'search' => Request::query('search')])->links() }}
+@stop
+
+@section('script-footer')
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#lenders').dataTable();
+    });
+    $('#check-in-toggle').click(function () {
+        $("#check-in").collapse('toggle');
+        return false;
+    });
+</script>
 @stop
