@@ -55,7 +55,7 @@ Repayment Process
         <td>
             {{ $payment->getBorrower()->getName() }}
             <p>Email : {{ $payment->getBorrower()->getUser()->getEmail() }}</p>
-            <p>Phone : {{ $payment->getBorrower()->getProfile()->getPhoneNumber() }}</p>
+            <p>Phone : {{ BootstrapHtml::number($payment->getBorrower()->getProfile()->getPhoneNumber(), $payment->getBorrower()->getCountry()->getCountryCode()) }}</p>
         </td>
         <td>{{ $payment->getAmount() }}</td>
         <td>

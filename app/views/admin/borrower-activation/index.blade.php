@@ -37,13 +37,13 @@ Activate Borrowers
         <td>
             {{ $borrower->getUser()->getEmail() }}
             <br/>
-            Dialing code: {{ $borrower->getProfile()->getPhoneNumber() }}
+            Dialing code: {{ BootstrapHtml::number($borrower->getProfile()->getPhoneNumber(), $borrower->getCountry()->getCountryCode()) }}
         </td>
         <td>
             @if($borrower->getCommunityLeader())
             {{ $borrower->getCommunityLeader()->getName() }}
             <br/>
-            {{ $borrower->getCommunityLeader()->getPhoneNumber() }}
+            {{ BootstrapHtml::number($borrower->getCommunityLeader()->getPhoneNumber(), $borrower->getCountry()->getCountryCode()) }}
             @endif
         </td>
         <td>

@@ -18,7 +18,7 @@ Activate Borrower
             <dd>{{ $borrower->getName() }}</dd>
 
             <dt>Telephone</dt>
-            <dd>{{ $borrower->getProfile()->getPhoneNumber() }}</dd>
+            <dd>{{ BootstrapHtml::number($borrower->getProfile()->getPhoneNumber(), $borrower->getCountry()->getCountryCode()) }}</dd>
 
             <dt>Email</dt>
             <dd>{{ $borrower->getUser()->getEmail() }}</dd>

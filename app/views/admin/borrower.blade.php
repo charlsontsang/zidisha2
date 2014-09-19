@@ -73,10 +73,10 @@
             <div class="loan-section-content">
                 Email: <strong>{{ $borrower->getUser()->getEmail() }}</strong>
                 <br/>
-                Phone: <strong>{{ $borrower->getProfile()->getPhoneNumber() }}</strong>
+                Phone: <strong>{{ BootstrapHtml::number($borrower->getProfile()->getPhoneNumber(), $borrower->getCountry()->getCountryCode()) }}</strong>
                 <br/>
                 @if (!empty($borrower->getProfile()->getAlternatePhoneNumber()))
-                    Alternate Phone: <strong>{{ $borrower->getProfile()->getAlternatePhoneNumber() }}</strong>
+                    Alternate Phone: <strong>{{ BootstrapHtml::number($borrower->getProfile()->getAlternatePhoneNumber(), $borrower->getCountry()->getCountryCode()) }}</strong>
                 @endif
             </div>
         </div>

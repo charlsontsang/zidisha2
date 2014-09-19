@@ -64,7 +64,7 @@ Quick Links
             </a>
             <br/>
             Email: {{ $borrower->getUser()->getEmail() }}<br/>
-            Phone: {{ $borrower->getProfile()->getPhoneNumber() }}
+            Phone: {{ BootstrapHtml::number($borrower->getProfile()->getPhoneNumber(), $borrower->getCountry()->getCountryCode()) }}
         </td>
         <td>
             {{ $borrower->getProfile()->getCity() }}<br/>

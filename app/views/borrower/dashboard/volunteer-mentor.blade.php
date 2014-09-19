@@ -19,7 +19,7 @@
             <br/>
             
             <strong>@lang('borrower.dashboard.volunteer-mentor.telephone')</strong>
-            {{ $volunteerMentor->getProfile()->getPhoneNumber() }}
+            {{ BootstrapHtml::number($volunteerMentor->getProfile()->getPhoneNumber(), $volunteerMentor->getCountry()->getCountryCode()) }}
         </p>
     </div>
 </div>
