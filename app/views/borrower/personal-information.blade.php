@@ -28,7 +28,11 @@ Join the global P2P microlending movement
 @endif
 
 <div class="borrower-personal-information-form">
-    {{ BootstrapForm::open(array('route' => 'borrower:post-personal-information', 'translationDomain' => 'borrower.personal-information', 'files' => true)) }}
+    @if($form->isVisitor() || $form->isAdmin())
+        {{ BootstrapForm::open(array('route' => ['admin:borrower:post-personal-information', $borrower->getUser()->getUsername()], 'translationDomain' => 'borrower.personal-information', 'files' => true)) }}
+    @else
+        {{ BootstrapForm::open(array('route' => 'borrower:post-personal-information', 'translationDomain' => 'borrower.personal-information', 'files' => true)) }}
+    @endif
     {{ BootstrapForm::populate($form) }}
 
 

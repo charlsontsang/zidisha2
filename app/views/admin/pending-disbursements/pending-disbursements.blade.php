@@ -65,7 +65,9 @@
                     <td>
                         <div class="row">
                             <div class="col-xs-12">
-                                <h3><a href="{{ route('borrower:public-profile', $loan->getBorrower()->getId()) }}">{{ $loan->getBorrower()->getName() }}</a></h3>
+                                <h3><a href="{{ route('loan:index', Auth::getUser()->getBorrower()->getLastLoanId()) }}">
+                                {{ $loan->getBorrower()->getName() }}</a>
+                                        </h3>
                             </div>
                         </div>
                         <div class="row">

@@ -57,7 +57,7 @@ class LenderMailer
     {
         $borrower = $bid->getLoan()->getBorrower();
         $parameters = [
-            'borrowerLink' => route('borrower:public-profile', $borrower->getUser()->getUsername()),
+            'borrowerLink' => route('loan:index', $borrower->getLastLoanId()),
             'borrowerName' => ucwords(strtolower($borrower->getName())),
             'bidInterest'  => $bid->getInterestRate(),
             'bidAmount'    => $bid->getBidAmount(),
@@ -78,7 +78,7 @@ class LenderMailer
     {
         $borrower = $bid->getLoan()->getBorrower();
         $parameters = [
-            'borrowerLink'      => route('borrower:public-profile', $borrower->getUser()->getUsername()),
+            'borrowerLink'      => route('loan:index', $borrower->getLastLoanId()),
             'borrowerName'      => ucwords(strtolower($borrower->getName())),
             'bidInterest'       => $bid->getInterestRate(),
             'bidAmount'         => $bid->getBidAmount(),
@@ -99,6 +99,7 @@ class LenderMailer
     public function sendLoanFullyFundedMail(Bid $bid)
     {
         $email = $bid->getLender()->getUser()->getEmail();
+        $borrower = $bid->getBorrower();
 
         $data['header'] = \Lang::get(
             'lender.mails.loan-fully-funded.accept-message-1',
@@ -109,10 +110,10 @@ class LenderMailer
         $data['content'] = \Lang::get(
             'lender.mails.loan-fully-funded.accept-message-2',
             [
-                'borrowerName'        => $bid->getBorrower()->getName(),
+                'borrowerName'        => $borrower->getName(),
                 'borrowerProfileLink' => route(
-                    'borrower:public-profile',
-                    ['username' => $bid->getBorrower()->getUser()->getUsername()]
+                    'loan:index',
+                    $borrower->getLastLoanId()
                 ),
                 'lendingGroupLink'    => route('lender:groups')
             ],

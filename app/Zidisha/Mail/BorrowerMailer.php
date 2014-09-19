@@ -89,7 +89,7 @@ class BorrowerMailer{
         $parameters = [
             'borrowerName' => $borrower->getName(),
             'vmName'       => $borrower->getVolunteerMentor()->getBorrowerVolunteer()->getName(),
-            'profileUrl'   => route('borrower:public-profile', $borrower->getUser()->getUsername())
+            'profileUrl'   => route('loan:index', $borrower->getLastLoanId())
         ];
 
         $body = \Lang::get('borrower.mails.volunteer-mentor-confirmation.body', $parameters, $local);
@@ -509,7 +509,7 @@ class BorrowerMailer{
             'emails.hero',
             $data + [
                 'to'         => $loan->getBorrower()->getUser()->getEmail(),
-                'subject'    => \Lang::get('borrower.mails.loan-fully-funded.subject', $local),
+                'subject'    => \Lang::get('borrower.mails.loan-fully-funded.subject', [], $local),
                 'templateId' => \Setting::get('sendwithus.borrower-notifications-template-id')
             ]
         );

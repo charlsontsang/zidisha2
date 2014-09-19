@@ -34,8 +34,10 @@ Quick Links
     <tbody>
     @foreach($paginator as $borrower)
     <tr>
-        <td><a href="{{ route('borrower:public-profile', $borrower->getUser()->getUserName()) }}">{{
-                $borrower->getFirstName() }} {{ $borrower->getLastName() }}</a>
+        <td>
+        <a href="{{ route('admin:borrower:personal-information', $borrower->getUser()->getUsername()) }}">
+        {{ $borrower->getFirstName() }} {{ $borrower->getLastName() }}
+        </a>
             <p>{{ $borrower->getUser()->getUsername() }}</p>
             <p>{{ $borrower->getUser()->getEmail() }}</p>
         </td>

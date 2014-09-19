@@ -138,6 +138,17 @@ Route::filter(
     }
 );
 
+Route::filter(
+    'isVMOrVolunteerOrAdmin',
+    function ($route, $request) {
+        $isAllowed = Auth::getUser()->isVMOrVolunteerOrAdmin();
+        if (!$isAllowed) {
+            Flash::error("You do not have proper permission to view this page");
+            return Redirect::route('login');
+        }
+    }
+);
+
 Route::filter('loggedIn', function()
     {
         if (Auth::check()) {

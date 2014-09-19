@@ -228,6 +228,7 @@
         <column name="first_name" type="VARCHAR" size="50" required="true"/>
         <column name="last_name" type="VARCHAR" size="50" required="true"/>
         <column name="active_loan_id" type="INTEGER"/>
+        <column name="last_loan_id" type="INTEGER"/>
         <column name="loan_status" type="ENUM" valueSet="0, 1, 2, 3, 4, 5, 6, 7" defaultValue="4"/>
         <column name="active" type="BOOLEAN" defaultValue="true"/>
         <column name="volunteer_mentor_id" type="INTEGER"/>
@@ -246,6 +247,9 @@
         </foreign-key>
         <foreign-key foreignTable="loans" phpName="ActiveLoan">
             <reference local="active_loan_id" foreign="id"/>
+        </foreign-key>
+        <foreign-key foreignTable="loans" phpName="LastLoan">
+            <reference local="last_loan_id" foreign="id"/>
         </foreign-key>
         <foreign-key foreignTable="volunteer_mentors" phpName="VolunteerMentor">
             <reference local="volunteer_mentor_id" foreign="borrower_id"/>

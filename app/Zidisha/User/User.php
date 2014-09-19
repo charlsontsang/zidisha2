@@ -121,9 +121,15 @@ class User extends BaseUser implements UserInterface, RemindableInterface
 
     public function getProfileUrl($parameters = [])
     {
-        $route = $this->getRole() . ":public-profile";
-
-        return route($route, ['username' => $this->getUsername()] + $parameters);
+        if ($this->isLender()) {
+            $route = $this->getRole() . ":public-profile";
+            return route($route, ['username' => $this->getUsername()] + $parameters);
+        } elseif ($this->isBorrower()) {
+            if ($this->getBorrower()->getLastLoanId()) {
+                return route('loan:index', ['loanId' =>$this->getBorrower()->getLastLoanId()] + $parameters);
+            }
+        }
+        return '#';
     }
 
     public function isLender()
@@ -169,5 +175,10 @@ class User extends BaseUser implements UserInterface, RemindableInterface
     public function isVolunteerMentorOrAdmin()
     {
         return ($this->isVolunteerMentor() || $this->isAdmin());
+    }
+
+    public function isVMOrVolunteerOrAdmin()
+    {
+        return ($this->isVolunteerMentor() || $this->isVolunteer() || $this->isAdmin());
     }
 }

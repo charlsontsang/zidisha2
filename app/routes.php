@@ -343,14 +343,6 @@ Route::group(
             }
         );
 
-        /**
-         * Routes for borrower page
-         */
-        Route::get(
-            'borrower/profile/view/{username}',
-            array('uses' => 'BorrowerController@getPublicProfile', 'as' => 'borrower:public-profile')
-        );
-
         Route::group(
             array('prefix' => 'borrower', 'before' => 'auth|hasRole:borrower'),
             function () {
@@ -548,13 +540,6 @@ Route::group(
         Route::group(
             array('prefix' => 'admin', 'before' => 'auth|isVolunteerMentorOrAdmin'),
             function () {
-                Route::get(
-                    'personal-information/{username?}',
-                    array(
-                        'uses' => 'BorrowerController@getPersonalInformation',
-                        'as'   => 'admin:borrower:personal-information'
-                    )
-                );
 
                 Route::get(
                     'vm/repayments/schedule/{borrowerId}/{loanId?}',
@@ -567,11 +552,34 @@ Route::group(
         );
 
         /**
+         * Routes for Admin|VolunteerMentor|Volunteer
+         */
+        Route::group(
+            array('prefix' => 'admin', 'before' => 'auth|isVMOrVolunteerOrAdmin'),
+            function () {
+                Route::get(
+                    'personal-information/{username?}',
+                    array(
+                        'uses' => 'BorrowerController@getPersonalInformation',
+                        'as'   => 'admin:borrower:personal-information'
+                    )
+                );
+            }
+        );
+
+        /**
          * Routes for Admin|Volunteer
          */
         Route::group(
             array('prefix' => 'admin', 'before' => 'auth|isVolunteerOrAdmin'),
             function () {
+                Route::post(
+                    'personal-information/{username?}',
+                    array(
+                        'uses' => 'BorrowerController@getPersonalInformationAdmin',
+                        'as'   => 'admin:borrower:post-personal-information'
+                    )
+                );
                 Route::get('dashboard', array('uses' => 'AdminController@getDashboard', 'as' => 'admin:dashboard'));
                 Route::get('volunteers', array('uses' => 'AdminController@getVolunteers', 'as' => 'admin:volunteers'));
                 Route::get(

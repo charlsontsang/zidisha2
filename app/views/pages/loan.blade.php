@@ -63,13 +63,27 @@
                                         @if($invitedBy)
                                         <br/>
                                         Invited By:
-                                        <strong><a href="{{ route('borrower:public-profile', $invitedBy->getId()) }}">{{ $invitedBy->getName() }}</a></strong>
+                                        <strong>
+                                         @if($invitedBy->getLastLoanId())
+                                            <a href="{{ route('loan:index', $invitedBy->getLastLoanId()) }}">
+                                             {{ $invitedBy->getName() }}</a>
+                                         @else
+                                             {{ $invitedBy->getName() }}
+                                        @endif
+                                        </strong>
                                         @endif
                                         
                                         @if($volunteerMentor)
                                         <br/>
                                         Volunteer Mentor:
-                                        <strong><a href="{{ route('borrower:public-profile', $volunteerMentor->getId()) }}">{{ $volunteerMentor->getName() }}</a></strong>
+                                        <strong>
+                                         @if($volunteerMentor->getLastLoanId())
+                                            <a href="{{ route('loan:index', $volunteerMentor->getLastLoanId()) }}">
+                                             {{ $volunteerMentor->getName() }}</a>
+                                         @else
+                                             {{ $volunteerMentor->getName() }}
+                                        @endif
+                                        </strong>
                                         @endif
                                     </div>
                                     <div class="col-sm-6">

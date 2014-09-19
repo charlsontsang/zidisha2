@@ -42,8 +42,9 @@ Quick Links
         </td>
         <td>@include('partials/_progress', [ 'raised' => rand(1,100)])</td>
         <td>
-            <p><a href="{{ route('borrower:public-profile', $loan->getBorrower()->getUser()->getUsername()) }}">{{ $loan->getBorrower()->getFirstName()
-                    }} {{ $loan->getBorrower()->getLastName() }}</a></p>
+            <p><a href="{{ route('admin:borrower:personal-information', $loan->getBorrower()->getUser()->getUsername()) }}">
+               {{ $loan->getBorrower()->getFirstName() }} {{ $loan->getBorrower()->getLastName() }}
+               </a></p>
             <p>{{ $loan->getBorrower()->getUser()->getUsername() }}</p>
             <p>{{ $loan->getBorrower()->getUser()->getEmail() }}</p>
             <p>{{ $loan->getBorrower()->getCountry()->getName() }}</p>

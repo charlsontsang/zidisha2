@@ -10,8 +10,12 @@
         </p>
         <p class="omega">
             <strong>@lang('borrower.dashboard.volunteer-mentor.name')</strong>
-            <a href="{{ route('borrower:public-profile', $borrower->getId()) }}">{{ $volunteerMentor->getName() }}</a>
-            
+            @if($volunteerMentor->getLastLoanId())
+            <a href="{{ route('loan:index', $volunteerMentor->getLastLoanId()) }}">
+             {{ $volunteerMentor->getName() }}</a>
+             @else
+                 {{ $volunteerMentor->getName() }}
+            @endif
             <br/>
             
             <strong>@lang('borrower.dashboard.volunteer-mentor.telephone')</strong>
