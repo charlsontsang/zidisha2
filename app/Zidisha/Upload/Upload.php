@@ -51,9 +51,9 @@ class Upload extends BaseUpload
         return $this->getBasePath() . $this->getFilename();
     }
 
-    protected function getBasePath()
+    protected function getBasePath($userId)
     {
-        return public_path() . '/uploads/';
+        return public_path() . '/uploads/' . $userId;
     }
 
     public function postDelete(ConnectionInterface $con = null)
@@ -88,7 +88,7 @@ class Upload extends BaseUpload
 
     public function postSave(ConnectionInterface $con = null)
     {
-        $this->file = $this->file->move($this->getBasePath(), $this->getFilename());
+        $this->file = $this->file->move($this->getBasePath($this->getUserId()), $this->getFilename());
     }
 
     public function getFile()
