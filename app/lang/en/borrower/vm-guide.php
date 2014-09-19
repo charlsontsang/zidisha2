@@ -8,7 +8,7 @@ return array(
 		<p>Volunteer Mentors are responsible for:</p>
 		<p>1. High personal standards</p>		
 		<ul>
-			<li>Upholding our <a href="index.php?p=132">Code of Ethics</a></li>
+			<li>Upholding our <a href=":ethicsLink">Code of Ethics</a></li>
 			<li>Remaining current with one\'s own repayment schedule (Please reschedule as necessary rather than skipping payments)</li>
 		</ul>
 		<p>2. Serving as an information resource for other members</p>
@@ -22,7 +22,7 @@ return array(
 			<li>Whenever possible, helping the assigned members to reschedule</li>
 			<li>Posting a positive, professional comment in the loan profile page of each member who has missed scheduled payments to inform lenders of the reason for the delay</li>
 		</ul>
-		<p>Please see the <a href="index.php?p=133">Frequently Asked Questions</a> page to learn more.</p>
+		<p>Please see the <a href=":faqLink">Frequently Asked Questions</a> page to learn more.</p>
 		<p>We welcome new Volunteer Mentors who can uphold these standards.  If you are interested in applying to become a Volunteer Mentor, please send an email to service@zidisha.org.</p>',
 
 	'vm-ethics-title'		=> 'Volunteer Mentor Code of Ethics',
@@ -79,14 +79,12 @@ return array(
 		<p>If the member still has access to the email account used to register with Zidisha, use the "Forgot password" link in the login page to reset the password. Otherwise, you may send an email to service@zidisha.org to and ask us to send a new password to the member\'s mobile phone number. You can then log in using the member\'s email address and the password we sent.</p>
 		<br/>
 		<h4>How can I qualify for a VM credit limit bonus?</h4>
-		<p>As long as you remain a VM and fulfill the <a href="index.php?p=131">VM program requirements</a>, you will receive a credit limit bonus for each of your assigned members who remains current with scheduled repayments. You may view the specific bonus amounts for your country in the Current Credit Limit page of your account.</p>
+		<p>As long as you remain a VM and fulfill the VM program requirements, you will receive a credit limit bonus for each of your assigned members who remains current with scheduled repayments. You may view the specific bonus amounts for your country in the Current Credit Limit page of your account.</p>
 		<br/>
 		<h4>Can I opt out of being a VM?</h4>
 		<p>Yes, being a VM is strictly voluntary.  If at any time you feel you can no longer perform VM duties, please do not hesitate to contact us at service@zidisha.org and ask to close your VM account.</p>
 		<br/>
 		<h4>Can I recommend others for a VM position?</h4>
-		<p>Yes.  If you know anyone that is a good fit, please have them email us at service@zidisha.org.</p>
-		<br/>
-		<p><a href="index.php?p=131">Back to the Volunteer Mentor Guidelines page</a></p>',
+		<p>Yes.  If you know anyone that is a good fit, please have them email us at service@zidisha.org.</p>',
 
 );
