@@ -8888,7 +8888,7 @@ form .btn-primary,
   .login-form .btn-block,
   form .btn-primary,
   .giftcard .btn-primary {
-    min-width: 100px;
+    min-width: 150px !important;
     max-width: 600px !important;
   }
 }
