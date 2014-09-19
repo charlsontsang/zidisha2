@@ -15,10 +15,18 @@ body {
   }
 }
 .page-section {
-  background-color: #f8f8f8;
-  border-bottom: 1px solid #e0e0e0;
+  background-color: @panel-default-bg;
+  border-bottom: 1px solid @panel-default-border;
   margin-bottom: 22px;
   padding-bottom: 22px;
+}
+.panel-info {
+  border-color: #e5e5e5;
+}
+.panel-info > .panel-heading {
+  color: #31708f;
+  background-color: #d9edf7;
+  border-color: @headings-color;
 }
 .page-section-inverted {
   background-color: @gray-dark;
