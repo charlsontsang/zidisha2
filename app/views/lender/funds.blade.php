@@ -23,8 +23,6 @@ Quick Links
 
         <p>Current lending credit: <strong>{{ $currentBalance }}</strong></p>
 
-        <br/>
-
         {{ BootstrapForm::open(array('route' => 'lender:post-funds', 'translationDomain' => 'fund', 'id' => 'funds-upload')) }}
         {{ BootstrapForm::populate($form) }}
 
