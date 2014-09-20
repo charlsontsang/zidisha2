@@ -8731,11 +8731,15 @@ body {
 }
 .panel-info {
   border-color: #dddddd;
+  margin-bottom: 15px;
 }
 .panel-info > .panel-heading {
   color: #404040;
   background-color: #ebebeb;
   border-color: #dddddd;
+}
+.panel-info .form-group:last-child {
+  margin-bottom: 0;
 }
 .page-section-inverted {
   background-color: #333232;
@@ -8888,6 +8892,11 @@ hr {
 }
 .info-page hr {
   margin: 3em 0;
+}
+@media (min-width: 768px) {
+  h1.page-title {
+    margin-top: 44px;
+  }
 }
 @media (min-width: 768px) {
   .lender-welcome h1 {

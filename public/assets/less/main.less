@@ -47,11 +47,15 @@ body {
 }
 .panel-info {
   border-color: @panel-default-border;
+  margin-bottom: 15px;
 }
 .panel-info > .panel-heading {
   color: @headings-color;
   background-color: darken(@body-bg, 5%);
   border-color: @panel-default-border;
+}
+.panel-info .form-group:last-child {
+  margin-bottom: 0;
 }
 .page-section-inverted {
   background-color: @gray-dark;
