@@ -21,45 +21,9 @@ Quick Links
         </div>
         <div class="panel-body">
             @if (count($comments))
-                <table class="table">
-                    <tbody>
-                    @foreach($comments as $comment)
-                        <tr>
-                            <td colspan="2">
-                                <a href="{{ route('loan:index', $comment->getBorrower()->getActiveLoanId()) }}">
-                                    <img src="{{ $comment->getBorrower()->getUser()->getProfilePictureUrl('small-profile-picture') }}" width="100%">
-                                </a>
-                            </td>
-                            <td>
-                                {{ $comment->getMessage() }}
-                                <br/><br/>
-                                <p class="meta">
-                                @if($comment->getUserId() != $comment->getBorrowerId())
-                                    <a href="{{ route('loan:index', $comment->getBorrower()->getActiveLoanId()) }}">
-                                     <strong>{{ $comment->getBorrower()->getName() }}</strong>
-                                    </a>
-                                    {{ $comment->getUser()->getSubObject()->getName() }}
-                                    <strong>
-                                    {{ $comment->getUser()->getSubObject()->getProfile()->getCity() }},
-                                    {{ $comment->getUser()->getSubObject()->getCountry()->getName() }}
-                                    </strong>
-                                    {{ date("d F Y", $comment->getCreatedAt()->getTimeStamp())  }}
-                                @else
-                                    <a href="{{ route('loan:index', $comment->getBorrower()->getActiveLoanId()) }}">
-                                     <strong>{{ $comment->getUser()->getSubObject()->getName() }}</strong>
-                                    </a>
-                                    <strong>
-                                    {{ $comment->getUser()->getSubObject()->getProfile()->getCity() }},
-                                    {{ $comment->getUser()->getSubObject()->getCountry()->getName() }}
-                                    </strong>
-                                    {{ date("d F Y", $comment->getCreatedAt()->getTimeStamp()) }}
-                                @endif
-                                </p>
-                            </td>
-                        </tr>
-                    @endforeach
-                     </tbody>
-                </table>
+                @foreach($comments as $comment)
+                    @include('partials.comments.display-comment-partial', ['comment' => $comment])
+                @endforeach
             @else
                 <p>Your comment feed is empty.</p>
                 <p><strong><a href="{{ route('lend:index') }}">Make a Loan</a></strong></p>
