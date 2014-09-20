@@ -114,8 +114,8 @@ class Upload extends BaseUpload
             if ($file->exists($this->getPath())) {
                 $this->postDelete();
             }
-            if (!$file->isDirectory($this->getBasePath())) {
-                $file->makeDirectory($this->getBasePath(), null , true);
+            if (!$file->exists($this->getBasePath())) {
+                $file->makeDirectory($this->getBasePath(), 0755 , true);
             }
             $this->file = $this->file->save($this->getBasePath() . $this->getFilename());
         } else {
