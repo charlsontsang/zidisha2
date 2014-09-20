@@ -83,12 +83,10 @@ class Upload extends BaseUpload
 
         if ($isProfileUpload) {
             $upload->isProfileUpload = $isProfileUpload;
-            $picture = (string) \Image::make($file)->encode('jpg');
+            $file = \Image::make($file);
             $upload->setFileName('profile.jpg');
             $extension = 'jpg';
             $mimeType = 'image/jpeg';
-            //TODO
-//            $file = new UploadedFile($picture, $upload->getFileName(), $upload->getMimeType());
         } else {
             $fileName = substr(Str::slug($file->getClientOriginalName()), 0, -3);
             $upload->setFileName('-' . substr($fileName, 0, 32). '.' . $extension);
@@ -117,8 +115,13 @@ class Upload extends BaseUpload
                 if ($file->exists($this->getPath())) {
                     $this->postDelete();
                 }
+                if (!is_dir($this->getBasePath())) {
+                    mkdir($this->getBasePath());
+                }
+                $this->file = $this->file->save($this->getBasePath() . $this->getFilename());
+            } else {
+                $this->file = $this->file->move($this->getBasePath(), $this->getFilename());
             }
-            $this->file = $this->file->move($this->getBasePath(), $this->getFilename());
         } else {
             $this->isPostSave = true;
         }
