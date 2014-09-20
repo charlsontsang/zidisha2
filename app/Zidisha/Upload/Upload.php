@@ -4,6 +4,7 @@ namespace Zidisha\Upload;
 
 use Config;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Str;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -65,34 +66,35 @@ class Upload extends BaseUpload
         return true;
     }
 
-    public function createFromFile(UploadedFile $file)
+    public static function createFromFile(UploadedFile $file, $isProfileUpload = false)
     {
+        $upload = new Upload();
         $extension = $file->getClientOriginalExtension();
         $mimeType = $file->getMimeType();
 
         $fileType = in_array($extension, static::$image_types) ? 'image' : 'document';
 
-        //TODO convert to jpg for profile pics
-        if ($this->isProfileUpload){
-//          $picture = new File(imagejpeg(imagecreatefromstring(file_get_contents($file))));
-        }
-        $fileName = substr(\Illuminate\Support\Str::slug($file->getClientOriginalName()), 0, -3);
-        if ($this->isProfileUpload) {
-            $this->setFileName('profile.jpg');
+        if ($isProfileUpload) {
+            $upload->isProfileUpload = $isProfileUpload;
+            $picture = (string) \Image::make($file)->encode('jpg');
+            $upload->setFileName('profile.jpg');
+            $extension = 'jpg';
+            $mimeType = 'image/jpeg';
+            //TODO
+//            $file = new UploadedFile($picture, $upload->getFileName(), $upload->getMimeType());
         } else {
-            $this->setFileName('-' . substr($fileName, 0, 32). '.' . $extension);
-            $this->isPostSave = false;
-            var_dump('saving');
-            $this->save();
+            $fileName = substr(Str::slug($file->getClientOriginalName()), 0, -3);
+            $upload->setFileName('-' . substr($fileName, 0, 32). '.' . $extension);
+            $upload->isPostSave = false;
         }
 
-        $this->setExtension($extension)
+        $upload->setExtension($extension)
             ->setType($fileType)
             ->setMimeType($mimeType);
 
-        $this->file = $file;
+        $upload->file = $file;
 
-        return $this;
+        return $upload;
     }
 
     public function preSave(ConnectionInterface $con = null)
@@ -103,6 +105,18 @@ class Upload extends BaseUpload
     public function postSave(ConnectionInterface $con = null)
     {
         if ($this->isPostSave) {
+            if ($this->isProfileUpload) {
+                if (file_exists($this->getPath())) {
+                    unlink($this->getPath());
+                    $formats = array_keys(Config::get('image.formats'));
+                    foreach ($formats as $format) {
+                        $cachePath = $this->getCachePath($format);
+                        if (file_exists($cachePath)) {
+                            unlink($cachePath);
+                        }
+                    }
+                }
+            }
             $this->file = $this->file->move($this->getBasePath(), $this->getFilename());
         } else {
             $this->isPostSave = true;
