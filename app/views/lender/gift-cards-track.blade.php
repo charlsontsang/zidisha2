@@ -10,16 +10,23 @@ Track Gift Cards
 
 <div class="panel panel-info">
     <div class="panel-body">
-        <p>Gift Cards Gifted: <strong>{{ $countCards }}</strong> 
-            <a href="{{ route('lender:gift-cards') }}" class="btn btn-primary pull-right">
-                @if ($countCards==0)
-                    Give your first gift card
-                @else
-                    Give another gift card
-                @endif
-            </a>
-        </p>
-        <p>Gift Cards Redeemed: <strong>{{ $countRedeemed }}</strong></p>
+        <div class="row">
+            <div class="col-sm-3">
+                Gift Cards Gifted: <strong>{{ $countCards }}</strong> 
+            </div>
+            <div class="col-sm-3">
+                Gift Cards Redeemed: <strong>{{ $countRedeemed }}</strong>
+            </div>
+            <div class="col-sm-6">
+                <a href="{{ route('lender:gift-cards') }}" class="btn btn-primary pull-right">
+                    @if ($countCards==0)
+                        Give your first gift card
+                    @else
+                        Give another gift card
+                    @endif
+                </a>
+            </div>
+        </div>
     </div>
 </div>
 

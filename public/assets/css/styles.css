@@ -9181,6 +9181,12 @@ table.dataTable {
   display: inline-block;
   width: 78%;
 }
+@media (max-width: 767px) {
+  .panel-info .btn-primary {
+    margin-top: 15px;
+    width: 100%;
+  }
+}
 .btn-facebook {
   background-color: #3B5999;
   color: white;
