@@ -46,11 +46,11 @@ Track Gift Cards
             <tbody>
                 @foreach($cards as $card)
                 <tr>
-                    <td data-title="Date Gifted">{{ $card->getDate()->format('M j, Y') }}</td>
-                    <td data-title="Recipient Name">{{ $card->getRecipientName() }}</td>
-                    <td data-title="Delivery Method">{{ $card->getOrderType() }}</td>
-                    <td data-title="Recipient Email">{{ $card->getRecipientEmail() }}</td>
-                    <td data-title="Card Amount">{{ $card->getCardAmount()->getAmount() }}</td>
+                    <td data-title="Date">{{ $card->getDate()->format('M j, Y') }}</td>
+                    <td data-title="Recipient">{{ $card->getRecipientName() }}</td>
+                    <td data-title="Delivery">{{ $card->getOrderType() }}</td>
+                    <td data-title="Email">{{ $card->getRecipientEmail() }}</td>
+                    <td data-title="Amount">{{ $card->getCardAmount()->getAmount() }}</td>
                     <td data-title="Status">
                         @if($card->getClaimed() == 1)
                         <span class="label label-success">{{ $card->getStringClaimed() }}</span>
