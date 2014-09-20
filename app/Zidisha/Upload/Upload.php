@@ -123,19 +123,6 @@ class Upload extends BaseUpload
         }
     }
 
-    public function preInsert(ConnectionInterface $con = null)
-    {
-        if ($this->isProfileUpload) {
-            $file = new Filesystem();
-            if ($file->exists($this->getPath())) {
-                $this->postDelete();
-            }
-            if (!is_dir($this->getBasePath())) {
-                mkdir($this->getBasePath());
-            }
-        }
-    }
-
     public function getFile()
     {
         if ($this->file == null) {
@@ -190,5 +177,4 @@ class Upload extends BaseUpload
         }
         return public_path() . '/uploads/cache/' . $format . '/' . $this->getUserId() . '/';
     }
-
 }
