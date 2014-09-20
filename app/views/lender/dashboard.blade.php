@@ -20,6 +20,12 @@ Quick Links
         Ready to make a loan? Check out our fundraising projects here: <a href="{{ route('lender:edit-profile') }}" class="btn btn-primary pull-right">View projects</a>
     </div>
 </div>
+@elseif (!empty($currentBalance))
+<div class="panel panel-info">
+    <div class="panel-body">
+        You have {{ $currentBalance }} in lending credit available. <a href="{{ route('lender:edit-profile') }}" class="btn btn-primary pull-right">Make a loan</a>
+    </div>
+</div>
 @endif
 
 @if (empty (Auth::getUser()->getLender()->getProfile()->getAboutMe()))
