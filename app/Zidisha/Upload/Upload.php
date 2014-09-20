@@ -18,7 +18,6 @@ class Upload extends BaseUpload
 
     protected $file = null;
     protected $isProfileUpload = false;
-    protected $isPostSave = true;
 
     public function isImage()
     {
@@ -90,7 +89,6 @@ class Upload extends BaseUpload
         } else {
             $fileName = substr(Str::slug($file->getClientOriginalName()), 0, -3);
             $upload->setFileName('-' . substr($fileName, 0, 32). '.' . $extension);
-            $upload->isPostSave = false;
         }
 
         $upload->setExtension($extension)
@@ -107,23 +105,34 @@ class Upload extends BaseUpload
         return $this->file ? true : false;
     }
 
-    public function postSave(ConnectionInterface $con = null)
+    public function postInsert(ConnectionInterface $con = null)
     {
-        if ($this->isPostSave) {
-            if ($this->isProfileUpload) {
-                $file = new Filesystem();
-                if ($file->exists($this->getPath())) {
-                    $this->postDelete();
-                }
-                if (!is_dir($this->getBasePath())) {
-                    mkdir($this->getBasePath());
-                }
-                $this->file = $this->file->save($this->getBasePath() . $this->getFilename());
-            } else {
-                $this->file = $this->file->move($this->getBasePath(), $this->getFilename());
+        if ($this->isProfileUpload) {
+            $file = new Filesystem();
+            if ($file->exists($this->getPath())) {
+                $this->postDelete();
             }
+            if (!is_dir($this->getBasePath())) {
+                mkdir($this->getBasePath());
+            }
+            $this->file = $this->file->save($this->getBasePath() . $this->getFilename());
         } else {
-            $this->isPostSave = true;
+            $this->setFileName( $this->getId() . $this->getFileName());
+            $this->save();
+            $this->file = $this->file->move($this->getBasePath(), $this->getFilename());
+        }
+    }
+
+    public function preInsert(ConnectionInterface $con = null)
+    {
+        if ($this->isProfileUpload) {
+            $file = new Filesystem();
+            if ($file->exists($this->getPath())) {
+                $this->postDelete();
+            }
+            if (!is_dir($this->getBasePath())) {
+                mkdir($this->getBasePath());
+            }
         }
     }
 
@@ -182,18 +191,4 @@ class Upload extends BaseUpload
         return public_path() . '/uploads/cache/' . $format . '/' . $this->getUserId() . '/';
     }
 
-    public function setProfileUpload($upload = true)
-    {
-        $this->isProfileUpload = $upload;
-        return $this->isProfileUpload;
-    }
-
-    public function save(ConnectionInterface $con = null)
-    {
-        $return = parent::save($con);
-        if (!$this->isProfileUpload) {
-            $this->postSave();
-        }
-        return $return;
-    }
 }

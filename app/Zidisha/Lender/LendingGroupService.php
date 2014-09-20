@@ -31,8 +31,6 @@ class LendingGroupService
             $upload = Upload::createFromFile($image);
             $upload->setUser($user);
             $upload->save();
-            $upload->setFileName( $upload->getId() . $upload->getFileName());
-            $upload->save();
             $group->setGroupProfilePicture($upload);
         }
 
@@ -56,8 +54,6 @@ class LendingGroupService
             $user = $group->getCreator()->getUser();
             $upload = Upload::createFromFile($image);
             $upload->setUser($user);
-            $upload->save();
-            $upload->setFileName( $upload->getId() . $upload->getFileName());
             $upload->save();
             $group->setGroupProfilePicture($upload);
         }
