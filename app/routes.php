@@ -890,7 +890,7 @@ Route::group(
         /**
          * Image resize route
          */
-        Route::get('resize/{uploadId}/{format}', array('uses' => 'ImageController@getImage', 'as' => 'image:resize'));
+        Route::get('resize/{uploadId}/{format}/{isProfileImage}', array('uses' => 'ImageController@getImage', 'as' => 'image:resize'));
 
         /**
          * Routes for Invite

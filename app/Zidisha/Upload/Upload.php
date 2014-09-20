@@ -24,7 +24,7 @@ class Upload extends BaseUpload
         return $this->getType() == 'image' ? true : false;
     }
 
-    public function getImageUrl($format)
+    public function getImageUrl($format, $isProfileImage = false)
     {
         if (!Config::get('image.formats.' . $format)) {
             throw new ConfigurationNotFoundException();
@@ -36,12 +36,16 @@ class Upload extends BaseUpload
 
         $file = new Filesystem();
 
-        if ($file->exists($this->getCachePath($format))) {
+        if ($file->exists($this->getCachePath($format, $isProfileImage))) {
             $width = Config::get("image.formats.$format.width");
-            $height = Config::get("image.formats.$format.height");
+            if ($isProfileImage) {
+                $height = Config::get("image.formats.$format.height");
+            } else {
+                $height = null;
+            }
             return asset('uploads/cache/' . $width . 'X' . $height . '/' . $this->getUserId() . '/' . $this->getFilename());
         } else {
-            return route('image:resize', ['upload_id' => $this->getId(), 'format' => $format]);
+            return route('image:resize', ['upload_id' => $this->getId(), 'format' => $format, 'is_profile_image' => $isProfileImage ? 1 : 0]);
         }
     }
 
@@ -66,7 +70,7 @@ class Upload extends BaseUpload
         $file->delete($this->getPath());
         $formats = array_keys(Config::get('image.formats'));
         foreach ($formats as $format) {
-            $cachePath = $this->getCachePath($format);
+            $cachePath = $this->getCachePath($format, $this->isProfileUpload);
             if ($file->exists($cachePath)) {
                 $file->delete($cachePath);
             }
@@ -134,28 +138,33 @@ class Upload extends BaseUpload
         return $this->file;
     }
 
-    public function resize($format)
+    public function resize($format, $isProfileImage = false)
     {
         $file = new Filesystem();
-        $cachePath = $this->getCachePath($format);
+        $cachePath = $this->getCachePath($format, $isProfileImage);
         if (!$file->exists($cachePath)) {
             $img = \Image::make($this->getPath());
 
             if (!Config::get('image.formats.' . $format)) {
                 throw new ConfigurationNotFoundException();
             }
-
+            $width = Config::get("image.formats.$format.width");
+            if ($isProfileImage) {
+                $height = Config::get("image.formats.$format.height");
+            } else {
+                $height = null;
+            }
             $img->resize(
-                Config::get("image.formats.$format.width"),
-                Config::get("image.formats.$format.height"),
+                $width,
+                $width,
                 function ($constraint) {
                     $constraint->aspectRatio();
                     $constraint->upsize();
                 }
             );
 
-            if(!$file->exists($this->getCacheBasePath($format))){
-                $file->makeDirectory($this->getCacheBasePath($format), 0755, true);
+            if(!$file->exists($this->getCacheBasePath($format, $isProfileImage))){
+                $file->makeDirectory($this->getCacheBasePath($format, $isProfileImage), 0755, true);
             }
             $img->save($cachePath);
         }
@@ -163,18 +172,22 @@ class Upload extends BaseUpload
         return new File($cachePath);
     }
 
-    protected function getCachePath($format)
+    protected function getCachePath($format, $isProfileImage = false)
     {
-        return $this->getCacheBasePath($format) . $this->getFilename();
+        return $this->getCacheBasePath($format, $isProfileImage) . $this->getFilename();
     }
 
-    protected function getCacheBasePath($format)
+    protected function getCacheBasePath($format, $isProfileImage = false)
     {
         if (!Config::get('image.formats.' . $format)) {
             throw new ConfigurationNotFoundException();
         }
         $width = Config::get("image.formats.$format.width");
-        $height = Config::get("image.formats.$format.height");
+        if ($isProfileImage) {
+            $height = Config::get("image.formats.$format.height");
+        } else {
+            $height = null;
+        }
         return public_path() . '/uploads/cache/' . $width . 'X' . $height . '/' . $this->getUserId() . '/';
     }
 }

@@ -99,7 +99,7 @@ class User extends BaseUser implements UserInterface, RemindableInterface
             throw new ConfigurationNotFoundException();
         }
         if ($this->hasProfilePicture()) {
-            return $this->getProfilePicture()->getImageUrl($format);
+            return $this->getProfilePicture()->getImageUrl($format, true);
         }elseif ($this->getFacebookId()) {
            $width =  Config::get("image.formats.$format.width");
            $height = Config::get("image.formats.$format.height");

@@ -19,8 +19,8 @@
         <div>      
             @foreach($borrower->getUploads() as $upload)
                 @if($upload->isImage())
-                <a href="{{ $upload->getImageUrl('small-profile-picture') }}">
-                    <img src="{{ $upload->getImageUrl('small-profile-picture') }}" width="100%" />
+                <a href="{{ $upload->getImageUrl('small-profile-picture', true) }}">
+                    <img src="{{ $upload->getImageUrl('small-profile-picture', true) }}" width="100%" />
                 </a>
                 @else
                 <div class="well">
