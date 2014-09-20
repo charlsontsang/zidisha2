@@ -8689,7 +8689,7 @@ body {
 }
 .highlight-top {
   border-top: none;
-  padding-bottom: 45px;
+  padding: 0 15px 45px 15px;
   margin-bottom: 30px;
 }
 .highlight-panel {
