@@ -89,7 +89,7 @@ class Upload extends BaseUpload
             $extension = 'jpg';
             $mimeType = 'image/jpeg';
         } else {
-            $fileName = substr(Str::slug($file->getClientOriginalName()), 0, -3);
+            $fileName = substr(Str::slug($file->getClientOriginalName()), 0, -(strlen($extension)));
             $upload->setFileName('-' . substr($fileName, 0, 32). '.' . $extension);
         }
 
