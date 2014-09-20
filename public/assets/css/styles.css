@@ -8730,7 +8730,7 @@ body {
 }
 .panel-info {
   border-color: #dddddd;
-  margin: 15px -15px;
+  margin: 15px -15px -15px -15px;
 }
 @media (min-width: 768px) {
   .panel-info {
