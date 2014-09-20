@@ -30,7 +30,7 @@ Quick Links
 
         {{ BootstrapForm::text('amount', null, ['label' => 'Lending Credit', 'id' => 'amount']) }}
         {{ BootstrapForm::hidden('creditAmount', null, ['id' => 'credit-amount']) }}
-        {{ BootstrapForm::text('donationAmount', null, ['label' => 'Donation to Zidisha', 'id' => 'donation-amount']) }}
+        {{ BootstrapForm::text('donationAmount', null, ['label' => 'Donation to Zidisha']) }}
         {{ BootstrapForm::hidden('donationCreditAmount', null, ['id' => 'donation-credit-amount']) }}
 
         {{ BootstrapForm::hidden('transactionFee', null, ['id' => 'transaction-fee-amount']) }}
