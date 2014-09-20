@@ -8693,13 +8693,12 @@ body {
   margin-bottom: 30px;
 }
 .highlight-panel {
-  margin-top: -5px;
-  margin-bottom: -15px;
   padding: 0 15px 22px 15px;
+  margin: -5px -15px -15px -15px;
 }
 @media (min-width: 768px) {
   .highlight-panel {
-    margin-top: 15px;
+    margin: 15px 0 0 0;
     padding: 0 30px 22px 30px;
   }
 }
@@ -8731,7 +8730,12 @@ body {
 }
 .panel-info {
   border-color: #dddddd;
-  margin-bottom: 15px;
+  margin: 15px -15px;
+}
+@media (min-width: 768px) {
+  .panel-info {
+    margin: 0 0 15px 0;
+  }
 }
 .panel-info > .panel-heading {
   color: #404040;
@@ -9089,6 +9093,7 @@ table.dataTable {
     padding-left: 30% !important;
     white-space: normal !important;
     text-align: left !important;
+    word-wrap: break-word;
   }
   .no-more-tables td:before {
     /* Now like a table header */

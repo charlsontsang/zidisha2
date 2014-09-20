@@ -15,11 +15,10 @@ body {
   margin-bottom: 30px;
 }
 .highlight-panel {
-  margin-top: -5px;
-  margin-bottom: -15px;
   padding: 0 15px 22px 15px;
+  margin: -5px -15px -15px -15px;
   @media (min-width: @screen-sm-min) {
-    margin-top: 15px;
+    margin: 15px 0 0 0;
     padding: 0 30px 22px 30px;
   }
 }
@@ -47,7 +46,10 @@ body {
 }
 .panel-info {
   border-color: @panel-default-border;
-  margin-bottom: 15px;
+  margin: 15px -15px;
+  @media (min-width: @screen-sm-min) {
+    margin: 0 0 15px 0;
+  }
 }
 .panel-info > .panel-heading {
   color: @headings-color;
