@@ -38,7 +38,6 @@ Track Gift Cards
                     <th>Date Gifted</th>
                     <th>Recipient Name</th>
                     <th>Delivery Method</th>
-                    <th>Recipient Email
                     <th>Card Amount</th>
                     <th>Status</th>
                 </tr>
@@ -48,8 +47,13 @@ Track Gift Cards
                 <tr>
                     <td data-title="Date">{{ $card->getDate()->format('M j, Y') }}</td>
                     <td data-title="Recipient">{{ $card->getRecipientName() }}</td>
-                    <td data-title="Delivery">{{ $card->getOrderType() }}</td>
-                    <td data-title="Email">{{ $card->getRecipientEmail() }}</td>
+                    <td data-title="Delivery">
+                        @if (!empty($card->getRecipientEmail()))
+                            {{ $card->getOrderType() }} to {{ $card->getRecipientEmail() }}
+                        @else
+                            {{ $card->getOrderType() }}
+                        @endif
+                    </td>
                     <td data-title="Amount">{{ $card->getCardAmount()->getAmount() }}</td>
                     <td data-title="Status">
                         @if($card->getClaimed() == 1)

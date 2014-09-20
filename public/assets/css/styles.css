@@ -9065,6 +9065,9 @@ table.dataTable.no-footer {
 table.dataTable {
   border: 1px solid #ddd;
 }
+.dataTables_filter label {
+  float: right;
+}
 /* no more tables styling for mobile */
 @media (max-width: 767px) {
   /* Force table to not be like tables anymore */
