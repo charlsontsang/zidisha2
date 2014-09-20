@@ -14,7 +14,7 @@ Quick Links
 
 @section('page-content')
 
-@if (!empty (Auth::getUser()->getLender()->getProfile()->getAboutMe()))
+@if (empty (Auth::getUser()->getLender()->getProfile()->getAboutMe()))
     <div class="panel panel-info">
         <div class="panel-body">
             Introduce yourself to our entrepreneurs! <a href="{{ route('lender:edit-profile') }}" class="btn btn-primary pull-right">Fill out profile</a>
