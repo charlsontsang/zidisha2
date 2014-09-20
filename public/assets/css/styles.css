@@ -8928,12 +8928,14 @@ form .btn-primary,
 }
 .login-form .btn-block,
 form .btn-primary,
+form .btn-default,
 .giftcard .btn-primary {
   width: 100%;
 }
 @media (min-width: 768px) {
   .login-form .btn-block,
   form .btn-primary,
+  form .btn-default,
   .giftcard .btn-primary {
     width: auto;
   }
@@ -10230,6 +10232,7 @@ a.link-dark {
 .lend-form button {
   font-size: 18px;
   margin-bottom: 0 !important;
+  min-width: 250px !important;
 }
 .mobile-bottom-btn {
   font-size: 20px;
