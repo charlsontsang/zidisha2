@@ -2,9 +2,11 @@
 
 namespace Zidisha\User;
 
+use Config;
 use Illuminate\Auth\Reminders\RemindableInterface;
 use Illuminate\Auth\UserInterface;
 use Propel\Runtime\Connection\ConnectionInterface;
+use Zidisha\Upload\Exceptions\ConfigurationNotFoundException;
 use Zidisha\User\Base\User as BaseUser;
 use Zidisha\User\Exceptions\InvalidUserRoleException;
 
@@ -93,18 +95,21 @@ class User extends BaseUser implements UserInterface, RemindableInterface
 
     public function getProfilePictureUrl($format = 'small-profile-picture')
     {
+        if (!Config::get('image.formats.' . $format)) {
+            throw new ConfigurationNotFoundException();
+        }
         if ($this->hasProfilePicture()) {
             return $this->getProfilePicture()->getImageUrl($format);
         }elseif ($this->getFacebookId()) {
-           $width =  \Config::get("image.formats.$format.width");
-           $height = \Config::get("image.formats.$format.height");
+           $width =  Config::get("image.formats.$format.width");
+           $height = Config::get("image.formats.$format.height");
             return 'https://graph.facebook.com/'.$this->getFacebookId().'/picture?width='.$width.'&height='.$height;
         }elseif ($this->getGoogleId()) {
-            $width =  \Config::get("image.formats.$format.width");
+            $width =  Config::get("image.formats.$format.width");
             return  ($this->getGooglePicture(). '?sz='.$width);
         }
 
-        return $this->getDefaultPicture();
+        return $this->getDefaultPicture($format);
     }
 
     public function hasProfilePicture()
@@ -112,11 +117,11 @@ class User extends BaseUser implements UserInterface, RemindableInterface
         return $this->getProfilePicture() ? true : false;
     }
 
-    public function getDefaultPicture()
+    public function getDefaultPicture($format)
     {
-        $pictures = array('1', '2', '3', '4', '5', '6');
-        $picture = $pictures[array_rand($pictures)];
-        return asset('/assets/images/profile-default/profile-default'.$picture.'.jpg');
+        $width =  Config::get("image.formats.$format.width");
+        $height = Config::get("image.formats.$format.height");
+        return asset('/assets/images/profile-default/profile-default-'. $width . 'X' . $height .'.jpg');
     }
 
     public function getProfileUrl($parameters = [])
