@@ -23,7 +23,7 @@ Lending Groups
         </div>
     </div>
     @if($paginator != null)
-    <table class="table table-striped no-more-tables">
+    <table class="table table-striped no-more-tables" id="group">
         <thead>
         <tr>
             <th>Group Name</th>
@@ -54,4 +54,14 @@ Lending Groups
     @endif
     {{ BootstrapHtml::paginator($paginator)->links() }}
 </div>
+@stop
+
+@section('script-footer')
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#group').dataTable({
+            searching: true
+        });
+    });
+</script>
 @stop
