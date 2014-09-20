@@ -21,11 +21,6 @@
             @endif
             {{ $lender->getCountry()->getName() }}
         </p>
-        <p>
-            Karma:
-            {{ BootstrapHtml::tooltip('lender.tooltips.profile.karma') }}
-            {{ $karma }}
-        </p>
         <p>{{ $lender->getProfile()->getAboutMe() }}</p>
     </div>
 </div>

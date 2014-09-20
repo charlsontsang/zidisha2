@@ -44,25 +44,19 @@ Quick Links
     </div>
 @endif
 
-@if (!empty($fundedFollowers))
-    <div class="panel panel-info">
-        <div class="panel-heading">
-            <h3 class="panel-title">
-                Entrepreneurs You've Funded
-            </h3>
-        </div>
-        <div class="panel-body">
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            Entrepreneurs You've Funded
+        </h3>
+    </div>
+    <div class="panel-body">
+    	@if (!empty($fundedFollowers))
 			@include('lender.follow.followers', ['followers' => $fundedFollowers])
-        </div>
+		@else
+    		After you lend, you can set your follow preference for each entrepreneur you fund here. <a href="{{ route('lender:edit-profile') }}" class="btn btn-primary pull-right">Make a loan</a>
+    	@endif
     </div>
-@endif
-
-@if (empty($followingFollowers) && empty($fundedFollowers))
-    <div class="panel panel-info">
-        <div class="panel-body">
-			
-        </div>
-    </div>
-@endif
+</div>
 
 @stop
