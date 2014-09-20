@@ -165,13 +165,7 @@ class Upload extends BaseUpload
 
     protected function getCachePath($format)
     {
-        if (!Config::get('image.formats.' . $format)) {
-            throw new ConfigurationNotFoundException();
-        }
-        $width = Config::get("image.formats.$format.width");
-        $height = Config::get("image.formats.$format.height");
-
-        return public_path() . '/uploads/cache/' . $width . 'X' . $height . '/' . $this->getUserId() . '/' . $this->getFilename();
+        return $this->getCacheBasePath($format) . $this->getFilename();
     }
 
     protected function getCacheBasePath($format)
