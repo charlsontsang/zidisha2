@@ -13,21 +13,28 @@ Quick Links
 @stop
 
 @section('page-content')
+
+@if (!empty (Auth::getUser()->getLender()->getProfile()->getAboutMe()))
+    <div class="panel panel-info">
+        <div class="panel-body">
+            Introduce yourself to our entrepreneurs! <a href="{{ route('lender:edit-profile') }}" class="btn btn-primary pull-right">Fill out profile</a>
+        </div>
+    </div>
+@endif
+
+@if (count($comments))
     <div class="panel panel-info">
         <div class="panel-heading">
             <h3 class="panel-title">
-                Your Project Updates
+                Recent Updates
             </h3>
         </div>
         <div class="panel-body">
-            @if (count($comments))
-                @foreach($comments as $comment)
-                    @include('partials.comments.display-comment-partial', ['comment' => $comment])
-                @endforeach
-            @else
-                <p>Your comment feed is empty.</p>
-                <p><strong><a href="{{ route('lend:index') }}">Make a Loan</a></strong></p>
-            @endif
+            @foreach($comments as $comment)
+                @include('partials.comments.display-comment-partial', ['comment' => $comment])
+            @endforeach
         </div>
     </div>
+@endif
+
 @stop
