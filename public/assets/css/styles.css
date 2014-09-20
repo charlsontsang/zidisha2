@@ -8910,7 +8910,18 @@ form .btn-primary,
   form .btn-primary,
   .giftcard .btn-primary {
     min-width: 150px !important;
-    max-width: 600px !important;
+  }
+}
+.login-form .btn-block,
+form .btn-primary,
+.giftcard .btn-primary {
+  width: 100%;
+}
+@media (min-width: 768px) {
+  .login-form .btn-block,
+  form .btn-primary,
+  .giftcard .btn-primary {
+    width: auto;
   }
 }
 @media (min-width: 768px) {
