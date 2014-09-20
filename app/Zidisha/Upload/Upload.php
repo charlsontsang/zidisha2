@@ -37,7 +37,9 @@ class Upload extends BaseUpload
         $file = new Filesystem();
 
         if ($file->exists($this->getCachePath($format))) {
-            return asset('uploads/cache/' . $format . '/' . $this->getUserId() . '/' . $this->getFilename());
+            $width = Config::get("image.formats.$format.width");
+            $height = Config::get("image.formats.$format.height");
+            return asset('uploads/cache/' . $width . 'X' . $height . '/' . $this->getUserId() . '/' . $this->getFilename());
         } else {
             return route('image:resize', ['upload_id' => $this->getId(), 'format' => $format]);
         }
@@ -166,8 +168,10 @@ class Upload extends BaseUpload
         if (!Config::get('image.formats.' . $format)) {
             throw new ConfigurationNotFoundException();
         }
+        $width = Config::get("image.formats.$format.width");
+        $height = Config::get("image.formats.$format.height");
 
-        return public_path() . '/uploads/cache/' . $format . '/' . $this->getUserId() . '/' . $this->getFilename();
+        return public_path() . '/uploads/cache/' . $width . 'X' . $height . '/' . $this->getUserId() . '/' . $this->getFilename();
     }
 
     protected function getCacheBasePath($format)
@@ -175,6 +179,8 @@ class Upload extends BaseUpload
         if (!Config::get('image.formats.' . $format)) {
             throw new ConfigurationNotFoundException();
         }
-        return public_path() . '/uploads/cache/' . $format . '/' . $this->getUserId() . '/';
+        $width = Config::get("image.formats.$format.width");
+        $height = Config::get("image.formats.$format.height");
+        return public_path() . '/uploads/cache/' . $width . 'X' . $height . '/' . $this->getUserId() . '/';
     }
 }
