@@ -8896,6 +8896,7 @@ hr {
 @media (min-width: 768px) {
   h1.page-title {
     margin-top: 44px;
+    margin-bottom: 22px;
   }
 }
 @media (min-width: 768px) {
