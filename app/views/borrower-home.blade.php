@@ -51,8 +51,11 @@
             
             <p>{{ \Lang::get('borrower.borrow.how-much-max-loan') }}</p>
             
-            <p>1. {{ $params['firstLoanVal'] }}
-                {{ $params['nxtLoanvalue'] }}</p>
+            <ol>
+                @foreach($creditLimitProgression as $creditLimit)
+                <li>{{ $creditLimit }}</li>
+                @endforeach
+            </ol>
   
         <h3>{{ \Lang::get('borrower.borrow.fees-heading') }}</h3>
         
