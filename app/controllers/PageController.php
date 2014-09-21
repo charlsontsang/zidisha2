@@ -164,7 +164,7 @@ class PageController extends BaseController {
     public function getRedirectLanguage($languageCode)
     {
         if (!in_array($languageCode, ['en', 'fr', 'in'])) {
-            return \Redirect::back();
+            return \Redirect::to('/');
         }
 
         \Session::set('languageCode', $languageCode);
