@@ -154,9 +154,18 @@ class BorrowerService
                 ->setBorrower($borrower);
             $joinLog->save($con);
 
-            $invite = $this->isBorrowerInvited($borrower, $facebookData, $con);
-                return $invite;
-            });
+            $invite = InviteQuery::create()
+                ->filterByInviteeId(null)
+                ->filterByEmail([$borrower->getUser()->getEmail(), $facebookData['email']])
+                ->findOne();
+
+            if ($invite) {
+                $invite->setInvitee($borrower);
+                $invite->save($con);
+            }
+
+            return $invite;
+        });
 
         if ($facebookData) {
             $this->siftScienceService->sendFacebookEvent($borrower->getUser(), $data['facebookId']);
@@ -684,20 +693,5 @@ class BorrowerService
             ->filterByReceiverId($borrower->getId())
             ->filterByUserId($volunteerMentor->getId())
             ->count();
-    }
-
-    private function isBorrowerInvited(Borrower $borrower, $facebookData, $con)
-    {
-        $invite = InviteQuery::create()
-            ->filterByInviteeId(null)
-            ->filterByEmail([$borrower->getUser()->getEmail(), $facebookData['email']])
-            ->findOne();
-
-        if ($invite) {
-            $invite->setInvitee($borrower);
-            $invite->save($con);
-            return $invite;
-        }
-        return null;
     }
 }
