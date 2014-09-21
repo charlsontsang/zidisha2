@@ -147,6 +147,10 @@ class BorrowerJoinController extends BaseController
                     $this->siftScienceService->sendNewBorrowerAccountEvent($borrower, SiftScienceService::NEW_ACCOUNT_TYPE_EDIT);
                 } else {
                     $this->siftScienceService->sendNewBorrowerAccountEvent($borrower, SiftScienceService::NEW_ACCOUNT_TYPE_CREATE);
+                    $siftScienceScore = $this->siftScienceService->getSiftScore($borrower->getUser());
+                    $joinLog = $borrower->getJoinLog();
+                    $joinLog->setSiftScienceScore($siftScienceScore);
+                    $joinLog->save();
                 }
 
                 $this->authService->login($borrower->getUser());
