@@ -47,7 +47,7 @@ class HomeController extends BaseController {
         
         $conditions['status'] = Loan::OPEN;
         $conditions['categoryId'] = '18';
-        $projects = $this->loanService->searchLoans($conditions)->take(3);
+        $projects = $this->loanService->searchLoans($conditions, 1, 3);
 
         return View::make('lender-home', compact('estherCaption', 'fatouCaption', 'melitaCaption', 'binetaCaption', 'maryCaption', 'secondaryCaption','buttonText', 'buttonTextBottom', 'buttonLink', 'projects'));
     }
