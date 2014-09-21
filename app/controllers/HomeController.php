@@ -111,7 +111,6 @@ class HomeController extends BaseController {
         $requirementsContentBusiness = \Lang::get('borrower.borrow.requirements-content-business', array('installmentFrequency' => $period));
         $howMuchContent = \Lang::get('borrower.borrow.how-much-content', array('firstLoanVal' => $params['firstLoanVal'], 'firstLoanValInvited' => $firstLoanValInvited));
             
-        
         return View::make('borrower-home', compact ('advantage3', 'requirementsContentBusiness', 'howMuchContent', 'regFeeNote', 'params'));
     }
 
