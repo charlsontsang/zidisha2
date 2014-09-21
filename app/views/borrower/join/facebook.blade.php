@@ -11,9 +11,9 @@
     @lang('borrower.join.form.facebook-intro', ['buttonText' => \Lang::get('borrower.join.form.facebook-button')])
 </p>
 
-<div class="callout callout-warning">
+<em>
     @lang('borrower.join.form.facebook-note')
-</div>
+</em>
 
 <p>
     <a href="{{ $facebookJoinUrl }}" class="btn btn-facebook">

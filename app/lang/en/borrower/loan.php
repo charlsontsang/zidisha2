@@ -79,7 +79,7 @@ return [
     'loan-repaid' => [
         'loan-application' => [
             'title'        => 'Congratulations!  Your loan is fully repaid.',
-            'instructions' => '<a href=":applicationLink">Click here</a> to create a new loan application.',
+            'instructions' => 'Post a new loan application',
         ],
     ],
     'partials'                   => [

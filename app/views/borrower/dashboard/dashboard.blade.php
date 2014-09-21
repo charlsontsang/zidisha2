@@ -1,11 +1,11 @@
 @extends('layouts.side-menu-simple')
 
 @section('page-title')
-Dashboard
+	@lang('borrower.menu.dashboard')
 @stop
 
 @section('menu-title')
-@lang('borrower.menu.links-title')
+	@lang('borrower.menu.links-title')
 @stop
 
 @section('menu-links')
@@ -18,9 +18,11 @@ Dashboard
 @include('borrower.dashboard.partials.'.$partial, compact('repaymentSchedule'))
         
 @if(!$borrower->isVerified())
-    <div class="alert alert-warning">
+<div class="panel panel-info">
+    <div class="panel-body">
     	@lang('borrower.dashboard.pending-confirmation', ['resendLink' => link_to_route('borrower:resend:verification')])
     </div>
+<div>
 @endif
 
 @if($volunteerMentor)
