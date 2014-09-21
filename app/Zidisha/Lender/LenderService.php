@@ -185,8 +185,9 @@ class LenderService
             'joinedAt'      => new DateTime(),
             'facebookData'  => null,
         ];
+        $facebookData = $data['facebookData'];
 
-        $lender = PropelDB::transaction(function($con) use($data) {
+        $lender = PropelDB::transaction(function($con) use($data, $facebookData) {
                 $user = new User();
                 $user
                     ->setJoinedAt($data['joinedAt'])
@@ -214,7 +215,7 @@ class LenderService
                 $lender->setPreferences($preferences);
 
                 $lender->save($con);
-                $facebookData = $data['facebookData'];
+
 
                 if ($facebookData) {
                     $facebookUser = new FacebookUser();
@@ -234,10 +235,14 @@ class LenderService
                         $facebookUserLog->setUser($user);
                         $facebookUserLog->save($con);
                     }
-                    $this->siftScienceService->sendFacebookEvent($user, $data['facebookId']);
                 }
                 return $lender;
             });
+
+        if ($facebookData) {
+            /** @var Lender $lender */
+            $this->siftScienceService->sendFacebookEvent($lender->getUser(), $data['facebookId']);
+        }
 
         $this->mixpanelService->trackLenderJoined($lender);
         
