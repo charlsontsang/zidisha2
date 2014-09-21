@@ -1,4 +1,4 @@
-@extends('layouts.side-menu')
+@extends('layouts.side-menu-simple')
 
 @section('page-title')
 Dashboard
