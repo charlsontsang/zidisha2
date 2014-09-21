@@ -1,18 +1,21 @@
 <?php
-$urlLocale = $locale = Request::segment(1);
-if (!in_array($locale, ['fr', 'in'])) {
-    $urlLocale = null;
-    if (\Session::has('languageCode')) {
-        $locale = \Session::get('languageCode');
-    } else {
-        $locale = \Zidisha\Country\LanguageQuery::create()->getLanguageCodeByIp();
-        if (!in_array($locale, ['en', 'fr', 'in'])) {
-            $locale = 'en';
+$locale = 'en';
+if (!App::runningInConsole()) {
+    $urlLocale = $locale = Request::segment(1);
+    if (!in_array($locale, ['fr', 'in'])) {
+        $urlLocale = null;
+        if (\Session::has('languageCode')) {
+            $locale = \Session::get('languageCode');
+        } else {
+            $locale = \Zidisha\Country\LanguageQuery::create()->getLanguageCodeByIp();
+            if (!in_array($locale, ['en', 'fr', 'in'])) {
+                $locale = 'en';
+            }
         }
     }
+    \App::setLocale($locale);
+    \Session::set('languageCode', $locale);
 }
-\App::setLocale($locale);
-\Session::set('languageCode', $locale);
 
 Route::group(
     array('prefix' => $urlLocale),
