@@ -96,6 +96,19 @@ ENV;
 
         $file->put(base_path() . '/app/config/' . $environment .'/database.php', $dbContent);
 
+        $file = new \Illuminate\Filesystem\Filesystem();
+        if ($environment == 'local' && !$file->exists(base_path() . '/app/config/local/app.php')) {
+            $contents = <<<ENV
+<?php
+return [
+    'debug' => true,
+];
+
+ENV;
+
+            $file->put(base_path() . '/app/config/local/app.php', $contents);
+        }
+
         $this->info('You are done.');
     }
 
