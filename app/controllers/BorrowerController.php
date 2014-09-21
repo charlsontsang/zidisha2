@@ -151,7 +151,7 @@ class BorrowerController extends BaseController
             $data['repaymentSchedule'] = $repaymentSchedule;
         }
 
-        return View::make('borrower.dashboard', $data);
+        return View::make('borrower.dashboard.dashboard', $data);
     }
 
     public function getTransactionHistory()
