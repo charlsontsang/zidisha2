@@ -1,16 +1,19 @@
-@extends('layouts.master')
+@extends('layouts.side-menu-simple')
 
 @section('page-title')
     @lang('borrower.loan.reschedule.title')
 @stop
 
-@section('content')
-<div class="page-header">
-    <h1>
-        @lang('borrower.loan.reschedule.title')
-    </h1>
-</div>
+@section('menu-title')
+    @lang('borrower.menu.links-title')
+@stop
 
+@section('menu-links')
+    @include('partials.nav-links.borrower-links')
+@stop
+
+
+@section('page-content')
 <p>
     @lang('borrower.loan.reschedule.description')
 </p>
