@@ -600,11 +600,12 @@ class GenerateModelData extends Command
             $settings = [];
         }
 
-        $this->line('Rebuild database');
+        $database = \Config::get('database.connections.zidisha.database');
+
+        $this->line("Rebuild database $database");
         DB::statement('SET storage_engine=INNODB;');
-        DB::statement('SET storage_engine=INNODB;');
-        DB::statement('DROP DATABASE IF EXISTS homestead');
-        DB::statement('CREATE DATABASE homestead CHARACTER SET utf8 COLLATE utf8_general_ci;');
+        DB::statement("DROP DATABASE IF EXISTS $database");
+        DB::statement("CREATE DATABASE $database CHARACTER SET utf8 COLLATE utf8_general_ci;");
         exec('rm -rf app/database/migrations');
         exec('./propel diff');
         exec('./propel migrate');
