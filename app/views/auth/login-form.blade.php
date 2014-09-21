@@ -78,9 +78,9 @@
 <strong>     
 
     @if(isset($modal) && $modal)
-        <a href="{{ route('join') }}" data-toggle="modal" data-target="#join-modal" data-dismiss="modal">@lang('borrower.login.join')</a>
+        <a href="{{ route($loginForm->getJoinLink()) }}" data-toggle="modal" data-target="#join-modal" data-dismiss="modal">@lang('borrower.login.join')</a>
     @else
-        <a href="{{ route('join') }}">@lang('borrower.login.join')</a>
+        <a href="{{ route($loginForm->getJoinLink()) }}">@lang('borrower.login.join')</a>
     @endif
 
 </strong>
