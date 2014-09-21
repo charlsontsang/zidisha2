@@ -142,48 +142,20 @@ class LenderController extends BaseController
             \App::abort(404);
         }
 
-        $totalFundsUpload = TransactionQuery::create()
-            ->getTotalFundsUpload($userId);
-
         $currentBalance = TransactionQuery::create()
             ->getCurrentBalance($userId);
-
-        $newMemberInviteCredit = InviteTransactionQuery::create()
-            ->getTotalInviteCreditAmount($lender->getId());
-
-        $lendingGroups = LendingGroupQuery::create()
-            ->getLendingGroupsForLender($lender);
 
         $numberOfInvitesSent = InviteQuery::create()
             ->filterByLender($lender)
             ->count();
-        $AcceptedInviteesIds = InviteQuery::create()
-            ->getAcceptedInviteesIds($lender);
-        $numberOfInvitesAccepted = $AcceptedInviteesIds->count();
-
-        $numberOfGiftedGiftCards = GiftCardQuery::create()
-            ->filterByLender($lender)
-            ->count();
-
-        $RedeemedGiftCardsRecipientsIds = GiftCardQuery::create()
-            ->getRedeemedGiftCardsRecipientsIds($lender);
-        $numberOfRedeemedGiftCards = $RedeemedGiftCardsRecipientsIds->count();
 
         $totalLentAmount = TransactionQuery::create()
             ->getTotalLentAmount($userId);
 
-        $myImpact = $this->lenderService->getMyImpact($lender);
-        $totalLentAmountByInvitees = $this->lenderService->getTotalAmountLentByInvitee($lender);
-        $totalLentAmountByRecipients = $myImpact->subtract($totalLentAmountByInvitees);
-        $totalImpact = $myImpact->add($totalLentAmount);
-
         $comments = $this->borrowerCommentService->getAllCommentForLender($lender);
 
-       return View::make('lender.dashboard', compact('currentBalance', 'totalFundsUpload', 'lendingGroups',
-                'numberOfInvitesSent', 'numberOfInvitesAccepted', 'numberOfGiftedGiftCards', 'numberOfRedeemedGiftCards', 
-                'totalLentAmount', 'totalImpact' , 'loans', 'newMemberInviteCredit',
-                'totalLentAmountByInvitees', 'totalLentAmountByRecipients',
-                'comments'
+        return View::make('lender.dashboard', compact('currentBalance', 'numberOfInvitesSent',  
+                'totalLentAmount', 'comments'
             ));
     }
 

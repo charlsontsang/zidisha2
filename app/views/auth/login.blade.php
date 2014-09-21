@@ -1,9 +1,9 @@
 @extends('layouts.master')
 
 @section('content')
-</div> <!-- /container -->
-<div class="container-fluid lend">
 
+<div class="full-page">
    @include('auth.login-form')
-   
+</div>
+
 @stop

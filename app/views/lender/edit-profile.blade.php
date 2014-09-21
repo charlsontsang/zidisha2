@@ -1,4 +1,4 @@
-@extends('layouts.side-menu')
+@extends('layouts.side-menu-simple')
 
 @section('page-title')
 Edit Profile
@@ -13,30 +13,49 @@ Quick Links
 @stop
 
 @section('page-content')
+
 {{ BootstrapForm::open(array('route' => 'lender:post-profile', 'files' => true)) }}
 {{ BootstrapForm::populate($form) }}
 
-<h4>Account Information</h4>
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                Public Profile
+            </h3>
+        </div>
+        <div class="panel-body">
 
-{{ BootstrapForm::text('username', null, ['label' => 'Change Username']) }}
+		<p>Introduce yourself to our entrepreneurs!</p>
 
-{{ BootstrapForm::text('email', null, ['label' => 'Email']) }}
+		{{ BootstrapForm::file('picture', ['label' => 'Your Picture']) }}
 
-{{ BootstrapForm::password('password', ['label' => 'Change Password']) }}
+		{{ BootstrapForm::text('city', null, ['label' => 'Your City']) }}
 
-{{ BootstrapForm::password('password_confirmation', ['label' => 'Confirm New Password']) }}
+		{{ BootstrapForm::textarea('aboutMe', null, ['label' => 'About Yourself']) }}
 
-<h4>Public Profile</h4>
+        </div>
+    </div>
+    
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                Account Information
+            </h3>
+        </div>
+        <div class="panel-body">
 
-<p>Introduce yourself to our entrepreneurs!</p>
+            {{ BootstrapForm::text('username', null, ['label' => 'Change Username']) }}
 
-{{ BootstrapForm::file('picture', ['label' => 'Your Picture']) }}
+            {{ BootstrapForm::text('email', null, ['label' => 'Email']) }}
 
-{{ BootstrapForm::text('city', null, ['label' => 'Your City']) }}
+            {{ BootstrapForm::password('password', ['label' => 'Change Password']) }}
 
-{{ BootstrapForm::textarea('aboutMe', null, ['label' => 'About Yourself']) }}
+            {{ BootstrapForm::password('password_confirmation', ['label' => 'Confirm New Password']) }}
 
-{{ BootstrapForm::submit('Save') }}
+        </div>
+    </div>
 
-{{ BootstrapForm::close() }}
+	{{ BootstrapForm::submit('Save') }}
+
+	{{ BootstrapForm::close() }}
 @stop

@@ -6,7 +6,7 @@ Meet the Team
 
 
 @section('content')
-<div class="team">
+<div class="team highlight highlight-panel">
 	<div class="page-header">
 	    <h1>Meet the Team</h1>
 	    <ul class="nav nav-tabs" role="tablist">

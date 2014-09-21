@@ -53,19 +53,20 @@
         @foreach($invites as $invite)
         <tr>
             <td data-title="Name">{{ $invite['name'] }}</td>
-            <td data-title="Email"><a href="#">{{ $invite['email'] }}</a></td>
-            <td data-title="Status">{{ $invite['status'] }}</td>
+            <td data-title="Email">{{ $invite['email'] }}</td>
+            <td data-title="Status">
+                <p>
+                    {{ $invite['status'] }}
+                </p>
+        <!-- allow removal only if invitee has not yet raised a loan -->
+                @if (empty($invite['repaymentRate'])) 
+                    <p><a href="{{ route('borrower:delete-invite', $invite['id']) }}">
+                        @lang('borrower.invite.delete')
+                    </a></p>
+                @endif
+            </td>
             <td data-title="RepaymentRate">{{ $invite['repaymentRate'] }}</td>
             <td data-title="BonusCredit">{{ $invite['bonusCredit'] }}</td>
-            <td>
-                {{ BootstrapForm::open([
-                    'route'               => ['borrower:delete-invite', $invite['id']],
-                    'translationDomain'   => 'borrower.invite',
-                    'data-disable-submit' => 'on'])
-                }}
-                {{ BootstrapForm::submit('delete') }}
-                {{ BootstrapForm::close() }}
-            </td>
         </tr>
         @endforeach
         </tbody>

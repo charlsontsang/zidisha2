@@ -1,4 +1,4 @@
-@extends('layouts.side-menu')
+@extends('layouts.side-menu-simple')
 
 @section('page-title')
 Dashboard
@@ -13,53 +13,50 @@ Quick Links
 @stop
 
 @section('page-content')
-<h3>Your Project Updates</h3>
 
-<div>
-<h3>Comments on My Loans</h3>
-@if (count($comments))
-    <table class="table">
-        <tbody>
-        @foreach($comments as $comment)
-            <tr>
-                <td colspan="2">
-                    <a href="{{ route('loan:index', $comment->getBorrower()->getActiveLoanId()) }}">
-                        <img src="{{ $comment->getBorrower()->getUser()->getProfilePictureUrl('small-profile-picture') }}" width="100%">
-                    </a>
-                </td>
-                <td>
-                    {{ $comment->getMessage() }}
-                    <br/><br/>
-                    <p class="meta">
-                    @if($comment->getUserId() != $comment->getBorrowerId())
-                        <a href="{{ route('loan:index', $comment->getBorrower()->getActiveLoanId()) }}">
-                         <strong>{{ $comment->getBorrower()->getName() }}</strong>
-                        </a>
-                        {{ $comment->getUser()->getSubObject()->getName() }}
-                        <strong>
-                        {{ $comment->getUser()->getSubObject()->getProfile()->getCity() }},
-                        {{ $comment->getUser()->getSubObject()->getCountry()->getName() }}
-                        </strong>
-                        {{ date("d F Y", $comment->getCreatedAt()->getTimeStamp())  }}
-                    @else
-                        <a href="{{ route('loan:index', $comment->getBorrower()->getActiveLoanId()) }}">
-                         <strong>{{ $comment->getUser()->getSubObject()->getName() }}</strong>
-                        </a>
-                        <strong>
-                        {{ $comment->getUser()->getSubObject()->getProfile()->getCity() }},
-                        {{ $comment->getUser()->getSubObject()->getCountry()->getName() }}
-                        </strong>
-                        {{ date("d F Y", $comment->getCreatedAt()->getTimeStamp()) }}
-                    @endif
-                    </p>
-                </td>
-            </tr>
-        @endforeach
-         </tbody>
-    </table>
-@else
-    <p>Your comment feed is empty.</p>
-    <p><strong><a href="{{ route('lend:index') }}">Make a Loan</a></strong></p>
-@endif
+@if (empty($totalLentAmount))
+<div class="panel panel-info">
+    <div class="panel-body">
+        Ready to make a loan? Check out our fundraising projects here: <a href="{{ route('lender:edit-profile') }}" class="btn btn-primary pull-right">View projects</a>
+    </div>
 </div>
+@elseif (!empty($currentBalance))
+<div class="panel panel-info">
+    <div class="panel-body">
+        You have {{ $currentBalance }} in lending credit available. <a href="{{ route('lender:edit-profile') }}" class="btn btn-primary pull-right">Make a loan</a>
+    </div>
+</div>
+@endif
+
+@if (empty (Auth::getUser()->getLender()->getProfile()->getAboutMe()))
+<div class="panel panel-info">
+    <div class="panel-body">
+        Introduce yourself to our entrepreneurs! <a href="{{ route('lender:edit-profile') }}" class="btn btn-primary pull-right">Fill out profile</a>
+    </div>
+</div>
+@endif
+
+@if (empty($numberOfInvitesSent))
+<div class="panel panel-info">
+    <div class="panel-body">
+        Send a free $25 lending credit to a friend. <a href="{{ route('lender:invite') }}" class="btn btn-primary pull-right">Learn more</a>
+    </div>
+</div>
+@endif
+
+@if (count($comments))
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                Recent Updates
+            </h3>
+        </div>
+        <div class="panel-body">
+            @foreach($comments as $comment)
+                @include('partials.comments.display-comment-partial', ['comment' => $comment])
+            @endforeach
+        </div>
+    </div>
+@endif
+
 @stop

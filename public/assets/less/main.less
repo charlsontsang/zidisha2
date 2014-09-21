@@ -5,6 +5,30 @@ body {
   /* enable scrollspy http://stackoverflow.com/questions/12095579/twitter-bootstrap-scrollspy-always-selecting-last-element */
   height: 100%;
 }
+.highlight {
+  background-color: #fff;
+  border: 1px solid @panel-default-border; 
+}
+.highlight-top {
+  border-top: none; 
+  padding: 0 15px 45px 15px;
+  margin-bottom: 30px;
+}
+.highlight-panel {
+  padding: 0 15px 22px 15px;
+  margin: -5px -15px -15px -15px;
+  @media (min-width: @screen-sm-min) {
+    margin: 15px 0 0 0;
+    padding: 0 30px 22px 30px;
+  }
+}
+.highlight-panel .page-header {
+  margin-top: 29px;
+}
+.container-fluid.highlight {
+  border-right: none;
+  border-left: none;
+}
 .footer {
   margin-top: 15px;
   @media (min-width: @screen-sm-min) {
@@ -15,10 +39,25 @@ body {
   }
 }
 .page-section {
-  background-color: #f8f8f8;
-  border-bottom: 1px solid #e0e0e0;
+  background-color: @panel-default-bg;
+  border-bottom: 1px solid @panel-default-border;
   margin-bottom: 22px;
   padding-bottom: 22px;
+}
+.panel-info {
+  border-color: @panel-default-border;
+  margin: 15px -15px -15px -15px;
+  @media (min-width: @screen-sm-min) {
+    margin: 0 0 15px 0;
+  }
+}
+.panel-info > .panel-heading {
+  color: @headings-color;
+  background-color: darken(@body-bg, 5%);
+  border-color: @panel-default-border;
+}
+.panel-info .form-group:last-child {
+  margin-bottom: 0;
 }
 .page-section-inverted {
   background-color: @gray-dark;
@@ -65,4 +104,7 @@ body {
 }
 .how-it-works hr {
   clear: both;
+}
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+  background-color: #fff;
 }

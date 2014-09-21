@@ -1,4 +1,4 @@
-@extends('layouts.side-menu')
+@extends('layouts.side-menu-simple')
 
 @section('page-title')
 Transfer Funds
@@ -13,81 +13,89 @@ Quick Links
 @stop
 
 @section('page-content')
-<p>Current lending credit: <strong>{{ $currentBalance }}</strong></p>
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            Add funds to your lending account
+        </h3>
+    </div>
+    <div class="panel-body">
 
-<br/>
+        <p>Current lending credit: <strong>{{ $currentBalance }}</strong></p>
 
-<h4>Add Funds</h4>
+        {{ BootstrapForm::open(array('route' => 'lender:post-funds', 'translationDomain' => 'fund', 'id' => 'funds-upload')) }}
+        {{ BootstrapForm::populate($form) }}
 
-<p>Transfer funds to your lending account.</p>
-<br/>
+        {{ BootstrapForm::text('amount', null, ['label' => 'Lending Credit', 'id' => 'amount']) }}
+        {{ BootstrapForm::hidden('creditAmount', null, ['id' => 'credit-amount']) }}
+        {{ BootstrapForm::text('donationAmount', null, ['label' => 'Donation to Zidisha']) }}
+        {{ BootstrapForm::hidden('donationCreditAmount', null, ['id' => 'donation-credit-amount']) }}
 
-{{ BootstrapForm::open(array('route' => 'lender:post-funds', 'translationDomain' => 'fund', 'id' => 'funds-upload')) }}
-{{ BootstrapForm::populate($form) }}
+        {{ BootstrapForm::hidden('transactionFee', null, ['id' => 'transaction-fee-amount']) }}
+        {{ BootstrapForm::hidden('transactionFeeRate', null, ['id' => 'transaction-fee-rate']) }}
+        {{ BootstrapForm::hidden('currentBalance', 0, ['id' => 'current-balance']) }}
+        {{ BootstrapForm::hidden('totalAmount', null, ['id' => 'total-amount']) }}
 
-{{ BootstrapForm::text('amount', null, ['label' => 'Lending Credit', 'id' => 'amount']) }}
-{{ BootstrapForm::hidden('creditAmount', null, ['id' => 'credit-amount']) }}
-{{ BootstrapForm::text('donationAmount', null, ['label' => 'Donation to Zidisha', 'id' => 'donation-amount']) }}
-{{ BootstrapForm::hidden('donationCreditAmount', null, ['id' => 'donation-credit-amount']) }}
+        {{ BootstrapForm::hidden('stripeToken', null, ['id' => 'stripe-token']) }}
+        {{ BootstrapForm::hidden('paymentMethod', null, ['id' => 'payment-method']) }}
 
-{{ BootstrapForm::hidden('transactionFee', null, ['id' => 'transaction-fee-amount']) }}
-{{ BootstrapForm::hidden('transactionFeeRate', null, ['id' => 'transaction-fee-rate']) }}
-{{ BootstrapForm::hidden('currentBalance', 0, ['id' => 'current-balance']) }}
-{{ BootstrapForm::hidden('totalAmount', null, ['id' => 'total-amount']) }}
+        <p>
+            Payment Transfer Cost: $<span id="fee-amount-display"></span>
+        </p>
 
-{{ BootstrapForm::hidden('stripeToken', null, ['id' => 'stripe-token']) }}
-{{ BootstrapForm::hidden('paymentMethod', null, ['id' => 'payment-method']) }}
+        <p>
+            Total Payment: $<span id="total-amount-display"></span>
+        </p>
 
-<p>
-    Payment Transfer Cost: $<span id="fee-amount-display"></span>
-</p>
+        <div class="lend-form">
+            @include('partials/payment-buttons')
+        </div>
 
-<p>
-    Total Payment: $<span id="total-amount-display"></span>
-</p>
-
-<div class="lend-form">
-    @include('partials/payment-buttons')
+        {{ BootstrapForm::close() }}
+    </div>
 </div>
 
-{{ BootstrapForm::close() }}
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            Redeem a gift card
+        </h3>
+    </div>
+    <div class="panel-body">
 
-<br/><br/>
+        {{ BootstrapForm::open(array('route' => 'lender:post-redeem-card')) }}
 
-<h4>Redeem Gift Card</h4>
+        {{ BootstrapForm::text('redemptionCode', null, ['label' => 'Enter Redemption Code']) }}
 
-<p>
-    Redeem a gift card you have received.&nbsp;&nbsp;&nbsp;<a href="{{ route('lender:gift-cards') }}">Give a gift card</a>
-</p>
+        <button id="stripe-payment" class="btn btn-primary">Redeem</button>
 
-{{ BootstrapForm::open(array('route' => 'lender:post-redeem-card')) }}
+        {{ BootstrapForm::close() }}
+    </div>
+</div>
 
-{{ BootstrapForm::text('redemptionCode', null, ['label' => 'Enter Redemption Code']) }}
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            Withdraw your lending credit
+        </h3>
+    </div>
+    <div class="panel-body">
 
-<button id="stripe-payment" class="btn btn-primary">Redeem</button>
+        <p>
+            Current lending credit: <strong>{{ $currentBalance }}</strong>
+        </p>
 
-{{ BootstrapForm::close() }}
+        {{ BootstrapForm::open(array('route' => 'lender:post-withdraw-funds')) }}
 
-<br/><br/>
+        {{ BootstrapForm::text('paypalEmail', null, ['label' => 'Your PayPal Account Address']) }}
+        {{ BootstrapForm::text('withdrawAmount', null, ['label' => 'Amount to Withdraw']) }}
 
-<h4>Withdraw Funds</h4>
+        <button id="stripe-payment" class="btn btn-primary">Submit</button>
 
-<p>
-    Request a transfer of your lending credit to your PayPal account.
-</p>
+        {{ BootstrapForm::close() }}
+    </div>
+</div>
 
-<p>
-    Current lending credit: <strong>{{ $currentBalance }}</strong>
-</p>
-
-{{ BootstrapForm::open(array('route' => 'lender:post-withdraw-funds')) }}
-
-{{ BootstrapForm::text('paypalEmail', null, ['label' => 'Your PayPal Account Address']) }}
-{{ BootstrapForm::text('withdrawAmount', null, ['label' => 'Amount to Withdraw']) }}
-
-<button id="stripe-payment" class="btn btn-primary">Submit</button>
-
-{{ BootstrapForm::close() }}
 @stop
 
 @section('script-footer')

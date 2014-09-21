@@ -1,23 +1,19 @@
-@extends('layouts.master')
+@extends('layouts.side-menu')
 
 @section('page-title')
 Volunteer and Internship Opportunities
 @stop
 
+@section('menu-title')
+About
+@stop
 
-@section('content')
-<div class="row">
-    <div class="col-sm-3 col-md-4">
-        <ul class="nav side-menu" role="complementary">
-          <h4>Community</h4>
-          @include('partials.nav-links.community-links')
-        </ul>
-    </div>
+@section('menu-links')
+@include('partials.nav-links.community-links')
+@stop
 
-    <div class="col-sm-9 col-md-8 info-page">
-        <div class="page-header">
-            <h1>Volunteer and Internship Opportunities</h1>
-        </div>
+@section('page-content')
+<div class="info-page">
 
 		<p>Are you passionate about connecting people, helping communities grow, and making an impact around the world? We give volunteers and interns the unique opportunity to gain hands-on experience in microfinance and international development, while extending life-changing business-growth opportunities to entrepreneurs in some of the world's most disadvantaged locations.</p>
 		 

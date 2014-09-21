@@ -7,10 +7,6 @@
 
 @section('content')
 <div class="row" class="bs-docs-sidebar">
-    <div class="col-xs-12 page-header">
-        <h1>{{ \Lang::get('common.faqs.heading') }}</h1>
-    </div>
-
     <div class="sidebar col-sm-4 pull-right">
         <div class="sidenav hidden-print hidden-xs affix-top" role="complementary">
             <ul class="nav sidenav-first-level">
@@ -92,7 +88,11 @@
         </div>
     </div>
 
-    <div class="col-sm-8 info-page">
+    <div class="col-sm-8 info-page highlight highlight-panel">
+        <div class="page-header">
+            <h1>{{ \Lang::get('common.faqs.heading') }}</h1>
+        </div>
+
         <h2 id="general-faqs">{{ \Lang::get('common.faqs.basic') }}</h2>
              
         <h4 id="faq-1">{{ \Lang::get('common.faqs.question1') }}</h4>

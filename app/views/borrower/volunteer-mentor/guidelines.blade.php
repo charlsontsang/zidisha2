@@ -13,5 +13,5 @@
 @stop
 
 @section('page-content')
-@lang('borrower.vm-guide.vm-guidelines-content')
+@lang('borrower.vm-guide.vm-guidelines-content', ['ethicsLink' => route('page:volunteer-mentor-code-of-ethics'), 'faqLink' => route('page:volunteer-mentor-faq')])
 @stop

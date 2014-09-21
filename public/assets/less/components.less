@@ -13,7 +13,7 @@
 }
 .circle {
     border-radius: 30px;
-    border: 1px solid #dfdcdc;
+    border: 1px solid @panel-default-border; 
     width: 40px;
     height: 40px;
     text-align: center;
@@ -46,6 +46,12 @@
   padding: 10px;
   display: inline-block;
   width: 78%;
+}
+.panel-info .btn-primary {
+  @media (max-width: @screen-xs-max) {
+    margin-top: 15px;
+    width: 100%;
+  }
 }
 .btn-facebook {
   background-color: #3B5999;

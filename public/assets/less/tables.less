@@ -3,7 +3,13 @@ table {
   border-collapse: collapse !important;
 }
 table.dataTable thead th, table.dataTable thead td, table.dataTable.no-footer {
-  border-bottom: 2px solid #ddd !important;
+  border-bottom: 1px solid #ddd !important;
+}
+table.dataTable {
+  border: 1px solid #ddd;
+}
+.dataTables_filter label {
+  float: right;
 }
 
 /* no more tables styling for mobile */
@@ -34,9 +40,10 @@ table.dataTable thead th, table.dataTable thead td, table.dataTable.no-footer {
     border: none !important;
     border-bottom: 1px solid #eee !important; 
     position: relative !important;
-    padding-left: 50% !important; 
+    padding-left: 30% !important; 
     white-space: normal !important;
     text-align:left !important;
+    word-wrap: break-word;
   }
  
   .no-more-tables td:before { 

@@ -1,19 +1,27 @@
 .home-section {
-  padding: 30px 0 15px 0;
+  padding-top: 30px;
+  padding-bottom: 15px;
   @media (min-width: @screen-sm-min) {
     padding: 50px 15px; 
   }
-}
-.home-grey {
-  background-color: #f8f8f8;
-  border-top: 1px solid #e0e0e0; 
-  border-bottom: 1px solid #e0e0e0; 
 }
 .home .result {
   @media (max-width: @screen-xs-max) {
       margin-left: -20px;
       margin-right: -20px;
       padding-bottom: 10px;
+  }
+}
+.home .container-fluid:first-child {
+  @media (min-width: @screen-sm-min) {
+    margin-top: -30px;
+    padding-top: 20px;
+  }
+}
+.home .container-fluid:last-child {
+  margin-bottom: -15px;
+  @media (min-width: @screen-sm-min) {
+    margin-bottom: -50px;
   }
 }
 .home h1, .home h2, .home h3 {
@@ -85,12 +93,6 @@
   font-weight: bold;
   @media (min-width: @screen-sm-min) {
     font-size: 24px;
-  }
-}
-.btn-home-bottom {
-  margin-bottom: -15px;
-  @media (min-width: @screen-sm-min) {
-    margin-bottom: -50px;
   }
 }
 .btn-home:hover {
