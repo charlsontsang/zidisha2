@@ -66,7 +66,7 @@
         <column name="loan_amount_step" type="DECIMAL" size="10" scale="2" defaultValue="0.00" phpType="string"/>
         <column name="repayment_instructions" type="LONGVARCHAR" required="false"/>
         <column name="accept_bids_note" type="LONGVARCHAR" required="false"/>
-        <column name="language_code" type="VARCHAR" size="10"/>
+        <column name="language_code" type="VARCHAR" size="2"/>
         <behavior name="timestampable"/>
         <index name="name">
             <index-column name="name"/>
@@ -1018,7 +1018,7 @@
         <vendor type="mysql">
             <parameter name="Engine" value="InnoDB"/>
         </vendor>
-        <column name="language_code" type="VARCHAR" size="10" primaryKey="true" required="true"/>
+        <column name="language_code" type="VARCHAR" size="2" primaryKey="true" required="true"/>
         <column name="name" type="VARCHAR" required="true"/>
         <column name="active" type="BOOLEAN" defaultValue="false"/>
     </table>
@@ -1029,7 +1029,7 @@
         </vendor>
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="category_id" type="INTEGER" required="true"/>
-        <column name="language_code" type="VARCHAR" size="10"/>
+        <column name="language_code" type="VARCHAR" size="2"/>
         <column name="translation" type="LONGVARCHAR"/>
         <unique>
             <unique-column name="category_id"/>
@@ -1111,7 +1111,7 @@
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="name" type="VARCHAR" required="true"/>
         <column name="value" type="LONGVARCHAR" required="false"/>
-        <column name="language_code" type="CHAR" size="5" required="true"/>
+        <column name="language_code" type="CHAR" size="2" required="true"/>
         <column name="folder" type="VARCHAR" required="true"/>
         <column name="filename" type="VARCHAR" required="true"/>
         <column name="translated" type="BOOLEAN" required="false" defaultValue="false"/>
