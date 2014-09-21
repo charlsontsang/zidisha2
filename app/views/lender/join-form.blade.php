@@ -41,8 +41,8 @@
 
     {{ BootstrapForm::text('username', null, [
         'label'         => false,
-        'placeholder'   => 'Create display name',
-        'sr-only'       => 'Create display name',
+        'placeholder'   => 'Your name',
+        'sr-only'       => 'Your name',
         'feedback-icon' => 'fa-user',
     ]) }}
 
