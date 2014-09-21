@@ -24,7 +24,7 @@ if ($file->exists( __DIR__.'/bootstrap/env.php')) {
     require __DIR__.'/bootstrap/env.php';
 }
 else {
-    define('LARAVEL_ENV', 'local');
+    define('LARAVEL_ENV', 'setup');
 }
 
 /*

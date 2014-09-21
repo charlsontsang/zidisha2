@@ -98,7 +98,7 @@ require app_path() . '/filters.php';
 /*
  * Setup Propel
  */
-if (defined('LARAVEL_ENV')) {
+if (LARAVEL_ENV != 'setup') {
     require app_path() . '/config/propel/config.php';
     if (LARAVEL_ENV == 'local') {
       $con = Propel\Runtime\Propel::getWriteConnection(\Zidisha\User\Map\UserTableMap::DATABASE_NAME);
