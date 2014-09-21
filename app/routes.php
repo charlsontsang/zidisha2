@@ -1,5 +1,5 @@
 <?php
-$locale = 'en';
+$urlLocale = 'en';
 if (!App::runningInConsole()) {
     $urlLocale = $locale = Request::segment(1);
     if (!in_array($locale, ['fr', 'in'])) {
