@@ -326,7 +326,7 @@ class CreditLimitCalculator
             }
 
             // add bonus for new members who were invited by eligible existing members
-            $bonusCredit = Money::create($isInvited ? 100 : 0, 'USD') ;
+            $bonusCredit = Money::create($isInvited ? Setting::get('invite.bonus') : 0, 'USD') ;
             $totalUsdAmount = $firstLoanMaxUsdAmount->add($bonusCredit);
             
             return Converter::fromUSD($totalUsdAmount, $this->currency, $this->exchangeRate);

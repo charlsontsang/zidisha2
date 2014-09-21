@@ -129,6 +129,11 @@ return [
         ],
     ],
     'Borrower' => [
+        'invite.bonus' => [
+            'label'   => 'Bonus for new members who were invited by eligible existing members',
+            'default' => '100',
+            'rule'    => 'numeric',
+        ],
         'invite.maxInviteesWithoutPayment' => [
             'label'   => 'Maximum invitees without payments',
             'default' => '3',
