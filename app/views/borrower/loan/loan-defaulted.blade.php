@@ -3,8 +3,6 @@
 @section('content')
 @parent
 
-@include('borrower.dashboard.partials.loan-defaulted')
-
 <div class="row">
     <div class="col-xs-12 col-sm-6">
         @include('loan.partials.repaid-bar', compact('loan'))
