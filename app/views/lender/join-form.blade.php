@@ -35,7 +35,6 @@
 <div id="join-with-email" {{ $errors->count() ? ''  : 'style="display:none"' }}>
     {{ BootstrapForm::open([
         'route' => 'lender:post-join',
-        'translationDomain' => 'lender.join.form',
         'id' => 'joinForm']
     ) }}
     {{ BootstrapForm::populate($joinForm) }}
