@@ -58,7 +58,8 @@ Pending Disbursements
                             <dd><a href="{{ route('borrower:public-profile', $loan->getBorrower()->getId()) }}">{{ $loan->getBorrower()->getName() }}</a></dd>
                                                            
                             <dt>Phone Number</dt>
-                            <dd>{{ $loan->getBorrower()->getProfile()->getPhoneNumber() }}</dd>
+                            <dd>{{ BootstrapHtml::number($loan->getBorrower()->getProfile()->getPhoneNumber(), $loan->getBorrower()->getCountry()->getCountryCode()) }}</dd>
+
                             
                             <dt>Email</dt>
                             <dd>{{ $loan->getBorrower()->getUser()->getEmail() }}</dd>
@@ -73,7 +74,6 @@ Pending Disbursements
                             <dt>Special Instructions</dt>
                             <dd>{{ $loan->getAcceptBidsNote() }}</dd>
                             @endif
-
                             <dt>Notes</dt>
                             <dd>
                                 @if(isset($adminNotes[$loan->getId()]))

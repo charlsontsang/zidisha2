@@ -58,16 +58,14 @@ class LendingGroupCommentService extends CommentService
         }
     }
 
-    protected function getImages(Comment $comment)
+    protected function getImages(LendingGroupComment $comment)
     {
-        $uploads = CommentUploadQuery::create()
-            ->filterByComment($comment)
-            ->find();
+        $uploads = $comment->getUploads();
         $images = '';
         /** @var Upload $upload */
         foreach ($uploads as $upload) {
             if ($upload->isImage()) {
-                $images .= "<br><br><a target='_blank' href='route('home')'><img src='$upload->getImageUrl('small-profile-picture')' width='100' style='border:none'></a><br>";
+                $images .= sprintf('<br><br><a target="_blank" href="%s"><img src="%s" width="100" style="border:none"></a><br>', route('home'), $upload->getImageUrl('small-profile-picture'));
             }
         }
         return $images;

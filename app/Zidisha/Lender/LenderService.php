@@ -48,12 +48,10 @@ class LenderService
 
     public function editProfile(Lender $lender, $data)
     {
-        $lender->setFirstName($data['firstName']);
-        $lender->setLastName($data['lastName']);
-        $lender->getUser()->setEmail($data['email']);
-        $lender->getUser()->setUsername($data['username']);
-        $lender->getProfile()->setCity($data['city']);
-        $lender->getProfile()->setAboutMe($data['aboutMe']);
+        $lender->getUser()->setEmail($data['email'])
+        ->setUsername($data['username']);
+        $lender->getProfile()->setCity($data['city'])
+        ->setAboutMe($data['aboutMe']);
 
         if (!empty($data['password'])) {
             $lender->getUser()->setPassword($data['password']);
@@ -67,7 +65,7 @@ class LenderService
         $user = $lender->getUser();
 
         if ($image) {
-            $upload = Upload::createFromFile($image);
+            $upload = Upload::createFromFile($image, true);
             $upload->setUser($user);
             $user->setProfilePicture($upload);
             $user->save();

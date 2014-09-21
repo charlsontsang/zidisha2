@@ -21,4 +21,10 @@ class BootstrapHtml {
         return '<i class="fa fa-info-circle" data-toggle="tooltip" data-placement="bottom" title="'.$title.'"></i>';
     }
 
-} 
+    public static function number($number, $countryCode)
+    {
+        $phoneUtil = \libphonenumber\PhoneNumberUtil::getInstance();
+        $phoneProto = $phoneUtil->parse($number, $countryCode);
+        return $phoneUtil->format($phoneProto, \libphonenumber\PhoneNumberFormat::INTERNATIONAL);
+    }
+}

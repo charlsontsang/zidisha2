@@ -71,7 +71,6 @@ abstract class CommentService
                 $upload->setUser($user);
                 $upload->save();
                 $comment->addUpload($upload);
-
             }
             $comment->save();
         }
@@ -90,8 +89,8 @@ abstract class CommentService
             foreach ($files as $file) {
                 $upload = Upload::createFromFile($file);
                 $upload->setUser($user);
+                $upload->save();
                 $comment->addUpload($upload);
-
             }
             $comment->save();
         }

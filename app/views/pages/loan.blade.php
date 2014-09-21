@@ -23,12 +23,8 @@
             <div class="col-sm-8 loan-body">
                 
                 <div class="pull-left profile-image" href="{{ route('loan:index', $loan->getId()) }}"
-                    style="background-image:url(/assets/images/test-photos/esther.JPG)" width="100%" height="450px">
+                    style="background-image:url({{ $borrower->getUser()->getProfilePictureUrl('large-profile-picture') }})" width="100%" height="450px">
                 </div>
-                <!--
-                <img src="{{ $borrower->getUser()->getProfilePictureUrl('large-profile-picture') }}" width="100%">
-                -->
-
                 <br/>
                 <br/>
 
@@ -135,7 +131,7 @@
 
                                             <div id="toggle-example" class="collapse">
                                                 @foreach($previousLoans as $oneLoan)
-                                                <p><a href="{{ route('loan:index', $oneLoan->getId()) }}">${{ $oneLoan->getAmount() }}
+                                                <p><a href="{{ route('loan:index', $oneLoan->getId()) }}">{{ $oneLoan->getUsdAmount() }}
                                                         {{ $oneLoan->getAppliedAt()->format('d-m-Y') }}
                                                         {{-- TODO $oneLoan->getAcceptedAt()->format('d-m-Y')
                                                         $oneLoan->getExpiredDate()->format('d-m-Y')

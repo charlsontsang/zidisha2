@@ -4,6 +4,7 @@ namespace Zidisha\Upload;
 
 use Config;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Str;
 use Propel\Runtime\Connection\ConnectionInterface;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -16,13 +17,14 @@ class Upload extends BaseUpload
     protected static $image_types = ['jpeg', 'png', 'jpg'];
 
     protected $file = null;
+    protected $isProfileUpload = false;
 
     public function isImage()
     {
         return $this->getType() == 'image' ? true : false;
     }
 
-    public function getImageUrl($format)
+    public function getImageUrl($format, $isProfileImage = false)
     {
         if (!Config::get('image.formats.' . $format)) {
             throw new ConfigurationNotFoundException();
@@ -34,16 +36,22 @@ class Upload extends BaseUpload
 
         $file = new Filesystem();
 
-        if ($file->exists($this->getCachePath($format))) {
-            return asset('uploads/cache/' . $format . '/' . $this->getFilename());
+        if ($file->exists($this->getCachePath($format, $isProfileImage))) {
+            $width = Config::get("image.formats.$format.width");
+            if ($isProfileImage) {
+                $height = Config::get("image.formats.$format.height");
+            } else {
+                $height = null;
+            }
+            return asset('uploads/cache/' . $width . 'X' . $height . '/' . $this->getUserId() . '/' . $this->getFilename());
         } else {
-            return route('image:resize', ['upload_id' => $this->getId(), 'format' => $format]);
+            return route('image:resize', ['upload_id' => $this->getId(), 'format' => $format, 'is_profile_image' => $isProfileImage ? 1 : 0]);
         }
     }
 
     public function getFileUrl()
     {
-        return asset('uploads/' . $this->getFilename());
+        return asset('uploads/' .  $this->getUserId() . '/' . $this->getFilename());
     }
 
     public function getPath()
@@ -53,28 +61,45 @@ class Upload extends BaseUpload
 
     protected function getBasePath()
     {
-        return public_path() . '/uploads/';
+        return public_path() . '/uploads/' . $this->getUserId() . '/';
     }
 
     public function postDelete(ConnectionInterface $con = null)
     {
         $file = new Filesystem();
         $file->delete($this->getPath());
+        $formats = array_keys(Config::get('image.formats'));
+        foreach ($formats as $format) {
+            $cachePath = $this->getCachePath($format, $this->isProfileUpload);
+            if ($file->exists($cachePath)) {
+                $file->delete($cachePath);
+            }
+        }
         return true;
     }
 
-    public static function createFromFile(UploadedFile $file)
+    public static function createFromFile(UploadedFile $file, $isProfileUpload = false)
     {
         $upload = new Upload();
-
         $extension = $file->getClientOriginalExtension();
         $mimeType = $file->getMimeType();
 
         $fileType = in_array($extension, static::$image_types) ? 'image' : 'document';
 
-        $upload->setExtension($extension);
-        $upload->setType($fileType);
-        $upload->setMimeType($mimeType);
+        if ($isProfileUpload) {
+            $upload->isProfileUpload = $isProfileUpload;
+            $file = \Image::make($file);
+            $upload->setFileName('profile.jpg');
+            $extension = 'jpg';
+            $mimeType = 'image/jpeg';
+        } else {
+            $fileName = substr(Str::slug($file->getClientOriginalName()), 0, -(strlen($extension)));
+            $upload->setFileName('-' . substr($fileName, 0, 32). '.' . $extension);
+        }
+
+        $upload->setExtension($extension)
+            ->setType($fileType)
+            ->setMimeType($mimeType);
 
         $upload->file = $file;
 
@@ -86,9 +111,22 @@ class Upload extends BaseUpload
         return $this->file ? true : false;
     }
 
-    public function postSave(ConnectionInterface $con = null)
+    public function postInsert(ConnectionInterface $con = null)
     {
-        $this->file = $this->file->move($this->getBasePath(), $this->getFilename());
+        if ($this->isProfileUpload) {
+            $file = new Filesystem();
+            if ($file->exists($this->getPath())) {
+                $this->postDelete();
+            }
+            if (!$file->exists($this->getBasePath())) {
+                $file->makeDirectory($this->getBasePath(), 0755 , true);
+            }
+            $this->file = $this->file->save($this->getBasePath() . $this->getFilename());
+        } else {
+            $this->setFileName( $this->getId() . $this->getFileName());
+            $this->save();
+            $this->file = $this->file->move($this->getBasePath(), $this->getFilename());
+        }
     }
 
     public function getFile()
@@ -100,28 +138,33 @@ class Upload extends BaseUpload
         return $this->file;
     }
 
-    public function resize($format)
+    public function resize($format, $isProfileImage = false)
     {
         $file = new Filesystem();
-        $cachePath = $this->getCachePath($format);
+        $cachePath = $this->getCachePath($format, $isProfileImage);
         if (!$file->exists($cachePath)) {
             $img = \Image::make($this->getPath());
 
             if (!Config::get('image.formats.' . $format)) {
                 throw new ConfigurationNotFoundException();
             }
-
+            $width = Config::get("image.formats.$format.width");
+            if ($isProfileImage) {
+                $height = Config::get("image.formats.$format.height");
+            } else {
+                $height = null;
+            }
             $img->resize(
-                Config::get("image.formats.$format.width"),
-                Config::get("image.formats.$format.height"),
+                $width,
+                $width,
                 function ($constraint) {
                     $constraint->aspectRatio();
                     $constraint->upsize();
                 }
             );
 
-            if(!$file->exists($this->getCacheBasePath($format))){
-                $file->makeDirectory($this->getCacheBasePath($format), 0755, true);
+            if(!$file->exists($this->getCacheBasePath($format, $isProfileImage))){
+                $file->makeDirectory($this->getCacheBasePath($format, $isProfileImage), 0755, true);
             }
             $img->save($cachePath);
         }
@@ -129,25 +172,22 @@ class Upload extends BaseUpload
         return new File($cachePath);
     }
 
-    protected function getCachePath($format)
+    protected function getCachePath($format, $isProfileImage = false)
+    {
+        return $this->getCacheBasePath($format, $isProfileImage) . $this->getFilename();
+    }
+
+    protected function getCacheBasePath($format, $isProfileImage = false)
     {
         if (!Config::get('image.formats.' . $format)) {
             throw new ConfigurationNotFoundException();
         }
-
-        return public_path() . '/uploads/cache/' . $format . '/' . $this->getFilename();
-    }
-
-    protected function getCacheBasePath($format)
-    {
-        if (!Config::get('image.formats.' . $format)) {
-            throw new ConfigurationNotFoundException();
+        $width = Config::get("image.formats.$format.width");
+        if ($isProfileImage) {
+            $height = Config::get("image.formats.$format.height");
+        } else {
+            $height = null;
         }
-        return public_path() . '/uploads/cache/' . $format . '/';
-    }
-
-    public function getFilename()
-    {
-        return $this->getId() . '.' . $this->getExtension();
+        return public_path() . '/uploads/cache/' . $width . 'X' . $height . '/' . $this->getUserId() . '/';
     }
 }

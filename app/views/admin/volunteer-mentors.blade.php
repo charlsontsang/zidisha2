@@ -40,9 +40,9 @@ Manage Volunteer Mentors
         <tbody>
         @foreach($paginator as $borrower)
         <tr>
-            <td><p><a href="{{ route('admin:borrower', $borrower->getId()) }}">{{
-                    $borrower->getName() }}</a></p>
-                <p>Tel. {{ $borrower->getProfile()->getPhoneNumber() }}</p>
+            <td><a href="{{ route('admin:borrower', $borrower->getId()) }}">{{
+                    $borrower->getName() }}</a>
+                <p>{{ BootstrapHtml::number($borrower->getProfile()->getPhoneNumber(), $borrower->getCountry()->getCountryCode()) }}</p>
                 <p>{{ $borrower->getUser()->getEmail() }}</p>
                 <p>{{ $borrower->getProfile()->getCity() }}, {{ $borrower->getCountry()->getName() }}</p>
             </td>

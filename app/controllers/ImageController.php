@@ -4,7 +4,7 @@ use Zidisha\Upload\UploadQuery;
 
 class ImageController extends BaseController
 {
-    public function getImage($uploadId, $format)
+    public function getImage($uploadId, $format, $isProfileImage)
     {
         $upload = UploadQuery::create()
             ->filterById($uploadId)
@@ -14,7 +14,7 @@ class ImageController extends BaseController
             App::abort(404, 'Bad Request');
         }
 
-        $file = $upload->resize($format);
+        $file = $upload->resize($format, $isProfileImage);
 
         return Response::make(file_get_contents($file->getPathname()), 200, ['content-type' => $file->getMimeType()]);
     }

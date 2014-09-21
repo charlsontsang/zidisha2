@@ -269,20 +269,19 @@ class BorrowerService
         }
 
         if ($picture) {
-            $upload = Upload::createFromFile($picture);
+            $upload = Upload::createFromFile($picture, true);
             $upload->setUser($user);
-            $upload->save();
-
             $user->setProfilePicture($upload);
+            $upload->save();
         }
 
-        foreach ($files as $file) {
-            $upload = Upload::createFromFile($file);
-            $upload->setUser($user);
-            
-            $borrower->addUpload($upload);
-        }
-
+//        foreach ($files as $file) {
+//            $upload = Upload::createFromFile($file);
+//            $upload->setUser($user);
+//
+//            $borrower->addUpload($upload);
+//        }
+        $user->save();
         $borrower->save();
     }
 

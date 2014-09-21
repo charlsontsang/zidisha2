@@ -31,10 +31,10 @@ Edit Profile
 
     {{ BootstrapForm::textarea('aboutBusiness') }}
 
-    <div class="borrower-upload-inputs">
-        {{ BootstrapForm::file('images[]', ['label' => 'borrower.edit-profile.upload-file']) }}
-        <button class="btn btn-primary btn-success borrower-upload-add-more">@lang('borrower.add-more')</button>
-    </div>
+    {{--<div class="borrower-upload-inputs">--}}
+        {{--{{ BootstrapForm::file('images[]', ['label' => 'borrower.edit-profile.upload-file']) }}--}}
+        {{--<button class="btn btn-primary btn-success borrower-upload-add-more">@lang('borrower.add-more')</button>--}}
+    {{--</div>--}}
 
     {{ BootstrapForm::submit('save') }}
 
@@ -48,8 +48,8 @@ Edit Profile
                 <div class="borrower-upload-form" data-comment-action="delete-upload">
                     {{ BootstrapForm::open(array('route' => 'borrower:delete-upload', 'translationDomain' => 'borrower.edit-uploads')) }}
                     @if($upload->isImage())
-                        <a href="{{ $upload->getImageUrl('small-profile-picture') }}">
-                            <img src="{{ $upload->getImageUrl('small-profile-picture') }}" width="100px" height="100px" alt=""/>
+                        <a href="{{ $upload->getImageUrl('small-profile-picture', true) }}">
+                            <img src="{{ $upload->getImageUrl('small-profile-picture', true) }}" width="100px" height="100px" alt=""/>
                         </a>
                     @else
                         <div class="well">

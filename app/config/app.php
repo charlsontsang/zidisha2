@@ -125,8 +125,8 @@ return array(
         'Zidisha\Html\BootstrapFormServiceProvider',
         'Zidisha\Http\RedirectorServiceProvider',
         'Barryvdh\Debugbar\ServiceProvider',
-        'Zidisha\Translation\TranslationServiceProvider'
-
+        'Zidisha\Translation\TranslationServiceProvider',
+        'Propaganistas\LaravelPhone\LaravelPhoneServiceProvider'
     ),
 
 	/*

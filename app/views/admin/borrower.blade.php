@@ -19,8 +19,8 @@
         <div>      
             @foreach($borrower->getUploads() as $upload)
                 @if($upload->isImage())
-                <a href="{{ $upload->getImageUrl('small-profile-picture') }}">
-                    <img src="{{ $upload->getImageUrl('small-profile-picture') }}" width="100%" />
+                <a href="{{ $upload->getImageUrl('small-profile-picture', true) }}">
+                    <img src="{{ $upload->getImageUrl('small-profile-picture', true) }}" width="100%" />
                 </a>
                 @else
                 <div class="well">
@@ -73,10 +73,10 @@
             <div class="loan-section-content">
                 Email: <strong>{{ $borrower->getUser()->getEmail() }}</strong>
                 <br/>
-                Phone: <strong>{{ $borrower->getProfile()->getPhoneNumber() }}</strong>
+                Phone: <strong>{{ BootstrapHtml::number($borrower->getProfile()->getPhoneNumber(), $borrower->getCountry()->getCountryCode()) }}</strong>
                 <br/>
                 @if (!empty($borrower->getProfile()->getAlternatePhoneNumber()))
-                    Alternate Phone: <strong>{{ $borrower->getProfile()->getAlternatePhoneNumber() }}</strong>
+                    Alternate Phone: <strong>{{ BootstrapHtml::number($borrower->getProfile()->getAlternatePhoneNumber(), $borrower->getCountry()->getCountryCode()) }}</strong>
                 @endif
             </div>
         </div>
