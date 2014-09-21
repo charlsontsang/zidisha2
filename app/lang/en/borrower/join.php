@@ -3,6 +3,12 @@
 return [
     'form'   => [
         'title'                      => 'Application for Zidisha Membership',
+        'start-new'                  => 'Start New Application',
+        'resume'                     => 'Resume Existing Application',
+        'country'                    => 'Your Country',
+        'next'                       => 'Next',
+        'resume-code'                => 'If you would like to resume a partially completed application, please enter your application code here.',
+        'resume-submit'              => 'Resume application',
         'online-identity'            => 'Online Identity',
         'create-account'             => 'Create Account',
         'contact-info'               => 'Contact Information',
@@ -11,10 +17,6 @@ return [
         'family-title'               => 'Family References',
         'neighbor-title'             => 'Other References',
         'more-info'                  => 'Loan Information',
-        'country'                    => 'Country',
-        'next'                       => 'Next step',
-        'resume-code'                => 'Enter code to resume your application',
-        'resume-submit'              => 'Resume your application',
         'facebook-intro'             => "In order to verify your online identity, please click on the ':buttonText' button to link your Facebook account.",
         'facebook-note'              => 'Please make sure you are signed into your own Facebook account before linking. If you link a Facebook account that does not belong to you, your application to join Zidisha may be permanently declined. A link to your public Facebook page will be displayed to lenders in your Zidisha loan profile page.',
         'facebook-button'            => 'Verify with Facebook',
