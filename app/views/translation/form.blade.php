@@ -9,7 +9,7 @@
 
 
 <div class="clearfix">
-    <a href=" {{ route('admin:translation:index') }} " class="btn btn-primary">Back to Translations</a>
+    <a href=" {{ route('admin:translation:index', ['languageCode' => $languageCode]) }} " class="btn btn-primary">Back to Translations</a>
     <a href="#" id="toggle-label" class="btn btn-default pull-right">Toggle Labels</a>
 </div>
 
