@@ -75,7 +75,7 @@ creating a new job while boosting production and revenue.', 't'],
     ['Beauty', 'Entrepreneurs with a gift for making others look and feel
 beautiful offer their services open a barbershop or beauty salon, or
 they supply beauty-enhancing products like perfumes and cosmetics.', 'Though it is expressed differently from one culture to another, the
-quest to enhance ones personal beauty is universal. Entrepreneurs in
+quest to enhance one\'s personal beauty is universal. Entrepreneurs in
 the beauty business use their artistic talent to uplift others, bringing
 much-needed brightness to lighten the burden of hard lives.', 'Beauty
 businesses often serve large numbers of customers at low margins, making
