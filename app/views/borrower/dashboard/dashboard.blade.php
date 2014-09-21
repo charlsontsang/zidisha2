@@ -24,11 +24,11 @@ Dashboard
 @endif
 
 @if($volunteerMentor)
-    @include('borrower.dashboard.volunteer-mentor', compact('volunteerMentor'))
+    @include('borrower.dashboard.partials.volunteer-mentor', compact('volunteerMentor'))
 @endif
 
-@include('borrower.dashboard.feedback', compact('feedbackMessages'))
+@include('borrower.dashboard.partials.feedback', compact('feedbackMessages'))
 
-@include('borrower.dashboard.do-more')
+@include('borrower.dashboard.partials.do-more')
 
 @stop
