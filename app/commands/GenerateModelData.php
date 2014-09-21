@@ -600,7 +600,7 @@ class GenerateModelData extends Command
             $settings = [];
         }
 
-        $database = \Config::get('database.connections.zidisha.database');
+        $database = \Config::get('database.connections.zidisha2.database');
 
         $this->line("Rebuild database $database");
         DB::statement('SET storage_engine=INNODB;');
