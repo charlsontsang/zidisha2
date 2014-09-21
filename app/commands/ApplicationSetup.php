@@ -32,10 +32,10 @@ class ApplicationSetup extends Command
 
         $databaseConfig['databaseHost'] = $this->ask('Enter your database host [Default=localhost] : ', 'localhost');
 
-        $databaseConfig ['databaseName'] = $this->ask('Enter your database name [Default=homestead] : ', 'homestead');
+        $databaseConfig ['databaseName'] = $this->ask('Enter your database name [Default=zidisha2] : ', 'zidisha2');
 
         $databaseConfig['databaseUsername'] = $this->ask(
-            'Enter your database username [Default=homestead] : ',
+            'Enter your database username [Default=zidisha] : ',
             'homestead'
         );
 
@@ -69,11 +69,11 @@ ENV;
 <?php
 
 return array(
-    'default' => 'mysql',
+    'default' => 'zidisha2',
 
     'connections' => array(
 
-        'mysql' => array(
+        'zidisha2' => array(
             'driver'   => 'mysql',
             'host'     => '{$databaseConfig['databaseHost']}',
             'database' => '{$databaseConfig ['databaseName']}',
