@@ -146,12 +146,14 @@ class BorrowerService
 
             $borrower->save($con);
 
+            $siftScienceScore = $this->siftScienceService->getSiftScore($borrower->getUser());
             $joinLog = new JoinLog();
             $joinLog
                 ->setIpAddress($data['ipAddress'])
                 ->setPreferredLoanAmount($data['preferredLoanAmount'])
                 ->setPreferredInterestRate($data['preferredInterestRate'])
                 ->setPreferredRepaymentAmount($data['preferredRepaymentAmount'])
+                ->setSiftScienceScore($siftScienceScore)
                 ->setBorrower($borrower);
             $joinLog->save($con);
 

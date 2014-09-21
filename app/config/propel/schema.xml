@@ -930,6 +930,7 @@
         <column name="preferred_interest_rate" type="VARCHAR" required="true" />
         <column name="preferred_repayment_amount" type="VARCHAR" required="true" />
         <column name="verified_at" type="TIMESTAMP" required="false" />
+        <column name="sift_science_score" type="DECIMAL" required="false"/>
         <behavior name="timestampable"/>
         <foreign-key foreignTable="borrowers" phpName="Borrower">
             <reference local="borrower_id" foreign="id"/>
