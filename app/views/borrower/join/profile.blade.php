@@ -202,7 +202,7 @@
                     <label>
                         <input id="termsAndConditionCheckbox" name="termsAndCondition" type="checkbox">
                             {{ \Lang::get('borrower.join.form.terms-and-condition.confirmation') }}
-                            <a data-toggle="modal" data-target="#termsAndConditionModal">{{ \Lang::get('borrower.join.form.terms-and-condition.link') }}</a>.
+                            <a data-toggle="modal" data-target="#termsAndConditionModal">{{ \Lang::get('borrower.join.form.terms-and-condition.title') }}</a>.
                     </label>
                 </div>
     
@@ -237,6 +237,7 @@
 @section('script-footer')
 <script type="text/javascript">
     $(function () {
+
         $("[name=volunteerMentorCity]").change(function () {
             var $volunteerMentors = $("[name=volunteerMentorId]");
             $volunteerMentors.empty();

@@ -61,7 +61,20 @@ return [
         'terms-and-condition' => [
             'legend'       => 'Legal Contract',
             'confirmation' => 'I have read and agree to the',
-            'link'         => 'Zidisha Loan Contract',
+            'title'         => 'Zidisha Loan Contract',
+            'body'         => '
+<ol>
+<li type="I"><b>Loan Agreement</b><p>If the loan requested in this form is granted, I agree to repay the loan on time and in full according to the interest rate, repayment period, grace period, and other terms specified in this form.</p>
+<li type="I"><b>Disclosure of Information</b>
+      <ol>
+        <li type="a"><p> In connection with this application and/or maintaining a credit facility with Zidisha.org, Zidisha and its authorized agents may carry out credit checks with a credit reference agency.  In the event of the account going into default, my name and transaction details will be recorded with the credit reference agency.  This information may be used by other banks and financial institutions in assessing applications for credit by me, members of my household, supplementary account holders and members of their households and for occasional debt tracing and fraud prevention purposes.</p>
+        <li type="a"><p>I agree that the financial institutions with which I have held loans or credit facilities may disclose details relating to my loan or credit facilities to any third party including credit reference agencies, if in the financial institution’s opinion such disclosure is necessary for the purposes of evaluating any application made to the financial institution or such third party, maintaining my Account with the financial institution or other purpose as the financial institution shall deem appropriate.</p>
+        <li type="a"><p>  I agree that the financial institution may disclose details relating to my loan or credit account including details of my default in servicing my loan or credit account to any third party including credit reference agencies for the purpose of evaluating my credit worthiness or for any other lawful purpose.</p>
+     </ol> 
+<li type="I"><b>Publicity</b><p>I agree that Zidisha.org may publicize all information, including pictures, provided by me on this form and in any future communications with Zidisha, as well as all information relating to my credit history provided by third parties, on the Internet for the purposes of loan application evaluation, fundraising and general publicity.
+</p>
+</ol>',
+            'please-agree' => 'Please confirm acceptance of the Zidisha Loan Contract to continue.'
         ],
         
         'submit'              => 'Submit Final Application',
