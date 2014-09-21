@@ -15,6 +15,8 @@
     @lang('borrower.join.form.facebook-note')
 </em>
 
+<br/><br/>
+
 <p>
     <a href="{{ $facebookJoinUrl }}" class="btn btn-facebook">
         <span class="fa fa-facebook fa-lg fa-fw"></span>
