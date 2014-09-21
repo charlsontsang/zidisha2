@@ -12,19 +12,8 @@
                     </div>
                 </div>
                 <div class="clearfix"></div>
-                <div class="dropdown">
-                    <br/>
-                    <a data-toggle="dropdown" href="#">
-                        English
-                        <b class="caret"></b>
-                    </a>
-                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                        <li role="presentation">
-                            <a role="menuitem" tabindex="-1" href="#">Français</a>
-                            <a role="menuitem" tabindex="-1" href="#">Bahasa Indonesia</a>
-                        </li>
-                    </ul>
-                </div>
+                <br/>
+                @include('partials.language-selector')
                     <div>
                         <p>
                             <br/>

@@ -75,6 +75,13 @@ Route::group(
                 'as'   => 'page:statistics'
             )
         );
+        Route::get(
+            'redirect-language/{languageCode}',
+            array(
+                'uses' => 'PageController@getRedirectLanguage',
+                'as'   => 'redirect-language'
+            )
+        );
         /**
          * Routes for Authentication
          */

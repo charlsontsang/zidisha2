@@ -160,4 +160,18 @@ class PageController extends BaseController {
             compact('totalStatistics', 'lendingStatistics', 'time', 'countries', 'selectedCountry', 'timePeriods', 'selectedTimePeriod', 'routeParams')
         );
     }
+
+    public function getRedirectLanguage($languageCode)
+    {
+        if (!in_array($languageCode, ['en', 'fr', 'in'])) {
+            return \Redirect::back();
+        }
+
+        \Session::set('languageCode', $languageCode);
+
+        $to = ltrim(\Request::query('from'), '/') ?: '';
+        $to = $languageCode != 'en' ? "$languageCode/$to" : $to;
+
+        return \Redirect::to("/$to");
+    }
 }
