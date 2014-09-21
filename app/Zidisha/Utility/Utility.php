@@ -5,25 +5,33 @@ namespace Zidisha\Utility;
 
 use Faker\Provider\DateTime;
 use GeoIp2\Database\Reader;
+use GeoIp2\Exception\AddressNotFoundException;
 use Zidisha\Country\CountryQuery;
 
 class Utility {
 
     public static function getCountryCodeByIP(){
-        $country['code'] = '';
-        $country['name'] = '';
-        $country['id'] = '';
+        $country = [
+            'code' => '',
+            'name' => '',
+            'id'   => '',
+        ];
         $ip = \Request::getClientIp();
-        if(!empty($ip)) {
+
+        if ($ip) {
             $reader = new Reader( app_path() . '/storage/external/GeoLite2-Country.mmdb');
-            $record = $reader->country('103.7.80.62');
-            $country = array();
-            $country['code'] = $record->country->isoCode;
-            $country['name'] = $record->country->name;
-            $dbCountry = CountryQuery::create()
-                                ->findOneByCountryCode($country['code']);
-            $country['id'] = $dbCountry->getId();
+            try {
+                $record = $reader->country($ip);
+                $dbCountry = CountryQuery::create()->findOneByCountryCode($record->country->isoCode);
+
+                if ($dbCountry) {
+                    $country['code'] = $record->country->isoCode;
+                    $country['name'] = $record->country->name;
+                    $country['id']   = $dbCountry->getId();
+                }
+            } catch (AddressNotFoundException $e) {}
         }
+
         return $country;
     }
 

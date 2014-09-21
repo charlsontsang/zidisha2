@@ -4,6 +4,7 @@ namespace Zidisha\Country;
 
 use Zidisha\Country\Base\LanguageQuery as BaseLanguageQuery;
 use Zidisha\Country\CountryQuery;
+use Zidisha\Utility\Utility;
 
 
 /**
@@ -28,6 +29,19 @@ class LanguageQuery extends BaseLanguageQuery
             ->find();
 
         return $this->filterByLanguageCode($languageCodes->getData());
+    }
+
+    public function getLanguageCodeByIp()
+    {
+        $country = Utility::getCountryCodeByIP();
+
+        return $this
+            ->useCountryQuery()
+                ->filterById($country['id'])
+                ->filterByBorrowerCountry(true)
+            ->endUse()
+            ->select('LanguageCode')
+            ->findOne();
     }
 
 } // LanguageQuery
