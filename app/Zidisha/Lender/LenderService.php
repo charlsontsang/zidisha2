@@ -17,11 +17,13 @@ use Zidisha\Loan\BidQuery;
 use Zidisha\Loan\Loan;
 use Zidisha\Mail\LenderMailer;
 use Zidisha\Upload\Upload;
+use Zidisha\User\FacebookUser;
 use Zidisha\User\FacebookUserLogQuery;
 use Zidisha\User\User;
 use Zidisha\User\UserQuery;
 use Zidisha\Vendor\Facebook\FacebookService;
 use Zidisha\Vendor\PropelDB;
+use Zidisha\Vendor\SiftScience\SiftScienceService;
 
 class LenderService
 {
@@ -31,19 +33,22 @@ class LenderService
     private $userQuery;
     private $transactionService;
     private $facebookService;
+    private $siftScienceService;
 
     public function __construct(
         LenderMailer $lenderMailer,
         MixpanelService $mixpanelService,
         UserQuery $userQuery,
         TransactionService $transactionService,
-        FacebookService $facebookService
+        FacebookService $facebookService,
+        SiftScienceService $siftScienceService
     ) {
         $this->lenderMailer = $lenderMailer;
         $this->mixpanelService = $mixpanelService;
         $this->userQuery = $userQuery;
         $this->transactionService = $transactionService;
         $this->facebookService = $facebookService;
+        $this->siftScienceService = $siftScienceService;
     }
 
     public function editProfile(Lender $lender, $data)
@@ -178,43 +183,61 @@ class LenderService
             'facebookId'    => null,
             'password'      => null,
             'joinedAt'      => new DateTime(),
+            'facebookData'  => null,
         ];
 
-        $user = new User();
-        $user
-            ->setJoinedAt($data['joinedAt'])
-            ->setLastLoginAt($data['joinedAt'])
-            ->setPassword($data['password'])
-            ->setEmail($data['email'])
-            ->setUsername($data['username'])
-            ->setRole('lender')
-            ->setGoogleId($data['googleId'])
-            ->setFacebookId($data['facebookId'])
-            ->setGooglePicture($data['googlePicture']);
+        $lender = PropelDB::transaction(function($con) use($data) {
+                $user = new User();
+                $user
+                    ->setJoinedAt($data['joinedAt'])
+                    ->setLastLoginAt($data['joinedAt'])
+                    ->setPassword($data['password'])
+                    ->setEmail($data['email'])
+                    ->setUsername($data['username'])
+                    ->setRole('lender')
+                    ->setGoogleId($data['googleId'])
+                    ->setFacebookId($data['facebookId'])
+                    ->setGooglePicture($data['googlePicture']);
 
-        $lender = new Lender();
-        $lender
-            ->setUser($user)
-            ->setCountryId($data['countryId'])
-            ->setFirstName($data['firstName'])
-            ->setLastName($data['lastName']);
+                $lender = new Lender();
+                $lender
+                    ->setUser($user)
+                    ->setCountryId($data['countryId'])
+                    ->setFirstName($data['firstName'])
+                    ->setLastName($data['lastName']);
 
-        $profile = new Profile();
-        $profile->setAboutMe($data['aboutMe']);
-        $lender->setProfile($profile);
+                $profile = new Profile();
+                $profile->setAboutMe($data['aboutMe']);
+                $lender->setProfile($profile);
 
-        $preferences = new Preferences();
-        $lender->setPreferences($preferences);
-        
-        $lender->save();
+                $preferences = new Preferences();
+                $lender->setPreferences($preferences);
 
-        $facebookUserLog = FacebookUserLogQuery::create()
-            ->orderByCreatedAt('desc')
-            ->findOneByFacebookId($data['facebookId']);
-        if ($facebookUserLog) {
-            $facebookUserLog->setUser($user);
-            $facebookUserLog->save();
-        }
+                $lender->save($con);
+                $facebookData = $data['facebookData'];
+
+                if ($facebookData) {
+                    $facebookUser = new FacebookUser();
+                    $facebookUser
+                        ->setUser($user)
+                        ->setEmail($facebookData['email'])
+                        ->setAccountName($facebookData['name'])
+                        ->setCity($facebookData['location']['name'])
+                        ->setBirthDate($facebookData['birthday'])
+                        ->setFriendsCount($this->facebookService->getFriendCount())
+                        ->setFirstPostDate($this->facebookService->getFirstPostDate());
+                    $facebookUser->save($con);
+                    $facebookUserLog = FacebookUserLogQuery::create()
+                        ->orderByCreatedAt('desc')
+                        ->findOneByFacebookId($data['facebookId']);
+                    if ($facebookUserLog) {
+                        $facebookUserLog->setUser($user);
+                        $facebookUserLog->save($con);
+                    }
+                    $this->siftScienceService->sendFacebookEvent($user, $data['facebookId']);
+                }
+                return $lender;
+            });
 
         $this->mixpanelService->trackLenderJoined($lender);
         
@@ -226,10 +249,11 @@ class LenderService
     public function joinFacebookUser($facebookUser, $data)
     {
         $data += [
-            'email'      => $facebookUser['email'],
-            'facebookId' => $facebookUser['id'],
-            'firstName'  => $facebookUser['first_name'],
-            'lastName'   => $facebookUser['last_name'],
+            'email'        => $facebookUser['email'],
+            'facebookId'   => $facebookUser['id'],
+            'firstName'    => $facebookUser['first_name'],
+            'lastName'     => $facebookUser['last_name'],
+            'facebookData' => $facebookUser
         ];
 
         return $this->joinLender($data);
@@ -535,7 +559,7 @@ class LenderService
 
             if ($errors) {
                 foreach ($errors as $error) {
-                    Flash::error($error);
+                    \Flash::error($error);
                 }
                 return false;
             }
