@@ -79,4 +79,14 @@
 
 <hr/>
 
-Already a member?  <strong><a href="{{ route('login') }}" data-toggle="modal" data-target="#login-modal" data-dismiss="modal">Log In</a></strong>
+Already a member?&nbsp;&nbsp;
+
+<strong>     
+
+    @if(isset($modal) && $modal)
+        <a href="{{ route('login') }}" data-toggle="modal" data-target="#login-modal" data-dismiss="modal">Log In</a>
+    @else
+        <a href="{{ route('login') }}">Log In</a>
+    @endif
+
+</strong>
