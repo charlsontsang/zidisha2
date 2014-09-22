@@ -942,7 +942,7 @@ class LoanService
         return $count > 0;
     }
 
-    public function getOnTimeRepaymentScore(Borrower $borrower)
+    public function getOnTimeRepaymentScore(Borrower $borrower, $sendTodayInstallmentCount = false)
     {
         $BorrowerLoans = LoanQuery::create()
             ->filterByBorrower($borrower)
@@ -962,12 +962,15 @@ class LoanService
         } else {
             $repaymentRate = $onTimeInstallmentCount / $totalTodayInstallmentCount * 100;
 
-            if ($repaymentRate < 0) { // TODO why?
+            if ($repaymentRate < 0) {
                 $repaymentRate = 0;
             }
             $repaymentScore = round($repaymentRate, 2);
         }
-        return $repaymentScore;
+            return [
+                'repaymentScore'             => $repaymentScore,
+                'totalTodayInstallmentCount' => $totalTodayInstallmentCount
+            ];
     }
 
     public function writeOffLoans()

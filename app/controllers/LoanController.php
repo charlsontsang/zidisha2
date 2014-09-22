@@ -155,7 +155,7 @@ class LoanController extends BaseController
             $follower = $this->followService->getFollower(\Auth::user()->getLender(), $borrower);
         }
         $repaymentSchedule = $this->repaymentService->getRepaymentSchedule($loan);
-        $repaymentScore = $this->loanService->getOnTimeRepaymentScore($borrower);
+        $repaymentScore = $this->loanService->getOnTimeRepaymentScore($borrower, true);
 
         $categoryForm = $this->adminCategoryForm;
 
