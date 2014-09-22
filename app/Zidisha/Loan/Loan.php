@@ -286,6 +286,15 @@ class Loan extends BaseLoan implements CommentReceiverInterface
         return in_array($this->getStatus(), [Loan::REPAID, Loan::DEFAULTED]);
     }
 
+    public function getCompletedAt()
+    {
+        if ($this->isRepaid()) {
+            return $this->getRepaidAt();
+        } elseif ($this->isDefaulted()) {
+            return $this->getExpiredAt(); // TODO store in defaultedAt column, also check loanService::defaultLoan
+        }
+    }
+
     public function getEndedAt()
     {
         if ($this->getStatus() == Loan::REPAID) {

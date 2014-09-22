@@ -71,8 +71,8 @@ class RepaymentSchedule implements \IteratorAggregate
         $totalAmountPaid = $zero;
         $paymentStatus = 'on-time';
         $dueDateThreshold = $isActiveLoan ? $repaymentThreshold : 0;
-        $endedAt = $this->loan->getEndedAt();
-        $maximumDueDate = $endedAt ? $endedAt : $today->subDays($dueDateThreshold);
+        $completedAt = $this->loan->getCompletedAt();
+        $maximumDueDate = $completedAt ? $completedAt : $today->subDays($dueDateThreshold);
 
         /** @var RepaymentScheduleInstallment $repaymentScheduleInstallment */
         foreach ($this as $repaymentScheduleInstallment) {
@@ -114,7 +114,7 @@ class RepaymentSchedule implements \IteratorAggregate
             if ($isInstallmentPaid) {
                 $paidInstallmentCount++;
             }
-            if ($isInstallmentPaidOnTime && !$endedAt && $isActiveLoan
+            if ($isInstallmentPaidOnTime && !$completedAt && $isActiveLoan
                 && $today->diffInDays($dueInstallmentDate, false) >= $repaymentThreshold
             ) {
                 $isTodayInstallment = true;
