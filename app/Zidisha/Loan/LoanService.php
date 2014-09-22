@@ -1018,7 +1018,8 @@ class LoanService
     public function defaultLoan(Loan $loan)
     {
         PropelDB::transaction(function($con) use ($loan) {
-            $loan->setStatus(Loan::DEFAULTED);
+            $loan->setStatus(Loan::DEFAULTED)
+                ->setDefaultedAt(new \DateTime());
             $loan->getBorrower()
                 ->setLoanStatus(Loan::DEFAULTED)
                 ->setActiveLoan(null);
