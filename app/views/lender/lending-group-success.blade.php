@@ -42,7 +42,7 @@
             </div>
             <p style="font-size: 18px !important;">
                 <br/>
-                <a href="{{ route('lender:group', $group->getId()) }}">Go to group page</a>
+                <a href="{{ route('lender:group', $group->getId()) }}">Back to group page</a>
             </p>
         </div>
     </div>
