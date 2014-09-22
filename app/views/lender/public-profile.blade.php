@@ -22,7 +22,7 @@
                 <p>
                     <i class="fa fa-fw fa-map-marker"></i>
                     @if($lender->getProfile()->getCity())
-                        {{ $lender->getProfile()->getCity() }},&nbsp;
+                        <a href="https://www.google.com/maps/place/{{ $lender->getProfile()->getCity() }},+{{ $lender->getCountry()->getName() }}/" target="_blank">{{ $lender->getProfile()->getCity() }}</a>,&nbsp;
                     @endif
                     {{ $lender->getCountry()->getName() }}
                 </p>
