@@ -194,15 +194,21 @@ class LenderJoinController extends BaseController
         $subject = "Join the Global P2P microLending Movement";
         $lender = Auth::user()->getLender();
         $custom_message = "You are Invited to join Zidisha!";
+        $allUsers = \Zidisha\User\UserQuery::create()
+            ->select('email')
+            ->find();
 
         $countInvites = 0;
         foreach ($emails as $email) {
             if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 continue;
             }
-            // TODO, remove already existing user and remove emails that are aready invited before
-            $countInvites += 1;
-            $this->lenderService->lenderInviteViaEmail($lender, $email, $subject, $custom_message);
+            if (in_array($email, $allUsers->getData())) {
+                Flash::info(\Lang::get('common.comments.flash.already-member', array('email' => $email)));
+            } else {
+                $countInvites += 1;
+                $this->lenderService->lenderInviteViaEmail($lender, $email, $subject, $custom_message);
+            }
         }
 
         Flash::success(\Lang::choice('common.comments.flash.invite-success', $countInvites, array('count' => $countInvites)));
