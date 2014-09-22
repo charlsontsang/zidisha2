@@ -21,9 +21,6 @@
                 @else
                     <img src="/assets/images/carousel/mary.jpg" width="300px">
                 @endif
-                <div class="carousel-caption caption-group">
-                    <h3>{{ $group->getName() }}</h3>
-                </div>
             </div>
         </div>
     </div>
@@ -33,7 +30,13 @@
 <div class="row">
     <div class="col-sm-8">
         <div class="highlight highlight-top group">
+
+            <h1 alpha>{{ $group->getName() }}</h1>
+
+            <hr/>
+
             <div class="loan-section">
+
                 <div class="loan-section-title">
                     <span class="text-light">Impact</span>
                 </div>
@@ -42,7 +45,6 @@
                     </p>
                     <p>Last month: <strong>{{ $groupImpacts['totalImpactLastMonth'] }}</strong>
                     </p>
-            
                     <p>
                         All time: <strong>{{ $groupImpacts['totalImpact'] }}</strong>
                     </p>
@@ -113,7 +115,7 @@
                 Leave this group
             </a>
             @else
-            <a href="{{ route('lender:group:join', $group->getId()) }}" class="btn btn-block btn-primary join-group">
+            <a href="{{ route('lender:group:join', $group->getId()) }}" class="btn btn-primary join-group">
                 Join this group
             </a>
             @endif

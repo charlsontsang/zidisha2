@@ -9530,24 +9530,6 @@ table.dataTable {
   right: 12%;
   text-align: right !important;
 }
-.caption-group {
-  display: none;
-}
-@media (min-width: 768px) {
-  .caption-group {
-    display: inline-block;
-    top: 280px;
-    left: 30px;
-    width: 90%;
-  }
-}
-@media (min-width: 992px) {
-  .caption-group {
-    top: 260px;
-    left: 90px;
-    width: 85%;
-  }
-}
 .carousel-control,
 .carousel-indicators {
   display: none;
@@ -10421,7 +10403,7 @@ span.text-content span {
   padding: 8px 5px;
 }
 .carousel-inner.group-image {
-  margin-bottom: 15px;
+  margin-bottom: 30px;
   height: 200px;
 }
 @media (min-width: 768px) {
@@ -10430,8 +10412,11 @@ span.text-content span {
   }
 }
 .highlight-top.group {
-  margin-top: -15px;
-  padding-top: 30px;
+  margin-top: -30px;
+  padding-top: 15px;
+}
+.highlight-top.group h1 {
+  margin-top: 15px;
 }
 .giftcard-thumbnail {
   float: left;
