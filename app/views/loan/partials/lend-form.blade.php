@@ -132,7 +132,8 @@
             if ($('#donation-percent').val() == 'other') {
                 $('#donation-amount').val('').focus();
             } else {
-                $('#donation-amount').val($amount.val() * $('#donation-percent').val());
+                var $donationBase = $amount.val() * $('#donation-percent').val();
+                $('#donation-amount').val(formatMoney($donationBase, 2));
             }
         }
 
