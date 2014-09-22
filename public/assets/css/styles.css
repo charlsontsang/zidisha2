@@ -10411,11 +10411,24 @@ span.text-content span {
     height: 400px;
   }
 }
-.highlight-top.group {
+.highlight-panel.group {
   margin-top: -30px;
   padding-top: 15px;
 }
-.highlight-top.group h1 {
+@media (max-width: 767px) {
+  .highlight-panel.group {
+    margin-bottom: -60px;
+  }
+}
+.group-title {
+  display: none;
+}
+@media (min-width: 768px) {
+  .group-title {
+    display: inline-block;
+  }
+}
+.group-title h1 {
   margin-top: 15px;
 }
 .giftcard-thumbnail {

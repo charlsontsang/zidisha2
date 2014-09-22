@@ -29,11 +29,12 @@
 @section('content')
 <div class="row">
     <div class="col-sm-8">
-        <div class="highlight highlight-top group">
+        <div class="highlight highlight-panel group">
 
-            <h1 alpha>{{ $group->getName() }}</h1>
-
-            <hr/>
+            <div class="group-title">
+                <h1>{{ $group->getName() }}</h1>
+                <hr/>
+            </div>
 
             <div class="loan-section">
 
