@@ -12,6 +12,7 @@ use Zidisha\Balance\Transaction;
 use Zidisha\Balance\TransactionQuery;
 use Zidisha\Balance\TransactionService;
 use Zidisha\Borrower\Borrower;
+use Zidisha\Comment\BorrowerCommentQuery;
 use Zidisha\Comment\BorrowerCommentService;
 use Zidisha\Currency\Converter;
 use Zidisha\Currency\ExchangeRate;
@@ -371,6 +372,10 @@ class LoanService
         $loanIndex = $this->getLoanIndex();
 
         $loanType = $loanIndex->getType('loan');
+        $borrower = $loan->getBorrower();
+        $discussionCount = BorrowerCommentQuery::create()
+            ->filterByReceiverId($borrower->getId())
+            ->count();
 
         $data = [
             'id'                  => $loan->getId(),
@@ -385,7 +390,9 @@ class LoanService
             'status'              => $loan->getStatus(),
             'created_at'          => $loan->getCreatedAt()->getTimestamp(),
             'raised_percentage'   => $loan->getRaisedPercentage(),
-            'applied_at'          => $loan->getAppliedAt()->getTimestamp()
+            'applied_at'          => $loan->getAppliedAt()->getTimestamp(),
+            'repayment_rate'      => $this->getOnTimeRepaymentScore($borrower)['repaymentScore'],
+            'most_discussed'      => $discussionCount,
         ];
 
         $loanDocument = new \Elastica\Document($loan->getId(), $data);
