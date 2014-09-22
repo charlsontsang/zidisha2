@@ -206,7 +206,9 @@ class LoanService
         $loan = $this->setLoanDetails($borrower, $loan, $data);
         $loan->save();
 
-        $this->sendLoanFullyFundedNotification($loan);
+        if ($loan->isFullyFunded()) {
+            $this->borrowerMailer->sendLoanFullyFundedMail($loan);
+        }
 
         $this->updateLoanIndex($loan);
 
@@ -494,7 +496,9 @@ class LoanService
         }
         
         if (!$isFullyFundedBeforeBid) {
-            $this->sendLoanFullyFundedNotification($loan);
+            if ($loan->isFullyFunded()) {
+                $this->borrowerMailer->sendLoanFullyFundedMail($loan);
+            }
         }
 
         return $bid;
@@ -1270,15 +1274,6 @@ class LoanService
         }
         
         return true;        
-    }
-
-    /**
-     * @param Loan $loan
-     * @throws \Propel\Runtime\Exception\PropelException
-     */
-    protected function sendLoanFullyFundedNotification(Loan $loan)
-    {
-        $this->borrowerMailer->sendLoanFullyFundedMail($loan);
     }
 
     public function rescheduleLoan(Loan $loan, array $data, $simulate = false)
