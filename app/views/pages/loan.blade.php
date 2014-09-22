@@ -447,14 +447,6 @@
             </span>
             @endif
 
-            @if($loan->isDefaulted())
-            <span class="label label-default">
-                Loan defaulted
-            </span>
-            <br/>
-            <br/>
-            @endif
-
             @if($loan->isDisbursed())
                 @include('loan.partials.repaid-bar', compact('loan'))
             @endif
