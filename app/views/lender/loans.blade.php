@@ -5,7 +5,13 @@ My Stats
 @stop
 
 @section('content')
-<h1 class="page-title">Your Loans</h1>
+<div class="row">
+    <div class="col-sm-8 col-sm-offset-2 text-center">
+        <div class="page-header">
+            <h1>Your Loans</h1>
+        </div>
+    </div>
+</div>
 
 <div class="row text-large">
     <div class="col-sm-6">
