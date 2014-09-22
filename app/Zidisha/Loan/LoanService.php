@@ -1050,20 +1050,17 @@ class LoanService
     
     public function expireLoans()
     {
-        //TODO: 
         $thresholdDays = Setting::get('loan.expireThreshold');
         $expireThreshold = Carbon::create()->subDays($thresholdDays);
-                
+
         $loans = LoanQuery::create()
             ->filterByStatus(Loan::OPEN)
-            ->where('loans.applied_at < ?', $expireThreshold)
+            ->filterByAppliedAt($expireThreshold, Criteria::LESS_THAN)
+            ->filterByRaisedPercentage(100, Criteria::LESS_THAN)
             ->find();
-        
+
         foreach($loans as $loan) {
-            $percentageRaised = $loan->getRaisedPercentage();
-            if($percentageRaised < 100) {
                 $this->expireLoan($loan);
-            }
         }
     }
 
