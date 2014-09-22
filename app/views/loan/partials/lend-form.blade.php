@@ -88,7 +88,7 @@
             </tr>
             @elseif($placeBidForm->getCurrentBalance()->isPositive())
             <tr>
-                <td colspan="2">Current Balance</td>
+                <td colspan="2">Lending Credit</td>
                 <td>${{ number_format($placeBidForm->getCurrentBalance()->getAmount(), 2, '.', '') }}</td>
             </tr>
             @endif

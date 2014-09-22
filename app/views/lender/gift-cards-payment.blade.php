@@ -29,41 +29,53 @@ Gift Card Purchase
          <table class="table">
             <tbody>
                 <tr>
-                    <td>
+                    <td colspan="2" style="width: 67%;">
                         @if(!empty($recipientName))
                             Gift card for {{ $recipientName }}
                         @else
                             Gift card
                         @endif
                     </td>
-                    <td>${{ $amount }}</span></td> 
+                    <td>$<span id="amount">{{ $amount }}</span></td> 
                 </tr>
                 <tr>
                     <td>
-                        Donation to Zidisha
-                        {{ BootstrapHtml::tooltip('borrower.tooltips.loan.donation-to-zidisha') }}
+                        Donation{{ BootstrapHtml::tooltip('borrower.tooltips.loan.donation-to-zidisha') }}
+                    </td>
+                    <td>
+                        {{ BootstrapForm::select(null, array('.2' => '20%', '.15' => '15%', '.1' => '10%', 'other' => 'Other', '0' => 'None'), '.15', [
+                            'label' => false,
+                            'id' => 'donation-percent',
+                            'style' => 'width: 100%; height: 25px',
+                        ]) }}
                     </td>
                     <td style="width: 100px;">
                         {{ BootstrapForm::text('donationAmount', null, [
-                            'id'      => 'donation-amount',
-                            'label'   => false,
+                        'id'      => 'donation-amount',
+                        'label'   => false,
                         ]) }}
-                    <!-- TO DO: make the default 15% of the loan amount -->
                     </td>
                 </tr>
                 <tr>
-                    <td>
+                    <td colspan="2">
                         Credit card fee
                         {{ BootstrapHtml::tooltip('borrower.tooltips.loan.credit-card-fee') }}
                     </td>
                     <td>$<span id="fee-amount-display"></span></td>
                 </tr>
+                <?php
+                // TODO, refactor this
+                $currentBalance = \Zidisha\Balance\TransactionQuery::create()
+                    ->getCurrentBalance(\Auth::id());
+                ?>
+                @if($currentBalance)
+                    <tr>
+                        <td colspan="2">Lending Credit</td>
+                        <td>{{ $currentBalance }}</td>
+                    </tr>
+                @endif
                 <tr>
-                    <td>Current Balance</td>
-                    <td>TO DO</td>
-                </tr>
-                <tr>
-                    <td><strong>Total</strong></td>
+                    <td colspan="2"><strong>Total</strong></td>
                     <td>$<strong><span id="total-amount-display"></span></strong></td>
                 </tr>
             </tbody>
@@ -75,7 +87,7 @@ Gift Card Purchase
 
         @include('partials/payment-buttons')
 
-        <input type="submit" id="balance-payment" class="btn btn-primary btn-block" value="Pay" name="submit_credit">
+        <input type="submit" id="balance-payment" class="btn btn-primary btn-block" value="Pay with lending credit" name="submit_credit">
 
         {{ BootstrapForm::close() }}
 </div>
