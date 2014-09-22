@@ -136,7 +136,7 @@
                                     <div id="show-previous-loans" class="collapse">
                                         @foreach($previousLoans as $oneLoan)
                                         <p><a href="{{ route('loan:index', $oneLoan->getId()) }}">
-                                            {{ $oneLoan->getAcceptedAt()->format('M Y') }}:&nbsp;
+                                            {{ $oneLoan->getAppliedAt()->format('M Y') }}:&nbsp;
                                             <!-- TO DO {{ $oneLoan->getRepaidAt() }} -->
                                             ${{ $oneLoan->getUsdAmount()->ceil()->format(0) }}
                                             </a>
