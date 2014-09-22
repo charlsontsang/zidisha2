@@ -9,7 +9,7 @@ Gift Cards
 <div class="container-fluid highlight highlight-top">
     <div class="container">
         <div class="row">
-            <div class="col-sm-8 col-sm-offset-2 text-center">
+            <div class="col-md-8 col-md-offset-2 text-center">
                 <div class="page-header">
                     <h1>Gift Cards</h1>
                 </div>

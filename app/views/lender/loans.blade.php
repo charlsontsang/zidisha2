@@ -6,7 +6,7 @@ My Stats
 
 @section('content')
 <div class="row">
-    <div class="col-sm-8 col-sm-offset-2 text-center">
+    <div class="col-md-8 col-md-offset-2 text-center">
         <div class="page-header">
             <h1>Your Loans</h1>
         </div>
