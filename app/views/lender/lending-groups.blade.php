@@ -60,7 +60,8 @@ Lending Groups
 <script type="text/javascript">
     $(document).ready(function() {
         $('#group').dataTable({
-            searching: true
+            searching: true,
+            'order': [[ 1, "desc" ]]
         });
     });
 </script>
