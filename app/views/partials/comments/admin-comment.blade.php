@@ -1,35 +1,42 @@
-<li id="comment-{{ $comment->getId() }}" class="comment">
-    <div>
-        <div class="media">
-            @if($comment->getUser() && !$comment->getUser()->isAdmin())
-            <a class="pull-left" href="{{ $comment->getUser()->getProfileUrl() }}">
-                <img class="media-object" width="100px" height="100px" src="{{ $comment->getUser()->getProfilePictureUrl() }}" alt="">
-            </a>
+<li id="comment-{{ $comment->getId() }}" class="comment media">
+    <div class="pull-left">
+        @if($comment->getUser() && !$comment->getUser()->isAdmin())
+            @if($comment->getUser()->getProfileUrl())
+                <a href="{{ $comment->getUser()->getProfileUrl() }}">
+                    <img class="media-object" src="{{ $comment->getUser()->getProfilePictureUrl() }}" alt="">
+                </a>
             @else
-            <a class="pull-left">
-                <img class="media-object" width="100px" height="100px" src="{{ asset('/assets/images/default.jpg') }}" alt="">
-            </a>
+                <img class="media-object" src="{{ $comment->getUser()->getProfilePictureUrl() }}" alt="">
             @endif
+        @else
+            <img class="media-object" src="{{ asset('/assets/images/profile-default/profile-default.jpg') }}" alt="">
+        @endif
+    </div>
 
-            <div class="media-body">
-                <h4 class="media-heading">
-                    @if($comment->getUser() && !$comment->getUser()->isAdmin())
-                    <a href="{{ $comment->getUser()->getProfileUrl() }}">{{ $comment->getUser()->getUsername() }}</a>
-                    @else
+    <div class="media-body">
+        <h4 class="media-heading">
+            @if($comment->getUser() && !$comment->getUser()->isAdmin())
+                @if($comment->getUser()->getProfileUrl())
+                    <a href="{{ $comment->getUser()->getProfileUrl() }}">
                         {{ $comment->getUser()->getUsername() }}
-                    @endif
-                    <small>{{ $comment->getCreatedAt()->format('M d, Y') }}</small>
-                </h4>
+                    </a>
+                @else
+                    {{ $comment->getUser()->getUsername() }}
+                @endif
+            @else
+                Deleted
+            @endif
+            <small>{{ $comment->getCreatedAt()->format('M d, Y') }}</small>
+        </h4>
 
-                <p>
-                    {{{ $comment->getMessage() }}}
-                </p>
+        <p>
+            {{{ $comment->getMessage() }}}
+        </p>
 
-                <a href="#TODO">Translate This Comment</a>
+        <a href="{{ route('loan:index', ['loanId' => $comment->getBorrower()->getLastLoanId()]) }}#comment-{{$comment->getId()}}">
+            Translate this comment
+        </a>
 
-                @include("partials.comments.partial.display-uploads", ['comment' => $comment])
-            </div>
-        </div>
-
+        @include("partials.comments.partial.display-uploads", ['comment' => $comment])
     </div>
 </li>

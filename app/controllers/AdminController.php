@@ -564,8 +564,7 @@ class AdminController extends BaseController
     {
         $languageCode = Request::query('language') ? : null;
 
-        if($type == 'loans')
-        {
+        if ($type == 'loans') {
             $loans = LoanQuery::create()
             ->condition('summery', 'Loan.SummaryTranslation IS NULL')
             ->condition('proposal', 'Loan.ProposalTranslation IS NULL')
@@ -586,14 +585,14 @@ class AdminController extends BaseController
             $page = Request::query('page') ? : 1;
             $paginator = $loans->paginate($page, 10);
 
-        }else{
+        } else {
             $type = 'comments';
-            $comments = CommentQuery::create()
-                ->where('Comment.BorrowerId = Comment.UserId')
+            $comments = BorrowerCommentQuery::create()
+                ->where('BorrowerComment.BorrowerId = BorrowerComment.UserId')
                 ->filterByMessageTranslation(null);
 
 
-            if($languageCode){
+            if ($languageCode){
                 $comments->useBorrowerQuery()
                     ->useCountryQuery()
                         ->useLanguageQuery()

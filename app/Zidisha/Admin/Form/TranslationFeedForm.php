@@ -21,7 +21,7 @@ class TranslationFeedForm extends AbstractForm
     {
 
         $list = [];
-        $list[0] = null;
+        $list[0] = 'All languages';
 
         $languages =  LanguageQuery::create()
             ->filterByActive(true)
