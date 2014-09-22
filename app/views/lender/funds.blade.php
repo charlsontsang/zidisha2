@@ -22,36 +22,54 @@ Quick Links
     <div class="panel-body">
 
         <p>Current lending credit: <strong>{{ $currentBalance }}</strong></p>
-
-        {{ BootstrapForm::open(array('route' => 'lender:post-funds', 'translationDomain' => 'fund', 'id' => 'funds-upload')) }}
-        {{ BootstrapForm::populate($form) }}
-
-        {{ BootstrapForm::text('amount', null, ['label' => 'Lending Credit', 'id' => 'amount']) }}
-        {{ BootstrapForm::hidden('creditAmount', null, ['id' => 'credit-amount']) }}
-        {{ BootstrapForm::text('donationAmount', null, ['label' => 'Donation to Zidisha']) }}
-        {{ BootstrapForm::hidden('donationCreditAmount', null, ['id' => 'donation-credit-amount']) }}
-
-        {{ BootstrapForm::hidden('transactionFee', null, ['id' => 'transaction-fee-amount']) }}
-        {{ BootstrapForm::hidden('transactionFeeRate', null, ['id' => 'transaction-fee-rate']) }}
-        {{ BootstrapForm::hidden('currentBalance', 0, ['id' => 'current-balance']) }}
-        {{ BootstrapForm::hidden('totalAmount', null, ['id' => 'total-amount']) }}
-
-        {{ BootstrapForm::hidden('stripeToken', null, ['id' => 'stripe-token']) }}
-        {{ BootstrapForm::hidden('paymentMethod', null, ['id' => 'payment-method']) }}
-
-        <p>
-            Payment Transfer Cost: $<span id="fee-amount-display"></span>
-        </p>
-
-        <p>
-            Total Payment: $<span id="total-amount-display"></span>
-        </p>
-
         <div class="lend-form">
-            @include('partials/payment-buttons')
-        </div>
+            <div class="lend-details">
+   
+                {{ BootstrapForm::open(array('route' => 'lender:post-funds', 'translationDomain' => 'fund', 'id' => 'funds-upload')) }}
+                {{ BootstrapForm::populate($form) }}
 
-        {{ BootstrapForm::close() }}
+                {{ BootstrapForm::hidden('creditAmount', null, ['id' => 'credit-amount']) }}
+                {{ BootstrapForm::hidden('donationCreditAmount', null, ['id' => 'donation-credit-amount']) }}
+
+                {{ BootstrapForm::hidden('donationAmount', null, ['id' => 'donation-amount']) }}
+
+                {{ BootstrapForm::hidden('transactionFee', null, ['id' => 'transaction-fee-amount']) }}
+                {{ BootstrapForm::hidden('transactionFeeRate', null, ['id' => 'transaction-fee-rate']) }}
+                {{ BootstrapForm::hidden('currentBalance', 0, ['id' => 'current-balance']) }}
+                {{ BootstrapForm::hidden('totalAmount', null, ['id' => 'total-amount']) }}
+
+                {{ BootstrapForm::hidden('stripeToken', null, ['id' => 'stripe-token']) }}
+                {{ BootstrapForm::hidden('paymentMethod', null, ['id' => 'payment-method']) }}
+
+                <table class="table">
+                    <tbody>
+                    <tr>
+                        <td width="67%">Lending Credit</td>
+                        <td>
+                            {{ BootstrapForm::text('amount', null, ['label' => '', 'id' => 'amount', 'prepend' => '$']) }}
+                        </td>
+                    </tr>
+                    <tr style="display: none;">
+                        <td>
+                            Credit card fee
+                            {{ BootstrapHtml::tooltip('borrower.tooltips.loan.credit-card-fee') }}
+                        </td>
+                        <td>$<span id="fee-amount-display"></span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Total</strong></td>
+                        <td>$<strong><span id="total-amount-display"></span></strong></td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                @include('partials/payment-buttons')
+
+                <input type="submit" id="balance-payment" class="btn btn-primary btn-block" value="Confirm" name="submit_credit">
+
+            </div>
+            {{ BootstrapForm::close() }}
+        </div>
     </div>
 </div>
 
