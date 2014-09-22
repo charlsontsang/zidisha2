@@ -163,7 +163,6 @@ class StatisticsService
             $sql .= ' AND l.accepted_at >= :acceptedAt';
             $params['acceptedAt'] = $startDate;
         }
-        $sql .= ' LIMIT :limit OFFSET :offset';
 
         $date=Carbon::now();
         $disb_amount=0;
@@ -177,11 +176,9 @@ class StatisticsService
         $offset = 0;
         $limit = 1000;
         while ($offset < $statistics['raised_count']) {
-            $params2 = [
-                'offset' => $offset,
-                'limit' => $limit
-            ];
-            $rows = PropelDB::fetchAll($sql, array_merge($params, $params2));
+            // cannot bind the offset and limit parameters as strings (in $stmt->execute)
+            $sqlLimitOffset = "$sql LIMIT $limit OFFSET $offset";
+            $rows = PropelDB::fetchAll($sqlLimitOffset, $params);
 
             if (empty($rows) || is_object($rows)) {
                 break;
