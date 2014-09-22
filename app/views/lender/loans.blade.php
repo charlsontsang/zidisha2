@@ -91,7 +91,7 @@ My Stats
         </h3>
     </div>
     <div class="panel-body">
-        <table class="table table-striped no-more-tables">
+        <table class="table table-striped no-more-tables" id="fundraising">
             <thead>
                 <tr>
                     <th colspan="2" width="25%">Entrepreneur</th>
@@ -150,7 +150,7 @@ My Stats
         </h3>
     </div>
     <div class="panel-body">
-        <table class="table table-striped no-more-tables">
+        <table class="table table-striped no-more-tables" id="active">
             <thead>
                 <tr>
                     <th colspan="2" width="25%">Entrepreneur</th>
@@ -230,7 +230,7 @@ My Stats
         </h3>
     </div>
     <div class="panel-body">
-        <table class="table table-striped no-more-tables">
+        <table class="table table-striped no-more-tables" id="completed">
             <thead>
                 <tr>
                     <th colspan="2" width="25%">Entrepreneur</th>
@@ -290,9 +290,27 @@ My Stats
 
 @section('script-footer')
 <script type="text/javascript">
+    $(document).ready(function () {
+        $('#fundraising').dataTable({
+            searching: true,
+              "columnDefs": [
+                { "orderable": false, "targets": 2 }
+              ]
+        });
+        $('#active').dataTable({
+            'searching': true,
+              "columnDefs": [
+                { "orderable": false, "targets": 2 }
+              ]
+        });
+        $('#complete').dataTable({
+            'searching': true,
+              "columnDefs": [
+                { "orderable": false, "targets": 2 }
+              ]
+        });
+    });
     $('.total-impact').tooltip({placement: 'bottom', title: 'The total amount lent by you, your invitees and your gift card recipients.'})
-</script>
-<script type="text/javascript">
     $('.loan-status-active-loans').tooltip({placement: 'bottom', title: 'Loans are labeled "Repaying Early" or "Repaying Late" if repayments are more than 10 days ahead or behind schedule, using a threshold of $10 or the value of one installment (whichever is greater). Otherwise, they are labeled "On Time.'})
 </script>
 @stop
