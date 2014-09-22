@@ -29,10 +29,6 @@ return [
             'instructions' => 'Click <a href=":loanLink">here</a> to accept the lender bids.',
         ]
     ],
-    'loan-defaulted' => [
-        'title'   => 'Your loan has been written off',
-        'message' => 'You cannot apply for a new loan.',
-    ],
     'loan-expired' => [
         'title'   => 'Your loan has been expired',
         'message' => '<a href=":applicationLink">Click here</a> to create a new loan application.',

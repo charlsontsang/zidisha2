@@ -29,14 +29,11 @@
     <strong>{{ $bonusEarned }}</strong>
 </p>
 
-    <table class="table table-striped no-more-tables">
+    <table class="table table-striped no-more-tables" id="invitees">
         <thead>
         <tr>
             <th>
-                @lang('borrower.invite.name')
-            </th>
-            <th>
-                @lang('borrower.invite.email')
+                @lang('borrower.invite.invitee')
             </th>
             <th>
                 @lang('borrower.invite.status')
@@ -52,8 +49,9 @@
         <tbody>
         @foreach($invites as $invite)
         <tr>
-            <td data-title="Name">{{ $invite['name'] }}</td>
-            <td data-title="Email">{{ $invite['email'] }}</td>
+            <td data-title="Invitee">
+                <p>{{ $invite['name'] }}</p>
+                <p>{{ $invite['email'] }}</p>
             <td data-title="Status">
                 <p>
                     {{ $invite['status'] }}
@@ -71,4 +69,14 @@
         @endforeach
         </tbody>
     </table>
+@stop
+
+@section('script-footer')
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#invitees').dataTable({
+            'searching': true
+        });
+    });
+</script>
 @stop

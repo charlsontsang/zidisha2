@@ -12,7 +12,7 @@ return array(
     'payment-history'     => 'Payment History',
     'feature-criteria'    => 'How To Have Your Loan Featured',
     'vm-pages'            => 'Volunteer Mentor Pages',
-    'vm-assigned-members' => 'Assigned Member Profiles',
+    'vm-assigned-members' => 'Assigned Members',
     'vm-guidelines'       => 'Volunteer Mentor Guidelines',
     'vm-ethics'           => 'Volunteer Mentor Code of Ethics',
     'vm-faq'              => 'Volunteer Mentor FAQ',

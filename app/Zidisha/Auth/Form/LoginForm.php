@@ -5,6 +5,8 @@ namespace Zidisha\Auth\Form;
 use Zidisha\Form\AbstractForm;
 use Zidisha\Vendor\Facebook\FacebookService;
 use Zidisha\Vendor\Google\GoogleService;
+use Zidisha\Utility\Utility;
+use Zidisha\Country\CountryQuery;
 
 class LoginForm extends AbstractForm
 {
@@ -22,6 +24,8 @@ class LoginForm extends AbstractForm
 
     protected $googleLoginUrl;
 
+    protected $joinLink;
+
     public function __construct(FacebookService $facebookService, GoogleService $googleService)
     {
         $this->facebookService = $facebookService;
@@ -29,6 +33,7 @@ class LoginForm extends AbstractForm
 
         $this->facebookLoginUrl = $this->facebookService->getLoginUrl('facebook:login');
         $this->googleLoginUrl = $this->googleService->getLoginUrl('google:login');
+        $this->joinLink = $this->getJoinLink();
     }
 
     public function getRules($data)
@@ -53,5 +58,20 @@ class LoginForm extends AbstractForm
     public function getGoogleLoginUrl()
     {
         return $this->googleLoginUrl;
+    }
+
+    /**
+     * @return string
+     */
+    public function getjoinLink()
+    {
+        $countryCode = Utility::getCountryCodeByIP();
+
+        $country = CountryQuery::create()
+            ->findOneByCountryCode($countryCode);
+        if($country && $country->isBorrowerCountry()) {
+            return 'borrower:join';
+        }
+        return 'join';
     }
 }

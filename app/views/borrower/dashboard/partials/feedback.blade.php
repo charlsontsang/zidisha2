@@ -1,9 +1,8 @@
-<div class="panel-group">
-    @foreach($feedbackMessages as $i => $feedbackMessage)
-    <div class="panel panel-default">
+@foreach($feedbackMessages as $i => $feedbackMessage)
+    <div class="panel panel-info">
         <div class="panel-heading">
             <h4 class="panel-title">
-                <small>{{ $feedbackMessage->getSentAt()->format('M j, Y') }}</small>
+                <small class="pull-right">{{ $feedbackMessage->getSentAt()->format('M j, Y') }}</small>
                 <a data-toggle="collapse" href="#feedback-message-{{ $feedbackMessage->getId() }}">
                     {{ $feedbackMessage->getSubject() }}
                 </a>
@@ -17,5 +16,4 @@
             </div>
         </div>
     </div>
-    @endforeach
-</div>
+@endforeach

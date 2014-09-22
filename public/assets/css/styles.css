@@ -8926,14 +8926,12 @@ form .btn-primary,
     min-width: 150px !important;
   }
 }
-.login-form .btn-block,
 form .btn-primary,
 form .btn-default,
 .giftcard .btn-primary {
   width: 100%;
 }
 @media (min-width: 768px) {
-  .login-form .btn-block,
   form .btn-primary,
   form .btn-default,
   .giftcard .btn-primary {

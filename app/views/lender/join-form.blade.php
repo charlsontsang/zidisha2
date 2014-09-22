@@ -35,15 +35,14 @@
 <div id="join-with-email" {{ $errors->count() ? ''  : 'style="display:none"' }}>
     {{ BootstrapForm::open([
         'route' => 'lender:post-join',
-        'translationDomain' => 'lender.join.form',
         'id' => 'joinForm']
     ) }}
     {{ BootstrapForm::populate($joinForm) }}
 
     {{ BootstrapForm::text('username', null, [
         'label'         => false,
-        'placeholder'   => 'Create display name',
-        'sr-only'       => 'Create display name',
+        'placeholder'   => 'Your name',
+        'sr-only'       => 'Your name',
         'feedback-icon' => 'fa-user',
     ]) }}
 
@@ -80,4 +79,14 @@
 
 <hr/>
 
-Already a member?  <strong><a href="{{ route('login') }}" data-toggle="modal" data-target="#login-modal" data-dismiss="modal">Log In</a></strong>
+Already a member?&nbsp;&nbsp;
+
+<strong>     
+
+    @if(isset($modal) && $modal)
+        <a href="{{ route('login') }}" data-toggle="modal" data-target="#login-modal" data-dismiss="modal">Log In</a>
+    @else
+        <a href="{{ route('login') }}">Log In</a>
+    @endif
+
+</strong>
