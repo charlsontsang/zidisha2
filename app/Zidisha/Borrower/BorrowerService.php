@@ -108,7 +108,7 @@ class BorrowerService
                 ->setBusinessCategoryId($data['businessCategoryId'])
                 ->setBusinessYears($data['businessYears'])
                 ->setLoanUsage($data['loanUsage'])
-                ->setBirthDate($data['birthDate'])
+//                ->setBirthDate($data['birthDate'])
                 ->setAlternatePhoneNumber($data['alternatePhoneNumber']);
             $borrower->setProfile($profile);
 
@@ -532,7 +532,8 @@ class BorrowerService
             return 'exceedsMaxInviteesWithoutPayment';
         }
 
-        $repaymentRate = $this->loanService->getOnTimeRepaymentScore($borrower);
+        $repaymentScore = $this->loanService->getOnTimeRepaymentStatistics($borrower);
+        $repaymentRate = $repaymentScore['repaymentScore'];
         $minRepaymentRate = Setting::get('invite.minRepaymentRate');
 
         if ($repaymentRate < $minRepaymentRate) {
@@ -619,7 +620,8 @@ class BorrowerService
                 ->findLastLoan($invite->getInvitee());
 
             if ($inviteeLastLoan) {
-                $repaymentRate = $this->loanService->getOnTimeRepaymentScore($invite->getInvitee());
+                $repaymentScore = $this->loanService->getOnTimeRepaymentStatistics($invite->getInvitee());
+                $repaymentRate = $repaymentScore['repaymentScore'];
 
                 if ($repaymentRate >= $minRepaymentRate) {
                     $count += 1;

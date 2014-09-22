@@ -12,6 +12,7 @@ use Zidisha\Balance\Transaction;
 use Zidisha\Balance\TransactionQuery;
 use Zidisha\Balance\TransactionService;
 use Zidisha\Borrower\Borrower;
+use Zidisha\Comment\BorrowerCommentQuery;
 use Zidisha\Comment\BorrowerCommentService;
 use Zidisha\Currency\Converter;
 use Zidisha\Currency\ExchangeRate;
@@ -205,7 +206,9 @@ class LoanService
         $loan = $this->setLoanDetails($borrower, $loan, $data);
         $loan->save();
 
-        $this->sendLoanFullyFundedNotification($loan);
+        if ($loan->isFullyFunded()) {
+            $this->borrowerMailer->sendLoanFullyFundedMail($loan);
+        }
 
         $this->updateLoanIndex($loan);
 
@@ -371,6 +374,10 @@ class LoanService
         $loanIndex = $this->getLoanIndex();
 
         $loanType = $loanIndex->getType('loan');
+        $borrower = $loan->getBorrower();
+        $discussionCount = BorrowerCommentQuery::create()
+            ->filterByReceiverId($borrower->getId())
+            ->count();
 
         $data = [
             'id'                  => $loan->getId(),
@@ -385,7 +392,9 @@ class LoanService
             'status'              => $loan->getStatus(),
             'created_at'          => $loan->getCreatedAt()->getTimestamp(),
             'raised_percentage'   => $loan->getRaisedPercentage(),
-            'applied_at'          => $loan->getAppliedAt()->getTimestamp()
+            'applied_at'          => $loan->getAppliedAt()->getTimestamp(),
+            'repayment_rate'      => $this->getOnTimeRepaymentStatistics($borrower)['repaymentScore'],
+            'most_discussed'      => $discussionCount,
         ];
 
         $loanDocument = new \Elastica\Document($loan->getId(), $data);
@@ -487,7 +496,9 @@ class LoanService
         }
         
         if (!$isFullyFundedBeforeBid) {
-            $this->sendLoanFullyFundedNotification($loan);
+            if ($loan->isFullyFunded()) {
+                $this->borrowerMailer->sendLoanFullyFundedMail($loan);
+            }
         }
 
         return $bid;
@@ -594,8 +605,15 @@ class LoanService
         });
 
         $this->updateLoanIndex($loan);
+
+        $lenders = LenderQuery::create()
+            ->getLendersForLoan($loan);
         
-        //TODO send emails (move lenders part from sendLoanFullyFundedNotification)
+        if ($loan->isFullyFunded()) {
+            foreach ($lenders as $lender) {
+                $this->lenderMailer->sendLoanFullyFundedMail($lender, $loan);
+            }
+        }
 
         return $acceptedBids;
     }
@@ -645,13 +663,15 @@ class LoanService
             ->getTotalInviteCreditAmount($lenderIds);
         /** @var LenderRefund $lenderRefund */
         foreach ($lenderRefunds as $lenderRefund) {
-            // TODO add account preference
-            if ($lenderRefund->getAmount()->isPositive()) {
-                $this->lenderMailer->sendExpiredLoanMail($loan, $lenderRefund->getLender(), $lenderRefund->getAmount(), $currentCreditArray[$lenderRefund->getLender()->getId()]);
-            }
+            $lender = $lenderRefund->getLender();
+            if ($lender->getPreferences()->isNotifyLoanExpired()) {
+                if ($lenderRefund->getAmount()->isPositive()) {
+                    $this->lenderMailer->sendExpiredLoanMail($loan, $lender, $lenderRefund->getAmount(), $currentCreditArray[$lenderRefund->getLender()->getId()]);
+                }
 
-            if ($lenderRefund->getLenderInviteCredit()->isPositive()) {
-                $this->lenderMailer->sendExpiredLoanWithLenderInviteCreditMail($loan, $lenderRefund->getLender(), $lenderRefund->getLenderInviteCredit(), $inviteCreditArray[$lenderRefund->getLender()->getId()]);
+                if ($lenderRefund->getLenderInviteCredit()->isPositive()) {
+                    $this->lenderMailer->sendExpiredLoanWithLenderInviteCreditMail($loan, $lender, $lenderRefund->getLenderInviteCredit(), $inviteCreditArray[$lenderRefund->getLender()->getId()]);
+                }
             }
         }
         
@@ -857,10 +877,13 @@ class LoanService
 
         $this->updateLoanIndex($loan);
 
-        // TODO, lenders + bid amount
-        $lenders = [];
+        $lenders = LenderQuery::create()
+            ->getLendersForLoan($loan);
+        /** @var Lender $lender */
         foreach ($lenders as $lender) {
-            $this->lenderMailer->sendDisbursedLoanMail($lender, $loan);
+            if ($lender->getPreferences()->isNotifyLoanDisbursed()) {
+                $this->lenderMailer->sendDisbursedLoanMail($lender, $loan);
+            }
         }
         $this->borrowerMailer->sendDisbursedLoanMail($loan);
         
@@ -942,7 +965,7 @@ class LoanService
         return $count > 0;
     }
 
-    public function getOnTimeRepaymentScore(Borrower $borrower)
+    public function getOnTimeRepaymentStatistics(Borrower $borrower)
     {
         $BorrowerLoans = LoanQuery::create()
             ->filterByBorrower($borrower)
@@ -962,12 +985,15 @@ class LoanService
         } else {
             $repaymentRate = $onTimeInstallmentCount / $totalTodayInstallmentCount * 100;
 
-            if ($repaymentRate < 0) { // TODO why?
+            if ($repaymentRate < 0) {
                 $repaymentRate = 0;
             }
             $repaymentScore = round($repaymentRate, 2);
         }
-        return $repaymentScore;
+            return [
+                'repaymentScore'             => $repaymentScore,
+                'totalTodayInstallmentCount' => $totalTodayInstallmentCount
+            ];
     }
 
     public function writeOffLoans()
@@ -1008,7 +1034,8 @@ class LoanService
     public function defaultLoan(Loan $loan)
     {
         PropelDB::transaction(function($con) use ($loan) {
-            $loan->setStatus(Loan::DEFAULTED);
+            $loan->setStatus(Loan::DEFAULTED)
+                ->setDefaultedAt(new \DateTime());
             $loan->getBorrower()
                 ->setLoanStatus(Loan::DEFAULTED)
                 ->setActiveLoan(null);
@@ -1020,13 +1047,8 @@ class LoanService
 
         $this->updateLoanIndex($loan);
 
-        $lenders = [];
-        // TODO
-        $calculator = new RepaymentCalculator($loan);
-        $bids = BidQuery::create()
-            ->filterBidsToRepay($loan)
-            ->find();
-        //$loanRepayments = $calculator->loanRepayments($exchangeRate, $bids);
+        $lenders = LenderQuery::create()
+        ->getLendersForLoan($loan, true);
 
         foreach ($lenders as $lender) {
             $this->lenderMailer->sendLoanDefaultedMail($loan, $lender);
@@ -1035,20 +1057,17 @@ class LoanService
     
     public function expireLoans()
     {
-        //TODO: 
         $thresholdDays = Setting::get('loan.expireThreshold');
         $expireThreshold = Carbon::create()->subDays($thresholdDays);
-                
+
         $loans = LoanQuery::create()
             ->filterByStatus(Loan::OPEN)
-            ->where('loans.applied_at < ?', $expireThreshold)
+            ->filterByAppliedAt($expireThreshold, Criteria::LESS_THAN)
+            ->filterByRaisedPercentage(100, Criteria::LESS_THAN)
             ->find();
-        
+
         foreach($loans as $loan) {
-            $percentageRaised = $loan->getRaisedPercentage();
-            if($percentageRaised < 100) {
                 $this->expireLoan($loan);
-            }
         }
     }
 
@@ -1104,7 +1123,7 @@ class LoanService
         // TODO lendersDenied
 
         $lendersForForgive = LenderQuery::create()
-            ->getLendersForForgive($loan);
+            ->getLendersForLoan($loan, true);
 
         foreach ($lendersForForgive as $lender) {
             $this->lenderMailer->sendAllowLoanForgivenessMail($loan, $forgivenessLoan, $lender);
@@ -1260,28 +1279,6 @@ class LoanService
         return true;        
     }
 
-    /**
-     * @param Loan $loan
-     * @throws \Propel\Runtime\Exception\PropelException
-     */
-    protected function sendLoanFullyFundedNotification(Loan $loan)
-    {
-        // Fully Funded notifications
-        if ($loan->isFullyFunded()) {
-            $bids = BidQuery::create()
-                ->filterByLoan($loan)
-                ->joinWith('Lender')
-                ->joinWith('Lender.User')
-                ->find();
-
-            foreach ($bids as $bid) {
-                $this->lenderMailer->sendLoanFullyFundedMail($bid);
-            }
-            
-            $this->borrowerMailer->sendLoanFullyFundedMail($loan);
-        }
-    }
-
     public function rescheduleLoan(Loan $loan, array $data, $simulate = false)
     {
         $data += [
@@ -1348,5 +1345,34 @@ class LoanService
         );
         
         return $repaymentSchedule;
+    }
+
+    public function isRescheduleAllowed(Loan $loan)
+    {
+        $borrower = $loan->getBorrower();
+        $count = RescheduleQuery::create()
+            ->filterByLoan($loan)
+            ->filterByBorrower($borrower)
+            ->count();
+        $maximumAllowed = Setting::get('loan.maxRescheduleAllowed');
+        if ($count > $maximumAllowed) {
+            return false;
+        }
+        if (!$count) {
+            return true;
+        }
+        $lastReschedule = RescheduleQuery::create()
+            ->filterByLoan($loan)
+            ->orderById('DESC')
+            ->findOne();
+        $isRescheduleActive = TransactionQuery::create()
+            ->filterByLoan($loan)
+            ->filterByUserId($borrower->getId())
+            ->filterByTransactionDate($lastReschedule->getCreatedAt(), Criteria::GREATER_EQUAL)
+            ->count();
+        if ($isRescheduleActive) {
+            return true;
+        }
+        return false;
     }
 }

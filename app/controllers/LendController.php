@@ -73,13 +73,11 @@ class LendController extends BaseController
             $conditions['sortByOrder'] = 'desc';
         } elseif ($sortBy == 'mostDiscussed') {
             $routeParams['sortBy'] = 'mostDiscussed';
-            //TODO sorting by mostDiscussed
-            $conditions['sortBy'] = 'id';
-            $conditions['sortByOrder'] = 'asc';
+            $conditions['sortBy'] = 'most_discussed';
+            $conditions['sortByOrder'] = 'desc';
         } else {
             $routeParams['sortBy'] = 'repaymentRate';
-            //TODO sorting by repaymentRate
-            $conditions['sortBy'] = 'id';
+            $conditions['sortBy'] = 'repayment_rate';
             $conditions['sortByOrder'] = 'asc';
         }
 

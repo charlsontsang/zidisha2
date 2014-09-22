@@ -135,9 +135,9 @@ PS:  You can sort the <a href=":lendLink">fundraising loans</a> by “Amount sti
 <br/><br/>
 Your loan disbursement is just the beginning. Keep informed of progress and interact with :borrowFirstName via the <a href=":loanPage">loan profile page</a>. Don\'t be shy! We encourage you to post comments and questions for :borrowFirstName throughout the lending period.<br/><br/>
 Cheers,<br/><br/>
-The Zidisha Team
-<br/><br/>
-PS:  Want a really cool gift idea?  Check out our <a href=":giftCardPage">gift cards</a> - your friend chooses the entrepreneur!'
+The Zidisha Team'
+//<br/><br/>
+//PS:  Want a really cool gift idea?  Check out our <a href=":giftCardPage">gift cards</a> - your friend chooses the entrepreneur!'
     ],
     'loan-defaulted'                     => [
         'subject' => 'Write-off notification',

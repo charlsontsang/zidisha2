@@ -37,7 +37,6 @@ class ForgivenessLoanShareQuery extends BaseForgivenessLoanShareQuery
             ->withColumn('SUM(amount)', 'total')
             ->findOne();
 
-        // Todo currency
         return Money::create($total, $currency);
     }
 

@@ -102,6 +102,7 @@
         <column name="applied_at" type="TIMESTAMP" required="true"/>
         <column name="accepted_at" type="TIMESTAMP"/>
         <column name="expired_at" type="TIMESTAMP"/>
+        <column name="defaulted_at" type="TIMESTAMP"/>
         <column name="canceled_at" type="TIMESTAMP"/>
         <column name="repaid_at" type="TIMESTAMP"/>
         <column name="authorized_at" type="TIMESTAMP" required="false"/>

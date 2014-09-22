@@ -291,7 +291,7 @@ class Loan extends BaseLoan implements CommentReceiverInterface
         if ($this->isRepaid()) {
             return $this->getRepaidAt();
         } elseif ($this->isDefaulted()) {
-            return $this->getExpiredAt(); // TODO store in defaultedAt column, also check loanService::defaultLoan
+            return $this->getDefaultedAt();
         }
     }
 
@@ -300,7 +300,7 @@ class Loan extends BaseLoan implements CommentReceiverInterface
         if ($this->isRepaid()) {
             return $this->getRepaidAt();
         } elseif ($this->isDefaulted()) {
-            return $this->getExpiredAt(); // TODO store in defaultedAt column, also check loanService::defaultLoan
+            return $this->getDefaultedAt();
         } elseif ($this->isExpired()) {
             return $this->getExpiredAt();
         }

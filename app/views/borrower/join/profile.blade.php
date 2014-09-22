@@ -58,7 +58,7 @@
             <div class="panel-body">
 
                 {{ BootstrapForm::select('volunteerMentorCity', $form->getVolunteerMentorCities()) }}
-                {{ BootstrapForm::select('volunteerMentor', $form->getVolunteerMentors()) }}
+                {{ BootstrapForm::select('volunteerMentorId', $form->getVolunteerMentors()) }}
             
             </div>
         </div>
@@ -185,7 +185,7 @@
                 {{ BootstrapForm::select('businessCategoryId', $form->getCategories()) }}
                 {{ BootstrapForm::select('businessYears', $form->getBusinessYears()) }}
                 {{ BootstrapForm::select('loanUsage', $form->getLoanUsage()) }}
-                {{ BootstrapForm::datepicker('birthDate') }}
+                {{--{{ BootstrapForm::datepicker('birthDate') }}--}}
     
             </div>
         </div>

@@ -25,11 +25,10 @@ class VolunteerMentorQuery extends BaseVolunteerMentorQuery
 
     public function getVolunteerMentorCities(Country $country)
     {
-        // TODO fix mentee_count?
         $sql = "SELECT DISTINCT city FROM borrower_profiles WHERE borrower_id IN "
             . "(SELECT borrower_id FROM volunteer_mentors WHERE country_id = :country_id AND active = true
             AND mentee_count < :mentee_count)";
-        $_cities = PropelDB::fetchAll($sql, [':country_id' => $country->getId(), ':mentee_count' => '25']);
+        $_cities = PropelDB::fetchAll($sql, [':country_id' => $country->getId(), ':mentee_count' => '50']);
 
         $cities = [];
         foreach ($_cities as $city) {

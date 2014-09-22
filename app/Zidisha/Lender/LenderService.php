@@ -113,39 +113,28 @@ class LenderService
 
     function processLenderInvite(Lender $invitee, InviteVisit $lenderInviteVisit)
     {
-        $con = Propel::getWriteConnection(TransactionTableMap::DATABASE_NAME);
-        for ($retry = 0; $retry < 3; $retry++) {
-            $con->beginTransaction();
-            try {
-                $invite = $lenderInviteVisit->getInvite();
-                if ($invite) {
-                    $res1 = $invite->setInvitee($invitee)->save();
-                } else {
-                    $invite = new Invite();
-                    $invite->setLender($lenderInviteVisit->getLender());
-                    $invite->setEmail($invitee->getUser()->getEmail());
-                    $invite->setInvitee($invitee);
-                    $invite->setInvited(false);
-                    $res1 = $invitee->save($con);
-                }
-                if (!$res1) {
-                    throw new \Exception();
-                }
-                $this->transactionService->addLenderInviteTransaction($con, $invite);
-            } catch (\Exception $e) {
-                $con->rollback();
+        $invite = PropelDB::transaction(function ($con) use ($lenderInviteVisit, $invitee) {
+            $invite = $lenderInviteVisit->getInvite();
+            if ($invite) {
+                $invite->setInvitee($invitee)->save();
+            } else {
+                $invite = new Invite();
+                $invite->setLender($lenderInviteVisit->getLender());
+                $invite->setEmail($invitee->getUser()->getEmail());
+                $invite->setInvitee($invitee);
+                $invite->setInvited(false);
+                $invitee->save($con);
             }
-            $con->commit();
+            $this->transactionService->addLenderInviteTransaction($con, $invite);
 
-            //TODO , invite_notify(see below commented if statement)
-            //   if ($lender['invite_notify']) {
-            $this->lenderMailer->sendLenderInviteCredit($invite);
-            // }
-            $this->mixpanelService->trackInviteAccept($invite);
             return $invite;
-        }
+        });
 
-        return false;
+        if ($invite->getLender()->getPreferences()->getNotifyInviteAccepted()) {
+            $this->lenderMailer->sendLenderInviteCredit($invite);
+        }
+        $this->mixpanelService->trackInviteAccept($invite);
+        return $invite;
     }
 
     public function deactivateLender(Lender $lender)
@@ -322,6 +311,7 @@ class LenderService
                 ->setHideKarma($data['hideKarma'])
                 ->setNotifyLoanFullyFunded($data['notifyLoanFullyFunded'])
                 ->setNotifyLoanAboutToExpire($data['notifyLoanAboutToExpire'])
+                ->setNotifyLoanExpired($data['notifyLoanExpired'])
                 ->setNotifyLoanDisbursed($data['notifyLoanDisbursed'])
                 ->setNotifyComment($data['notifyComment'])
                 ->setNotifyLoanApplication($data['notifyLoanApplication'])

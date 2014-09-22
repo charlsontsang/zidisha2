@@ -17,15 +17,15 @@ Track Gift Cards
             <div class="col-sm-3">
                 Gift Cards Redeemed: <strong>{{ $countRedeemed }}</strong>
             </div>
-            <div class="col-sm-6">
-                <a href="{{ route('lender:gift-cards') }}" class="btn btn-primary pull-right">
-                    @if ($countCards==0)
-                        Give your first gift card
-                    @else
-                        Give another gift card
-                    @endif
-                </a>
-            </div>
+            {{--<div class="col-sm-6">--}}
+                {{--<a href="{{ route('lender:gift-cards') }}" class="btn btn-primary pull-right">--}}
+                    {{--@if ($countCards==0)--}}
+                        {{--Give your first gift card--}}
+                    {{--@else--}}
+                        {{--Give another gift card--}}
+                    {{--@endif--}}
+                {{--</a>--}}
+            {{--</div>--}}
         </div>
     </div>
 </div>

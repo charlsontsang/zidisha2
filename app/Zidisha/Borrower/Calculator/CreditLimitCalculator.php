@@ -164,7 +164,8 @@ class CreditLimitCalculator
                 if (!$lastLoanOfInvitee) {
                     continue;
                 }
-                $repaymentRate = $this->loanService->getOnTimeRepaymentScore($invitee->getInvitee());
+                $repaymentScore = $this->loanService->getOnTimeRepaymentStatistics($invitee->getInvitee());
+                $repaymentRate = $repaymentScore['repaymentScore'];
                 if ($repaymentRate >= $minRepaymentRate) {
                     $creditEarned = $creditEarned->add($credit);
                 }
@@ -362,7 +363,8 @@ class CreditLimitCalculator
         
         // case where last loan was repaid on time
         // we next check whether monthly installment repayment rate meets threshold
-        $repaymentRate = $this->loanService->getOnTimeRepaymentScore($this->borrower);
+        $repaymentScore = $this->loanService->getOnTimeRepaymentStatistics($this->borrower);
+        $repaymentRate = $repaymentScore['repaymentScore'];
         $minRepaymentRate = $this->getMinimumRepaymentRate();
 
         $this->sufficientRepaymentRate = $repaymentRate;

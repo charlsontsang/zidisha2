@@ -144,7 +144,7 @@ class RescheduleCalculator {
         $addInstallmentPeriods = $this->loan->isWeeklyInstallment() ? 'addWeeks' : 'addMonths';
         $extraPeriod = 0;
 
-        // we only allow rescheduling after the borrower made at least one payment and after the first installment (?TODO),
+        // we only allow rescheduling after the borrower made at least one payment and after the first installment,
         // hence $repaymentScheduleInstallments is never empty
         /** @var RepaymentScheduleInstallment $lastRepaymentScheduleInstallment */
         $lastRepaymentScheduleInstallment = $repaymentScheduleInstallments[count($repaymentScheduleInstallments)-1];

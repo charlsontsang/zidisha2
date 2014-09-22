@@ -23,6 +23,7 @@ return [
         'delete-success' => 'The message has been deleted.',
         'translate-success' => 'Your translation has been published. Thanks!',
         'file-deleted' => 'The file has been deleted.',
+        'already-member' => ':email is already a user.',
     ],
     'add-photo' => 'Add a photo',
     'delete-upload' => 'Delete',

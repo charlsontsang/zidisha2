@@ -96,14 +96,13 @@ class LenderMailer
         );
     }
 
-    public function sendLoanFullyFundedMail(Bid $bid)
+    public function sendLoanFullyFundedMail(Lender $lender, Loan $loan)
     {
-        $email = $bid->getLender()->getUser()->getEmail();
-        $borrower = $bid->getBorrower();
+        $borrower = $loan->getBorrower();
 
         $data['header'] = \Lang::get(
             'lender.mails.loan-fully-funded.accept-message-1',
-            ['borrowerName' => $bid->getBorrower()->getName()],
+            ['borrowerName' => $borrower->getName()],
             'en'
         );
 
@@ -123,7 +122,7 @@ class LenderMailer
         $this->mailer->queue(
             'emails.hero',
             $data + [
-                'to'         => $email,
+                'to'         => $lender->getUser()->getEmail(),
                 'from'       => 'service@zidisha.com',
                 'subject'    => \Lang::get('lender.mails.loan-fully-funded.subject', ['borrowerName' => $bid->getBorrower()->getName()], 'en'),
                 'templateId' => \Setting::get('sendwithus.lender-loan-fully-funded-template-id'),
@@ -537,7 +536,7 @@ class LenderMailer
             'borrowFirstName' => $borrower->getFirstName(),
             'disbursedDate'   => date('F d, Y', time()),
             'loanPage'        => route('loan:index', $loan->getId()),
-            'giftCardPage'    => route('lender:gift-cards')
+//            'giftCardPage'    => route('lender:gift-cards')
         ];
 
         $data['image_src'] = $borrower->getUser()->getProfilePictureUrl();

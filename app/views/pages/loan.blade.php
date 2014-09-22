@@ -121,13 +121,19 @@
                                 @endif
 
                                 On-Time Repayments:{{ BootstrapHtml::tooltip('borrower.tooltips.loan.on-time-repayments') }}
-                                <strong>TODO</strong>
+                                @if($repaymentScore['totalTodayInstallmentCount'] == 0)
+                                    <strong> "New Member" </strong>
+                                @else
+                                    <strong> {{ $repaymentScore['repaymentScore'] }}%
+                                        ({{ $repaymentScore['totalTodayInstallmentCount'] }})
+                                    </strong>
+                                @endif
                                 <br/>
                                 
                                 @if($previousLoans != null)
                                 <div class="DemoBS2">
                                     <!-- Toogle Buttons -->
-                                    <a href="#" class="previous-loans" id="toggle-btn"
+                                    <a class="previous-loans" id="toggle-btn"
                                        data-toggle="collapse" data-target="#toggle-example">View Previous Loans</a>
 
                                     <div id="toggle-example" class="collapse">

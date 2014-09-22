@@ -149,8 +149,7 @@ class PersonalInformationForm extends AbstractForm
                 . "(SELECT borrower_id FROM volunteer_mentors WHERE country_id = :country_id AND status = :status
             AND mentee_count < :mentee_count)";
             $stmt = $con->prepare($sql);
-            //TODO to make mentee_count = 50
-            $stmt->execute(array(':country_id' => $country->getId(), ':status' => '1', ':mentee_count' => '25'));
+            $stmt->execute(array(':country_id' => $country->getId(), ':status' => '1', ':mentee_count' => '50'));
             $cities = $stmt->fetchAll(\PDO::FETCH_COLUMN);
 
             $this->cities = array_combine($cities, $cities);

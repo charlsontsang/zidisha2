@@ -36,7 +36,6 @@ class BorrowerLoanController extends BaseController
                 $loan = LoanQuery::create()
                     ->findLastLoan($borrower);
             if (!$loan) {
-                // TODO render no active loan template, show previous loans
                 return View::make('borrower.loan.loan-no-loans');
             }
         } else {
@@ -225,7 +224,10 @@ class BorrowerLoanController extends BaseController
 
     protected function validateReschedule(Loan $loan)
     {
-        // TODO check if reschedule is allowed
+        if (!$this->loanService->isRescheduleAllowed($loan)) {
+            Flash::error('borrower.loan.reschedule-not-allowed');
+            return Redirect::back();
+        }
         if (!$loan || !$loan->isActive()) {
             App::abort('404');
         }

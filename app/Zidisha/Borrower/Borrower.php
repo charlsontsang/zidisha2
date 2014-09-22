@@ -193,7 +193,7 @@ class Borrower extends BaseBorrower implements CommentReceiverInterface
         }
 
         return $contacts;
-        //TODO
+        //TODO fb_data
 //        if(!empty($bdetail['fb_data'])){
 //            $fb_data= unserialize(base64_decode($bdetail['fb_data']));
 //            if(isset($fb_data['user_friends']['data'])){
