@@ -199,33 +199,33 @@ Route::group(
                 Route::post('loan/{loanId}/place-bid', array('uses' => 'LoanController@postPlaceBid', 'as' => 'loan:place-bid', 'before' => 'csrf'));
                 Route::post('loan/{loanId}/edit-bid/{bidId}', array('uses' => 'LoanController@postEditBid', 'as' => 'loan:edit-bid', 'before' => 'csrf'));
                 
-                Route::get(
-                    'gift-cards',
-                    array('uses' => 'GiftCardController@getGiftCards', 'as' => 'lender:gift-cards')
-                );
-                Route::post(
-                    'gift-cards',
-                    array(
-                        'uses'   => 'GiftCardController@postGiftCards',
-                        'as'     => 'lender:post-gift-cards',
-                        'before' => 'csrf'
-                    )
-                );
-
-                Route::get(
-                    '/gift-cards/accept',
-                    array(
-                        'uses' => 'GiftCardController@getTermsAccept',
-                        'as'   => 'lender:gift-cards:terms-accept'
-                    )
-                );
-                Route::post(
-                    '/gift-cards/accept',
-                    array(
-                        'uses' => 'GiftCardController@postTermsAccept',
-                        'as'   => 'lender:gift-cards:post-terms-accept'
-                    )
-                );
+//                Route::get(
+//                    'gift-cards',
+//                    array('uses' => 'GiftCardController@getGiftCards', 'as' => 'lender:gift-cards')
+//                );
+//                Route::post(
+//                    'gift-cards',
+//                    array(
+//                        'uses'   => 'GiftCardController@postGiftCards',
+//                        'as'     => 'lender:post-gift-cards',
+//                        'before' => 'csrf'
+//                    )
+//                );
+//
+//                Route::get(
+//                    '/gift-cards/accept',
+//                    array(
+//                        'uses' => 'GiftCardController@getTermsAccept',
+//                        'as'   => 'lender:gift-cards:terms-accept'
+//                    )
+//                );
+//                Route::post(
+//                    '/gift-cards/accept',
+//                    array(
+//                        'uses' => 'GiftCardController@postTermsAccept',
+//                        'as'   => 'lender:gift-cards:post-terms-accept'
+//                    )
+//                );
                 Route::post(
                     'redeem',
                     array(

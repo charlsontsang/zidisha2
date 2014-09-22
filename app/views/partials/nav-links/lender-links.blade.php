@@ -4,7 +4,7 @@
 <li><a href="{{ route('lender:public-profile', Auth::getUser()->getId()) }}">View Profile</a></li>
 <li class="@if (Request::segment(3) == 'edit') active @else '' @endif "><a href="{{ route('lender:edit-profile') }}">Edit Profile</a></li>
 <li class="@if (Request::segment(2) == 'preferences') active @else '' @endif "><a href="{{ route('lender:preference') }}">Account Preferences</a></li>
-<li><a href="{{ route('lender:gift-cards') }}">Gift Cards</a></li>
+{{--<li><a href="{{ route('lender:gift-cards') }}">Gift Cards</a></li>--}}
 <li class="@if (Request::segment(2) == 'gift-cards') active @else '' @endif "><a href="{{ route('lender:gift-cards:track') }}">Track Gift Cards</a></li>
 <li><a href="{{ route('lender:invite') }}">Invite Friends</a></li>
 <li class="@if (Request::segment(2) == 'history') active @else '' @endif "><a href="{{ route('lender:history') }}">Transaction History</a></li>

@@ -537,7 +537,7 @@ class LenderMailer
             'borrowFirstName' => $borrower->getFirstName(),
             'disbursedDate'   => date('F d, Y', time()),
             'loanPage'        => route('loan:index', $loan->getId()),
-            'giftCardPage'    => route('lender:gift-cards')
+//            'giftCardPage'    => route('lender:gift-cards')
         ];
 
         $data['image_src'] = $borrower->getUser()->getProfilePictureUrl();
