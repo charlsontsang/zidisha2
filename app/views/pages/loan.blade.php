@@ -131,12 +131,9 @@
                                 <br/>
                                 
                                 @if($previousLoans != null)
-                                <div class="DemoBS2">
-                                    <!-- Toogle Buttons -->
-                                    <a class="previous-loans" id="toggle-btn"
-                                       data-toggle="collapse" data-target="#toggle-example">View Previous Loans</a>
+                                    <a href="#" id="previous-loans">View Previous Loans</a>
 
-                                    <div id="toggle-example" class="collapse">
+                                    <div id="show-previous-loans" class="collapse">
                                         @foreach($previousLoans as $oneLoan)
                                         <p><a href="{{ route('loan:index', $oneLoan->getId()) }}">{{ $oneLoan->getUsdAmount() }}
                                                 {{ $oneLoan->getAppliedAt()->format('d-m-Y') }}
@@ -148,7 +145,6 @@
                                         </p>
                                         @endforeach
                                     </div>
-                                </div>
                                 @endif
                             </div>
                         </div>
@@ -546,6 +542,10 @@
             placement: 'left', 
             title: 'Receive an email when this borrower posts a new comment or loan application.'
         })
+    });
+    $('#previous-loans').click(function () {
+        $("#show-previous-loans").collapse('toggle');
+        return false;
     });
 </script>
 @append
