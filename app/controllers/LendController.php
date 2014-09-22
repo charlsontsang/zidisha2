@@ -53,7 +53,7 @@ class LendController extends BaseController
         $routeParams = [
             'category' => 'all',
             'country' => 'everywhere',
-            'sortBy' => 'repaymentRate'
+            'sortBy' => 'recentlyAdded'
         ];
 
 
