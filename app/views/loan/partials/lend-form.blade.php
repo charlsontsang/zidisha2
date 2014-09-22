@@ -127,14 +127,20 @@
                 return false;
             }
         });
-
-        $('#donation-amount').val($amount.val() * $('#donation-percent').val());
+        
+        function updateDonation() {
+            $('#donation-amount').val($amount.val() * $('#donation-percent').val());
+        }
 
         $('#lend-action').on('click', function() {
             $('#lend-details').show();
             $('#lend-form-initial').hide();
+            updateDonation();
             return false;
         });
+
+        $('#donation-percent').on('change', updateDonation);
+
         $('#join-lend').on('click', function() {
             var data = $(this).closest('form').serialize();
             // https://github.com/laravel/framework/issues/4576
