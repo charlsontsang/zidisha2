@@ -138,9 +138,9 @@ class LenderService
             $con->commit();
 
             //TODO , invite_notify(see below commented if statement)
-            //   if ($lender['invite_notify']) {
-            $this->lenderMailer->sendLenderInviteCredit($invite);
-            // }
+            if ($invite->getLender()->getPreferences()->getNotifyInviteAccepted()) {
+                $this->lenderMailer->sendLenderInviteCredit($invite);
+            }
             $this->mixpanelService->trackInviteAccept($invite);
             return $invite;
         }
