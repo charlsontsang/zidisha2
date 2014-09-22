@@ -108,7 +108,7 @@ class BorrowerService
                 ->setBusinessCategoryId($data['businessCategoryId'])
                 ->setBusinessYears($data['businessYears'])
                 ->setLoanUsage($data['loanUsage'])
-                ->setBirthDate($data['birthDate'])
+//                ->setBirthDate($data['birthDate'])
                 ->setAlternatePhoneNumber($data['alternatePhoneNumber']);
             $borrower->setProfile($profile);
 

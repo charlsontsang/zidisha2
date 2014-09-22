@@ -36,7 +36,7 @@ class ProfileForm extends AbstractForm
             'businessCategoryId'       => 'required|in:' . implode(',', array_keys($this->getCategories())),
             'businessYears'            => 'required|in:' . implode(',', array_keys($this->getBusinessYears())),
             'loanUsage'                => 'required|in:' . implode(',', array_keys($this->getLoanUsage())),
-            'birthDate'                => 'required',
+//            'birthDate'                => 'required',
             'firstName'                => 'required',
             'lastName'                 => 'required',
             'address'                  => 'required',
