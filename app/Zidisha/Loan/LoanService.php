@@ -1040,13 +1040,8 @@ class LoanService
 
         $this->updateLoanIndex($loan);
 
-        $lenders = [];
-        // TODO
-        $calculator = new RepaymentCalculator($loan);
-        $bids = BidQuery::create()
-            ->filterBidsToRepay($loan)
-            ->find();
-        //$loanRepayments = $calculator->loanRepayments($exchangeRate, $bids);
+        $lenders = LenderQuery::create()
+        ->getLendersForLoan($loan, true);
 
         foreach ($lenders as $lender) {
             $this->lenderMailer->sendLoanDefaultedMail($loan, $lender);
