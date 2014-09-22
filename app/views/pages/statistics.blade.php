@@ -13,7 +13,7 @@ About
 @stop
 
 @section('page-content')
-<div class="panel panel-info">
+<div class="panel panel-info info-page">
     <div class="panel-heading">
         <h3 class="panel-title">
             Community Statistics
@@ -22,37 +22,33 @@ About
     <div class="panel-body">
         <p><em>What the whole Zidisha community has achieved so far</em></p>
 
-        <p>Loan money raised:
-        {{ BootstrapHtml::tooltip('lender.tooltips.pages.loan-money-raised') }}
-        <br/>
-        USD {{ number_format($totalStatistics['disbursed_amount'], 0, ".", ","); }}
+        <p>
+            Loan money raised:{{ BootstrapHtml::tooltip('lender.tooltips.pages.loan-money-raised') }}
+            <strong>${{ number_format($totalStatistics['disbursed_amount'], 0, ".", ","); }}</strong>
         </p>
-        <br/>
-        <p>Loan projects funded:
-        {{ BootstrapHtml::tooltip('lender.tooltips.pages.loan-projects-funded') }}
-        <br/>
-        {{ number_format($totalStatistics['raised_count'], 0, ".", ","); }}
+        <p>
+            Loan projects funded:{{ BootstrapHtml::tooltip('lender.tooltips.pages.loan-projects-funded') }}
+            <strong>{{ number_format($totalStatistics['raised_count'], 0, ".", ","); }}</strong>
         </p>
-        <br/>
-        <p>Lenders joined:
-        <br/>
-        {{ number_format($totalStatistics['lenders_count'], 0, ".", ","); }}
-        </p><br/>
-        <p>Borrowers joined:
-        <br/>
-        {{ number_format($totalStatistics['borrowers_count'], 0, ".", ",") }}
-        </p><br/>
-        <p>Total members:
-        <br/>
-        {{ number_format($totalStatistics['lenders_count'] + $totalStatistics['borrowers_count'], 0, ".", ",") }}
-        </p><br/>
-        <p>Countries represented by Zidisha members:
-        <br/>
-        {{ number_format($totalStatistics['countries_count'], 0, ".", ",") }}
+        <p>
+            Lenders joined: 
+            <strong>{{ number_format($totalStatistics['lenders_count'], 0, ".", ","); }}</strong>
+        </p>
+        <p>
+            Borrowers joined:
+            <strong>{{ number_format($totalStatistics['borrowers_count'], 0, ".", ",") }}</strong>
+        </p>
+        <p>
+            Total members:
+            <strong>{{ number_format($totalStatistics['lenders_count'] + $totalStatistics['borrowers_count'], 0, ".", ",") }}</strong>
+        </p>
+        <p>
+            Countries represented by Zidisha members:
+            <strong>{{ number_format($totalStatistics['countries_count'], 0, ".", ",") }}</strong>
         </p>
     </div>
 </div>
-<div class="panel panel-info">
+<div class="panel panel-info info-page">
     <div class="panel-heading">
         <h3 class="panel-title">
             Lending Statistics
@@ -74,63 +70,51 @@ About
             </div>
         </span>
         <br/><br/>
-        <p>Loan money raised:
-        {{ BootstrapHtml::tooltip('lender.tooltips.pages.loan-money-raised-filtered') }}
-        <br/>
-        USD {{ number_format($lendingStatistics['disbursed_amount'], 0, ".", ","); }}</p>
-        <br/>
-        <p>Loan projects funded:
-        {{ BootstrapHtml::tooltip('lender.tooltips.pages.loan-projects-funded-filtered') }}
-        <br/>
-        {{ number_format($lendingStatistics['raised_count'], 0, ".", ","); }}</p>
-        <br/>
-        <p>Average lender interest:
-        {{ BootstrapHtml::tooltip('lender.tooltips.pages.average-lender-interest') }}
-        <br/>
-        {{ number_format($lendingStatistics['average_lender_interest'], 1, ".", ","); }}%</p>
-        <br/>
+        <p>
+            Loan money raised:{{ BootstrapHtml::tooltip('lender.tooltips.pages.loan-money-raised-filtered') }}
+            <strong>${{ number_format($lendingStatistics['disbursed_amount'], 0, ".", ","); }}</strong>
+        </p>
+        <p>
+            Loan projects funded:{{ BootstrapHtml::tooltip('lender.tooltips.pages.loan-projects-funded-filtered') }}
+            <strong>{{ number_format($lendingStatistics['raised_count'], 0, ".", ","); }}</strong>
+        </p>
+        <p>
+            Average lender interest:{{ BootstrapHtml::tooltip('lender.tooltips.pages.average-lender-interest') }}
+            <strong>{{ number_format($lendingStatistics['average_lender_interest'], 1, ".", ","); }}%</strong>
+        </p>
         @if ($lendingStatistics['repaid_amount'])
-            <p>Principal repaid:
-            {{ BootstrapHtml::tooltip('lender.tooltips.pages.principal-repaid') }}
-            <br/>
-            USD {{ number_format($lendingStatistics['repaid_amount'], 0, ".", ","); }}
-            ({{ number_format($lendingStatistics['repaid_rate'], 1, ".", ","); }}% of amount disbursed)
+            <p>
+                Principal repaid:{{ BootstrapHtml::tooltip('lender.tooltips.pages.principal-repaid') }}
+                <strong>${{ number_format($lendingStatistics['repaid_amount'], 0, ".", ","); }}
+                ({{ number_format($lendingStatistics['repaid_rate'], 1, ".", ","); }}% of amount disbursed)</strong>
             </p>
-            <br/>
         @endif
         @if ($lendingStatistics['outstanding_on_time_amount'])
-            <p>Principal held by borrowers repaying on time (within 30-day threshold):
-            {{ BootstrapHtml::tooltip('lender.tooltips.pages.principal-repaid-on-time') }}
-            <br/>
-            USD {{ number_format($lendingStatistics['outstanding_on_time_amount'], 0, ".", ",") }}
-            ({{ number_format($lendingStatistics['outstanding_on_time_rate'], 1, ".", ","); }}% of amount disbursed)
+            <p>
+                Principal held by borrowers repaying on time (within 30-day threshold):{{ BootstrapHtml::tooltip('lender.tooltips.pages.principal-repaid-on-time') }}
+                <strong>${{ number_format($lendingStatistics['outstanding_on_time_amount'], 0, ".", ",") }}
+                ({{ number_format($lendingStatistics['outstanding_on_time_rate'], 1, ".", ","); }}% of amount disbursed)</strong>
             </p>
-            <br/>
         @endif
         @if ($lendingStatistics['outstanding_late_amount'])
-            <p>Principal held by borrowers more than 30 days past due with scheduled repayments:
-            {{ BootstrapHtml::tooltip('lender.tooltips.pages.principal-repaid-due') }}
-            <br/>
-            USD {{ number_format($lendingStatistics['outstanding_late_amount'], 0, ".", ",") }}
-            ({{ number_format($lendingStatistics['outstanding_late_rate'], 1, ".", ","); }}% of amount disbursed)
+            <p>
+                Principal held by borrowers more than 30 days past due with scheduled repayments:{{ BootstrapHtml::tooltip('lender.tooltips.pages.principal-repaid-due') }}
+                <strong>${{ number_format($lendingStatistics['outstanding_late_amount'], 0, ".", ",") }}
+                ({{ number_format($lendingStatistics['outstanding_late_rate'], 1, ".", ","); }}% of amount disbursed)</strong>
             </p>
-            <br/>
         @endif
         @if ($lendingStatistics['forgiven_amount'])
-             <p>Principal that has been forgiven by lenders:
-             {{ BootstrapHtml::tooltip('lender.tooltips.pages.principal-forgiven') }}
-             <br/>
-             USD {{ number_format($lendingStatistics['forgiven_amount'], 0, ".", ","); }}
-             ({{ number_format($lendingStatistics['forgiven_rate'], 1, ".", ","); }}% of amount disbursed)
+             <p>
+                Principal that has been forgiven by lenders:{{ BootstrapHtml::tooltip('lender.tooltips.pages.principal-forgiven') }}
+                <strong>${{ number_format($lendingStatistics['forgiven_amount'], 0, ".", ","); }}
+                ({{ number_format($lendingStatistics['forgiven_rate'], 1, ".", ","); }}% of amount disbursed)</strong>
              </p>
-             <br/>
         @endif
         @if ($lendingStatistics['written_off_amount'])
-            <p>Principal that has been written off:
-            {{ BootstrapHtml::tooltip('lender.tooltips.pages.principal-written-off') }}
-            <br/>
-            USD {{ number_format($lendingStatistics['written_off_amount'], 0, ".", ","); }}
-            ({{ number_format($lendingStatistics['written_off_rate'], 1, ".", ","); }}% of amount disbursed)
+            <p>
+                Principal that has been written off:{{ BootstrapHtml::tooltip('lender.tooltips.pages.principal-written-off') }}
+                <strong>${{ number_format($lendingStatistics['written_off_amount'], 0, ".", ","); }}
+                ({{ number_format($lendingStatistics['written_off_rate'], 1, ".", ","); }}% of amount disbursed)</strong>
         @endif
         <!-- TO DO 
         <p>Want to dive deeper? You can see the individual loan reports that provided the raw data for these statistics <a href="https://www.zidisha.org/index.php?p=114">here</a>.</p>
