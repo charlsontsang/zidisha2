@@ -5,71 +5,80 @@ My Stats
 @stop
 
 @section('content')
-<div class="page-header">
-    <h1>Your Loans</h1>
-</div>
+<h1 class="page-title">Your Loans</h1>
 
 <div class="row text-large">
-    <div class="col-sm-5">
-        <div class="page-header">
-            <h3><strong>Lending Totals</strong></h3>
-        </div>
-
-        <div class="row">
-            <div class="col-sm-7">
-                <p class="text-light">Funds uploaded:{{ BootstrapHtml::tooltip('lender.tooltips.loans.funds-uploaded') }}</p>
+    <div class="col-sm-6">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    Lending Totals
+                </h3>
             </div>
-            <div class="col-sm-5">
-                <p>{{ $totalFundsUpload }}</p>
-            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <p class="text-light">Funds uploaded:{{ BootstrapHtml::tooltip('lender.tooltips.loans.funds-uploaded') }}</p>
+                    </div>
+                    <div class="col-sm-4">
+                        <p>{{ $totalFundsUpload }}</p>
+                    </div>
 
-            <div class="col-sm-7">
-                <p class="text-light">Number of loans made:</p>
-            </div>
+                    <div class="col-sm-8">
+                        <p class="text-light">Number of loans made:</p>
+                    </div>
 
-            <div class="col-sm-5">
-                <p>{{ $numberOfLoans }}</p>
-            </div>
+                    <div class="col-sm-4">
+                        <p>{{ $numberOfLoans }}</p>
+                    </div>
 
-            <div class="col-sm-7">
-                <p class="text-light">Total amount lent:</p>
-            </div>
+                    <div class="col-sm-8">
+                        <p class="text-light">Total amount lent:</p>
+                    </div>
 
-            <div class="col-sm-5">
-                <p>{{ $totalLentAmount }}</p>
+                    <div class="col-sm-4">
+                        <p>{{ $totalLentAmount }}</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="col-sm-5 col-sm-offset-1">
-        <div class="page-header">
-            <h3><strong>Current Status</strong></h3>
-        </div>
-        <div class="row">
-            <div class="col-sm-7">
-                <p class="text-light">Loans outstanding:{{ BootstrapHtml::tooltip('lender.tooltips.loans.loans-outstanding') }}</p>
+    <div class="col-sm-6">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    Current Status
+                </h3>
             </div>
-            <div class="col-sm-5">
-                <p>{{ $principleOutstanding }}</p>
-            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <p class="text-light">Loans outstanding:{{ BootstrapHtml::tooltip('lender.tooltips.loans.loans-outstanding') }}</p>
+                    </div>
+                    <div class="col-sm-4">
+                        <p>{{ $principleOutstanding }}</p>
+                    </div>
 
-            <div class="col-sm-7">
-                <p class="text-light">Lending credit available:{{ BootstrapHtml::tooltip('lender.tooltips.loans.lending-credit-available') }}</p>
-            </div>
+                    <div class="col-sm-8">
+                        <p class="text-light">Lending credit available:{{ BootstrapHtml::tooltip('lender.tooltips.loans.lending-credit-available') }}</p>
+                    </div>
 
-            <div class="col-sm-5">
-                <p>{{ $currentBalance }}</p>
-            </div>
+                    <div class="col-sm-4">
+                        <p>{{ $currentBalance }}</p>
+                    </div>
 
-            @if ($lenderInviteCredit)
-            <div class="col-sm-7">
-                <p class="text-light">New member invite credit:</p>
-            </div>
+                    @if ($lenderInviteCredit)
+                    <div class="col-sm-8">
+                        <p class="text-light">New member invite credit:</p>
+                    </div>
 
-            <div class="col-sm-5">
-                <p>{{ $lenderInviteCredit }}</p>
+                    <div class="col-sm-4">
+                        <p>{{ $lenderInviteCredit }}</p>
+                    </div>
+                    @endif
+                </div>
             </div>
-            @endif
         </div>
     </div>
 </div>
