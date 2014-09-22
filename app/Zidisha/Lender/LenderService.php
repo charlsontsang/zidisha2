@@ -125,15 +125,8 @@ class LenderService
                 $invite->setInvited(false);
                 $res1 = $invitee->save($con);
             }
-            if (!$res1) {
-                throw new \Exception();
-            }
             $this->transactionService->addLenderInviteTransaction($con, $invite);
 
-            if ($invite->getLender()->getPreferences()->getNotifyInviteAccepted()) {
-                $this->lenderMailer->sendLenderInviteCredit($invite);
-            }
-            $this->mixpanelService->trackInviteAccept($invite);
             return $invite;
         });
 
@@ -141,6 +134,7 @@ class LenderService
             $this->lenderMailer->sendLenderInviteCredit($invite);
         }
         $this->mixpanelService->trackInviteAccept($invite);
+        return $invite;
     }
 
     public function deactivateLender(Lender $lender)
