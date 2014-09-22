@@ -37,22 +37,18 @@ class LenderQuery extends BaseLenderQuery
     public function getLendersForLoan(Loan $loan, $forgive = false)
     {
         if ($forgive) {
-            $query = 'SELECT distinct(id) FROM lenders as l, loan_bids as lb
-                  WHERE lb.loan_id = :loanId AND lb.active = TRUE l.id = lb.lender_id
-                  AND id NOT IN ( SELECT lender_id FROM forgiveness_loan_shares WHERE loan_id = :loanId )';
+            $query = 'SELECT distinct(lender_id) FROM loan_bids
+                  WHERE loan_id = :loanId AND active = TRUE
+                  AND lender_id NOT IN ( SELECT lender_id FROM forgiveness_loan_shares WHERE loan_id = :loanId )';
         } else {
-            $query = 'SELECT distinct(id) FROM lenders as l, loan_bids as lb
-                  WHERE lb.loan_id = :loanId AND lb.active = TRUE l.id = lb.lender_id';
+            $query = 'SELECT distinct(lender_id) FROM loan_bids
+                  WHERE loan_id = :loanId
+                    AND active = TRUE';
         }
 
-        $lenderIds =  PropelDB::fetchAll(
-            $query,
-            [
-                'loanId' => $loan->getId(),
-            ]
-        );
-        return $this
-            ->filterById($lenderIds);
+        $lenderIds =  PropelDB::fetchColumn($query, ['loanId' => $loan->getId()]);
+
+        return $this->filterById($lenderIds);
     }
 
     public function findBidOnLoan(Loan $loan)
