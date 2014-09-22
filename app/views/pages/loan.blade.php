@@ -135,12 +135,10 @@
 
                                     <div id="show-previous-loans" class="collapse">
                                         @foreach($previousLoans as $oneLoan)
-                                        <p><a href="{{ route('loan:index', $oneLoan->getId()) }}">{{ $oneLoan->getUsdAmount() }}
-                                                {{ $oneLoan->getAppliedAt()->format('d-m-Y') }}
-                                                {{-- TODO $oneLoan->getAcceptedAt()->format('d-m-Y')
-                                                $oneLoan->getExpiredDate()->format('d-m-Y')
-                                                TODO change Amount to disbursedAmount in USD
-                                                --}}
+                                        <p><a href="{{ route('loan:index', $oneLoan->getId()) }}">
+                                            {{ $oneLoan->getAcceptedAt()->format('M Y') }}:&nbsp;
+                                            <!-- TO DO {{ $oneLoan->getRepaidAt() }} -->
+                                            ${{ $oneLoan->getUsdAmount()->ceil()->format(0) }}
                                             </a>
                                         </p>
                                         @endforeach
