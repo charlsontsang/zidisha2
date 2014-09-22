@@ -124,7 +124,7 @@ class LenderMailer
             $data + [
                 'to'         => $lender->getUser()->getEmail(),
                 'from'       => 'service@zidisha.com',
-                'subject'    => \Lang::get('lender.mails.loan-fully-funded.subject', ['borrowerName' => $bid->getBorrower()->getName()], 'en'),
+                'subject'    => \Lang::get('lender.mails.loan-fully-funded.subject', ['borrowerName' => $borrower->getName()], 'en'),
                 'templateId' => \Setting::get('sendwithus.lender-loan-fully-funded-template-id'),
             ]
         );
