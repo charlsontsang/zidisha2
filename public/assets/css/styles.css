@@ -10227,7 +10227,8 @@ a.link-dark {
   margin: 0;
 }
 .lend-details .table .form-control {
-  width: 70%;
+  width: 80%;
+  padding-left: 5px;
 }
 .lend-details .table tbody > tr > td {
   vertical-align: middle;
