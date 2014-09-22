@@ -362,10 +362,14 @@ var handler;
         $('#lend-details').show();
         $('#lend-form-initial').hide();
         updateDonation();
+        calculateAmounts();
         return false;
     });
 
-    $('#donation-percent').on('change', updateDonation);
+    $('#donation-percent').on('change', function() {
+        updateDonation();
+        calculateAmounts();
+    });
 
     $donationAmount.on('keyup', calculateAmounts);
     $amount.on('keyup', calculateAmounts);
