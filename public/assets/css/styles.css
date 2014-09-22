@@ -10422,7 +10422,8 @@ span.text-content span {
 }
 @media (max-width: 767px) {
   .highlight-panel.group {
-    margin-bottom: -60px;
+    margin-bottom: -120px;
+    padding-bottom: 120px;
   }
 }
 .group-title {
