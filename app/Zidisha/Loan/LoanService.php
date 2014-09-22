@@ -1349,4 +1349,33 @@ class LoanService
         
         return $repaymentSchedule;
     }
+
+    public function isReschedulationAllowed(Loan $loan)
+    {
+        $borrower = $loan->getBorrower();
+        $count = RescheduleQuery::create()
+            ->filterByLoan($loan)
+            ->filterByBorrower($borrower)
+            ->count();
+        $maximumAllowed = Setting::get('loan.maxRescheduleAllowed');
+        if ($count > $maximumAllowed) {
+            return false;
+        }
+        if (!$count) {
+            return true;
+        }
+        $lastReschedule = RescheduleQuery::create()
+            ->filterByLoan($loan)
+            ->orderById('DESC')
+            ->findOne();
+        $isRescheduleActive = TransactionQuery::create()
+            ->filterByLoan($loan)
+            ->filterByUserId($borrower->getId())
+            ->filterByTransactionDate($lastReschedule->getCreatedAt(), Criteria::GREATER_EQUAL)
+            ->count();
+        if ($isRescheduleActive) {
+            return true;
+        }
+        return false;
+    }
 }

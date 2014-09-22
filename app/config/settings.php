@@ -127,6 +127,11 @@ return [
             'default' => '60',
             'rule' => 'numeric'
         ],
+        'loan.maxRescheduleAllowed' => [
+            'label' => 'Maximum reschedulement allowed for a loan',
+            'default' => '1000',
+            'rule' => 'numeric'
+        ],
     ],
     'Borrower' => [
         'invite.bonus' => [
