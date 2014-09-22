@@ -872,8 +872,11 @@ class LoanService
 
         $lenders = LenderQuery::create()
             ->getLendersForLoan($loan);
+        /** @var Lender $lender */
         foreach ($lenders as $lender) {
-            $this->lenderMailer->sendDisbursedLoanMail($lender, $loan);
+            if ($lender->getPreferences()->isNotifyLoanDisbursed()) {
+                $this->lenderMailer->sendDisbursedLoanMail($lender, $loan);
+            }
         }
         $this->borrowerMailer->sendDisbursedLoanMail($loan);
         
