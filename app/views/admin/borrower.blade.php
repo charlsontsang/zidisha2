@@ -41,10 +41,24 @@
             </div>
             <div class="loan-section-content">
                 @if($loans)
-                    @foreach($loans as $loan)
-                    {{ $loan->getAmount() }}: TODO (show dates)&nbsp;&nbsp;&nbsp;<a href="{{ route('loan:index', $loan->getId()) }}">View Loan Profile</a>
-                    <br/>
-                    @endforeach
+                    <table>
+                        <tbody>
+                        @foreach($loans as $loan)
+                        <tr>
+                            <td>{{ $loan->getAmount() }}:&nbsp;&nbsp;</td>
+                            <td>
+                                {{ $loan->getAppliedAt()->format('M j, Y') }}
+                                @if($loan->getEndedAt())
+                                 - {{ $loan->getEndedAt()->format('M j, Y') }}</td>
+                                @endif
+                            <td>
+                                &nbsp;&nbsp;
+                                <a href="{{ route('loan:index', $loan->getId()) }}">View Loan Profile</a>
+                            </td>
+                        </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
                 @else
                     No loans
                 @endif
