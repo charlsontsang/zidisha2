@@ -61,7 +61,11 @@ Lending Groups
     $(document).ready(function() {
         $('#group').dataTable({
             searching: true,
-            'order': [[ 1, "desc" ]]
+            'order': [[ 1, "desc" ]],
+              "columnDefs": [
+                { "orderable": false, "targets": 4 },
+                { "orderable": false, "targets": 5 }
+              ]
         });
     });
 </script>
