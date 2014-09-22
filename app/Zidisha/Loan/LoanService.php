@@ -605,10 +605,13 @@ class LoanService
         });
 
         $this->updateLoanIndex($loan);
+
+        $lenders = LenderQuery::create()
+            ->getLendersForLoan($loan);
         
         if ($loan->isFullyFunded()) {
-            foreach ($bids as $bid) {
-                $this->lenderMailer->sendLoanFullyFundedMail($bid);
+            foreach ($lenders as $lender) {
+                $this->lenderMailer->sendLoanFullyFundedMail($lender, $loan);
             }
         }
 

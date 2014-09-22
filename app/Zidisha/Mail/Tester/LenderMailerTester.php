@@ -125,7 +125,7 @@ class LenderMailerTester
             ->setBorrower($borrower)
             ->setLoan($loan);
 
-        $this->lenderMailer->sendLoanFullyFundedMail($bid);
+        $this->lenderMailer->sendLoanFullyFundedMail($lender, $loan);
     }
 
     public function sendLenderInvite()
