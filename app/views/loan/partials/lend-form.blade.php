@@ -129,7 +129,11 @@
         });
         
         function updateDonation() {
-            $('#donation-amount').val($amount.val() * $('#donation-percent').val());
+            if ($('#donation-percent').val() == 'other') {
+                $('#donation-amount').val('').focus();
+            } else {
+                $('#donation-amount').val($amount.val() * $('#donation-percent').val());
+            }
         }
 
         $('#lend-action').on('click', function() {
