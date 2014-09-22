@@ -26,7 +26,7 @@ class BorrowerActivationController extends BaseController
         $paginator = BorrowerQuery::create()
             ->filterByVerified(true)
             ->filterPendingActivation()
-            ->orderByCreatedAt() 
+            ->orderByCreatedAt()
             ->joinWith('Profile')
             ->paginate($page, 50);
 
