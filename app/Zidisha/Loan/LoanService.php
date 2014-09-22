@@ -602,7 +602,11 @@ class LoanService
 
         $this->updateLoanIndex($loan);
         
-        //TODO send emails (move lenders part from sendLoanFullyFundedNotification)
+        if ($loan->isFullyFunded()) {
+            foreach ($bids as $bid) {
+                $this->lenderMailer->sendLoanFullyFundedMail($bid);
+            }
+        }
 
         return $acceptedBids;
     }
@@ -1277,20 +1281,7 @@ class LoanService
      */
     protected function sendLoanFullyFundedNotification(Loan $loan)
     {
-        // Fully Funded notifications
-        if ($loan->isFullyFunded()) {
-            $bids = BidQuery::create()
-                ->filterByLoan($loan)
-                ->joinWith('Lender')
-                ->joinWith('Lender.User')
-                ->find();
-
-            foreach ($bids as $bid) {
-                $this->lenderMailer->sendLoanFullyFundedMail($bid);
-            }
-            
-            $this->borrowerMailer->sendLoanFullyFundedMail($loan);
-        }
+        $this->borrowerMailer->sendLoanFullyFundedMail($loan);
     }
 
     public function rescheduleLoan(Loan $loan, array $data, $simulate = false)
