@@ -371,7 +371,20 @@ var handler;
         calculateAmounts();
     });
 
-    $donationAmount.on('keyup', calculateAmounts);
+    $donationAmount.on('keyup', function() {
+        calculateAmounts();
+        if ($('#donation-amount').val() == $amount.val() * .2) {
+            $('#donation-percent').val('.2');
+        } else if ($('#donation-amount').val() == $amount.val() * .15) {
+            $('#donation-percent').val('.15');
+        } else if ($('#donation-amount').val() == $amount.val() * .1) {
+            $('#donation-percent').val('.1');
+        } else if ($('#donation-amount').val() == 0) {
+            $('#donation-percent').val('0');
+        } else {
+            $('#donation-percent').val('other');
+        }
+    });
     $amount.on('keyup', calculateAmounts);
 
     calculateAmounts();
