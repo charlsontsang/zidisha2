@@ -870,8 +870,8 @@ class LoanService
 
         $this->updateLoanIndex($loan);
 
-        // TODO, lenders + bid amount
-        $lenders = [];
+        $lenders = LenderQuery::create()
+            ->getLendersForLoan($loan);
         foreach ($lenders as $lender) {
             $this->lenderMailer->sendDisbursedLoanMail($lender, $loan);
         }
@@ -1121,7 +1121,7 @@ class LoanService
         // TODO lendersDenied
 
         $lendersForForgive = LenderQuery::create()
-            ->getLendersForForgive($loan);
+            ->getLendersForLoan($loan, true);
 
         foreach ($lendersForForgive as $lender) {
             $this->lenderMailer->sendAllowLoanForgivenessMail($loan, $forgivenessLoan, $lender);
