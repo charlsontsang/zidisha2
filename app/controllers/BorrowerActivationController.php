@@ -26,7 +26,7 @@ class BorrowerActivationController extends BaseController
         $paginator = BorrowerQuery::create()
             ->filterByVerified(true)
             ->filterPendingActivation()
-            ->orderByCreatedAt() // Todo registration date
+            ->orderByCreatedAt() 
             ->joinWith('Profile')
             ->paginate($page, 50);
 
