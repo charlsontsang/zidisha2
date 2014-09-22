@@ -116,14 +116,14 @@ class LenderService
         $invite = PropelDB::transaction(function ($con) use ($lenderInviteVisit, $invitee) {
             $invite = $lenderInviteVisit->getInvite();
             if ($invite) {
-                $res1 = $invite->setInvitee($invitee)->save();
+                $invite->setInvitee($invitee)->save();
             } else {
                 $invite = new Invite();
                 $invite->setLender($lenderInviteVisit->getLender());
                 $invite->setEmail($invitee->getUser()->getEmail());
                 $invite->setInvitee($invitee);
                 $invite->setInvited(false);
-                $res1 = $invitee->save($con);
+                $invitee->save($con);
             }
             $this->transactionService->addLenderInviteTransaction($con, $invite);
 
