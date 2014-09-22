@@ -322,6 +322,7 @@ class LenderService
                 ->setHideKarma($data['hideKarma'])
                 ->setNotifyLoanFullyFunded($data['notifyLoanFullyFunded'])
                 ->setNotifyLoanAboutToExpire($data['notifyLoanAboutToExpire'])
+                ->setNotifyLoanExpired($data['notifyLoanExpired'])
                 ->setNotifyLoanDisbursed($data['notifyLoanDisbursed'])
                 ->setNotifyComment($data['notifyComment'])
                 ->setNotifyLoanApplication($data['notifyLoanApplication'])

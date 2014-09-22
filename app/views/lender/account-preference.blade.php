@@ -33,11 +33,9 @@ Quick Links
 		    'label' => 'A loan I have bid on has not been fully funded and is about to expire',
 		]) }}
 
-		<!-- TODO 
-		{{ BootstrapForm::checkbox('', null, null, [
+		{{ BootstrapForm::checkbox('notifyLoanExpired', null, null, [
 		    'label' => 'A loan I have bid on has expired and the funds have been returned to my account',
 		]) }}
-		-->
 
 		{{ BootstrapForm::checkbox('notifyLoanDisbursed', null, null, [
 		    'label' => 'A loan I have funded is disbursed to a borrower',
