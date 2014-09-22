@@ -33,7 +33,7 @@ Lend
             </li>
             <li class="text">sorted by</li>
             <li class="btn btn-default btn-filter" target="#filter-sortings">
-               {{ $sortBy ? $sortConditions[$sortBy] : 'Repayment Rate' }}
+               {{ $sortBy ? $sortConditions[$sortBy] : 'Recently Added' }}
                 <i class="fa fa-fw fa-caret-down"></i>
             </li>
             <li>
