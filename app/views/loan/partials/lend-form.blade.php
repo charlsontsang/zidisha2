@@ -63,7 +63,7 @@
                 <td>
                     {{ BootstrapForm::select(null, array('.2' => '20%', '.15' => '15%', '.1' => '10%', 'other' => 'Other', '0' => 'None'), '.15', [
                         'label' => false,
-                        'id' => 'donationPercent',
+                        'id' => 'donation-percent',
                         'style' => 'width: 100%; height: 25px',
                     ]) }}
                 </td>
@@ -72,7 +72,6 @@
                     'id'      => 'donation-amount',
                     'label'   => false,
                     ]) }}
-                    <!-- TO DO: make the default 15% of the loan amount -->
                 </td>
             </tr>
             <tr style="display: none;">
@@ -128,6 +127,8 @@
                 return false;
             }
         });
+
+        $('#donation-amount').val($amount.val() * $('#donation-percent').val());
 
         $('#lend-action').on('click', function() {
             $('#lend-details').show();
