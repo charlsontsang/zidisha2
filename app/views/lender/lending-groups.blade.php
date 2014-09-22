@@ -37,14 +37,14 @@ Lending Groups
         <tbody>
         @foreach($paginator as $group)
         <tr>
-            <td data-title="Group Name">{{ $group->getName() }}
+            <td data-title="Name">{{ $group->getName() }}
                 @if($group->getGroupProfilePicture())
                     <img src="{{ $group->getGroupProfilePicture()->getImageUrl('small-profile-picture') }}" alt=""/>
                 @endif
             </td>
-            <td data-title="Impact This Month">{{ $groupsImpacts[$group->getId()]['totalImpactThisMonth'] }}</td>
-            <td data-title="Impact Last Month">{{ $groupsImpacts[$group->getId()]['totalImpactLastMonth'] }}</td>
-            <td data-title="Impact All Time">{{ $groupsImpacts[$group->getId()]['totalImpact'] }}</td>
+            <td data-title="This Month">{{ $groupsImpacts[$group->getId()]['totalImpactThisMonth'] }}</td>
+            <td data-title="Last Month">{{ $groupsImpacts[$group->getId()]['totalImpactLastMonth'] }}</td>
+            <td data-title="All Time">{{ $groupsImpacts[$group->getId()]['totalImpact'] }}</td>
             <td>{{ $group->getAbout() }}</td>
             <td><a href="{{ route('lender:group', $group->getId()) }}">View Profile</a></td>
         </tr>
