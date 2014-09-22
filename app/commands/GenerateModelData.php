@@ -1153,7 +1153,7 @@ class GenerateModelData extends Command
             }
             $installments = InstallmentQuery::create()
                 ->filterByLoan($loan)
-                ->orderById()// TODO order due date?
+                ->orderByDueDate()
                 ->find();
             
             foreach ($installments as $installment) {
