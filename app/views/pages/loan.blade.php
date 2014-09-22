@@ -122,7 +122,7 @@
 
                                 On-Time Repayments:{{ BootstrapHtml::tooltip('borrower.tooltips.loan.on-time-repayments') }}
                                 @if($repaymentScore['totalTodayInstallmentCount'] == 0)
-                                    <strong> "New Member" </strong>
+                                    <strong>New Member</strong>
                                 @else
                                     <strong> {{ $repaymentScore['repaymentScore'] }}%
                                         ({{ $repaymentScore['totalTodayInstallmentCount'] }})
