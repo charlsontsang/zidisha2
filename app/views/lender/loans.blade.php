@@ -127,7 +127,7 @@ My Stats
                 <tr>
                     <td colspan="3"><strong>Total</strong></td>
                     <td>{{ \Lang::choice(
-                               'lender.shared-labels.projects.stats-projects',
+                               'lender.shared-labels.projects',
                                $fundraisingLoanBids->getTotal(),
                                ['count' => $fundraisingLoanBids->getTotal()]
                         ) }}
@@ -206,7 +206,7 @@ My Stats
                 <tr>
                     <td colspan="3"><strong>Total</strong></td>
                     <td>{{ \Lang::choice(
-                               'lender.shared-labels.projects.stats-projects',
+                               'lender.shared-labels.projects',
                                $activeLoanBids->getTotal(),
                                ['count' => $activeLoanBids->getTotal()]
                         ) }}
@@ -275,7 +275,12 @@ My Stats
             <tfoot>
                 <tr>
                     <td colspan="3"><strong>Total</strong></td>
-                    <td>{{ $numberOfCompletedProjects }}</td>
+                    <td>
+                        {{ \Lang::choice(
+                               'lender.shared-labels.projects', 
+                               $numberOfCompletedProjects
+                        ) }}
+                    </td>
                     <td>{{ $totalCompletedLoansBidsAmount->getAmount() }} Lent</td>
                     <td>{{ $totalCompletedLoansRepaidAmount->getAmount() }} Repaid</td>
                     <td>{{ $totalNetChangeCompletedBid->getAmount() }} Net Change in Loan Fund Value</td>
