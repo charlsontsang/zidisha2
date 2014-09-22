@@ -73,7 +73,7 @@ class Currency
         $this->isoStatus = $isoStatus;
         $this->decimalDigits = $decimalDigits;
         $this->name = $name;
-        $this->sign = $sign ?: $code;
+        $this->sign = $sign;
     }
 
     /**
@@ -167,7 +167,16 @@ class Currency
      */
     public function __toString()
     {
-        return $this->sign;
+        return $this->code;
+    }
+
+    public function format($moneyString)
+    {
+        if ($this->sign) {
+            return $this->sign . ' ' . $moneyString;
+        }
+
+        return $moneyString . ' ' . $this->code;
     }
 
     /**
