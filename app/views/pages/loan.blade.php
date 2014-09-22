@@ -483,8 +483,7 @@
                 href="{{ route('lender:follow', $borrower->getId()) }}"
                 class="btn btn-default btn-block followBorrower"
                 style="{{ $follower ? 'display:none' : '' }}"
-                data-follow="follow"
-                data-toggle="tooltip">
+                data-follow="follow">
                 
                 <i class="fa fa-fw fa-bookmark"></i>
                 Follow {{ $borrower->getFirstName() }}
@@ -543,7 +542,10 @@
             $(this).tab('show');
         });
 
-        $('.followBorrower').tooltip({placement: 'bottom', title: 'Receive an email when this borrower posts a new comment or loan application.'})
+        $('.followBorrower').tooltip({
+            placement: 'bottom', 
+            title: 'Receive an email when this borrower posts a new comment or loan application.'
+        })
     });
 </script>
 @append
