@@ -165,7 +165,7 @@ class BorrowerInviteController extends BaseBorrowerController
                         $data['status'] = \Lang::get('borrower.invite.invite-accepted');
                     }
 
-                    $repaymentScore = $this->loanService->getOnTimeRepaymentScore($invite->getInvitee());
+                    $repaymentScore = $this->loanService->getOnTimeRepaymentStatistics($invite->getInvitee());
                     $repaymentRate = $repaymentScore['repaymentScore'];
                     $data['repaymentRate'] = number_format($repaymentRate) . "%";
 

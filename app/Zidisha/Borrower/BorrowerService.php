@@ -532,7 +532,7 @@ class BorrowerService
             return 'exceedsMaxInviteesWithoutPayment';
         }
 
-        $repaymentScore = $this->loanService->getOnTimeRepaymentScore($borrower);
+        $repaymentScore = $this->loanService->getOnTimeRepaymentStatistics($borrower);
         $repaymentRate = $repaymentScore['repaymentScore'];
         $minRepaymentRate = Setting::get('invite.minRepaymentRate');
 
@@ -620,7 +620,7 @@ class BorrowerService
                 ->findLastLoan($invite->getInvitee());
 
             if ($inviteeLastLoan) {
-                $repaymentScore = $this->loanService->getOnTimeRepaymentScore($invite->getInvitee());
+                $repaymentScore = $this->loanService->getOnTimeRepaymentStatistics($invite->getInvitee());
                 $repaymentRate = $repaymentScore['repaymentScore'];
 
                 if ($repaymentRate >= $minRepaymentRate) {

@@ -391,7 +391,7 @@ class LoanService
             'created_at'          => $loan->getCreatedAt()->getTimestamp(),
             'raised_percentage'   => $loan->getRaisedPercentage(),
             'applied_at'          => $loan->getAppliedAt()->getTimestamp(),
-            'repayment_rate'      => $this->getOnTimeRepaymentScore($borrower)['repaymentScore'],
+            'repayment_rate'      => $this->getOnTimeRepaymentStatistics($borrower)['repaymentScore'],
             'most_discussed'      => $discussionCount,
         ];
 
@@ -958,7 +958,7 @@ class LoanService
         return $count > 0;
     }
 
-    public function getOnTimeRepaymentScore(Borrower $borrower, $sendTodayInstallmentCount = false)
+    public function getOnTimeRepaymentStatistics(Borrower $borrower)
     {
         $BorrowerLoans = LoanQuery::create()
             ->filterByBorrower($borrower)
