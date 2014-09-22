@@ -137,7 +137,6 @@ class LenderService
             }
             $con->commit();
 
-            //TODO , invite_notify(see below commented if statement)
             if ($invite->getLender()->getPreferences()->getNotifyInviteAccepted()) {
                 $this->lenderMailer->sendLenderInviteCredit($invite);
             }
