@@ -134,7 +134,7 @@ class User extends BaseUser implements UserInterface, RemindableInterface
                 return route('loan:index', ['loanId' =>$this->getBorrower()->getLastLoanId()] + $parameters);
             }
         }
-        return '#';
+        return null;
     }
 
     public function isLender()
