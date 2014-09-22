@@ -9598,16 +9598,6 @@ table.dataTable {
     display: inline-block;
   }
 }
-.group-image {
-  height: 200px;
-  margin-bottom: 22px;
-}
-@media (min-width: 768px) {
-  .group-image {
-    height: 400px;
-    margin-bottom: 50px;
-  }
-}
 .home-section {
   padding-top: 30px;
   padding-bottom: 15px;
@@ -10429,6 +10419,19 @@ span.text-content span {
   display: table-cell;
   vertical-align: middle;
   padding: 8px 5px;
+}
+.carousel-inner.group-image {
+  margin-bottom: 15px;
+  height: 200px;
+}
+@media (min-width: 768px) {
+  .carousel-inner.group-image {
+    height: 400px;
+  }
+}
+.highlight-top.group {
+  margin-top: -15px;
+  padding-top: 30px;
 }
 .giftcard-thumbnail {
   float: left;
