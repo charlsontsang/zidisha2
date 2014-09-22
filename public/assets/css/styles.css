@@ -8745,6 +8745,11 @@ body {
 .panel-info .form-group:last-child {
   margin-bottom: 0;
 }
+@media (min-width: 768px) {
+  .panel-info.your-loans {
+    margin-top: 15px;
+  }
+}
 .page-section-inverted {
   background-color: #333232;
   color: #e6e6e6;

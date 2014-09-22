@@ -84,7 +84,7 @@ My Stats
 </div>
 
 @if ($fundraisingLoanBids->count())
-<div class="panel panel-info">
+<div class="panel panel-info your-loans">
     <div class="panel-heading">
         <h3 class="panel-title">
             Fundraising Loans
@@ -143,7 +143,7 @@ My Stats
 @endif
 
 @if ($activeLoanBids->count())
-<div class="panel panel-info">
+<div class="panel panel-info your-loans">
     <div class="panel-heading">
         <h3 class="panel-title">
             Active Loans
@@ -223,7 +223,7 @@ My Stats
 @endif
 
 @if (count($completedLoansBids)>0)
-<div class="panel panel-info">
+<div class="panel panel-info your-loans">
     <div class="panel-heading">
         <h3 class="panel-title">
             Completed Loans
