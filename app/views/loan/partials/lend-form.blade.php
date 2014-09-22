@@ -127,24 +127,6 @@
                 return false;
             }
         });
-        
-        function updateDonation() {
-            if ($('#donation-percent').val() == 'other') {
-                $('#donation-amount').val('').focus();
-            } else {
-                var $donationBase = $amount.val() * $('#donation-percent').val();
-                $('#donation-amount').val(formatMoney($donationBase, 2));
-            }
-        }
-
-        $('#lend-action').on('click', function() {
-            $('#lend-details').show();
-            $('#lend-form-initial').hide();
-            updateDonation();
-            return false;
-        });
-
-        $('#donation-percent').on('change', updateDonation);
 
         $('#join-lend').on('click', function() {
             var data = $(this).closest('form').serialize();
