@@ -8926,10 +8926,6 @@ form .btn-primary,
     min-width: 150px !important;
   }
 }
-.lend-form input.form-control,
-.lend-form select.form-control {
-  min-width: 0 !important;
-}
 form .btn-primary,
 form .btn-default,
 .giftcard .btn-primary {
@@ -8941,9 +8937,6 @@ form .btn-default,
   .giftcard .btn-primary {
     width: auto;
   }
-}
-.lend-form button {
-  width: 100% !important;
 }
 .form-inline .btn-primary,
 td .btn-primary {
@@ -10048,18 +10041,6 @@ a.link-dark {
     border-top: 1px solid #ddd;
   }
 }
-.lend-details .table tr:first-child td {
-  border-top: 0;
-}
-.lend-details .table .form-group {
-  margin: 0;
-}
-.lend-details .table .form-control {
-  width: 70%;
-}
-.lend-details .table tbody > tr > td {
-  vertical-align: middle;
-}
 .loan-titlebar {
   padding: 15px 15px 10px 15px;
   background-color: #f8f8f8;
@@ -10188,9 +10169,6 @@ a.link-dark {
 .loan-side h3 {
   line-height: 30px;
 }
-.lend-form {
-  margin: 0;
-}
 .loan-side .panel-default {
   padding: 15px;
   margin-bottom: 0;
@@ -10207,6 +10185,9 @@ a.link-dark {
 .progress {
   margin-bottom: 8px;
   margin-top: 30px;
+}
+.lend-form {
+  margin: 0;
 }
 @media (min-width: 768px) {
   .lend-form .text-light {
@@ -10229,10 +10210,33 @@ a.link-dark {
 .lend-form .form-group {
   margin: 20px 0 8px 0;
 }
+.lend-form input.form-control,
+.lend-form select.form-control {
+  min-width: 0 !important;
+}
 .lend-form button {
   font-size: 18px;
   margin-bottom: 0 !important;
   min-width: 250px !important;
+  width: 100% !important;
+}
+.lend-details .table tr:first-child td {
+  border-top: 0;
+}
+.lend-details .table .form-group {
+  margin: 0;
+}
+.lend-details .table .form-control {
+  width: 70%;
+}
+.lend-details .table tbody > tr > td {
+  vertical-align: middle;
+}
+.lend-details .table tbody > tr > td:first-child {
+  padding-left: 0;
+}
+.lend-details .table tbody > tr > td:last-child {
+  padding-right: 0;
 }
 .mobile-bottom-btn {
   font-size: 20px;

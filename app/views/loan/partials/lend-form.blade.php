@@ -53,13 +53,19 @@
         <table class="table">
             <tbody>
             <tr>
-                <td>Loan for {{ $borrower->getFirstName() }}</td>
+                <td colspan="2" style="width: 67%;">Loan for {{ $borrower->getFirstName() }}</td>
                 <td>$<span id="amount-display"></span></td>
             </tr>
             <tr>
                 <td>
-                    Donation to Zidisha
-                    {{ BootstrapHtml::tooltip('borrower.tooltips.loan.donation-to-zidisha') }}
+                    Donation{{ BootstrapHtml::tooltip('borrower.tooltips.loan.donation-to-zidisha') }}
+                </td>
+                <td>
+                    {{ BootstrapForm::select(null, array('.2' => '20%', '.15' => '15%', '.1' => '10%', 'other' => 'Other', '0' => 'None'), '.15', [
+                        'label' => false,
+                        'id' => 'donationPercent',
+                        'style' => 'width: 100%; height: 25px',
+                    ]) }}
                 </td>
                 <td style="width: 100px;">
                     {{ BootstrapForm::text('donationAmount', null, [
@@ -70,7 +76,7 @@
                 </td>
             </tr>
             <tr style="display: none;">
-                <td>
+                <td colspan="2">
                     Credit card fee
                     {{ BootstrapHtml::tooltip('borrower.tooltips.loan.credit-card-fee') }}
                 </td>
@@ -78,17 +84,17 @@
             </tr>
             @if($placeBidForm->getLenderInviteCredit()->isPositive())
             <tr>
-                <td>Lender invite credit</td>
+                <td colspan="2">Lender invite credit</td>
                 <td>${{ number_format($placeBidForm->getLenderInviteCredit()->getAmount(), 2, '.', '') }}</td>
             </tr>
             @elseif($placeBidForm->getCurrentBalance()->isPositive())
             <tr>
-                <td>Current Balance</td>
+                <td colspan="2">Current Balance</td>
                 <td>${{ number_format($placeBidForm->getCurrentBalance()->getAmount(), 2, '.', '') }}</td>
             </tr>
             @endif
             <tr>
-                <td><strong>Total</strong></td>
+                <td colspan="2"><strong>Total</strong></td>
                 <td>$<strong><span id="total-amount-display"></span></strong></td>
             </tr>
             </tbody>
