@@ -1,6 +1,6 @@
 <div>
     @if(\Auth::check())
-        @if(\Auth::user()->getRole() == 'lender')
+        @if(\Auth::user()->isLender() || \Auth::user()->isAdmin())
             <a href="#" target="translate" class="comment-action">@lang('common.comments.actions.translate')</a> &bull;
         @endif
         @if($comment->getUser() == \Auth::user())

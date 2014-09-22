@@ -171,8 +171,7 @@ abstract class CommentsController extends BaseController
             ->findOne();
 
         $user = \Auth::user();
-        $userRole = $user->getRole();
-        if ($message == '' || !$comment || $userRole != 'lender') {
+        if ($message == '' || !$comment || !($user->isAdmin() || $user->isLender())) {
             App::abort(404, 'Bad Request');
         }
 

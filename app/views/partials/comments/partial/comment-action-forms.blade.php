@@ -6,7 +6,7 @@
         @include('partials.comments.partial.edit', ['comment' => $comment] )
         @include('partials.comments.partial.delete')
     @endif
-    @if(\Auth::user()->isLender())
+    @if(\Auth::user()->isLender() || \Auth::user()->isAdmin())
         @include('partials.comments.partial.translate', ['comment' => $comment] )
     @endif
 @endif
