@@ -495,9 +495,16 @@
             ])
             @endif
         @else
-            <div class="text-center">
-                @lang('lender.follow.login', ['name' => $borrower->getFirstName(), 'link' => route('login')])                        
-            </div>
+            <a
+                id="follow-button"
+                href="{{ route('login') }}" 
+                data-toggle="modal" 
+                data-target="#login-modal" 
+                class="btn btn-default btn-block followBorrower">
+                
+                <i class="fa fa-fw fa-bookmark"></i>
+                Follow {{ $borrower->getFirstName() }}
+            </a>
         @endif
         </div>
 
