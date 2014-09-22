@@ -46,16 +46,22 @@ Pending Disbursements
                     <td>
                         <div class="row">
                             <div class="col-xs-12">
-                                <h3><a href="{{ route('loan:index', Auth::getUser()->getBorrower()->getLastLoanId()) }}">
-                                {{ $loan->getBorrower()->getName() }}</a>
-                                        </h3>
+                                <h3>
+                                    <a href="{{ route('admin:borrower', $loan->getBorrowerId()) }}">
+                                        {{ $loan->getBorrower()->getName() }}
+                                    </a>
+                                </h3>
                             </div>
                         </div>
                         <div class="row">
                         <div class="col-sm-6">
                             <dl class="dl-horizontal dl-horizontal-left">                                
                             <dt>Name</dt>
-                            <dd><a href="{{ route('borrower:public-profile', $loan->getBorrower()->getId()) }}">{{ $loan->getBorrower()->getName() }}</a></dd>
+                            <dd>
+                                <a href="{{ route('admin:borrower', $loan->getBorrowerId())}}">
+                                    {{ $loan->getBorrower()->getName() }}
+                                </a>
+                            </dd>
                                                            
                             <dt>Phone Number</dt>
                             <dd>{{ BootstrapHtml::number($loan->getBorrower()->getProfile()->getPhoneNumber(), $loan->getBorrower()->getCountry()->getCountryCode()) }}</dd>
