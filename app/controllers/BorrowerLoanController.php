@@ -224,8 +224,8 @@ class BorrowerLoanController extends BaseController
 
     protected function validateReschedule(Loan $loan)
     {
-        if (!$this->loanService->isReschedulationAllowed($loan)) {
-            Flash::error('borrower.loan.reschedulation-not-allowed');
+        if (!$this->loanService->isRescheduleAllowed($loan)) {
+            Flash::error('borrower.loan.reschedule-not-allowed');
             return Redirect::back();
         }
         if (!$loan || !$loan->isActive()) {

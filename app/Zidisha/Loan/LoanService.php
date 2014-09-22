@@ -1344,7 +1344,7 @@ class LoanService
         return $repaymentSchedule;
     }
 
-    public function isReschedulationAllowed(Loan $loan)
+    public function isRescheduleAllowed(Loan $loan)
     {
         $borrower = $loan->getBorrower();
         $count = RescheduleQuery::create()

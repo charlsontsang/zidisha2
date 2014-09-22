@@ -111,6 +111,6 @@ return [
         'negative' => 'Negative',
         'neutral'  => 'Neutral',
     ],
-    'reschedule-success'         => 'Your installment amount has been successfully modified.',
-    'reschedulation-not-allowed' => 'You may not reschedule again until you have made at least one repayment.',
+    'reschedule-success'     => 'Your installment amount has been successfully modified.',
+    'reschedule-not-allowed' => 'You may not reschedule again until you have made at least one repayment.',
 ];
