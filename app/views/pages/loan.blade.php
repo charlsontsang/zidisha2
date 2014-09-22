@@ -543,7 +543,7 @@
         });
 
         $('.followBorrower').tooltip({
-            placement: 'bottom', 
+            placement: 'left', 
             title: 'Receive an email when this borrower posts a new comment or loan application.'
         })
     });
