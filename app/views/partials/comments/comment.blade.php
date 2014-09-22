@@ -6,26 +6,33 @@
 
     <div class="pull-left">
         @if($comment->getUser() && !$comment->getUser()->isAdmin())
-            <a href="{{ $comment->getUser()->getProfileUrl() }}">
+            @if($comment->getUser()->getProfileUrl())
+                <a href="{{ $comment->getUser()->getProfileUrl() }}">
+                    <img class="media-object" src="{{ $comment->getUser()->getProfilePictureUrl() }}" alt="">
+                </a>
+            @else
                 <img class="media-object" src="{{ $comment->getUser()->getProfilePictureUrl() }}" alt="">
-            </a>
+            @endif
         @else
-        <a>
-            <img class="media-object" src="{{ asset('/assets/images/default.jpg') }}" alt="">
-        </a>
+            <img class="media-object" src="{{ asset('/assets/images/profile-default/profile-default.jpg') }}" alt="">
         @endif
     </div>
 
     <div class="media-body">                    
         <h4 class="media-heading">
-            @if($comment->getUser() && !$comment->getUser()->isAdmin())
-                <a href="{{ $comment->getUser()->getProfileUrl() }}">{{ $comment->getUser()->getUsername() }}</a>
+            @if($comment->getUser())
+                @if($comment->getUser()->getProfileUrl() && !$comment->getUser()->isAdmin())
+                <a href="{{ $comment->getUser()->getProfileUrl() }}">
+                    {{ $comment->getUser()->getUsername() }}
+                </a>
+                @else
+                    {{ $comment->getUser()->getUsername() }}
+                @endif
             @else
                  Deleted
             @endif
             <small>{{ $comment->getCreatedAt()->format('M d, Y') }}</small>
         </h4>
-
 
         @if($controller == 'LoanFeedbackController' && $comment->isRoot() && !$comment->getRemoved())
             <?php
