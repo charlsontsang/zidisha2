@@ -18,7 +18,7 @@
         {{ BootstrapForm::open(['route' => ['admin:translation:post', $folder, $filename, $languageCode], 'id' => 'labels-form']) }}
         {{ BootstrapForm::model($defaultValues) }}
 
-        @include('translation.form-section',['labels' => $fileLabels, 'level' => 2, 'group' => '', 'title' => $filename])
+        @include('admin.translation.form-section',['labels' => $fileLabels, 'level' => 2, 'group' => '', 'title' => $filename])
 
         {{ BootstrapForm::submit('Save') }}
         {{ BootstrapForm::close() }}
@@ -28,7 +28,7 @@
         <br/>
         <br/>
         <nav>
-            @include('translation.form-menu', ['labels' => $fileLabels, 'group' => ''])
+            @include('admin.translation.form-menu', ['labels' => $fileLabels, 'group' => ''])
         </nav>
     </div>
 </div>
