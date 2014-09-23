@@ -188,7 +188,7 @@ class DatabaseMigration extends Command {
             $this->line('Migrate lenders table');
             $this->line('Migrate lender_profiles table');
             $this->line('Migrate lender_preferences table');
-            $this->line('Migrate lending_group_notifications table');
+            //$this->line('Migrate lending_group_notifications table');
 
             $count = $this->con->table('lenders')->count();
             $limit = 500;
@@ -211,13 +211,17 @@ class DatabaseMigration extends Command {
                         'last_name'           => $lender->LastName,
                         'admin_donate'        => $lender->admin_donate,
                         'active'              => $lender->Active,
-                        'last_check_in_email' => $lender->last_check_in_email
+                        'last_check_in_email' => $lender->last_check_in_email,
+                        'created_at'          => date("Y-m-d H:i:s"),
+                        'updated_at'          => date("Y-m-d H:i:s"),
                     ];
 
                     $profile = [
-                        'lender_id' => $lender->userid,
-                        'city'      => $lender->City,
-                        'about_me'  => $lender->About,
+                        'lender_id'  => $lender->userid,
+                        'city'       => $lender->City,
+                        'about_me'   => $lender->About,
+                        'created_at' => date("Y-m-d H:i:s"),
+                        'updated_at' => date("Y-m-d H:i:s"),
                     ];
                     $preference = [
                         'lender_id'                   => $lender->userid,
@@ -227,10 +231,12 @@ class DatabaseMigration extends Command {
                         'notify_loan_about_to_expire' => $lender->loan_about_to_expire_notify,
                         'notify_loan_expired'         => $lender->loan_expired_notify,
                         'notify_loan_disbursed'       => $lender->loan_disbursed_notify,
-                        'notify_comment'              => $lender->emailcomment, // TODO cross check
+                        'notify_comment'              => $lender->emailcomment,
                         'notify_loan_application'     => $lender->loan_app_notify,
                         'notify_invite_accepted'      => $lender->invite_notify,
                         'notify_loan_repayment'       => $lender->email_loan_repayment,
+                        'created_at'                  => date("Y-m-d H:i:s"),
+                        'updated_at'                  => date("Y-m-d H:i:s"),
                     ];
 
                     array_push($lenderArray, $newLender);
