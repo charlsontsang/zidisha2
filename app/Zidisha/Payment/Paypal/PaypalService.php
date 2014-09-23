@@ -267,8 +267,8 @@ class PayPalService extends PaymentService
             if ($paymentStatus == 'Completed') {
                 $this->paymentBus->getCompletedHandler($payment)->process();
             } elseif ($paymentStatus == 'Failed') {
-
-                $this->paymentBus->getFailedHandler($payment)->process();
+                $paymentError = new PaymentError('Sorry we can not process your card at this moment.');
+                $this->paymentBus->getFailedHandler($payment, $paymentError)->process();
             }
         } else {
             \Log::error("Error: Got invalid IPN data");
