@@ -25,7 +25,7 @@ class DummyMixpanel
             'properties' => $properties
         ];
 
-        $this->mailer->send('emails.mix-panel.send-data', $data);
+        $this->mailer->send('emails.mixpanel.send-data', $data);
     }
 
     public function alias($userId)
@@ -36,7 +36,7 @@ class DummyMixpanel
             'userId' => $userId
         ];
 
-        $this->mailer->send('emails.mix-panel.send-data', $data);
+        $this->mailer->send('emails.mixpanel.send-data', $data);
     }
 
     public function track($eventName, $properties = array())
@@ -47,6 +47,6 @@ class DummyMixpanel
             'eventName' => $eventName
         ];
 
-        $this->mailer->send('emails.mix-panel.send-data', $data);
+        $this->mailer->send('emails.mixpanel.send-data', $data);
     }
 }
