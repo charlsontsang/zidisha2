@@ -517,28 +517,27 @@ class DatabaseMigration extends Command {
             
             $registrationFees = $this->con->table('registration_fee')
                 ->lists('Amount', 'currency_name');
-            
+
             $countryArray = [];
 
-             // USA Minor Outlying Islands
             foreach ($countries as $country) {
                 $newCountry = [
                     'id'                      => $country->id,
                     'name'                    => $country->name,
                     'slug'                    => \Illuminate\Support\Str::slug($country->name),
                     'capital'                 => $country->capital,
-                    'continent_code'          => $country->loc, //TODO cross check
+                    'continent_code'          => $country->loc,
                     'country_code'            => $country->code,
                     'dialing_code'            => $country->phone ?: '',
-//                    'phone_number_length'     => '', //TODO
-                    'currency_code'           => $country->Currency, // TODO NULL for some countries
+//                    'phone_number_length'     => '',
+                    'currency_code'           => $country->Currency,
                     'borrower_country'        => $country->active,
                     'registration_fee'        => isset($registrationFees[$country->Currency]) ? $registrationFees[$country->Currency] : null,
-//                    'installment_period'      => null, //TODO
-//                    'installment_amount_step' => '', //TODO
-//                    'loan_amount_step'        => '', //TODO
+//                    'installment_period'      => null,
+//                    'installment_amount_step' => '',
+//                    'loan_amount_step'        => '',
                     'repayment_instructions'  => $country->repayment_instructions ?: null,
-//                    'accept_bids_note'        => null, //TODO
+//                    'accept_bids_note'        => null,
                     'language_code'           => $country->lang_code,
                 ];
 
