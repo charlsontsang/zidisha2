@@ -185,7 +185,10 @@ abstract class CommentsController extends BaseController
 
         $this->service->translateComment($translateCommentForm->getData(), $comment, $user);
 
-        Flash::success(\Lang::get('common.comments.flash.translate-success'));
+        $thankyous = array('Thanks', 'Merci beaucoup', 'Terima kasih', 'Gracias', 'Obrigados', 'Jerejef', 'Asante sana', 'Danke schön', 'Shukran');
+        $thanks = $thankyous[array_rand($thankyous)];
+
+        \Flash::success('Your translation has been published. '.$thanks.'!');
         return $this->redirect($comment);
     }
 

@@ -21,7 +21,6 @@ return [
         'edit-success' => 'Message edited!',
         'reply-success' => 'Reply posted!',
         'delete-success' => 'The message has been deleted.',
-        'translate-success' => 'Your translation has been published. Thanks!',
         'file-deleted' => 'The file has been deleted.',
         'already-member' => ':email is already a user.',
     ],
