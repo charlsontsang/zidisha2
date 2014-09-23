@@ -123,6 +123,16 @@ class AuthController extends BaseController
                 Auth::loginUsingId($checkUser->getId());
             } else {
                 $country = Utility::getCountryCodeByIP();
+                if ($country['code'] == '') {
+                    $defaultCountry = CountryQuery::create()
+                        ->getOneByCountryCode('US');
+
+                    $country = [
+                        'code' => $defaultCountry->getCountryCode(),
+                        'name' => $defaultCountry->getName(),
+                        'id'   => $defaultCountry->getId(),
+                    ];
+                }
                 $user = $this->lenderService->joinFacebookUser($facebookUser, $country);
                 return $this->join($user);
             }
@@ -260,6 +270,16 @@ class AuthController extends BaseController
                             Auth::loginUsingId($checkUser->getId());
                         } else {
                             $country = Utility::getCountryCodeByIP();
+                            if ($country['code'] == '') {
+                                $defaultCountry = CountryQuery::create()
+                                    ->getOneByCountryCode('US');
+
+                                $country = [
+                                    'code' => $defaultCountry->getCountryCode(),
+                                    'name' => $defaultCountry->getName(),
+                                    'id'   => $defaultCountry->getId(),
+                                ];
+                            }
                             $user = $this->lenderService->joinGoogleUser(
                                 $googleUser, $country
                             );

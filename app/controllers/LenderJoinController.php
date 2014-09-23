@@ -1,5 +1,6 @@
 <?php
 
+use Zidisha\Country\CountryQuery;
 use Zidisha\Lender\Form\JoinForm;
 use Zidisha\Lender\InviteVisitQuery;
 use Zidisha\Lender\Lender;
@@ -73,6 +74,16 @@ class LenderJoinController extends BaseController
         if ($facebookUser) {
             $this->facebookService->addFacebookUserLog($facebookUser, true);
             $country = Utility::getCountryCodeByIP();
+            if ($country['code'] == '') {
+                $defaultCountry = CountryQuery::create()
+                    ->getOneByCountryCode('US');
+
+                $country = [
+                    'code' => $defaultCountry->getCountryCode(),
+                    'name' => $defaultCountry->getName(),
+                    'id'   => $defaultCountry->getId(),
+                ];
+            }
             $user = $this->lenderService->joinFacebookUser($facebookUser, $country);
 
             return $this->join($user);
@@ -118,6 +129,16 @@ class LenderJoinController extends BaseController
                 $googleUser = $this->googleService->getGoogleUser($accessToken);
                 if ($googleUser) {
                     $country = Utility::getCountryCodeByIP();
+                    if ($country['code'] == '') {
+                        $defaultCountry = CountryQuery::create()
+                            ->getOneByCountryCode('US');
+
+                        $country = [
+                            'code' => $defaultCountry->getCountryCode(),
+                            'name' => $defaultCountry->getName(),
+                            'id'   => $defaultCountry->getId(),
+                        ];
+                    }
                     $user = $this->lenderService->joinGoogleUser(
                         $googleUser, $country
                     );

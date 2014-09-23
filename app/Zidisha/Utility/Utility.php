@@ -11,14 +11,10 @@ use Zidisha\Country\CountryQuery;
 class Utility {
 
     public static function getCountryCodeByIP(){
-        $defaultCountry = CountryQuery::create()
-            ->filterByBorrowerCountry(false)
-            ->findOneByCountryCode('US');
-
         $country = [
-            'code' => $defaultCountry->getCountryCode(),
-            'name' => $defaultCountry->getName(),
-            'id'   => $defaultCountry->getId(),
+            'code' => '',
+            'name' => '',
+            'id'   => '',
         ];
         $ip = \Request::getClientIp();
 
