@@ -30,7 +30,7 @@ return [
     'expires-at'                            => 'Expiration Date',
     'repayment-schedule'                    => [
         'title'             => 'Repayment Schedule',
-        'due-date'          => 'Due Date (Number Of months after disbursement Date)',
+        'due-date'          => 'Due Date (Number of months after disbursement date)',
         'repayment-due'     => 'Repayment Due (:currencyCode)',
         'balance-remaining' => 'Balance Remaining',
         'total-repayment'   => 'Total Repayment',
