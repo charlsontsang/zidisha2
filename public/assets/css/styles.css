@@ -9069,8 +9069,12 @@ table.dataTable {
   float: right;
 }
 /* make full width and height when inside info panel */
-.dataTables_wrapper {
+.panel-info .dataTables_wrapper {
   margin: -15px;
+}
+.panel-info .dataTables_filter label {
+  margin-top: 15px;
+  margin-right: 15px;
 }
 /* no more tables styling for mobile */
 @media (max-width: 767px) {
