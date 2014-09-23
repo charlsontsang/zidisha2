@@ -664,6 +664,7 @@ class GenerateModelData extends Command
             ['ID', 'Indonesia', 'IDR', '0', 'in',],
             ['SN', 'Senegal', 'XOF', '0', 'fr',],
             ['IN', 'India', 'INR', '0', 'hi',],
+            ['US', 'USA', 'USD', '0', 'en',],
         ];
 
         $return = [];
@@ -676,7 +677,7 @@ class GenerateModelData extends Command
                 ->setContinentCode('AF')
                 ->setDialingCode(str_pad($this->faker->numberBetween(1, 200), '3', '0'))
                 ->setRegistrationFee(Money::create($data[3], $data[2]))
-                ->setBorrowerCountry($data[0] != 'IN')
+                ->setBorrowerCountry(!in_array($data[0], ['IN', 'US']))
                 ->setCurrencyCode($data[2])
                 ->setPhoneNumberLength(9)
                 ->setInstallmentPeriod($this->faker->randomElement([Loan::WEEKLY_INSTALLMENT, Loan::MONTHLY_INSTALLMENT]))

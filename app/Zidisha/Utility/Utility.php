@@ -11,10 +11,14 @@ use Zidisha\Country\CountryQuery;
 class Utility {
 
     public static function getCountryCodeByIP(){
+        $defaultCountry = CountryQuery::create()
+            ->filterByBorrowerCountry(false)
+            ->findOneByCountryCode('US');
+
         $country = [
-            'code' => 'IN',
-            'name' => 'India',
-            'id'   => 7,
+            'code' => $defaultCountry->getCountryCode(),
+            'name' => $defaultCountry->getName(),
+            'id'   => $defaultCountry->getId(),
         ];
         $ip = \Request::getClientIp();
 
@@ -32,6 +36,7 @@ class Utility {
             } catch (AddressNotFoundException $e) {
             }
         }
+
         return $country;
     }
 
