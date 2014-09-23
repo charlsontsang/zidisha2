@@ -29,7 +29,7 @@ class LenderJoinController extends BaseController
 
     public function getJoin()
     {
-        return View::make(Request::ajax() ? 'lender.join-modal' : 'lender.join');
+        return View::make(Request::ajax() ? 'lender.join.join-modal' : 'lender.join.join');
     }
 
     public function postJoin()
@@ -73,7 +73,7 @@ class LenderJoinController extends BaseController
         if ($facebookUser) {
             $this->facebookService->addFacebookUserLog($facebookUser);
             $country = Utility::getCountryCodeByIP();
-            return View::make('lender.facebook-join',
+            return View::make('lender.join.facebook-join',
                 compact('country'), ['form' => $this->joinForm,]);
         }
 
@@ -142,7 +142,7 @@ class LenderJoinController extends BaseController
                 $googleUser = $this->googleService->getGoogleUser($accessToken);
                 if ($googleUser) {
                     $country = Utility::getCountryCodeByIP();
-                    return View::make('lender.google-join',
+                    return View::make('lender.join.google-join',
                         compact('country'), ['form' => $this->joinForm,]);
                 }
             }
@@ -176,7 +176,7 @@ class LenderJoinController extends BaseController
 
             $response = $this->join($user);
             if ($contacts) {
-                return View::make('lender.invite-google-contacts',
+                return View::make('lender.join.invite-contacts',
                     compact('contacts'));
             }
             return $response;
