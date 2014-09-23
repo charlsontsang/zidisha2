@@ -18,11 +18,7 @@
 @include('borrower.dashboard.partials.'.$partial, compact('repaymentSchedule'))
         
 @if(!$borrower->isVerified())
-<div class="panel panel-info">
-    <div class="panel-body">
-    	@lang('borrower.dashboard.pending-confirmation', ['resendLink' => link_to_route('borrower:resend:verification')])
-    </div>
-<div>
+	@include('borrower.dashboard.partials.pending-confirmation')
 @endif
 
 @if($volunteerMentor)
