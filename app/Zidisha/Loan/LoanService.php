@@ -1178,23 +1178,25 @@ class LoanService
         $lenderRepaymentAmount = $repaymentCalculator->repaymentAmountForLenders();
         
         $totalAmountForRepayment = $lenderRepaymentAmount->add($lenderInterestAmount, 'USD');
-        
-        PropelDB::transaction(function () use ($loan, $lender, $totalAmountForRepayment) {
+
+        $forgiveLoanShare = PropelDB::transaction(function () use ($loan, $lender, $totalAmountForRepayment) {
                 $forgiveLoanShare = new ForgivenessLoanShare();
-                
+
                 $forgiveLoanShare->setLoan($loan)
                     ->setBorrower($loan->getBorrower())
                     ->setLender($lender)
                     ->setAmount($totalAmountForRepayment)
                     ->setUsdAmount($totalAmountForRepayment)
                     ->setIsAccepted(true);
-                
+
                 $forgiveLoanShare->save();
+                return $forgiveLoanShare;
         });
         
         $con = PropelDB::getConnection();
         $this->transactionService->lenderLoanForgivenessTransaction($con, $lender, Money::create($lenderInterestAmount, 'USD'));
-        $this->lenderMailer->sendLoanForgivenessConfirmationMail($lender, $loan, ''); //TODO send reducedAmount
+        /** @var ForgivenessLoanShare $forgiveLoanShare */
+        $this->lenderMailer->sendLoanForgivenessConfirmationMail($lender, $loan, $forgiveLoanShare->getUsdAmount());
         
         //TODO: updateScheduleAfterForgive
         
