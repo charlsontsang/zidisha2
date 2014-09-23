@@ -26,7 +26,7 @@ class LendingGroupController extends BaseController
 
     public function getCreateGroup()
     {
-        return View::make('lender.create-lending-group', ['form' => $this->createGroupForm,]);
+        return View::make('lender.groups.create', ['form' => $this->createGroupForm,]);
     }
 
     public function postCreateGroup()
@@ -76,7 +76,7 @@ class LendingGroupController extends BaseController
 
         $successMessage = "You just created the " . $groupName . " lending group!";
 
-        return View::make('lender.lending-group-success', compact('group', 'twitterUrl', 'facebookUrl', 'mailUrl', 'successMessage'));
+        return View::make('lender.groups.success', compact('group', 'twitterUrl', 'facebookUrl', 'mailUrl', 'successMessage'));
     }
 
     public function getJoinSuccess($id)
@@ -103,7 +103,7 @@ class LendingGroupController extends BaseController
 
         $successMessage = "You just joined the " . $groupName . " lending group!";
 
-        return View::make('lender.lending-group-success', compact('group', 'twitterUrl', 'facebookUrl', 'mailUrl', 'successMessage'));
+        return View::make('lender.groups.success', compact('group', 'twitterUrl', 'facebookUrl', 'mailUrl', 'successMessage'));
     }
 
     public function getGroups()
@@ -119,7 +119,7 @@ class LendingGroupController extends BaseController
         }
 
 
-        return View::make('lender.lending-groups', compact('paginator', 'groupsImpacts'));
+        return View::make('lender.groups.index', compact('paginator', 'groupsImpacts'));
     }
 
     public function getGroup($id)
@@ -158,7 +158,7 @@ class LendingGroupController extends BaseController
 
         $groupImpacts = $this->lendingGroupService->getGroupImpacts($id);
 
-        return View::make('lender.lending-group', compact('group', 'receiver', 'membersCount', 'members', 'leaderId', 'comments', 'commentType', 'canPostComment', 'canReplyComment', 'groupImpacts'));
+        return View::make('lender.groups.profile', compact('group', 'receiver', 'membersCount', 'members', 'leaderId', 'comments', 'commentType', 'canPostComment', 'canReplyComment', 'groupImpacts'));
     }
 
     public function joinGroup($id)
@@ -213,7 +213,7 @@ class LendingGroupController extends BaseController
 
 
         $editGroupForm = new EditGroupForm($group);
-        return View::make('lender.edit-lending-group', ['form' => $editGroupForm,], compact('group'));
+        return View::make('lender.groups.edit', ['form' => $editGroupForm,], compact('group'));
     }
 
     public function postEditGroup($id)

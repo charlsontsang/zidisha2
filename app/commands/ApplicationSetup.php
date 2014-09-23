@@ -53,7 +53,7 @@ ENV;
         
         $databaseConfig['environment'] = $environment;
 
-        $config = View::make('command.runtime-conf', $databaseConfig);
+        $config = View::make('admin.test.runtime-conf', $databaseConfig);
 
         if (!$file->isDirectory(base_path() . '/app/config/propel/')) {
             $file->makeDirectory(base_path() . '/app/config/propel');

@@ -53,7 +53,7 @@
     </div>
     <div class="panel-body">
         
-        @include('partials/loan-progress', ['loan' => $loan, 'dollar' => false])
+        @include('loan/partials/progress', ['loan' => $loan, 'dollar' => false])
 
         @include('borrower.loan.partials.loan-information', [
             'amount'            => $loan->getAmount(),
@@ -76,7 +76,7 @@
         </h3>
     </div>
     <div class="panel-body">
-            @include('partials.loan-lenders', compact($lenders))
+            @include('loan.partials.lenders', compact($lenders))
     </div>
 </div>
 @endif

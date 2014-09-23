@@ -29,7 +29,7 @@ class GiftCardController extends BaseController
 
     public function getGiftCards()
     {
-        return View::make('lender.gift-cards', ['form' => $this->cardForm,]);
+        return View::make('lender.gift-cards.index', ['form' => $this->cardForm,]);
     }
 
     public function getTermsAccept(){
@@ -37,7 +37,7 @@ class GiftCardController extends BaseController
         $amount = $data['amount'];
         $recipientName = $data['recipientName'];
         $paymentForm = new GiftCardForm($this->giftCardService);
-        return View::make('lender.gift-cards-payment', compact('amount', 'recipientName'), ['paymentForm' => $paymentForm,]);
+        return View::make('lender.gift-cards.payment', compact('amount', 'recipientName'), ['paymentForm' => $paymentForm,]);
     }
 
     public function postGiftCards()
@@ -99,7 +99,7 @@ class GiftCardController extends BaseController
             ->orderByDate('desc')
             ->find();
 
-        return View::make('lender.gift-cards-track', compact('countCards', 'countRedeemed', 'cards'));
+        return View::make('lender.gift-cards.track', compact('countCards', 'countRedeemed', 'cards'));
     }
 
 }

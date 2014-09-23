@@ -66,7 +66,7 @@
     </div>
 </div>
 
-@include('partials/repayment-schedule-table', compact('repaymentSchedule'))
+@include('loan/partials/repayment-schedule', compact('repaymentSchedule'))
 
 <hr/>
 

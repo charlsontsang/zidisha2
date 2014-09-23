@@ -217,7 +217,7 @@
     </div>
 </div>
 
-@include('partials._modal', [
+@include('partials.modal', [
     'id' => 'termsAndConditionModal',
     'title' => \Lang::get('borrower.join.form.terms-and-condition.title'),
     'body' => \Lang::get('borrower.join.form.terms-and-condition.body')

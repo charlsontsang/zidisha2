@@ -66,7 +66,7 @@ class TranslationController extends BaseController
             \App::abort(404, 'The given file not found.');
         }
 
-        return View::make('translation.form', compact(
+        return View::make('admin.translation.form', compact(
             'folder', 'file', 'fileLabels', 'defaultValues', 'filename', 'nameToTranslationLabel', 'languageCode'
         ));
     }
@@ -118,6 +118,6 @@ class TranslationController extends BaseController
                 ->getTotals();
         }       
 
-        return View::make('translation.index', ['languageCode' => $languageCode, 'borrowerLanguages' => $this->borrowerLanguages, 'folders' => $folders]);
+        return View::make('admin.translation.index', ['languageCode' => $languageCode, 'borrowerLanguages' => $this->borrowerLanguages, 'folders' => $folders]);
     }
 }

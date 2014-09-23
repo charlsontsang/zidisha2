@@ -125,7 +125,7 @@ My Stats
                     </td>
                     <td data-title="Date Funded">{{ $fundraisingLoanBid->getBidAt()->format('M j, Y') }}</td>
                     <td data-title="Amount Lent">{{ $fundraisingLoanBid->getBidAmount()->getAmount() }}</td>
-                    <td data-title="Progress"> @include('partials/loan-progress', [ 'loan' => $fundraisingLoanBid->getLoan() ]) </td>
+                    <td data-title="Progress"> @include('loan/partials/progress', [ 'loan' => $fundraisingLoanBid->getLoan() ]) </td>
                 </tr>
                 @endforeach
             </tbody>

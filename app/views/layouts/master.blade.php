@@ -39,8 +39,8 @@
         @include('partials.footer')
 
         @if(!\Auth::check())
-            @include('partials.login-modal')
-            @include('partials.join-modal')
+            @include('auth.show-login-modal')
+            @include('lender.join.show-join-modal')
         @endif
         
         <script src="{{ asset('assets/vendor/jquery/dist/jquery.min.js') }}"></script>
@@ -60,7 +60,7 @@
             } );
         </script>
         @yield('script-footer')
-        @include('partials/_flash')
+        @include('partials/flash')
         <!-- Mixpanel -->
         {{ \Zidisha\Vendor\Mixpanel::bodyScript() }}
     </body>

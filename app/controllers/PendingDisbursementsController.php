@@ -84,7 +84,7 @@ class PendingDisbursementsController extends BaseController
         }
 
         return View::make(
-            'admin.pending-disbursements.pending-disbursements',
+            'admin.pending-disbursements',
             compact(
                 'loans', 'adminNotes', 'exchangeRate',
                 'currency', 'country', 'countries'

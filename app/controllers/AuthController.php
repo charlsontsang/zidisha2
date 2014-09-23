@@ -116,7 +116,7 @@ class AuthController extends BaseController
                 Auth::loginUsingId($checkUser->getId());
             } else {
                 $country = Utility::getCountryCodeByIP();
-                return View::make('lender.facebook-join',
+                return View::make('lender.join.facebook-join',
                     compact('country'), ['form' => $this->joinForm,]);
             }
             return $this->login();
@@ -253,7 +253,7 @@ class AuthController extends BaseController
                             Auth::loginUsingId($checkUser->getId());
                         } else {
                             $country = Utility::getCountryCodeByIP();
-                            return View::make('lender.google-join',
+                            return View::make('lender.join.google-join',
                                 compact('country'), ['form' => $this->joinForm,]);
                         }
                         return $this->login();

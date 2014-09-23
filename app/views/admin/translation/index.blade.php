@@ -15,7 +15,7 @@
 
 @foreach ($folders as $folder => $files)
     <h2>{{ ucfirst($folder) }}</h2>
-    @include('translation.folder-table', compact('files', 'folder'))
+    @include('admin.translation.folder-table', compact('files', 'folder'))
 @endforeach
 
 @stop
