@@ -219,7 +219,7 @@ class DatabaseMigration extends Command {
                     $profile = [
                         'lender_id' => $lender->userid,
                         'city'      => $lender->City,
-                        'about_me'  => $lender->About
+                        'about_me'  => $lender->About,
                     ];
                     $preference = [
                         'lender_id'                   => $lender->userid,
@@ -372,6 +372,7 @@ class DatabaseMigration extends Command {
                         'address'                    => $borrower->PAddress ?: '',
                         'address_instructions'       => $borrower->home_location ?: '',
                         'city'                       => $borrower->City,
+                        'referred_by'                => $borrower->reffered_by,
                         'national_id_number'         => $borrower->nationId,
                         'phone_number'               => $borrower->TelMobile,// TODO clean up
                         'alternate_phone_number'     => $borrower->AlternateTelMobile ?: '',// TODO clean up
