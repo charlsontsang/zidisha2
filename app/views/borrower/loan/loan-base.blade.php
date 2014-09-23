@@ -1,11 +1,20 @@
-@extends('layouts.master')
+@extends('layouts.side-menu-simple')
 
-@section('content')
+@section('page-title')
+    {{ $loan->getSummary() }}
+@stop
+
+@section('menu-title')
+    @lang('borrower.menu.links-title')
+@stop
+
+@section('menu-links')
+    @include('partials.nav-links.borrower-links')
+@stop
+
+
+@section('page-content')
     <div class="page-header">
-        <h1>
-            {{ $loan->getSummary() }}
-            <small>{{ $loan->getAppliedAt()->format('M j, Y') }}</small>
-        </h1>
         
         <a href="{{ action('LoanController@getIndex', [ 'loanId' => $loan->getId() ]) }}" class="btn btn-primary">
             @lang('borrower.loan.page.public-loan-page')

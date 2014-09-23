@@ -1,6 +1,6 @@
 @if(Auth::check() && Auth::getUser()->isBorrower())
 <li class="@if (Request::segment(2) == 'dashboard') active @else '' @endif "><a href="{{ route('borrower:dashboard') }}">@lang('borrower.menu.dashboard')</a></li>
-<!-- removing loan page link until bug is fixed -->
+<li><a href="{{ action('LoanController@getIndex', [ 'loanId' => $loan->getId() ]) }}">@lang('borrower.menu.loan-page')</a></li>
 <li class="@if (Request::segment(2) == 'edit-profile') active @else '' @endif "><a href="{{ route('borrower:edit-profile') }}">@lang('borrower.menu.edit-profile')</a></li>
 <li class="@if (Request::segment(2) == 'invite') active @else '' @endif "><a href="{{ route('borrower:invite') }}">@lang('borrower.menu.send-invites')</a></li>
 <li class="@if (Request::segment(2) == 'invites') active @else '' @endif "><a href="{{ route('borrower:invites') }}">@lang('borrower.menu.your-invites')</a></li>

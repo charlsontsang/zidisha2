@@ -1,6 +1,6 @@
 @extends('borrower.loan.loan-base')
 
-@section('content')
+@section('page-content')
 @parent
 
 @if(!$loan->isFullyFunded())
