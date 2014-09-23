@@ -211,11 +211,7 @@ class LenderService
                     $facebookUser
                         ->setUser($user)
                         ->setEmail($facebookData['email'])
-                        ->setAccountName($facebookData['name'])
-                        ->setCity(array_get($facebookData, 'location.name'))
-                        ->setBirthDate($facebookData['birthday'])
-                        ->setFriendsCount($this->facebookService->getFriendCount())
-                        ->setFirstPostDate($this->facebookService->getFirstPostDate());
+                        ->setAccountName($facebookData['name']);
                     $facebookUser->save($con);
                     $facebookUserLog = FacebookUserLogQuery::create()
                         ->orderByCreatedAt('desc')
@@ -240,13 +236,15 @@ class LenderService
         return $lender;
     }
 
-    public function joinFacebookUser($facebookUser, $data)
+    public function joinFacebookUser($facebookUser, $country)
     {
-        $data += [
+        $data = [
             'email'        => $facebookUser['email'],
             'facebookId'   => $facebookUser['id'],
             'firstName'    => $facebookUser['first_name'],
             'lastName'     => $facebookUser['last_name'],
+            'countryId'    => $country['id'],
+            'username'     => $facebookUser['name'],
             'facebookData' => $facebookUser
         ];
 

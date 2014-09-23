@@ -12,9 +12,9 @@ class Utility {
 
     public static function getCountryCodeByIP(){
         $country = [
-            'code' => '',
-            'name' => '',
-            'id'   => '',
+            'code' => 'IN',
+            'name' => 'India',
+            'id'   => 7,
         ];
         $ip = \Request::getClientIp();
 
@@ -29,9 +29,9 @@ class Utility {
                     $country['name'] = $record->country->name;
                     $country['id']   = $dbCountry->getId();
                 }
-            } catch (AddressNotFoundException $e) {}
+            } catch (AddressNotFoundException $e) {
+            }
         }
-
         return $country;
     }
 

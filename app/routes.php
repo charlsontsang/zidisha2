@@ -94,10 +94,6 @@ Route::group(
             'lender/facebook/join',
             array('uses' => 'LenderJoinController@getFacebookJoin', 'as' => 'lender:facebook-join')
         );
-        Route::post(
-            'lender/facebook/join',
-            array('uses' => 'LenderJoinController@postFacebookJoin', 'as' => 'lender:post-facebook-join', 'before' => 'csrf')
-        );
         Route::get(
             'lender/google/join',
             array('uses' => 'LenderJoinController@getGoogleJoin', 'as' => 'lender:google-join')

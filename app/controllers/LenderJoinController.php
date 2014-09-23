@@ -71,37 +71,13 @@ class LenderJoinController extends BaseController
         $facebookUser = $this->lenderService->getFacebookUser();
 
         if ($facebookUser) {
-            $this->facebookService->addFacebookUserLog($facebookUser);
+            $this->facebookService->addFacebookUserLog($facebookUser, true);
             $country = Utility::getCountryCodeByIP();
-            return View::make('lender.join.facebook-join',
-                compact('country'), ['form' => $this->joinForm,]);
-        }
-
-        Flash::error('common.validation.link-account.facebook-no-account-connected');
-        return Redirect::route('lender:join');
-    }
-
-    public function postFacebookJoin()
-    {
-        $facebookUser = $this->lenderService->getFacebookUser();
-
-        if ($facebookUser) {
-            $form = $this->joinForm;
-            $form->setFacebookJoin(true);
-            $form->handleRequest(Request::instance());
-
-            if (!$form->isValid()) {
-                return Redirect::route('lender:facebook-join')->withForm($form);
-            }
-
-            $user = $this->lenderService->joinFacebookUser(
-                $facebookUser,
-                $form->getData()
-            );
+            $user = $this->lenderService->joinFacebookUser($facebookUser, $country);
 
             return $this->join($user);
         } else {
-            Flash::error('common.comments.flash.welcome');
+            Flash::error('common.validation.link-account.facebook-no-account-connected');
             return Redirect::route('lender:join');
         }
     }
