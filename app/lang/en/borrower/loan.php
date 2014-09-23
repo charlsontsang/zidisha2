@@ -30,7 +30,7 @@ return [
     'expires-at'                            => 'Expiration Date',
     'repayment-schedule'                    => [
         'title'             => 'Repayment Schedule',
-        'due-date'          => 'Due Date (Number of months after disbursement date)',
+        'due-date'          => 'Installment Number',
         'repayment-due'     => 'Repayment Due (:currencyCode)',
         'balance-remaining' => 'Balance Remaining',
         'total-repayment'   => 'Total Repayment',
@@ -61,7 +61,7 @@ return [
         'details' => 'Loan Details',
         'fully-funded' => [
             'instructions' => 'Use the form below to accept the bids.',
-            'accept-bids' => 'Accept Bids',
+            'accept-bids' => 'Accept Loan',
         ],
     ],
     'loan-funded' => [
