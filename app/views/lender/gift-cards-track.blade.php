@@ -5,8 +5,13 @@ Track Gift Cards
 @stop
 
 @section('content')
-
-<h1 class="page-title">Track Gift Cards</h1>
+<div class="row">
+    <div class="col-md-8 col-md-offset-2 text-center">
+        <div class="page-header">
+            <h1>Track Gift Cards</h1>
+        </div>
+    </div>
+</div>
 
 <div class="panel panel-info">
     <div class="panel-body">
@@ -27,11 +32,6 @@ Track Gift Cards
                 {{--</a>--}}
             {{--</div>--}}
         </div>
-    </div>
-</div>
-
-<div class="panel panel-info">
-    <div class="panel-body">
         <table class="table table-striped no-more-tables" id="track-cards">
             <thead>
                 <tr>

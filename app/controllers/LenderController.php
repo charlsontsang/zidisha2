@@ -296,9 +296,6 @@ class LenderController extends BaseController
         $totalLentAmount = TransactionQuery::create()
             ->getTotalLentAmount($userId);
 
-        $myImpact = $this->lenderService->getMyImpact($lender);
-        $totalImpact = $myImpact->add($totalLentAmount);
-
         $fundraisingLoanBids = new FundRaisingLoanBids($lender, $page);
         $activeLoanBids = new ActiveLoanBids($lender, $page2);
 
@@ -339,8 +336,6 @@ class LenderController extends BaseController
            'totalFundsUpload',
            'numberOfLoans',
            'totalLentAmount',
-           'myImpact',
-           'totalImpact',
            'loans',
            'fundraisingLoanBids',
            'activeLoanBids',

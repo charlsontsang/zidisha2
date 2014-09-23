@@ -21,9 +21,6 @@
                 @else
                     <img src="/assets/images/carousel/mary.jpg" width="300px">
                 @endif
-                <div class="carousel-caption caption-group">
-                    <h3>{{ $group->getName() }}</h3>
-                </div>
             </div>
         </div>
     </div>
@@ -31,78 +28,85 @@
 
 @section('content')
 <div class="row">
-    <div class="col-sm-8 loan-body">
+    <div class="col-sm-8">
+        <div class="highlight highlight-panel group">
 
-        <div class="loan-section">
-            <div class="loan-section-title">
-                <span class="text-light">Impact</span>
+            <div class="group-title">
+                <h1>{{ $group->getName() }}</h1>
+                <hr/>
             </div>
-            <div class="loan-section-content">
-                <p>This month: <strong>{{ $groupImpacts['totalImpactThisMonth'] }}</strong>
-                </p>
-                <p>Last month: <strong>{{ $groupImpacts['totalImpactLastMonth'] }}</strong>
-                </p>
-        
-                <p>
-                    All time: <strong>{{ $groupImpacts['totalImpact'] }}</strong>
-                </p>
-            </div>
-        </div>
 
-        <hr/>
+            <div class="loan-section">
 
-        <div class="loan-section">
-            <div class="loan-section-title">
-                <span class="text-light">About</span>
-            </div>
-            <div class="loan-section-content">
-                <p>{{ $group->getAbout() }}</p>
-            </div>
-        </div>
-
-        <hr/>
-
-        <div class="loan-section">
-            <div class="loan-section-title">
-                <span class="text-light">Members</span>
-            </div>
-            <div class="loan-section-content">
-                {{ $membersCount }} Members
-                @if($membersCount > 0)
-                <div class="Members">
-                    <a class="previous-loans" id="toggle-btn"
-                       data-toggle="collapse" data-target="#toggle-example">View Members</a>
-
-                    <div id="toggle-example" class="collapse">
-                        @foreach($members as $member)
-                        <p>
-                            <a href="{{ route('lender:public-profile', $member->getMember()->getId()) }}">
-                                {{ $member->getMember()->getUser()->getUserName() }}
-                            </a>
-                            @if($group->isLeader($member->getMember()))
-                                <span class="label label-info">Leader</span>
-                            @endif
-                        </p>
-                        @endforeach
-                    </div>
+                <div class="loan-section-title">
+                    <span class="text-light">Impact</span>
                 </div>
-                @endif
+                <div class="loan-section-content">
+                    <p>This month: <strong>{{ $groupImpacts['totalImpactThisMonth'] }}</strong>
+                    </p>
+                    <p>Last month: <strong>{{ $groupImpacts['totalImpactLastMonth'] }}</strong>
+                    </p>
+                    <p>
+                        All time: <strong>{{ $groupImpacts['totalImpact'] }}</strong>
+                    </p>
+                </div>
             </div>
+
+            <hr/>
+
+            <div class="loan-section">
+                <div class="loan-section-title">
+                    <span class="text-light">About</span>
+                </div>
+                <div class="loan-section-content">
+                    <p>{{ $group->getAbout() }}</p>
+                </div>
+            </div>
+
+            <hr/>
+
+            <div class="loan-section">
+                <div class="loan-section-title">
+                    <span class="text-light">Members</span>
+                </div>
+                <div class="loan-section-content">
+                    {{ $membersCount }} Members
+                    @if($membersCount > 0)
+                    <div class="Members">
+                        <a class="previous-loans" id="toggle-btn"
+                           data-toggle="collapse" data-target="#toggle-example">View Members</a>
+
+                        <div id="toggle-example" class="collapse">
+                            @foreach($members as $member)
+                            <p>
+                                <a href="{{ route('lender:public-profile', $member->getMember()->getId()) }}">
+                                    {{ $member->getMember()->getUser()->getUserName() }}
+                                </a>
+                                @if($group->isLeader($member->getMember()))
+                                    <span class="label label-info">Leader</span>
+                                @endif
+                            </p>
+                            @endforeach
+                        </div>
+                    </div>
+                    @endif
+                </div>
+            </div>
+
+            <hr/>
+
+            <div class="loan-section">
+                <div class="loan-section-title">
+                    <span class="text-light">Discussion</span>
+                </div>
+                <div class="loan-section-content">
+                    <p></p>
+                </div>
+            </div>
+
+            @include('partials.comments.comments', ['comments' => $comments, 'controller' => 'LendingGroupCommentController', 'canPostComment' => $canPostComment, 'canReplyComment' => $canReplyComment])
+                
         </div>
-
-        <hr/>
-
-        <div class="loan-section">
-            <div class="loan-section-title">
-                <span class="text-light">Discussion</span>
-            </div>
-            <div class="loan-section-content">
-                <p></p>
-            </div>
-        </div>
-
-        @include('partials.comments.comments', ['comments' => $comments, 'controller' => 'LendingGroupCommentController', 'canPostComment' => $canPostComment, 'canReplyComment' => $canReplyComment])
-            
     </div>
 
     <div class="col-xs-4">
@@ -112,7 +116,7 @@
                 Leave this group
             </a>
             @else
-            <a href="{{ route('lender:group:join', $group->getId()) }}" class="btn btn-block btn-primary join-group">
+            <a href="{{ route('lender:group:join', $group->getId()) }}" class="btn btn-primary join-group">
                 Join this group
             </a>
             @endif

@@ -54,7 +54,13 @@ Quick Links
     	@if (!empty($fundedFollowers))
 			@include('lender.follow.followers', ['followers' => $fundedFollowers])
 		@else
-    		After you lend, you can set your follow preference for each entrepreneur you fund here. <a href="{{ route('lender:edit-profile') }}" class="btn btn-primary pull-right">Make a loan</a>
+            <div class="row">
+                <div class="col-sm-9">
+    		      After you lend, you can set your follow preference for each entrepreneur you fund here.
+                </div>
+                <div class="col-sm-3">
+                    <a href="{{ route('lender:edit-profile') }}" class="btn btn-primary pull-right">Make a loan</a>
+                </div>
     	@endif
     </div>
 </div>

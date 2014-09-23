@@ -38,11 +38,11 @@ class LendController extends BaseController
         //for loans
         $conditions = [];
         $sortConditions = array(
-            'repaymentRate'  => 'Repayment Rate',
             'recentlyAdded'  => 'Recently Added',
             'expiringSoon'   => 'Expiring Soon',
             'almostFunded'   => 'Almost Funded',
             'mostDiscussed' => 'Most Discussed',
+            'repaymentRate'  => 'Repayment Rate',
         );
 
         $loanCategoryName = $category;
@@ -53,7 +53,7 @@ class LendController extends BaseController
         $routeParams = [
             'category' => 'all',
             'country' => 'everywhere',
-            'sortBy' => 'repaymentRate'
+            'sortBy' => 'recentlyAdded'
         ];
 
 

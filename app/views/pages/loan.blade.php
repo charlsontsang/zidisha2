@@ -122,7 +122,7 @@
 
                                 On-Time Repayments:{{ BootstrapHtml::tooltip('borrower.tooltips.loan.on-time-repayments') }}
                                 @if($repaymentScore['totalTodayInstallmentCount'] == 0)
-                                    <strong> "New Member" </strong>
+                                    <strong>New Member</strong>
                                 @else
                                     <strong> {{ $repaymentScore['repaymentScore'] }}%
                                         ({{ $repaymentScore['totalTodayInstallmentCount'] }})
@@ -131,24 +131,18 @@
                                 <br/>
                                 
                                 @if($previousLoans != null)
-                                <div class="DemoBS2">
-                                    <!-- Toogle Buttons -->
-                                    <a class="previous-loans" id="toggle-btn"
-                                       data-toggle="collapse" data-target="#toggle-example">View Previous Loans</a>
+                                    <a href="#" id="previous-loans">View Previous Loans</a>
 
-                                    <div id="toggle-example" class="collapse">
+                                    <div id="show-previous-loans" class="collapse">
                                         @foreach($previousLoans as $oneLoan)
-                                        <p><a href="{{ route('loan:index', $oneLoan->getId()) }}">{{ $oneLoan->getUsdAmount() }}
-                                                {{ $oneLoan->getAppliedAt()->format('d-m-Y') }}
-                                                {{-- TODO $oneLoan->getAcceptedAt()->format('d-m-Y')
-                                                $oneLoan->getExpiredDate()->format('d-m-Y')
-                                                TODO change Amount to disbursedAmount in USD
-                                                --}}
+                                        <p><a href="{{ route('loan:index', $oneLoan->getId()) }}">
+                                            {{ $oneLoan->getAppliedAt()->format('M Y') }}:&nbsp;
+                                            <!-- TO DO {{ $oneLoan->getRepaidAt() }} -->
+                                            ${{ $oneLoan->getUsdAmount()->ceil()->format(0) }}
                                             </a>
                                         </p>
                                         @endforeach
                                     </div>
-                                </div>
                                 @endif
                             </div>
                         </div>
@@ -453,14 +447,6 @@
             </span>
             @endif
 
-            @if($loan->isDefaulted())
-            <span class="label label-default">
-                Loan defaulted
-            </span>
-            <br/>
-            <br/>
-            @endif
-
             @if($loan->isDisbursed())
                 @include('loan.partials.repaid-bar', compact('loan'))
             @endif
@@ -483,8 +469,7 @@
                 href="{{ route('lender:follow', $borrower->getId()) }}"
                 class="btn btn-default btn-block followBorrower"
                 style="{{ $follower ? 'display:none' : '' }}"
-                data-follow="follow"
-                data-toggle="tooltip">
+                data-follow="follow">
                 
                 <i class="fa fa-fw fa-bookmark"></i>
                 Follow {{ $borrower->getFirstName() }}
@@ -495,9 +480,16 @@
             ])
             @endif
         @else
-            <div class="text-center">
-                @lang('lender.follow.login', ['name' => $borrower->getFirstName(), 'link' => route('login')])                        
-            </div>
+            <a
+                id="follow-button"
+                href="{{ route('login') }}" 
+                data-toggle="modal" 
+                data-target="#login-modal" 
+                class="btn btn-default btn-block followBorrower">
+                
+                <i class="fa fa-fw fa-bookmark"></i>
+                Follow {{ $borrower->getFirstName() }}
+            </a>
         @endif
         </div>
 
@@ -536,7 +528,14 @@
             $(this).tab('show');
         });
 
-        $('.followBorrower').tooltip({placement: 'bottom', title: 'Receive an email when this borrower posts a new comment or loan application.'})
+        $('.followBorrower').tooltip({
+            placement: 'left', 
+            title: 'Receive an email when this borrower posts a new comment or loan application.'
+        })
+    });
+    $('#previous-loans').click(function () {
+        $("#show-previous-loans").collapse('toggle');
+        return false;
     });
 </script>
 @append

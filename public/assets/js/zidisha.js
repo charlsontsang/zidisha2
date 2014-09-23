@@ -349,7 +349,46 @@ var handler;
         }
     }
 
-    $donationAmount.on('keyup', calculateAmounts);
+    function updateDonation() {
+        if ($('#donation-percent').val() == 'other') {
+            $('#donation-amount').val('').focus();
+        } else {
+            var $donationBase = $amount.val() * $('#donation-percent').val();
+            $('#donation-amount').val(formatMoney($donationBase, 2));
+        }
+    }
+
+    $('document').ready(function() {
+        updateDonation();
+    });
+
+    $('#lend-action').on('click', function() {
+        $('#lend-details').show();
+        $('#lend-form-initial').hide();
+        updateDonation();
+        calculateAmounts();
+        return false;
+    });
+
+    $('#donation-percent').on('change', function() {
+        updateDonation();
+        calculateAmounts();
+    });
+
+    $donationAmount.on('keyup', function() {
+        calculateAmounts();
+        if ($('#donation-amount').val() == $amount.val() * .2) {
+            $('#donation-percent').val('.2');
+        } else if ($('#donation-amount').val() == $amount.val() * .15) {
+            $('#donation-percent').val('.15');
+        } else if ($('#donation-amount').val() == $amount.val() * .1) {
+            $('#donation-percent').val('.1');
+        } else if ($('#donation-amount').val() == 0) {
+            $('#donation-percent').val('0');
+        } else {
+            $('#donation-percent').val('other');
+        }
+    });
     $amount.on('keyup', calculateAmounts);
 
     calculateAmounts();
