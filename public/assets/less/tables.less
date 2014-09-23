@@ -13,9 +13,6 @@ table.dataTable {
 }
 
 /* make full width and height when inside panel */
-.panel-info .dataTables_wrapper {
-  margin: -15px;
-}
 .highlight-panel .dataTables_wrapper {
   margin: -15px;
   @media (min-width: @screen-sm-min) {
@@ -25,6 +22,14 @@ table.dataTable {
 .highlight-panel table.dataTable {
   border-right: none;
   border-left: none;
+}
+.panel-info .dataTables_wrapper {
+  margin: -15px;
+}
+.panel-info table.dataTable {
+  border-right: none;
+  border-left: none;
+  border-bottom: none;
 }
 .panel-info .dataTables_filter label, .highlight-panel .dataTables_filter label {
   margin-top: 15px;
