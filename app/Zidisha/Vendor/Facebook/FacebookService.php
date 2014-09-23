@@ -101,7 +101,7 @@ class FacebookService
             ->setFacebookId($facebookData['id'])
             ->setEmail($facebookData['email'])
             ->setAccountName($facebookData['name'])
-            ->setCity($facebookData['location']['name'])
+            ->setCity(array_get($facebookData, 'location.name'))
             ->setBirthDate($facebookData['birthday'])
             ->setFriendsCount($this->getFriendCount())
             ->setFirstPostDate($this->getFirstPostDate());

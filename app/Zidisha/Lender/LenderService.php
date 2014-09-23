@@ -212,7 +212,7 @@ class LenderService
                         ->setUser($user)
                         ->setEmail($facebookData['email'])
                         ->setAccountName($facebookData['name'])
-                        ->setCity($facebookData['location']['name'])
+                        ->setCity(array_get($facebookData, 'location.name'))
                         ->setBirthDate($facebookData['birthday'])
                         ->setFriendsCount($this->facebookService->getFriendCount())
                         ->setFirstPostDate($this->facebookService->getFirstPostDate());
