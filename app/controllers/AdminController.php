@@ -807,7 +807,7 @@ class AdminController extends BaseController
         }
         
         return View::make(
-            'admin.repayments',
+            'admin.repayments.repayments',
             compact('paymentCounts', 'form', 'filterForm', 'borrowers')
         );
     }
@@ -855,7 +855,7 @@ class AdminController extends BaseController
         } else {
             $deletable = false;
         }
-        return View::make('admin.repayment-process', compact('name', 'payments', 'status', 'deletable'));
+        return View::make('admin.repayments.repayment-process', compact('name', 'payments', 'status', 'deletable'));
     }
 
     public function postRepaymentProcess()
@@ -878,7 +878,7 @@ class AdminController extends BaseController
     public function getRepaymentRefund()
     {
         $refunds = $this->repaymentService->getBorrowerRefunds(false);
-        return View::make('admin.repayment-refunds', compact('refunds'));
+        return View::make('admin.repayments.repayment-refunds', compact('refunds'));
     }
 
     public function postRepaymentRefund()
@@ -930,7 +930,7 @@ class AdminController extends BaseController
         $form = new EnterRepaymentForm();
 
         return View::make(
-            'admin.repayment-schedule',
+            'admin.repayments.repayment-schedule',
             compact('borrower', 'loan', 'repaymentSchedule', 'allowPayment', 'form')
         );
     }

@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('page-title')
-Join the global P2P microlending movement
+Edit Borrower Profile
 @stop
 
 @section('content')
