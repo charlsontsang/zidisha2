@@ -137,7 +137,7 @@
                                         @foreach($previousLoans as $oneLoan)
                                         <p><a href="{{ route('loan:index', $oneLoan->getId()) }}">
                                             {{ $oneLoan->getAppliedAt()->format('M Y') }}:&nbsp;
-                                            <!-- TO DO {{ $oneLoan->getRepaidAt() }} -->
+                                            {{-- TODO {{ $oneLoan->getRepaidAt()->format('M Y') }}--}}
                                             ${{ $oneLoan->getUsdAmount()->ceil()->format(0) }}
                                             </a>
                                         </p>
