@@ -22,10 +22,6 @@
 
         @include('borrower.loan.partials.loan-information-fundraising', compact('loan', 'installmentCalculator'))
 
-        <p>
-            @lang('borrower.loan.accept-bids.schedule')
-        </p>
-
         @include('borrower.loan.partials.repayment-schedule-installments', compact('repaymentSchedule'))
 
         {{ BootstrapForm::open([
