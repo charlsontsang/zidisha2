@@ -1,1 +1,0 @@
-[deactivation one-month warning message here]
