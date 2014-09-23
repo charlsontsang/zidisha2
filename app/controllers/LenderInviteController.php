@@ -79,7 +79,7 @@ class LenderInviteController extends BaseController
 
     public function getHowItWorks()
     {
-        return View::make('lender.how-it-works');
+        return View::make('lender.invite-terms');
     }
 
     public function postInvite()
