@@ -164,7 +164,7 @@ class AdminController extends BaseController
             ->orderById()
             ->paginate($page, 100);
 
-        return View::make('admin.borrowers', compact('paginator', 'form'));
+        return View::make('admin.borrowers.index', compact('paginator', 'form'));
     }
 
     public function getBorrower($borrowerId)
@@ -181,7 +181,7 @@ class AdminController extends BaseController
         $loans = LoanQuery::create()
             ->filterByBorrowerId($borrowerId);
 
-        return View::make('admin.borrower', compact('borrower', 'personalInformation', 'loans'));
+        return View::make('admin.borrowers.profile', compact('borrower', 'personalInformation', 'loans'));
     }
 
     public function getBorrowerEdit($borrowerId)
@@ -197,7 +197,7 @@ class AdminController extends BaseController
         $form = new AdminEditForm($borrower);
 
         return \View::make(
-            'admin.borrower-information',
+            'admin.borrowers.edit',
             compact('form', 'borrower', 'borrowerId')
         );
     }
