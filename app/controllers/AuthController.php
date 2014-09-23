@@ -8,6 +8,8 @@ use Zidisha\Borrower\BorrowerService;
 use Zidisha\Borrower\JoinLogQuery;
 use Zidisha\Country\CountryQuery;
 use Zidisha\Lender\Form\JoinForm;
+use Zidisha\Lender\InviteVisitQuery;
+use Zidisha\Lender\Lender;
 use Zidisha\Lender\LenderService;
 use Zidisha\User\FacebookUserLogQuery;
 use Zidisha\User\User;
@@ -122,9 +124,7 @@ class AuthController extends BaseController
             } else {
                 $country = Utility::getCountryCodeByIP();
                 $user = $this->lenderService->joinFacebookUser($facebookUser, $country);
-                /** @var LenderJoinController $lenderJoinController */
-                $lenderJoinController = \App::make('controllers\LenderJoinController');
-                return $lenderJoinController->join($user);
+                return $this->join($user);
             }
             return $this->login();
         } else {
@@ -267,9 +267,7 @@ class AuthController extends BaseController
                             $contacts = $this->googleService->getContacts($googleUser, Session::get('accessToken'));
                             Session::forget('accessToken');
 
-                            /** @var LenderJoinController $lenderJoinController */
-                            $lenderJoinController = \App::make('controllers\LenderJoinController');
-                            $response = $lenderJoinController->join($user);
+                            $response = $this->join($user);
                             if ($contacts) {
                                 return View::make('lender.invite-google-contacts',
                                     compact('contacts'));
@@ -293,4 +291,27 @@ class AuthController extends BaseController
         $this->facebookService->logout();
     }
 
+    protected function join(Lender $user)
+    {
+        Auth::login($user->getUser());
+
+        if (Session::get('lenderInviteVisitId')) {
+            $lenderInviteVisit = InviteVisitQuery::create()
+                ->findOneById(Session::get('lenderInviteVisitId'));
+            $inviter = $lenderInviteVisit->getLender()->getUser();
+
+            $this->lenderService->processLenderInvite($user, $lenderInviteVisit);
+            Session::forget('lenderInviteVisitId');
+            Flash::modal(View::make('lender.invite-new-account', compact('inviter'))->render());
+        } else {
+            Flash::success('common.comments.flash.welcome');
+        }
+        if (Session::get('lenderJoin')) {
+            $params = Session::get('lenderJoin');
+            Session::forget('lenderJoin');
+            return Redirect::route('loan:index', $params);
+        }
+
+        return Redirect::route('lender:welcome');
+    }
 }
