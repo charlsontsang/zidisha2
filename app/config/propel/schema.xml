@@ -23,12 +23,6 @@
         <foreign-key foreignTable="uploads" phpName="ProfilePicture">
             <reference local="profile_picture_id" foreign="id"/>
         </foreign-key>
-        <unique>
-            <unique-column name="email"/>
-        </unique>
-        <!--<unique>-->
-            <!--<unique-column name="email"/>-->
-        <!--</unique>-->
     </table>
 
     <table name="loan_categories" phpName="Category" namespace="Loan">

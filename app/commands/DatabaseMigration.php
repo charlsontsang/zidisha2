@@ -98,6 +98,7 @@ class DatabaseMigration extends Command {
                         'l.userid as lUserid',
                         'l.Email as lEmail',
                         'l.Active as lActive',
+                        'l.isTranslator as isTranslator',
                         'b.userid as bUserid',
                         'b.Email as bEmail',
                         'b.Active as bActive',
@@ -121,34 +122,41 @@ class DatabaseMigration extends Command {
                     6 => 2, // partner                  
                     9 => 3, // admin
                 ];
-                               
+
+                $sub_role = null;
                 foreach ($users as $user) {
                     // lender
                     if ($user->lUserid !== null) {
                         $active = $user->lActive ? true : false;
                         $email = $user->lEmail;
                         $role = 0;
+                        $sub_role = $user->isTranslator ? 0 : null; // volunteer
                     }
                     // borrower
                     elseif ($user->bUserid !== null) {
                         $active = $user->lActive ? true : false;
-                        $email = $user->lEmail;
+                        $email = $user->bEmail;
                         $role = 1;
                     }
-                    elseif ($user->userid == 92) { // TODO, partner?
+                    elseif ($user->userid == 92) {
                         $active = true;
                         $email = 'admin@zidisha.org';
                         $role = 3;
                     }
+                    elseif ($user->userid == 1690) { // user adminread, only user with read-only sublevel
+                        $active = false;
+                        $email = '';
+                        $role = 3;
+                    }
                     // partner
                     elseif ($user->pUserid !== null) {
-                        $active = $user->pActive ? true : false;
+                        $active = false; //$user->pActive ? true : false;
                         $email = $user->pEmail;
                         $role = 2;
                     }
                     else {
                         $active = false;
-                        $email = 'fake_email_' . $user->userid . '@zidisha.org';
+                        $email = '';
                         $role = $roles[$user->userlevel];
                     }
                                         
@@ -163,7 +171,7 @@ class DatabaseMigration extends Command {
                         'google_picture'     => null,
                         'remember_token'     => null, // this cannot be shared between old and new codebase
                         'role'               => $role,
-                        'sub_role'           => null, // TODO
+                        'sub_role'           => $sub_role,
                         'joined_at'          => date("Y-m-d H:i:s", $user->regdate),
                         'last_login_at'      => date("Y-m-d H:i:s", $user->last_login),
                         'created_at'         => date("Y-m-d H:i:s", $user->regdate),
