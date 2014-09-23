@@ -61,8 +61,13 @@ class AuthController extends BaseController
     {
         $rememberMe = Input::has('remember_me');
         $credentials = Input::only('email', 'password');
+        $countryDate = Utility::getCountryCodeByIP();
+        $isLenderCountry = CountryQuery::create()
+            ->filterByBorrowerCountry(false)
+            ->filterByCountryCode($countryDate['code'])
+            ->count();
         
-        $form = new LoginForm($this->facebookService, $this->googleService);
+        $form = new LoginForm($this->facebookService, $this->googleService, $isLenderCountry);
         $form->handleRequest(Request::instance());
 
         if ($form->isValid() && $this->authService->attempt($credentials, $rememberMe)) {
@@ -116,8 +121,10 @@ class AuthController extends BaseController
                 Auth::loginUsingId($checkUser->getId());
             } else {
                 $country = Utility::getCountryCodeByIP();
-                return View::make('lender.join.facebook-join',
-                    compact('country'), ['form' => $this->joinForm,]);
+                $user = $this->lenderService->joinFacebookUser($facebookUser, $country);
+                /** @var LenderJoinController $lenderJoinController */
+                $lenderJoinController = \App::make('controllers\LenderJoinController');
+                return $lenderJoinController->join($user);
             }
             return $this->login();
         } else {
