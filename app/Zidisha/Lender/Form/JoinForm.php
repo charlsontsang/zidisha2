@@ -32,7 +32,7 @@ class JoinForm extends AbstractForm
     public function __construct(FacebookService $facebookService, GoogleService $googleService)
     {
         $this->country = Utility::getCountryCodeByIP();
-        $this->facebookJoinUrl = $facebookService->getLoginUrl('lender:facebook-join');
+        $this->facebookJoinUrl = $facebookService->getLoginUrl('lender:facebook-join', [], true);
         $this->googleJoinUrl  = $googleService->getLoginUrl('lender:google-join') . '&max_auth_age=0';
         $this->facebookService = $facebookService;
         $this->googleService = $googleService;

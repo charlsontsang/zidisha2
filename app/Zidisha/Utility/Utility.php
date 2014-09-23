@@ -29,7 +29,8 @@ class Utility {
                     $country['name'] = $record->country->name;
                     $country['id']   = $dbCountry->getId();
                 }
-            } catch (AddressNotFoundException $e) {}
+            } catch (AddressNotFoundException $e) {
+            }
         }
 
         return $country;

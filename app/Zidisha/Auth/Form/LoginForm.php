@@ -26,12 +26,16 @@ class LoginForm extends AbstractForm
 
     protected $joinLink;
 
-    public function __construct(FacebookService $facebookService, GoogleService $googleService)
+    public function __construct(FacebookService $facebookService, GoogleService $googleService, $isLenderCountry = false)
     {
         $this->facebookService = $facebookService;
         $this->googleService = $googleService;
 
-        $this->facebookLoginUrl = $this->facebookService->getLoginUrl('facebook:login');
+        if ($isLenderCountry) {
+            $this->facebookLoginUrl = $this->facebookService->getLoginUrl('facebook:login', [], true);
+        } else {
+            $this->facebookLoginUrl = $this->facebookService->getLoginUrl('facebook:login');
+        }
         $this->googleLoginUrl = $this->googleService->getLoginUrl('google:login');
         $this->joinLink = $this->getJoinLink();
     }

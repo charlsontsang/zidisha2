@@ -18,10 +18,15 @@ class FacebookService
         ));
     }
 
-    public function getLoginUrl($route, $params = [])
+    public function getLoginUrl($route, $params = [], $forLender = false)
     {
+        if ($forLender) {
+            $scope = 'email';
+        } else {
+            $scope = 'email, user_actions.news, user_birthday, user_location, read_stream';
+        }
         $defaults = [
-            'scope' => 'email, user_actions.news, user_birthday, user_location, read_stream',
+            'scope' => $scope,
             'redirect_uri' => strpos($route, '@') === false ? route($route) : action($route),
             'auth_type' => 'reauthenticate',
         ];
@@ -29,10 +34,15 @@ class FacebookService
         return $this->facebook->getLoginUrl($params + $defaults);
     }
 
-    public function getLogoutUrl($route, $params = [])
+    public function getLogoutUrl($route, $params = [], $forLender = false)
     {
+        if ($forLender) {
+            $scope = 'email';
+        } else {
+            $scope = 'email, user_actions.news, user_birthday, user_location, read_stream';
+        }
         $defaults = [
-            'scope' => 'email, user_actions.news, user_birthday, user_location, read_stream',
+            'scope' => $scope,
             'redirect_uri' => strpos($route, '@') === false ? route($route) : action($route),
             'auth_type' => 'reauthenticate',
         ];
@@ -95,16 +105,19 @@ class FacebookService
         return $post['data'][0]['created_time'];
     }
 
-    public function addFacebookUserLog($facebookData){
+    public function addFacebookUserLog($facebookData, $forLender = false){
         $facebookUserLog = new FacebookUserLog();
         $facebookUserLog
             ->setFacebookId($facebookData['id'])
             ->setEmail($facebookData['email'])
-            ->setAccountName($facebookData['name'])
-            ->setCity(array_get($facebookData, 'location.name'))
-            ->setBirthDate($facebookData['birthday'])
-            ->setFriendsCount($this->getFriendCount())
-            ->setFirstPostDate($this->getFirstPostDate());
+            ->setAccountName($facebookData['name']);
+        if (!$forLender) {
+            $facebookUserLog
+                ->setCity($facebookData['location']['name'])
+                ->setBirthDate($facebookData['birthday'])
+                ->setFriendsCount($this->getFriendCount())
+                ->setFirstPostDate($this->getFirstPostDate());
+        }
         $facebookUserLog->save();
     }
 }

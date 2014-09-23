@@ -30,7 +30,7 @@ Invite Your Friends to Zidisha
     </tbody>
 </table>
 <button id="invite-google" class="btn btn-primary" type="submit">Invite Friends</button>
-<a href="{{ route('lender:dashboard') }}" >
+<a href="{{ route('lender:welcome') }}" >
     Skip this step
 </a>
 {{ BootstrapForm::close() }}

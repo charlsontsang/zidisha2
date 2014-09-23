@@ -8,6 +8,8 @@ use Zidisha\Borrower\BorrowerService;
 use Zidisha\Borrower\JoinLogQuery;
 use Zidisha\Country\CountryQuery;
 use Zidisha\Lender\Form\JoinForm;
+use Zidisha\Lender\InviteVisitQuery;
+use Zidisha\Lender\Lender;
 use Zidisha\Lender\LenderService;
 use Zidisha\User\FacebookUserLogQuery;
 use Zidisha\User\User;
@@ -61,8 +63,13 @@ class AuthController extends BaseController
     {
         $rememberMe = Input::has('remember_me');
         $credentials = Input::only('email', 'password');
+        $countryDate = Utility::getCountryCodeByIP();
+        $isLenderCountry = CountryQuery::create()
+            ->filterByBorrowerCountry(false)
+            ->filterByCountryCode($countryDate['code'])
+            ->count();
         
-        $form = new LoginForm($this->facebookService, $this->googleService);
+        $form = new LoginForm($this->facebookService, $this->googleService, $isLenderCountry);
         $form->handleRequest(Request::instance());
 
         if ($form->isValid() && $this->authService->attempt($credentials, $rememberMe)) {
@@ -116,8 +123,18 @@ class AuthController extends BaseController
                 Auth::loginUsingId($checkUser->getId());
             } else {
                 $country = Utility::getCountryCodeByIP();
-                return View::make('lender.join.facebook-join',
-                    compact('country'), ['form' => $this->joinForm,]);
+                if ($country['code'] == '') {
+                    $defaultCountry = CountryQuery::create()
+                        ->getOneByCountryCode('US');
+
+                    $country = [
+                        'code' => $defaultCountry->getCountryCode(),
+                        'name' => $defaultCountry->getName(),
+                        'id'   => $defaultCountry->getId(),
+                    ];
+                }
+                $user = $this->lenderService->joinFacebookUser($facebookUser, $country);
+                return $this->join($user);
             }
             return $this->login();
         } else {
@@ -253,8 +270,29 @@ class AuthController extends BaseController
                             Auth::loginUsingId($checkUser->getId());
                         } else {
                             $country = Utility::getCountryCodeByIP();
-                            return View::make('lender.join.google-join',
-                                compact('country'), ['form' => $this->joinForm,]);
+                            if ($country['code'] == '') {
+                                $defaultCountry = CountryQuery::create()
+                                    ->getOneByCountryCode('US');
+
+                                $country = [
+                                    'code' => $defaultCountry->getCountryCode(),
+                                    'name' => $defaultCountry->getName(),
+                                    'id'   => $defaultCountry->getId(),
+                                ];
+                            }
+                            $user = $this->lenderService->joinGoogleUser(
+                                $googleUser, $country
+                            );
+
+                            $contacts = $this->googleService->getContacts($googleUser, Session::get('accessToken'));
+                            Session::forget('accessToken');
+
+                            $response = $this->join($user);
+                            if ($contacts) {
+                                return View::make('lender.join.invite-contacts',
+                                    compact('contacts'));
+                            }
+                            return $response;
                         }
                         return $this->login();
                     }
@@ -273,4 +311,27 @@ class AuthController extends BaseController
         $this->facebookService->logout();
     }
 
+    protected function join(Lender $user)
+    {
+        Auth::login($user->getUser());
+
+        if (Session::get('lenderInviteVisitId')) {
+            $lenderInviteVisit = InviteVisitQuery::create()
+                ->findOneById(Session::get('lenderInviteVisitId'));
+            $inviter = $lenderInviteVisit->getLender()->getUser();
+
+            $this->lenderService->processLenderInvite($user, $lenderInviteVisit);
+            Session::forget('lenderInviteVisitId');
+            Flash::modal(View::make('lender.invite.new-account', compact('inviter'))->render());
+        } else {
+            Flash::success('common.comments.flash.welcome');
+        }
+        if (Session::get('lenderJoin')) {
+            $params = Session::get('lenderJoin');
+            Session::forget('lenderJoin');
+            return Redirect::route('loan:index', $params);
+        }
+
+        return Redirect::route('lender:welcome');
+    }
 }
