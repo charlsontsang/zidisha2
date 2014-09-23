@@ -45,7 +45,7 @@
     </div>
 </div>
 
-@include('partials._modal', [
+@include('partials.modal', [
     'title' => 'Thanks for sharing!',
     'body' => 'Know someone else who might like to try direct microlending?
                Send them $25 to lend at Zidisha for free!<br/>

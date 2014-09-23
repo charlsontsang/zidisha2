@@ -40,7 +40,7 @@ Quick Links
 
             <p>{{ Request::query('status')?: 'Fund Raising' }}</p>
         </td>
-        <td>@include('partials/_progress', [ 'raised' => rand(1,100)])</td>
+        <td>@include('partials/progress', [ 'raised' => rand(1,100)])</td>
         <td>
             <p><a href="{{ route('admin:borrower:personal-information', $loan->getBorrower()->getUser()->getUsername()) }}">
                {{ $loan->getBorrower()->getFirstName() }} {{ $loan->getBorrower()->getLastName() }}

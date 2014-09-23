@@ -60,7 +60,7 @@
             } );
         </script>
         @yield('script-footer')
-        @include('partials/_flash')
+        @include('partials/flash')
         <!-- Mixpanel -->
         {{ \Zidisha\Vendor\Mixpanel::bodyScript() }}
     </body>
