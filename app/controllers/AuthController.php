@@ -260,8 +260,21 @@ class AuthController extends BaseController
                             Auth::loginUsingId($checkUser->getId());
                         } else {
                             $country = Utility::getCountryCodeByIP();
-                            return View::make('lender.join.google-join',
-                                compact('country'), ['form' => $this->joinForm,]);
+                            $user = $this->lenderService->joinGoogleUser(
+                                $googleUser, $country
+                            );
+
+                            $contacts = $this->googleService->getContacts($googleUser, Session::get('accessToken'));
+                            Session::forget('accessToken');
+
+                            /** @var LenderJoinController $lenderJoinController */
+                            $lenderJoinController = \App::make('controllers\LenderJoinController');
+                            $response = $lenderJoinController->join($user);
+                            if ($contacts) {
+                                return View::make('lender.invite-google-contacts',
+                                    compact('contacts'));
+                            }
+                            return $response;
                         }
                         return $this->login();
                     }
