@@ -49,7 +49,7 @@ class HomeController extends BaseController {
         $conditions['categoryId'] = '18';
         $projects = $this->loanService->searchLoans($conditions, 1, 3);
 
-        return View::make('lender-home', compact('estherCaption', 'fatouCaption', 'melitaCaption', 'binetaCaption', 'maryCaption', 'secondaryCaption','buttonText', 'buttonTextBottom', 'buttonLink', 'projects'));
+        return View::make('lender.lender-home', compact('estherCaption', 'fatouCaption', 'melitaCaption', 'binetaCaption', 'maryCaption', 'secondaryCaption','buttonText', 'buttonTextBottom', 'buttonLink', 'projects'));
     }
 
     private function getBorrowerHome(Country $country)
@@ -98,7 +98,7 @@ class HomeController extends BaseController {
         $requirementsContentBusiness = \Lang::get('borrower.borrow.requirements-content-business', array('installmentFrequency' => $period));
         $howMuchContent = \Lang::get('borrower.borrow.how-much-content', compact('firstLoanVal', 'firstLoanValInvited'));
         
-        return View::make('borrower-home', compact (
+        return View::make('borrower.borrower-home', compact (
             'advantage3', 'requirementsContentBusiness', 'howMuchContent', 'regFeeNote', 'creditLimitProgression'
         ));
     }
