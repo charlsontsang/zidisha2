@@ -22,6 +22,8 @@ return [
     'total-interest-and-fees'               => 'Total Interest and Transaction Fees',
     'monthly-interest-rate'                 => ':interestRate % annual rate for :period months',
     'weekly-interest-rate'                  => ':interestRate % annual rate for :period weeks',
+    'weeks'                                 => 'weeks',
+    'months'                                => 'months',
     'total-amount'                          => 'Total Amount (Including Interest and Transaction Fee) to be Repaid',
     'total-amount-due'                      => 'Total Repayment Due',
     'total-amount-due-date'                 => 'Total Repayment Due Date',
