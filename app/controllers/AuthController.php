@@ -269,7 +269,7 @@ class AuthController extends BaseController
 
                             $response = $this->join($user);
                             if ($contacts) {
-                                return View::make('lender.invite-google-contacts',
+                                return View::make('lender.join.invite-contacts',
                                     compact('contacts'));
                             }
                             return $response;
@@ -302,7 +302,7 @@ class AuthController extends BaseController
 
             $this->lenderService->processLenderInvite($user, $lenderInviteVisit);
             Session::forget('lenderInviteVisitId');
-            Flash::modal(View::make('lender.invite-new-account', compact('inviter'))->render());
+            Flash::modal(View::make('lender.invite.new-account', compact('inviter'))->render());
         } else {
             Flash::success('common.comments.flash.welcome');
         }

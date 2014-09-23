@@ -127,7 +127,7 @@ class LenderJoinController extends BaseController
 
                     $response = $this->join($user);
                     if ($contacts) {
-                        return View::make('lender.invite-google-contacts',
+                        return View::make('lender.join.invite-contacts',
                             compact('contacts'));
                     }
                     return $response;
