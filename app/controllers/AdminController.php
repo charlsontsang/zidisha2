@@ -401,7 +401,7 @@ class AdminController extends BaseController
             $adminNotes[$VmNote->getBorrowerId()][] = $VmNote;
         }
 
-        return View::make('admin.volunteer-mentors', compact('paginator', 'form', 'menteeCounts', 'assignedMembers', 'adminNotes', 'borrowerService'));
+        return View::make('admin.volunteer-mentors.index', compact('paginator', 'form', 'menteeCounts', 'assignedMembers', 'adminNotes', 'borrowerService'));
     }
 
     public function getExchangeRates($countrySlug = null)
