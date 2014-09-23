@@ -4,7 +4,7 @@
     </div>
     <div class="panel-body">
 
-        @include('loan/partials/progress', ['loan' => $loan, 'dollar' => false])
+        @include('loan/loan/partials/progress', ['loan' => $loan, 'dollar' => false])
         
         <p>@lang('borrower.dashboard.loan-open.tips', ['tipsLink' => route('page:loan-feature-criteria')])</p>
         <p>@lang('borrower.dashboard.loan-open.edit-profile', ['editProfileLink' => route('borrower:edit-profile')])</p>

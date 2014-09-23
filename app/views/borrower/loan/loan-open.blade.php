@@ -53,7 +53,7 @@
     </div>
     <div class="panel-body">
         
-        @include('loan/partials/progress', ['loan' => $loan, 'dollar' => false])
+        @include('loan/loan/partials/progress', ['loan' => $loan, 'dollar' => false])
 
         @include('borrower.loan.partials.loan-information', [
             'amount'            => $loan->getAmount(),

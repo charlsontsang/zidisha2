@@ -33,7 +33,7 @@ Repayment schedule
 </p>
 
 @if($repaymentSchedule)
-    @include('partials/repayment-schedule-table', compact('repaymentSchedule'))
+    @include('loan/partials/repayment-schedule', compact('repaymentSchedule'))
 @endif
 
 @stop
