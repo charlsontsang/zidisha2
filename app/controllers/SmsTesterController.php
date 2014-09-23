@@ -18,7 +18,7 @@ class SmsTesterController extends BaseController
     {
         $borrowerSms = get_class_methods($this->borrowerSmsTester);
 
-        return View::make('admin.test-sms.index', compact('borrowerSms'));
+        return View::make('admin.test-sms', compact('borrowerSms'));
     }
 
     public function postSms()
