@@ -205,7 +205,7 @@ class SiftScienceService
                 'community_leader_phone' => $communityLeader->getPhoneNumber(),
                 'about_me'               => $profile->getAboutMe(),
                 'about_business'         => $profile->getAboutBusiness(),
-                'hear_about_zidisha'     => '', //TODO it's for reffered_by column in old DB
+                'hear_about_zidisha'     => $profile->getReferredBy(),
                 '$time'                  => time(),
             ]
         );
