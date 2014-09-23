@@ -1,6 +1,6 @@
 <div class="lend-form">
     <div id="lend-form-initial" style="{{ \Auth::check() && \Auth::user()->isLender() && \Request::query('amount') ? 'display:none' : '' }}">
-        @include('loan/loan/partials/progress', [ 'loan' => $loan ])
+        @include('loan/partials/progress', [ 'loan' => $loan ])
 
         {{ BootstrapForm::open(array('route' => ['loan:place-bid', $loan->getId()], 'translationDomain' => 'bid', 'id' => 'funds-upload')) }}
         {{ BootstrapForm::populate($placeBidForm) }}

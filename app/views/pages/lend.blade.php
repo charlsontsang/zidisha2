@@ -158,7 +158,7 @@ Lend
                         {{ $loan->getBorrower()->getCountry()->getName() }}
                     </p>
 
-                    @include('loan/loan/partials/progress', [ 'loan' => $loan ])
+                    @include('loan/partials/progress', [ 'loan' => $loan ])
                 </div>
             </div>
         </div>
