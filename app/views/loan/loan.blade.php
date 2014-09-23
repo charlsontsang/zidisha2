@@ -161,7 +161,7 @@
                             <span class="label label-default">
                                 Loan application expired
                             </span>
-                            @include('partials/loan-progress', [ 'loan' => $loan ])
+                            @include('loan/partials/progress', [ 'loan' => $loan ])
                             @endif
 
                             @if($loan->isCanceled())
@@ -365,7 +365,7 @@
                         <span class="text-light">Lenders</span>
                     </div>
                     <div class="loan-section-content">
-                        @include('partials.loan-lenders', compact('lenders'))
+                        @include('loan.partials.lenders', compact('lenders'))
                     </div>
                 </div>
                 @endif
@@ -438,7 +438,7 @@
             <span class="label label-default">
                 Loan expired
             </span>
-            @include('partials/loan-progress', [ 'loan' => $loan ])
+            @include('loan/partials/progress', [ 'loan' => $loan ])
             @endif
 
             @if($loan->isCanceled())
@@ -453,7 +453,7 @@
 
             @if($loan->isOpen())
                 @if(Auth::check() && Auth::user()->isBorrower())
-                    @include('partials/loan-progress', [ 'loan' => $loan ])
+                    @include('loan/partials/progress', [ 'loan' => $loan ])
                 @else
                     @include('loan.partials.lend-form')
                 @endif
