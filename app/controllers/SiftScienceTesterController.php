@@ -16,7 +16,7 @@ class SiftScienceTesterController extends BaseController
     {
         $siftScienceEvents = get_class_methods($this->siftScienceTester);
 
-        return View::make('admin.test-sift-science', compact('siftScienceEvents'));
+        return View::make('admin.test.test-sift-science', compact('siftScienceEvents'));
     }
 
     public function postSiftScienceEvent()

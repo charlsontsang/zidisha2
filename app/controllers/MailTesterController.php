@@ -40,7 +40,7 @@ class MailTesterController extends BaseController
         $adminMailerMethods = get_class_methods($this->adminMailerTester);
         $userMailerMethods = get_class_methods($this->userMailerTester);
 
-        return View::make('admin.test-email', compact('lenderMailerMethods', 'borrowerMailerMethods', 'adminMailerMethods', 'userMailerMethods'));
+        return View::make('admin.test.test-email', compact('lenderMailerMethods', 'borrowerMailerMethods', 'adminMailerMethods', 'userMailerMethods'));
     }
 
     public function postMail()
