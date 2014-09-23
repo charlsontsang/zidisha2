@@ -7,6 +7,7 @@ use Stripe_CardError;
 use Stripe_Error;
 use Stripe_InvalidRequestError;
 use Zidisha\Admin\Setting;
+use Zidisha\Mail\AdminMailer;
 use Zidisha\Payment\Error\PaymentError;
 use Zidisha\Payment\Payment;
 use Zidisha\Payment\PaymentBus;
@@ -40,6 +41,8 @@ class StripeService extends PaymentService
 
         \Stripe::setApiKey(Setting::get('stripe.secretKey'));
 
+        /** @var AdminMailer $adminMailer */
+        $adminMailer = \App::make('Zidisha\Mail\AdminMailer');
         $paymentError = $charge = null;
         try {
             $charge = \Stripe_Charge::create(
@@ -58,11 +61,11 @@ class StripeService extends PaymentService
         } catch (Stripe_ApiConnectionError $e) {
             $paymentError = new PaymentError('We could not communicate with stripe please try again.');
         } catch (Stripe_Error $e) {
-            //Todo: send mail to admin
             $paymentError = new PaymentError('Sorry we can not process your card at this moment.');
+            $adminMailer->sendErrorMail($paymentError->getException());
         } catch (\Exception $e) {
-            //Todo: send mail to admin
             $paymentError = new PaymentError('Oops something is wrong.');
+            $adminMailer->sendErrorMail($paymentError->getException());
         }
 
         if ($paymentError) {

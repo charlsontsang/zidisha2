@@ -1334,7 +1334,6 @@ class LoanService
             $loan->save($con);
         });
         
-        // TODO email
         $borrower = $loan->getBorrower();
         
         $this->borrowerCommentService->postComment(

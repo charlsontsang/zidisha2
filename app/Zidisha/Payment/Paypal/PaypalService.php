@@ -21,6 +21,7 @@ use PayPal\Service\PayPalAPIInterfaceServiceService;
 use Zidisha\Admin\Setting;
 use Zidisha\Balance\WithdrawalRequestQuery;
 use Zidisha\Currency\Money;
+use Zidisha\Mail\AdminMailer;
 use Zidisha\Payment\Error\PaymentError;
 use Zidisha\Payment\Payment;
 use Zidisha\Payment\PaymentBus;
@@ -266,7 +267,8 @@ class PayPalService extends PaymentService
             if ($paymentStatus == 'Completed') {
                 $this->paymentBus->getCompletedHandler($payment)->process();
             } elseif ($paymentStatus == 'Failed') {
-                $this->paymentBus->getFailedHandler($payment)->process();
+                $paymentError = new PaymentError('Sorry we can not process your card at this moment.');
+                $this->paymentBus->getFailedHandler($payment, $paymentError)->process();
             }
         } else {
             \Log::error("Error: Got invalid IPN data");
@@ -292,14 +294,16 @@ class PayPalService extends PaymentService
 
     protected function logPayPalErrors($response)
     {
-        //Todo: mail to admin.
         \Log::error('PaypalError');
         \Log::error('Time: ' . $response->Timestamp);
 
+        /** @var AdminMailer $adminMailer */
+        $adminMailer = \App::make('Zidisha\Mail\AdminMailer');
         foreach ($response->Errors as $error) {
             \Log::error('Error Code: ' . $error->ErrorCode);
             \Log::error('Error Short Message: ' . $error->ShortMessage);
             \Log::error('Error Long Message: ' . $error->LongMessage);
+            $adminMailer->sendErrorMail(new \Exception($error->LongMessage));
         }
     }
 

@@ -269,6 +269,7 @@
         <column name="address" type="LONGVARCHAR" required="true"/>
         <column name="address_instructions" type="LONGVARCHAR" required="true"/>
         <column name="city" type="VARCHAR" size="100" required="true"/>
+        <column name="referred_by" type="VARCHAR" size="100" required="false"/>
         <column name="national_id_number" type="VARCHAR" size="100" required="true"/>
         <column name="phone_number" type="VARCHAR" size="45" required="true"/>
         <column name="alternate_phone_number" type="VARCHAR" size="45" required="true"/>
