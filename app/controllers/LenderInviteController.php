@@ -30,7 +30,7 @@ class LenderInviteController extends BaseController
     public function getInvite()
     {
         if (!Auth::check() || Auth::getUser()->getRole() != 'lender') {
-            return View::make('lender.invite-guest');
+            return View::make('lender.invite.guest');
         }
 
         /** @var Lender $lender */
@@ -63,7 +63,7 @@ class LenderInviteController extends BaseController
         }
 
         return View::make(
-            'lender.invite',
+            'lender.invite.invite',
             ['form' => $this->inviteForm,]
             ,
             compact(
@@ -79,7 +79,7 @@ class LenderInviteController extends BaseController
 
     public function getHowItWorks()
     {
-        return View::make('lender.invite-terms');
+        return View::make('lender.invite.terms');
     }
 
     public function postInvite()
@@ -134,7 +134,7 @@ class LenderInviteController extends BaseController
             ->getCurrentBalance(Setting::get('site.YCAccountId'));
 
         if ($ycAccountCredit->getAmount() < 5000) {
-            return View::make('lender.invite-inactive');
+            return View::make('lender.invite.inactive');
         }
 
         if (!Auth::check()) {
@@ -172,7 +172,7 @@ class LenderInviteController extends BaseController
         $projects = $this->loanService->searchLoans($conditions)->take(3);
 
         return View::make(
-            'lender.invitee',
+            'lender.invite.invitee',
             compact('lender','inviteeCaption','buttonText','buttonLink','projects')
         );
     }

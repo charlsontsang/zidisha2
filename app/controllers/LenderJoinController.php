@@ -117,7 +117,7 @@ class LenderJoinController extends BaseController
 
             $this->lenderService->processLenderInvite($user, $lenderInviteVisit);
             Session::forget('lenderInviteVisitId');
-            Flash::modal(View::make('lender.invite-new-account', compact('inviter'))->render());
+            Flash::modal(View::make('lender.invite.new-account', compact('inviter'))->render());
         } else {
             Flash::success('common.comments.flash.welcome');
         }
