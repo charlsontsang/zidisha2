@@ -118,48 +118,25 @@ class LenderJoinController extends BaseController
                 $googleUser = $this->googleService->getGoogleUser($accessToken);
                 if ($googleUser) {
                     $country = Utility::getCountryCodeByIP();
-                    return View::make('lender.join.google-join',
-                        compact('country'), ['form' => $this->joinForm,]);
+                    $user = $this->lenderService->joinGoogleUser(
+                        $googleUser, $country
+                    );
+
+                    $contacts = $this->googleService->getContacts($googleUser, Session::get('accessToken'));
+                    Session::forget('accessToken');
+
+                    $response = $this->join($user);
+                    if ($contacts) {
+                        return View::make('lender.invite-google-contacts',
+                            compact('contacts'));
+                    }
+                    return $response;
                 }
             }
         }
 
-        Flash::error('common.validation.link-account.facebook-no-account-connected');
+        Flash::error('common.validation.link-account.google-no-account-connected');
         return Redirect::route('lender:join');
-    }
-
-    public function postGoogleJoin()
-    {
-        $googleUser = $this->googleService->getGoogleUser(Session::get('accessToken'));
-
-        if ($googleUser) {
-            $form = $this->joinForm;
-            $form->setGoogleJoin(true);
-            $form->handleRequest(Request::instance());
-
-            if (!$form->isValid()) {
-                return Redirect::route('lender:google-join')->withForm($form);
-            }
-
-
-            $user = $this->lenderService->joinGoogleUser(
-                $googleUser,
-                $form->getData()
-            );
-
-            $contacts = $this->googleService->getContacts($googleUser, Session::get('accessToken'));
-            Session::forget('accessToken');
-
-            $response = $this->join($user);
-            if ($contacts) {
-                return View::make('lender.join.invite-contacts',
-                    compact('contacts'));
-            }
-            return $response;
-        } else {
-            Flash::error('common.comments.flash.welcome');
-            return Redirect::route('lender:join');
-        }
     }
 
     public function postGoogleInvite()

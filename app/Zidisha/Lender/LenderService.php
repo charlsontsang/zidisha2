@@ -269,14 +269,16 @@ class LenderService
         return $errors;
     }
 
-    public function joinGoogleUser(\Google_Service_Oauth2_Userinfoplus $googleUser, $data)
+    public function joinGoogleUser(\Google_Service_Oauth2_Userinfoplus $googleUser, $country)
     {
-        $data += [
+        $data = [
             'email'         => $googleUser->getEmail(),
             'googleId'      => $googleUser->getId(),
             'googlePicture' => $googleUser->getPicture(),
             'firstName'     => $googleUser->getGivenName(),
-            'lastName'      => $googleUser->getFamilyName()
+            'lastName'      => $googleUser->getFamilyName(),
+            'countryId'     => $country['id'],
+            'username'      => $googleUser->getName(),
         ];
 
         return $this->joinLender($data);
