@@ -99,10 +99,6 @@ Route::group(
             array('uses' => 'LenderJoinController@getGoogleJoin', 'as' => 'lender:google-join')
         );
         Route::post(
-            'lender/google/join',
-            array('uses' => 'LenderJoinController@postGoogleJoin','as' => 'lender:post-google-join', 'before' => 'csrf')
-        );
-        Route::post(
             'lender/google/invite',
             array('uses' => 'LenderJoinController@postGoogleInvite','as' => 'lender:post-invite-google', 'before' => 'csrf')
         );
