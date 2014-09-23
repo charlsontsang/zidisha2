@@ -9068,6 +9068,10 @@ table.dataTable {
 .dataTables_filter label {
   float: right;
 }
+/* make full width and height when inside info panel */
+.dataTables_wrapper {
+  margin: -15px;
+}
 /* no more tables styling for mobile */
 @media (max-width: 767px) {
   /* Force table to not be like tables anymore */
