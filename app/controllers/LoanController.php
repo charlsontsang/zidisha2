@@ -178,7 +178,7 @@ class LoanController extends BaseController
         }
 
         return View::make(
-            'pages.loan.loan',
+            'loan.loan',
             compact(
                 'lenders',
                 'loan',
