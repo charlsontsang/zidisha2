@@ -15,16 +15,14 @@ Quick Links
 @section('page-content')
 <div class="panel panel-info">
     <div class="panel-heading">
-        <h3 class="panel-title">
-            {{ BootstrapForm::open(array('route' => 'admin:lenders')) }}
-            {{ BootstrapForm::populate($form) }}
+        {{ BootstrapForm::open(array('route' => 'admin:lenders')) }}
+        {{ BootstrapForm::populate($form) }}
 
-            {{ BootstrapForm::select('country', $form->getCountries(), Request::query('country'), ['label' => 'Country']) }}
-            {{ BootstrapForm::text('search', Request::query('search'), ['label' => 'Search']) }}
-            {{ BootstrapForm::submit('Submit') }}
+        {{ BootstrapForm::select('country', $form->getCountries(), Request::query('country'), ['label' => 'Country']) }}
+        {{ BootstrapForm::text('search', Request::query('search'), ['label' => 'Search']) }}
+        {{ BootstrapForm::submit('Submit') }}
 
-            {{ BootstrapForm::close() }}
-        </h3>
+        {{ BootstrapForm::close() }}
     </div>
     <div class="panel-body">
         <table class="table table-striped" id="lenders">
