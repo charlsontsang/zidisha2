@@ -115,7 +115,7 @@
         <column name="period" type="INTEGER"/>
         <column name="original_period" type="INTEGER"/>
         <column name="accept_bids_note" type="LONGVARCHAR" required="false"/>
-        <column name="sift_science_score" type="DECIMAL" required="false"/>
+        <column name="sift_science_score" type="DECIMAL" size="3" scale="2" required="false"/>
         <column name="deleted_by_admin" type="BOOLEAN" required="true" default="false"/>
         <behavior name="timestampable"/>
         <foreign-key foreignTable="loan_categories" phpName="Category">
@@ -926,7 +926,7 @@
         <column name="preferred_interest_rate" type="VARCHAR" required="true" />
         <column name="preferred_repayment_amount" type="VARCHAR" required="true" />
         <column name="verified_at" type="TIMESTAMP" required="false" />
-        <column name="sift_science_score" type="DECIMAL" required="false"/>
+        <column name="sift_science_score" type="DECIMAL" size="3" scale="2" required="false"/>
         <behavior name="timestampable"/>
         <foreign-key foreignTable="borrowers" phpName="Borrower">
             <reference local="borrower_id" foreign="id"/>
