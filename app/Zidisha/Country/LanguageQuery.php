@@ -33,11 +33,11 @@ class LanguageQuery extends BaseLanguageQuery
 
     public function getLanguageCodeByIp()
     {
-        $country = Utility::getCountryCodeByIP();
+        $country = Utility::getCountryByIP();
 
         return $this
             ->useCountryQuery()
-                ->filterById($country['id'])
+                ->filterById($country->getId())
                 ->filterByBorrowerCountry(true)
             ->endUse()
             ->select('LanguageCode')

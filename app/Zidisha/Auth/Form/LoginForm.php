@@ -69,10 +69,7 @@ class LoginForm extends AbstractForm
      */
     public function getjoinLink()
     {
-        $countryCode = Utility::getCountryCodeByIP();
-
-        $country = CountryQuery::create()
-            ->findOneByCountryCode($countryCode);
+        $country = Utility::getCountryByIP();
         if($country && $country->isBorrowerCountry()) {
             return 'borrower:join';
         }
