@@ -852,7 +852,7 @@ class DatabaseMigration extends Command {
                         'id'            => $rate->id,
                         'rate'          => $rate->rate,
                         'start_date'    => date("Y-m-d H:i:s", $rate->start),
-                        'end_date'      => date("Y-m-d H:i:s", $rate->stop),
+                        'end_date'      => $rate->stop ? date("Y-m-d H:i:s", $rate->stop) : null,
                         'currency_code' => $rate->Currency
                     ];
 
