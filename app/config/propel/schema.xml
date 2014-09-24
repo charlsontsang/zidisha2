@@ -1280,7 +1280,7 @@
         <vendor type="mysql">
             <parameter name="Engine" value="InnoDB"/>
         </vendor>
-        <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
+        <column name="id" type="VARCHAR" required="true" primaryKey="true"/>
         <column name="user_id" type="INTEGER" required="true" phpType="string"/>
         <column name="account_name" type="VARCHAR"/>
         <column name="email" type="VARCHAR"/>

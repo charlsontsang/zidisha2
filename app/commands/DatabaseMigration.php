@@ -167,7 +167,7 @@ class DatabaseMigration extends Command {
                         'email'              => $email,
                         'password'           => $user->password, // TODO old password, salt column
                         'profile_picture_id' => null, // TODO
-                        'facebook_id'        => $user->facebook_id,
+                        'facebook_id'        => $user->facebook_id ?: null,
                         'google_id'          => null, // since google login is now added
                         'google_picture'     => null,
                         'remember_token'     => null, // this cannot be shared between old and new codebase
@@ -1719,19 +1719,25 @@ class DatabaseMigration extends Command {
         }
 
         if ($table == 'facebook_users') {
+            $this->line('Migrate facebook_user_logs table');
             $this->line('Migrate facebook_users table');
 
-            $count = $this->con->table('facebook_info')
-                ->join('users', 'users.userid', '=', 'facebook_info.userid')
-                ->count();
+            $facebookIdToUserId = \Zidisha\User\UserQuery::create()
+                ->filterByFacebookId(null, \Propel\Runtime\ActiveQuery\Criteria::ISNOTNULL)
+                ->find()
+                ->toKeyValue('facebookId', 'id');
+
+            $count = $this->con->table('facebook_info')->count();
             $limit = 500;
+
+            $facebookUserArray = [];
 
             for ($offset = 0; $offset < $count; $offset += $limit) {
                 $facebookUsers = $this->con->table('facebook_info')
                     ->select('facebook_info.*')
-                    ->join('users', 'users.userid', '=', 'facebook_info.userid') // TODO check missing users
+                    ->orderBy('date', 'asc')
                     ->skip($offset)->limit($limit)->get();
-                $facebookUserArray = [];
+                $facebookUserLogArray = [];
 
                 foreach ($facebookUsers as $facebookUser) {
                     $facebookData = unserialize($facebookUser->facebook_data);
@@ -1743,23 +1749,39 @@ class DatabaseMigration extends Command {
                         $facebookData['posts'] = [];
                     }
                     $facebookData['posts'] += [1 => []];
-                    $newFacebookUser = [
-                        'id'              => $facebookUser->id, // TODO store facebook_id
-                        'user_id'         => $facebookUser->userid,
+                    $newFacebookUserLog = [
+                        'id'              => $facebookUser->id,
+                        'facebook_id'     => $facebookUser->facebook_id,
+                        'user_id'         => $facebookUser->userid ?: null,
                         'account_name'    => array_get($facebookData['user_profile'], 'name'),
                         'email'           => array_get($facebookData['user_profile'], 'email'),
                         'birth_date'      => array_get($facebookData['user_profile'], 'birthday'),
                         'city'            => array_get($facebookData['user_profile'], 'hometown', ['name' => ''])['name'],
-                        'first_post_date' => array_get($facebookData['posts'][1], 'created_time'), // TODO check
+                        'first_post_date' => array_get($facebookData['posts'][1], 'created_time') ? date("Y-m-d H:i:s", array_get($facebookData['posts'][1], 'created_time')): null,
                         'friends_count'   => count(array_get($facebookData, 'user_friends', [])),
                         'accept'          => $facebookUser->accept,
                         'ip_address'      => $facebookUser->ip_address,
+                        'created_at'      => date("Y-m-d H:i:s", $facebookUser->date),
+                        'updated_at'      => date("Y-m-d H:i:s", $facebookUser->date)
                     ];
                     
-                    array_push($facebookUserArray, $newFacebookUser);
+                    array_push($facebookUserLogArray, $newFacebookUserLog);
+
+                    if (isset($facebookIdToUserId[$facebookUser->facebook_id])) {
+                        $userId = $facebookIdToUserId[$facebookUser->facebook_id];
+                        if ($userId == $newFacebookUserLog['user_id']) {
+                            $newFacebookUser = $newFacebookUserLog;
+                            $newFacebookUser['id'] = $facebookUser->facebook_id;
+                            unset($newFacebookUser['facebook_id']);
+                            unset($newFacebookUser['created_at']);
+                            unset($newFacebookUser['updated_at']);
+                            $facebookUserArray[$facebookUser->facebook_id] = $newFacebookUser;
+                        }
+                    }
                 }
-                DB::table('facebook_users')->insert($facebookUserArray);
+                DB::table('facebook_user_logs')->insert($facebookUserLogArray);
             }
+            DB::table('facebook_users')->insert($facebookUserArray);
         }
 
         if ($table == 'auto_lending_settings') {
