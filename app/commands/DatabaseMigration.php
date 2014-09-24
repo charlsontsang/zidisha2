@@ -1578,23 +1578,25 @@ class DatabaseMigration extends Command {
         if ($table == 'borrower_invites') {
             $this->line('Migrate borrower_invites table');
 
-            $count = $this->con->table('invites')->count();
+            $count = $this->con->table('invites')
+                ->join('borrowers', 'borrowers.userid', '=', 'invites.userid')
+                ->count();
             $limit = 500;
 
             for ($offset = 0; $offset < $count; $offset += $limit) {
                 $borrowerInvites = $this->con->table('invites')
-                    ->join('borrowers', 'borrowers.userid', '=', 'invites.userid') // TODO missing borrowers, lenders?
+                    ->join('borrowers', 'borrowers.userid', '=', 'invites.userid')
                     ->skip($offset)->limit($limit)->get();
                 $borrowerInviteArray = [];
 
-                foreach ( $borrowerInvites as $borrowerInvite) {
+                foreach ($borrowerInvites as $borrowerInvite) {
                     $newBorrowerInvite =  [
                         'id'          => $borrowerInvite->id,
                         'borrower_id' => $borrowerInvite->userid,
                         'email'       => $borrowerInvite->email,
-                        'invited'     => $borrowerInvite->visited, // TODO cross check
-                        'hash'        => '', // $borrowerInvite->cookie_value, // TODO
-                        'invitee_id'  => $borrowerInvite->invitee_id ?: null
+                        'invitee_id'  => $borrowerInvite->invitee_id ?: null,
+                        'created_at'  => date("Y-m-d H:i:s", $borrowerInvite->date),
+                        'updated_at'  => date("Y-m-d H:i:s", $borrowerInvite->date),
                     ];
 
                     array_push($borrowerInviteArray, $newBorrowerInvite);
