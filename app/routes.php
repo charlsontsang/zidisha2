@@ -546,7 +546,7 @@ Route::group(
         );
 
         Route::group(
-            array('prefix' => 'volunteer-mentor', 'before' => 'auth|isVolunteerMentorOrAdmin'),
+            array('prefix' => 'volunteer-mentor', 'before' => 'auth|isVMOrVolunteerOrAdmin'),
             function () {
                 Route::get(
                     'assigned-members/{vmId?}',

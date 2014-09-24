@@ -204,6 +204,7 @@ class LoanService
         $data['usdAmount'] = Converter::toUSD(Money::create($data['amount'], $loan->getCurrencyCode()),$exchangeRate)->getAmount();
 
         $loan = $this->setLoanDetails($borrower, $loan, $data);
+        // Reset raised percentage
         $loan->setRaisedUsdAmount($loan->getRaisedUsdAmount());
         $loan->save();
 

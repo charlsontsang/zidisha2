@@ -126,6 +126,11 @@ class Loan extends BaseLoan implements CommentReceiverInterface
     {
         return Money::create(parent::getRaisedUsdAmount(), 'USD');
     }
+
+    public function getRaisedAmount()
+    {
+        return $this->getAmount()->multiply($this->getRaisedPercentage())->divide(100)->getAmount();
+    }
     
     public function getStillNeededUsdAmount()
     {

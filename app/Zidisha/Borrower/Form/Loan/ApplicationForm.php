@@ -131,7 +131,7 @@ class ApplicationForm extends AbstractForm
         
         $range = array_reverse($range);
         if ($this->loan) {
-            $raisedAmount = $this->loan->getAmount()->multiply($this->loan->getRaisedPercentage())->divide(100)->getAmount();
+            $raisedAmount = $this->loan->getRaisedAmount();
             $range =  array_filter($range, function ($x) use ($raisedAmount) { return $x > $raisedAmount; });
         }
         
