@@ -4,6 +4,7 @@ use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Zidisha\Balance\Transaction;
+use Zidisha\Currency\Currency;
 use Zidisha\Lender\Lender;
 use Zidisha\User\User;
 
@@ -882,8 +883,8 @@ class DatabaseMigration extends Command {
                         'amount'      => $installment->amount,
                         'paid_date'   => $installment->paiddate ? date("Y-m-d H:i:s", $installment->paiddate) : null,
                         'paid_amount' => $installment->paidamt,
-                        'created_at'  => null, // TODO
-                        'updated_at'  => null, // TODO
+                        'created_at'  => null,
+                        'updated_at'  => null,
                     ];
 
                     array_push($installmentArray, $newInstallment);
@@ -895,28 +896,60 @@ class DatabaseMigration extends Command {
         if ($table == 'installment_payments') {
             $this->line('Migrate installment_payments table');
 
+            $rows = \Zidisha\Borrower\Base\BorrowerQuery::create()
+                ->joinCountry()
+                ->select(['Borrower.id', 'Country.currency_code'])
+                ->find();
+            $borrowerIdToCurrencyCode = [];
+            foreach ($rows as $row) {
+                $borrowerIdToCurrencyCode[$row['Borrower.id']] = $row['Country.currency_code'];
+            }
+
             $count = $this->con->table('repaymentschedule_actual')->count();
             $limit = 500;
 
             for ($offset = 0; $offset < $count; $offset += $limit) {
                 $payments = $this->con->table('repaymentschedule_actual')
                     ->select('repaymentschedule_actual.*')
-                    ->join('repaymentschedule', 'repaymentschedule.id', '=', 'repaymentschedule_actual.rid') // TODO fix this
-                    ->where('rid', '>', 0) // TODO remove rid = 0 rows
+                    ->join('repaymentschedule', 'repaymentschedule.id', '=', 'repaymentschedule_actual.rid')
+                    ->where('rid', '>', 0)
                     ->skip($offset)->limit($limit)->get();
                 $paymentArray = [];
 
                 foreach ($payments as $payment) {
+                    $currencyCode = $borrowerIdToCurrencyCode[$payment->userid];
+
+                    $exchangeRateId = null;
+                    if ($payment->paiddate) {
+                        $paidDate = new \Datetime();
+                        $paidDate->setTimestamp($payment->paiddate);
+                        $exchangeRateId = \Zidisha\Currency\ExchangeRateQuery::create()
+                            ->filterByDate($paidDate)
+                            ->filterByCurrencyCode($currencyCode)
+                            ->select('id')
+                            ->findOne();
+
+                        if (!$exchangeRateId) {
+                            $this->line($payment->id);
+                        }
+                    }
+
+                    if (!$exchangeRateId) {
+                        $exchangeRateId = \Zidisha\Currency\ExchangeRateQuery::create()
+                            ->findCurrent(Currency::create($currencyCode))
+                            ->getId();
+                    }
+
                     $newPayment = [
                         'id'               => $payment->id,
                         'installment_id'   => $payment->rid,
                         'borrower_id'      => $payment->userid,
                         'loan_id'          => $payment->loanid,
-                        'paid_date'        => date("Y-m-d H:i:s", $payment->paiddate), // TODO check paiddate = 0
+                        'paid_date'        => date("Y-m-d H:i:s", $payment->paiddate),
                         'paid_amount'      => $payment->paidamt,
-                        'exchange_rate_id' => 1, // TODO
-                        'created_at'       => null, // TODO
-                        'updated_at'       => null, // TODO
+                        'exchange_rate_id' => $exchangeRateId,
+                        'created_at'       => null,
+                        'updated_at'       => null,
                     ];
 
                     array_push($paymentArray, $newPayment);
