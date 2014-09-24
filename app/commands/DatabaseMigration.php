@@ -1247,7 +1247,7 @@ class DatabaseMigration extends Command {
 
         if ($table == 'volunteer_mentors') {
             $this->line('Migrate volunteer_mentors table');
-            $ids = [];
+            $ids = $activeIds = [];
             $menteeCount = [];
 
             $count = $this->con->table('community_organizers')->count();
@@ -1255,9 +1255,9 @@ class DatabaseMigration extends Command {
 
             for ($offset = 0; $offset < $count; $offset += $limit) {
                 $volunteerMentors = $this->con->table('community_organizers')
-                    ->select('community_organizers.*', 'countries.id AS country_id')
+                    ->select('community_organizers.*', 'countries.id AS country_id', 'borrowers.Active')
                     ->join('countries', 'community_organizers.country', '=', 'countries.code')
-                    ->join('borrowers', 'community_organizers.user_id', '=', 'borrowers.userid') // TODO other community_organizers
+                    ->join('borrowers', 'community_organizers.user_id', '=', 'borrowers.userid')
                     ->skip($offset)
                     ->limit($limit)
                     ->get();
@@ -1276,11 +1276,14 @@ class DatabaseMigration extends Command {
 
                     array_push($volunteerMentorArray, $newVolunteerMentor);
                     $ids[] = $volunteerMentor->user_id;
+                    if ($volunteerMentor->Active && $volunteerMentor->status) {
+                        $activeIds[]  = $volunteerMentor->user_id;
+                    }
                     $menteeCount[$volunteerMentor->user_id] = 0;
                 }
                 DB::table('volunteer_mentors')->insert($volunteerMentorArray);
             }
-            
+
             $rows = $this->con->table('borrowers_extn AS be')
                 ->select('be.userid', 'be.mentor_id')
                 ->join('borrowers', 'borrowers.userid', '=', 'be.userid')
@@ -1296,6 +1299,8 @@ class DatabaseMigration extends Command {
             foreach ($menteeCount as $userId => $count) {
                 DB::table('volunteer_mentors')->where('borrower_id', $userId)->update(['mentee_count' => $count]);
             }
+
+            DB::table('users')->whereIn('id', $activeIds)->update(['sub_role' => 1]);
         }
 
         if ($table == 'borrower_feedback_messages') {
