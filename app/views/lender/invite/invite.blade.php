@@ -64,60 +64,61 @@ Invite Friends
         </div>
 
         @if ($count_invites > 0)
+        <div class="panel panel-info" style="margin-top: 30px">
+            <div class="panel-heading">
+                <h3 class="panel-title text-center">
+                    @if ($count_joined_invites == 0 && $count_invites == 1) 
+                    Your first invitee has not yet joined.
 
-        <div class="highlight highlight-panel">
+                    @elseif ($count_joined_invites == 0 && $count_invites > 1) 
+                    None of your {{$count_invites}} invitees have joined.
+                    
+                    @elseif ($count_joined_invites == 1) 
+                    Way to go - your first invitee has joined Zidisha!&nbsp;&nbsp;&nbsp;
+                    <a href="mailto:@foreach($invites as $invite){{ $invite->getEmail() }}@endforeach">Send a welcome note</a>
+                    
+                    @else
+                    <span style="color:#f15656">{{$count_joined_invites}}</span> of your {{$count_invites}} invitees have joined
+                    Zidisha.
 
-            <h3 style="margin-bottom: 25px" style="text-align: center;">
-                @if ($count_joined_invites == 0 && $count_invites == 1) 
-                Your first invitee has not yet joined.
-
-                @elseif ($count_joined_invites == 0 && $count_invites > 1) 
-                None of your {{$count_invites}} invitees have joined.
-                
-                @elseif ($count_joined_invites == 1) 
-                Way to go - your first invitee has joined Zidisha!&nbsp;&nbsp;&nbsp;
-                <a href="mailto:@foreach($invites as $invite){{ $invite->getEmail() }}@endforeach">Send a welcome note</a>
-                
-                @else
-                <span style="color:#f15656">{{$count_joined_invites}}</span> of your {{$count_invites}} invitees have joined
-                Zidisha.
-
-                @endif
-            </h3>
-
-            <table class="table table-striped no-more-tables" id="invitees">
-                <thead>
-                <tr>
-                    <th>Date Invited</th>
-                    <th>Email</th>
-                    <th>Status</th>
-                    <th class="td-profile-image">Profile</th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach($invites as $invite)
-                <tr>
-                    <td data-title="Invited">{{ $invite->getCreatedAt()->format('M j, Y') }}</td>
-                    <td data-title="Email">{{ $invite->getEmail() }}</td>
-                    <td data-title="Status">
-                        @if($invite->getInvitee())
-                        Joined on {{ $invite->getInvitee()->getCreatedAt()->format('M j, Y') }}
-                        @else
-                        Invite Not Yet Accepted
-                        @endif
-                    </td>
-                    <td>@if($invite->getInvitee())
-                        <a href="{{ route('lender:public-profile', $invite->getId()) }} ">
-                            {{ $invite->getInvitee()->getUser()->getUsername()}}
-                        </a>
-                        @endif
-                    </td>
-                </tr>
-                @endforeach
-                </tbody>
-            </table>
-            @endif
+                    @endif
+                </h3>
+            </div>
+            <div class="panel-body">
+                <table class="table table-striped no-more-tables" id="invitees">
+                    <thead>
+                    <tr>
+                        <th>Date Invited</th>
+                        <th>Email</th>
+                        <th>Status</th>
+                        <th class="td-profile-image">Profile</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach($invites as $invite)
+                    <tr>
+                        <td data-title="Invited">{{ $invite->getCreatedAt()->format('M j, Y') }}</td>
+                        <td data-title="Email">{{ $invite->getEmail() }}</td>
+                        <td data-title="Status">
+                            @if($invite->getInvitee())
+                            Joined on {{ $invite->getInvitee()->getCreatedAt()->format('M j, Y') }}
+                            @else
+                            Invite Not Yet Accepted
+                            @endif
+                        </td>
+                        <td>@if($invite->getInvitee())
+                            <a href="{{ route('lender:public-profile', $invite->getId()) }} ">
+                                {{ $invite->getInvitee()->getUser()->getUsername()}}
+                            </a>
+                            @endif
+                        </td>
+                    </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
+        @endif
     </div>
 </div>
 @stop
