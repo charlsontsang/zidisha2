@@ -149,13 +149,10 @@ class LenderController extends BaseController
             ->filterByLender($lender)
             ->count();
 
-        $totalLentAmount = TransactionQuery::create()
-            ->getTotalLentAmount($userId);
-
         $comments = $this->borrowerCommentService->getAllCommentForLender($lender);
 
         return View::make('lender.dashboard', compact('currentBalance', 'numberOfInvitesSent',  
-                'totalLentAmount', 'comments'
+                'comments'
             ));
     }
 
