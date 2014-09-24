@@ -25,33 +25,8 @@ class AdminMailerTester
             ->findOne();
     }
 
-    public function sendBorrowerCommentNotification()
-    {
-        $userBorrower = new User();
-        $userBorrower->setUsername('LenderTest')
-            ->setEmail('lendertest@gmail.com');
-        $borrower = new Borrower();
-        $borrower->setUser($userBorrower)
-            ->setCountry($this->borrowerCountry)
-            ->setFirstName('borrowerFirstName')
-            ->setLastName('borrowerLastName');
-        $loan = new Loan();
-        $loan->setBorrower($borrower);
-        $comment = new BorrowerComment();
-        $comment->setMessage('this is comment for borrower!!');
-        $postedBy = 'dmdm by hddhd on ffjfjfjf';
-        $images = '.....';
-
-        $this->adminMailer->sendBorrowerCommentNotification($loan, $comment, $postedBy, $images);
-    }
-
     public function sendErrorMail()
     {
         $this->adminMailer->sendErrorMail(new \Exception('This is the error message.'));
-    }
-
-    public function sendWithdrawalRequestMail()
-    {
-        $this->adminMailer->sendWithdrawalRequestMail(Money::create(60, 'USD'));
     }
 }
