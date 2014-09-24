@@ -738,8 +738,7 @@ class DatabaseMigration extends Command {
 
             for ($offset = 0; $offset < $count; $offset += $limit) {
                 $stages = $this->con->table('loanstage')
-                    ->join('loanapplic', 'loanapplic.loanid', '=', 'loanstage.loanid') // TODO missing loans
-                    ->where('loanstage.loanid', '>', '0')
+                    ->join('loanapplic', 'loanapplic.loanid', '=', 'loanstage.loanid')
                     ->skip($offset)->take($limit)->get();
                 $stageArray = [];
 
