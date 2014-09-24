@@ -552,7 +552,11 @@ class AdminController extends BaseController
 
             $this->loanService->addTranslations($loan, $data);
 
-            \Flash::success("Your translation has been published. Thanks!");
+            $thankyous = array('Thanks', 'Merci beaucoup', 'Terima kasih', 'Gracias', 'Obrigados', 'Jerejef', 'Asante sana', 'Danke schön', 'Shukran');
+            $thanks = $thankyous[array_rand($thankyous)];
+
+            \Flash::success('Your translation has been published. '.$thanks.'!');
+
             return Redirect::route('loan:index', $loanId);
         }
 

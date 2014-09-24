@@ -1,24 +1,24 @@
 @extends('borrower.loan.loan-base')
 
-@section('content')
+@section('page-content')
 @parent
 
-<div class="row">
-    <div class="col-xs-12 col-sm-6">
-        <br/>
-        <br/>
+<div class="panel panel-info">
+    <div class="panel-body">
         @include('loan.partials.repaid-bar', compact('loan'))
         <br/>
-    </div>
-    <div class="col-xs-12 col-sm-6">
-        @include('borrower.loan.next-installment', compact('repaymentSchedule'))     
+        @include('borrower.loan.next-installment', compact('repaymentSchedule')) 
     </div>
 </div>
-
-<h4>
-    @lang('borrower.loan.repayment-schedule.title')
-</h4>
-
-@include('partials.repayment-schedule-table', compact('repaymentSchedule'))
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h4>
+            @lang('borrower.loan.repayment-schedule.title')
+        </h4>
+    </div>
+    <div class="panel-body">
+        @include('partials.repayment-schedule-table', compact('repaymentSchedule'))
+    </div>
+</div>
 
 @stop

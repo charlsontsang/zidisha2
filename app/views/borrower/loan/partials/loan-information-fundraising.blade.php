@@ -14,7 +14,12 @@
             <strong>@lang('borrower.loan.repayment-period'):</strong>
         </td>
         <td>
-            {{ $loan->getPeriod() }}
+            {{ $loan->getPeriod() }} 
+            @if($loan->isWeeklyInstallment())
+                @lang('borrower.loan.weeks')
+            @else
+                @lang('borrower.loan.months')
+            @endif
         </td>
     </tr>
 

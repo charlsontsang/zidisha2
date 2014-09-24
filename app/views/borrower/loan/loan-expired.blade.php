@@ -1,6 +1,6 @@
 @extends('borrower.loan.loan-base')
 
-@section('content')
+@section('page-content')
 @parent
 
 @include('borrower.dashboard.partials.loan-expired')

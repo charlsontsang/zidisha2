@@ -22,13 +22,15 @@ return [
     'total-interest-and-fees'               => 'Total Interest and Transaction Fees',
     'monthly-interest-rate'                 => ':interestRate % annual rate for :period months',
     'weekly-interest-rate'                  => ':interestRate % annual rate for :period weeks',
+    'weeks'                                 => 'weeks',
+    'months'                                => 'months',
     'total-amount'                          => 'Total Amount (Including Interest and Transaction Fee) to be Repaid',
     'total-amount-due'                      => 'Total Repayment Due',
     'total-amount-due-date'                 => 'Total Repayment Due Date',
     'expires-at'                            => 'Expiration Date',
     'repayment-schedule'                    => [
         'title'             => 'Repayment Schedule',
-        'due-date'          => 'Due Date (Number Of months after disbursement Date)',
+        'due-date'          => 'Installment Number',
         'repayment-due'     => 'Repayment Due (:currencyCode)',
         'balance-remaining' => 'Balance Remaining',
         'total-repayment'   => 'Total Repayment',
@@ -55,15 +57,11 @@ return [
     'public' => [
         'loan-page' => 'Go to loan page',
     ],
-    'page' => [
-        'public-loan-page' => 'Go to public loan page',
-        'your-loans'       => 'Your loans',
-    ],
     'loan-open' => [
         'details' => 'Loan Details',
         'fully-funded' => [
             'instructions' => 'Use the form below to accept the bids.',
-            'accept-bids' => 'Accept Bids',
+            'accept-bids' => 'Accept Loan',
         ],
     ],
     'loan-funded' => [

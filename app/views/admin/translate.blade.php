@@ -1,27 +1,50 @@
 @extends('layouts.master')
 
 @section('page-title')
-Translate
+Add or Edit Translations
 @stop
 
 @section('content')
-
-<a href="{{ route('loan:index', $loan->getId()) }}">back to Loan</a>
+<h1 class="page-title">
+    Add or Edit Translations
+</h1>
 {{ BootstrapForm::open(['route' => ['admin:post-translate', $loan->getId()]]) }}
 {{ BootstrapForm::populate($form) }}
 
-{{ BootstrapForm::textarea('translateAboutMe', $borrower->getProfile()->getAboutMeTranslation(),
-['description' => $borrower->getProfile()->getAboutMe(), 'id' => 'about-me'] )}}
+<div class="panel panel-info">
+    <div class="panel-heading">
+    	<h4>About Me</h4>
+    </div>
+    <div class="panel-body">
+		{{ BootstrapForm::textarea('translateAboutMe', $borrower->getProfile()->getAboutMeTranslation(),
+		['description' => $borrower->getProfile()->getAboutMe(), 'id' => 'about-me', 'label' => ''] )}}
+	</div>
+</div>
 
-{{ BootstrapForm::textarea('translateAboutBusiness', $borrower->getProfile()->getAboutBusinessTranslation(),
-['description' => $borrower->getProfile()->getAboutBusiness(), 'id' => 'about-business'] )}}
+<div class="panel panel-info">
+    <div class="panel-heading">
+    	<h4>About My Business</h4>
+    </div>
+    <div class="panel-body">
+		{{ BootstrapForm::textarea('translateAboutBusiness', $borrower->getProfile()->getAboutBusinessTranslation(),
+		['description' => $borrower->getProfile()->getAboutBusiness(), 'id' => 'about-business', 'label' => ''] )}}
+	</div>
+</div>
 
-{{ BootstrapForm::textarea('proposal', $loan->getProposal(), array('readonly')) }}
-
-{{ BootstrapForm::textarea('translateProposal', $loan->getProposalTranslation(), ['description' => $loan->getProposal(),
-'id' => 'proposal'] )}}
-
-{{ BootstrapForm::submit('save') }}
+<div class="panel panel-info">
+    <div class="panel-heading">
+    	<h4>My Loan Proposal</h4>
+    </div>
+    <div class="panel-body">
+		{{ BootstrapForm::textarea('translateProposal', $loan->getProposalTranslation(), ['description' => $loan->getProposal(),
+		'id' => 'proposal', 'label' => ''] )}}
+	</div>
+</div>
+{{ BootstrapForm::submit('Publish translations') }}
 
 {{ BootstrapForm::close() }}
+
+<br/>
+<p><a href="{{ route('loan:index', $loan->getId()) }}">Cancel</a></p>
+
 @stop

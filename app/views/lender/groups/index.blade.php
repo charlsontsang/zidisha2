@@ -53,8 +53,8 @@ Lending Groups
         </tbody>
     </table>
     @endif
-    {{ BootstrapHtml::paginator($paginator)->links() }}
 </div>
+{{ BootstrapHtml::paginator($paginator)->links() }}
 @stop
 
 @section('script-footer')

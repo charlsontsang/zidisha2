@@ -1,6 +1,6 @@
 @extends('borrower.loan.loan-base')
 
-@section('content')
+@section('page-content')
 @parent
 
 <div class="panel panel-info">
@@ -10,28 +10,21 @@
         </h4>
     </div>
     <div class="panel-body">
-        <div class="row">
-            <div class="col-sm-6">
+        @include('borrower.loan.partials.loan-information-fundraising', compact('loan', 'installmentCalculator'))
 
-                @include('borrower.loan.partials.loan-information-fundraising', compact('loan', 'installmentCalculator'))
+        <h4>
+            @lang('borrower.loan.repayment-schedule.title')
+        </h4>
+        
+        @include('borrower.loan.partials.repayment-schedule-installments', compact('repaymentSchedule'))
 
-                <h4>
-                    @lang('borrower.loan.repayment-schedule.title')
-                </h4>
-                
-                @include('borrower.loan.partials.repayment-schedule-installments', compact('repaymentSchedule'))
-            </div>
+        @if($loan->getAcceptBidsNote())
+            <h4>
+                @lang('borrower.loan.loan-funded.accept-bids-note')
+            </h4>
             
-            <div class="col-xs-6">
-                @if($loan->getAcceptBidsNote())
-                    <h4>
-                        @lang('borrower.loan.loan-funded.accept-bids-note')
-                    </h4>
-                    
-                    {{{ $loan->getAcceptBidsNote() }}}
-                @endif
-            </div>
-        </div>
+            {{{ $loan->getAcceptBidsNote() }}}
+        @endif
     </div>
 </div>
 
