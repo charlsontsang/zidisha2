@@ -110,7 +110,7 @@ My Stats
             <tbody>
                 @foreach($fundraisingLoanBids as $fundraisingLoanBid)
                 <tr>
-                    <td data-title="Entrepreneur">
+                    <td data-title="Name">
                         <a class="pull-left" href="{{ route('loan:index', $fundraisingLoanBid->getLoanId()) }}">
                             <img src="{{ $fundraisingLoanBid->getBorrower()->getUser()->getProfilePictureUrl('small-profile-picture') }}" width="100%">
                         </a>
@@ -123,8 +123,8 @@ My Stats
                     <td data-title="Project">
                         <a href="{{ route('loan:index', $fundraisingLoanBid->getLoanId()) }}">{{ $fundraisingLoanBid->getLoan()->getSummary() }}</a>
                     </td>
-                    <td data-title="Date Funded">{{ $fundraisingLoanBid->getBidAt()->format('M j, Y') }}</td>
-                    <td data-title="Amount Lent">{{ $fundraisingLoanBid->getBidAmount()->getAmount() }}</td>
+                    <td data-title="Funded">{{ $fundraisingLoanBid->getBidAt()->format('M j, Y') }}</td>
+                    <td data-title="Amount">{{ $fundraisingLoanBid->getBidAmount()->getAmount() }}</td>
                     <td data-title="Progress"> @include('loan/partials/progress', [ 'loan' => $fundraisingLoanBid->getLoan() ]) </td>
                 </tr>
                 @endforeach
@@ -176,7 +176,7 @@ My Stats
             <tbody>
                 @foreach($activeLoanBids as $activeLoanBid)
                 <tr>
-                    <td data-title="Entrepreneur">
+                    <td data-title="Name">
                         <a class="pull-left" href="{{ route('loan:index', $activeLoanBid->getLoanId()) }}">
                             <img src="{{ $activeLoanBid->getBorrower()->getUser()->getProfilePictureUrl('small-profile-picture') }}" width="100%">
                         </a>
@@ -189,11 +189,11 @@ My Stats
                     <td data-title="Project">
                         <a href="{{ route('loan:index', $activeLoanBid->getLoanId()) }}">{{ $activeLoanBid->getLoan()->getSummary() }}</a>
                     </td>
-                    <td data-title="Date Funded">
+                    <td data-title="Funded">
                         {{ $activeLoanBid->getFundedAt()->format('M j, Y') }}
                     </td>
-                    <td data-title="Amount Lent">{{ $activeLoanBid->getLentAmount()->getAmount() }}</td>
-                    <td data-title="Amount Repaid">{{ $activeLoanBid->getRepaidAmount()->getAmount() }}</td>
+                    <td data-title="Lent">{{ $activeLoanBid->getLentAmount()->getAmount() }}</td>
+                    <td data-title="Repaid">{{ $activeLoanBid->getRepaidAmount()->getAmount() }}</td>
                     <td data-title="Outstanding">
                         {{ $activeLoanBid->getOutstandingAmount()->getAmount() }}
                         <br/><br/>
@@ -256,7 +256,7 @@ My Stats
             <tbody>
                 @foreach($completedLoansBids as $completedLoansBid)
                 <tr>
-                    <td data-title="Entrepreneur">
+                    <td data-title="Name">
                         <a class="pull-left" href="{{ route('loan:index', $completedLoansBid->getLoanId()) }}">
                             <img src="{{ $completedLoansBid->getBorrower()->getUser()->getProfilePictureUrl('small-profile-picture') }}" width="100%">
                         </a>
@@ -267,14 +267,14 @@ My Stats
                         {{ $completedLoansBid->getBorrower()->getCountry()->getName() }}
                     </td>
                     <td data-title="Project"><a href="{{ route('loan:index', $completedLoansBid->getLoanId()) }}">{{ $completedLoansBid->getLoan()->getSummary() }}</a></td>
-                    <td data-title="Date Funded">{{ $completedLoansBid->getLoan()->getDisbursedAt()->format('M j, Y') }}</td>
-                    <td data-title="Amount Lent">{{ $completedLoansBid->getAcceptedAmount()->getAmount() }}</td>
-                    <td data-title="Amount Repaid">
+                    <td data-title="Funded">{{ $completedLoansBid->getLoan()->getDisbursedAt()->format('M j, Y') }}</td>
+                    <td data-title="Lent">{{ $completedLoansBid->getAcceptedAmount()->getAmount() }}</td>
+                    <td data-title="Repaid">
                         {{ $completedLoansBidAmountRepaid[$completedLoansBid->getId()]->getAmount() }}
                         <br/><br/>
                         <a href="{{ route('loan:index', $completedLoansBid->getLoanId()) }}#feedback">Leave Feedback</a>
                     </td>
-                    <td data-title="Net Change">{{ $netChangeCompletedBid[$completedLoansBid->getId()]->getAmount() }} </td>
+                    <td data-title="Net">{{ $netChangeCompletedBid[$completedLoansBid->getId()]->getAmount() }} </td>
                 </tr>
                 @endforeach
             </tbody>
