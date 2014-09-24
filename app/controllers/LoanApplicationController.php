@@ -161,7 +161,6 @@ class LoanApplicationController extends BaseBorrowerController
         } else {
             $form  = new ApplicationForm($borrower);
         }
-
         $isFirstLoan = LoanQuery::create()
             ->filterByBorrower($borrower)
             ->filterCompleted()
