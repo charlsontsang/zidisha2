@@ -8748,6 +8748,7 @@ body {
 @media (min-width: 768px) {
   .panel-info.your-loans {
     margin-top: 15px;
+    margin-bottom: 30px;
   }
 }
 .page-section-inverted {
