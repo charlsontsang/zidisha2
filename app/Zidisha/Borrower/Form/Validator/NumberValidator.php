@@ -10,8 +10,13 @@ class NumberValidator extends ZidishaValidator
 {
     public function validateUniqueNumber($attribute, $value, $parameters)
     {
+        $id = null;
+        if ($parameters) {
+            $id = $parameters[0];
+        }
 
         $checkPhoneNumber = ProfileQuery::create()
+            ->filterByBorrowerId($id, Criteria::NOT_EQUAL)
             ->filterByPhoneNumber($value)
             ->_or()
             ->filterByAlternatePhoneNumber($value)
