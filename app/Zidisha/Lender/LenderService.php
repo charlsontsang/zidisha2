@@ -58,6 +58,8 @@ class LenderService
         ->setUsername($data['username']);
         $lender->getProfile()->setCity($data['city'])
         ->setAboutMe($data['aboutMe']);
+        $lender->setFirstName($data['firstName'])
+            ->setLastName($data['lastName']);
 
         if (!empty($data['password'])) {
             $lender->getUser()->setPassword($data['password']);
