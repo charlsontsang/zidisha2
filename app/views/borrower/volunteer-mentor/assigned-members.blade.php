@@ -54,7 +54,7 @@
 		<table class="table table-striped" id="arrears-members">
 			<tbody>
 				@foreach ($data['assignedMembers'] as $assignedMember)
-				        @if ($data['repaymentService']->getRepaymentSchedule($assignedMember->getActiveLoan())->getOverDueInstallmentCount() > 1)
+				        @if ($data['repaymentService']->getRepaymentSchedule($assignedMember->getLastLoan())->getOverDueInstallmentCount() > 1)
 						<tr>
 							<td>
 								{{ $assignedMember->getName() }}
@@ -102,7 +102,7 @@
 		<table class="table table-striped" id="current-members">
 			<tbody>
 				@foreach ($data['assignedMembers'] as $assignedMember)
-			        @if ($data['repaymentService']->getRepaymentSchedule($assignedMember->getActiveLoan())->getOverDueInstallmentCount() <= 1)
+			        @if ($data['repaymentService']->getRepaymentSchedule($assignedMember->getLastLoan())->getOverDueInstallmentCount() <= 1)
 					<tr>
 						<td>
 							{{ $assignedMember->getName() }}
