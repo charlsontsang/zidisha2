@@ -10,30 +10,18 @@ use Zidisha\Country\CountryQuery;
 
 class Utility {
 
-    public static function getCountryCodeByIP(){
-        $country = [
-            'code' => '',
-            'name' => '',
-            'id'   => '',
-        ];
+    public static function getCountryByIP(){
         $ip = \Request::getClientIp();
 
         if ($ip) {
             $reader = new Reader( app_path() . '/storage/external/GeoLite2-Country.mmdb');
             try {
                 $record = $reader->country($ip);
-                $dbCountry = CountryQuery::create()->findOneByCountryCode($record->country->isoCode);
-
-                if ($dbCountry) {
-                    $country['code'] = $record->country->isoCode;
-                    $country['name'] = $record->country->name;
-                    $country['id']   = $dbCountry->getId();
-                }
+                return CountryQuery::create()->findOneByCountryCode($record->country->isoCode);
             } catch (AddressNotFoundException $e) {
             }
         }
-
-        return $country;
+        return null;
     }
 
     /**
