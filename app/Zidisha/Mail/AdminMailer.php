@@ -79,7 +79,7 @@ class AdminMailer
             [
                 'to'         => \Config::get('app.developerEmail'),
                 'subject'    => 'ERROR: ' . get_class($exception),
-                'content'    => View::make('emails.admin.error', $parameters)->render(),
+                'content'    => \View::make('emails.admin.error', $parameters)->render(),
                 'templateId' => \Setting::get('sendwithus.lender-notifications-template-id')
             ]
         );

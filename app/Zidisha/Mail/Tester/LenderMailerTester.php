@@ -56,9 +56,11 @@ class LenderMailerTester
         $borrower = new Borrower();
         $borrower->setUser($userBorrower)
             ->setFirstName('borrowerFirstName')
+            ->setLastLoanId(44)
             ->setLastName('borrowerLastName');
         $loan = new Loan();
-        $loan->setBorrower($borrower);
+        $loan->setBorrower($borrower)
+            ->setId(3343);
         $user = new User();
         $user->setUsername('LenderTest')
             ->setEmail('lendertest@gmail.com');
@@ -596,6 +598,7 @@ class LenderMailerTester
             ->setLastName('borrowerLastName');
         $loan = new Loan();
         $loan->setBorrower($borrower)
+            ->setId(444)
             ->setDisbursedAt(Carbon::now()->subMonths(6));
         $user = new User();
         $user->setUsername('LenderTest')
