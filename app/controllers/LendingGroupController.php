@@ -46,7 +46,6 @@ class LendingGroupController extends BaseController
 
             $group =  $this->lendingGroupService->addLendingGroup($creator, $data, $image);
 
-            \Flash::success("Your group is created!");
             return Redirect::route('lender:group:create:success', $group->getId());
         }
         return Redirect::route('lender:groups:create')->withForm($form);
