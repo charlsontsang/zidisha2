@@ -6,22 +6,27 @@ namespace Zidisha\Utility;
 use Faker\Provider\DateTime;
 use GeoIp2\Database\Reader;
 use GeoIp2\Exception\AddressNotFoundException;
+use Zidisha\Country\Country;
 use Zidisha\Country\CountryQuery;
 
 class Utility {
 
     public static function getCountryByIP(){
         $ip = \Request::getClientIp();
+        $country = new Country();
+        $country->setId(null)
+            ->setCountryCode(null)
+            ->setName(null);
 
         if ($ip) {
             $reader = new Reader( app_path() . '/storage/external/GeoLite2-Country.mmdb');
             try {
                 $record = $reader->country($ip);
-                return CountryQuery::create()->findOneByCountryCode($record->country->isoCode);
+                $country = CountryQuery::create()->findOneByCountryCode($record->country->isoCode);
             } catch (AddressNotFoundException $e) {
             }
         }
-        return null;
+        return $country;
     }
 
     /**

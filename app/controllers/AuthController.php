@@ -64,7 +64,7 @@ class AuthController extends BaseController
         $rememberMe = Input::has('remember_me');
         $credentials = Input::only('email', 'password');
         $country = Utility::getCountryByIP();
-        $isLenderCountry = !$country->isBorrowerCountry();
+        $isLenderCountry = ($country->getId() && !$country->isBorrowerCountry());
 
         $form = new LoginForm($this->facebookService, $this->googleService, $isLenderCountry);
         $form->handleRequest(Request::instance());
@@ -120,7 +120,7 @@ class AuthController extends BaseController
                 Auth::loginUsingId($checkUser->getId());
             } else {
                 $country = Utility::getCountryByIP();
-                if (!$country) {
+                if (!$country->getId()) {
                     $country = CountryQuery::create()
                         ->getOneByCountryCode('US');
                 }
@@ -137,7 +137,7 @@ class AuthController extends BaseController
     {
         $country = Utility::getCountryByIP();
 
-        if ($country->isBorrowerCountry()) {
+        if ($country->getId() && $country->isBorrowerCountry()) {
             return Redirect::route('borrower:join');
         }
         return Redirect::route('lender:join');
@@ -257,7 +257,7 @@ class AuthController extends BaseController
                             Auth::loginUsingId($checkUser->getId());
                         } else {
                             $country = Utility::getCountryByIP();
-                            if (!$country) {
+                            if (!$country->getId()) {
                                 $country = CountryQuery::create()
                                     ->getOneByCountryCode('US');
                             }

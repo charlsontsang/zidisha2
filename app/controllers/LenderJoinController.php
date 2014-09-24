@@ -74,7 +74,7 @@ class LenderJoinController extends BaseController
         if ($facebookUser) {
             $this->facebookService->addFacebookUserLog($facebookUser, true);
             $country = Utility::getCountryByIP();
-            if (!$country) {
+            if (!$country->getId()) {
                 $country = CountryQuery::create()
                     ->getOneByCountryCode('US');
             }
@@ -123,7 +123,7 @@ class LenderJoinController extends BaseController
                 $googleUser = $this->googleService->getGoogleUser($accessToken);
                 if ($googleUser) {
                     $country = Utility::getCountryByIP();
-                    if (!$country) {
+                    if (!$country->getId()) {
                         $country = CountryQuery::create()
                             ->getOneByCountryCode('US');
                     }
