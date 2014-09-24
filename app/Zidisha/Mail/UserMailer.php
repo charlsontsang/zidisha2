@@ -28,7 +28,7 @@ class UserMailer
         ];
 
         $this->mailer->queue(
-            'emails.label-template',
+            'emails.hero',
             [
                 'to'      => $user->getEmail(),
                 'content' => \Lang::get('lender.mails.lending-group-comment-notification.body', $parameters, 'en'),
@@ -37,6 +37,7 @@ class UserMailer
                     ['groupName' => $lendingGroup->getName()],
                     'en'
                 ),
+                'templateId' => \Setting::get('sendwithus.lender-notifications-template-id'),
             ]
         );
     }
