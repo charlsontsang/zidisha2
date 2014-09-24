@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('page-title')
-My Stats
+Your Loans
 @stop
 
 @section('content')
