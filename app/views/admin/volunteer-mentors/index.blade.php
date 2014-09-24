@@ -82,7 +82,7 @@ Manage Volunteer Mentors
                                                 </td>
                                                 <td>
                                                     @if($borrowerService->hasVMComment($borrower, $assignedMember))
-                                                        <a href="{{ route('admin:borrower:personal-information', $assignedMember->getUser()->getUsername()) }}">
+                                                        <a href="{{ route('admin:borrower:personal-information', $assignedMember->getId()) }}">
                                                         View Comment
                                                         </a>
                                                     @else

@@ -31,7 +31,7 @@
 								{{ $pendingMember->getName() }}
 							</td>
 							<td>
-							    <a href="{{ route('admin:borrower:personal-information', $pendingMember->getUser()->getUsername()) }}">
+							    <a href="{{ route('admin:borrower:personal-information', $pendingMember->getId()) }}">
 							    @lang('borrower.text.assigned-members.review-profile')
 							    </a>
 							</td>
