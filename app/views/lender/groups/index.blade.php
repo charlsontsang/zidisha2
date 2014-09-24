@@ -17,12 +17,19 @@ Lending Groups
  
         </div>
     </div>
+    
     @if(Auth::check() && Auth::getUser()->isLender())
         <a href="{{ route('lender:groups:create') }}" class="btn btn-primary">
            Start a new group
         </a>
-        <br/><br/>
+    @else
+        <a href="{{ route('login') }}" data-toggle="modal" data-target="#login-modal"  class="btn btn-primary">
+           Start a new group
+        </a>
     @endif
+
+    <br/><br/>
+
     @if($paginator != null)
     <table class="table table-striped no-more-tables" id="group">
         <thead>
