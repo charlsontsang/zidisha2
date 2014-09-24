@@ -110,12 +110,12 @@ My Stats
             <tbody>
                 @foreach($fundraisingLoanBids as $fundraisingLoanBid)
                 <tr>
-                    <td data-title="Name">
+                    <td>
                         <a class="pull-left" href="{{ route('loan:index', $fundraisingLoanBid->getLoanId()) }}">
                             <img src="{{ $fundraisingLoanBid->getBorrower()->getUser()->getProfilePictureUrl('small-profile-picture') }}" width="100%">
                         </a>
                     </td>
-                    <td>
+                    <td data-title="Name">
                         {{ $fundraisingLoanBid->getBorrower()->getName() }}
                         <br/><br/>
                         {{ $fundraisingLoanBid->getBorrower()->getCountry()->getName() }}
@@ -176,12 +176,12 @@ My Stats
             <tbody>
                 @foreach($activeLoanBids as $activeLoanBid)
                 <tr>
-                    <td data-title="Name">
+                    <td>
                         <a class="pull-left" href="{{ route('loan:index', $activeLoanBid->getLoanId()) }}">
                             <img src="{{ $activeLoanBid->getBorrower()->getUser()->getProfilePictureUrl('small-profile-picture') }}" width="100%">
                         </a>
                     </td>
-                    <td>
+                    <td data-title="Name">
                         {{ $activeLoanBid->getBorrower()->getName() }}
                         <br/><br/>
                         {{ $activeLoanBid->getBorrower()->getCountry()->getName() }}
@@ -256,12 +256,12 @@ My Stats
             <tbody>
                 @foreach($completedLoansBids as $completedLoansBid)
                 <tr>
-                    <td data-title="Name">
+                    <td>
                         <a class="pull-left" href="{{ route('loan:index', $completedLoansBid->getLoanId()) }}">
                             <img src="{{ $completedLoansBid->getBorrower()->getUser()->getProfilePictureUrl('small-profile-picture') }}" width="100%">
                         </a>
                     </td>
-                    <td>
+                    <td data-title="Name">
                         {{ $completedLoansBid->getBorrower()->getName() }}
                         <br/><br/>
                         {{ $completedLoansBid->getBorrower()->getCountry()->getName() }}
