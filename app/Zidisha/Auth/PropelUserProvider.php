@@ -57,6 +57,7 @@ class PropelUserProvider implements UserProviderInterface
     {
         return UserQuery::create()
             ->filterByEmail($credentials['email'])
+            ->filterByActive(true) // because of duplicate email addresses
             ->findOne();
     }
 
