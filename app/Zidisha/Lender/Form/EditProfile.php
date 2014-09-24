@@ -27,7 +27,7 @@ class EditProfile extends AbstractForm
             'username'  => 'required|alpha_num_space',
             'email'     => 'required|email|uniqueUserEmail:' . $this->lender->getId(),
             'password'  => 'confirmed',
-            'city'      => 'required|alpha_num',
+            'city'      => 'alpha_num',
             'firstName' => '',
             'lastName'  => '',
             'aboutMe'   => '',
