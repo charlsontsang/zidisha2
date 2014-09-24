@@ -95,7 +95,7 @@ class AuthController extends BaseController
         
         $this->flushLogout();
         
-        return Redirect::route('home');
+        return Redirect::back();
     }
 
     public function getFacebookLogin()
