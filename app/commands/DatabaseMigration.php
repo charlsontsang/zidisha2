@@ -362,7 +362,7 @@ class DatabaseMigration extends Command {
                         'last_name'           => $borrower->LastName,
                         'active_loan_id'      => null, // TODO do in cache step
                         'last_loan_id'        => null, // TODO do in cache step
-                        'loan_status'         => $borrower->ActiveLoan,
+                        'loan_status'         => null, // TODO in cache step $borrower->ActiveLoan,
                         'active'              => $borrower->Active,
                         'volunteer_mentor_id' => null, // we do it when importing volunteer mentors
                         'referrer_id'         => $referrerId,
@@ -371,6 +371,7 @@ class DatabaseMigration extends Command {
                         'activation_status'   => $activationStatus[$borrower->Assigned_status],
                         'created_at'          => date("Y-m-d H:i:s", $borrower->Created),
                         'updated_at'          => date("Y-m-d H:i:s", $borrower->LastModified),
+                        //'sift_science_score'          => $borrower->sift_score, TODO
                     ];
 
                     $profile = [
@@ -457,6 +458,7 @@ class DatabaseMigration extends Command {
                         'created_at'                 => date("Y-m-d H:i:s", $borrower->Created),
                         'updated_at'                 => date("Y-m-d H:i:s", $borrower->Created),
                         'verification_code'          => null,
+                        'sift_science_score'         => $borrower->sift_score,
                     ];
 
                     if (!$borrower->emailVerified) {
@@ -571,23 +573,31 @@ class DatabaseMigration extends Command {
         if ($table == 'loans') {
             $this->line('Migrate loans table');
 
+            $rows = \Zidisha\Borrower\Base\BorrowerQuery::create()
+                ->joinCountry()
+                ->select(['Borrower.id', 'Country.currency_code'])
+                ->find();
+            $borrowerIdToCurrencyCode = [];
+            foreach ($rows as $row) {
+                $borrowerIdToCurrencyCode[$row['Borrower.id']] = $row['Country.currency_code'];
+            }
+
             $count = $this->con->table('loanapplic')->count();
             $limit = 500;
+            $autoIncrement = 0;
             for ($offset = 0; $offset < $count; $offset += $limit) {
                 $loans = $this->con->table('loanapplic')
-                    ->select('loanapplic.*', 'currency.Currency')
-                    ->join('borrowers', 'borrowers.userid', '=', 'loanapplic.borrowerid') // TODO check missing borrowers
-                    ->join('currency', 'borrowers.country', '=', 'currency.country_code')
+                    ->select('loanapplic.*')
                     ->skip($offset)
-                    ->where('loanapplic.loanid', '>', 0)
-                    ->orderBy('id')
                     ->take($limit)
+                    ->orderBy('loanid')
                     ->get();
                 
                 $loanArray = [];
-                $ids = []; 
+                $ids = [];
 
                 foreach ($loans as $loan) {
+                    $loan->loanid = $loan->loanid ?: 100000;
                     $ids[] = $loan->loanid;
                     
                     $newLoan = [
@@ -614,7 +624,7 @@ class DatabaseMigration extends Command {
                         'repaid_at'             => $loan->RepaidDate ? date("Y-m-d H:i:s", $loan->RepaidDate) : null,
                         'authorized_at'         => $loan->auth_date ? date("Y-m-d H:i:s", $loan->auth_date) : null,
                         'authorized_amount'     => $loan->p_amount ?: null,
-                        'disbursed_at'          => null, // TODO missing loans
+                        'disbursed_at'          => null,
                         'disbursed_amount'      => $loan->AmountGot ?: null,
                         'forgiven_amount'       => null, // TODO calculate in new code
                         'registration_fee'      => '0',
@@ -623,7 +633,7 @@ class DatabaseMigration extends Command {
                         'paid_percentage'       => null, // TODO calculate in new code
                         'service_fee_rate'      => $loan->WebFee,
                         'extra_days'            => $loan->extra_days,
-                        'currency_code'         => $loan->Currency,
+                        'currency_code'         => $borrowerIdToCurrencyCode[$loan->borrowerid],
                         'installment_period'    => $loan->weekly_inst ? 1 : 0, // 'weekly' : 'monthly',
                         'period'                => $loan->period,
                         'accept_bids_note'      => $loan->accept_bid_note ?: null,
@@ -632,6 +642,7 @@ class DatabaseMigration extends Command {
                     ];
 
                     $loanArray[$loan->loanid] = $newLoan;
+                    $autoIncrement = $loan->loanid + 1;
                 }
                 $rows = $this->con->table('transactions')
                     ->whereIn('loanid', $ids)
@@ -649,8 +660,11 @@ class DatabaseMigration extends Command {
                     $loanArray[$loanId]['registration_fee'] = -$amount;
                 }
                 
-                DB::table('loans')->insert($loanArray);                
+                DB::table('loans')->insert($loanArray);
             }
+
+            DB::table('loans')->where('id', '=', 100000)->update(['id' => 0]);
+            DB::statement("ALTER TABLE loans AUTO_INCREMENT=$autoIncrement");
         }
 
         if ($table == 'loan_bids') {
