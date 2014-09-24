@@ -92,7 +92,7 @@ Manage Volunteer Mentors
                                             </tr>
                                             <?php unset($assignedMember) ?>
                                         @endif
-                            @endforeach
+                                    @endforeach
                             </tbody>
                         </table>
                     </div>

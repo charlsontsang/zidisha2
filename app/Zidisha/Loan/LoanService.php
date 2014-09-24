@@ -277,14 +277,15 @@ class LoanService
                 'order' => $sortByOrder
             ]
         ];
+        $query->setSort($sorting);
         if ($sortBy == 'repayment_rate') {
-            $sorting += [
+            $sortingInstallments = [
                 'installment_count' => [
                     'order' => 'desc'
                 ]
             ];
+            $query->setSort($sortingInstallments);
         }
-        $query->setSort($sorting);
 
         if ($search) {
             $queryString->setDefaultOperator('AND');

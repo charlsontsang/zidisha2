@@ -20,7 +20,7 @@ class VolunteerMentorService {
                     (b.activation_status = 1 || b.activation_status = 0 || b.loan_status = 4)
                     AND log.verified_at > :date)
                     || b.loan_status = 0 || b.loan_status = 1)
-                    AND b.activation_status != 4
+                    AND b.activation_status != 3
                     AND b.id = bp.borrower_id
                     AND b.id = log.borrower_id
                     AND b.volunteer_mentor_id = :mentorId";
@@ -57,6 +57,7 @@ class VolunteerMentorService {
             ->filterByActive(true)
             ->filterByVolunteerMentorId($borrower->getId())
             ->filterByLastLoanId(null, Criteria::NOT_EQUAL)
+            ->filterByActivationStatus(Borrower::ACTIVATION_APPROVED)
             ->orderById('DESC')
             ->find();
     }

@@ -20,10 +20,15 @@ class VolunteerMentorController extends BaseController
         $this->repaymentService = $repaymentService;
     }
 
-    public function getAssignedMembers()
+    public function getAssignedMembers($vmId = null)
     {
-        /** @var Borrower $borrower */
-        $borrower = \Auth::User()->getBorrower();
+        if ($vmId) {
+            $borrower = \Zidisha\Borrower\BorrowerQuery::create()
+                ->findOneById($vmId);
+        } else {
+            /** @var Borrower $borrower */
+            $borrower = \Auth::User()->getBorrower();
+        }
         if (!$borrower) {
             App::abort(404);
         }

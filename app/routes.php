@@ -458,18 +458,7 @@ Route::group(
             array('uses' => 'AuthController@postResumeApplication', 'as' => 'borrower:post:resumeApplication')
         );
 
-        /**
-         * Routes for Volunteer Mentor
-         */
-        Route::group(
-            array('prefix' => 'volunteer-mentor', 'before' => 'auth|hasSubRole:volunteerMentor'),
-            function () {
-                Route::get(
-                    'assigned-members',
-                    ['uses' => 'VolunteerMentorController@getAssignedMembers', 'as' => 'volunteer-mentor:get:assigned-members']
-                );
-            }
-        );
+
 
         /**
          * Routes for loan page
@@ -552,6 +541,16 @@ Route::group(
                         'uses' => 'AdminController@getRepaymentSchedule',
                         'as'   => 'admin:vm:repayment-schedule'
                     )
+                );
+            }
+        );
+
+        Route::group(
+            array('prefix' => 'volunteer-mentor', 'before' => 'auth|isVolunteerMentorOrAdmin'),
+            function () {
+                Route::get(
+                    'assigned-members/{vmId?}',
+                    ['uses' => 'VolunteerMentorController@getAssignedMembers', 'as' => 'volunteer-mentor:get:assigned-members']
                 );
             }
         );
