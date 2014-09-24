@@ -63,12 +63,9 @@ class AuthController extends BaseController
     {
         $rememberMe = Input::has('remember_me');
         $credentials = Input::only('email', 'password');
-        $countryDate = Utility::getCountryCodeByIP();
-        $isLenderCountry = CountryQuery::create()
-            ->filterByBorrowerCountry(false)
-            ->filterByCountryCode($countryDate['code'])
-            ->count();
-        
+        $country = Utility::getCountryByIP();
+        $isLenderCountry = ($country->getId() && !$country->isBorrowerCountry());
+
         $form = new LoginForm($this->facebookService, $this->googleService, $isLenderCountry);
         $form->handleRequest(Request::instance());
 
@@ -122,16 +119,10 @@ class AuthController extends BaseController
                 }
                 Auth::loginUsingId($checkUser->getId());
             } else {
-                $country = Utility::getCountryCodeByIP();
-                if ($country['code'] == '') {
-                    $defaultCountry = CountryQuery::create()
+                $country = Utility::getCountryByIP();
+                if (!$country->getId()) {
+                    $country = CountryQuery::create()
                         ->getOneByCountryCode('US');
-
-                    $country = [
-                        'code' => $defaultCountry->getCountryCode(),
-                        'name' => $defaultCountry->getName(),
-                        'id'   => $defaultCountry->getId(),
-                    ];
                 }
                 $user = $this->lenderService->joinFacebookUser($facebookUser, $country);
                 return $this->join($user);
@@ -144,13 +135,9 @@ class AuthController extends BaseController
 
     public function getJoin()
     {
-        $country = Utility::getCountryCodeByIP();
-        $isBorrowerCountry = CountryQuery::create()
-            ->filterByBorrowerCountry(true)
-            ->filterByCountryCode($country['code'])
-            ->count();
+        $country = Utility::getCountryByIP();
 
-        if ($isBorrowerCountry) {
+        if ($country->getId() && $country->isBorrowerCountry()) {
             return Redirect::route('borrower:join');
         }
         return Redirect::route('lender:join');
@@ -269,16 +256,10 @@ class AuthController extends BaseController
                         if ($checkUser) {
                             Auth::loginUsingId($checkUser->getId());
                         } else {
-                            $country = Utility::getCountryCodeByIP();
-                            if ($country['code'] == '') {
-                                $defaultCountry = CountryQuery::create()
+                            $country = Utility::getCountryByIP();
+                            if (!$country->getId()) {
+                                $country = CountryQuery::create()
                                     ->getOneByCountryCode('US');
-
-                                $country = [
-                                    'code' => $defaultCountry->getCountryCode(),
-                                    'name' => $defaultCountry->getName(),
-                                    'id'   => $defaultCountry->getId(),
-                                ];
                             }
                             $user = $this->lenderService->joinGoogleUser(
                                 $googleUser, $country

@@ -16,8 +16,8 @@
 
                 {{ BootstrapForm::open(['controller' => 'BorrowerJoinController@postCountry', 'translationDomain' => 'borrower.join.form']) }}
 
-                {{ BootstrapForm::select('country', $form->getCountries()->toKeyValue('id', 'name'), ['id' => $country['id'],
-                'name' =>$country['name']]) }}
+                {{ BootstrapForm::select('country', $form->getCountries()->toKeyValue('id', 'name'), ['id' => $country->getId(),
+                'name' =>$country->getName()]) }}
 
                 {{ BootstrapForm::submit('next') }}
 

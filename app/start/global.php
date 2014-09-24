@@ -79,7 +79,7 @@ App::error(
 
 App::down(
     function () {
-        return Response::make("Be right back!", 503);
+        return Response::view('pages.maintenance', [], 503);
     }
 );
 
@@ -125,3 +125,10 @@ Validator::resolver(function($translator, $data, $rules, $messages)
 {
     return new Zidisha\Form\ZidishaValidator($translator, $data, $rules, $messages);
 });
+
+App::missing(
+    function ($exception) {
+        return Response::view('pages.404', [], 404);
+    }
+);
+

@@ -130,6 +130,10 @@ class ApplicationForm extends AbstractForm
         }
         
         $range = array_reverse($range);
+        if ($this->loan) {
+            $raisedAmount = $this->loan->getRaisedAmount()->getAmount();
+            $range =  array_filter($range, function ($x) use ($raisedAmount) { return $x > $raisedAmount; });
+        }
         
         return array_combine($range, $range);
     }

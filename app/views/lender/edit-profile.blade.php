@@ -29,6 +29,10 @@ Quick Links
 
 		{{ BootstrapForm::file('picture', ['label' => 'Your Picture']) }}
 
+		{{ BootstrapForm::text('firstName', null, ['label' => 'Your FirstName']) }}
+
+		{{ BootstrapForm::text('lastName', null, ['label' => 'Your LastName']) }}
+
 		{{ BootstrapForm::text('city', null, ['label' => 'Your City']) }}
 
 		{{ BootstrapForm::textarea('aboutMe', null, ['label' => 'About Yourself']) }}

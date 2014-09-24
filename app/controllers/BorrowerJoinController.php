@@ -51,7 +51,7 @@ class BorrowerJoinController extends BaseController
 
     public function getCountry()
     {
-        $country = Utility::getCountryCodeByIP();
+        $country = Utility::getCountryByIP();
 
         return View::make('borrower.join.country', compact('country'), ['form' => $this->countryForm]);
     }

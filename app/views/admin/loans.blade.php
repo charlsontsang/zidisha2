@@ -42,7 +42,7 @@ Quick Links
         </td>
         <td>@include('loan/partials/progress', [ 'raised' => rand(1,100)])</td>
         <td>
-            <p><a href="{{ route('admin:borrower:personal-information', $loan->getBorrower()->getUser()->getUsername()) }}">
+            <p><a href="{{ route('admin:borrower:personal-information', $loan->getBorrower()->getId()) }}">
                {{ $loan->getBorrower()->getFirstName() }} {{ $loan->getBorrower()->getLastName() }}
                </a></p>
             <p>{{ $loan->getBorrower()->getUser()->getUsername() }}</p>

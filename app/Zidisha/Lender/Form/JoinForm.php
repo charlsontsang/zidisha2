@@ -31,7 +31,7 @@ class JoinForm extends AbstractForm
 
     public function __construct(FacebookService $facebookService, GoogleService $googleService)
     {
-        $this->country = Utility::getCountryCodeByIP();
+        $this->country = Utility::getCountryByIP();
         $this->facebookJoinUrl = $facebookService->getLoginUrl('lender:facebook-join', [], true);
         $this->googleJoinUrl  = $googleService->getLoginUrl('lender:google-join') . '&max_auth_age=0';
         $this->facebookService = $facebookService;
@@ -73,7 +73,7 @@ class JoinForm extends AbstractForm
     public function getDefaultDate()
     {
         return [
-            'countryId' => $this->country['id'], 
+            'countryId' => $this->country->getId(),
         ];
     }
 
@@ -84,9 +84,6 @@ class JoinForm extends AbstractForm
         return $countries;
     }
 
-    /**
-     * @return array
-     */
     public function getCountry()
     {
         return $this->country;

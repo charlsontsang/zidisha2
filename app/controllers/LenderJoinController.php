@@ -73,16 +73,10 @@ class LenderJoinController extends BaseController
 
         if ($facebookUser) {
             $this->facebookService->addFacebookUserLog($facebookUser, true);
-            $country = Utility::getCountryCodeByIP();
-            if ($country['code'] == '') {
-                $defaultCountry = CountryQuery::create()
+            $country = Utility::getCountryByIP();
+            if (!$country->getId()) {
+                $country = CountryQuery::create()
                     ->getOneByCountryCode('US');
-
-                $country = [
-                    'code' => $defaultCountry->getCountryCode(),
-                    'name' => $defaultCountry->getName(),
-                    'id'   => $defaultCountry->getId(),
-                ];
             }
             $user = $this->lenderService->joinFacebookUser($facebookUser, $country);
 
@@ -128,16 +122,10 @@ class LenderJoinController extends BaseController
                 Session::set('accessToken', $accessToken);
                 $googleUser = $this->googleService->getGoogleUser($accessToken);
                 if ($googleUser) {
-                    $country = Utility::getCountryCodeByIP();
-                    if ($country['code'] == '') {
-                        $defaultCountry = CountryQuery::create()
+                    $country = Utility::getCountryByIP();
+                    if (!$country->getId()) {
+                        $country = CountryQuery::create()
                             ->getOneByCountryCode('US');
-
-                        $country = [
-                            'code' => $defaultCountry->getCountryCode(),
-                            'name' => $defaultCountry->getName(),
-                            'id'   => $defaultCountry->getId(),
-                        ];
                     }
                     $user = $this->lenderService->joinGoogleUser(
                         $googleUser, $country

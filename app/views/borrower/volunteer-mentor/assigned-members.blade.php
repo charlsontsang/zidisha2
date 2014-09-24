@@ -31,7 +31,7 @@
 								{{ $pendingMember->getName() }}
 							</td>
 							<td>
-							    <a href="{{ route('admin:borrower:personal-information', $pendingMember->getUser()->getUsername()) }}">
+							    <a href="{{ route('admin:borrower:personal-information', $pendingMember->getId()) }}">
 							    @lang('borrower.text.assigned-members.review-profile')
 							    </a>
 							</td>
@@ -54,7 +54,7 @@
 		<table class="table table-striped" id="arrears-members">
 			<tbody>
 				@foreach ($data['assignedMembers'] as $assignedMember)
-				        @if ($data['repaymentService']->getRepaymentSchedule($assignedMember->getActiveLoan())->getOverDueInstallmentCount() > 1)
+				        @if ($data['repaymentService']->getRepaymentSchedule($assignedMember->getLastLoan())->getOverDueInstallmentCount() > 1)
 						<tr>
 							<td>
 								{{ $assignedMember->getName() }}
@@ -65,7 +65,7 @@
 		                        </a>
 							</td>
 							<td>
-							    <a href="{{ route('admin:borrower:personal-information', $assignedMember->getUser()->getUsername()) }}">
+							    <a href="{{ route('admin:borrower', $assignedMember->getId()) }}">
 							    @lang('borrower.text.assigned-members.view-contact-information')
 							    </a>
 							</td>
@@ -102,7 +102,7 @@
 		<table class="table table-striped" id="current-members">
 			<tbody>
 				@foreach ($data['assignedMembers'] as $assignedMember)
-			        @if ($data['repaymentService']->getRepaymentSchedule($assignedMember->getActiveLoan())->getOverDueInstallmentCount() <= 1)
+			        @if ($data['repaymentService']->getRepaymentSchedule($assignedMember->getLastLoan())->getOverDueInstallmentCount() <= 1)
 					<tr>
 						<td>
 							{{ $assignedMember->getName() }}
@@ -113,7 +113,7 @@
 	                        </a>
 						</td>
 						<td>
-						    <a href="{{ route('admin:borrower:personal-information', $assignedMember->getUser()->getUsername()) }}">
+						    <a href="{{ route('admin:borrower', $assignedMember->getId()) }}">
 						    @lang('borrower.text.assigned-members.view-contact-information')
 						    </a>
 						</td>

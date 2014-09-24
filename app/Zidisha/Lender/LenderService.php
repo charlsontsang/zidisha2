@@ -12,6 +12,7 @@ use Zidisha\Balance\TransactionQuery;
 use Zidisha\Balance\TransactionService;
 use Zidisha\Balance\WithdrawalRequest;
 use Zidisha\Comment\BorrowerCommentQuery;
+use Zidisha\Country\Country;
 use Zidisha\Currency\Money;
 use Zidisha\Loan\BidQuery;
 use Zidisha\Loan\Loan;
@@ -57,6 +58,8 @@ class LenderService
         ->setUsername($data['username']);
         $lender->getProfile()->setCity($data['city'])
         ->setAboutMe($data['aboutMe']);
+        $lender->setFirstName($data['firstName'])
+            ->setLastName($data['lastName']);
 
         if (!empty($data['password'])) {
             $lender->getUser()->setPassword($data['password']);
@@ -236,14 +239,14 @@ class LenderService
         return $lender;
     }
 
-    public function joinFacebookUser($facebookUser, $country)
+    public function joinFacebookUser($facebookUser,Country $country)
     {
         $data = [
             'email'        => $facebookUser['email'],
             'facebookId'   => $facebookUser['id'],
             'firstName'    => $facebookUser['first_name'],
             'lastName'     => $facebookUser['last_name'],
-            'countryId'    => $country['id'],
+            'countryId'    => $country->getId(),
             'username'     => $facebookUser['name'],
             'facebookData' => $facebookUser
         ];
@@ -269,7 +272,7 @@ class LenderService
         return $errors;
     }
 
-    public function joinGoogleUser(\Google_Service_Oauth2_Userinfoplus $googleUser, $country)
+    public function joinGoogleUser(\Google_Service_Oauth2_Userinfoplus $googleUser,Country $country)
     {
         $data = [
             'email'         => $googleUser->getEmail(),
@@ -277,7 +280,7 @@ class LenderService
             'googlePicture' => $googleUser->getPicture(),
             'firstName'     => $googleUser->getGivenName(),
             'lastName'      => $googleUser->getFamilyName(),
-            'countryId'     => $country['id'],
+            'countryId'     => $country->getId(),
             'username'      => $googleUser->getName(),
         ];
 

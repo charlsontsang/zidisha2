@@ -173,7 +173,7 @@ class Currency
     public function format($moneyString)
     {
         if ($this->sign) {
-            return $this->sign . ' ' . $moneyString;
+            return $this->sign . $moneyString;
         }
 
         return $moneyString . ' ' . $this->code;

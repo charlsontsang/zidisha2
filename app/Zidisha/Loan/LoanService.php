@@ -204,6 +204,8 @@ class LoanService
         $data['usdAmount'] = Converter::toUSD(Money::create($data['amount'], $loan->getCurrencyCode()),$exchangeRate)->getAmount();
 
         $loan = $this->setLoanDetails($borrower, $loan, $data);
+        // Reset raised percentage
+        $loan->setRaisedUsdAmount($loan->getRaisedUsdAmount());
         $loan->save();
 
         if ($loan->isFullyFunded()) {
@@ -278,6 +280,14 @@ class LoanService
             ]
         ];
         $query->setSort($sorting);
+        if ($sortBy == 'repayment_rate') {
+            $sortingInstallments = [
+                'installment_count' => [
+                    'order' => 'desc'
+                ]
+            ];
+            $query->setSort($sortingInstallments);
+        }
 
         if ($search) {
             $queryString->setDefaultOperator('AND');
@@ -394,6 +404,7 @@ class LoanService
             'raised_percentage'   => $loan->getRaisedPercentage(),
             'applied_at'          => $loan->getAppliedAt()->getTimestamp(),
             'repayment_rate'      => $this->getOnTimeRepaymentStatistics($borrower)['repaymentScore'],
+            'installment_count'   => $this->getOnTimeRepaymentStatistics($borrower)['totalTodayInstallmentCount'],
             'most_discussed'      => $discussionCount,
         ];
 

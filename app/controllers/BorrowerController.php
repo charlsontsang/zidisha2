@@ -186,16 +186,13 @@ class BorrowerController extends BaseController
         return \Redirect::action('BorrowerController@getDashboard');
     }
 
-    public function getPersonalInformation($username = null)
+    public function getPersonalInformation($userId = null)
     {
         $isVisitor = false;
         $isAdmin = false;
-        if ($username) {
+        if ($userId) {
             $borrower = BorrowerQuery::create()
-                ->useUserQuery()
-                ->filterByUsername($username)
-                ->endUse()
-                ->findOne();
+                ->findOneById($userId);
             /** @var User $user */
             $user = \Auth::user();
             if ($user->isVolunteerMentor()) {
@@ -280,10 +277,10 @@ class BorrowerController extends BaseController
             $this->borrowerService->updatePersonalInformation($borrower, $data);
 
             \Flash::success('Profile has been updated.');
-            return Redirect::route('admin:borrower:personal-information', $borrower->getUser()->getUsername());
+            return Redirect::route('admin:borrower:personal-information', $borrower->getId());
         }
         \Flash::error('Profile has some errors.');
-        return Redirect::route('admin:borrower:personal-information', $borrower->getUser()->getUsername())->withForm($form);
+        return Redirect::route('admin:borrower:personal-information', $borrower->getId())->withForm($form);
     }
 
     public function getFacebookRedirect()
