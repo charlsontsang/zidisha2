@@ -124,7 +124,7 @@ return array(
     /*
      * Two options are valid currently laravel or sendwithus
      */
-    'mailer.driver' => 'laravel',
+    'mailer.driver' => 'sendwithus',
 
     'enabled' => 'true'
 );
