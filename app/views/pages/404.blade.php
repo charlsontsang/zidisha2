@@ -1,1 +1,7 @@
-<h3>We apologize for the inconvenience. Zidisha is undergoing scheduled maintenance.  Please check back later.</h3>
+@extends('layouts.master')
+
+@section('content')
+<br/>
+<br/>
+<img src="{{ asset('assets/images/404-background.jpg'); }}" />
+@stop

@@ -26,6 +26,7 @@ Route::group(
         /**
          * Routes for static pages
          */
+        Route::get('404', array('uses' => 'PageController@get404Page', 'as' => 'page:404'));
         Route::get('our-story', array('uses' => 'PageController@getOurStory', 'as' => 'page:our-story'));
         Route::get('how-it-works', array('uses' => 'PageController@getHowItWorks', 'as' => 'page:how-it-works'));
         Route::get('faq', array('uses' => 'PageController@getFaq', 'as' => 'page:faq'));
