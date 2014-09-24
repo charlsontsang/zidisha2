@@ -54,7 +54,7 @@ Quick Links
 @if (empty($numberOfInvitesSent))
 <div class="panel panel-info">
     <div class="panel-body">
-        Send a free $25 lending credit to a friend. <a href="{{ route('lender:invite') }}" class="btn btn-primary pull-right">Learn more</a>
+        Send a free $25 lending credit to a friend! <a href="{{ route('lender:invite') }}" class="btn btn-primary pull-right">Learn more</a>
     </div>
 </div>
 @endif
