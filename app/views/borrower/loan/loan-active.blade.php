@@ -17,7 +17,7 @@
         </h4>
     </div>
     <div class="panel-body">
-        @include('borrower.loan.partials.repayment-schedule', compact('repaymentSchedule'))
+        @include('partials.repayment-schedule-table', compact('repaymentSchedule'))
     </div>
 </div>
 
