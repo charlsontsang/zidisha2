@@ -10,14 +10,3 @@
 <li class="@if (Request::segment(2) == 'history') active @else '' @endif "><a href="{{ route('lender:history') }}">Transaction History</a></li>
 <li class="@if (Request::segment(2) == 'funds') active @else '' @endif "><a href="{{ route('lender:funds') }}">Transfer Funds</a></li>
 <li class="@if (Request::segment(2) == 'auto-lending') active @else '' @endif "><a href="{{ route('lender:auto-lending') }}">Autolending</a></li>
-<!-- TO DO: move this logic to a controller -->
-<?php
-$lendingGroups = Zidisha\Lender\LendingGroupQuery::create()->getLendingGroupsForLender(\Auth::user()->getLender());
-?>
-@if (count($lendingGroups)>0)
-    @foreach($lendingGroups as $lendingGroup)
-        <li><a href="{{ route('lender:group', $lendingGroup->getId()) }}">{{ $lendingGroup->getName() }}</a></li>
-    @endforeach
-@else
-        <li><a href="{{ route('lender:groups') }}">Lending Groups</a></li>
-@endif

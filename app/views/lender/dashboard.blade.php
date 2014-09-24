@@ -36,6 +36,21 @@ Quick Links
 </div>
 @endif
 
+@if (count($groups)>0)
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                Your Groups
+            </h3>
+        </div>
+        <div class="panel-body">            
+            @foreach($groups as $group)
+                <p><a href="{{ route('lender:group', $group->getId()) }}">{{ $group->getName() }}</a></p>
+            @endforeach
+        </div>
+    </div>
+@endif
+
 @if (empty($numberOfInvitesSent))
 <div class="panel panel-info">
     <div class="panel-body">

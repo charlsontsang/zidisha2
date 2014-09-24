@@ -149,10 +149,12 @@ class LenderController extends BaseController
             ->filterByLender($lender)
             ->count();
 
+        $groups = LendingGroupQuery::create()->getLendingGroupsForLender(\Auth::user()->getLender());
+
         $comments = $this->borrowerCommentService->getAllCommentForLender($lender);
 
         return View::make('lender.dashboard', compact('currentBalance', 'numberOfInvitesSent',  
-                'comments'
+                'groups', 'comments'
             ));
     }
 
