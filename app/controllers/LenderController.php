@@ -214,11 +214,11 @@ class LenderController extends BaseController
         $form->handleRequest(\Request::instance());
 
         if ($form->isValid()) {
-            $country = Utility::getCountryCodeByIP();
+            $country = Utility::getCountryByIP();
             $blockedCountries = Setting::get('site.countriesCodesBlockedFromUploadFunds');
             $blockedCountries = explode(',', $blockedCountries);
 
-            if (in_array($country['code'], $blockedCountries)) {
+            if (in_array($country->getCountryCode(), $blockedCountries)) {
                 \Flash::error('common.validation.error');
                 return Redirect::route('lender:funds')->withForm($form);
             }
