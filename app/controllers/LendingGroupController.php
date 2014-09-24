@@ -188,7 +188,7 @@ class LendingGroupController extends BaseController
         $lender = Auth::user()->getLender();
         $leaved = $this->lendingGroupService->leaveLendingGroup($group, $lender);
         if(!$leaved){
-            \Flash::success("Please transfer leadership to another group member before leaving. Thanks!");
+            \Flash::success("Please use the \"Edit Group\" page to transfer leadership to another member before leaving. Thanks!");
             return Redirect::route('lender:group', $group->getId());
         }
 
