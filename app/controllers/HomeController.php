@@ -21,9 +21,7 @@ class HomeController extends BaseController {
 
     public function getHome()
     {
-        $country = Utility::getCountryCodeByIP();
-
-        $country = CountryQuery::create()->findOneById($country['id']);
+        $country = Utility::getCountryByIP();
 
         if ($country && $country->isBorrowerCountry()) {
             return $this->getBorrowerHome($country);
