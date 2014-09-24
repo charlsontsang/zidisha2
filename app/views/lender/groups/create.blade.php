@@ -10,7 +10,7 @@ Start a New Lending Group
 		<div class="highlight highlight-panel">
 			<h2>Start a New Lending Group</h2>
 
-			{{ BootstrapForm::open(array('route' => 'lender:groups:post-create', 'translationDomain' => 'lender.group', 'files' => true)) }}
+			{{ BootstrapForm::open(array('route' => 'lender:groups:post-create', 'translationDomain' => 'lender.shared-labels.groups', 'files' => true)) }}
 			{{ BootstrapForm::populate($form) }}
 
 			{{ BootstrapForm::text('name') }}
@@ -21,7 +21,7 @@ Start a New Lending Group
 
 			{{ BootstrapForm::textarea('about') }}
 
-			{{ BootstrapForm::submit('save') }}
+			{{ BootstrapForm::submit('publish') }}
 
 			{{ BootstrapForm::close() }}
 		</div>

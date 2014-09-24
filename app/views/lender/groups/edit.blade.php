@@ -11,7 +11,7 @@ Edit Lending Group
 			<div class="page-header">
 			    <h1>Edit Lending Group</h1>
 			</div>
-			{{ BootstrapForm::open(['route' => ['lender:groups:post-edit', $group->getId()], 'translationDomain' => 'lender.group', 'files' => true]) }}
+			{{ BootstrapForm::open(['route' => ['lender:groups:post-edit', $group->getId()], 'translationDomain' => 'lender.shared-labels.groups', 'files' => true]) }}
 
 			{{ BootstrapForm::populate($form) }}
 
