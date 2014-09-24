@@ -404,7 +404,7 @@
             <div class="tab-pane fade" id="repayment">
                 @if($loan->isDisbursed())
                 <div>
-                    @include('partials.repayment-schedule-table', ['repaymentSchedule' => $repaymentSchedule, 'dollarExchangeRate' => $disbursedExchangeRate])
+                    @include('loan.partials.repayment-schedule', ['repaymentSchedule' => $repaymentSchedule, 'dollarExchangeRate' => $disbursedExchangeRate])
                 </div>
                 @endif
             </div>
