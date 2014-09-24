@@ -164,7 +164,7 @@ class DatabaseMigration extends Command {
                         'id'                 => $user->userid,
                         'username'           => $user->username,
                         'email'              => $email,
-                        'password'           => $user->password,
+                        'password'           => $user->password, // TODO old password, salt column
                         'profile_picture_id' => null, // TODO
                         'facebook_id'        => $user->facebook_id,
                         'google_id'          => null, // since google login is now added
@@ -288,6 +288,8 @@ class DatabaseMigration extends Command {
                     ->select(
                         'borrowers.*',
                         'users.emailVerified',
+                        'users.password',
+                        'users.salt',
                         'countries.id AS country_id',
                         'borrowers_extn.community_leader_first_name',
                         'borrowers_extn.community_leader_last_name',
@@ -335,8 +337,10 @@ class DatabaseMigration extends Command {
                 
                 $activationStatus = [
                     0 => 0, // pending
-                    -1 => 1, // incomplete TODO check
-                    -2 => 2, // reviewed TODO check
+                    -1 => 4, // declined
+                    -2 => 3, // assigned to partner and approved
+//                     => 1, // incomplete
+//                     => 3, // reviewed
                     1 => 3, // approved
                     2 => 4, // declined
                 ];
@@ -356,11 +360,13 @@ class DatabaseMigration extends Command {
                         'country_id'          => $borrower->country_id,
                         'first_name'          => $borrower->FirstName,
                         'last_name'           => $borrower->LastName,
-                        'active_loan_id'      => null, // TODO $borrower->activeLoanID, do when importing loans 
+                        'active_loan_id'      => null, // TODO do in cache step
+                        'last_loan_id'        => null, // TODO do in cache step
                         'loan_status'         => $borrower->ActiveLoan,
                         'active'              => $borrower->Active,
                         'volunteer_mentor_id' => null, // we do it when importing volunteer mentors
                         'referrer_id'         => $referrerId,
+                        //'referrer_by'         => '', TODO
                         'verified'            => $borrower->emailVerified,
                         'activation_status'   => $activationStatus[$borrower->Assigned_status],
                         'created_at'          => date("Y-m-d H:i:s", $borrower->Created),
@@ -378,8 +384,10 @@ class DatabaseMigration extends Command {
                         'city'                       => $borrower->City,
                         'referred_by'                => $borrower->reffered_by,
                         'national_id_number'         => $borrower->nationId,
-                        'phone_number'               => $borrower->TelMobile,// TODO clean up
-                        'alternate_phone_number'     => $borrower->AlternateTelMobile ?: '',// TODO clean up
+                        'phone_number'               => $this->FormatNumber($borrower->TelMobile, $borrower->Country),
+                        'alternate_phone_number'     => $borrower->AlternateTelMobile ? $this->FormatNumber($borrower->AlternateTelMobile, $borrower->Country) : '',
+                        //'old_phone_number'           => $borrower->TelMobile,// TODO
+                        //'old_alternate_phone_number' => $borrower->AlternateTelMobile ?: '',// TODO
                         'business_category_id'       => null,
                         'business_years'             => null,
                         'loan_usage'                 => null,
@@ -442,18 +450,18 @@ class DatabaseMigration extends Command {
 
                     $newJoinLog = [
                         'borrower_id'                => $borrower->userid,
-                        'ip_address'                 => '', // TODO clean up duplicates in facebook_info table $borrower->ip_address ?: '',
+                        'ip_address'                 => '', // TODO do in cache step $borrower->ip_address ?: '',
                         'preferred_loan_amount'      => '',
                         'preferred_interest_rate'    => '',
                         'preferred_repayment_amount' => '',
                         'created_at'                 => date("Y-m-d H:i:s", $borrower->Created),
                         'updated_at'                 => date("Y-m-d H:i:s", $borrower->Created),
+                        'verification_code'          => null,
                     ];
 
-                    // TODO we should probably not share this with old database
-//                    if (!$borrower['users.emailVerified']) {
-//                        $newJoinLog = $newJoinLog + ['verification_code' => md5($borrower['users.password'].$borrower['users.salt'])];
-//                    }
+                    if (!$borrower->emailVerified) {
+                        $newJoinLog['verification_code'] = md5(md5($borrower->password).$borrower->salt);
+                    }
 
                     array_push($borrowerArray, $newBorrower);
                     array_push($profileArray, $profile);
@@ -1815,5 +1823,38 @@ class DatabaseMigration extends Command {
 			array('example', null, InputOption::VALUE_OPTIONAL, 'An example option.', null),
 		);
 	}
+
+    protected function FormatNumber($telnumber, $country){
+        $result=preg_replace("/[^0-9]+/", "", $telnumber);
+        $to_number = "";
+        if($country=='KE'){
+            $to_number = substr($result, -9);
+        }
+        if($country=='NE'){
+            $to_number = substr($result, -8);
+        }
+        if($country=='SN'){
+            $to_number = substr($result, -9);
+        }
+        if($country=='ID'){
+            $to_number = substr($result, -11);
+        }
+        if($country=='BF'){
+            $to_number = substr($result, -8);
+        }
+        if($country=='GN'){
+            $to_number = substr($result, -8);
+        }
+        if($country=='BJ'){
+            $to_number = substr($result, -8);
+        }
+        if($country=='GH'){
+            $to_number = substr($result, -10);
+        }
+        if($country=='ZM'){
+            $to_number = substr($result, -10);
+        }
+        return $to_number;
+    }
 
 }
