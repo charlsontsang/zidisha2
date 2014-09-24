@@ -9205,6 +9205,12 @@ table.dataTable {
 .btn {
   border-radius: 2px;
 }
+.btn:focus,
+.btn:active:focus,
+.btn.active:focus {
+  outline: none;
+  outline-offset: none;
+}
 .btn-icon {
   padding: 0;
   text-align: left;
