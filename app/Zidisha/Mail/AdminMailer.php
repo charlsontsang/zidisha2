@@ -113,11 +113,12 @@ class AdminMailer
         ];
 
         $this->mailer->queue(
-            'emails.label-template',
+            'emails.hero',
             [
-                'to'      => $admin->getEmail(),
-                'content' => \Lang::get('admin.mails.withdraw-request.body', $parameters, 'en'),
-                'subject' => \Lang::get('admin.mails.withdraw-request.subject', [], 'en')
+                'to'         => $admin->getEmail(),
+                'content'    => \Lang::get('admin.mails.withdraw-request.body', $parameters, 'en'),
+                'subject'    => \Lang::get('admin.mails.withdraw-request.subject', [], 'en'),
+                'templateId' => \Setting::get('sendwithus.lender-notifications-template-id')
             ]
         );
     }
