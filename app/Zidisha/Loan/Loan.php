@@ -129,7 +129,7 @@ class Loan extends BaseLoan implements CommentReceiverInterface
 
     public function getRaisedAmount()
     {
-        return $this->getAmount()->multiply($this->getRaisedPercentage())->divide(100)->getAmount();
+        return $this->getAmount()->multiply($this->getRaisedPercentage())->divide(100);
     }
     
     public function getStillNeededUsdAmount()
