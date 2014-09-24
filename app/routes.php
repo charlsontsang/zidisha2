@@ -569,6 +569,18 @@ Route::group(
                         'as'   => 'admin:borrower:personal-information'
                     )
                 );
+                Route::get(
+                    'borrowers/{borrowerId}',
+                    array('uses' => 'AdminController@getBorrower', 'as' => 'admin:borrower')
+                );
+                Route::get(
+                    'borrowers/edit/{borrowerId}',
+                    array('uses' => 'AdminController@getBorrowerEdit', 'as' => 'admin:borrower:edit')
+                );
+                Route::post(
+                    'borrowers/edit/{borrowerId}',
+                    array('uses' => 'AdminController@postBorrowerEdit', 'as' => 'admin:borrower:edit:post', 'before' => 'csrf')
+                );
             }
         );
 
@@ -606,18 +618,7 @@ Route::group(
                     array('uses' => 'AdminController@removeVolunteerMentor', 'as' => 'admin:remove:volunteer-mentor')
                 );
                 Route::get('borrowers', array('uses' => 'AdminController@getBorrowers', 'as' => 'admin:borrowers'));
-                Route::get(
-                    'borrowers/{borrowerId}',
-                    array('uses' => 'AdminController@getBorrower', 'as' => 'admin:borrower')
-                );
-                Route::get(
-                    'borrowers/edit/{borrowerId}',
-                    array('uses' => 'AdminController@getBorrowerEdit', 'as' => 'admin:borrower:edit')
-                );
-                Route::post(
-                    'borrowers/edit/{borrowerId}',
-                    array('uses' => 'AdminController@postBorrowerEdit', 'as' => 'admin:borrower:edit:post', 'before' => 'csrf')
-                );
+
                 Route::get('lenders', array('uses' => 'AdminController@getLenders', 'as' => 'admin:lenders'));
                 
                 Route::post('lender/delete/{lenderId}', array('uses' => 'AdminController@postDeleteLender', 'as' => 'admin:delete:lender'));

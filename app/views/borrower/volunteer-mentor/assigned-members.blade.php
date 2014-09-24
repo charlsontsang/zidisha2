@@ -65,7 +65,7 @@
 		                        </a>
 							</td>
 							<td>
-							    <a href="{{ route('admin:borrower:personal-information', $assignedMember->getUser()->getUsername()) }}">
+							    <a href="{{ route('admin:borrower', $assignedMember->getId()) }}">
 							    @lang('borrower.text.assigned-members.view-contact-information')
 							    </a>
 							</td>
@@ -113,7 +113,7 @@
 	                        </a>
 						</td>
 						<td>
-						    <a href="{{ route('admin:borrower:personal-information', $assignedMember->getUser()->getUsername()) }}">
+						    <a href="{{ route('admin:borrower', $assignedMember->getId()) }}">
 						    @lang('borrower.text.assigned-members.view-contact-information')
 						    </a>
 						</td>
