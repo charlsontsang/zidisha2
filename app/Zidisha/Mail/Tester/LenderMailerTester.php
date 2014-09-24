@@ -163,7 +163,7 @@ class LenderMailerTester
         $this->lenderMailer->sendLenderInviteCredit($invite);
     }
 
-    public function sendLenderWelcomeMail()
+    public function sendWelcomeMail()
     {
         $user = new User();
         $user->setUsername('LenderTest')
