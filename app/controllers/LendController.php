@@ -78,7 +78,7 @@ class LendController extends BaseController
         } else {
             $routeParams['sortBy'] = 'repaymentRate';
             $conditions['sortBy'] = 'repayment_rate';
-            $conditions['sortByOrder'] = 'asc';
+            $conditions['sortByOrder'] = 'desc';
         }
 
         if ($selectedLoanCategory) {

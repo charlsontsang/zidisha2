@@ -277,6 +277,13 @@ class LoanService
                 'order' => $sortByOrder
             ]
         ];
+        if ($sortBy == 'repayment_rate') {
+            $sorting += [
+                'installment_count' => [
+                    'order' => 'desc'
+                ]
+            ];
+        }
         $query->setSort($sorting);
 
         if ($search) {
@@ -394,6 +401,7 @@ class LoanService
             'raised_percentage'   => $loan->getRaisedPercentage(),
             'applied_at'          => $loan->getAppliedAt()->getTimestamp(),
             'repayment_rate'      => $this->getOnTimeRepaymentStatistics($borrower)['repaymentScore'],
+            'installment_count'   => $this->getOnTimeRepaymentStatistics($borrower)['totalTodayInstallmentCount'],
             'most_discussed'      => $discussionCount,
         ];
 
