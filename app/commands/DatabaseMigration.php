@@ -796,16 +796,15 @@ class DatabaseMigration extends Command {
         if ($table == 'borrower_comments') {
             $this->line('Migrate borrower_comments table');
 
-            $count = $this->con->table('zi_comment')->count();
-            $limit = 500;
+            $forumIds = $this->con->table('zi_comment')
+                ->selectRaw('DISTINCT forumid')
+                ->orderBy('forumid')
+                ->get();
 
-            for ($offset = 0; $offset < $count ; $offset += $limit) {
+            foreach ($forumIds as $forumId) {
                 $comments = $this->con->table('zi_comment')
-                    ->join('borrowers', 'borrowers.userid', '=', 'zi_comment.receiverid') // TODO missing borrowers
-                    ->join('users', 'users.userid', '=', 'zi_comment.senderid') // TODO missing users
-                    ->orderBy('id', 'asc')
-                    ->skip($offset)
-                    ->limit($limit)
+                    ->orderBy('left', 'asc')
+                    ->where('forumid', '=', $forumId->forumid)
                     ->get();
                 $commentArray = [];
 
@@ -817,18 +816,31 @@ class DatabaseMigration extends Command {
                         'message'             => $comment->message ? : '',
                         'message_translation' => $comment->tr_message ? : null,
                         'translator_id'       => $comment->tr_user ? : null,
-                        'parent_id'           => null, // TODO
-                        'root_id'             => null, // TODO
-                        'level'               => 0, // TODO
+                        'parent_id'           => $comment->parentid ?: null,
+                        'root_id'             => $comment->id,
+                        'level'               => 0,
                         'removed'             => false,
+                        'reschedule_id'       => $comment->reschedule_id ?: null,
                         'published'           => $comment->publish,
                         'created_at'          => date("Y-m-d H:i:s", $comment->pub_date),
                         'updated_at'          => $comment->modified ? date("Y-m-d H:i:s", $comment->modified) : null,
-                        // TODO reschedule_id
                     ];
                     
-                    $commentArray[] = $newComment;
+                    $commentArray[$comment->id] = $newComment;
                 }
+
+                foreach ($comments as $comment) {
+                    if (!$comment->parentid) {
+                        continue;
+                    }
+
+                    $parent = $commentArray[$comment->parentid];
+                    $commentArray[$comment->id]['root_id'] = $parent['root_id'];
+                    $commentArray[$comment->id]['level'] = $parent['level'] + 1;
+                }
+
+                ksort($commentArray);
+
                 DB::table('borrower_comments')->insert($commentArray);
             }
         }
