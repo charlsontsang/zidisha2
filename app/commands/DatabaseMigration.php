@@ -1829,7 +1829,6 @@ class DatabaseMigration extends Command {
 
             for ($offset = 0; $offset < $count; $offset += $limit) {
                 $reschedules = $this->con->table('reschedule')
-                    ->where('period', '>', 0) // TODO remove broken reschedule
                     ->skip($offset)
                     ->limit($limit)
                     ->get();
