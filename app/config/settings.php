@@ -259,5 +259,8 @@ return [
         'sendwithus.inactive-invitee-template-id' => [
             'label' => 'Inactive invitee template ID'
         ],
+        'sendwithus.lender-notifications-template-id' => [
+            'label' => 'Lender account notifications template ID'
+        ],
     ]
 ];
