@@ -64,7 +64,7 @@ Invite Friends
         </div>
 
         @if ($count_invites > 0)
-        <div class="panel panel-info" style="margin-top: 30px">
+        <div class="panel panel-info invitees">
             <div class="panel-heading">
                 <h3 class="panel-title text-center">
                     @if ($count_joined_invites == 0 && $count_invites == 1) 

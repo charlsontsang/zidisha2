@@ -8751,6 +8751,11 @@ body {
     margin-bottom: 30px;
   }
 }
+@media (min-width: 768px) {
+  .panel-info.invitees {
+    margin-top: 30px;
+  }
+}
 .page-section-inverted {
   background-color: #333232;
   color: #e6e6e6;
