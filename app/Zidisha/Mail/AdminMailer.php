@@ -66,7 +66,6 @@ class AdminMailer
             $exceptions[] = $_exception;
         }
         $parameters = [
-
             'trace'      => $exception->getTraceAsString(),
             'exceptions' => $exceptions,
             'request'    => $request,
@@ -80,8 +79,8 @@ class AdminMailer
             [
                 'to'         => \Config::get('app.developerEmail'),
                 'subject'    => 'ERROR: ' . get_class($exception),
-                'templateId' => \Setting::get('sendwithus.lender-notifications-template-id'),
-                'content'    => View::make('emails.admin.error', compact('parameters'))->render()
+                'content'    => View::make('emails.admin.error', $parameters)->render(),
+                'templateId' => \Setting::get('sendwithus.lender-notifications-template-id')
             ]
         );
     }
