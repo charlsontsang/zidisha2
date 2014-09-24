@@ -639,6 +639,7 @@ class DatabaseMigration extends Command {
                         'accept_bids_note'      => $loan->accept_bid_note ?: null,
                         'sift_science_score'    => null, // new
                         'deleted_by_admin'      => $loan->adminDelete,
+                        'created_at'            => $loan->applydate ? date("Y-m-d H:i:s", $loan->applydate) : null,
                     ];
 
                     $loanArray[$loan->loanid] = $newLoan;
