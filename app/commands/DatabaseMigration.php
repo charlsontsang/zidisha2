@@ -1494,13 +1494,13 @@ class DatabaseMigration extends Command {
                     $newLendingGroup = [
                         'id'                       => $lendingGroup->id,
                         'name'                     => $lendingGroup->name,
-                        'website'                  => $lendingGroup->website,
-                        'group_profile_picture_id' => $lendingGroup->image, //TODO with upload things
+                        'website'                  => $lendingGroup->website ?: null,
+                        'group_profile_picture_id' => null, //$lendingGroup->image, //TODO with upload things
                         'about'                    => $lendingGroup->about_grp,
                         'creator_id'               => $lendingGroup->created_by,
                         'leader_id'                => $lendingGroup->grp_leader,
                         'created_at'               => $lendingGroup->created,
-                        'updated_at'              => $lendingGroup->modified
+                        'updated_at'               => $lendingGroup->modified
                     ];
 
                     array_push($lendingGroupArray, $newLendingGroup);
