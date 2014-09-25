@@ -30,7 +30,7 @@ class BorrowerMailer{
         $local = $borrower->getCountry()->getLanguageCode();
         $hashCode = $borrower->getJoinLog()->getVerificationCode();
         $parameters = [
-            'verifyLink' => route('home') . 'ident=' . $borrower->getId() . '&activate=' . $hashCode, //TODO check
+            'verifyLink' => route('borrower:verify', $hashCode),
         ];
 
         $body = \Lang::get('borrower.mails.email-verification.body', $parameters, $local);
