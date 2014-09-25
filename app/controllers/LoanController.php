@@ -257,6 +257,6 @@ class LoanController extends BaseController
         $facebookUrl = "http://www.facebook.com/sharer.php?s=100&p[url]=" . urlencode($relativeInviteUrl);
         $mailUrl = "mailto:?body=%0D%0A%0D%0A%0D%0A".$loanUrl;
 
-        return View::make('pages.loan.success', compact('loan', 'twitterUrl', 'facebookUrl', 'mailUrl'));
+        return View::make('loan.success', compact('loan', 'twitterUrl', 'facebookUrl', 'mailUrl'));
     }
 }
