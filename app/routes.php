@@ -573,14 +573,7 @@ Route::group(
                     'borrowers/{borrowerId}',
                     array('uses' => 'AdminController@getBorrower', 'as' => 'admin:borrower')
                 );
-                Route::get(
-                    'borrowers/edit/{borrowerId}',
-                    array('uses' => 'AdminController@getBorrowerEdit', 'as' => 'admin:borrower:edit')
-                );
-                Route::post(
-                    'borrowers/edit/{borrowerId}',
-                    array('uses' => 'AdminController@postBorrowerEdit', 'as' => 'admin:borrower:edit:post', 'before' => 'csrf')
-                );
+
             }
         );
 
@@ -884,6 +877,14 @@ Route::group(
                 Route::get(
                     'allow-loan-forgiveness-loans',
                     ['uses' => 'AdminLoanForgivenessController@getLoans', 'as' => 'admin:loan-forgiveness:loans']
+                );
+                Route::get(
+                    'borrowers/edit/{borrowerId}',
+                    array('uses' => 'AdminController@getBorrowerEdit', 'as' => 'admin:borrower:edit')
+                );
+                Route::post(
+                    'borrowers/edit/{borrowerId}',
+                    array('uses' => 'AdminController@postBorrowerEdit', 'as' => 'admin:borrower:edit:post', 'before' => 'csrf')
                 );
             }
         );
