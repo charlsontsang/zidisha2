@@ -1580,7 +1580,8 @@ class DatabaseMigration extends Command {
                         'lender_id'    => $withdrawalRequest->userid,
                         'amount'       => $withdrawalRequest->amount,
                         'paid'         => $withdrawalRequest->paid,
-                        'paypal_email' => $withdrawalRequest->paypalemail
+                        'paypal_email' => $withdrawalRequest->paypalemail,
+                        'created_at'   => date("Y-m-d H:i:s", $withdrawalRequest->date),
                     ];
 
                     array_push($withdrawalRequestArray, $newWithdrawalRequest);
