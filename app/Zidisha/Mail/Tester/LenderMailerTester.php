@@ -60,7 +60,7 @@ class LenderMailerTester
             ->setLastName('borrowerLastName');
         $loan = new Loan();
         $loan->setBorrower($borrower)
-            ->setId(3343);
+            ->setId(40);
         $user = new User();
         $user->setUsername('LenderTest')
             ->setEmail('lendertest@gmail.com');
@@ -84,9 +84,11 @@ class LenderMailerTester
         $borrower = new Borrower();
         $borrower->setUser($userBorrower)
             ->setFirstName('borrowerFirstName')
-            ->setLastName('borrowerLastName');
+            ->setLastName('borrowerLastName')
+            ->setLastLoanId(44);
         $loan = new Loan();
-        $loan->setBorrower($borrower);
+        $loan->setBorrower($borrower)
+            ->setId(40);
         $user = new User();
         $user->setUsername('LenderTest')
             ->setEmail('lendertest@gmail.com');
@@ -112,9 +114,11 @@ class LenderMailerTester
         $borrower = new Borrower();
         $borrower->setUser($userBorrower)
             ->setFirstName('borrowerFirstName')
-            ->setLastName('borrowerLastName');
+            ->setLastName('borrowerLastName')
+            ->setLastLoanId(44);
         $loan = new Loan();
-        $loan->setBorrower($borrower);
+        $loan->setBorrower($borrower)
+            ->setId(40);
         $user = new User();
         $user->setUsername('LenderTest')
             ->setEmail('lendertest@gmail.com');
@@ -228,6 +232,7 @@ class LenderMailerTester
             ->setLastName('borrowerLastName');
         $loan = new Loan();
         $loan->setBorrower($borrower)
+            ->setId(40)
             ->setUsdAmount(Money::create('400'));
         $user = new User();
         $user->setUsername('LenderTest')
@@ -251,7 +256,8 @@ class LenderMailerTester
             ->setLastName('borrowerLastName');
         $loan = new Loan();
         $loan->setBorrower($borrower)
-            ->setUsdAmount(Money::create('400'));
+            ->setUsdAmount(Money::create('400'))
+            ->setId(40);
         $user = new User();
         $user->setUsername('LenderTest')
             ->setEmail('lendertest@gmail.com');
@@ -277,7 +283,8 @@ class LenderMailerTester
             ->setLastName('borrowerLastName');
         $loan = new Loan();
         $loan->setBorrower($borrower)
-            ->setUsdAmount(Money::create('400'));
+            ->setUsdAmount(Money::create('400'))
+            ->setId(40);
         $user = new User();
         $user->setUsername('LenderTest')
             ->setEmail('lendertest@gmail.com');
@@ -328,7 +335,8 @@ class LenderMailerTester
             ->setFirstName('borrowerFirstName')
             ->setLastName('borrowerLastName');
         $loan = new Loan();
-        $loan->setBorrower($borrower);
+        $loan->setBorrower($borrower)
+            ->setId(40);
         $user = new User();
         $user->setUsername('LenderTest')
             ->setEmail('lendertest@gmail.com');
@@ -358,7 +366,8 @@ class LenderMailerTester
             ->setLastName('borrowerLastName');
         $loan = new Loan();
         $loan->setBorrower($borrower)
-            ->setDisbursedAt(Carbon::now()->subMonths(6));
+            ->setDisbursedAt(Carbon::now()->subMonths(6))
+            ->setId(40);
         $user = new User();
         $user->setUsername('LenderTest')
             ->setEmail('lendertest@gmail.com');
@@ -388,7 +397,8 @@ class LenderMailerTester
             ->setLastName('borrowerLastName');
         $loan = new Loan();
         $loan->setBorrower($borrower)
-            ->setDisbursedAt(Carbon::now()->subMonths(6));
+            ->setDisbursedAt(Carbon::now()->subMonths(6))
+            ->setId(40);
         $user = new User();
         $user->setUsername('LenderTest')
             ->setEmail('lendertest@gmail.com');
@@ -411,7 +421,8 @@ class LenderMailerTester
             ->setLastName('borrowerLastName');
         $loan = new Loan();
         $loan->setBorrower($borrower)
-            ->setDisbursedAt(Carbon::now()->subMonths(6));
+            ->setDisbursedAt(Carbon::now()->subMonths(6))
+            ->setId(40);
         $user = new User();
         $user->setUsername('LenderTest')
             ->setEmail('lendertest@gmail.com');
@@ -434,7 +445,8 @@ class LenderMailerTester
             ->setLastName('borrowerLastName');
         $loan = new Loan();
         $loan->setBorrower($borrower)
-            ->setDisbursedAt(Carbon::now()->subMonths(6));
+            ->setDisbursedAt(Carbon::now()->subMonths(6))
+            ->setId(40);
         $user = new User();
         $user->setUsername('LenderTest')
             ->setEmail('lendertest@gmail.com');
@@ -459,7 +471,8 @@ class LenderMailerTester
             ->setLastName('borrowerLastName');
         $loan = new Loan();
         $loan->setBorrower($borrower)
-            ->setDisbursedAt(Carbon::now()->subMonths(6));
+            ->setDisbursedAt(Carbon::now()->subMonths(6))
+            ->setId(40);
         $user = new User();
         $user->setUsername('LenderTest')
             ->setEmail('lendertest@gmail.com');
@@ -482,7 +495,8 @@ class LenderMailerTester
             ->setLastName('borrowerLastName');
         $loan = new Loan();
         $loan->setBorrower($borrower)
-            ->setDisbursedAt(Carbon::now()->subMonths(6));
+            ->setDisbursedAt(Carbon::now()->subMonths(6))
+            ->setId(40);
         $user = new User();
         $user->setUsername('LenderTest')
             ->setEmail('lendertest@gmail.com');
@@ -505,7 +519,8 @@ class LenderMailerTester
             ->setLastName('borrowerLastName');
         $loan = new Loan();
         $loan->setBorrower($borrower)
-            ->setDisbursedAt(Carbon::now()->subMonths(6));
+            ->setDisbursedAt(Carbon::now()->subMonths(6))
+            ->setId(40);
         $user = new User();
         $user->setUsername('LenderTest')
             ->setEmail('lendertest@gmail.com');
@@ -528,7 +543,8 @@ class LenderMailerTester
             ->setLastName('borrowerLastName');
         $loan = new Loan();
         $loan->setBorrower($borrower)
-            ->setDisbursedAt(Carbon::now()->subMonths(6));
+            ->setDisbursedAt(Carbon::now()->subMonths(6))
+            ->setId(40);
         $user = new User();
         $user->setUsername('LenderTest')
             ->setEmail('lendertest@gmail.com');
@@ -598,7 +614,7 @@ class LenderMailerTester
             ->setLastName('borrowerLastName');
         $loan = new Loan();
         $loan->setBorrower($borrower)
-            ->setId(444)
+            ->setId(40)
             ->setDisbursedAt(Carbon::now()->subMonths(6));
         $user = new User();
         $user->setUsername('LenderTest')

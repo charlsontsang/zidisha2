@@ -463,7 +463,7 @@ class LenderMailer
     {
         $parameters = [
             'borrowerName' => $loan->getBorrower()->getName(),
-            'loanUrl'      => route('loan:index', ['loanId' => $loan->getId()]),
+            'loanUrl'      => route('loan:index', $loan->getId()),
         ];
 
         $this->mailer->queue(
