@@ -403,13 +403,13 @@ class BorrowerService
 
         \Session::forget('BorrowerJoin');
 
-        \Flash::info(\Lang::get('borrower.save-later.information-is-saved'));
+        \Flash::info(\Lang::get('borrower.join.save-later.information-is-saved'));
         \Flash::info(
             \Lang::get(
-                'borrower.save-later.application-resume-link' . ' ' . route('borrower:resumeApplication', $resumeCode)
+                'borrower.join.save-later.application-resume-link', [ 'resumeLink' => route('borrower:resumeApplication', $resumeCode)]
             )
         );
-        \Flash::info(\Lang::get('borrower.save-later.application-resume-code' . ' ' . $resumeCode));
+        \Flash::info(\Lang::get('borrower.join.save-later.application-resume-code', ['resumeCode' => $resumeCode]));
         return \Redirect::action('BorrowerJoinController@getCountry');
     }
 
