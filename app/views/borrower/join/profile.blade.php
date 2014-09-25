@@ -227,7 +227,7 @@
 <p>
     <button type="submit" class="btn btn-facebook" name="disconnect-facebook" value="disconnect-facebook">
         <span class="fa fa-facebook fa-lg fa-fw"></span>
-        @lang('borrower.join.form.disconnect-facebook')
+        {{--@lang('borrower.join.form.disconnect-facebook')--}}
     </button>
 </p>
 -->
