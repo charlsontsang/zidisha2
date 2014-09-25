@@ -1054,7 +1054,7 @@ class DatabaseMigration extends Command {
                     $newInviteVisit = [
                         'id'               => $inviteVisit->id,
                         'lender_id'        => $inviteVisit->lender_id,
-                        'lender_invite_id' => $inviteVisit->lender_invite_id,
+                        'lender_invite_id' => $inviteVisit->lender_invite_id ?: null,
                         'share_type'       => $inviteVisit->share_type,
                         'http_referer'     => $inviteVisit->http_referer,
                         'ip_address'       => $inviteVisit->ip_address,
