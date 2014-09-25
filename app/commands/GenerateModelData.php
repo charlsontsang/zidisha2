@@ -720,6 +720,7 @@ class GenerateModelData extends Command
 
         $transaction = new Transaction();
         $transaction->setAmount(Money::create(10000, 'USD'))
+            ->setUser($user)
             ->setDescription('YC money')
             ->setType(Transaction::FUND_UPLOAD)
             ->setTransactionDate(Carbon::now());
