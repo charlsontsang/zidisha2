@@ -35,6 +35,8 @@ class DatabaseMigration extends Command {
 	{
         $table = $this->argument('table');
         $this->con = DB::connection('zidisha1');
+        $this->con->disableQueryLog();
+        DB::connection()->disableQueryLog();
 
         if ($table == 'all') {
             $this->line('Migrate all tables');
