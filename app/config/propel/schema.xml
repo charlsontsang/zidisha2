@@ -973,13 +973,13 @@
         <column name="id" type="INTEGER" required="true" primaryKey="true" autoIncrement="true"/>
         <column name="borrower_id" type="INTEGER" required="true"/>
         <column name="type" type="ENUM" valueSet="loan, activation"/>
-        <column name="borrower_email" type="VARCHAR" size="100" required="true"/>
+        <column name="borrower_email" type="VARCHAR" size="100" required="false"/>
         <column name="cc" type="VARCHAR"/>
         <column name="reply_to" type="VARCHAR" required="true"/>
         <column name="subject" type="VARCHAR" required="true"/>
         <column name="message" type="LONGVARCHAR" required="true"/>
         <column name="sent_at" type="TIMESTAMP" required="true"/>
-        <column name="sender_name" type="VARCHAR" required="true"/>
+        <column name="sender_name" type="VARCHAR" required="false"/>
         <column name="loan_id" type="INTEGER" size="11"/>
         <behavior name="timestampable"/>
         <foreign-key foreignTable="loans">

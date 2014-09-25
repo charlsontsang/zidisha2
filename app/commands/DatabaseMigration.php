@@ -1382,27 +1382,35 @@ class DatabaseMigration extends Command {
         if ($table == 'borrower_feedback_messages') {
             $this->line('Migrate borrower_feedback_messages table');
 
-            $count = $this->con->table('borrower_reports')->count();
+            $count = $this->con
+                ->table('borrower_reports')
+                ->join('borrowers', 'borrowers.userid', '=', 'borrower_reports.borrower_id')
+                ->count();
             $limit = 500;
 
             for ($offset = 0; $offset < $count; $offset += $limit) {
-                $feedbackMessages = $this->con->table('borrower_reports')
-                    ->skip($offset)->limit($limit)->get();
+                $feedbackMessages = $this->con
+                    ->table('borrower_reports')
+                    ->join('borrowers', 'borrowers.userid', '=', 'borrower_reports.borrower_id')
+                    ->skip($offset)
+                    ->limit($limit)
+                    ->get();
                 $feedbackMessageArray = [];
 
                 foreach ($feedbackMessages as $feedbackMessage) {
-                    $newFeedbackMessage = [
+                    $newFeedbackMessage = array(
                         'borrower_id'    => $feedbackMessage->borrower_id,
-                        'type'           => null, //TODO
-                        'borrower_email' => '', //TODO
-                        'cc'             => $feedbackMessage->cc,
+                        'type'           => $feedbackMessage->loanid ? FeedbackMessage::COLUMN_LOAN_TYPE : FeedbackMessage::COLUMN_ACTIVATION_TYPE,
+                        'borrower_email' => '',
+                        'cc'             => $feedbackMessage->cc ?: null,
                         'reply_to'       => $feedbackMessage->replyto,
                         'subject'        => $feedbackMessage->subject,
                         'message'        => $feedbackMessage->message,
                         'sent_at'        => date("Y-m-d H:i:s", $feedbackMessage->sent_on),
-                        'sender_name'    => '', //TODO
-                        'loan_id'        => $feedbackMessage->loanid
-                    ];
+                        'sender_name'    => '',
+                        'loan_id'        => $feedbackMessage->loanid ?: null,
+                        'created_at'     => date("Y-m-d H:i:s", $feedbackMessage->sent_on),
+                    );
 
                     array_push($feedbackMessageArray, $newFeedbackMessage);
                 }
