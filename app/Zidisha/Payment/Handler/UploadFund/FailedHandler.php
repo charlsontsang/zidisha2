@@ -2,14 +2,13 @@
 namespace Zidisha\Payment\Handler\UploadFund;
 
 
-use Zidisha\Payment\Error\PaymentError;
 use Zidisha\Payment\PaymentHandler;
 
 class FailedHandler extends PaymentHandler
 {
-    public function redirect(PaymentError $paymentError)
+    public function redirect()
     {
-        \Flash::error($paymentError->getMessage());
+        \Flash::error($this->paymentError->getMessage());
         return \Redirect::route('lender:funds');
     }
 } 

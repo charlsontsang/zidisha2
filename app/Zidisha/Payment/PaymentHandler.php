@@ -33,14 +33,19 @@ class PaymentHandler
     public function setPayment($payment)
     {
         $this->payment = $payment;
+
+        return $this;
     }
 
     /**
      * @param PaymentError $paymentError
+     * @return $this
      */
     public function setPaymentError(PaymentError $paymentError)
     {
         $this->paymentError = $paymentError;
+
+        return $this;
     }
 
 }
