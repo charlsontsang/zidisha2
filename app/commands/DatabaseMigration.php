@@ -1607,8 +1607,8 @@ class DatabaseMigration extends Command {
                         'lender_id'               => $follower->lender_id,
                         'borrower_id'             => $follower->borrower_id,
                         'active'                  => !$follower->deleted,
-                        'notify_comment'          => $follower->comment_notify, // TODO cross check, if !$value
-                        'notify_loan_application' => $follower->new_loan_notify, // TODO cross check, if !$value
+                        'notify_comment'          => $follower->comment_notify,
+                        'notify_loan_application' => $follower->new_loan_notify,
                         'created_at'              => $follower->created,
                         'updated_at'              => $follower->modified
                     ];
