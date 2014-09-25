@@ -389,7 +389,7 @@ class BorrowerMailer{
             'emails.hero',
             [
                 'to'         => $email,
-                'label'      => \Lang::get('borrower.mails.loan-arrear-mediation-notification.body', $parameters, $local),
+                'content'    => \Lang::get('borrower.mails.loan-arrear-mediation-notification.body', $parameters, $local),
                 'subject'    => \Lang::get('borrower.mails.loan-arrear-mediation-notification.subject', [], $local),
                 'templateId' => \Setting::get('sendwithus.borrower-notifications-template-id')
             ]
