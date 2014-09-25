@@ -1681,12 +1681,18 @@ class DatabaseMigration extends Command {
         if ($table == 'credits_earned') {
             $this->line('Migrate credits_earned table');
 
-            $count = $this->con->table('credits_earned')->count();
+            $count = $this->con->table('credits_earned')
+                ->join('loanapplic', 'loanapplic.loanid', '=', 'credits_earned.loan_id')
+                ->count();
             $limit = 500;
 
             for ($offset = 0; $offset < $count; $offset += $limit) {
-                $creditsEarned = $this->con->table('credits_earned')
-                    ->skip($offset)->limit($limit)->get();
+                $creditsEarned = $this->con
+                    ->table('credits_earned')
+                    ->join('loanapplic', 'loanapplic.loanid', '=', 'credits_earned.loan_id')
+                    ->skip($offset)
+                    ->limit($limit)
+                    ->get();
                 $creditEarnedArray = [];
 
                 foreach ($creditsEarned as $creditEarned) {
@@ -1694,7 +1700,7 @@ class DatabaseMigration extends Command {
                         'id'          => $creditEarned->id,
                         'borrower_id' => $creditEarned->borrower_id,
                         'loan_id'     => $creditEarned->loan_id,
-                        'credit_type' => $creditEarned->credit_type, // TODO, add valueSet in table?
+                        'credit_type' => $creditEarned->credit_type,
                         'ref_id'      => $creditEarned->ref_id,
                         'credit'      => $creditEarned->credit,
                         'created_at'  => date("Y-m-d H:i:s", $creditEarned->created),
