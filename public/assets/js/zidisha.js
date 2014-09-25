@@ -309,6 +309,7 @@ var handler;
     });
 
     var $donationAmount = $('#donation-amount'),
+        $donationPercent = $('#donation-percent'),
         $donationCreditAmount = $('#donation-credit-amount'),
         $creditAmount = $('#credit-amount'),
         $transactionFeeAmount = $('#transaction-fee-amount'),
@@ -350,11 +351,11 @@ var handler;
     }
 
     function updateDonation() {
-        if ($('#donation-percent').val() == 'other') {
-            $('#donation-amount').val('').focus();
+        if ($donationPercent.val() == 'other') {
+            $donationAmount.val('').focus();
         } else {
-            var $donationBase = $amount.val() * $('#donation-percent').val();
-            $('#donation-amount').val(formatMoney($donationBase, 2));
+            var $donationBase = $amount.val() * $donationPercent.val();
+            $donationAmount.val(formatMoney($donationBase, 2));
         }
     }
 
@@ -370,23 +371,23 @@ var handler;
         return false;
     });
 
-    $('#donation-percent').on('change', function() {
+    $donationPercent.on('change', function() {
         updateDonation();
         calculateAmounts();
     });
 
     $donationAmount.on('keyup', function() {
         calculateAmounts();
-        if ($('#donation-amount').val() == $amount.val() * .2) {
-            $('#donation-percent').val('.2');
-        } else if ($('#donation-amount').val() == $amount.val() * .15) {
-            $('#donation-percent').val('.15');
-        } else if ($('#donation-amount').val() == $amount.val() * .1) {
-            $('#donation-percent').val('.1');
-        } else if ($('#donation-amount').val() == 0) {
-            $('#donation-percent').val('0');
+        if ($donationAmount.val() == $amount.val() * .2) {
+            $donationPercent.val('.2');
+        } else if ($donationAmount.val() == $amount.val() * .15) {
+            $donationPercent.val('.15');
+        } else if ($donationAmount.val() == $amount.val() * .1) {
+            $donationPercent.val('.1');
+        } else if ($donationAmount.val() == 0) {
+            $donationPercent.val('0');
         } else {
-            $('#donation-percent').val('other');
+            $donationPercent.val('other');
         }
     });
     $amount.on('keyup', calculateAmounts);
