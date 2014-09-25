@@ -24,6 +24,7 @@ return [
         'file-deleted' => 'The file has been deleted.',
         'already-member' => ':email is already a Zidisha member.',
         'invite-success' => 'Your invite has been sent.',
+        'borrower-join-email-sent' => 'Confirmation email sent!',
     ],
     'add-photo' => 'Add a photo',
     'delete-upload' => 'Delete',
