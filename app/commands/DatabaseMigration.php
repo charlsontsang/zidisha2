@@ -679,8 +679,9 @@ class DatabaseMigration extends Command {
 
             for ($offset = 0; $offset < $count; $offset += $limit) {
                 $bids = $this->con->table('loanbids')
-                    ->select('loanbids.*', 'loanapplic.borrowerid')
+                    ->select('loanbids.*', 'loanapplic.borrowerid', 'auto_lendbids.id as auto_lendbids_id')
                     ->join('loanapplic', 'loanbids.loanid', '=', 'loanapplic.loanid')
+                    ->leftJoin('auto_lendbids', 'loanbids.bidid', '=', 'auto_lendbids.loanbid_id')
                     ->skip($offset)->take($limit)->get();
                 $bidArray = [];
 
@@ -691,13 +692,13 @@ class DatabaseMigration extends Command {
                         'lender_id'               => $bid->lenderid,
                         'borrower_id'             => $bid->borrowerid,
                         'bid_amount'              => $bid->bidamount,
-                        'interest_rate'           => '', //TODO
+                        'interest_rate'           => $bid->bidint,
                         'active'                  => $bid->active,
                         'accepted_amount'         => $bid->givenamount,
                         'bid_at'                  => date("Y-m-d H:i:s", $bid->biddate),
                         'is_lender_invite_credit' => $bid->use_lender_invite_credit,
-                        'is_automated_lending'    => null, //TODO
-                        'updated_at'              => date("Y-m-d H:i:s", $bid->modified), //TODO is necessary?
+                        'is_automated_lending'    => $bid->auto_lendbids_id ? true: false,
+                        'updated_at'              => $bid->modified ? date("Y-m-d H:i:s", $bid->modified) : null,
                     ];
 
                     array_push($bidArray, $newBid);
