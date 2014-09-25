@@ -99,5 +99,10 @@ return [
 
             If you know and recommend :borrowerName as a trustworthy person, you do not need to respond. If you do not know or do not recommend
             :borrowerName, please inform us by SMS reply to this number. Thank you.'
-    ]
+    ],
+    'save-later' => [
+        'information-is-saved' => 'your information is saved!',
+        'application-resume-link' => "your application resume link is :resumeLink",
+        'application-resume-code' => "your application resume code is :resumeCode",
+    ],
 ];

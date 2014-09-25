@@ -21,7 +21,7 @@ class RemindersController extends Controller {
 	 */
 	public function postRemind()
 	{
-		switch ($response = Password::remind(Input::only('username')))
+		switch ($response = Password::remind(Input::only('email')))
 		{
 			case Password::INVALID_USER:
                 Flash::error("borrower.$response");
@@ -53,7 +53,7 @@ class RemindersController extends Controller {
 	public function postReset()
 	{
 		$credentials = Input::only(
-			'username', 'password', 'password_confirmation', 'token'
+			'email', 'password', 'password_confirmation', 'token'
 		);
 
 		$response = Password::reset($credentials, function($user, $password)
@@ -73,5 +73,4 @@ class RemindersController extends Controller {
 				return Redirect::to('/');
 		}
 	}
-
 }

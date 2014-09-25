@@ -7,7 +7,7 @@
 @section('content')
 <div class="page-header">
     <h1>{{ $borrower->getName() }}
-        @if(Auth::check() && Auth::getUser()->isAdmin())
+        @if(Auth::check() && Auth::getUser()->isVolunteerOrAdmin())
             <span class="pull-right">
                 <a href="{{ route('admin:borrower:edit', $borrower->getId()) }}"> <i class="fa fa-pencil-square-o fa-lg"></i></a>
             </span>

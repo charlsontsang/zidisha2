@@ -10,9 +10,9 @@
             {{ Form::open(array('url' => 'password/reset')) }}
 
             <div class="form-group">
-                {{ Form::label('username', \Lang::get('borrower.reminders.username-or-password')) }}
-                {{ Form::text('username', null, array('class' => 'form-control')) }}
-                {{ $errors->first('username', '<div class="alert alert-danger">:message</div>') }}
+                {{ Form::label('email', \Lang::get('borrower.reminders.email-password-reset')) }}
+                {{ Form::text('email', null, array('class' => 'form-control')) }}
+                {{ $errors->first('email', '<div class="alert alert-danger">:message</div>') }}
             </div>
 
             <div class="form-group">

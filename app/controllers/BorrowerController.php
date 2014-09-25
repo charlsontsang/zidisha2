@@ -182,7 +182,7 @@ class BorrowerController extends BaseController
 
         $this->borrowerService->sendVerificationCode($borrower);
 
-        \Flash::info('borrower.dashboard.pending-confirmation');
+        \Flash::info(\Lang::get('common.comments.flash.borrower-join-email-sent'));
         return \Redirect::action('BorrowerController@getDashboard');
     }
 

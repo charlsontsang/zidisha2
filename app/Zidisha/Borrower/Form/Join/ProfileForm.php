@@ -28,7 +28,7 @@ class ProfileForm extends AbstractForm
 
         return [
             'username'                 => 'required|unique:users,username',
-            'password'                 => 'required',
+            'password'                 => 'required|min:7',
             'email'                    => 'required|email|unique:users,email',
             'preferredLoanAmount'      => 'required',
             'preferredInterestRate'    => 'required',

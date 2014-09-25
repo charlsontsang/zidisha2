@@ -201,6 +201,8 @@ class AuthController extends BaseController
 
     public function resumeApplication($resumeCode)
     {
+        \Session::forget('BorrowerJoin');
+
         $borrowerGuest = BorrowerGuestQuery::create()
             ->findOneByResumecode($resumeCode);
 
@@ -225,14 +227,14 @@ class AuthController extends BaseController
 
     public function postResumeApplication()
     {
-        $code = \Input::get('code');
+        $resumeCode = \Input::get('resumeCode');
 
-        if (!$code) {
+        if (!$resumeCode) {
             \App::abort(404, 'fatal error');
         }
 
         return \Redirect::route('borrower:resumeApplication', [
-                'code' => $code
+                'code' => $resumeCode
             ]);
     }
 

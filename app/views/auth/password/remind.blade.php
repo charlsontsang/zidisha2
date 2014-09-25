@@ -11,8 +11,8 @@
             <br/><br/>
             {{ Form::open(array('url' => 'password/remind')) }}
             <div class="form-group">
-                {{ Form::label('username', \Lang::get('borrower.reminders.username-or-password')) }}
-                {{ Form::text('username', null, array('class' => 'form-control')) }}
+                {{ Form::label('email', \Lang::get('borrower.reminders.email-password-reset')) }}
+                {{ Form::text('email', null, array('class' => 'form-control')) }}
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
 
