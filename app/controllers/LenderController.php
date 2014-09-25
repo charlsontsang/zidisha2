@@ -177,18 +177,19 @@ class LenderController extends BaseController
             ->getCurrentBalance($userId);
 
         $page = Request::query('page') ? : 1;
+        $limit = 50;
 
         $currentBalancePageObj = DB::select(
             'SELECT SUM(amount) AS total
              FROM transactions as t
-             INNER JOIN
-             (SELECT id
-             FROM transactions
-             WHERE user_id = ?
-             ORDER BY transaction_date DESC, transactions.id DESC
-             LIMIT 50 OFFSET ?) as t2
-             ON t.id = t2.id',
-            array($userId, ($page - 1) * 50)
+             INNER JOIN (
+                 SELECT id
+                 FROM transactions
+                 WHERE user_id = ?
+                 ORDER BY transaction_date DESC, transactions.id DESC
+                 LIMIT 18446744073709551615 OFFSET ?
+             ) as t2 ON t.id = t2.id',
+            array($userId, ($page - 1) * $limit)
         );
 
         $currentBalancePage = Money::create($currentBalancePageObj[0]->total);
@@ -197,7 +198,7 @@ class LenderController extends BaseController
             ->orderByTransactionDate('desc')
             ->orderById('desc')
             ->filterByUserId($userId)
-            ->paginate($page, 50);
+            ->paginate($page, $limit);
 
         return View::make('lender.history', compact('paginator', 'currentBalance', 'currentBalancePage'));
     }
