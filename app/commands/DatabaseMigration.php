@@ -1007,12 +1007,19 @@ class DatabaseMigration extends Command {
         if ($table == 'lender_invites') {
             $this->line('Migrate lender_invites table');
 
-            $count = $this->con->table('lender_invites')->count();
+            $count = $this->con
+                ->table('lender_invites')
+                ->join('lenders', 'lenders.userid', '=', 'lender_invites.lender_id')
+                ->count();
             $limit = 500;
 
             for ($offset = 0; $offset < $count; $offset += $limit) {
-                $lenderInvites = $this->con->table('lender_invites')
-                    ->skip($offset)->limit($limit)->get();
+                $lenderInvites = $this->con
+                    ->table('lender_invites')
+                    ->join('lenders', 'lenders.userid', '=', 'lender_invites.lender_id')
+                    ->skip($offset)
+                    ->limit($limit)
+                    ->get();
                 $lenderInviteArray = [];
 
                 foreach ($lenderInvites as $lenderInvite) {
@@ -1021,8 +1028,8 @@ class DatabaseMigration extends Command {
                         'lender_id'  => $lenderInvite->lender_id,
                         'email'      => $lenderInvite->email,
                         'invited'    => $lenderInvite->invited,
-                        'hash'       => $lenderInvite->hash,
-                        'invitee_id' => $lenderInvite->invitee_id,
+                        'hash'       => $lenderInvite->hash ?: null,
+                        'invitee_id' => $lenderInvite->invitee_id ?: null,
                         'created_at' => $lenderInvite->created // because it's already DateTime in old DB
                     ];
 
