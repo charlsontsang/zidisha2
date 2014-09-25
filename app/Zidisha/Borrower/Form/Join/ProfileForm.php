@@ -41,7 +41,7 @@ class ProfileForm extends AbstractForm
             'lastName'                 => 'required',
             'address'                  => 'required',
             'addressInstructions'      => 'required',
-            'city'                     => 'required',
+            'city'                     => 'required|alpha_num_space',
             'nationalIdNumber'         => 'required|unique:borrower_profiles,national_id_number',
             'phoneNumber'              => 'required|numeric|digits:' . $phoneNumberLength . '|UniqueNumber|MutualUniqueNumber',
             'alternatePhoneNumber'     => 'numeric|digits:' . $phoneNumberLength . '|UniqueNumber|MutualUniqueNumber',
