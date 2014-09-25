@@ -581,7 +581,7 @@
         <column name="receipt" type="VARCHAR" size="32" required="true"/>
         <column name="date" type="TIMESTAMP" required="true"/>
         <column name="amount" type="DECIMAL" size="10" scale="2" required="true"/>
-        <column name="borrower_id" type="INTEGER" required="true"/>
+        <column name="borrower_id" type="INTEGER" required="false"/>
         <column name="status" type="TINYINT" size="2" required="true"/>
         <column name="phone" type="VARCHAR" size="45" required="true"/>
         <column name="details" type="LONGVARCHAR" required="true"/>
