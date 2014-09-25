@@ -1255,7 +1255,8 @@ class DatabaseMigration extends Command {
                         'amount'      => $forgivenessLoanShare->amount,
                         'usdAmount'   => $forgivenessLoanShare->damount,
                         'is_accepted' => $forgivenessLoanShare->tnc,
-                        'date'        => date("Y-m-d H:i:s", $forgivenessLoanShare->date)
+                        'date'        => date("Y-m-d H:i:s", $forgivenessLoanShare->date),
+                        'created_at'  => date("Y-m-d H:i:s", $forgivenessLoanShare->date),
                     ];
 
                     array_push($forgivenessLoanShareArray, $newForgivenessLoanShare);
