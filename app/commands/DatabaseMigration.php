@@ -1441,7 +1441,7 @@ class DatabaseMigration extends Command {
                         'is_photo_clear'            => $borrowerReview->is_photo_clear,
                         'is_desc_clear'             => $borrowerReview->is_desc_clear,
                         'is_address_locatable'      => $borrowerReview->is_addr_locatable,
-                        'is_address_locatable_note' => '', //TODO
+                        'is_address_locatable_note' => '',
                         'is_number_provided'        => $borrowerReview->is_number_provided,
                         'is_nat_id_uploaded'        => $borrowerReview->is_nat_id_uploaded,
                         'is_rec_form_uploaded'      => $borrowerReview->is_rec_form_uploaded,
