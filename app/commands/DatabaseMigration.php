@@ -1073,7 +1073,7 @@ class DatabaseMigration extends Command {
             $count = $this->con->table('lender_invite_transactions')->count();
             $limit = 500;
 
-            for ($offset = 0; $offset < $count; $$offset += $limit) {
+            for ($offset = 0; $offset < $count; $offset += $limit) {
                 $inviteTransactions = $this->con->table('lender_invite_transactions')
                     ->skip($offset)->limit($limit)->get();
                 $inviteTransactionArray = [];
@@ -1086,8 +1086,8 @@ class DatabaseMigration extends Command {
                         'description'      => $inviteTransaction->txn_desc,
                         'transaction_date' => $inviteTransaction->created, // because it's already DateTime in old DB
                         'type'             => $inviteTransaction->txn_type,
-                        'loan_id'          => $inviteTransaction->loan_id,
-                        'loan_bid_id'      => $inviteTransaction->loanbid_id
+                        'loan_id'          => $inviteTransaction->loan_id ?: null,
+                        'loan_bid_id'      => $inviteTransaction->loanbid_id ?: null
                     ];
 
                     array_push($inviteTransactionArray, $newInviteTransaction);
@@ -1134,7 +1134,7 @@ class DatabaseMigration extends Command {
                 foreach ($paypalTransactions as $paypalTransaction) {
                     $newPaypalTransaction = [
                         'id'                     => $paypalTransaction->invoiceid,
-                        'transaction_id'         => $paypalTransaction->txnid,
+                        'transaction_id'         => $paypalTransaction->txnid ?: null,
                         'transaction_type'       => $paypalTransaction->txn_type,
                         'amount'                 => $paypalTransaction->amount,
                         'donation_amount'        => $paypalTransaction->donation,
