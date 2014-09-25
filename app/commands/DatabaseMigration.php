@@ -4,6 +4,7 @@ use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Zidisha\Balance\Transaction;
+use Zidisha\Borrower\FeedbackMessage;
 use Zidisha\Currency\Currency;
 use Zidisha\Lender\Lender;
 use Zidisha\User\User;
@@ -57,7 +58,6 @@ class DatabaseMigration extends Command {
             $this->call('migrate-zidisha1', array('table' => 'borrower_invites'));
             $this->call('migrate-zidisha1', array('table' => 'reschedules'));
             $this->call('migrate-zidisha1', array('table' => 'borrower_comments'));
-            dd('TODO: other models');
             $this->call('migrate-zidisha1', array('table' => 'loan_bids'));
             $this->call('migrate-zidisha1', array('table' => 'admin_notes'));
             $this->call('migrate-zidisha1', array('table' => 'transactions'));
@@ -67,15 +67,13 @@ class DatabaseMigration extends Command {
             $this->call('migrate-zidisha1', array('table' => 'lender_invite_transactions'));
             $this->call('migrate-zidisha1', array('table' => 'paypal_ipn_log'));
             $this->call('migrate-zidisha1', array('table' => 'paypal_transactions'));
-            $this->call('migrate-zidisha1', array('table' => 'gift_cards'));
             $this->call('migrate-zidisha1', array('table' => 'gift_card_transaction'));
+            $this->call('migrate-zidisha1', array('table' => 'gift_cards'));
             $this->call('migrate-zidisha1', array('table' => 'forgiveness_loan_shares'));
             $this->call('migrate-zidisha1', array('table' => 'forgiveness_loans'));
             $this->call('migrate-zidisha1', array('table' => 'borrower_refunds'));
             $this->call('migrate-zidisha1', array('table' => 'borrower_feedback_messages'));
             $this->call('migrate-zidisha1', array('table' => 'borrower_reviews'));
-            $this->call('migrate-zidisha1', array('table' => 'lending_groups'));
-            $this->call('migrate-zidisha1', array('table' => 'lending_group_members'));
             $this->call('migrate-zidisha1', array('table' => 'withdrawal_requests'));
             $this->call('migrate-zidisha1', array('table' => 'followers'));
             $this->call('migrate-zidisha1', array('table' => 'credit_settings'));
@@ -84,7 +82,8 @@ class DatabaseMigration extends Command {
             $this->call('migrate-zidisha1', array('table' => 'statistics'));
             $this->call('migrate-zidisha1', array('table' => 'bulk_emails'));
             $this->call('migrate-zidisha1', array('table' => 'bulk_email_recipients'));
-
+            $this->call('migrate-zidisha1', array('table' => 'lending_groups'));
+            $this->call('migrate-zidisha1', array('table' => 'lending_group_members'));
         }
 
         if ($table == 'users') {
