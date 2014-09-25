@@ -880,7 +880,7 @@
         <column name="amount" type="DECIMAL" size="10" scale="2" required="true"/>
         <column name="borrower_id" type="INTEGER" required="true"/>
         <column name="loan_id" type="INTEGER" required="true"/>
-        <column name="borrower_payment_id" type="INTEGER" required="true"/>
+        <column name="borrower_payment_id" type="INTEGER" required="false"/>
         <column name="refunded" type="BOOLEAN" default="0"/>
         <behavior name="timestampable"/>
         <foreign-key foreignTable="borrowers">

@@ -1310,7 +1310,7 @@ class DatabaseMigration extends Command {
                         'amount'              => $borrowerRefund->amount,
                         'borrower_id'         => $borrowerRefund->borrower_id,
                         'loan_id'             => $borrowerRefund->loan_id,
-                        'borrower_payment_id' => $borrowerRefund->borrower_payment_id,
+                        'borrower_payment_id' => $borrowerRefund->borrower_payment_id ?: null,
                         'refunded'            => $borrowerRefund->refunded,
                         'created_at'          => $borrowerRefund->created // because it's already DateTime in old DB
                     ];
