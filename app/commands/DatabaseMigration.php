@@ -1421,12 +1421,18 @@ class DatabaseMigration extends Command {
         if ($table == 'borrower_reviews') {
             $this->line('Migrate borrower_reviews table');
 
-            $count = $this->con->table('borrower_review')->count();
+            $count = $this->con->table('borrower_review')
+                ->join('borrowers', 'borrowers.userid', '=', 'borrower_review.borrower_id')
+                ->count();
             $limit = 500;
 
             for ($offset = 0; $offset < $count; $offset += $limit) {
-                $borrowerReviews = $this->con->table('borrower_review')
-                    ->skip($offset)->limit($limit)->get();
+                $borrowerReviews = $this->con
+                    ->table('borrower_review')
+                    ->join('borrowers', 'borrowers.userid', '=', 'borrower_review.borrower_id')
+                    ->skip($offset)
+                    ->limit($limit)
+                    ->get();
                 $borrowerReviewArray = [];
 
                 foreach ($borrowerReviews as $borrowerReview) {
