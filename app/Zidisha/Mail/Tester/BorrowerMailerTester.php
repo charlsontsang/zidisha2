@@ -81,7 +81,8 @@ class BorrowerMailerTester
         $borrower->setUser($userBorrower)
             ->setCountry($this->borrowerCountry)
             ->setFirstName('borrowerFirstName')
-            ->setLastName('borrowerLastName');
+            ->setLastName('borrowerLastName')
+            ->setLastLoanId(44);
 
         $userBorrowerVM = new User();
         $userBorrowerVM->setUsername('LenderTestvm')
@@ -91,6 +92,7 @@ class BorrowerMailerTester
             ->setCountry($this->borrowerCountry)
             ->setFirstName('borrowerFirstNamevm')
             ->setLastName('borrowerLastNamevm');
+
         $volunteerMentor = new VolunteerMentor();
         $volunteerMentor->setBorrowerVolunteer($borrowerVM);
 
@@ -161,7 +163,7 @@ class BorrowerMailerTester
             ->setLastName('Last Name');
 
         $loan = new Loan();
-        $loan->setId(14);
+        $loan->setId(40);
 
         $this->borrowerMailer->sendLoanConfirmationMail($borrower, $loan);
     }
@@ -330,15 +332,15 @@ class BorrowerMailerTester
         $userBorrower = new User();
         $userBorrower->setUsername('LenderTest')
             ->setEmail('lendertest@gmail.com');
+        $country = CountryQuery::create()
+            ->findOne();
+        $country->setRepaymentInstructions('This is Testing of  repayment instructions!!!');
         $borrower = new Borrower();
         $borrower->setUser($userBorrower)
             ->setCountry($this->borrowerCountry)
             ->setFirstName('borrowerFirstName')
             ->setLastName('borrowerLastName')
-            ->setCountry(
-                CountryQuery::create()
-                    ->findOne()
-            );
+            ->setCountry($country);
         $installment = new Installment();
         $installment->setDueDate(new \DateTime())
             ->setAmount(Money::create(340, $borrower->getCountry()->getCurrencyCode()))

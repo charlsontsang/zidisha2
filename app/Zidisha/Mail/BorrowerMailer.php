@@ -30,7 +30,7 @@ class BorrowerMailer{
         $local = $borrower->getCountry()->getLanguageCode();
         $hashCode = $borrower->getJoinLog()->getVerificationCode();
         $parameters = [
-            'verifyLink' => route('home') . 'ident=' . $borrower->getId() . '&activate=' . $hashCode, //TODO check
+            'verifyLink' => route('borrower:verify', $hashCode),
         ];
 
         $body = \Lang::get('borrower.mails.email-verification.body', $parameters, $local);
@@ -68,17 +68,18 @@ class BorrowerMailer{
 
     public function sendFormResumeLaterMail($email, $resumeCode)
     {
-            $parameters = [
-                'resumeLink' => route('borrower:resumeApplication', $resumeCode),
-                'resumeCode' => $resumeCode
-            ];
+        $parameters = [
+            'resumeLink' => route('borrower:resumeApplication', $resumeCode),
+            'resumeCode' => $resumeCode
+        ];
 
         $this->mailer->queue(
-            'emails.label-template',
+            'emails.hero',
             [
-                'to'      => $email,
-                'content' => \Lang::get('borrower.mails.resume-registration.body', $parameters, 'en'),
-                'subject' => \Lang::get('borrower.mails.resume-registration.subject', [], 'en')
+                'to'         => $email,
+                'content'    => \Lang::get('borrower.mails.resume-registration.body', $parameters, 'en'),
+                'subject'    => \Lang::get('borrower.mails.resume-registration.subject', [], 'en'),
+                'templateId' => \Setting::get('sendwithus.borrower-notifications-template-id')
             ]
         );
     }
@@ -108,36 +109,38 @@ class BorrowerMailer{
     public function sendFeedbackMail(FeedbackMessage $feedbackMessage)
     {
         $data = [
-            'content' => nl2br($feedbackMessage->getMessage()),
-            'to'      => $feedbackMessage->getBorrowerEmail(),
-            'from'    => $feedbackMessage->getReplyTo(),
-            'subject' => $feedbackMessage->getSubject()
+            'content'    => nl2br($feedbackMessage->getMessage()),
+            'to'         => $feedbackMessage->getBorrowerEmail(),
+            'from'       => $feedbackMessage->getReplyTo(),
+            'subject'    => $feedbackMessage->getSubject(),
+            'templateId' => \Setting::get('sendwithus.borrower-notifications-template-id')
         ];
 
-        $this->mailer->queue('emails.label-template', $data);
+        $this->mailer->queue('emails.hero', $data);
 
        // TODO necessary? or just use cc field
         foreach($feedbackMessage->getCcEmails() as $email) {
             $data['to'] = $email;
-            $this->mailer->queue('emails.label-template', $data);
+            $this->mailer->queue('emails.hero', $data);
         }
     }
 
     public function sendLoanFeedbackMail(FeedbackMessage $feedbackMessage)
     {
         $data = [
-            'content' => nl2br($feedbackMessage->getMessage()),
-            'to'      => $feedbackMessage->getBorrowerEmail(),
-            'from'    => $feedbackMessage->getReplyTo(),
-            'subject' => $feedbackMessage->getSubject()
+            'content'    => nl2br($feedbackMessage->getMessage()),
+            'to'         => $feedbackMessage->getBorrowerEmail(),
+            'from'       => $feedbackMessage->getReplyTo(),
+            'subject'    => $feedbackMessage->getSubject(),
+            'templateId' => \Setting::get('sendwithus.borrower-notifications-template-id')
         ];
 
-        $this->mailer->queue('emails.label-template', $data);
+        $this->mailer->queue('emails.hero', $data);
 
         // TODO necessary? or just use cc field
         foreach($feedbackMessage->getCcEmails() as $email) {
             $data['to'] = $email;
-            $this->mailer->queue('emails.label-template', $data);
+            $this->mailer->queue('emails.hero', $data);
         }
     }
 
@@ -154,11 +157,12 @@ class BorrowerMailer{
             ];
 
         $this->mailer->queue(
-            'emails.label-template',
+            'emails.hero',
             [
-                'to'      => $borrower->getUser()->getEmail(),
-                'content' => \Lang::get('borrower.mails.loan-confirmation.body', $parameters, $local),
-                'subject' => $subject
+                'to'         => $borrower->getUser()->getEmail(),
+                'content'    => \Lang::get('borrower.mails.loan-confirmation.body', $parameters, $local),
+                'subject'    => $subject,
+                'templateId' => \Setting::get('sendwithus.borrower-notifications-template-id')
             ]
         );
     }
@@ -172,11 +176,12 @@ class BorrowerMailer{
             ];
 
         $this->mailer->queue(
-            'emails.label-template',
+            'emails.hero',
             [
-                'to'      => $borrower->getUser()->getEmail(),
-                'content' => \Lang::get('borrower.mails.approved-confirmation.body', $parameters, $local),
-                'subject' => \Lang::get('borrower.mails.approved-confirmation.subject', [], $local),
+                'to'         => $borrower->getUser()->getEmail(),
+                'content'    => \Lang::get('borrower.mails.approved-confirmation.body', $parameters, $local),
+                'subject'    => \Lang::get('borrower.mails.approved-confirmation.subject', [], $local),
+                'templateId' => \Setting::get('sendwithus.borrower-notifications-template-id')
             ]
         );
     }
@@ -381,11 +386,12 @@ class BorrowerMailer{
         ];
 
         $this->mailer->send(
-            'emails.label-template',
+            'emails.hero',
             [
                 'to'         => $email,
-                'label'      => \Lang::get('borrower.mails.loan-arrear-mediation-notification.body', $parameters, $local),
+                'content'    => \Lang::get('borrower.mails.loan-arrear-mediation-notification.body', $parameters, $local),
                 'subject'    => \Lang::get('borrower.mails.loan-arrear-mediation-notification.subject', [], $local),
+                'templateId' => \Setting::get('sendwithus.borrower-notifications-template-id')
             ]
         );
     }

@@ -59,11 +59,11 @@
         @endif
     </b>
     <p style="color:red;">
-        {{ $exception->getMessage() }}    
+        {{ $exception->getMessage() }}
     </p>
-    
+
     <p>
-        <i>{{ $exception->getFile() }}:{{ $exception->getLine() }}</i>    
+        <i>{{ $exception->getFile() }}:{{ $exception->getLine() }}</i>
     </p>
 
     <hr/>

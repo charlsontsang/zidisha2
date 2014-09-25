@@ -18,29 +18,6 @@ class AdminMailer
         $this->mailer = $mailer;
     }
 
-    public function sendBorrowerCommentNotification(Loan $loan, Comment $comment, $postedBy, $images)
-    {
-        $admin = UserQuery::create()
-            ->findOneById(\Setting::get('site.adminId'));
-        $borrower = $loan->getBorrower();
-        $parameters = [
-            'borrowerName' => $borrower->getName(),
-            'message'      => nl2br($comment->getMessage()),
-            'postedBy'     => $postedBy,
-            'images'       => $images,
-        ];
-
-        $this->mailer->queue(
-            'emails.hero',
-            [
-                'to'         => $admin->getEmail(),
-                'subject'    => \Lang::get('lender.mails.borrower-comment-notification.subject', $parameters, 'en'),
-                'content'    => \Lang::get('lender.mails.borrower-comment-notification.body', $parameters, 'en'),
-                'templateId' => \Setting::get('sendwithus.comments-template-id'),
-            ]
-        );
-    }
-
     public function sendErrorMail(\Exception $exception)
     {
         /** @var Request $request */
@@ -87,37 +64,22 @@ class AdminMailer
             $_exception = $_exception->getPrevious();
             $exceptions[] = $_exception;
         }
-
+        $parameters = [
+            'trace'      => $exception->getTraceAsString(),
+            'exceptions' => $exceptions,
+            'request'    => $request,
+            'session'    => $session,
+            'input'      => $input,
+            'cookies'    => $cookies,
+            'user'       => $user,
+        ];
         $this->mailer->send(
-            'emails.admin.error',
+            'emails.hero',
             [
                 'to'         => \Config::get('app.developerEmail'),
                 'subject'    => 'ERROR: ' . get_class($exception),
-                'trace'      => $exception->getTraceAsString(),
-                'exceptions' => $exceptions,
-                'request'    => $request,
-                'session'    => $session,
-                'input'      => $input,
-                'cookies'    => $cookies,
-                'user'       => $user,
-            ]
-        );
-    }
-
-    public function sendWithdrawalRequestMail(Money $money)
-    {
-        $admin = UserQuery::create()
-            ->findOneById(\Setting::get('site.adminId'));
-        $parameters = [
-            'withdrawAmount' => (string)$money,
-        ];
-
-        $this->mailer->queue(
-            'emails.label-template',
-            [
-                'to'      => $admin->getEmail(),
-                'content' => \Lang::get('admin.mails.withdraw-request.body', $parameters, 'en'),
-                'subject' => \Lang::get('admin.mails.withdraw-request.subject', [], 'en')
+                'content'    => \View::make('emails.admin.error', $parameters)->render(),
+                'templateId' => \Setting::get('sendwithus.lender-notifications-template-id')
             ]
         );
     }

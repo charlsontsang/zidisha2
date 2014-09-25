@@ -174,4 +174,9 @@ class PageController extends BaseController {
 
         return \Redirect::to("/$to");
     }
+
+    public function get404Page()
+    {
+        return View::make('pages.404');
+    }
 }
