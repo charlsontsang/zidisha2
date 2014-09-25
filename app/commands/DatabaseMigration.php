@@ -793,7 +793,6 @@ class DatabaseMigration extends Command {
             }
         }
 
-        // TODO all type of comments table , till borrower_uploads table
         if ($table == 'borrower_comments') {
             $this->line('Migrate borrower_comments table');
 
@@ -1543,6 +1542,56 @@ class DatabaseMigration extends Command {
                 DB::table('lending_group_members')->insert($groupMemberArray);
             }
         }
+
+        if ($table == 'lending_group_comments') {
+            $this->line('Migrate lending_group_comments table');
+
+            $forumIds = $this->con->table('lending_group_comment')
+                ->selectRaw('DISTINCT forumid')
+                ->orderBy('forumid')
+                ->get();
+
+            foreach ($forumIds as $forumId) {
+                $comments = $this->con->table('lending_group_comment')
+                    ->orderBy('left', 'asc')
+                    ->where('forumid', '=', $forumId->forumid)
+                    ->get();
+                $commentArray = [];
+
+                foreach ($comments as $comment) {
+                    $newComment = [
+                        'id'                  => $comment->id,
+                        'user_id'             => $comment->senderid,
+                        'lending_group_id'    => $comment->receiverid,
+                        'message'             => $comment->message ? : '',
+                        'parent_id'           => $comment->parentid ?: null,
+                        'root_id'             => $comment->id,
+                        'level'               => 0,
+                        'removed'             => false,
+                        'created_at'          => date("Y-m-d H:i:s", $comment->pub_date),
+                        'updated_at'          => $comment->modified ? date("Y-m-d H:i:s", $comment->modified) : null,
+                    ];
+
+                    $commentArray[$comment->id] = $newComment;
+                }
+
+                foreach ($comments as $comment) {
+                    if (!$comment->parentid) {
+                        continue;
+                    }
+
+                    $parent = $commentArray[$comment->parentid];
+                    $commentArray[$comment->id]['root_id'] = $parent['root_id'];
+                    $commentArray[$comment->id]['level'] = $parent['level'] + 1;
+                }
+
+                ksort($commentArray);
+
+                DB::table('lending_group_comments')->insert($commentArray);
+            }
+        }
+
+        // TODO lending_group notifications
 
         if ($table == 'withdrawal_requests') {
             $this->line('Migrate withdrawal_requests table');
