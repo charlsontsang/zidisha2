@@ -110,7 +110,13 @@ class PayPalService extends PaymentService
             ->setToken($setExpressCheckoutResponse->Token);
         $payPalTransaction->save();
 
-        $paypalUrl = 'https://www.sandbox.paypal.com/webscr?cmd=_express-checkout&token=' . $setExpressCheckoutResponse->Token;
+        if (\Setting::get('paypal.mode') == 'sandbox') {
+            $paypalUrl = 'https://www.sandbox.paypal.com/webscr?cmd=_express-checkout&token=' . $setExpressCheckoutResponse->Token;
+        } elseif (\Setting::get('paypal.mode') == 'live') {
+            $paypalUrl = 'https://www.paypal.com/webscr?cmd=_express-checkout&token=' . $setExpressCheckoutResponse->Token;
+        } else {
+            throw new \Exception("Paypal mode must be either 'sandbox' or 'live'.");
+        }
 
         return \Redirect::away($paypalUrl);
     }
