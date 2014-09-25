@@ -1062,12 +1062,6 @@
         <foreign-key foreignTable="uploads" phpName="GroupProfilePicture">
             <reference local="group_profile_picture_id" foreign="id"/>
         </foreign-key>
-        <unique>
-            <unique-column name="name"/>
-        </unique>
-        <unique>
-            <unique-column name="website"/>
-        </unique>
     </table>
 
     <table name="lending_group_notifications" phpName="LendingGroupNotification" namespace="Lender">
