@@ -88,11 +88,11 @@ Gift Cards
 
                     {{ BootstrapForm::label('Delivery Method:') }}
 
-                    {{ BootstrapForm::radio('orderType', 'Email', null, [
+                    {{ BootstrapForm::radio('orderType', 'email', null, [
                         'label' => 'Email', 'id' => 'email'
                     ]) }}
 
-                    {{ BootstrapForm::radio('orderType', 'Self-Print', null, [
+                    {{ BootstrapForm::radio('orderType', 'print', null, [
                         'label' => 'Self-Print', 'id' => 'print'
                     ]) }}
 

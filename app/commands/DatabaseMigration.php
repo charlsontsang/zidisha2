@@ -1163,35 +1163,35 @@ class DatabaseMigration extends Command {
                 $giftCards = $this->con->table('gift_cards as g')
                     ->select(
                         'g.*',
-                        'gt.userid as userId',
-                        'gt.id as giftTransactionId')
-                    ->join('gift_transaction as gt', 'g.txn_id', '=', 'gt.txn_id') // TODO cross check(is it gift_transaction.txn_id or gift_transaction.id)
+                        'lenders.userid as userId'
+                    )
+                    ->join('gift_transaction as gt', 'g.txn_id', '=', 'gt.id')
+                    ->leftJoin('lenders', 'lenders.userid', '=', 'gt.userid')
                     ->skip($offset)
                     ->limit($limit)
-                    ->orderBy('g.txn_id', 'asc')
                     ->get();
                 $giftCardArray = [];
 
                 foreach ($giftCards as $giftCard) {
                     $newGiftCard = [
                         'id'                       => $giftCard->id,
-                        'lender_id'                => $giftCard->userId,
-                        'template'                 => $giftCard->template, // TODO make sure old and new template ids are same
-                        'order_type'               => $giftCard->order_type, // TODO check both string are smame
+                        'lender_id'                => $giftCard->userId ?: null,
+                        'template'                 => $giftCard->template ?: null,
+                        'order_type'               => $giftCard->order_type,
                         'card_amount'              => $giftCard->card_amount,
-                        'recipient_email'          => $giftCard->recipient_email,
-                        'confirmation_email'       => $giftCard->sender,
-                        'recipient_name'           => $giftCard->to_name,
-                        'from_name'                => $giftCard->from_name,
-                        'message'                  => $giftCard->message,
+                        'recipient_email'          => $giftCard->recipient_email ?: null,
+                        'confirmation_email'       => $giftCard->sender ?: null,
+                        'recipient_name'           => $giftCard->to_name ?: null,
+                        'from_name'                => $giftCard->from_name ?: null,
+                        'message'                  => $giftCard->message ?: null,
                         'date'                     => date("Y-m-d H:i:s", $giftCard->date),
                         'expire_date'              => date("Y-m-d H:i:s", $giftCard->exp_date),
                         'card_code'                => $giftCard->card_code,
                         'status'                   => $giftCard->status,
                         'claimed'                  => $giftCard->claimed,
-                        'recipient_id'             => $giftCard->claimed_by,
+                        'recipient_id'             => $giftCard->claimed_by  ?: null,
                         'donated'                  => $giftCard->donated,
-                        'gift_card_transaction_id' => $giftCard->giftTransactionId // TODO cross check
+                        'gift_card_transaction_id' => $giftCard->txn_id,
                     ];
 
                     array_push($giftCardArray, $newGiftCard);

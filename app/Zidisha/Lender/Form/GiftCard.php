@@ -13,7 +13,7 @@ class GiftCard extends AbstractForm
     {
         return [
             'amount' => 'required|in:' . implode(',', array_keys($this->getAmounts())),
-            'orderType' => 'required|in:Email,Self-Print',
+            'orderType' => 'required|in:email,print',
             'template' => 'required|in:' . implode(',', array_keys($this->getTemplates())),
             'recipientEmail' => 'email|required_if:orderType,Email',
             'recipientName' => '',
@@ -26,7 +26,7 @@ class GiftCard extends AbstractForm
     public function getDefaultData()
     {
         return [
-            'orderType' => 'Email',
+            'orderType' => 'email',
             'recipientName' => null,
             'recipientEmail' => null,
             'fromName' => null,
@@ -64,8 +64,8 @@ class GiftCard extends AbstractForm
     public function getOrderTypes()
     {
         $array = [
-            'Self-Print',
-            'Email',
+            'Self-Print' => 'email',
+            'Email' => 'print',
         ];
 
         return array_combine($array, $array);
