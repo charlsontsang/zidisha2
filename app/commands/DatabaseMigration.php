@@ -76,7 +76,6 @@ class DatabaseMigration extends Command {
             $this->call('migrate-zidisha1', array('table' => 'borrower_reviews'));
             $this->call('migrate-zidisha1', array('table' => 'lending_groups'));
             $this->call('migrate-zidisha1', array('table' => 'lending_group_members'));
-            $this->call('migrate-zidisha1', array('table' => 'notifications'));
             $this->call('migrate-zidisha1', array('table' => 'withdrawal_requests'));
             $this->call('migrate-zidisha1', array('table' => 'followers'));
             $this->call('migrate-zidisha1', array('table' => 'credit_settings'));
@@ -1535,31 +1534,6 @@ class DatabaseMigration extends Command {
                     array_push($groupMemberArray, $newGroupMember);
                 }
                 DB::table('lending_group_members')->insert($groupMemberArray);
-            }
-        }
-
-        if ($table == 'notifications') {
-            $this->line('Migrate notifications table');
-
-            $count = $this->con->table('notification_history')->count();
-            $limit = 500;
-
-            for ($offset = 0; $offset < $count; $offset += $limit) {
-                $notifications = $this->con->table('notification_history')
-                    ->skip($offset)->limit($limit)->get();
-                $notificationArray = [];
-
-                foreach ($notifications as $notification) {
-                    $newNotification = [
-                        'id'         => $notification->id,
-                        'type'       => $notification->type,
-                        'user_id'    => $notification->userid,
-                        'created_at' => $notification->created
-                    ];
-
-                    array_push($notificationArray, $newNotification);
-                }
-                DB::table('notifications')->insert($notificationArray);
             }
         }
 
