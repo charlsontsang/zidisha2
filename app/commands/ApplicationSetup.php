@@ -36,7 +36,7 @@ class ApplicationSetup extends Command
 
         $databaseConfig['databaseUsername'] = $this->ask(
             'Enter your database username [Default=zidisha] : ',
-            'homestead'
+            'zidisha'
         );
 
         $databaseConfig ['databasePassword'] = $this->secret('Enter your database password [Default=secret] : ') ?: 'secret';
