@@ -359,10 +359,6 @@ var handler;
         }
     }
 
-    $('document').ready(function() {
-        updateDonation();
-    });
-
     $('#lend-action').on('click', function() {
         $('#lend-details').show();
         $('#lend-form-initial').hide();
@@ -392,5 +388,8 @@ var handler;
     });
     $amount.on('keyup', calculateAmounts);
 
+    if ($donationPercent.length) {
+        updateDonation();
+    }
     calculateAmounts();
 }
