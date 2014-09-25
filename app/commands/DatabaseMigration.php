@@ -1667,7 +1667,7 @@ class DatabaseMigration extends Command {
                         'loan_amount_limit' => $creditSetting->loanamt_limit,
                         'character_limit'   => $creditSetting->character_limit,
                         'comments_limit'    => $creditSetting->comments_limit,
-                        'type'              => $creditSetting->type, // TODO, add comments type?
+                        'type'              => $creditSetting->type,
                         'created_at'        => date("Y-m-d H:i:s", $creditSetting->created),
                         'updated_at'        => date("Y-m-d H:i:s", $creditSetting->modified)
                     ];
