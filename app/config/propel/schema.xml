@@ -747,7 +747,7 @@
         <foreign-key foreignTable="loans">
             <reference local="loan_id" foreign="id"/>
         </foreign-key>
-        <foreign-key foreignTable="gift_card_transaction">
+        <foreign-key foreignTable="gift_card_transactions">
             <reference local="gift_card_transaction_id" foreign="id"/>
         </foreign-key>
         <column name="class_key" type="INTEGER" inheritance="single">
@@ -785,12 +785,12 @@
         <foreign-key foreignTable="lenders" phpName="Recipient">
             <reference local="recipient_id" foreign="id"/>
         </foreign-key>
-        <foreign-key foreignTable="gift_card_transaction">
+        <foreign-key foreignTable="gift_card_transactions">
             <reference local="gift_card_transaction_id" foreign="id"/>
         </foreign-key>
     </table>
 
-    <table name="gift_card_transaction" phpName="GiftCardTransaction" namespace="Lender">
+    <table name="gift_card_transactions" phpName="GiftCardTransaction" namespace="Lender">
         <vendor type="mysql">
             <parameter name="Engine" value="InnoDB"/>
         </vendor>
@@ -804,6 +804,7 @@
         <column name="amount" type="DECIMAL" size="10" scale="2" required="true"/>
         <column name="donation" type="DECIMAL" size="10" scale="2"/>
         <column name="date" type="TIMESTAMP" required="true"/>
+        <column name="ip_address" type="VARCHAR" size="256" required="false"/>
         <behavior name="timestampable"/>
         <foreign-key foreignTable="lenders">
             <reference local="lender_id" foreign="id"/>

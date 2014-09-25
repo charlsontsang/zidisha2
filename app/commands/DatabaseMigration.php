@@ -1208,21 +1208,25 @@ class DatabaseMigration extends Command {
 
             for ($offset = 0; $offset < $count; $offset += $limit) {
                 $giftCardTransactions = $this->con->table('gift_transaction')
+                    ->select('gift_transaction.*', 'lenders.userid as lender_id')
+                    ->leftJoin('lenders', 'lenders.userid', '=', 'gift_transaction.userid')
                     ->skip($offset)->limit($limit)->get();
                 $giftCardTransactionArray = [];
 
                 foreach ($giftCardTransactions as $giftCardTransaction) {
                     $newGiftCardTransaction = [
                         'id'               => $giftCardTransaction->id,
-                        'transaction_id'   => $giftCardTransaction->txn_id,
+                        'transaction_id'   => $giftCardTransaction->txn_id ?: null,
                         'transaction_type' => $giftCardTransaction->txn_type,
-                        'lender_id'        => $giftCardTransaction->userid,
-                        'invoice_id'       => $giftCardTransaction->invoiceid,
+                        'lender_id'        => $giftCardTransaction->lender_id ?: null,
+                        'invoice_id'       => $giftCardTransaction->invoiceid ?: null,
                         'status'           => $giftCardTransaction->status,
                         'total_cards'      => $giftCardTransaction->total_cards,
                         'amount'           => $giftCardTransaction->amount,
                         'donation'         => $giftCardTransaction->donation,
+                        'ip_address'       => $giftCardTransaction->ip,
                         'date'             => date("Y-m-d H:i:s", $giftCardTransaction->date),
+                        'created_at'       => date("Y-m-d H:i:s", $giftCardTransaction->date),
                     ];
 
                     array_push($giftCardTransactionArray, $newGiftCardTransaction);
