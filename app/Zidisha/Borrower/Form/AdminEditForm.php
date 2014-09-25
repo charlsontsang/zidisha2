@@ -40,7 +40,7 @@ class AdminEditForm extends AbstractForm
             'alternatePhoneNumber'        => 'numeric|digits:' . $this->getPhoneNumberLength() . '|UniqueNumber:' . $this->borrower->getId() . '|MutualUniqueNumber',
             'address'                     => 'required',
             'addressInstructions'         => 'required',
-            'city'                        => 'required',
+            'city'                        => 'required|alpha_num_space',
             'countryId'                   => 'required',
             'communityLeader_firstName'   => 'required',
             'communityLeader_lastName'    => 'required',

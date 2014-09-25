@@ -66,7 +66,7 @@ class PersonalInformationForm extends AbstractForm
         return [
             'address'                     => 'required',
             'addressInstructions'         => 'required',
-            'city'                        => 'required',
+            'city'                        => 'required|alpha_num_space',
             'nationalIdNumber'            => 'required|unique:borrower_profiles,national_id_number,'.$this->borrower->getId() .',borrower_id',
             'phoneNumber'                 => 'required|numeric|digits:' . $this->getPhoneNumberLength() . '|UniqueNumber:'. $this->borrower->getId() .'|MutualUniqueNumber',
             'alternatePhoneNumber'        => 'numeric|digits:' . $this->getPhoneNumberLength() . '|UniqueNumber:'. $this->borrower->getId() .'|MutualUniqueNumber',
