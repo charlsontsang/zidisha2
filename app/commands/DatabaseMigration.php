@@ -1872,9 +1872,14 @@ class DatabaseMigration extends Command {
             $this->line('Migrate statistics table');
 
             $count = $this->con->table('statistics')->count();
-            $limit = 500;
+            $limit = 100;
+
+            $countryCodeToId = \Zidisha\Country\Base\CountryQuery::create()
+                ->find()
+                ->toKeyValue('countryCode', 'id');
 
             for ($offset = 0; $offset < $count; $offset += $limit) {
+                $this->line($offset);
                 $statistics =$this->con->table('statistics')
                     ->skip($offset)->limit($limit)->get();
                 $statisticArray = [];
@@ -1884,8 +1889,7 @@ class DatabaseMigration extends Command {
                         'id'         => $statistic->id,
                         'name'       => $statistic->Name,
                         'value'      => $statistic->value,
-                        //TODO croos check for foreign key bcz some country values in old DB are '' (empty string)
-                        'country_id' => $statistic->country,
+                        'country_id' => array_get($countryCodeToId, $statistic->country),
                         'date'       => date("Y-m-d H:i:s", $statistic->date)
                     ];
 
