@@ -25,6 +25,7 @@ return [
         'already-member' => ':email is already a Zidisha member.',
         'invite-success' => 'Your invite has been sent.',
         'borrower-join-email-sent' => 'Confirmation email sent!',
+        'welcome' => 'Welcome to Zidisha!',
     ],
     'add-photo' => 'Add a photo',
     'delete-upload' => 'Delete',
