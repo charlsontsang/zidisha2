@@ -180,11 +180,14 @@ class LenderController extends BaseController
 
         $currentBalancePageObj = DB::select(
             'SELECT SUM(amount) AS total
+             FROM transactions as t
+             INNER JOIN
+             (SELECT id
              FROM transactions
-             WHERE id IN (SELECT id
-                          FROM transactions WHERE user_id = ?
-                          ORDER BY transaction_date DESC, transactions.id DESC
-                          OFFSET ?)',
+             WHERE user_id = ?
+             ORDER BY transaction_date DESC, transactions.id DESC
+             LIMIT 50 OFFSET ?) as t2
+             ON t.id = t2.id',
             array($userId, ($page - 1) * 50)
         );
 
