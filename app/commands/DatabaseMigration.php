@@ -1512,12 +1512,20 @@ class DatabaseMigration extends Command {
         if ($table == 'lending_group_members') {
             $this->line('Migrate lending_group_members table');
 
-            $count = $this->con->table('lending_group_members')->count();
-            $limit = 500;
+            $count = $this->con
+                ->table('lending_group_members')
+                ->join('lender_groups', 'lender_groups.id', '=', 'lending_group_members.group_id')
+                ->count();
+            $limit = 1;
 
             for ($offset = 0; $offset < $count; $offset += $limit) {
-                $groupMembers = $this->con->table('lending_group_members')
-                    ->skip($offset)->limit($limit)->get();
+                $groupMembers = $this->con
+                    ->table('lending_group_members')
+                    ->select('lending_group_members.*')
+                    ->join('lender_groups', 'lender_groups.id', '=', 'lending_group_members.group_id')
+                    ->skip($offset)
+                    ->limit($limit)
+                    ->get();
                 $groupMemberArray = [];
 
                 foreach ($groupMembers as $groupMember) {
