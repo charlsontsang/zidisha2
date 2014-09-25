@@ -781,12 +781,12 @@ class DatabaseMigration extends Command {
                         'user_id'          => $transaction->userid,
                         'amount'           => $transaction->amount,
                         'description'      => $transaction->txn_desc,
-                        'loan_id'          => $transaction->loanid,
+                        'loan_id'          => $transaction->loanid ?: null,
                         'transaction_date' => date("Y-m-d H:i:s", $transaction->TrDate),
                         'exchange_rate'    => $transaction->conversionrate,
                         'type'             => $transaction->txn_type,
                         'sub_type'         => $transaction->txn_sub_type,
-                        'loan_bid_id'      => $transaction->loanbid_id
+                        'loan_bid_id'      => $transaction->loanbid_id ?: null
                     ];
 
                     array_push($transactionArray, $newTransaction);
