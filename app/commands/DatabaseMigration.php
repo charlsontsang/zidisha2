@@ -1143,8 +1143,8 @@ class DatabaseMigration extends Command {
                         'status'                 => $paypalTransaction->status,
                         'custom'                 => $paypalTransaction->custom,
                         'token'                  => $paypalTransaction->paypaldata,
-                        // TODO check if necessary and if yes then viable with created_at new then updated_at
-                        'updated_at'             => date("Y-m-d H:i:s", $paypalTransaction->updateddate)
+                        'created_at'             => date("Y-m-d H:i:s", $paypalTransaction->txndate),
+                        'updated_at'             => date("Y-m-d H:i:s", $paypalTransaction->updateddate),
                     ];
 
                     array_push($paypalTransactionArray, $newPaypalTransaction);
