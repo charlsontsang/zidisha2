@@ -18,7 +18,6 @@ class AdminMailer
         $this->mailer = $mailer;
     }
 
-    //TODO gives blank page in redirect/return
     public function sendErrorMail(\Exception $exception)
     {
         /** @var Request $request */
