@@ -18,7 +18,7 @@ return array(
     "token"                => "This password reset token is invalid.",
     "sent"                 => "We have sent password reset instructions to the email address registered with your Zidisha account.",
     'intro' 			   => 'No worries!  We\'ll help you access your account right away.',
-    'username-or-password' => 'Enter your email or username',
+    'email-password-reset' => 'Enter your email',
     'create-password' 	   => 'Create a new password',
 
 );
