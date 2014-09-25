@@ -26,7 +26,7 @@ return [
         'edit-profile' => 'Click <a href=":editProfileLink">here</a> to edit your photo and profile.',
         'fully-funded' => [
             'title'        => 'Congratulations! Your loan application is 100% funded.',
-            'instructions' => 'Click <a href=":loanLink">here</a> to accept the lender bids.',
+            'instructions' => 'Click <a href=":loanLink">here</a> to review the repayment schedule and confirm acceptance of the loan.',
         ]
     ],
     'loan-expired' => [

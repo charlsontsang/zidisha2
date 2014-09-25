@@ -95,7 +95,7 @@ class AuthController extends BaseController
         
         $this->flushLogout();
         
-        return Redirect::route('home');
+        return Redirect::back();
     }
 
     public function getFacebookLogin()
@@ -165,7 +165,7 @@ class AuthController extends BaseController
                 Session::forget('lenderJoin');
                 return Redirect::route('loan:index', $params);
             }
-            return Redirect::route('lender:dashboard');
+            return Redirect::back();
         } elseif ($user->isBorrower()) {
             return Redirect::route('borrower:dashboard');
         }

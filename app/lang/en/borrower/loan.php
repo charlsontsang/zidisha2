@@ -2,11 +2,11 @@
 
 return [
     'accept-bids'                => [
-        'title'        => 'Accept Bids',
-        'instructions' => 'Please review the following repayment schedule carefully. By clicking the "Accept Bids" button below, you will be entering into a legal contract to repay the loan according to this schedule.',
+        'title'        => 'Accept Loan',
+        'instructions' => 'Please review the following repayment schedule carefully. By clicking the "Accept Loans" button below, you will be entering into a legal contract to repay the loan according to this schedule.',
         'schedule'     => 'The following payment schedule is generated to illustrate the payments you are committing to make should the loan you proposed be financed at the maximum interest rate. Please review it carefully to ensure that the repayment amounts and dates are what you intended to propose, and that you will be able to make the below scheduled repayments without difficulty.  <br/><br/>You may modify your loan application by clicking the "Go Back and Edit" button.  Once you click "Confirm and Publish", your application will be posted for funding by lenders.',
         'default-note' => 'Please enter any special instructions for your loan disbursement here (optional)',
-        'submit'       => 'Accept Bids',
+        'submit'       => 'Accept Loan',
     ],
     'requested-amount'                      => 'Amount Requested',
     'maximum-interest-rate'                 => 'Maximum Interest Rate',
@@ -60,7 +60,7 @@ return [
     'loan-open' => [
         'details' => 'Loan Details',
         'fully-funded' => [
-            'instructions' => 'Use the form below to accept the bids.',
+            'instructions' => 'Use the form below to accept the loan.',
             'accept-bids' => 'Accept Loan',
         ],
     ],

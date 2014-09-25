@@ -8748,6 +8748,12 @@ body {
 @media (min-width: 768px) {
   .panel-info.your-loans {
     margin-top: 15px;
+    margin-bottom: 30px;
+  }
+}
+@media (min-width: 768px) {
+  .panel-info.invitees {
+    margin-top: 30px;
   }
 }
 .page-section-inverted {
@@ -9198,6 +9204,12 @@ table.dataTable {
 /* button styles */
 .btn {
   border-radius: 2px;
+}
+.btn:focus,
+.btn:active:focus,
+.btn.active:focus {
+  outline: none;
+  outline-offset: none;
 }
 .btn-icon {
   padding: 0;

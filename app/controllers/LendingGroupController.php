@@ -46,7 +46,6 @@ class LendingGroupController extends BaseController
 
             $group =  $this->lendingGroupService->addLendingGroup($creator, $data, $image);
 
-            \Flash::success("Your group is created!");
             return Redirect::route('lender:group:create:success', $group->getId());
         }
         return Redirect::route('lender:groups:create')->withForm($form);
@@ -189,7 +188,7 @@ class LendingGroupController extends BaseController
         $lender = Auth::user()->getLender();
         $leaved = $this->lendingGroupService->leaveLendingGroup($group, $lender);
         if(!$leaved){
-            \Flash::success("Please transfer leadership to another group member before leaving. Thanks!");
+            \Flash::success("Please use the \"Edit Group\" page to transfer leadership to another member before leaving. Thanks!");
             return Redirect::route('lender:group', $group->getId());
         }
 
