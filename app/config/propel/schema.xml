@@ -854,7 +854,8 @@
         <column name="borrower_id" type="INTEGER"/>
         <column name="comment" type="LONGVARCHAR" required="false"/>
         <column name="verification_code" type="VARCHAR" required="false" />
-        <column name="is_reminder_sent" type="BOOLEAN" default="false" />
+        <column name="reminder_count" type="INTEGER" default="0" />
+        <column name="lender_denied" type="VARCHAR" />
         <behavior name="timestampable"/>
         <foreign-key foreignTable="loans" phpName="Loan">
             <reference local="loan_id" foreign="id"/>

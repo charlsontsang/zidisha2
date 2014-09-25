@@ -1282,7 +1282,9 @@ class DatabaseMigration extends Command {
                         'borrower_id'       => $forgivenessLoan->borrowerid,
                         'comment'           => $forgivenessLoan->comment,
                         'verification_code' => $forgivenessLoan->validation_code,
-                        'is_reminder_sent'  => $forgivenessLoan->reminder_sent
+                        'reminder_count'    => $forgivenessLoan->reminder_sent,
+                        'lender_denied'     => $forgivenessLoan->lender_denied,
+                        'created_at'        => date("Y-m-d H:i:s", $forgivenessLoan->time),
                     ];
 
                     array_push($forgivenessLoanArray, $newForgivenessLoan);
