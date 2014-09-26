@@ -128,7 +128,7 @@ class User extends BaseUser implements UserInterface, RemindableInterface
     {
         if ($this->isLender()) {
             $route = $this->getRole() . ":public-profile";
-            return route($route, ['username' => $this->getUsername()] + $parameters);
+            return route($route, ['id' => $this->getId()] + $parameters);
         } elseif ($this->isBorrower()) {
             if ($this->getBorrower()->getLastLoanId()) {
                 return route('loan:index', ['loanId' =>$this->getBorrower()->getLastLoanId()] + $parameters);
