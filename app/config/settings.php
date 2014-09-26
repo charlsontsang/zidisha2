@@ -186,7 +186,8 @@ return [
             'label' => 'Sift Science API Key'
         ],
         'paypal.mode' => [
-            'label' => 'PayPal Process Mode'
+            'label' => 'PayPal Process Mode',
+            'default' => 'sandbox',
         ],
         'paypal.username' => [
             'label' => 'PayPal Username'
