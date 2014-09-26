@@ -9,6 +9,7 @@
         <column name="username" type="VARCHAR" size="20" required="true"/>
         <column name="email" type="VARCHAR" size="100" required="false"/>
         <column name="password" type="VARCHAR" size="60" required="false"/>
+        <column name="salt" type="VARCHAR" size="60" required="false"/>
         <column name="profile_picture_id" type="INTEGER" required="false"/>
         <column name="facebook_id" type="VARCHAR" required="false"/>
         <column name="google_id" type="VARCHAR" required="false"/>

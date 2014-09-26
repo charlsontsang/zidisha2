@@ -165,7 +165,8 @@ class DatabaseMigration extends Command {
                         'id'                 => $user->userid,
                         'username'           => $user->username,
                         'email'              => $email,
-                        'password'           => $user->password, // TODO old password, salt column
+                        'password'           => null,
+                        'salt'               => $user->salt,
                         'profile_picture_id' => null, // TODO
                         'facebook_id'        => $user->facebook_id ?: null,
                         'google_id'          => null, // since google login is now added
@@ -1592,6 +1593,7 @@ class DatabaseMigration extends Command {
         }
 
         // TODO lending_group notifications
+        // TODO feedback
 
         if ($table == 'withdrawal_requests') {
             $this->line('Migrate withdrawal_requests table');

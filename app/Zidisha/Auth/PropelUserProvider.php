@@ -4,6 +4,7 @@ namespace Zidisha\Auth;
 
 use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\UserProviderInterface;
+use Zidisha\User\User;
 use Zidisha\User\UserQuery;
 
 class PropelUserProvider implements UserProviderInterface
@@ -70,6 +71,27 @@ class PropelUserProvider implements UserProviderInterface
      */
     public function validateCredentials(UserInterface $user, array $credentials)
     {
-        return \Hash::check($credentials['password'], $user->getPassword());
+        /** @var User $user */
+        $check = \Hash::check($credentials['password'], $user->getPassword());
+
+        if (!$check) {
+            // Try with old password hashing scheme
+            if ($user->getSalt()) {
+                $password = md5(md5($credentials['password']) . md5($user->getSalt()));
+            } else {
+                $password = md5($credentials['password']);
+            }
+
+            $check = $user->getPassword() == $password;
+
+            if ($check) {
+                $user
+                    ->setSalt(null)
+                    ->setPassword($credentials['password']);
+                $user->save();
+            }
+        }
+
+        return $check;
     }
 }
