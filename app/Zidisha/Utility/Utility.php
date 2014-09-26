@@ -259,6 +259,7 @@ class Utility {
         return $post_val;
     }
 
+    // TODO pass country object
     public static function formatNumber($phoneNumber, $countryCode){
         $result=preg_replace("/[^0-9]+/", "", $phoneNumber);
         $country = CountryQuery::create()

@@ -1317,8 +1317,9 @@ class LoanService
         foreach ($repaymentScheduleInstallments['delete'] as $repaymentScheduleInstallment) {
             $deleteIds[] = $repaymentScheduleInstallment->getInstallment()->getId();
         }
-        
-        PropelDB::transaction(function($con) use ($loan, $data, $repaymentSchedule, $deleteIds) {
+
+        /** @var Reschedule $reschedule */
+        $reschedule = PropelDB::transaction(function($con) use ($loan, $data, $repaymentSchedule, $deleteIds) {
             $deletedInstallmentCount = InstallmentQuery::create()
                 ->filterById($deleteIds)
                 ->delete($con);
@@ -1343,6 +1344,8 @@ class LoanService
 
             $loan->clearInstallments();
             $loan->save($con);
+
+            return $reschedule;
         });
         
         $borrower = $loan->getBorrower();
@@ -1350,7 +1353,7 @@ class LoanService
         $this->borrowerCommentService->postComment(
             [
                 'message' => $data['reason'],
-                'isReschedulingReason' => true
+                'rescheduleId' => $reschedule->getId(),
             ],
             $borrower->getUser(),
             $borrower

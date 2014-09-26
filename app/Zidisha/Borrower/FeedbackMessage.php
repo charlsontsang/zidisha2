@@ -10,6 +10,9 @@ class FeedbackMessage extends BaseFeedbackMessage
     const LOAN_TYPE = 'loan';
     const ACTIVATION_TYPE = 'activation';
 
+    const COLUMN_LOAN_TYPE = 0;
+    const COLUMN_ACTIVATION_TYPE = 1;
+
     public function setCc($cc)
     {
         $emails = explode(',', $cc);

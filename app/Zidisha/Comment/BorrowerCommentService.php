@@ -42,8 +42,8 @@ class BorrowerCommentService extends CommentService
     {
         $comment = new BorrowerComment();
         
-        if (array_get($data, 'isReschedulingReason', false)) {
-            $comment->setIsReschedulingReason(true);
+        if (array_get($data, 'rescheduleId')) {
+            $comment->setRescheduleId(array_get($data, 'rescheduleId'));
         }
         
         return $comment;
